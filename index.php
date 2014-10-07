@@ -1,1 +1,1 @@
-<?php header('Location: http://eclipse.org/projects/project.php?id=technology.che'); ?>
+<?php header('Location: http://docs.codenvy.com/sdk/'); ?>
