@@ -1,1 +1,1 @@
-<?php header('Location: http://docs.codenvy.com/sdk/'); ?>
+<?php header('Location: http://docs.codenvy.com/che/'); ?>
