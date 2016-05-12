@@ -47,7 +47,15 @@
     <!-- Equal Height for Content Script -->
     <script type="text/javascript">
       $(document).ready(function(){
-        
+
+        // open correct tab on load
+        var url = document.location.toString();
+        if (url.match('#')!=null) {
+          var keyword = url.split('#')[1];
+          var script = '#tabChoice a[href="#' + keyword + '"]';
+          $(script).tab('show');
+        }
+
         var leaderHeight = $(".leader p").height();
         $(".border p").height( leaderHeight);
         return false;
@@ -130,7 +138,7 @@
     <p><b>Chat:</b> Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">Gitter</a>, <a href="http://qwebirc.swiftirc.net/?nick=fromwebsite&channels=%23eclipseche">IRC</a> and Slack.</p>
   <div class="separator"></div>
 
-  <ul class="row tabs">
+  <ul class="row tabs" id="tabChoice">
     <li class="col-xs-6 active">
       <div class="cloud">
         <h3 class="active"><a href="#tab1" data-toggle="tab">Try Eclipse Che in the Cloud</a></h3>
