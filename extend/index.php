@@ -49,7 +49,7 @@
     <div class="col-sm-6">
       <img src="../images/logo-extend-codenvy@2x.jpg" alt="Codenvy">
       <h2>Codenvy</h2>
-      <p>Codenvy provides a multi-user, multi-tenant and elastic impelementation of Eclipse Che with enterprise features including LDAP, single sign-on, security, and resource controls.</p>
+      <p>Codenvy provides a multi-user, multi-tenant and elastic Eclipse Che with enterprise features including LDAP, single sign-on, security, and resource controls. You can use Codenvy in a shared hosted cloud, private cloud, or download installed onto your own servers.</p>
       <a href="https://codenvy.com/product/technology/" class="btn-yellow" target="_blank">Learn More</a>  
     </div>
   </div> <!-- /.row -->
