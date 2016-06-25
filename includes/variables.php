@@ -2,7 +2,7 @@
   // Define site root path
   // Staging http://site-ci.codenvy-stg.com/che
   // Production http://eclipse.org/che
-  $rootPath = 'http://site-ci.codenvy-stg.com/che';
+  $rootPath = 'http://www.eclipse.org/che';
   // Define description
   $pageDescription = 'Eclipse Che Next-Generation Eclipse IDE.';
   // Define page title

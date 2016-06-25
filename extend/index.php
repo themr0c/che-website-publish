@@ -58,6 +58,9 @@
 <div class="tech">
   <div class="container-fluid content">
     <h2>Plug-Ins</h2>
+    <p>We are building a world where anyone, anytime can contribute to a project without installing software. Workspaces encapsulate their own IDE and runtime, each of which are extensible along with the project types, stacks, templates that ship within an assembly. Che is a distributed architecture, so it's extension points are equally distriburted.</p>
+    <img alt="" class="img-responsive" src="./Eclipse Che _ Next-Generation Eclipse IDE, Cloud IDE, and Workspace Server_files/hero-home-technology.png">
+
     <p>Che includes a growing set of <a href="https://eclipse-che.readme.io/docs/plug-ins">plug-ins</a>. You can also <a href="https://eclipse-che.readme.io/docs/developing-extensions">create and package</a> your own. You can also extend Che's runtimes, stacks, commands, look-and-feel. We are starting to build out customization <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">resource center</a>.</p>
     <div class="row">
       <div class="col-md-3 col-sm-6">
