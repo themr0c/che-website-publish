@@ -37,7 +37,7 @@
     <h2>Avoid These Common Setup Gotchas</h2>
         <p><b>Windows/Mac:</b> VT-X/AMD-v must be enabled on your laptop. You can change this <a href="https://docs.fedoraproject.org/en-US/Fedora/13/html/Virtualization_Guide/sect-Virtualization-Troubleshooting-Enabling_Intel_VT_and_AMD_V_virtualization_hardware_extensions_in_BIOS.html">in the BIOS</a>.</p>
         <p><b>Windows:</b> If VirtualBox fails to create a VM, the most common reason is <a href="http://stackoverflow.com/questions/33725779/failed-to-open-create-the-internal-network-vagrant-on-windows10">NDIS driver bugs</a>.</p>
-        <p><b>Proxies:</b> Che must download software from the Internet. Configure <a href="https://eclipse-che.readme.io/v4.0/docs/usage#installing-behind-a-proxy">Vagrant's proxy</a>, or if installing as a server, <a href="https://eclipse-che.readme.io/v4.0/docs/configuration-proxies">setup Che's proxies</a>.</p>
+        <p><b>Proxies:</b> If you are behind a proxy, configure <a href="https://eclipse-che.readme.io/v4.0/docs/usage#installing-behind-a-proxy">Vagrant's proxy</a>, or if installing as a server, <a href="https://eclipse-che.readme.io/v4.0/docs/configuration-proxies">setup Che's proxies</a>.</p>
 
     <div class="separator"></div>
 
