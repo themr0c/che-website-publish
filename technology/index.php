@@ -12,7 +12,7 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Eclipse Che - Not just another IDE.</h1>
+    <h1>Eclipse Che - Development Witchcraft.</h1>
     <h3>Eclipse Che is an IDE and developer workspace server that allows anyone to contribute to a project without having to install software. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-technology@2x.png" />
