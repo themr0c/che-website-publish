@@ -24,15 +24,13 @@
   
     <h2>Installation Types</h2>
 
-     <p><b>Yatta Profile:</b> This is a <a href="https://marketplace.yatta.de/profiles/iQBd" target="_blank">working Eclipse setup</a>, complete with plug-ins, workspace, repositories, and more.</p>
-
       <p><b>Vagrant:</b> The quickest way to try Eclipse Che on any operating system.</p>
 
       <p><b>Server:</b> The best performance, especially on Docker-native systems.</p>
 
-      <p><b>Docker:</b> You can run Eclipse Che in a <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax" target="_blank">Docker container</a>.</p>
+      <p><b>Docker:</b> Run Eclipse Che in a container</a>.</p>
 
-      <p><b>IDE for IoT</b> Eclispe Che has a <a href="http://eclipse.org/che/artik/" target="_blank">Samsung ARTIK IDE assembly</a> and also <a href="https://blog.benjamin-cabe.com/2016/04/01/running-eclipse-che-on-a-raspberry-pi" target="_blank">runs on a Raspberry Pi</a>.</p>
+      <p><b>Yatta:</b> A headless Che installer that also installs OS dependencies.</p>
 
     <div class="separator"></div>
 
@@ -44,13 +42,13 @@
     <div class="separator"></div>
 
     <h2>1. Install Che</h2>
-        <p><b>Vagrant:</b> First install <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> and <a href="https://www.vagrantup.com/downloads.html">Vagrant</a>. <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Place Che's Vagrantfile in an empty directory</a>. Execute <code>vagrant up</code>. The Vagrant installer configures Java, Docker, and the latest released version of Che.</p>
+        <p><b>Vagrant:</b> First install <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> and <a href="https://www.vagrantup.com/downloads.html">Vagrant</a>. <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Place Che's Vagrantfile in an empty directory</a>. Execute <code>vagrant up</code>. The Vagrant installer configures Java, Docker, and the latest released version of Che. You can <a href="https://eclipse-che.readme.io/docs/usage-vagrant"> customize the Vagrantfile with a different IP address, DHCP, proxies, and logging output.</a></p>
         <p><b>Server:</b> You must first <a href="https://eclipse-che.readme.io/docs/install-pre-reqs">install Java and Docker Toolbox</a>. Then install <a href="https://www.eclipse.org/che/download/">Che from a ZIP file</a>. Another option is that Codenvy provides a <a href="https://install.codenvycorp.com/che/eclipse-che-latest.exe">Windows wizard-based installer that installs both Che and its prerequisites</a>.</p>
-        <p><b>Docker:</b> There is syntax for launching a Che container using <a href="https://eclipse-che.readme.io/docs/usage-docker#using-che-scripts">Che's scripts</a>, or <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax">with Docker run syntax</a>.</p>
-
+        <p><b>Docker:</b> Launch a Che container using our <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax">Docker run syntax</a>.</p>
+        <p><b>Yatta:</b> Go <a href="https://marketplace.yatta.de/profiles/iQBd" target="_blank">to their marketplace</a> and accept their terms of service to get a self-updating installer.</p>
   <div class="separator"></div>
     <h2>2. Run Che</h2>
-      <p><b>Vagrant:</b> Che is already running! <code>http://192.168.28.30:8080</code> will open Che's dashboard.</p>
+      <p><b>Vagrant:</b> Che is already running! <code>http://192.168.28.100:8080</code> will open Che's dashboard.</p>
       <p><b>Server:</b> Follow these <a href="https://eclipse-che.readme.io/v4.0/docs/usage-server">usage steps</a>.</p>
       <p><a href="../../images/features/img-features-docker-powered.png"><img alt="" class="img-responsive" src="../../images/features/img-features-docker-powered.png"></a></p>
       
@@ -67,9 +65,7 @@
 
   <div class="separator"></div>
     <h2>5. Customize Che</h2>
-      <p><b>Stacks:</b> <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">Add your own runtimes and templates.</a></p>
-      <p><b>Plug-Ins:</b> Tool teams can create their own plug-ins which modify the server's behavior, alter the IDE, or inject agents into the hosted workspaces. Plug-ins can add new projects types, change the editor, add version control features and to implement vendor workflows. We have <a href="https://eclipse-che.readme.io/docs/plug-ins">instructions for writing plug-ins and extensions.</a></p>
-      <p><b>Assemblies:</b> You can create your own distributable packages of Che with custom stacks, plug-ins, or Che core modifications. The <a href="http://github.com/codenvy/artik-ide">Samsung ARTIK IDE is an example.</a> You can <a href="https://eclipse-che.readme.io/docs/assemblies">create custom assemblies with the SDK.</a></p>
+      <p>You can <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">customize Che's stacks, templates, recipes, commands, IDE extensions, workspace extensions, REST APIs, plugins, or assemblies. Add your own runtimes and templates.</a></p>
      
   <div class="separator"></div>
     <h2>6. Contribute to Che</h2>
