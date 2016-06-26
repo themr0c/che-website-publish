@@ -32,7 +32,7 @@
       <div class="col-md-4">
         <h3>Local Install</h3>
         <p>Install and host Eclipse Che on your machine or server.</p>
-        <a href="<?php echo $rootPath; ?>/getting-started/download/" class="btn-yellow">Downloads</a>
+        <a href="<?php echo $rootPath; ?>/getting-started/download/" class="btn-yellow">Download</a>
 
       </div>
       <div class="col-md-4">
