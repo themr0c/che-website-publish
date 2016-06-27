@@ -45,7 +45,7 @@
         <p><b>Vagrant:</b> First install <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> and <a href="https://www.vagrantup.com/downloads.html">Vagrant</a>. <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Place Che's Vagrantfile in an empty directory</a>. Execute <code>vagrant up</code>. The Vagrant installer configures Java, Docker, and the latest released version of Che. You can <a href="https://eclipse-che.readme.io/docs/usage-vagrant"> customize the Vagrantfile with a different IP address, DHCP, proxies, and logging output.</a></p>
         <p><b>Server:</b> You must first <a href="https://eclipse-che.readme.io/docs/install-pre-reqs">install Java and Docker Toolbox</a>. Then install <a href="https://www.eclipse.org/che/download/">Che from a ZIP file</a>. Another option is that Codenvy provides a <a href="https://install.codenvycorp.com/che/eclipse-che-latest.exe">Windows wizard-based installer that installs both Che and its prerequisites</a>.</p>
         <p><b>Docker:</b> Launch a Che container using our <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax">Docker run syntax</a>.</p>
-        <p><b>Yatta:</b> Go <a href="https://marketplace.yatta.de/profiles/iQBd" target="_blank">to their marketplace</a> and accept their terms of service to get a self-updating installer.</p>
+        <p><b>Yatta:</b> Go <a href="https://marketplace.yatta.de/profiles/eclipse.che" target="_blank">to their marketplace</a> and accept their terms of service to get a self-updating installer.</p>
   <div class="separator"></div>
     <h2>2. Run Che</h2>
       <p><b>Vagrant:</b> Che is already running! <code>http://192.168.28.100:8080</code> will open Che's dashboard.</p>

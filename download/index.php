@@ -33,7 +33,7 @@
 
     <li>Download with Vagrant: <a href="<?php echo $rootPath; ?>/getting-started/download/">Quick Install</a></li></br>
 
-    <li>Download with Yatta: <a href="https://marketplace.yatta.de/profiles/iQBd">Automated Marketplace Install</a></li></br>
+    <li>Download with Yatta: <a href="https://marketplace.yatta.de/profiles/eclipse.che">Automated Marketplace Install</a></li></br>
 
     <li>Docker: <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax">Run as a Container</a></li></br>
 
