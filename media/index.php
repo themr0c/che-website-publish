@@ -2,7 +2,7 @@
   include '../includes/variables.php';
 
   // Define page title
-  $pageTitle = 'Eclipse Che | Media and Events';
+  $pageTitle = 'Eclipse Che | Media';
   // Define body class
   $bodyClass = 'media_events';
 
@@ -12,51 +12,31 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1 class="no-margin">Media and Events</h1>
+    <h1 class="no-margin">Media</h1>
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
 
 <hr class="gray">
 <div class="container-fluid content">
-  <h2>Events</h2>
-  <table class="wrapper">
-    <tr class="item">
-      <td><img src="../images/media/devnation.png" alt=""></td>
-      <td>
-        <h3>Red Hat DevNation: General Session</h3>
-        <p class="loc">Moscone Center, San Francisco | June 27, 2016</p>
-         <p class="desc">Eclipse Che project lead Tyler Jewell will join Red Hat and Microsoft on stage to present a vision of how new technologies and ways of building software will evolve. Be the first to hear the latest announcements and watch demos for advancements in tools that developers commonly use today.</p>
-        <a href="http://www.devnation.org/#sessions" class="btn-yellow" target="_blank">View Session Details</a>
-      </td>
-    </tr><!-- .item -->
-
-     <tr class="item">
-      <td><img src="../images/media/summit.png" alt=""></td>
-      <td>
-        <h3>Red Hat DevNation: An Introduction to Eclipse Che</h3>
-        <p class="loc">Moscone Center, San Francisco | June 27, 2016</p>
-        <p class="desc">Tyler Jewell, founder and CEO of Codenvy, will introduce Eclipse Che how how it works with OpenShift. Learn how Eclipse Che can be extended and customized into different assemblies like how it was used to build the SAP Web IDE, Samsung ARTIK IDE, and the OpenShift IDE.</p>
-        <a href="http://developers.redhat.com/blog/2016/06/01/devnation-2016-tyler-jewell-on-an-introduction-to-eclipse-che-next-generation-java-ide/" class="btn-yellow" target="_blank">View Session Details</a>
-      </td>
-    </tr><!-- .item -->
-
-    <tr class="item">
-     <td><img src="../images/media/jenkins.png" alt=""></td>
-      <td>
-        <h3>Jenkins World </h3>
-        <p class="loc">Santa Clara | September 13-15, 2016</p>
-        <p class="desc">Join us at the largest gathering of Jenkins users in the world, including Jenkins experts, continuous delivery leaders and technologies (like ours) that complement Jenkins. </p>
-        <a href="https://www.cloudbees.com/jenkinsworld/home" class="btn-yellow" target="_blank">Visit Website</a>
-      </td>
-    </tr><!-- .item -->
-
+  
 
   </table><!-- .wrapper -->
 
-  <h2>Press Releases</h2>
+  <h2>News</h2>
   <table class="wrapper">
    
+    <tr class="item">
+      <td><img src="../images/media/redhat.png" alt=""></td>
+      <td>
+        <h3>Red Hat, Codenvy and Microsoft Collaborate on Language Server Protocol</h3>
+         <p class="loc">June 27, 2016</p>
+          <p class="desc">Today, Codenvy, Microsoft and Red Hat, Inc. announced adoption of a language server protocol project representing a collaborative effort to provide a common way to integrate programming languages across code editors and integrated development environments (IDEs).</p>
+        <a href="http://www.marketwired.com/press-release/red-hat-codenvy-and-microsoft-collaborate-on-language-server-protocol-2137810.htm" class="btn-yellow" target="_blank">Read the Press Release</a>
+      </td>
+    </tr><!-- .item -->
+
+
  <tr class="item">
       <td><img src="../images/media/samsung.png" alt=""></td>
       <td>
@@ -109,8 +89,81 @@
 
   </table><!-- .wrapper -->
 
-  <h2>Media Coverage</h2>
+  <h2>Articles</h2>
   <table class="wrapper">
+
+
+      <tr class="item">
+      <td><img src="../images/media/zdnet.png" alt=""></td>
+      <td>
+        <h3>​Open-source Microsoft protocol aims to be a programming standard</h3>
+        <p class="loc">ZDNet | June 28, 2016</p>
+        <p class="desc">This may sound shocking. Keep in mind though that Microsoft has been embracing open-source methods at a deep level. And besides that, Microsoft has been working in bringing together Visual Studio with the open-source Eclipse integrated development environment. </p>
+        <a href="http://www.zdnet.com/article/open-source-microsoft-protocol-aims-to-be-a-programming-standard/" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+    <tr class="item">
+      <td><img src="../images/media/eweek.png" alt=""></td>
+      <td>
+        <h3>Codenvy's New Language Server Protocol Reduces Programmer Envy</h3>
+        <p class="loc">eWeek | June 27, 2016</p>
+        <p class="desc">Codenvy, Microsoft and Red Hat announced on June 27 the adoption of a language server protocol project to provide a common way to integrate programming languages across code editors and integrated development environments (IDEs).</p>
+        <a href="http://www.eweek.com/developer/codenvys-new-language-server-protocol-reduces-programmer-envy.html" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+    <tr class="item">
+      <td><img src="../images/media/infoworld.png" alt=""></td>
+      <td>
+        <h3>Microsoft-backed Language Server Protocol strives for language, tools interoperability</h3>
+        <p class="loc">InfoWorld | June 27, 2016</p>
+        <p class="desc">Language Server Protocol, which will be officially unveiled today, features a JSON-based data exchange protocol for providing language services consistently across different code editors and IDEs.</p>
+        <a href="http://www.infoworld.com/article/3088698/application-development/microsoft-backed-langauge-server-protocol-strives-for-language-tools-interoperability.html" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+    <tr class="item">
+      <td><img src="../images/media/idg.png" alt=""></td>
+      <td>
+        <h3>Microsoft's open sourcing of .NET hits a major milestone</h3>
+        <p class="loc">IDG | June 27, 2016</p>
+        <p class="desc">Microsoft’s open source programming language push reached a new milestone Monday, with the company announcing the general availability of .NET Core and ASP.NET Core 1.0.</p>
+        <a href="http://www.pcworld.com/article/3089068/application-development/microsofts-open-sourcing-of-net-hits-a-major-milestone.html" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+    <tr class="item">
+      <td><img src="../images/media/sdtimes.png" alt=""></td>
+      <td>
+        <h3>Codenvy, Microsoft and Red Hat collaborate on Language Server Protocol</h3>
+        <p class="loc">SD Times | June 27, 2016</p>
+        <p class="desc">Eclipse and Microsoft are bringing their IDEs closer together thanks to a new protocol created by a collaboration between the Eclipse Che project, Microsoft and Red Hat. The result is a Language Server Protocol, an open-source, JSON-based data exchange protocol for language servers.</p>
+        <a href="http://sdtimes.com/codenvy-microsoft-red-hat-collaborate-language-server-protocol/" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+       <tr class="item">
+      <td><img src="../images/media/techcrunch.png" alt=""></td>
+      <td>
+        <h3>Microsoft’s open source .NET Core and ASP.NET Core hit 1.0</h3>
+        <p class="loc">TechCrunch | June 27, 2016</p>
+        <p class="desc">It’s been over a year and a half since Microsoft first announced the open source .NET Core project, which aims to bring the core parts of Microsoft’s .NET framework to Linux, OS X and other operating systems that the company didn’t previously support. As Microsoft announced today, .NET Core and ASP.NET Core have now hit 1.0.</p>
+        <a href="https://techcrunch.com/2016/06/27/microsofts-open-source-net-and-asp-net-core-hit-1-0/" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+    <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>At DevNation, Microsoft introduces open-source Language Server Protocol</h3>
+        <p class="loc">The New Stack | June 27, 2016</p>
+        <p class="desc">Codenvy, Microsoft and Red Hat have banded together to bring a more consistent developer experience across different code editors, by way of a new protocol that would allow any editing tool to check user’s code against a set of rules and best practices formed for each language.</p>
+        <a href="http://thenewstack.io/codenvy-microsoft-red-hat-collaborate-protocol-sharing-programming-language-guidance/" class="btn-yellow" target="_blank">Read the Article</a>
+      </td>
+    </tr><!-- .item -->
+
+
     <tr class="item">
       <td><img src="../images/media/infoworld.png" alt=""></td>
       <td>
