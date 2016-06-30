@@ -15,8 +15,8 @@
   <div class="container-fluid">
     <h1>Downloads</h1>
     <h3>
-      Release: <span class="text-yellow">4.3.5</span><br>
-      Date: <span class="text-yellow">June 24, 2016</span>
+      Release: <span class="text-yellow">4.4.0</span><br>
+      Date: <span class="text-yellow">June 30, 2016</span>
     </h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
@@ -49,17 +49,17 @@
   <ul>
     <li><h4>ZIP Package for Windows, Mac, and Linux</h4></li>
     <li><i>Installs Che in any directory</i></li>
-    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.0.1.zip&amp;r=1">❯ Download signed binaries from Eclipse mirrors (142 MB)</a></b></h4></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.zip">❯ Download unsigned latest release from Codenvy servers (140 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.zip">❯ Download unsigned nightly from Codenvy servers (140 MB)</a></li>
+    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.4.0.zip&r=1">❯ Download signed binaries from Eclipse mirrors (133 MB)</a></b></h4></li>
+    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.zip">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
+    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.zip">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
   </ul>
 
   <ul>
     <li><h4>TGZ Package for Windows, Mac, and Linux</h4></li>
     <li><i>Installs Che in any directory</i></li>
-    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.0.1.tar.gz&amp;r=1">❯ Download latest signed binaries from Eclipse mirrors (137 MB)</a></b></h4></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.tar.gz">❯ Download unsigned latest release from Codenvy servers (135 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.tar.gz">❯ Download unsigned nightly from Codenvy servers (135 MB)</a></li>
+    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.4.0.tar.gz&r=1">❯ Download latest signed binaries from Eclipse mirrors (131 MB)</a></b></h4></li>
+    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.tar.gz">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
+    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.tar.gz">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
   </ul>
 
   <p>Need help getting Che to run? Please check the oodles of <a href="https://eclipse-che.readme.io/docs/">installation and usage docs</a>.</p>
