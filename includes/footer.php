@@ -31,7 +31,6 @@
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/media/">Media</a></li>
-            <li><a href="<?php echo $rootPath; ?>/media/">News</a></li>
             <li><a href="<?php echo $rootPath; ?>/media/">Articles</a></li>
             <li><a href="http://che.eclipse.org/" target="_blank">Blog</a></li>
           </ul>
