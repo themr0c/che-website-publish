@@ -31,8 +31,8 @@
       <a href="../getting-started/" target="_blank" class="btn-yellow">Get Eclipse Che</a>
     </div>
     <div class="col-sm-6">
-      <img src="../images/img-comm-highlights-octocat@2x.png" alt="2500+ Git Stars">
-      <h2>2500+ Git Stars</h2>
+      <img src="../images/img-comm-highlights-octocat@2x.png" alt="2900 Git Stars">
+      <h2>2900 GitHub Stars</h2>
       <p>Thank you for the love! The Che GitHub repo is now a featured showcase and frequently one of the fastest growing Java projects. We are getting 50 new GitHub issues / week. Let's keep collaborating together.</p>
       <a href="https://github.com/eclipse/che/" target="_blank" class="btn-yellow">GitHub Repo</a>
     </div>
@@ -50,8 +50,7 @@
     <div class="col-sm-6">
       <img src="../images/img-comm-highlights-heart@2x.png" alt="Microsoft Loves Open Source">
       <h2>Microsoft Loves Open Source</h2>
-      <p>At EclipseCon, Microsoft announced their joining the Eclipse Foundation. We’re extremely happy to welcome them into our community and grateful for their contributions to Che and cloud development.
-</p>
+      <p>At EclipseCon, Microsoft announced their joining the Eclipse Foundation. We’re extremely happy to welcome them into our community and grateful for their contributions to Che and cloud development.</p>
       <a href="https://blogs.msdn.microsoft.com/visualstudio/2016/03/08/microsoft-joins-the-eclipse-foundation/" target="_blank" class="btn-yellow">Read the Press Release</a>
     </div>
   </div>

@@ -58,9 +58,9 @@
   <div class="row">
     <div class="col-md-4">
       <img src="images/img-home-whatsnew1@2x.png" alt="" class="img-responsive">
-      <h3>Not just another IDE</h3>
-      <p>Eclipse Che is  an IDE and developer workspace server that allows anyone to contribute to any project. </p>
-      <a href="<?php echo $rootPath; ?>/technology/" class="btn-yellow">How Eclipse Che Works</a>
+      <h3>Che at Red Hat</h3>
+      <p>See Che used to do cloud native development in Paul Cormier's Red Hat Summit keynote.</p>
+      <a href="https://www.youtube.com/embed/wMTgIIJ-oqQ?start=2995&autoplay=1">Watch the Video</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew2@2x.png" alt="" class="img-responsive">

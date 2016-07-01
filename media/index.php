@@ -47,8 +47,28 @@
         <p class="desc">Eclipse Che 4.4 has been released with 65 issues resolved including UX improvements to the navigation bar and console, as well support for private Docker registries...</p>
         <a href="http://che.eclipse.org/release-notes-eclipse-che-4-4/" class="btn-yellow" target="_blank">Read More</a>
       </td>
+   </tr><!-- .item -->
 
-</tr><!-- .item -->
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>German: Browser IDEs Compared: Che vs. Orion vs. VS Code</h3>
+        <p class="loc">June 29, 2016</p>
+        <p class="desc">The modern app development does not always occur on the local machine, but increasingly in the expanses of the Web ...</p>
+        <a href="https://jaxenter.de/eclipse-che-orion-visual-studio-code-42531?utm_source=tw&utm_medium=social&utm_campaign=early" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Develop Collaboratively with Eclipse Che, Now on Bitnami!</h3>
+        <p class="loc">June 28, 2016</p>
+        <p class="desc">Eclipse Che is an open source cloud IDE and developer workspace server featuring containerized workspaces that accelerate agile software development. Containerized workspaces let developers...</p>
+        <a href="http://blog.bitnami.com/2016/06/develop-collaboratively-with-eclipse.html" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/pc-world.png" alt=""></td>
       <td>
@@ -57,8 +77,8 @@
         <p class="desc">Microsoft’s open source programming language push reached a new milestone Monday, with the company announcing the general availability of .NET Core and ASP.NET Core 1.0....</p>
         <a href="http://www.pcworld.com/article/3089068/application-development/microsofts-open-sourcing-of-net-hits-a-major-milestone.html" class="btn-yellow" target="_blank">Read More</a>
       </td>
+   </tr><!-- .item -->
 
-      </tr><!-- .item -->
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
@@ -119,10 +139,18 @@
         <p class="desc">Microsoft -- yes, Microsoft -- announced at the DevNation conference in San Francisco that it's releasing an open-source language server protocol. More interesting still, this is being done in concert with Codenvy and Red Hat...</p>
         <a href="http://www.zdnet.com/article/open-source-microsoft-protocol-aims-to-be-a-programming-standard" class="btn-yellow" target="_blank">Read More</a>
       </td>
+   </tr><!-- .item -->
+  
+   <tr class="item">
+      <td><img src="../images/media/redhat.png" alt=""></td>
+      <td>
+        <h3>RedHat and Eclipse Che</h3>
+        <p class="loc">June 27, 2016</p>
+        <p class="desc">During the DevNation General Session today we talked about how we need to rethink some of the basic concepts of software development. We think it’s essential to make developers more effective and get started quickly. Rethinking what and how developers write and debug their code...</p>
+        <a href="http://developers.redhat.com/blog/2016/06/27/red-hat-eclipse-che/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
 
-
-
- </tr><!-- .item -->
    <tr class="item">
       <td><img src="../images/media/eweek.png" alt=""></td>
       <td>
@@ -132,8 +160,8 @@
         <a href="http://www.eweek.com/developer/codenvys-new-language-server-protocol-reduces-programmer-envy.html
 " class="btn-yellow" target="_blank">Read More</a>
       </td>
+   </tr><!-- .item -->
 
- </tr><!-- .item -->
    <tr class="item">
       <td><img src="../images/media/infoworld.png" alt=""></td>
       <td>

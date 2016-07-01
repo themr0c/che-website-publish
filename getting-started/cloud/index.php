@@ -27,7 +27,7 @@
 <div ng-app="gettingStarted" class="container-fluid content options">
 
   <div class="block">
-     <h2>Create Your Own Workspace</h2>
+     <h2>Create Your Own Che Workspace @ Codenvy.com</h2>
    </div>
 
    <div class="row">
@@ -43,13 +43,15 @@
          </div>
          <a href="http://beta.codenvy.com/site/login" class="btn-green">Create a free account</a>
        </div>
+       <p style="font-size:0.7em">Requires a Codenvy account. You will be asked to accept their TOS.
+
      </div> <!-- /.col -->
    </div> <!-- /.row -->
    <!-- END_CUSTOM_WORKSPACE -->
 
    <!-- START_URL_FACTORY -->
   <div class="block">
-    <h2>Create an Eclipse Che workspace from your GitHub or GitLab project</h2>
+    <h2>Create a workspace from your GitHub or GitLab repo</h2>
   </div>
 
   <div class="row">
@@ -62,7 +64,7 @@
         <button type="submit" class="btn btn-primary">Go!</button>
       </form>
       <p style="font-size:0.7em">This will create a new workspace in Codenvy, an Eclipse Che provider. You will be asked to accept their TOS. The workspace will be powered with an Ubuntu / JDK8 stack. You can customize the runtime and project configuration by adding <samp>.codenvy.dockerfile</samp> or <samp>codenvy.json</samp> files inside your repository.
-        <a href="https://codenvy.readme.io/docs/factories#url-factories">See more</a>.</p>
+        <a href="https://codenvy.readme.io/docs/factories#url-factories">See docs</a>.</p>
     </div>
   </div>
   <!-- END_URL_FACTORY -->
