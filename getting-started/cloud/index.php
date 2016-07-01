@@ -27,7 +27,7 @@
 <div ng-app="gettingStarted" class="container-fluid content options">
 
   <div class="block">
-     <h2>Create Your Own Che Workspace @ Codenvy.com</h2>
+     <h2>Create a workspace using a wizard</h2>
    </div>
 
    <div class="row">
