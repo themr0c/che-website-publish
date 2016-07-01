@@ -57,7 +57,7 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
-      <img src="images/logo-redhat@2x.png" alt="" class="img-responsive">
+      <img src="images/img-summit-redhat@2x.png" alt="" class="img-responsive">
       <h3>Che at Red Hat</h3>
       <p>See Che used to do cloud native development in Paul Cormier's Red Hat Summit keynote.</p>
       <a href="https://www.youtube.com/embed/wMTgIIJ-oqQ?start=2995&autoplay=1" class="btn-yellow">Watch the Video</a>
