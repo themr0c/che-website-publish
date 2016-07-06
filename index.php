@@ -106,6 +106,7 @@
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
     <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
     <li><img src="images/logo-sap@2x.png" alt="SAP" class="img-responsive"></li>
+    <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
     <li><img src="images/logo-smartbear@2x.png" alt="SmartBear" class="img-responsive"></li>
     <li><img src="images/logo-tomitribe@2x.png" alt="Tomibrite" class="img-responsive"></li>
     <li><img src="images/logo-typefox@2x.png" alt="Type Fox" class="img-responsive"></li>
