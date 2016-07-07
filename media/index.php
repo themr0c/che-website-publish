@@ -25,9 +25,27 @@
 
   <table class="wrapper">
 
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Docs: Step-by-Step Guide to How Workspace Servers Work</h3>
+        <p class="loc">July 6th,</p>
+        <p class="desc">Eclipse Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run and debug...</p>
+        <a href="https://eclipse-che.readme.io/v4.4/docs/introduction#workspace-model" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>German: Eclipse Weekly: Interview with Wayne Beaton</h3>
+        <p class="loc">July 5th,</p>
+        <p class="desc">Happy Birthday Eclipse Weekly!  Along with the simultaneous release of Eclipse Neon, Codenvy announced Eclipse Che 4.4 with 65 issues resolved with particular attention on the user experience...</p>
+        <a href="https://jaxenter.de/eclipse-weekly-openpass-che-language-server-42934" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
 
 
-</tr><!-- .item -->
    <tr class="item">
       <td><img src="../images/media/devnation.png" alt=""></td>
       <td>
@@ -36,9 +54,9 @@
         <p class="desc">At DevNation this week, Red Hat announced Eclipse Che as its strategic development platform. Watch Codenvy CEO Tyler Jewell introduce how Che’s containerized developer workspaces let you contribute to any project without installing software...</p>
         <a href="http://che.eclipse.org/demo-eclipse-che-devnation-red-hat-summit/" class="btn-yellow" target="_blank">Watch Video</a>
       </td>
+  </tr><!-- .item -->
 
 
-</tr><!-- .item -->
    <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
@@ -1041,9 +1059,9 @@
         <p class="desc">It's now possible to install a multi-node Codenvy and Eclipse Che using Docker. Docker containers wrap a piece of software into a filesystem...</p>
         <a href="http://blog.codenvy.com/eclipse-che-codenvy-docker/?ref=dzone" class="btn-yellow" target="_blank">Read More</a>
       </td>
-
- </tr><!-- .item -->
-        <tr class="item">
+   </tr><!-- .item -->
+ 
+    <tr class="item">
       <td><img src="../images/media/infoq.png" alt=""></td>
       <td>
         <h3>Video: An Introduction to Eclipse Che</h3>
@@ -1051,7 +1069,7 @@
         <p class="desc">Tyler Jewell introduces Eclipse Che, its architecture, how to create Java applications with it and provides a tutorial on building plug-ins and extensions to Che directly...</p>
         <a href="http://www.infoq.com/presentations/eclipse-che" class="btn-yellow" target="_blank">Watch Video</a>
       </td>
-
+    </tr>
 
   </table><!-- .wrapper -->
 </div> <!-- .container-fluid -->
