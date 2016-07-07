@@ -137,7 +137,7 @@
     <ul>
       <li><span><i class="fa fa-twitter"></i> @ciberado</span> @eclipse_che is potentially the greatest innovation in tools since Maven.</li>
       <li><span><i class="fa fa-twitter"></i> @monkchips</span> @eclipse_che developer workspace server - what kind of witchcraft is this?</li>
-      <li><span><i class="fa fa-twitter"></i> @smithkenny</span> There is some seriously disruptive #Devops technology coming with #Eclipse Che. Solves probs with dev workstations &eacute; workspaces</li>
+      <li><span><i class="fa fa-twitter"></i> @smithkenny</span> There is some seriously disruptive #Devops technology coming with #Eclipse Che. Solves probs with dev workstations &amp; workspaces</li>
       <li><span><i class="fa fa-twitter"></i> @mogreau</span> Contribute to an open source project in less than 10 minutes with @eclipse_che!</li>
       <li><span><i class="fa fa-twitter"></i> @jack-y</span> I develop micro services in Java. @eclispe_che saves my life - I can work on my code out of my office.</li>
       <li><span><i class="fa fa-twitter"></i> @CarlesZ</span> Developers of the world, a big applause!!!</li>
