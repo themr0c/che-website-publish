@@ -49,7 +49,7 @@
   <ul>
     <li><h4>ZIP Package for Windows, Mac, and Linux</h4></li>
     <li><i>Installs Che in any directory</i></li>
-    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.4.0.zip&r=1">❯ Download signed binaries from Eclipse mirrors (133 MB)</a></b></h4></li>
+    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-latest.zip&r=1">❯ Download signed binaries from Eclipse mirrors (133 MB)</a></b></h4></li>
     <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.zip">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
     <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.zip">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
   </ul>
@@ -57,7 +57,7 @@
   <ul>
     <li><h4>TGZ Package for Windows, Mac, and Linux</h4></li>
     <li><i>Installs Che in any directory</i></li>
-    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-4.4.0.tar.gz&r=1">❯ Download latest signed binaries from Eclipse mirrors (131 MB)</a></b></h4></li>
+    <li><h4><b><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-latest.tar.gz&r=1">❯ Download latest signed binaries from Eclipse mirrors (131 MB)</a></b></h4></li>
     <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.tar.gz">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
     <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.tar.gz">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
   </ul>
