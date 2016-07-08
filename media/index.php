@@ -26,6 +26,16 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>A Tour of Codenvy’s Portable Developer Workspaces</h3>
+        <p class="loc">July 7th,</p>
+        <p class="desc">Developers today often have to juggle multiple projects but in some cases entirely different programming languages. This can become even more of an issue...</p>
+        <a href="http://thenewstack.io/developers-laptop-container-workspace-codenvy/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Docs: Step-by-Step Guide to How Workspace Servers Work</h3>
