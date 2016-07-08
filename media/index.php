@@ -29,7 +29,7 @@
       <td><img src="../images/media/tns.png" alt=""></td>
       <td>
         <h3>A Tour of Codenvy’s Portable Developer Workspaces</h3>
-        <p class="loc">July 7th,</p>
+        <p class="loc">July 7th, 2016</p>
         <p class="desc">Developers today often have to juggle multiple projects but in some cases entirely different programming languages. This can become even more of an issue...</p>
         <a href="http://thenewstack.io/developers-laptop-container-workspace-codenvy/" class="btn-yellow" target="_blank">Read More</a>
       </td>
@@ -39,7 +39,7 @@
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Docs: Step-by-Step Guide to How Workspace Servers Work</h3>
-        <p class="loc">July 6th,</p>
+        <p class="loc">July 6th, 2016</p>
         <p class="desc">Eclipse Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run and debug...</p>
         <a href="https://eclipse-che.readme.io/v4.4/docs/introduction#workspace-model" class="btn-yellow" target="_blank">Read More</a>
       </td>
@@ -49,7 +49,7 @@
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>German: Eclipse Weekly: Interview with Wayne Beaton</h3>
-        <p class="loc">July 5th,</p>
+        <p class="loc">July 5th, 2016</p>
         <p class="desc">Happy Birthday Eclipse Weekly!  Along with the simultaneous release of Eclipse Neon, Codenvy announced Eclipse Che 4.4 with 65 issues resolved with particular attention on the user experience...</p>
         <a href="https://jaxenter.de/eclipse-weekly-openpass-che-language-server-42934" class="btn-yellow" target="_blank">Read More</a>
       </td>
