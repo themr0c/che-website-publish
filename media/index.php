@@ -26,7 +26,7 @@
   <table class="wrapper">
 
    <tr class="item">
-      <td><img src="../images/media/tns.png" alt=""></td>
+      <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>German: Eclipse Weekly: The Controversy Over Eclipse Che</h3>
         <p class="loc">July 13th, 2016</p>
@@ -36,7 +36,7 @@
    </tr><!-- .item -->
 
    <tr class="item">
-      <td><img src="../images/media/tns.png" alt=""></td>
+      <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Pair Programming in the Cloud with Eclispe Che, Eclipse Flux, and Docker</h3>
         <p class="loc">July 12th, 2016</p>
