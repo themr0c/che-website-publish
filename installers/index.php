@@ -37,8 +37,6 @@
 
     <li>Manual with Packages: <a href="..\download\">Eclipse Signed ZIP/TGZ</a></li></br>
 
-  <div class="separator"></div>
-
   <p>Need help getting Che to run? Please check the oodles of <a href="https://eclipse-che.readme.io/docs/">installation and usage docs</a>.</p>
   <div class="separator"></div>
 

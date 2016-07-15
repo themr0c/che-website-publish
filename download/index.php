@@ -26,7 +26,7 @@
 <div class="container-fluid content">    
   
   <h2><a id="installers">Installers</a></h2>
-  <a href='../installers'>Other (simpler) options including cloud, hosting, and Docker.</a><br>
+  Simpler options for getting started including <a href='../installers'><b>cloud, hosting, and Docker.</b></a><br>
   <div class="separator"></div>
 
   <h2><a id="signed">Eclipse Signed Packages</a></h2>
