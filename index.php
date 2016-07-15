@@ -2,7 +2,7 @@
   include 'includes/variables.php';
 
   // Define page title
-  $pageTitle = 'Eclipse Che | Next-Generation Eclipse IDE, Cloud IDE, and Workspace Server';
+  $pageTitle = 'Eclipse Che | Eclipse Next-Generation IDE, Cloud IDE, and Workspace Server';
   // Define body class
   $bodyClass = 'index';
 
@@ -12,7 +12,7 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Next-Generation Eclipse IDE</h1>
+    <h1>Eclipse Next-Generation IDE</h1>
     <h3>Eclipse Che is a developer workspace server and cloud IDE. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-home@2x.jpg" />

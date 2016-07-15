@@ -28,6 +28,26 @@
    <tr class="item">
       <td><img src="../images/media/tns.png" alt=""></td>
       <td>
+        <h3>German: Eclipse Weekly: The Controversy Over Eclipse Che</h3>
+        <p class="loc">July 13th, 2016</p>
+        <p class="desc">The weather is getting warmer and temperatures rise, at least one could assume the latter, if you read some very sultry comments from the community...</p>
+        <a href="https://jaxenter.de/eclipse-weekly-che-red-hat-iot-43354?utm_source=tw&utm_medium=social&utm_campaign=early" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>Pair Programming in the Cloud with Eclispe Che, Eclipse Flux, and Docker</h3>
+        <p class="loc">July 12th, 2016</p>
+        <p class="desc">Sun Tan demos a prototype showing multi-editing and real-time collaboration from 3 different editors -Che, Orion, Eclipse- using a Flux microservice running inside a Che Docker runner...</p>
+        <a href="https://www.infoq.com/presentations/pair-programming-cloud" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
         <h3>A Tour of Codenvy’s Portable Developer Workspaces</h3>
         <p class="loc">July 7th, 2016</p>
         <p class="desc">Developers today often have to juggle multiple projects but in some cases entirely different programming languages. This can become even more of an issue...</p>
