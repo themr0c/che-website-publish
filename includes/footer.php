@@ -18,6 +18,7 @@
           </ul>
           <ul>
             <li><a href="https://eclipse-che.readme.io/docs/" target="_blank">Support</a></li>
+            <li><a href="<?php echo $rootPath; ?>/installers/">Installers</a></li>
             <li><a href="<?php echo $rootPath; ?>/download/">Downloads</a></li>
             <li><a href="https://eclipse-che.readme.io/docs/" target="_blank">Docs</a></li>
             <li><a href="https://github.com/eclipse/che/" target="_blank">Github</a></li>

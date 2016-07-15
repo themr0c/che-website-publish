@@ -25,8 +25,8 @@
 <hr class="gray">
 <div class="container-fluid content">    
   
-  This page only includes signed binaries. 
-  <a href='../installers'>The complete list of getting started options.</a><br>
+  <h2><a id="installers">Installers</a></h2>
+  <a href='../installers'>Other (simpler) options including cloud, hosting, and Docker.</a><br>
   <div class="separator"></div>
 
   <h2><a id="signed">Eclipse Signed Packages</a></h2>
@@ -49,14 +49,6 @@
   </ul>
 
   <p>Need help getting Che to run? Please check the oodles of <a href="https://eclipse-che.readme.io/docs/">installation and usage docs</a>.</p>
-  <div class="separator"></div>
-
-  <h2>Prerequisites</h2>
-  <p>Eclipse Che has different prerequisites for different platforms. The <b><a href="https://eclipse-che.readme.io/docs/install-pre-reqs">prerequisites page</a></b> in our docs itemizes the list of dependencies and how they are used.</p>
-  <div class="separator"></div>
-   
-  <h2>Build Assembly From Source</h2>
-  <p>You will need maven, Java, and Git to build Che from source. <b><a href="http://github.com/eclipse/che">Our GitHub repository has build and contribution instructions</a></b>.</p>
   <div class="separator"></div>
 
   <h2>Older Releases</h2>
