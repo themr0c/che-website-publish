@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Japan: Write Your Own Workspace with Eclipse Che</h3>
+        <p class="loc">July 17th, 2016</p>
+        <p class="desc">The story around cloud development is completed only when ...</p>
+        <a href="http://qiita.com/rerofumi/items/eec865155c8c59f523f2" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>German: Eclipse Weekly: The Controversy Over Eclipse Che</h3>
         <p class="loc">July 13th, 2016</p>
         <p class="desc">The weather is getting warmer and temperatures rise, at least one could assume the latter, if you read some very sultry comments from the community...</p>
