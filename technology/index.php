@@ -46,9 +46,9 @@
       </div>
 
       <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-collaborative-workspace-server.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-collaborative-workspace-server.png" class="img-responsive" /></a>
-        <h3>Collaborative Workspace Server</h3>
-        <p>Host Eclipse Che as a workspace server. Share tools, runtime and programming services across workspaces and teams. Control workspaces with REST APIs... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+        <a href="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
+        <h3>Any Desktop IDE</h3>
+        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
       </div>
     </div> <!-- .row -->
 
