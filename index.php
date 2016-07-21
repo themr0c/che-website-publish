@@ -47,7 +47,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <p>Read the Eclipse Che <a href="http://che.eclipse.org/release-notes-eclipse-che-4-4" target="_blank">4.4 Release Notes</a></p>
+    <p>Read the Eclipse Che <a href="http://che.eclipse.org/release-notes-eclipse-che-4-5" target="_blank">4.5 Release Notes</a></p>
   </div>
 </div>
 
