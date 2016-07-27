@@ -33,28 +33,31 @@
 
     <div class="separator"></div>
 
-    <h2>... Then Get Your First Workspace Running</h2>
+    <h2>Start Your First Workspace</h2>
       <p><b>Vagrant:</b> Che is already running! <code>http://192.168.28.100:8080</code> will open Che's dashboard.</p>
       [CONSIDER SHOWING SYNTAX FOR DOING A TEST TO ADD <your-first-workspace> to the system]
       <p><a href="../../images/features/img-features-docker-powered.png"><img alt="" class="img-responsive" src="../../images/features/img-features-docker-powered.png"></a></p>
    
     <div class="separator"></div>
-    <h2>... Optionally Add Our CLI To Make Life Simpler</h2>
+    <h2>Add Our CLI To Make Life Simpler</h2>
+    <p><i>For Linux<br>
+        <code>
+          wget -0- http://eclipse.org/che/che.sh | sh start<br>
+          curl -sL http://eclipse.org/che/che.sh | sh start</code>
+      </p>
+      <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
+        <code>
+          curl -sL http://eclipse.org/che/che.bat > che.bat<br>
+          set PATH=<currentdirectory>;%PATH%</code>
+      </p>
 
-    <h3>... Get Eclipse Che CLI </h3>
-        <p><i>For Linux<br>
-          <code>
-            wget -0- http://eclipse.org/che/che.sh | sh start<br>
-            curl -sL http://eclipse.org/che/che.sh | sh start</code>
-        </p>
-        <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
-          <code>
-            curl -sL http://eclipse.org/che/che.bat > che.bat<br>
-            set PATH=<currentdirectory>;%PATH%</code>
-        </p>
-    <h3>... Create Workspaces From Any Git Repo </h3>
-        <p><b>Syntax for Che Up here.</p>
-   
+      <p><i>Create Workspaces From Any Git Repo<br>
+        <code>
+          git clone http://github.com/pick/repo<br>
+          cd some-directory<br>
+          che up</code>
+        ** This launches a silent Che server and creates a workspace with the current directory's contents.<br>
+        ** You can configure how che launches and the runtime stack used to run the code by adding a Chefile [LINK TO INSTRUCTIONS]
    <div class="separator"></div>
 
 
