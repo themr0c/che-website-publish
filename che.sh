@@ -75,7 +75,7 @@ docker() {
   if [[ get_docker_install_type = "boot2docker" || get_docker_install_type = "docker4windows" ]]; then
     MSYS_NO_PATHCONV=1 docker.exe "$@"
   else
-    $(which docker) "$@"
+    "$(which docker)" "$@"
   fi
 }
 
