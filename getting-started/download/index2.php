@@ -54,13 +54,13 @@
           set PATH=<currentdirectory>;%PATH%</code>
       </p>
 
-      <h4><i>CLI: Start / Stop / Debug Che Server<br>
+      <h4><i>CLI: Start / Stop / Debug Che Server</h4>
         <code>
           che start<br>
           che stop<br>
           che info<br></code>
 
-      <h4><i>CLI: Create Workspaces From Any Git Repo<br>
+      <h4><i>CLI: Create Workspaces From Any Git Repo</h4>
         <code>
           git clone http://github.com/pick/repo<br>
           cd some-directory<br>
