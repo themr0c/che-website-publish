@@ -45,14 +45,12 @@
         <p><i>For Linux<br>
           <code>
             wget -0- http://eclipse.org/che/che.sh | sh start<br>
-            curl -sL http://eclipse.org/che/che.sh | sh start<br>
-          </code>
+            curl -sL http://eclipse.org/che/che.sh | sh start</code>
         </p>
         <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
           <code>
             curl -sL http://eclipse.org/che/che.bat > che.bat<br>
-            set PATH=<currentdirectory>;%PATH%<br>
-          </code>
+            set PATH=<currentdirectory>;%PATH%</code>
         </p>
     <h3>... Create Workspaces From Any Git Repo </h3>
         <p><b>Syntax for Che Up here.</p>
