@@ -26,7 +26,6 @@
       <p><b>1:</b> <a href="https://docs.docker.com/engine/installation/">Get Docker</a>.</p>
       <p><b>2:</b> <code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
         ** [footnote style] Che properties like port, IP address, hostname, and user identity are configured with environment variables [LINK].
-        ** You can configure how che launches and the runtime stack used to run the code by adding a Chefile [LINK TO INSTRUCTIONS]
 
     <div class="separator"></div>
 
@@ -54,13 +53,13 @@
           set PATH=<currentdirectory>;%PATH%</code>
       </p>
 
-      <h4><i>CLI: Start / Stop / Debug Che Server</h4>
+      <h4><i>CLI: Start / Stop / Debug Che Server</i></h4>
         <code>
           che start<br>
           che stop<br>
           che info<br></code>
 
-      <h4><i>CLI: Create Workspaces From Any Git Repo</h4>
+      <h4><i>CLI: Create Workspaces From Any Git Repo</i></h4>
         <code>
           git clone http://github.com/pick/repo<br>
           cd some-directory<br>
