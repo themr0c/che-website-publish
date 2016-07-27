@@ -25,7 +25,9 @@
     <h1>Run Eclipse Che on Any Operating System</h1>
       <p><b>1:</b> <a href="https://docs.docker.com/engine/installation/">Get Docker</a>.</p>
       <p><b>2:</b> <code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
-      
+        ** [footnote style] Che properties like port, IP address, hostname, and user identity are configured with environment variables [LINK].
+        ** You can configure how che launches and the runtime stack used to run the code by adding a Chefile [LINK TO INSTRUCTIONS]
+
     <div class="separator"></div>
 
     <h2>... Or Use Yatta To Install Docker and Che Together</h2>
@@ -43,7 +45,8 @@
     <p><i>For Linux<br>
         <code>
           wget -0- http://eclipse.org/che/che.sh | sh start<br>
-          curl -sL http://eclipse.org/che/che.sh | sh start</code>
+          curl -sL http://eclipse.org/che/che.sh | sh start<br>
+          export PATH=directory-of-script;$PATH</code>
       </p>
       <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
         <code>
@@ -51,12 +54,18 @@
           set PATH=<currentdirectory>;%PATH%</code>
       </p>
 
-      <p><i>Create Workspaces From Any Git Repo<br>
+      <h4><i>CLI: Start / Stop / Debug Che Server<br>
+        <code>
+          che start<br>
+          che stop<br>
+          che info<br></code>
+
+      <h4><i>CLI: Create Workspaces From Any Git Repo<br>
         <code>
           git clone http://github.com/pick/repo<br>
           cd some-directory<br>
-          che up</code>
-        ** This launches a silent Che server and creates a workspace with the current directory's contents.<br>
+          che up<br></code>
+        ** [footnote style] This launches a silent Che server and creates a workspace with the current directory's contents.<br>
         ** You can configure how che launches and the runtime stack used to run the code by adding a Chefile [LINK TO INSTRUCTIONS]
    <div class="separator"></div>
 
