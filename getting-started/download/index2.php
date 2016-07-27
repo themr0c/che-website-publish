@@ -42,7 +42,7 @@
     <h2>... Optionally Add Our CLI To Make Life Simpler</h2>
 
     <h3>... Get Eclipse Che CLI </h3>
-        <p><i>For Linuxbr>
+        <p><i>For Linux<br>
           <code>
             wget -0- http://eclipse.org/che/che.sh | sh start<br>
             curl -sL http://eclipse.org/che/che.sh | sh start<br>
