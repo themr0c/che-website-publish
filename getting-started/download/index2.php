@@ -38,19 +38,20 @@
       [CONSIDER SHOWING SYNTAX FOR DOING A TEST TO ADD <your-first-workspace> to the system]
       <p><a href="../../images/features/img-features-docker-powered.png"><img alt="" class="img-responsive" src="../../images/features/img-features-docker-powered.png"></a></p>
    
+    <div class="separator"></div>
     <h2>... Then Optionally Install Che CLI To Make Life Better</h2>
 
     <h3>... Get Eclipse Che CLI </h3>
-        <p><i>For Linux...
+        <p><i>For Linux...<br>
           <code>
-            wget -0- http://eclipse.org/che/che.sh | sh start
-            curl -sL http://eclipse.org/che/che.sh | sh start
+            wget -0- http://eclipse.org/che/che.sh | sh start<br>
+            curl -sL http://eclipse.org/che/che.sh | sh start<br>
           </code>
         </p>
-        <p><i>For Windows (requires Git Bash [LINK])...
+        <p><i>For Windows (requires Git Bash [LINK])...<br>
           <code>
-            curl -sL http://eclipse.org/che/che.bat > che.bat
-            set PATH=<currentdirectory>;%PATH%
+            curl -sL http://eclipse.org/che/che.bat > che.bat<br>
+            set PATH=<currentdirectory>;%PATH%<br>
           </code>
         </p>
     <h3>... Create Workspaces From Any Git Repo </h3>
