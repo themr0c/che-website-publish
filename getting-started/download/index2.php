@@ -22,8 +22,8 @@
 <hr class="gray">
 <div class="container-fluid content">
   
-    <h2>Install Eclipse Che - Universal for All OS</h2>
-      <p><b>1:</b> Install Docker. [link to docker]</p>
+    <h1>Run Eclipse Che on Any Operating System</h1>
+      <p><b>1:</b> <a href="https://docs.docker.com/engine/installation/">Get Docker</a>.</p>
       <p><b>2:</b> <code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
       
     <div class="separator"></div>
@@ -39,16 +39,16 @@
       <p><a href="../../images/features/img-features-docker-powered.png"><img alt="" class="img-responsive" src="../../images/features/img-features-docker-powered.png"></a></p>
    
     <div class="separator"></div>
-    <h2>... Then Optionally Install Che CLI To Make Life Better</h2>
+    <h2>... Optionally Add Our CLI To Make Life Simpler</h2>
 
     <h3>... Get Eclipse Che CLI </h3>
-        <p><i>For Linux...<br>
+        <p><i>For Linuxbr>
           <code>
             wget -0- http://eclipse.org/che/che.sh | sh start<br>
             curl -sL http://eclipse.org/che/che.sh | sh start<br>
           </code>
         </p>
-        <p><i>For Windows (requires Git Bash [LINK])...<br>
+        <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
           <code>
             curl -sL http://eclipse.org/che/che.bat > che.bat<br>
             set PATH=<currentdirectory>;%PATH%<br>
