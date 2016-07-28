@@ -22,15 +22,17 @@
 <hr class="gray">
 <div class="container-fluid content">
   
-    <h1>Run Eclipse Che on Any Operating System</h1>
-      <p><b>1:</b> <a href="https://docs.docker.com/engine/installation/">Get Docker</a>.</p>
+    <h1>Run Eclipse Che on Any OS</h1>
       <p><b>2:</b> <code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
+        ** [footnote style] <a href="https://docs.docker.com/engine/installation/">Requires Docker 1.6+</a>. ** Or use Vagrant image with Docker installed[LINK].</p>
         ** [footnote style] Che properties like port, IP address, hostname, and user identity are configured with environment variables [LINK].
+        
 
     <div class="separator"></div>
 
     <h2>... Or Use Yatta To Install Docker and Che Together</h2>
         <p>[YATTA]Can we do nice embed of Yatta here?</p>
+        <p>[FOOTNOTE]Clarification on YATTA TOS that must be accepted.?</p>
 
     <div class="separator"></div>
 
@@ -47,7 +49,7 @@
           curl -sL http://eclipse.org/che/che.sh | sh start<br>
           export PATH=directory-of-script;$PATH</code>
       </p>
-      <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)<br>
+      <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</i><br>
         <code>
           curl -sL http://eclipse.org/che/che.bat > che.bat<br>
           set PATH=<currentdirectory>;%PATH%</code>
