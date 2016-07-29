@@ -24,7 +24,7 @@
   
     <h2>Start Che with Docker</h2>
     <code>docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
-    <p style="font-size: 10px; line-height: 22px;"> <a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required. Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker installed.</br>Configure Che properties like port and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
+    <p style="font-size: 12px; line-height: 22px;"> <a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required. Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker installed.</br>Configure Che properties like port and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
 
 
     <div class="separator"></div>
@@ -32,7 +32,7 @@
     <h2>Or... Use Yatta to Install Docker and Che Together</h3>
     <p>Launch a Yatta profile to automate installation of dependencies with Che.</p>
     <a href="https://marketplace.yatta.de/profiles/eclipse.che" class="btn-yellow" target="_blank">Yatta Profile</a>
-    <p style="font-size: 10px; line-height: 22px;"> <a href="">You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
+    <p style="font-size: 12px; line-height: 22px;"> <a href="">You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
     
     <div class="separator"></div>
 
@@ -56,7 +56,7 @@
 
       <p>CLI: Create Workspaces From Any Git Repo</p>
         <script src="https://gist.github.com/billkalogiros/93de1ed5a6f31fd2120f3567432259c9.js"></script>        
-        <p style="font-size: 10px; line-height: 22px;"> This starts Che and creates a workspace with the current directory's contents.<br>
+        <p style="font-size: 12px; line-height: 22px;"> This starts Che and creates a workspace with the current directory's contents.<br>
         You can <a href="">configure how Che starts and the workspace runtime with Chefiles</a></p>
   
    <div class="separator"></div>
