@@ -13,8 +13,8 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Local Install</h1>
-    <h3>Install Eclipse Che on your computer or a development server.</h3>
+    <h1>Run Che Locally</h1>
+    <h3>Install anywhere Docker runs.</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
@@ -22,52 +22,43 @@
 <hr class="gray">
 <div class="container-fluid content">
   
-    <h1>Run Eclipse Che on Any OS</h1>
-      <p><code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
-        ** [footnote style] <a href="https://docs.docker.com/engine/installation/">Requires Docker 1.6+</a>. Or use Vagrant image with Docker installed[LINK].</p>
-        ** [footnote style] Che properties like port, IP address, hostname, and user identity are configured with environment variables [LINK].
-        
+    <h2>Start Che with Docker</h2>
+    <code>docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
+    <p style="font-size: 10px; line-height: 22px;"> <a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required. Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker installed.</br>Configure Che properties like port and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
+
 
     <div class="separator"></div>
 
-    <h2>... Or Use Yatta To Install Docker and Che Together</h2>
-        <p>[YATTA]Can we do nice embed of Yatta here?</p>
-        <p>[FOOTNOTE]Clarification on YATTA TOS that must be accepted.?</p>
-
+    <h2>Or... Use Yatta to Install Docker and Che Together</h3>
+    <p>Launch a Yatta profile to automate installation of dependencies with Che.</p>
+    <a href="https://marketplace.yatta.de/profiles/eclipse.che" class="btn-yellow" target="_blank">Yatta Profile</a>
+    <p style="font-size: 10px; line-height: 22px;"> <a href="">You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
+    
     <div class="separator"></div>
 
-    <h2>Start Your First Workspace</h2>
-      <p><b>Vagrant:</b> Che is already running! <code>http://192.168.28.100:8080</code> will open Che's dashboard.</p>
-      [CONSIDER SHOWING SYNTAX FOR DOING A TEST TO ADD <your-first-workspace> to the system]
-      <p><a href="../../images/features/img-features-docker-powered.png"><img alt="" class="img-responsive" src="../../images/features/img-features-docker-powered.png"></a></p>
+    <h3>Open Che in Your Browser</h3>
+    The installer will let you know the location where Che is running.
+    <code>http://192.168.28.100:8080</code>
+    <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
    
     <div class="separator"></div>
-    <h2>Add Our CLI To Make Life Simpler</h2>
-    <p><i>For Linux</i><br>
-        <code>
-          wget -0- http://eclipse.org/che/che.sh | sh start<br>
-          curl -sL http://eclipse.org/che/che.sh | sh start<br>
-          export PATH=directory-of-script;$PATH</code>
-      </p>
-      <p><i>For Windows (requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</i><br>
-        <code>
-          curl -sL http://eclipse.org/che/che.bat > che.bat<br>
-          set PATH=<currentdirectory>;%PATH%</code>
-      </p>
 
-      <h4><i>CLI: Start / Stop / Debug Che Server</i></h4>
-        <code>
-          che start<br>
-          che stop<br>
-          che info<br></code>
+    <h3>Add Our CLI To Make Life Simpler</h3>
+    <p>Linux</p>
+    <script src="https://gist.github.com/billkalogiros/b894ae51843a7148b3971ef14018f559.js"></script>
+      
+      <p>Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
+        
+      <script src="https://gist.github.com/billkalogiros/ecdcfbdf2c4428e46d5c64f7758c0ccb.js"></script>
+    
+      <p>CLI: Start / Stop / Debug Che Server</p>
+      <script src="https://gist.github.com/billkalogiros/b7c520b6dea0624b91316c83e96178c8.js"></script>
 
-      <h4><i>CLI: Create Workspaces From Any Git Repo</i></h4>
-        <code>
-          git clone http://github.com/pick/repo<br>
-          cd some-directory<br>
-          che up<br></code>
-        ** [footnote style] This launches a silent Che server and creates a workspace with the current directory's contents.<br>
-        ** You can configure how che launches and the runtime stack used to run the code by adding a Chefile [LINK TO INSTRUCTIONS]
+      <p>CLI: Create Workspaces From Any Git Repo</p>
+        <script src="https://gist.github.com/billkalogiros/93de1ed5a6f31fd2120f3567432259c9.js"></script>        
+        <p style="font-size: 10px; line-height: 22px;"> This starts Che and creates a workspace with the current directory's contents.<br>
+        You can <a href="">configure how Che starts and the workspace runtime with Chefiles</a></p>
+  
    <div class="separator"></div>
 
 
