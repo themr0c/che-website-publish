@@ -23,7 +23,7 @@
 <div class="container-fluid content">
   
     <h1>Run Eclipse Che on Any OS</h1>
-      <p><b>2:</b> <code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
+      <p><code> docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code></p>
         ** [footnote style] <a href="https://docs.docker.com/engine/installation/">Requires Docker 1.6+</a>. Or use Vagrant image with Docker installed[LINK].</p>
         ** [footnote style] Che properties like port, IP address, hostname, and user identity are configured with environment variables [LINK].
         

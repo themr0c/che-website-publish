@@ -28,6 +28,56 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>German: Eclipse Che - the IDE of the Future?</h3>
+        <p class="loc">July 29th, 2016</p>
+        <p class="desc">After about two years of development, the browser IDE Eclipse Che has left the beta phase beginning 2016th A good time to look at the differences from traditional Eclipse and the features of Che...</p>
+        <a href="http://www.heise.de/developer/artikel/Eclipse-Che-die-IDE-der-Zukunft-3266413.html?wt_mc=rss.developer.beitrag.atom" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Hands-On: Configure and Run Plain Java Apps in Che</h3>
+        <p class="loc">July 27th, 2016</p>
+        <p class="desc">This post will demonstrate how to develop and run standard Java applications in Eclipse Che. We’ll start by creating and running a simple “Hello World” example using one of the Che template apps...</p>
+        <a href="http://che.eclipse.org/hands-configure-run-plain-java-apps-che/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Hands-On: Develop, Run & Debug Android Apps Natively</h3>
+        <p class="loc">July 25th, 2016</p>
+        <p class="desc">Prepare your Android device for USB and wireless debugging in Eclipse Che...</p>
+        <a href="http://che.eclipse.org/hands-develop-run-debug-android-apps-natively-eclipse-che/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Release Notes: 4.5.0 With New WS URLs Out!</h3>
+        <p class="loc">July 21th, 2016</p>
+        <p class="desc">This release includes new workspace URL schema, side-by-side terminals, and configurable Docker API...</p>
+        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-5/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Che Project Lead: The State of Eclipse Che</h3>
+        <p class="loc">July 20th, 2016</p>
+        <p class="desc">Six mopnths after the beta launch of Eclipse Che, a look at community growth and momentum...</p>
+        <a href="http://che.eclipse.org/6-months-review-state-eclipse-che/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Japan: Write Your Own Workspace with Eclipse Che</h3>
         <p class="loc">July 17th, 2016</p>
         <p class="desc">The story around cloud development is completed only when ...</p>
