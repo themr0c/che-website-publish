@@ -28,6 +28,8 @@
     Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.</br>
     Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
 
+    The startup sequence will download any Docker images required and start the server.
+    <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
 
     <div class="separator"></div>
 
@@ -38,8 +40,7 @@
     <div class="separator"></div>
 
     <h3>Open Che in Your Browser</h3>
-    The installer will let you know the location where Che is running.
-    <code>http://192.168.28.100:8080</code>
+    The last line of the launcher specifies the host or IP address where Che is reachable in your browser. This address varies depending upon your operating system and type of Docker installation you have.
     <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
    
     <div class="separator"></div>
@@ -47,7 +48,7 @@
     <h3>Add Our CLI To Make Life Simpler</h3>
     <p>Linux</p>
     <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f.js"></script>
-          
+
     <p>Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
     <script src="https://gist.github.com/TylerJewell/14dd2136997eea7540ee748f791b24d7.js"></script>  
 
