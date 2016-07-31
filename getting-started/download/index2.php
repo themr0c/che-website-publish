@@ -22,7 +22,7 @@
 <hr class="gray">
 <div class="container-fluid content">
   
-    <h2>Start Che with Docker</h2>
+    <h2>1. Start Che with Docker</h2>
     <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 16px; line-height: 20px;"> 
       <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;Docker 1.10+</a> required.<br>
@@ -36,13 +36,13 @@
     
     <div class="separator"></div>
 
-    <h3>Use Che in Your Browser</h3>
-    The last line of output provides the URL to access Che in your browser. The URL varies by operating system, type of Docker installation and environment configuration.
+    <h3>2. Use Che</h3>
+    The access URL varies by OS, Docker install type, and any environment variables set by you.
     <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
    
     <div class="separator"></div>
 
-    <h3>Add Our CLI To Make Life Simpler</h3>
+    <h3>3. Add Our CLI To Make Life Simpler</h3>
     <p>Linux</p>
     <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f.js"></script>
 
