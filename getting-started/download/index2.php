@@ -24,7 +24,7 @@
   
     <h2>Start Che with Docker</h2>
     <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
-    <p style="font-size: 14px; line-height: 20px;"> <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;Docker 1.10+</a> required. <br>
+    <p style="font-size: 16px; line-height: 20px;"> <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;Docker 1.10+</a> required. <br>
     &nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.</br>
     &nbsp;&nbsp;Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
 
@@ -35,7 +35,7 @@
 
     <h2>Or... Install Che and Docker Together with Yatta</h3>
     <a href="https://marketplace.yatta.de/profiles/eclipse.che" class="btn-yellow" target="_blank">Yatta Profile</a>
-    <p style="font-size: 14px; line-height: 20px;"> <a href="">&nbsp;&nbsp;You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
+    <p style="font-size: 16px; line-height: 20px;"> <a href="">&nbsp;&nbsp;You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
     
     <div class="separator"></div>
 
@@ -58,7 +58,7 @@
     <p>CLI: Create Workspaces From Any Git Repo</p>
     <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6.js"></script>
 
-    <p style="font-size: 14px; line-height: 20px;">&nbsp;&nbsp;You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
+    <p style="font-size: 16px; line-height: 20px;">&nbsp;&nbsp;You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
   
    <div class="separator"></div>
 
