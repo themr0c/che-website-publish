@@ -46,17 +46,17 @@
 
     <h3>Add Our CLI To Make Life Simpler</h3>
     <p>Linux</p>
-    <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f"></script>
-      
+    <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f.js"></script>
+          
     <p>Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
-        
-    <script src="https://gist.github.com/TylerJewell/14dd2136997eea7540ee748f791b24d7"></script>
-  
+    <script src="https://gist.github.com/TylerJewell/14dd2136997eea7540ee748f791b24d7.js"></script>  
+
     <p>CLI: Run Che</p>
-    <script src="https://gist.github.com/TylerJewell/66c4bba115cd49674dde921006a170ca"></script>
+    <script src="https://gist.github.com/TylerJewell/66c4bba115cd49674dde921006a170ca.js"></script>
 
     <p>CLI: Create Workspaces From Any Git Repo</p>
-    <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6"></script>        
+    <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6.js"></script>
+
     <p style="font-size: 14px; line-height: 20px;"> You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
   
    <div class="separator"></div>
