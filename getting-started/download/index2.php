@@ -71,7 +71,7 @@
       </div>
       <div class="col-md-4">
         <h4>Documentation</h4>
-        <p>We put a lot of effort <a href="https://eclipse-che.readme.io/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback. Chat: Che engineers hang out on Gitter, IRC and Slack.</p>
+        <p>We put a lot of effort <a href="https://eclipse-che.readme.io/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback.</p>
       </div>
       <div class="col-md-4">
         <h4>Chat</h4>
