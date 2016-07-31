@@ -28,19 +28,20 @@
     Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.</br>
     Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
 
+    <div class="separator"></div>
     <p>The startup sequence will download any Docker images required and start the server.
     <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
 
     <div class="separator"></div>
 
-    <h2>Or... Use Yatta to Install Docker and Che Together</h3>
+    <h2>Or... Install Che and Docker Together with Yatta</h3>
     <a href="https://marketplace.yatta.de/profiles/eclipse.che" class="btn-yellow" target="_blank">Yatta Profile</a>
     <p style="font-size: 14px; line-height: 20px;"> <a href="">You must accept the Yatta TOS and use their proprietary Eclipse installer</a>.</p>
     
     <div class="separator"></div>
 
-    <h3>Open Che in Your Browser</h3>
-    The last line of the launcher specifies the host or IP address where Che is reachable in your browser. This address varies depending upon your operating system and type of Docker installation you have.
+    <h3>Use Che in Your Browser</h3>
+    The last line of output provides the URL to access Che in your browser. The URL varies by operating system, type of Docker installation and environment configuration.
     <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
    
     <div class="separator"></div>
