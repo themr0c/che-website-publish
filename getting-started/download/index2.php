@@ -23,12 +23,12 @@
 <div class="container-fluid content">
   
     <h2>Start Che with Docker</h2>
-    <code style="font-size: 100%;"">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
+    <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 14px; line-height: 20px;"> <a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required. <br>
     Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.</br>
     Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</p>
 
-    The startup sequence will download any Docker images required and start the server.
+    <p>The startup sequence will download any Docker images required and start the server.
     <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
 
     <div class="separator"></div>
