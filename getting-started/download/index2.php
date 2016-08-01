@@ -25,13 +25,13 @@
     <h2>1. Start Che with Docker</h2>
     <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
-      <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;Docker 1.10+</a> required.<br>
+      <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;&nbsp;&nbsp;Docker 1.10+</a> required.<br>
       &nbsp;&nbsp;&nbsp;&nbsp;Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.    
     </p>
 
-    <p>The startup sequence will download any Docker images required and start the server.
+    <p style="margin: 30px 0 0;">The startup sequence will download any Docker images required and start the server.
     <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
     
     <div class="separator"></div>
@@ -43,16 +43,16 @@
     <div class="separator"></div>
 
     <h3 style="margin-top: -30px;">3. Add Our CLI To Make Life Simpler</h3>
-    <p>Linux</p>
+    <p style="margin: 30px 0 0;">Linux</p>
     <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f.js"></script>
 
-    <p>Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
+    <p style="margin: 30px 0 0;">Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
     <script src="https://gist.github.com/TylerJewell/14dd2136997eea7540ee748f791b24d7.js"></script>  
 
-    <p>CLI: Run Che</p>
+    <p style="margin: 30px 0 0;">CLI: Run Che</p>
     <script src="https://gist.github.com/TylerJewell/66c4bba115cd49674dde921006a170ca.js"></script>
 
-    <p>CLI: Create Workspaces From Any Git Repo</p>
+    <p style="margin: 30px 0 0;">CLI: Create Workspaces From Any Git Repo</p>
     <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6.js"></script>
 
     <p style="font-size: 16px; line-height: 20px;">&nbsp;&nbsp;You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
