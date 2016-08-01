@@ -25,7 +25,7 @@
     <h2>1. Start Che with Docker</h2>
     <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
-      <a href="https://docs.docker.com/engine/installation/">&nbsp;&nbsp;&nbsp;&nbsp;Docker 1.10+</a> required.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required.<br>
       &nbsp;&nbsp;&nbsp;&nbsp;Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.    
