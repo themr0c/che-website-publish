@@ -26,18 +26,18 @@
     <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
       &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required.<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Configure properties for Eclipse Che like port, user execution and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Configure properties like port, user and hostname <a href="https://eclipse-che.readme.io/docs/usage-docker-launcher#configure-how-che-launches">with environment variables</a>.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.    
     </p>
 
-    <p style="margin: 30px 0 0;">The startup sequence will download any Docker images required and start the server.
+    <p style="margin: 30px 0 0;">The launcher downloads and caches required Docker images and then starts the server.
     <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
     
     <div class="separator"></div>
 
     <h3 style="margin-top: -30px;">2. Use Che</h3>
-    The access URL varies by OS, Docker install type, and any environment variables set by you.
+    The Che URL varies by OS, Docker type, and environment variables set by you.
     <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
    
     <div class="separator"></div>
