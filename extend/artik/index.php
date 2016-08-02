@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Samsung ARTIK&trade; IDE</h1>
-    <h3>Powered by Eclipse Che, it's a toolset that makes it easy to build, deploy and manage IoT applications. <a target="_blank" href="https://eclipse-che.readme.io/v4.0/docs/samsung-artik-ide-getting-started">Get Started with the ARTIK IDE.</a></h3>
+    <h3>Powered by Eclipse Che, it's a toolset that makes it easy to build, deploy and manage IoT applications. <a target="_blank" href="https://eclipse-che.readme.io/docs/samsung-artik-ide-getting-started">Get Started with the ARTIK IDE.</a></h3>
     <img alt="" class="img-responsive" src="../../images/artik/hero-home-artik.png" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
