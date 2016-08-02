@@ -57,11 +57,12 @@
 
     <p style="font-size: 15px; line-height: 23px;">&nbsp;&nbsp;&nbsp;&nbsp;You can optionally use <a href="">public/private key authentication</a>.</p>
 
+<!--
     <p style="margin: 30px 0 0;">CLI: Create Workspaces From Any Git Repo</p>
     <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6.js"></script>
 
     <p style="font-size: 15px; line-height: 23px;">&nbsp;&nbsp;&nbsp;&nbsp;You can use You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
-
+-->
 </div> <!-- /.container-fluid -->
 
 
