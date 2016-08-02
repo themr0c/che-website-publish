@@ -1,7 +1,7 @@
     <footer>
       <div class="container-fluid">
         <a class="logo" href="<?php echo $rootPath; ?>/"><img alt="Eclipse Che" src="<?php echo $rootPath; ?>/images/logo-eclipseche.svg" /></a>
-        <p class="tagline">Next-Generation Eclipse IDE</p>
+        <p class="tagline">Eclipse Next-Generation IDE</p>
 
         <div class="sitemap">
           <ul>

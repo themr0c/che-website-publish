@@ -26,6 +26,26 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Pair Programming 4 Editors with Eclipse Che</h3>
+        <p class="loc">August 2nd, 2016</p>
+        <p class="desc">Google summer of code student Randika Navagamuwa shows off pair programming with 4 editors all in Eclipse Che...</p>
+        <a href="https://www.youtube.com/watch?v=OZNceE-sWto&feature=youtu.be&a=" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>What's Cooking in Nuxeo? Eclipse Che</h3>
+        <p class="loc">August 1st, 2016</p>
+        <p class="desc">We are currently experimenting with how we can provide an all-in-one development environment. The goal is to allow users to bootstrap...</p>
+        <a href="http://www.nuxeo.com/blog/whats-cooking-in-the-nuxeo-tech-lab/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>German: Eclipse Che - the IDE of the Future?</h3>
