@@ -112,7 +112,7 @@
      <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
       <p>
       <a href="https://eclipse-che.readme.io/docs/assemblies#che-layout">Che Layout</a><br>
-      <a href="https://eclipse-che.readme.io/docs/assemblies#modules">Che Modules</a>
+      <a href="https://eclipse-che.readme.io/docs/assemblies#modules">Che Modules</a><br>
       <a href="https://eclipse-che.readme.io/docs/assemblies#custom-assemblies">Custom Assemblies</a>
     </div>
   </div> <!-- .row -->
