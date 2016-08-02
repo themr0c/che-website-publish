@@ -52,10 +52,15 @@
     <p style="margin: 30px 0 0;">CLI: Run Che</p>
     <script src="https://gist.github.com/TylerJewell/66c4bba115cd49674dde921006a170ca.js"></script>
 
+    <p style="margin: 30px 0 0;">CLI: Sync Your Desktop IDE</p>
+    <script src="https://gist.github.com/TylerJewell/9db9f2eaf8c07ec7b74217d75b4f1177.js"></script>
+
+    <p style="font-size: 15px; line-height: 23px;">&nbsp;&nbsp;&nbsp;&nbsp;You can optionally use <a href="">public/private key authentication</a>.</p>
+
     <p style="margin: 30px 0 0;">CLI: Create Workspaces From Any Git Repo</p>
     <script src="https://gist.github.com/TylerJewell/6ec5ad03e96a0507ce45ad2e400144b6.js"></script>
 
-    <p style="font-size: 16px; line-height: 20px;">&nbsp;&nbsp;You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
+    <p style="font-size: 15px; line-height: 23px;">&nbsp;&nbsp;&nbsp;&nbsp;You can use You can configure how Che creates your workspace <a href="">by adding a Chefile to the repo</a>.</p>
 
 </div> <!-- /.container-fluid -->
 
