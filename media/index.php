@@ -26,6 +26,36 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Community: Paving the Future</h3>
+        <p class="loc">August 6th, 2016</p>
+        <p class="desc">Eclipse Che will pave the way by allowing companies on premises installs...</p>
+        <a href="https://twitter.com/fgortazar/status/761845762372296704" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>TheNewStack: IDEs are Moving to the Cloud</h3>
+        <p class="loc">August 5th, 2016</p>
+        <p class="desc">During the early days of my career,  I used a variety of development environments, including the most popular Turbo C along with FoxPro, PowerBuilder, and Delphi before finally settling down with Microsoft Visual Studio. The first line of code...</p>
+        <a href="http://thenewstack.io/integrated-development-environments-moving-cloud/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Datacenter Knowledge: Red Hat, Microsoft and Codenvy Push DevOps with New Language Protocol</h3>
+        <p class="loc">August 3rd, 2016</p>
+        <p class="desc">Red Hat, Microsoft and Codenvy partnered recently to knock down another barrier to open collaboration through the launch of a new open source project called Language Server Protocol. Here’s what it means for the channel...</p>
+        <a href="http://www.datacenterknowledge.com/archives/2016/08/03/red-hat-microsoft-codenvy-push-devops-new-language-protocol/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
         <h3>Pair Programming 4 Editors with Eclipse Che</h3>

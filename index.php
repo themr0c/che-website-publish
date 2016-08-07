@@ -64,9 +64,9 @@
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew2@2x.png" alt="" class="img-responsive">
-      <h3>Hands-on with Che</h3>
-      <p>Learn how to configure commands, develop your own plugins, and pair program with your peers.</p>
-      <a href="http://che.eclipse.org/tag/hands-on/" class="btn-yellow">Technical Blogs</a>
+      <h3>Enterprise Eclipse Che</h3>
+      <p>Codenvy builds upon Eclipse Che to deliver team workspaces with scalable infrastructure for DevOps.</p>
+      <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">Case Study</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew3@2x.png" alt="" class="img-responsive">
