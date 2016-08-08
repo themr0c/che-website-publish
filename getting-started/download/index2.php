@@ -23,7 +23,7 @@
 <div class="container-fluid content">
   
     <h2>1. Start Che with Docker</h2>
-    <code style="font-size: 100%; line-height: 40px;">docker run -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
+    <code style="font-size: 100%; line-height: 40px;">docker run --rm -t -v /var/run/docker.sock:/var/run/docker.sock codenvy/che-launcher start</code>
     <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
       &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.10+</a> required.<br>
       &nbsp;&nbsp;&nbsp;&nbsp;Configure properties like port, user and hostname <a href="https://eclipse-che.readme.io/v4.6/docs/usage-docker#environment-variables">with environment variables</a>.</br>
