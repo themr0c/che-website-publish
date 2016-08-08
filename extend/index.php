@@ -43,7 +43,7 @@
 
     <div class="col-sm-4">
       <h3>Recipes</h3>
-      <p>Recipes describe the contents of a runtime created by a stack. Recipes can be Dockerfiles and soon Compose files.</p>
+      <p>Recipes describe a runtime created by a stack. Recipes can be Dockerfiles and soon Compose files.</p>
       <p>
       <a href="https://eclipse-che.readme.io/docs/recipes#section-custom-recipe">Custom Recipes</a><br>
       <a href="https://eclipse-che.readme.io/docs/recipes#section-issue-a-pull-request-to-improve-recipes">Improve Che Recipes</a>
@@ -63,7 +63,7 @@
 <div class="row">
     <div class="col-sm-4">
      <h3>Commands</h3>
-     <p>Processes that are injected into workspaces. Available to users to automate actions like compile and previews.</p>
+     <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p>
       <p>
       <a href="https://eclipse-che.readme.io/docs/commands">Custom Commands</a><br>
       <a href="https://eclipse-che.readme.io/docs/commands#macros">Command Macros</a>
@@ -81,7 +81,7 @@
 
     <div class="col-sm-4">
       <h3>IDE Extensions</h3>
-     <p>Modify the behavior of the IDE loaded in the browser with new views, actions, look, perspectives, and wizards.</p>
+     <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
       <p>
       <a href="https://eclipse-che.readme.io/docs/developing-extensions">Developing Extensions</a><br>
       <a href="https://eclipse-che.readme.io/docs/developing-extensions#ide-extension-example">Client-Side Tutorial</a>
