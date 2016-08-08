@@ -25,7 +25,7 @@
   
 <!-- .extend types start -->
 
-  <h2>Platform Extension Points</h2>
+  <h1>Platform Extension Points</h1>
   <p>Everything in Eclipse Che can be altered, from changing the stack library to creating new assemblies that distribute developer tooling with your own branding.</p>
 
 
@@ -124,132 +124,41 @@
 
 <div class="container-fluid content options">
 
-<h2>Organizations Extending Eclipse Che</h2>
+    <h1>Organizations Extending Eclipse Che</h1>
 
-<div class="separator"></div>
+    <div class="separator"></div>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <img src="../images/logo-extend-codenvy@2x.jpg" alt="Codenvy">
-      <h2>Codenvy</h2>
-      <p>Codenvy provides a multi-user, multi-tenant and elastic Eclipse Che with enterprise features including LDAP, single sign-on, security, and resource controls.</p>
-      <a href="<?php echo $rootPath; ?>/extend/codenvy/" class="btn-yellow">Learn More</a>
+    <div class="row">
+      <div class="col-sm-6">
+        <img src="../images/logo-extend-codenvy@2x.jpg" alt="Codenvy">
+        <h2>Codenvy</h2>
+        <p>Codenvy extends Che to create team and organization workspaces for the enterprise. The Codenvy Enterprise subscription provides a cerified Che with multi-user Che extensions and DevOps infrastructure.</p>
+        <a href="<?php echo $rootPath; ?>/extend/codenvy/" class="btn-yellow">Learn More</a>
+      </div>
+
+      <div class="col-sm-6">
+        <img src="../images/logo-extend-redhat@2x.jpg" alt="RedHat">
+        <h2>Red Hat Open Shift</h2>
+        <p>Eclipse Che is the strategic tooling platform for Red Hat. Workspace portability, workspace runtimes powered by Docker, and IDE extensibility are areas of technical collaboration.</p>
+        <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>  
+      </div>
     </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <img src="../images/logo-extend-samsung@2x.jpg" alt="Samsung">
+        <h2>Samsung ARTIK IDE</h2>
+        <p>Samsung uses Eclipse Che for their IoT-IDE to give ARTIK customers a development environment that is identical on the desktop and the cloud.</p>
+        <a href="<?php echo $rootPath; ?>/extend/artik/" class="btn-yellow">Learn More</a>
+      </div>
+      <div class="col-sm-6">
+        <img src="../images/logo-extend-sap@2x.jpg" alt="SAP">
+        <h2>SAP Hana Cloud IDE</h2>
+        <p>Che powers developer workspaces in SAP Hana Cloud. SAP authored a custom Web IDE that uses Che workspaces over RESTful APIs to create multi-targeted application development environments.</p>
+        <a href="<?php echo $rootPath; ?>/extend/sap/" class="btn-yellow">Learn More</a>
+      </div>
+    </div> <!-- /.row -->
 
-    <div class="col-sm-6">
-      <img src="../images/logo-extend-redhat@2x.jpg" alt="RedHat">
-      <h2>Red Hat Open Shift</h2>
-      <p>Eclipse Che is the strategic tooling platform for Red Hat. Workspace portability, workspace runtimes powered by Docker, and IDE extensibility are areas of technical collaboration.</p>
-      <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>  
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <img src="../images/logo-extend-samsung@2x.jpg" alt="Samsung">
-      <h2>Samsung ARTIK IDE</h2>
-      <p>Samsung uses Eclipse Che for their IoT-IDE to give ARTIK customers a development environment that is identical on the desktop and the cloud.</p>
-      <a href="<?php echo $rootPath; ?>/extend/artik/" class="btn-yellow">Learn More</a>
-    </div>
-    <div class="col-sm-6">
-      <img src="../images/logo-extend-sap@2x.jpg" alt="SAP">
-      <h2>SAP Hana Cloud IDE</h2>
-      <p>Che powers developer workspaces in SAP Hana Cloud. SAP authored a custom Web IDE that uses Che workspaces over RESTful APIs to create multi-targeted application development environments.</p>
-      <a href="<?php echo $rootPath; ?>/extend/sap/" class="btn-yellow">Learn More</a>
-    </div>
-
-
-  </div> <!-- /.row -->
 </div> <!-- /.container-fluid -->
-
-<!-- .logo section end -->
-
-
-<!-- .plugins section start -->
-
-
-<div class="container-fluid content">
-  
-
-  <h2>Plug-Ins</h2>
-     <p>Eclipse Che includes a growing set of <a href="https://eclipse-che.readme.io/docs/plug-ins">plug-ins</a>. You can also <a href="https://eclipse-che.readme.io/docs/developing-extensions">create and package</a> your own. You can also extend Che's runtimes, stacks, commands, look-and-feel. We are starting to build out customization <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">resource center</a>.</p>
-
-
-<div class="separator"></div>
-
-<div class="row">
-    <div class="col-sm-6">
-       <h3>Languages</h3>
-        <p>Syntax highlighting, stacks, templates, and code assistants.</p>
-        <ul>
-          <li>Java</li>
-          <li>C++</li>
-          <li>JavaSript</li>
-          <li>Python</li>
-          <li>PHP</li>
-          <li>Ruby</li>
-          <li>SQL</li>
-        </ul>
-    </div>
-
-    <div class="col-sm-6">
-        <h3>Frameworks</h3>
-        <p>Project types, scaffold tool integration, and syntax analysis.</p>
-        <ul>
-          <li>Samsung ARTIK</li>
-          <li>SAP HANNA</li>
-          <li>Red Hat OpenShift</li>
-          <li>Angular JS</li>
-          <li>Docker</li>
-          <li>Yeoman</li>
-        </ul>
-    </div>
-
-   
-  </div> <!-- .row -->
-
-<div class="separator"></div>
-
-<div class="row">
-    <div class="col-sm-6">
-      <h3>Builders</h3>
-        <p>Builders to manage unit tests, compilation, linking, and dependencies.</p>
-        <ul>
-          <li>Ant</li>
-          <li>Bower</li>
-          <li>Grunt</li>
-          <li>Gulp</li>
-          <li>Maven</li>
-          <li>Npm</li>
-        </ul>
-    </div>
-
-
-    <div class="col-sm-6">
-         <h3>Tools</h3>
-        <p>Extensions that integrate the IDE with other parts of the developer tool chain.</p>
-        <ul>
-          <li>Git</li>
-          <li>Orion</li>
-          <li>SSH</li>
-          <li>Subversion</li>
-        </ul>
-    </div>
-  </div> <!-- .row -->
-</div><!-- .contributors -->
-
-
-<!-- .extend section end -->
-
-
-
-<div class="bg-gray5 get-help">
-  <div class="container-fluid content">
-    <h2>Commercial and Enterprise Support</h2>
-    <p>Codenvy offers commercial and enterprise support options for Eclipse Che, please contact them to discuss your needs.</p>
-    <a href="https://codenvy.com/contact/questions/" class="btn-yellow" target="_blank">Talk to Codenvy</a>  
-  </div> <!-- .container-fluid -->
-</div> <!-- .get-help -->
-
 
 
 <?php include '../includes/footer.php'; ?>
