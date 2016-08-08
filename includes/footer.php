@@ -25,10 +25,10 @@
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
+            <li><a href="<?php echo $rootPath; ?>/extend/codenvy">Codenvy</a></li>
+            <li><a href="<?php echo $rootPath; ?>/extend/">Red Hat</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/artik/">Samsung</a></li>
-            <li><a href="<?php echo $rootPath; ?>/extend/">Red Hat</a></li>
-            <li><a href="<?php echo $rootPath; ?>/extend/">Codenvy</a></li>
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/media/">Media</a></li>

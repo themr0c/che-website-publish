@@ -130,12 +130,10 @@
 
   <div class="row">
     <div class="col-sm-6">
-      <img src="../images/logo-extend-sap@2x.jpg" alt="SAP">
-      <h2>SAP Hana Cloud IDE</h2>
-      <p>Che powers developer workspaces in SAP Hana Cloud. SAP authored a custom Web IDE that uses Che workspaces over RESTful APIs to create multi-targeted application development environments.</p>
-    <a href="<?php echo $rootPath; ?>/extend/sap/" class="btn-yellow">Learn More</a>
-
-
+      <img src="../images/logo-extend-codenvy@2x.jpg" alt="Codenvy">
+      <h2>Codenvy</h2>
+      <p>Codenvy provides a multi-user, multi-tenant and elastic Eclipse Che with enterprise features including LDAP, single sign-on, security, and resource controls.</p>
+      <a href="<?php echo $rootPath; ?>/extend/codenvy/" class="btn-yellow">Learn More</a>
     </div>
 
     <div class="col-sm-6">
@@ -150,15 +148,16 @@
       <img src="../images/logo-extend-samsung@2x.jpg" alt="Samsung">
       <h2>Samsung ARTIK IDE</h2>
       <p>Samsung uses Eclipse Che for their IoT-IDE to give ARTIK customers a development environment that is identical on the desktop and the cloud.</p>
-    <a href="<?php echo $rootPath; ?>/extend/artik/" class="btn-yellow">Learn More</a>
+      <a href="<?php echo $rootPath; ?>/extend/artik/" class="btn-yellow">Learn More</a>
+    </div>
+    <div class="col-sm-6">
+      <img src="../images/logo-extend-sap@2x.jpg" alt="SAP">
+      <h2>SAP Hana Cloud IDE</h2>
+      <p>Che powers developer workspaces in SAP Hana Cloud. SAP authored a custom Web IDE that uses Che workspaces over RESTful APIs to create multi-targeted application development environments.</p>
+      <a href="<?php echo $rootPath; ?>/extend/sap/" class="btn-yellow">Learn More</a>
     </div>
 
-    <div class="col-sm-6">
-      <img src="../images/logo-extend-codenvy@2x.jpg" alt="Codenvy">
-      <h2>Codenvy</h2>
-      <p>Codenvy provides a multi-user, multi-tenant and elastic Eclipse Che with enterprise features including LDAP, single sign-on, security, and resource controls.</p>
-      <a href="https://codenvy.com/product/technology/" class="btn-yellow" target="_blank">Learn More</a>  
-    </div>
+
   </div> <!-- /.row -->
 </div> <!-- /.container-fluid -->
 
