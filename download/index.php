@@ -16,7 +16,7 @@
     <h1>Downloads</h1>
     <h3>
       Release: <span class="text-yellow">4.6.2</span><br>
-      Date: <span class="text-yellow">August 9, 2016</span>
+      Date: <span class="text-yellow">August 11, 2016</span>
     </h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
