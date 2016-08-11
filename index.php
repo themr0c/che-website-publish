@@ -24,7 +24,7 @@
   <div class="container-fluid content">
     <div class="row">
       <div class="col-md-4">
-        <h3>SaaS Cloud</h3>
+        <h3>SaaS</h3>
         <p>Self-service Eclipse Che workspaces hosted at Codenvy.com</p>
         <a href="<?php echo $rootPath; ?>/getting-started/cloud/" class="btn-yellow">Create Free Account</a></li>
 
@@ -36,7 +36,7 @@
 
       </div>
       <div class="col-md-4">
-        <h3>Private Cloud</h3>
+        <h3>Cloud</h3>
         <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
         <a href="https://bitnami.com/stack/eclipse-che" class="btn-yellow" target="_blank">One-Click Install</a>
       </div>
