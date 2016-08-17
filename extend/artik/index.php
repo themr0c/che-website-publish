@@ -151,7 +151,7 @@
   <div class="container-fluid content">
     <img alt="" class="img-responsive" src="../../images/artik/artik_ide_black.png"/>
     <br>
-    <h2><a target="_blank" href="https://eclipse-che.readme.io/v4.0/docs/samsung-artik-ide-getting-started">Get Started</a> with the ARTIK IDE.</h2>
+    <h2><a target="_blank" href="https://eclipse-che.readme.io/docs/samsung-artik-ide-getting-started">Get Started</a> with the ARTIK IDE.</h2>
     <h3><a  target="_blank" href="https://github.com/codenvy/artik-ide/blob/master/CONTRIBUTING.md">Contribute to the ARTIK IDE</a> or get involved With <a href="<?php echo $rootPath; ?>/community/">Eclipse Che</a>
   </div> <!-- .container-fluid -->
 </div> <!-- .get-help -->
