@@ -28,6 +28,46 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Eclipse Newsletter: Eclipse Che - Next-Generation Eclipse IDE</h3>
+        <p class="loc">August 17th, 2016</p>
+        <p class="desc">This month, I am happy to bring to you a newsletter filled with articles about Eclipse Che. Start at the top to learn what Eclipse Che is and how to easily contribute to open source...</p>
+        <a href="https://www.eclipse.org/community/eclipse_newsletter/2016/august/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Simplified Open Source Contributions with Eclipse Che</h3>
+        <p class="loc">August 16th, 2016</p>
+        <p class="desc">I remember one of my first Eclipse contributions. It was in 2008, on the Standard Widget Toolkit (SWT) project. I submitted a bugzilla issue and uploaded a patch with a one-line change. It took me some time to achieve this very simple task...</p>
+        <a href="https://www.eclipse.org/community/eclipse_newsletter/2016/august/article4.php" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>TheNewStack: A Close Look at Eclipse Che</h3>
+        <p class="loc">August 12th, 2016</p>
+        <p class="desc">The era of microservices and cloud-native applications, Software Development Lifecycle (SDLC) is going through a major transformation. The combination of containers and continuous integration and deployment (CI/CD) is enabling rapid deployment of software like never before...</p>
+        <a href="http://thenewstack.io/close-look-eclipse-che/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Release Notes: Eclipse Che 4.6: Simplicity!</h3>
+        <p class="loc">August 12th, 2016</p>
+        <p class="desc">Thank you to everyone that has made Eclipse Che successful. If you haven’t seen it – Tyler’s summary on the first six months of Eclipse Che discusses the rate of growth and the participation of the community. Also,...</p>
+        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Community: Paving the Future</h3>
         <p class="loc">August 6th, 2016</p>
         <p class="desc">Eclipse Che will pave the way by allowing companies on premises installs...</p>
