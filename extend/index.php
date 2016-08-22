@@ -1,4 +1,4 @@
-<?php 
+<?php
   include '../includes/variables.php';
 
   // Define page title
@@ -22,7 +22,7 @@
 <hr class="gray">
 
 <div class="container-fluid content">
-  
+
 <!-- .extend types start -->
 
   <h1>Platform Extension Points</h1>
@@ -36,7 +36,7 @@
       <h3>Stacks</h3>
       <p>Stacks define new types of workspace runtimes displayed in the dashboard.</p>
       <p>
-      <a href="<https://eclipse-che.readme.io/docs/stacks">Add Stacks to Che</a><br>
+      <a href="https://eclipse-che.readme.io/docs/stacks">Add Stacks to Che</a><br>
       <a href="https://github.com/codenvy/dockerfiles">Stacks Included with Che</a>
       <a href="https://eclipse-che.readme.io/docs/stack">Che Stacks Data Model</a>
     </div>
@@ -73,18 +73,19 @@
       <h3>Workspace Extensions</h3>
       <p>Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/developing-extensions">Developing Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/developing-extensions#server-side-extension-example">Server-Side Tutorial</a>
-      <a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a>    
-      <a href="https://eclipse-che.readme.io/v4.0/docs/java-class-reference">Che Extension SDK Doc</a>
+      <a href="https://eclipse-che.readme.io/docs/introduction-1">Developing Extensions</a><br>
+      <a href="https://eclipse-che.readme.io/docs/serverworkspace-access">Server-Side Tutorial</a><br>
+      <a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a><br>
+      <a href="https://eclipse-che.readme.io/docs/java-class-reference">Che Extension SDK Doc</a><br>
     </div>
 
     <div class="col-sm-4">
       <h3>IDE Extensions</h3>
      <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/developing-extensions">Developing Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/developing-extensions#ide-extension-example">Client-Side Tutorial</a>
+      <a href="https://eclipse-che.readme.io/docs/introduction-1">Developing Extensions</a><br>
+      <a href="https://eclipse-che.readme.io/docs/actions">Client-Side Tutorial</a><br>
+      <a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a><br>
       <a href="https://eclipse-che.readme.io/docs/calling-workspace-apis">Invoking Workspace APIs</a>
     </div>
   </div> <!-- .row -->
@@ -96,7 +97,7 @@
       <h3>Plugins</h3>
       <p>Packaged groups of extensions with descriptors and UI resources that can be deployed as a group.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/plug-ins#get-plug-ins">Get Plugins</a><br>
+      <a href="https://github.com/eclipse/che/tree/master/plugins">Get Plugins</a><br>
     </div>
 
     <div class="col-sm-4">
@@ -140,7 +141,7 @@
         <img src="../images/logo-extend-redhat@2x.jpg" alt="RedHat">
         <h2>Red Hat Open Shift</h2>
         <p>Eclipse Che is the strategic tooling platform for Red Hat. Workspace portability, workspace runtimes powered by Docker, and IDE extensibility are areas of technical collaboration.</p>
-        <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>  
+        <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>
       </div>
     </div>
     <div class="row">
