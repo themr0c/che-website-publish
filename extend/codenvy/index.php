@@ -2,7 +2,7 @@
   include '../../includes/variables.php';
 
   // Define page title
-  $pageTitle = 'Codenvy Enterprise Powered by Eclipse Che';
+  $pageTitle = 'Codenvy: Cloud Workspaces for Development Teams Powered by Eclipse Che';
   // Define body class
   $bodyClass = 'extend-child extend-sap';
 
@@ -12,43 +12,34 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Codenvy: Eclipse Che for the Enterprise</h1>
-    <h3>Codenvy Enterprise builds upon Eclipse Che to provide workspaces for the team and organization. <a target="_blank" href="https://codenvy.com/getting-started/">Get Your Team Onboard.</a></h3>
-    <img alt="" class="img-responsive" src="../../images/img-extend-codenvy@2x.png" />  
+    <h1>Codenvy: Workspaces for Dev Teams</h1>
+    <h3> <a target="_blank" href="https://codenvy.com/">Codenvy builds upon Eclipse Che</a> to provide one-click developer environments, team onboarding and collaboration, and a workspace platform for DevOps.</h3>
+    <img alt="" class="img-responsive" src="../../images/codenvy/img-extend-codenvy@2x.png" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
-<!-- <hr class="gray"> -->
-<div class="container-fluid content features">
+<hr class="gray">
+<div class="container-fluid content whats-new">
   <div class="row">
-    <div class="col-sm-6">
-      <h3>Certified Eclipse Che Package</h3>
-      <p>Codenvy packages Eclipse Che and popular community plugins into a tested and supported bundle delivered with an update service.</p>
-      <!-- <a href="../getting-started/" target="_blank" class="btn-yellow">Get Eclipse Che</a> -->
+    <div class="col-md-4">
+      <img src="../../images/codenvy/icon-click@2x.png" alt="" class="img-icon">
+      <h3>One click developer environments</h3>
+      <p>Create workspaces with production runtimes containing your source code and dev tools. Choose any architecture - from microservices topology to monolith.</p>
+      <a href="https://codenvy.com/solutions/bootstrapping/" class="btn-yellow">Learn More</a>
     </div>
-    <div class="col-sm-6">
-      <h3>Team and Organization Extensions</h3>
-      <p>Codenvy adds Eclipse Che extensions for multi-user, permissions, security and workspace automation to let DevOps integrate Che into any process. 
-      <!-- <a href="../getting-started/" target="_blank" class="btn-yellow">Get Eclipse Che</a> -->
+    <div class="col-md-4">
+      <img src="../../images/codenvy/icon-platform@2x.png" alt="" class="img-icon">
+      <h3>Team onboarding and collaboration</h3>
+      <p>Onboard teams with powerful collaboration, workspace automation, and permissions. Devs can use their local IDE or the gorgeous Eclipse Che cloud IDE.</p>
+      <a href="https://codenvy.com/product/next-generation" class="btn-yellow">Learn More</a>
     </div>
-  </div> <!-- .row -->
-  
-  <div class="separator"></div>
-
-  <div class="row">
-    <div class="col-sm-6">
-      <h3 style="margin-top: -60px;">DevOps Infrastructure</h3>
-      <p>Operate an Eclipse Che cloud that scales workspaces indpendently of hardware and users. Codenvy Enterprise operationalized backup, monitoring, and infrastructure management.</p>
-      <!-- <a href="../getting-started/" target="_blank" class="btn-yellow">Get Eclipse Che</a> -->
+    <div class="col-md-4">
+      <img src="../../images/codenvy/icon-team-collaboration@2x.png" alt="" class="img-icon">
+      <h3>Workspace platform for DevOps</h3>
+      <p>Manage workspaces at scale with programmable and customizable infrastructure that lets you control system performance, availability and functionality.</p>
+      <a href="https://codenvy.com/product/technology" class="btn-yellow">Learn More</a>
     </div>
-    <div class="col-sm-6">
-      <h3 style="margin-top: -60px;">Customize with Che</h3>
-      <p>Eclipse Che's powerful stack and extension frameworkss let you build anything for anyone. Codenvy interoperates with Eclipse Che to enable custom cloud products based on Che to scale.</p>
-      <!-- <a href="../getting-started/" target="_blank" class="btn-yellow">Get Eclipse Che</a> -->
-    </div>
-  </div> <!-- .row -->
-
-  <p class="h3"><a target="_blank" href="https://codenvy.com">Try Hosted or a Private Codenvy Based on Eclipse Che</a>.</p>
-</div> <!-- .container-fluid -->
+  </div>
+</div>
 
 <?php include '../../includes/footer.php'; ?>

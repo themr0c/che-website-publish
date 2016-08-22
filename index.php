@@ -64,9 +64,9 @@
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew2@2x.png" alt="" class="img-responsive">
-      <h3>Enterprise Eclipse Che</h3>
-      <p>Codenvy builds upon Eclipse Che to deliver team workspaces with scalable infrastructure for DevOps.</p>
-      <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">Case Study</a>
+      <h3>Eclipse Che Enterprise</h3>
+      <p>Codenvy uses Eclipse Che to provide dev team collaboration on a scalable workspace platform for DevOps.</p>
+      <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew3@2x.png" alt="" class="img-responsive">
