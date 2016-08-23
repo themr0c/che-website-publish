@@ -28,6 +28,26 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>CodeTalk Ep. 3: Tyler Jewell on Eclipse Che and keeping developers in the code</h3>
+        <p class="loc">August 23rd, 2016</p>
+        <p class="desc">Tyler Jewell, founder and CEO of Codenvy, talks about Eclipse Che (for which Tyler is also project lead), un-frustrating developer workspaces, and creating a protocol for context-aware, in-IDE, IntelliSense-like help for all programming languages...</p>
+        <a href="https://soundcloud.com/john-esposito-23072673/tyler-jewell?utm_source=soundcloud&utm_campaign=wtshare&utm_medium=Twitter&utm_content=https%3A//soundcloud.com/john-esposito-23072673/tyler-jewell" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/dzone.png" alt=""></td>
+      <td>
+        <h3>Configure and Run Plain Java Apps in Eclipse Che</h3>
+        <p class="loc">August 20th, 2016</p>
+        <p class="desc">This post will demonstrate how to develop and run standard Java applications in Eclipse Che. We’ll start by creating and running a simple “Hello World” example using...</p>
+        <a href="https://dzone.com/articles/configure-amp-run-plain-java-apps-in-eclipse-che" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Eclipse Newsletter: Eclipse Che - Next-Generation Eclipse IDE</h3>
         <p class="loc">August 17th, 2016</p>
         <p class="desc">This month, I am happy to bring to you a newsletter filled with articles about Eclipse Che. Start at the top to learn what Eclipse Che is and how to easily contribute to open source...</p>
