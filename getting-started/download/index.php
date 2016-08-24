@@ -57,7 +57,7 @@
     <p style="margin: 30px 0 0;">CLI: Sync Your Desktop IDE</p>
     <script src="https://gist.github.com/TylerJewell/9db9f2eaf8c07ec7b74217d75b4f1177.js"></script>
 
-    <h3>4. Learn More or Get Help</h3>
+    <h3 style="margin-top: 30px;">4. Learn More or Get Help</h3>
     <b><p style="margin: 30px 0 0;">Docs</p></b>
     We put a lot of effort into our docs. Please start with <a href="https://eclipse-che.readme.io/docs/usage-docker">the usage page on how to run and configure Che</a>.
 
