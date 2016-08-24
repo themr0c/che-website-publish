@@ -58,11 +58,11 @@
     <script src="https://gist.github.com/TylerJewell/9db9f2eaf8c07ec7b74217d75b4f1177.js"></script>
 
     <h3>4. Learn More or Get Help</h3>
-    <p style="margin: 30px 0 0;">Docs</p>
+    <b><p style="margin: 30px 0 0;">Docs</p></b>
     We put a lot of effort into our docs. Please start with <a href="https://eclipse-che.readme.io/docs/usage-docker">the usage page on how to run and configure Che</a>.
 
-    <p style="margin: 30px 0 0;">Support</p>
-    Engineers will respond to nicely and <a href="http://github.com/eclipse/che/issues">detailed GitHub issues</a>.
+    <b><p style="margin: 30px 0 0;">Support</p></b>
+    Engineers will respond to <a href="http://github.com/eclipse/che/issues">detailed GitHub issues</a>.
 
 <!--
 
