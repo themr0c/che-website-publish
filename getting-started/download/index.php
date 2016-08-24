@@ -27,7 +27,7 @@
     <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
       &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.8+</a> required.<br>
       &nbsp;&nbsp;&nbsp;&nbsp;Docker for Mac beta requires <a href="https://eclipse-che.readme.io/docs/usage-docker">1-time setup of loopback device.</a><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Workspaces are saved in `/home/user/che`. Change the location with <a href="https://eclipse-che.readme.io/docs/usage-docker#workspace-storage">setting `CHE_DATA_FOLDER` variable.</a><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Workspaces are saved in /home/user/che. Change the location <a href="https://eclipse-che.readme.io/docs/usage-docker#workspace-storage">by setting CHE_DATA_FOLDER.</a><br>
       &nbsp;&nbsp;&nbsp;&nbsp;Configure properties like port, user and hostname <a href="https://eclipse-che.readme.io/v4.6/docs/usage-docker#environment-variables">with environment variables</a>.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
       &nbsp;&nbsp;&nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.    
@@ -56,6 +56,13 @@
 
     <p style="margin: 30px 0 0;">CLI: Sync Your Desktop IDE</p>
     <script src="https://gist.github.com/TylerJewell/9db9f2eaf8c07ec7b74217d75b4f1177.js"></script>
+
+    <h3 style="margin-top: -30px;">4. Learn More or Get Help</h3>
+    <p style="margin: 30px 0 0;">Docs</p>
+    We put a lot of effort into our docs. Please start with <a href="https://eclipse-che.readme.io/docs/usage-docker">the usage page on how to run and configure Che</a>.
+
+    <p style="margin: 30px 0 0;">Support</p>
+    Engineers will respond to nicely and <a href="http://github.com/eclipse/che/issues">detailed GitHub issues</a>.
 
 <!--
 
