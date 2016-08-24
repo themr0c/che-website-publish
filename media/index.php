@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Hands-on: Getting Started with Che Plugins</h3>
+        <p class="loc">August 24th, 2016</p>
+        <p class="desc">This piece describes how to extend Eclipse Che with custom plugins, e.g. to provide support for new languages. It covers various aspects from adding new file types, extending the code editor, adding IntelliSense features, defining a specific project-type, and accessing the workspace...</p>
+        <a href="https://www.eclipse.org/community/eclipse_newsletter/2016/august/article2.php" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>CodeTalk Ep. 3: Tyler Jewell on Eclipse Che and keeping developers in the code</h3>
         <p class="loc">August 23rd, 2016</p>
         <p class="desc">Tyler Jewell, founder and CEO of Codenvy, talks about Eclipse Che (for which Tyler is also project lead), un-frustrating developer workspaces, and creating a protocol for context-aware, in-IDE, IntelliSense-like help for all programming languages...</p>
