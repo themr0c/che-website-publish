@@ -107,7 +107,7 @@
         <td>
           <h2>Chedir - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
           <p>Chedir provides easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chedir launches synchronized workspaces within Eclipse Che, which Chedir will quietly install and run in the background, if necessary.</p>
-          <a href="<https://eclipse-che.readme.io/docs/why-chedir" class="btn-yellow" target="_blank">Learn More</a>
+          <a href="https://eclipse-che.readme.io/docs/why-chedir" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>
