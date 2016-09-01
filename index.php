@@ -44,13 +44,11 @@
   </div>
 </div>
 
-
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>Eclipse Che <a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" target="_blank">4.7 Released!</a> It's all about usability with tabbed terminals and multi-panel editors</a></h3>
+    <h3><a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" target="_blank">4.7 Released!</a> Major usability advances with tabbed terminals and multi-panel editors.</a></h3>
   </div>
 </div>
-
 
 <hr class="gray">
 <div class="container-fluid content whats-new">
@@ -108,7 +106,7 @@
         <td><img src="<?php echo $rootPath; ?>/images/img-google-hangout@2x.png" alt=""></td>
         <td>
           <h2>Chedir - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
-          <p>Chedir provides easy to configure, reproducible and portable developer workspaces built on top of Docker plus Eclipse Che and controlled by a repeatable workflow to maximize the productivity of your team. Chedir launches synchronized workspaces within Eclipse Che, which Chedir will install and run for you, if necessary.</p>
+          <p>Chedir provides easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chedir launches synchronized workspaces within Eclipse Che, which Chedir will quietly install and run in the background, if necessary.</p>
           <a href="<https://eclipse-che.readme.io/docs/why-chedir" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
