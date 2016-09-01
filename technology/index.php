@@ -124,7 +124,7 @@
         <p>Project types, scaffold tool integration, and syntax analysis.</p>
         <ul>
           <li><a href="<?php echo $rootPath; ?>/extend/artik/">Samsung ARTIK</a></li>
-          <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP HANNA</a></li>
+          <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP HANA</a></li>
           <li><a href="https://eclipse-che.readme.io/docs/openshift-config" target="_blank">Red Hat OpenShift</a></li>
           <li>Angular JS</li>
           <li>Docker</li>

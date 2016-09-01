@@ -47,7 +47,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>Eclipse Che <a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" target="_blank">4.6 Released - New Docker Launcher</a></h3>
+    <h3>Eclipse Che <a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" target="_blank">4.7 Released! Usability: Tabbed Terminals and Multi-Panel Editors</a></h3>
   </div>
 </div>
 
@@ -77,22 +77,20 @@
   </div>
 </div>
 
-<!-- 
 <div class="bg-purple google-hangout">
   <div class="container-fluid content">
     <table>
       <tr>
         <td><img src="<?php echo $rootPath; ?>/images/img-google-hangout@2x.png" alt=""></td>
         <td>
-          <h2>Google Hangout: Introduction to Eclipse Che</h2>
-          <p>Every few weeks, our product team hosts a Google Hangout to show users how to setup and use Eclipse Che for everyday development and team collaboration.</p>
-          <a href="<?php echo $rootPath; ?>/" class="btn-yellow" target="_blank">Join the Hangout</a>
+          <h2>Chedir - Clonable, Reproducible, Lightweight Workspaces</h2>
+          <p>Chedir provides easy to configure, reproducible and portable developer workspaces built on top of Docker and controlled by a single consistent workflow to help maximize the productivity and flexibility of you and your team. Chedir workspaces are launched within Eclipse Che, which powers their embedded runtimes.</p>
+          <a href="<?php echo $rootPath; ?>/" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>
   </div>
 </div>
--->
 
 <hr class="gray">
 <div class="container-fluid content contributors">
@@ -148,6 +146,9 @@
       <li><span><i class="fa fa-twitter"></i> @ejuliot</span> Several years ago, there were competitors. Now, @eclipse_che and Orion are working together. Great collaboration in the open.</li>
       <li><span><i class="fa fa-twitter"></i> @nilsbundi</span> PS: Your product is pretty awesome and I never want to switch back to desktop Eclipse.</li>
       <li><span><i class="fa fa-twitter"></i> @thomasehardt</span> Not many dev tools blow my mind, but @eclipse_che certain does - it is the future of IDEs!</li>
+      <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
+      <li><span><i class="fa fa-twitter"></i> @GaryM03062</span> I've been reading up on @eclipse_che and it sounds brilliant.</li>
+      <li><span><i class="fa fa-twitter"></i> @chespinoza_75</span> Interesting, now trying out #EclipseChe with #golang, seems like a good choice for remote jobs.</li>
     </ul>
 
     <a href="https://twitter.com/eclipse_che" class="btn-yellow" target="_blank">Follow Us on Twitter</a>

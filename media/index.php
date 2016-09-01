@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Snaps with Eclipse Che Design</h3>
+        <p class="loc">August 24th, 2016</p>
+        <p class="desc">This post explains how “Snaps with Eclipse Che” works in detail; for a getting started guide see snaps-eclipse-che. Firstly the code works through an agent written in go...</p>
+        <a href="https://idealcoder.github.io/jekyll-blog/snappy/eclipse-che/2016/08/24/snaps-eclipse-che.html" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Hands-on: Getting Started with Che Plugins</h3>
         <p class="loc">August 24th, 2016</p>
         <p class="desc">This piece describes how to extend Eclipse Che with custom plugins, e.g. to provide support for new languages. It covers various aspects from adding new file types, extending the code editor, adding IntelliSense features, defining a specific project-type, and accessing the workspace...</p>
@@ -42,6 +52,16 @@
         <p class="loc">August 23rd, 2016</p>
         <p class="desc">Tyler Jewell, founder and CEO of Codenvy, talks about Eclipse Che (for which Tyler is also project lead), un-frustrating developer workspaces, and creating a protocol for context-aware, in-IDE, IntelliSense-like help for all programming languages...</p>
         <a href="https://soundcloud.com/john-esposito-23072673/tyler-jewell?utm_source=soundcloud&utm_campaign=wtshare&utm_medium=Twitter&utm_content=https%3A//soundcloud.com/john-esposito-23072673/tyler-jewell" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Snaps with Eclipse Che</h3>
+        <p class="loc">August 22nd, 2016</p>
+        <p class="desc">Eclipse Che is a cloud based IDE that allows you to develop and deploy from within a web browser, and snaps are a universal linux package that can run on any distribution or device. Combining these together allows you to develop from anywhere and remotely deploy to anything. This is really cool for IoT, as there are loads of snappy machines, e.g. Raspberry Pi, that can be deployed to...</p>
+        <a href="https://idealcoder.github.io/jekyll-blog/snappy/eclipse-che/2016/08/22/snaps-eclipse-che.html" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
