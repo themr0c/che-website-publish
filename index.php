@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3><a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" target="_blank">4.7 Released!</a> Major usability advances with tabbed terminals and multi-panel editors.</a></h3>
+    <h3><a href="http://che.eclipse.org/release-notes-eclipse-che-4-7/" target="_blank">4.7 Released!</a> Major usability advances with tabbed terminals and multi-panel editors.</a></h3>
   </div>
 </div>
 
