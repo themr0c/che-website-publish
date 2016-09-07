@@ -28,6 +28,46 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>IT World: Choosing Your Java IDE</h3>
+        <p class="loc">September 6th, 2016</p>
+        <p class="desc">Comparing Eclipse, NetBeans, and IntelliJ IDEA for features, usability, and project size and type. Eclipse Che is a top lightweight...</p>
+        <a href="http://www.itworld.com/article/3114167/development-tools/choosing-your-java-ide.html" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/techcrunch.png" alt=""></td>
+      <td>
+        <h3>The death of localhost and the rise of cloud development</h3>
+        <p class="loc">September 3rd, 2016</p>
+        <p class="desc">If there was any skepticism when Marc Andreessen declared software was “eating the world,” there’s little doubt five years later that nearly every business and industry is running on software delivered as online services...</p>
+        <a href="https://techcrunch.com/2016/09/03/the-death-of-localhost-and-the-rise-of-cloud-development/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Hands On: Creating Custom IDE Themes in Eclipse Che</h3>
+        <p class="loc">September 2nd, 2016</p>
+        <p class="desc">Customization of an IDE doesn’t just apply to tailored runtimes or choice of programming language, but also to the IDE’s appearance. Eclipse Che allows developers to choose from two themes, Dark or Light, which can be...</p>
+        <a href="http://che.eclipse.org/hands-creating-custom-ide-themes-che/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Release Notes: Eclipse Che 4.7: Usability!</h3>
+        <p class="loc">September 1st, 2016</p>
+        <p class="desc">This release focuses on usability with an updated multi-pane editor, tabbed terminals, dashboard and command macros...</p>
+        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-7/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Snaps with Eclipse Che Design</h3>
         <p class="loc">August 24th, 2016</p>
         <p class="desc">This post explains how “Snaps with Eclipse Che” works in detail; for a getting started guide see snaps-eclipse-che. Firstly the code works through an agent written in go...</p>
