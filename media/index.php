@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
+        <h3>Bitnami and Codenvy: Ready-to-Go Stacks for a Simple Developer Experience</h3>
+        <p class="loc">September 13th, 2016</p>
+        <p class="desc">Bitnami and Codenvy release one-click cloud programming stacks for Express, Play, Swift, Symfony, Codeigniter, Laravel and Rails...</p>
+        <a href="http://blog.codenvy.com/bitnami-codenvy-ready-go-stacks-simple-developer-experience/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
         <h3>Docker Workspaces vs Vagrant VMs</h3>
         <p class="loc">September 9th, 2016</p>
         <p class="desc">Development teams need easy-to-configure, reproducible and portable developer workspaces controlled by a single consistent workflow to maximize their productivity. Over the years, developers have flocked...</p>
