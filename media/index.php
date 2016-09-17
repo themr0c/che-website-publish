@@ -26,6 +26,27 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Eclipse Weekly: Eclipse vs. IntelliJ</h3>
+        <p class="loc">September 17th, 2016</p>
+        <p class="desc">Content marketing is more powerful than (professional) marketing, for example, shows Eclipse Che. Founder Tyler Jewell specifies their team schedules 10-15 hours / week for content marketing. The results speak for themselves...</p>
+        <a href="https://jaxenter.de/eclipse-weekly-eclipse-vs-intellij-idea-46687" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Video: Portable Development in the Cloud with Eclipse Che</h3>
+        <p class="loc">September 16th, 2016</p>
+        <p class="desc">David Dennis, VP Marketing at Bitnami and Brad Micklea, COO Codenvy demonstrate how to create a consistnet development workflow with reproducible environments in the cloud with Eclipse Che and Bitnami Docker images...</p>
+        <a href="http://www.codechannels.com/video/bitnami/bitnami/portable-development-in-the-cloud-with-eclipse-che-ft-11-cloud-platform/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+
+   <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
         <h3>Bitnami and Codenvy: Ready-to-Go Stacks for a Simple Developer Experience</h3>
