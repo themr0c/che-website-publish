@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Running Eclipse Che with Docker and AppFog</h3>
+        <p class="loc">September 19th, 2016</p>
+        <p class="desc">Most developers use an integrated development environment (IDE) to build and manage their products. Eclipse Che is a developer workspace server and cloud IDE that allows a team to share development space over the network in a system entirely encapsulated in Docker images...</p>
+        <a href="https://www.ctl.io/developers/blog/post/cloud-ide-docker-che-eclipse?utm_source=CTLDevCenter&utm_medium=twitter" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Eclipse Weekly: Eclipse vs. IntelliJ</h3>
         <p class="loc">September 17th, 2016</p>
         <p class="desc">Content marketing is more powerful than (professional) marketing, for example, shows Eclipse Che. Founder Tyler Jewell specifies their team schedules 10-15 hours / week for content marketing. The results speak for themselves...</p>
