@@ -23,39 +23,40 @@
 <div class="container-fluid content">
   
     <h2>1. Start Che with Docker</h2>
-    <code style="font-size: 100%; line-height: 40px;">docker run --rm -t -v /var/run/docker.sock:/var/run/docker.sock eclipse/che start</code>
-    <p style="font-size: 15px; line-height: 23px; margin: 0 0 0px;"> 
-      &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.8+</a> required.<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Docker for Mac beta requires <a href="https://eclipse-che.readme.io/docs/usage-docker">1-time setup of loopback device.</a><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Workspaces are saved in /home/user/che. Change the location <a href="https://eclipse-che.readme.io/docs/usage-docker#workspace-storage">by setting CHE_DATA_FOLDER.</a><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Configure properties like port, user and hostname <a href="https://eclipse-che.readme.io/v4.6/docs/usage-docker#environment-variables">with environment variables</a>.</br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
-      &nbsp;&nbsp;&nbsp;&nbsp;Or, use our <a href="https://github.com/eclipse/che/blob/master/Vagrantfile">Vagrant image</a> with Docker already installed.    
+    <p style="font-size: 18px; line-height: 24px; margin: 0 0 0px;"> 
+      &nbsp;&nbsp;<a href="https://docs.docker.com/engine/installation/">Docker 1.8+</a> required.<br>
+      &nbsp;&nbsp;Docker for Mac requires <a href="https://eclipse-che.readme.io/docs/che-getting-started#0-pre-reqs">1-time setup of loopback device.</a><br>
+      &nbsp;&nbsp;Don't want to install Docker? Use <a href="https://marketplace.yatta.de/profiles/eclipse.che">Yatta (requires TOS acceptance)</a> which installs Che and Docker together.</br>
     </p>
 
-    <p style="margin: 30px 0 0;">The launcher downloads and caches required Docker images and then starts the server.
-    <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>
-    
-    <div class="separator"></div>
-
-    <h3 style="margin-top: -30px;">2. Use Che</h3>
-    The Che URL varies by OS, Docker type, and environment variables set by you.
-    <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
-   
-    <div class="separator"></div>
-
-    <h3 style="margin-top: -30px;">3. Add Our CLI To Make Life Simpler</h3>
-    <p style="margin: 30px 0 0;">Linux</p>
+    <p style="margin: 30px 0 0;">Linux & Mac - Add Our CLI</p>
     <script src="https://gist.github.com/TylerJewell/f064857038110d2205c5aa377c01942f.js"></script>
 
-    <p style="margin: 30px 0 0;">Windows (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
+    <p style="margin: 30px 0 0;">Windows - Add Our CLI - (Requires <a href="https://git-for-windows.github.io/">Git Bash</a>)</p>
     <script src="https://gist.github.com/TylerJewell/14dd2136997eea7540ee748f791b24d7.js"></script>  
+
+
+    <p style="margin: 30px 0 0;">Download the Che Docker image and start the server
+    <script src="https://gist.github.com/TylerJewell/e37305cf2a2c74d8fb7996fb85e96fa5.js"></script>
+    <p style="font-size: 18px; line-height: 24px; margin: 0 0 0px;"> 
+      &nbsp;&nbsp;Workspaces are saved in /home/user/che. Change where <a href="https://eclipse-che.readme.io/docs/configuration#section-environment-variables">by modifying CHE_DATA_FOLDER.</a><br>
+      &nbsp;&nbsp;Configure properties like port, IP and hostname <a href="https://eclipse-che.readme.io/docs/configuration#section-environment-variables">with environment variables</a>.</br>
+    </p>
 
     <p style="margin: 30px 0 0;">CLI: Run Che</p>
     <script src="https://gist.github.com/TylerJewell/66c4bba115cd49674dde921006a170ca.js"></script>
 
-    <p style="margin: 30px 0 0;">CLI: Sync Your Desktop IDE</p>
+    <p style="margin: 30px 0 0;">CLI: Sync Your Local IDE</p>
     <script src="https://gist.github.com/TylerJewell/9db9f2eaf8c07ec7b74217d75b4f1177.js"></script>
+
+    <h3 style="margin-top: 30px;">2. Use Che</h3>
+    The Che URL varies by OS, Docker type, and environment variables set by you.
+    <p><img src="https://www.eclipse.org/che/images/features/img-features-docker-powered.png" width="700" height="450" alt="Eclipse Che Workspace" style="vertical-align:baseline"/><p>
+   
+    <h3 style="margin-top: 30px;">3. Or, Launch Che With Docker Syntax</h3>
+    <code style="font-size: 100%; line-height: 40px;">docker run --rm -t -v /var/run/docker.sock:/var/run/docker.sock eclipse/che start</code>
+    <p style="margin: 30px 0 0;">The CLI downloads the Che Docker image and and starts the server.
+    <script src="https://gist.github.com/TylerJewell/62636be9e3601d6a51c50dee34f708f1.js"></script>    
 
     <h3 style="margin-top: 30px;">4. Learn More or Get Help</h3>
     <b><p style="margin: 30px 0 0;">Docs</p></b>
