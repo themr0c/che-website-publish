@@ -26,6 +26,16 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Jaxenter: OpenShift 3 + Eclipse Che - Match Made in Heaven</h3>
+        <p class="loc">September 23rd, 2016</p>
+        <p class="desc">The concept of universal workspaces, championed by Eclipse Che, gave Red Hat the ability to easily replicate and distribute the entire development workspace. Red Hat and Codenvy have integrated Che with OpenShift, providing an easy way to copy both your runtime, and your development workspace...</p>
+        <a href="https://jaxenter.com/openshift-3-eclipse-che-129034.html" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/tns.png" alt=""></td>
       <td>
         <h3>TheNewStack: Streamlining Developer Workflows with Eclipse Che and Bitnami</h3>
