@@ -26,6 +26,56 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/tns.png" alt=""></td>
+      <td>
+        <h3>TheNewStack: Streamlining Developer Workflows with Eclipse Che and Bitnami</h3>
+        <p class="loc">September 23rd, 2016</p>
+        <p class="desc">What happens when you marry certified production Docker images from Bitnami with reproducible developer workspaces in a consistent workflow with Eclipse Che...</p>
+        <a href="http://thenewstack.io/streamlining-developer-workflows-eclipse-che-bitnami-integration/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Eclipse Cloud Development at EclipseCon EU 2016</h3>
+        <p class="loc">September 22nd, 2016</p>
+        <p class="desc">Join us at EclipseCon 2016 to discover, learn, and share all things Eclipse...</p>
+        <a href="http://che.eclipse.org/eclipse-cloud-development-eclipsecon-eu-2016/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/sdtimes.png" alt=""></td>
+      <td>
+        <h3>JavaOne vendors talk tools, Oracle, and Eclipse Che</h3>
+        <p class="loc">September 22nd, 2016</p>
+        <p class="desc">At Oracle OpenWorld and JavaOne this week, the software development industry was on hand to show off its new tools and to comment on Oracle’s myriad announcements. Oracle founder and chairman Larry Ellison doubled-down on cloud technologies, offering more cloud services, a cloud-in-a-box on-premise system, and a road map for Java EE...</p>
+        <a href="http://sdtimes.com/javaone-vendors-talk-tools-oracle/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>New Runnable service ... compared to Eclipse Che</h3>
+        <p class="loc">September 21st, 2016</p>
+        <p class="desc">Once Runnable is pointed to a user's GitHub repository, each branch receives its own isolated infrastructure. It's similar to another company, Codenvy, which focuses on container-hosted collaborative developer workspaces linked to the Eclipse Che...</p>
+        <a href="http://searchitoperations.techtarget.com/news/450304730/New-Runnable-service-seeks-to-woo-firms-from-AWS-staging-servers" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>RedHat links Java and Eclipse Che to Visual Studio Code</h3>
+        <p class="loc">September 20th, 2016</p>
+        <p class="desc">An extension based on the Language Server Protocol offers developers expanded use of Microsoft's development tool...</p>
+        <a href="http://www.infoworld.com/article/3122362/java/red-hat-links-java-to-microsofts-visual-studio-code.html" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Running Eclipse Che with Docker and AppFog</h3>
