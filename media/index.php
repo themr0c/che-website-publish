@@ -26,9 +26,19 @@
   <table class="wrapper">
 
    <tr class="item">
+      <td><img src="../images/media/sdtimes.png" alt=""></td>
+      <td>
+        <h3>SDTimes: Language Server Protocol Foretells Future for Developers</h3>
+        <p class="loc">September 23rd, 2016</p>
+        <p class="desc">Developers have long stuck to their own treasured IDEs like baseball players and their lucky socks. Back in June, Codenvy, Microsoft and MuleSoft made a somewhat innocuous announcement that (long term) could eliminate a lot of the variances that currently exist in IDEs and other software development tools...</p>
+        <a href="http://sdtimes.com/language-server-protocol-foretells-future-developers/" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
-        <h3>Jaxenter: OpenShift 3 + Eclipse Che - Match Made in Heaven</h3>
+        <h3>JAXenter: OpenShift 3 + Eclipse Che - Match Made in Heaven</h3>
         <p class="loc">September 23rd, 2016</p>
         <p class="desc">The concept of universal workspaces, championed by Eclipse Che, gave Red Hat the ability to easily replicate and distribute the entire development workspace. Red Hat and Codenvy have integrated Che with OpenShift, providing an easy way to copy both your runtime, and your development workspace...</p>
         <a href="https://jaxenter.com/openshift-3-eclipse-che-129034.html" class="btn-yellow" target="_blank">Read More</a>
