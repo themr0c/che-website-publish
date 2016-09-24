@@ -79,6 +79,7 @@
 <div class="container-fluid content contributors">
   <h2>Contributors</h2>
   <ul>
+    <li><img src="images/logo-bitnami@2x.png" alt="Bitnami" class="img-responsive"></li>
     <li><img src="images/logo-codenvy-navy@2x.png" alt="Codenvy" class="img-responsive"></li>
     <li><img src="images/logo-eclipsesource@2x.png" alt="Eclipse Source" class="img-responsive"></li>
     <li><img src="images/logo-exo@2x.png" alt="eXo Platform" class="img-responsive"></li>
