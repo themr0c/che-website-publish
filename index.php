@@ -79,10 +79,11 @@
 <div class="container-fluid content contributors">
   <h2>Contributors</h2>
   <ul>
-    <li><img src="images/logo-bitnami@2x.png" alt="Bitnami" class="img-responsive"></li>
+    <li><img src="images/logo-bitnami@2x.png" alt="Bitnami" style="width: 196px; height: 50px; margin-top: 20px" class="img-responsive"></li>
     <li><img src="images/logo-codenvy-navy@2x.png" alt="Codenvy" class="img-responsive"></li>
     <li><img src="images/logo-eclipsesource@2x.png" alt="Eclipse Source" class="img-responsive"></li>
     <li><img src="images/logo-exo@2x.png" alt="eXo Platform" class="img-responsive"></li>
+    <li><img src="images/logo-gsoc@2x.png" alt="Google Summer of Code" style="width: 210px; height: 96px" class="img-responsive"></li>
     <li><img src="images/logo-ibm@2x.png" alt="IBM" class="img-responsive"></li>
     <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
@@ -94,6 +95,7 @@
     <li><img src="images/logo-typefox@2x.png" alt="Type Fox" class="img-responsive"></li>
     <li><img src="images/logo-wso2@2x.png" alt="WSO2" class="img-responsive"></li>
     <li><img src="images/logo-yatta@2x.png" alt="Yatta" class="img-responsive"></li>
+    <li><img src="images/logo-zend@2x.png" style="width: 190px; height: 70px; margin-top: 15px" alt="Zend"/></li>
   </ul>
 
   <a href="https://github.com/eclipse/che/" class="btn-yellow" target="_blank">Become a Contributor</a>
