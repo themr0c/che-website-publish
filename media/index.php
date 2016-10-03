@@ -25,6 +25,16 @@
 
   <table class="wrapper">
 
+  <tr class="item">
+      <td><img src="../images/media/adt.png" alt=""></td>
+      <td>
+        <h3>ADTMag: One-Click Cloud Dev Stacks From Codenvy and Bitnami</h3>
+        <p class="loc">October 3rd, 2016</p>
+        <p class="desc">Developer workspaces builder Codenvy, the leading commercial supporter of Eclipse Che, is partnering with Bitnami, the leading library for open source server application deployments, to create "one-click" programming stacks to simplify the developer workflow for common frameworks...</p>
+        <a href="https://adtmag.com/articles/2016/10/03/one-click-dev-stacks.aspx" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/sdtimes.png" alt=""></td>
       <td>
