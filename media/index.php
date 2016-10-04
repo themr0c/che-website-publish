@@ -26,6 +26,16 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Article: Setup Remote Debugging of Eclipse Che Modules</h3>
+        <p class="loc">October 4th, 2016</p>
+        <p class="desc">Eclipse Che has a large codebase which consists of a dozen of individual modules. Basically, if you work on a separate module it is utterly convenient to have only this particular module imported to the IDE and setup the remote debugging...</p>
+        <a href="https://adtmag.com/articles/2016/10/03/one-click-dev-stacks.aspx" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/adt.png" alt=""></td>
       <td>
         <h3>ADTMag: One-Click Cloud Dev Stacks From Codenvy and Bitnami</h3>
