@@ -26,6 +26,16 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/dzone.png" alt=""></td>
+      <td>
+        <h3>Tutorial: Java and Maven in Eclipse Che</h3>
+        <p class="loc">October 5th, 2016</p>
+        <p class="desc">Eclipse Che was written in Java. Get started with the rich Intellisense and Java tools in this tutorial....</p>
+        <a href="https://dzone.com/articles/tutorial-java-amp-maven-in-eclipse-che" class="btn-yellow" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Article: Setup Remote Debugging of Eclipse Che Modules</h3>
