@@ -10,7 +10,7 @@
             <li><a href="<?php echo $rootPath; ?>/technology/">Technology</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
             <li><a target="_blank" href="https://eclipse-che.readme.io/docs/">Docs</a></li>
-            <li><a target="_blank"  href="http://che.eclipse.org/">Blog</a></li>
+            <li><a target="_blank"  href="https://medium.com/eclipse-che-blog">Blog</a></li>
             <li><a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></li>
           </ul>
         </nav>
@@ -20,7 +20,7 @@
             <li><a href="<?php echo $rootPath; ?>/technology/">Technology</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
             <li><a target="_blank" href="https://eclipse-che.readme.io/docs/">Docs</a></li>
-            <li><a target="_blank"  href="http://che.eclipse.org/">Blog</a></li>
+            <li><a target="_blank"  href="https://medium.com/eclipse-che-blog">Blog</a></li>
             <li><a href="<?php echo $rootPath; ?>/media/">Articles</a></li>
             <li><a class="btn-yellow" href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></li>
             <li><iframe src="https://ghbtns.com/github-btn.html?user=eclipse&repo=che&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe></li>

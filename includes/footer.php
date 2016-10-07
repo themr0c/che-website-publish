@@ -33,7 +33,7 @@
           <ul>
             <li><a href="<?php echo $rootPath; ?>/media/">Media</a></li>
             <li><a href="<?php echo $rootPath; ?>/media/">Articles</a></li>
-            <li><a href="http://che.eclipse.org/" target="_blank">Blog</a></li>
+            <li><a href="https://medium.com/eclipse-che-blog" target="_blank">Blog</a></li>
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/community/">Community</a></li>
@@ -46,8 +46,8 @@
         <div class="mailing-list">
           <p><span>Join our mailing list</span> Receive release notes and product updates.</p>
           <script src="//app-ab05.marketo.com/js/forms2/js/forms2.min.js"></script>
-<form id="mktoForm_1294"></form>
-<script>MktoForms2.loadForm("//app-ab05.marketo.com", "519-AYY-549", 1294);</script>
+          <form id="mktoForm_1294"></form>
+          <script>MktoForms2.loadForm("//app-ab05.marketo.com", "519-AYY-549", 1294);</script>
         </div>
 
         <div class="copyright">Copyright &copy; Eclipse Foundation <?php echo date("Y") ?></div>

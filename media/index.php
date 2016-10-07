@@ -91,7 +91,7 @@
         <h3>Eclipse Cloud Development at EclipseCon EU 2016</h3>
         <p class="loc">September 22nd, 2016</p>
         <p class="desc">Join us at EclipseCon 2016 to discover, learn, and share all things Eclipse...</p>
-        <a href="http://che.eclipse.org/eclipse-cloud-development-eclipsecon-eu-2016/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/eclipse-cloud-development-at-eclipsecon-eu-2016-c22d51320326#.bj73sp1uq" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -172,7 +172,7 @@
         <h3>Docker Workspaces vs Vagrant VMs</h3>
         <p class="loc">September 9th, 2016</p>
         <p class="desc">Development teams need easy-to-configure, reproducible and portable developer workspaces controlled by a single consistent workflow to maximize their productivity. Over the years, developers have flocked...</p>
-        <a href="http://che.eclipse.org/docker-workspaces-vs-vagrant-vms/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/docker-workspaces-vs-vagrant-vms-c93b7b7a57b7#.90bs7zhvh" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -202,7 +202,7 @@
         <h3>Hands On: Creating Custom IDE Themes in Eclipse Che</h3>
         <p class="loc">September 2nd, 2016</p>
         <p class="desc">Customization of an IDE doesn’t just apply to tailored runtimes or choice of programming language, but also to the IDE’s appearance. Eclipse Che allows developers to choose from two themes, Dark or Light, which can be...</p>
-        <a href="http://che.eclipse.org/hands-creating-custom-ide-themes-che/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/hands-on-creating-custom-ide-themes-in-che-d1b0b2214423#.wh8jj09s2" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -212,7 +212,7 @@
         <h3>Release Notes: Eclipse Che 4.7: Usability!</h3>
         <p class="loc">September 1st, 2016</p>
         <p class="desc">This release focuses on usability with an updated multi-pane editor, tabbed terminals, dashboard and command macros...</p>
-        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-7/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/release-notes-eclipse-che-4-7-e8ba27a0c54d#.9wxbkrc7r" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -302,7 +302,7 @@
         <h3>Release Notes: Eclipse Che 4.6: Simplicity!</h3>
         <p class="loc">August 12th, 2016</p>
         <p class="desc">Thank you to everyone that has made Eclipse Che successful. If you haven’t seen it – Tyler’s summary on the first six months of Eclipse Che discusses the rate of growth and the participation of the community. Also,...</p>
-        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-6/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/release-notes-eclipse-che-4-6-d607aca9b12c#.h9qkkpcij" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -372,7 +372,7 @@
         <h3>Hands-On: Configure and Run Plain Java Apps in Che</h3>
         <p class="loc">July 27th, 2016</p>
         <p class="desc">This post will demonstrate how to develop and run standard Java applications in Eclipse Che. We’ll start by creating and running a simple “Hello World” example using one of the Che template apps...</p>
-        <a href="http://che.eclipse.org/hands-configure-run-plain-java-apps-che/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/hands-on-configure-run-plain-java-apps-in-che-6f443ef509d0#.athiak42o" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -382,7 +382,7 @@
         <h3>Hands-On: Develop, Run & Debug Android Apps Natively</h3>
         <p class="loc">July 25th, 2016</p>
         <p class="desc">Prepare your Android device for USB and wireless debugging in Eclipse Che...</p>
-        <a href="http://che.eclipse.org/hands-develop-run-debug-android-apps-natively-eclipse-che/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/hands-on-develop-run-debug-android-apps-natively-ea150f662f3#.4hrfin5bv" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -392,7 +392,7 @@
         <h3>Release Notes: 4.5.0 With New WS URLs Out!</h3>
         <p class="loc">July 21th, 2016</p>
         <p class="desc">This release includes new workspace URL schema, side-by-side terminals, and configurable Docker API...</p>
-        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-5/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/release-notes-eclipse-che-4-5-a0dcf1ec6afa#.ked80ylnh" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -402,7 +402,7 @@
         <h3>Che Project Lead: The State of Eclipse Che</h3>
         <p class="loc">July 20th, 2016</p>
         <p class="desc">Six mopnths after the beta launch of Eclipse Che, a look at community growth and momentum...</p>
-        <a href="http://che.eclipse.org/6-months-review-state-eclipse-che/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/insight-the-state-of-eclipse-che-db7f2fe74695#.hq79icdky" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -473,7 +473,7 @@
         <h3>Demo: Eclipse Che at DevNation and Red Hat Summit</h3>
         <p class="loc">June 30, 2016</p>
         <p class="desc">At DevNation this week, Red Hat announced Eclipse Che as its strategic development platform. Watch Codenvy CEO Tyler Jewell introduce how Che’s containerized developer workspaces let you contribute to any project without installing software...</p>
-        <a href="http://che.eclipse.org/demo-eclipse-che-devnation-red-hat-summit/" class="btn-yellow" target="_blank">Watch Video</a>
+        <a href="https://medium.com/eclipse-che-blog/demo-eclipse-che-at-devnation-red-hat-summit-bede3cead85f#.xraapuws3" class="btn-yellow" target="_blank">Watch Video</a>
       </td>
   </tr><!-- .item -->
 
@@ -484,7 +484,7 @@
         <h3>Release Notes: Eclipse Che 4.4</h3>
         <p class="loc">June 30, 2016</p>
         <p class="desc">Eclipse Che 4.4 has been released with 65 issues resolved including UX improvements to the navigation bar and console, as well support for private Docker registries...</p>
-        <a href="http://che.eclipse.org/release-notes-eclipse-che-4-4/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/release-notes-eclipse-che-4-4-62a4f4d529a#.ldtactbio" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -660,7 +660,7 @@
         <h3>Announcement: Eclipse Che Now a Strategic Platform for Red Hat</h3>
         <p class="loc">June 27, 2016</p>
         <p class="desc">Today at DevNation, Red Hat’s annual conference for developers, we announced Codenvy’s collaboration with Red Hat and Microsoft to further the vision of letting anyone contribute to a project without installing software...</p>
-        <a href="http://che.eclipse.org/eclipse-che-now-strategic-platform-red-hat/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/announcement-eclipse-che-now-a-strategic-platform-for-red-hat-b2797804d170#.pbsyh7d3y" class="btn-yellow" target="_blank">Read More</a>
       </td>
 
  </tr><!-- .item -->
@@ -670,7 +670,7 @@
         <h3>Hands-on with Eclipse Che: JavaScript Plugin API</h3>
         <p class="loc">June 22, 2016</p>
         <p class="desc">The Che client (browser IDE) is written with Java and compiled to JavaScript via GWT. This framework has a lot of limitations, especially in extension/plugin support. The result of the GWT compiler is a monolithic, not human-readable JavaScript...</p>
-        <a href="http://che.eclipse.org/hands-eclipse-che-javascript-plugin-api/" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://medium.com/eclipse-che-blog/hands-on-with-eclipse-che-javascript-plugin-api-2d44c31a178b#.vfi75dili" class="btn-yellow" target="_blank">Read More</a>
       </td>
 
 
