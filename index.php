@@ -85,6 +85,7 @@
     <li><img src="images/logo-exo@2x.png" alt="eXo Platform" class="img-responsive"></li>
     <li><img src="images/logo-gsoc@2x.png" alt="Google Summer of Code" style="width: 210px; height: 96px" class="img-responsive"></li>
     <li><img src="images/logo-ibm@2x.png" alt="IBM" class="img-responsive"></li>
+    <li><img src="images/logo-nuxeo@2x.png" alt="Nuxeo" style="width: 196px; height: 70px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
     <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
