@@ -26,6 +26,46 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Using Docker to Build a Cross-Platform CLI</h3>
+        <p class="loc">October 17th, 2016</p>
+        <p class="desc">Docker has been a life saver for Eclipse Che. We originally made the choice to use Docker as the engine for workspaces starting in 2013, but it’s power has extended beyond offering a convenient runtime for developers. We’ve applied Docker to our installation...</p>
+        <a href="https://medium.com/eclipse-che-blog/using-docker-to-build-a-cross-platform-cli-8a5b80a5655d#.5vy86hgwv" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>use Your Favorite Framework with Eclipse Che with Bitnami</h3>
+        <p class="loc">October 16th, 2016</p>
+        <p class="desc">Choose any framework and within a couple clicks, get to town...</p>
+        <a href="http://www.codechannels.com/video/bitnami/bitnami/use-your-favorite-framework-with-eclipse-che-bitnami-development-containers/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Announcing CheConf 2016: Cloud Workspace Virtual Conference</h3>
+        <p class="loc">October 13th, 2016</p>
+        <p class="desc">When we announced Eclipse Che to the world in the EclipseCon keynote the response was overwhelmingly positive. Even so, if you’d told me that only seven months later I’d be announcing Che’s first user...</p>
+        <a href="https://medium.com/eclipse-che-blog/checonf-2016-cloud-development-and-open-source-f6a3afb58373#.1te2452z9" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Discovering Docker's IP Address</h3>
+        <p class="loc">October 12th, 2016</p>
+        <p class="desc">With Eclipse Che, we write a lot of utilities using Docker containers. They are small in footprint and portable that can run on many different operating systems without the user having to install additional software....</p>
+        <a href="https://medium.com/eclipse-che-blog/discovering-dockers-ip-address-2bb524b0cb28#.shpp8v8ft" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/dzone.png" alt=""></td>
       <td>
         <h3>Tutorial: Java and Maven in Eclipse Che</h3>
