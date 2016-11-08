@@ -41,7 +41,7 @@
            <h4>Custom</h4>
            <p class="small">Create workspaces for any language/framework.</p>
          </div>
-         <a href="http://beta.codenvy.com/site/login" class="btn-green">Create a free account</a>
+         <a href="http://codenvy.io/site/login" class="btn-green">Create a free account</a>
        </div>
        <p style="font-size:0.7em">Requires a Codenvy account. You will be asked to accept their TOS.
 
@@ -57,7 +57,7 @@
   <div class="row">
     <div class="col-md-12">
       <small>Enter a git URL to import</small>
-      <form class="form-inline" method="get" action="http://beta.codenvy.com/f/" target="_blank">
+      <form class="form-inline" method="get" action="http://codenvy.io/f/" target="_blank">
         <div class="form-group" style="width: 80%">
           <input type="text" class="form-control" name="url" value="https://github.com/che-samples/console-java-simple" placeholder="Enter GitHub or GitLab project URL" style="width: 100%">
         </div>
