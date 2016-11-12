@@ -144,6 +144,7 @@
         <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>
       </div>
     </div>
+
     <div class="row">
       <div class="col-sm-6">
         <img src="../images/logo-extend-samsung@2x.jpg" alt="Samsung">
@@ -156,6 +157,17 @@
         <h2>SAP Hana Cloud IDE</h2>
         <p>Che powers developer workspaces in SAP Hana Cloud. SAP authored a custom Web IDE that uses Che workspaces over RESTful APIs to create multi-targeted application development environments.</p>
         <a href="<?php echo $rootPath; ?>/extend/sap/" class="btn-yellow">Learn More</a>
+      </div>
+    </div> <!-- /.row -->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <img src="../images/logo-extend-bitnami@2x.png" alt="Bitnami">
+        <h2>Bitnami</h2>
+        <p>Bitnami Developer Containers are integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Try instant development workspaces for Express, Laravel, Rails, and others.</p>
+        <a href="<?php echo $rootPath; ?>/extend/bitnami/" class="btn-yellow">Learn More</a>
+      </div>
+      <div class="col-sm-6">
       </div>
     </div> <!-- /.row -->
 
