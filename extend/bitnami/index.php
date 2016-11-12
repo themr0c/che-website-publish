@@ -79,7 +79,7 @@
 
 <div class="bg-gray5">
   <div class="container-fluid content">
-    <img alt="" class="img-responsive" src="bitnami.png" width="800" />
+    <p><img alt="" class="img-responsive" src="bitnami.png" width="800"></p>
     <br>
     <h2><a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started</a> with Che and Bitnami Development Containers.</h2>
     <h3><a  target="_blank" href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.mdgit">Contribute to Eclipse Che</a>
