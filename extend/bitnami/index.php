@@ -60,11 +60,8 @@
     <h2>Watch and Learn</h2>
 
     <div class="row">
-      <div class="col-md-4">
         <a href="https://www.youtube.com/watch?v=pNcOXCV7G8s&t=1210s" target="_blank"><img src="../../images/video-workspaces@2x.png" alt="Bitnami Watch and Learn" class="img-responsive"></a>
         <h3><a href="https://www.youtube.com/watch?v=tgMD2jS9f_w" target="_blank">Use Your Favorite Framework with Eclipse Che &amp; Bitnami Development Containers </a></h3>
-        <p>2 Minutes 3 Second</p>
-      </div>
     </div> <!-- .row -->
   </div> <!-- .container-fluid -->
 </div> <!-- .video -->
@@ -82,7 +79,7 @@
 
 <div class="bg-gray5">
   <div class="container-fluid content">
-    <img alt="" class="img-responsive" src="bitnami.png" width="1200" />
+    <img alt="" class="img-responsive" src="bitnami.png" width="800" />
     <br>
     <h2><a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started</a> with Che and Bitnami Development Containers.</h2>
     <h3><a  target="_blank" href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.mdgit">Contribute to Eclipse Che</a>
