@@ -15,7 +15,7 @@
   <div class="container-fluid">
 
     <h1>Bitnami Development Containers</h1>
-    <h3>Integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Development Containers are currently available for many popular frameworks, including Express, Laravel, Rails, Symfony and Swift. Get Started with Bitnami Development Containers.</a></h3>
+    <h3>Integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Development Containers are currently available for many popular frameworks, including Express, Laravel, Rails, Symfony and Swift. <a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started with Che and Bitnami Development Containers.</a></h3>
     <img alt="Bitnami in Che" class="img-responsive" src="bitnami-hero.png" width="1200" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
