@@ -13,9 +13,10 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
+
     <h1>Bitnami Development Containers</h1>
     <h3>Integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Development Containers are currently available for many popular frameworks, including Express, Laravel, Rails, Symfony and Swift. Get Started with Bitnami Development Containers.</a></h3>
-    <img alt="Bitnami in Che" class="img-responsive" src="bitnami1.png" />  
+    <img alt="Bitnami in Che" class="img-responsive" src="bitnami-hero.png" width="1200" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
@@ -44,7 +45,7 @@
     </div>
 
     <div class="col-sm-6">
-      <a href="../../images/artik/stacks-web@2x.png"><img alt="" class="img-responsive" src="../../images/artik/stacks-web@2x.png" /></a>
+      <a href="bitnami-box4.png"><img alt="" class="img-responsive" src="bitnami-box4.png" /></a>
       <h3>Or In Any Major Cloud Marketplace</h3>
       <p>Eclipse Che can be launched as a virtual machine on for Amazon Web Services, Azure, Google and Oracle Cloud Platforms.</p>
     </div>
@@ -81,13 +82,12 @@
 
 <div class="bg-gray5">
   <div class="container-fluid content">
-    <img alt="" class="img-responsive" src="bitnami.png"/>
+    <img alt="" class="img-responsive" src="bitnami.png" width="1200" />
     <br>
     <h2><a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started</a> with Che and Bitnami Development Containers.</h2>
     <h3><a  target="_blank" href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.mdgit">Contribute to Eclipse Che</a>
   </div> <!-- .container-fluid -->
 </div> <!-- .get-help -->
-
 
 
 <?php include '../../includes/footer.php'; ?>
