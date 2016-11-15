@@ -81,9 +81,10 @@
   <ul>
     <li><img src="images/logo-bitnami@2x.png" alt="Bitnami" style="width: 196px; height: 50px; margin-top: 20px" class="img-responsive"></li>
     <li><img src="images/logo-codenvy-navy@2x.png" alt="Codenvy" class="img-responsive"></li>
+    <li><img src="images/logo-docker@2x.png" alt="Docker" style="width: 196px; height: 70px; margin-left: 0px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-eclipsesource@2x.png" alt="Eclipse Source" class="img-responsive"></li>
     <li><img src="images/logo-exo@2x.png" alt="eXo Platform" class="img-responsive"></li>
-    <li><img src="images/logo-gsoc@2x.png" alt="Google Summer of Code" style="width: 210px; height: 96px" class="img-responsive"></li>
+    <li><img src="images/logo-gsoc@2x.png" alt="Google Summer of Code" style="width: 205px; height: 90px" class="img-responsive"></li>
     <li><img src="images/logo-ibm@2x.png" alt="IBM" class="img-responsive"></li>
     <li><img src="images/logo-nuxeo@2x.png" alt="Nuxeo" style="width: 196px; height: 70px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-platformio@2x.png" alt="RedHat" style="width: 96px; height: 70px; margin-left: 50px; margin-top: 10px" class="img-responsive"></li>
