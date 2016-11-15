@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3><a href="http://eclipse.org/che/checonf" target="_blank">Register for CheConf 2016!</a> A virtual conference for cloud development.</a></h3>
+    <h3>Watch the <a href="https://www.crowdcast.io/e/checonf16" target="_blank">CheConf Live Stream!</a> &nbsp;A virtual conference for cloud development.</a></h3>
   </div>
 </div>
 
