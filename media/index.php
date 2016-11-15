@@ -26,6 +26,46 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Introduction to Eclipse Che, a Next-Generation Web-Based IDE</h3>
+        <p class="loc">November 14th, 2016</p>
+        <p class="desc">Correctly installing and configuring an integrated development environment, workspace, and build tools in order to contribute to a project can be a daunting or time consuming task, even for experienced developers...</p>
+        <a href="https://opensource.com/life/16/11/introduction-eclipse-che" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Made with Che: Zend Training</h3>
+        <p class="loc">November 11th, 2016</p>
+        <p class="desc">Hi Kaloyan, can you explain your project in one sentence for people who aren’t familiar with it? Kaloyan: Sure, we’re introducing Che into the Zend Training process by providing students with a ready-to-play-with PHP development environment...</p>
+        <a href="https://medium.com/eclipse-che-blog/made-with-che-zend-training-af13a1bf3665#.4ef73rong" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Made with Che: RedHat OpenShift and Eclipse Che</h3>
+        <p class="loc">November 9th, 2016</p>
+        <p class="desc">Eclipse Che has a rich community of contributors and partners. The “Made With Che” interview series shares their stories, highlighting the most exciting projects and opportunities to contribute to Che...</p>
+        <a href="https://medium.com/eclipse-che-blog/made-with-che-openshift-che-9b75292a1f5c#.p085dbi5a" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>German: Codenvy - New Version at Codenvy.io</h3>
+        <p class="loc">November 4th, 2016</p>
+        <p class="desc">Die neue Version der Cloud IDE Codenvy, quasi die SaaS-Version von Eclipse Che, ist nun unter Codenvy.io verfügbar. Die Homepage des Unternehmens ist weiterhin Codenvy.com (zumindest bisher)...</p>
+        <a href="https://innovative-trends.de/2016/11/04/codenvy-neue-version-der-cloud-ide-jetzt-auf-codenvy-io/?uid=115113376" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
         <h3>Using Docker to Build a Cross-Platform CLI</h3>
