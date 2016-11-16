@@ -26,6 +26,36 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/infoworld.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che Joins the Docker Revolution</h3>
+        <p class="loc">November 16th, 2016</p>
+        <p class="desc">Eclipse Che 5.0 is making accommodations for Docker containers and Language Server Protocol across multiple IDEs. The newest version of the Eclipse Foundation’s cloud-based IDE and workspace server will be...</p>
+        <a href="http://www.infoworld.com/article/3141657/application-development/eclipse-che-cloud-ide-joins-docker-revolution.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Docker Joins Eclipse Foundation and Eclipse Che Project</h3>
+        <p class="loc">November 15th, 2016</p>
+        <p class="desc">Eclipse Che is a developer workspace server and cloud IDE. With Che, you can define a workspace with the project code files and all of their dependencies necessary to edit, build, run, and debug them. You can share your workspaces with other team members...</p>
+        <a href="https://blog.docker.com/2016/11/exciting-news-checonf/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che 5.0 Announced at CheConf 2016</h3>
+        <p class="loc">November 15th, 2016</p>
+        <p class="desc">When we launched Eclipse Che in January, appetite for a seamless, portable development workspace was immediately apparent. In this short time, a robust community of developers and partners have transformed Che into one of the fastest-growing open source projects, with 600,000 usage hours...</p>
+        <a href="https://medium.com/eclipse-che-blog/eclipse-che-5-0-announced-at-checonf-2016-8d7759aca777#.mponk8x58" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Introduction to Eclipse Che, a Next-Generation Web-Based IDE</h3>
