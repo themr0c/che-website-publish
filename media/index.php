@@ -38,6 +38,16 @@
   <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
       <td>
+        <h3>Docker Joins Eclipse Foundation and Eclipse Che Project</h3>
+        <p class="loc">November 15th, 2016</p>
+        <p class="desc">Eclipse Che is a developer workspace server and cloud IDE. With Che, you can define a workspace with the project code files and all of their dependencies necessary to edit, build, run, and debug them. You can share your workspaces with other team members...</p>
+        <a href="https://blog.docker.com/2016/11/exciting-news-checonf/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/eclipseche.png" alt=""></td>
+      <td>
         <h3>Eclipse Che 5.0 Announced at CheConf 2016</h3>
         <p class="loc">November 15th, 2016</p>
         <p class="desc">When we launched Eclipse Che in January, appetite for a seamless, portable development workspace was immediately apparent. In this short time, a robust community of developers and partners have transformed Che into one of the fastest-growing open source projects, with 600,000 usage hours...</p>
