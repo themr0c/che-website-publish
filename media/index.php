@@ -26,12 +26,32 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/infoq.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che 5.0 Brings Docker Compose Support, Workspace Agents, and More</h3>
+        <p class="loc">November 16th, 2016</p>
+        <p class="desc">At the first CheConf16, a virtual user conference dedicated to Eclipse Che, a containerized portable development workspace, Codenvy CEO and Che project leader Tyler Jewell announced Eclipse Che 5.0. Expected to be released before the end...</p>
+        <a href="https://www.infoq.com/news/2016/11/eclipse-che-50-announced" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/infoworld.png" alt=""></td>
       <td>
         <h3>Eclipse Che Joins the Docker Revolution</h3>
         <p class="loc">November 16th, 2016</p>
         <p class="desc">Eclipse Che 5.0 is making accommodations for Docker containers and Language Server Protocol across multiple IDEs. The newest version of the Eclipse Foundation’s cloud-based IDE and workspace server will be...</p>
         <a href="http://www.infoworld.com/article/3141657/application-development/eclipse-che-cloud-ide-joins-docker-revolution.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/sdtimes.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che Hits 5.0</h3>
+        <p class="loc">November 16th, 2016</p>
+        <p class="desc">The Eclipse Foundation’s Che Project is stepping up to version 5.0. Announced online at the virtual CheConf yesterday, Codenvy CEO Tyler Jewell gave a keynote address that discussed the features added to the platform originally created by his company...</p>
+        <a href="http://sdtimes.com/eclipse-che-hits-5-0/" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
