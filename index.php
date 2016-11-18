@@ -55,9 +55,9 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
-      <img src="images/img-home-checonf.png" alt="CheConf 2016" class="img-responsive">
+      <img src="images/img-home-checonf2.png" alt="CheConf 2016" class="img-responsive">
       <h3>CheConf 2016</h3>
-      <p>Sessions by Che committers, Docker, Red Hat, Codenvy, Samsung, Sourcegraph, Bitnami, Zend, EclipseSource and Serli.</p>
+      <p>Watch sessions on extending Che, using the language server protocol, Docker and OpenShift.</p>
       <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
     </div>
     <div class="col-md-4">
