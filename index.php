@@ -57,8 +57,8 @@
     <div class="col-md-4">
       <img src="images/img-home-checonf.png" alt="CheConf 2016" class="img-responsive">
       <h3>CheConf 2016</h3>
-      <p>See how cloud workspaces, powered by Docker, simplify software development.</p>
-      <a href="https://www.eclipse.org/che/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
+      <p>Sessions by Che committers, Docker, Red Hat, Codenvy, Samsung, Sourcegraph, Bitnami, Zend, EclipseSource and Serli.</p>
+      <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew2@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
