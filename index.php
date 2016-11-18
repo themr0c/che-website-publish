@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>CheConf 2016 recorded sessions are available: <a href="https://eclipse.org/che/checonf/sessions.html" target="_blank">Watch now</a>.</h3>
+    <h3>Che 5.0 Announcement Blog: <a href="https://medium.com/eclipse-che-blog/eclipse-che-5-0-announced-at-checonf-2016-8d7759aca777#.pckp8j876" target="_blank">Read it here</a>.</h3>
   </div>
 </div>
 
@@ -55,19 +55,19 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
-      <img src="images/img-summit-redhat@2x.png" alt="" class="img-responsive">
-      <h3>Che at Red Hat</h3>
-      <p>See Che used to do cloud native development in Paul Cormier's Red Hat Summit keynote.</p>
-      <a href="https://www.youtube.com/embed/wMTgIIJ-oqQ?start=2995&autoplay=1" class="btn-yellow">Watch the Video</a>
+      <img src="images/img-home-checonf.png" alt="CheConf 2016" class="img-responsive">
+      <h3>CheConf 2016</h3>
+      <p>See how cloud workspaces, powered by Docker, simplify software development.</p>
+      <a href="https://www.eclipse.org/che/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
     </div>
     <div class="col-md-4">
-      <img src="images/img-home-whatsnew2@2x.png" alt="" class="img-responsive">
+      <img src="images/img-home-whatsnew2@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
       <h3>Eclipse Che Enterprise</h3>
       <p>Codenvy uses Eclipse Che to provide dev team collaboration on a scalable workspace platform for DevOps.</p>
       <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
     </div>
     <div class="col-md-4">
-      <img src="images/img-home-whatsnew3@2x.png" alt="" class="img-responsive">
+      <img src="images/img-home-whatsnew3@2x.png" alt="EclipseCon Keynote" class="img-responsive">
       <h3>EclipseCon Keynote</h3>
       <p>Watch Tyler Jewell at EclipseCon talk about Eclipse Che alongside SAP, Red Hat, IBM, and Microsoft.</p>
       <a href="<?php echo $rootPath; ?>/community/" class="btn-yellow">Watch the Keynote</a>
