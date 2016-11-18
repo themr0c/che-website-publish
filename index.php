@@ -57,7 +57,7 @@
     <div class="col-md-4">
       <img src="images/img-home-checonf3.png" alt="CheConf 2016" class="img-responsive">
       <h3>CheConf 2016</h3>
-      <p>Watch sessions on the future of Che, building plugins, Docker, and many more topics.</p>
+      <p>Watch sessions on the future of Che, building plugins, Docker, and many more cloud development topics.</p>
       <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
     </div>
     <div class="col-md-4">
