@@ -26,6 +26,36 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/opensource-for-u.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che IDE starts supporting Docker</h3>
+        <p class="loc">November 18th, 2016</p>
+        <p class="desc">At CheConf 2016, Eclipse Che 5.0 has emerged as the latest portable development workspace. The latest IDE supports Docker to enable easy development of containerised apps. The updated Eclipse Che includes Docker Compose Workspaces to let developers...</p>
+        <a href="http://opensourceforu.com/2016/11/eclipse-che-ide-starts-supporting-docker/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/divine-jpn.png" alt=""></td>
+      <td>
+        <h3>Using Gradle with Eclipse Che</h3>
+        <p class="loc">November 18th, 2016</p>
+        <p class="desc">【縛りプレイ中】Codenvy(Eclipse Che)でGradleのプロジェクトをまともに使えるようにしたい(その２)....</p>
+        <a href="http://mao-instantlife.hatenablog.com/entry/2016/11/19/%E3%80%90%E7%B8%9B%E3%82%8A%E3%83%97%E3%83%AC%E3%82%A4%E4%B8%AD%E3%80%91Codenvy%28Eclipse_Che%29%E3%81%A7Gradle%E3%81%AE%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%82%92%E3%81%BE" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/jaxenter.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che IDE starts supporting Docker</h3>
+        <p class="loc">November 18th, 2016</p>
+        <p class="desc">Docker hat angekündigt, Mitglied der Eclipse Foundation zu werden. Auf der virtuellen Konferenz CheConf 2016 wurden zudem Integrationen von Docker in die Cloud-IDE Eclipse Che vorgestellt....</p>
+        <a href="https://jaxenter.de/docker-tritt-der-eclipse-foundation-bei-49604" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/infoq.png" alt=""></td>
       <td>
         <h3>Eclipse Che 5.0 Brings Docker Compose Support, Workspace Agents, and More</h3>
