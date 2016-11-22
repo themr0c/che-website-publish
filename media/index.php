@@ -26,6 +26,16 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/it-business-edge-logo.gif" alt=""></td>
+      <td>
+        <h3>Docker Joins Eclipse, Updates Commercial Platform</h3>
+        <p class="loc">November 21th, 2016</p>
+        <p class="desc">This past week, Docker announced that it is joining the Eclipse Foundation, which is a leading developer tools organization that produces its namesakeDocker Eclipse IDE. Eclipse is also home to the Che developer workspace server and cloud IDE, which is becoming an increasingly popular option...</p>
+        <a href="http://www.serverwatch.com/server-news/docker-joins-eclipse-updates-commercial-platform.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/opensource-for-u.png" alt=""></td>
       <td>
         <h3>Eclipse Che IDE starts supporting Docker</h3>
