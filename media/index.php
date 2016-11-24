@@ -66,6 +66,16 @@
    </tr><!-- .item -->
 
   <tr class="item">
+      <td><img src="../images/media/heise.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che 5.0 verwendet das Language Server Protocol</h3>
+        <p class="loc">November 17th, 2016</p>
+        <p class="desc">Außerdem können Entwickler nun Dockerfiles und Docker Compose Files in Che erstellen. Zu den weiteren Neuerungen gehört die Möglichkeit, Workspaces für spezielle Aufgaben zu konfigurieren....</p>
+        <a href="https://www.infoq.com/news/2016/11/eclipse-che-50-announced" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/infoq.png" alt=""></td>
       <td>
         <h3>Eclipse Che 5.0 Brings Docker Compose Support, Workspace Agents, and More</h3>
