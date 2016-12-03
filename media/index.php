@@ -26,6 +26,16 @@
   <table class="wrapper">
 
   <tr class="item">
+      <td><img src="../images/media/JUC-logo.png" alt=""></td>
+      <td>
+        <h3>The Future of IDEs: Eclipse Che, The Next-Generation Eclipse IDE</h3>
+        <p class="loc">September 15th, 2016</p>
+        <p class="desc">The developer workspace has evolved to support every language, framework, paradigm and runtime. Yet, developers are frustrated. They want to do more but cannot, inhibited by workspaces that are non-portable, non-collaborative and difficult to configure. Universal workspaces are essential...</p>
+        <a href="https://www.cloudbees.com/future-ides-eclipse-che-next-generation-eclipse-ide" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/it-business-edge-logo.gif" alt=""></td>
       <td>
         <h3>Docker Joins Eclipse, Updates Commercial Platform</h3>
