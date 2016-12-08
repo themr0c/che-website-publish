@@ -25,13 +25,24 @@
 
   <table class="wrapper">
 
+
   <tr class="item">
-      <td><img src="../images/media/JUC-logo.png" alt=""></td>
+      <td><img src="../images/media/article.png" alt=""></td>
       <td>
-        <h3>The Future of IDEs: Eclipse Che, The Next-Generation Eclipse IDE</h3>
-        <p class="loc">September 15th, 2016</p>
-        <p class="desc">The developer workspace has evolved to support every language, framework, paradigm and runtime. Yet, developers are frustrated. They want to do more but cannot, inhibited by workspaces that are non-portable, non-collaborative and difficult to configure. Universal workspaces are essential...</p>
-        <a href="https://www.cloudbees.com/future-ides-eclipse-che-next-generation-eclipse-ide" target="_blank">Read More</a>
+        <h3>Building lejOS EV3 with Eclipse Che</h3>
+        <p class="loc">Dec 8th, 2016</p>
+        <p class="desc">Japanese: using Che is advantageous because of easy clean up, easy to make the environment the same for installation on multiple development machines, simultaneous editing is possible from multiple browsers, it is easy to pair program, resource demands are low so any device (even tablet) is okay...</p>
+        <a href="http://qiita.com/monamour555/items/3b1e50a05b57e1f5c787" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>First Steps in Java without any Setup</h3>
+        <p class="loc">Dec 6th, 2016</p>
+        <p class="desc">Russian: Open Source Eclipse Che software - the new generation of IDE for collaborative development software. Not so familiar to us "oldies", but allows you to develop locally ... and we do not even need to install anything...</p>
+        <a href="https://habrahabr.ru/post/310438/" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -345,6 +356,15 @@
       </td>
    </tr><!-- .item -->
 
+  <tr class="item">
+      <td><img src="../images/media/JUC-logo.png" alt=""></td>
+      <td>
+        <h3>The Future of IDEs: Eclipse Che, The Next-Generation Eclipse IDE</h3>
+        <p class="loc">September 15th, 2016</p>
+        <p class="desc">The developer workspace has evolved to support every language, framework, paradigm and runtime. Yet, developers are frustrated. They want to do more but cannot, inhibited by workspaces that are non-portable, non-collaborative and difficult to configure. Universal workspaces are essential...</p>
+        <a href="https://www.cloudbees.com/future-ides-eclipse-che-next-generation-eclipse-ide" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
 
    <tr class="item">
       <td><img src="../images/media/eclipseche.png" alt=""></td>
