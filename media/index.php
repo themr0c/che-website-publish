@@ -29,6 +29,16 @@
   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Providing a Cloud IDE for Embedded Software</h3>
+        <p class="loc">Dec 12th, 2016</p>
+        <p class="desc">Japanese: A new cloud-based IDE built on Eclipse Che will come to market in Japan from Mizanomiya. The product is available now with an enhanced version planned for January 2017. There are new problems in the embedded software world that can't be solved by assuming everyone has a desktop IDE...</p>
+        <a href="https://www.value-press.com/pressrelease/175017" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Building lejOS EV3 with Eclipse Che</h3>
         <p class="loc">Dec 8th, 2016</p>
         <p class="desc">Japanese: using Che is advantageous because of easy clean up, easy to make the environment the same for installation on multiple development machines, simultaneous editing is possible from multiple browsers, it is easy to pair program, resource demands are low so any device (even tablet) is okay...</p>
