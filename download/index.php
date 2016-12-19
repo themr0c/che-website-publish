@@ -15,8 +15,8 @@
   <div class="container-fluid">
     <h1>Downloads</h1>
     <h3>
-      Release: <span class="text-yellow">4.6.2</span><br>
-      Date: <span class="text-yellow">August 11, 2016</span>
+      Release: <span class="text-yellow">5.0.0-M8</span><br>
+      Date: <span class="text-yellow">Nov 12, 2016</span>
     </h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
@@ -26,7 +26,7 @@
 <div class="container-fluid content">    
   
   <h2><a id="installers">Installers</a></h2>
-  Try simpler options for getting started including <a href='../installers'><b>cloud, hosting, and Docker.</b></a><br>
+  Get started quickly with <a href='../getting-started'><b>a private cloud install, hosted SaaS, and local Docker images.</b></a><br>
   <div class="separator"></div>
 
   <h2><a id="signed">Eclipse Signed Packages</a></h2>
