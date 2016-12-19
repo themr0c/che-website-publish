@@ -26,10 +26,15 @@
 <div class="container-fluid content">    
   
   <h2><a id="installers">Installers</a></h2>
-  Get started quickly with <a href='../getting-started'><b>a private cloud install, hosted SaaS, and local Docker images.</b></a><br>
+  We strongly suggest that you get started with <a href='../getting-started'><b>a private cloud install, hosted SaaS, and local Docker images.</b></a><br>
   <div class="separator"></div>
+</div> <!-- /. container -->
 
-  <h2><a id="signed">Eclipse Signed Packages</a></h2>
+<hr class="gray">
+ <div class="bg-deep-purple feedback">
+  <div class="container-fluid content">    
+
+  <h3><a id="signed">Eclipse Signed Packages</a></h3>
   <p>Packages let you run Che natively. These packages extract Che into a directory. You must have </a><a href="https://www.java.com/en/download/">Java 1.8</a> and <a href="https://www.docker.com/">Docker</a> installed. Docker for Windows is currently supported. You can optionally use Virtual Box to launch Docker with Boot2Docker.</p>
 
   <ul>
@@ -54,6 +59,6 @@
   <h2>Older Releases</h2>
   <p>Archived versions of previous releases are maintained on the <b><a href="https://github.com/eclipse/che/releases">Che GitHub release page</a></b>.</p>
 </div> <!-- /.container-fluid -->
-
+</div> <!-- /.purple-container -->
 
 <?php include '../includes/footer.php'; ?>
