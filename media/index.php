@@ -27,6 +27,16 @@
 
 
   <tr class="item">
+      <td><img src="../images/media/infoq.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che 5.0 Announced</h3>
+        <p class="loc">Dec 12th, 2016</p>
+        <p class="desc">Japanese: コンテナ化されたポータブルな開発ワークプレースであるEclipse Cheのために開催された仮想ユーザカンファレンスCheConf16の第1回において，CheプロジェクトのリーダであるCodenvy CEOのTyler Jewell氏は，Eclipse Che 5.0を発表した。...</p>
+        <a href="https://www.infoq.com/jp/news/2016/12/eclipse-che-50-announced" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Providing a Cloud IDE for Embedded Software</h3>
