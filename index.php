@@ -90,7 +90,7 @@
     <li><img src="images/logo-platformio@2x.png" alt="RedHat" style="width: 96px; height: 70px; margin-left: 50px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
-    <li><img src="images/img-logo-sfdc.jpg" alt="Salesforce" style="height: 70px; margin-top: 15px" class="img-responsive"></li>
+    <li><img src="images/img-logo-sfdc.jpg" alt="Salesforce" class="img-responsive"></li>
     <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
     <li><img src="images/logo-sap@2x.png" alt="SAP" class="img-responsive"></li>
     <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
