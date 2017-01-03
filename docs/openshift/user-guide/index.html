@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -80,7 +84,7 @@
 </header>
 
 
-    <section class="openshift">
+    <section class="docs">
     <div class="grid">
 
       <div class="docs-nav-mobile unit whole show-on-mobiles">
@@ -483,19 +487,23 @@
 /bin/che.sh run
 
 <span class="c"># if you built Che from source</span>
-
-assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</span><span class="nv">version</span><span class="k">}</span>/eclipse-che-<span class="k">${</span><span class="nv">version</span><span class="k">}</span>/bin/che.sh run<span class="se">\</span>
+assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</span><span class="nv">version</span><span class="k">}</span>/eclipse-che-<span class="k">${</span><span class="nv">version</span><span class="k">}</span>/bin/che.sh run
 </code></pre>
 </div>
 <p>Che will be available at <code class="highlighter-rouge">http://localhost:8080</code></p>
+
 <h1 id="connect-account">Connect Account</h1>
 <p>Login to your account <strong>OpenShift &gt; Connect Account</strong>. You will retrieve a token using authentication method set up for your OpenShift installation (login/password, Google oAuth etc).</p>
+
 <h1 id="create-application-from-template">Create Application From Template</h1>
 <p>Create a new app from a template at <strong>OpenShift &gt; Create Application From Template</strong>. This will both create a new OpenShift project (namespace) and a set of configs, as well as import an app into Che.</p>
 
 <p>Once an app is imported, OpenShift metadata is added to project attributes, thus a connection between Che and OpenShift resources is established.</p>
+
 <h4 id="import-a-module">Import a Module</h4>
-<p>}</p>
+<p>If template buildConfig features <strong>GIT_CONTEXT_DIR</strong> parameter, a particular project module will be checked out into a project tree.</p>
+
+<p>This module will be a sub-folder of a root project which you should then turn into a Maven module (right click to call a context menu &gt; Create Module)</p>
 
 <p><img src="../../../docs/assets/imgs/module.png" alt="module.png" /></p>
 
@@ -504,11 +512,11 @@ assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</s
 
 <h1 id="import-existing-openshift-app">Import Existing OpenShift App</h1>
 <p>When importing an existing OpenShift application, the plugin checks for all <em>buildConfigs</em> in all user namespaces, extracts Git URLs and shows them in the application list, grouped by a namespace.</p>
+
 <h1 id="deploy-existing-app-to-openshift">Deploy Existing App to OpenShift</h1>
 <p>Deployment to OpenShift triggers two actions: marking Che project as OpenShift project type and creating a set of objects on the OpenShift side.</p>
 
 <p>A user can choose/edit:</p>
-
 <ul>
   <li>namespace where all the objects will be created (new vs existing one)</li>
   <li>builder image, i.e. where the code will be compiled (if applicable) and deployed with an app server</li>
@@ -516,26 +524,33 @@ assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</s
 </ul>
 
 <p>You’ll need to enter both project and application names.</p>
+
 <h1 id="link-che-app-with-existing-openshift-app--unlink-app">Link Che App With Existing OpenShift App / Unlink App</h1>
 <p>Che projects can be linked with existing OpenShift applications at <strong>OpenShift &gt; Deploy &gt; Link With Existing App</strong>. When a Che project is linked to OpenShift application, OpenShift metadata is saved to Che project attributes (namespace and label).</p>
 
 <p>It is possible to <code class="highlighter-rouge">'unlink'</code> Che project from OpenShift, which means clearing Che project attributes. Unlinking project does not delete OpenShift namespace and its associated resources.</p>
+
 <h1 id="delete-openshift-project">Delete OpenShift Project</h1>
 <p>It is possible to delete an OpenShift project only when a related Che project is selected in a project tree. Deleting OpenShift project resets Che project (OpenShift attributes are removed) and deletes OpenShift namespace.</p>
 
 <p>If an OpenShift namespace has multiple <code class="highlighter-rouge">buildConfigs</code> (apps), a user will be prompted to confirm namespace deletion. Warning message will contain the list of resources that will be deleted.</p>
+
 <h1 id="get-webhooks">Get Webhooks</h1>
 <p>GitHub and generic Git webhooks make it possible to notify OpenShift that a Git repo has been updated. Git push will trigger a new build in OpenShift, and a <code class="highlighter-rouge">buildConfig</code> will clone updated source code. Webhooks are retrieved at <code class="highlighter-rouge">OpenShift &gt; Manage Configs &gt; Build</code>.</p>
+
 <h1 id="show-appication-url">Show Appication URL</h1>
 <p>If a project has been deployed to OpenShift, linked with existing app or imported an as existing OpenShift application, it is possible to get preview URL of a running app (get route) at <code class="highlighter-rouge">OpenShift &gt; Manage Configs &gt; Route</code>.</p>
+
 <h1 id="trigger-build">Trigger Build</h1>
 <p><code class="highlighter-rouge">OpenShift &gt; Start Build</code> will initiate a new build, subscribe to Websocket channels to track build status and stream build logs.</p>
 
 <p>Che will also listen to other build channels, and if a build has been triggered (not necessarily from Che), build logs will be streamed to a dedicated panel.</p>
+
 <h1 id="add-a-database">Add A Database</h1>
 <p>Databases can be added at <code class="highlighter-rouge">OpenShift &gt; Services &gt; Add Service</code>.</p>
 
 <p>OpenShift Plugin will look for database templates in <code class="highlighter-rouge">openshift</code> namespace and all user namespaces, let a user edit/add environment variables (username, password, databasename) create objects listed in a template, and add database pod environment variables to application <code class="highlighter-rouge">deploymentConfig</code>.</p>
+
 <h4 id="database-templates">Database Templates</h4>
 <p>The plugin filters templates by <code class="highlighter-rouge">database</code> tag. If you database templates do not have this tag, they will not be listed in the popup.</p>
 
@@ -544,11 +559,13 @@ assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</s
 
 <p>Having added a database, connect to it, using environment variables.</p>
 
-<p>A few examples:</p>
+<p>A few examples:
+<em>Java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">System</span><span class="o">.</span><span class="na">getenv</span><span class="o">(</span><span class="s">"MYSQL_USER"</span><span class="o">)</span>
 </code></pre>
 </div>
 
+<p><em>PHP</em></p>
 <div class="language-php highlighter-rouge"><pre class="highlight"><code>$servername = getenv("MYSQL_PORT_3306_TCP_ADDR");
 </code></pre>
 </div>
@@ -811,9 +828,7 @@ assembly/openshift-plugin-assembly-main/target/eclipse-che-<span class="k">${</s
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

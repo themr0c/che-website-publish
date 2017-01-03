@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -113,14 +117,20 @@
           </div>
           
 <h1 id="1-start-che">1. Start Che</h1>
-<p>Use your SaaS account for the following, or if you have <a href="https://eclipse-che.readme.io/v5.0/docs/che-getting-started">installed Che</a>, open a terminal and use the Che startup script:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Launch Che</span>
-che start<span class="se">\</span>
+<p>Use your SaaS account for the following, or if you have <a href="../../../docs/setup/getting-started/index.html">installed Che</a>, open a terminal and use the Che startup script:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
+docker run -it eclipse/che-cli start
+
+<span class="c"># Or, full start syntax where &lt;path&gt; is a local directory</span>
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che-cli start
 </code></pre>
 </div>
+
 <p>When you execute this command, you’ll see the URL for the user dashboard.</p>
 
 <p>The Che dashboard will open. It is where you manage your projects and workspaces. If you do not have any projects in Che, you’ll be asked to create a new project.  If you already have projects in Che, click on <code class="highlighter-rouge">New Project</code> button in the menu bar.</p>
+
 <h1 id="2-create-console-java-project">2. Create Console Java Project</h1>
 <p>From the Dashboard page click “Create Workspace”.</p>
 
@@ -130,9 +140,10 @@ This informs Che where the source code for your project is going to come from. I
 
 <p>We will create a project from a provided template.</p>
 
-<p>###Select Stack
-<img src="../../../docs/assets/imgs/ScreenShot2016-09-30at5.52.21PM.png" alt="ScreenShot2016-09-30at5.52.21PM.png" />
+<h3 id="select-stack">Select Stack</h3>
+<p><img src="../../../docs/assets/imgs/ScreenShot2016-09-30at5.52.21PM.png" alt="ScreenShot2016-09-30at5.52.21PM.png" />
 Your project will be inserted into a workspace, which has a provided Docker runtime. Stacks are the recipes or images used to define the runtime environment for the workspace where your project will be placed. There are three ways to choose a stack:</p>
+
 <ol>
   <li><em>Ready-To-Go Stacks.</em> Environments that have a large variety of tools already installed optimized for projects of a particular type. For this example, we will select the Java stack which will create a container with Ubuntu git, java-jdk, maven, tomcat installed.</li>
   <li><em>Stack Library.</em> Offers finer grained stacks that can be used to create specific technology layers needed for a project. Ubuntu and Debian stacks, for example, are minimal stacks with only an operating system and Che tools installed.</li>
@@ -145,8 +156,8 @@ Your project will be inserted into a workspace, which has a provided Docker runt
 <p><img src="../../../docs/assets/imgs/ScreenShot2016-09-30at5.55.07PM.png" alt="ScreenShot2016-09-30at5.55.07PM.png" />
 Provide a name to your workspace and configure its RAM. RAM will be the memory limit applied to the machines running your workspace environment. For this tutorial, create a new workspace with name <code class="highlighter-rouge">tutorial-java</code> and set its RAM to 1GB.</p>
 
-<p>###Select Template (Code Sample)
-<img src="../../../docs/assets/imgs/ScreenShot2016-09-30at5.55.58PM.png" alt="ScreenShot2016-09-30at5.55.58PM.png" />
+<h3 id="select-template-code-sample">Select Template (Code Sample)</h3>
+<p><img src="../../../docs/assets/imgs/ScreenShot2016-09-30at5.55.58PM.png" alt="ScreenShot2016-09-30at5.55.58PM.png" />
 A template is a set of code, configuration, and commands that can be imported to operate within Che. There are two types of templates:</p>
 <ol>
   <li><strong>Ready-to-run project samples</strong>. These samples have a compilable source tree and embedded commands. The list of templates available are filtered based upon the stack chosen.</li>
@@ -165,11 +176,14 @@ You can set a name and description of your project. The name is what will appear
 
 <p>The project construction process goes through a number of steps including creating a new workspace, downloading an image to use for the workspace environment, instantiating that environment, installing Che services into the workspace, and then creating your project.</p>
 <h1 id="3-develop-in-the-ide">3. Develop in the IDE</h1>
-<p>The project created is a Maven project. Once you open it in the IDE, you’ll see the dependencies updated from the <code class="highlighter-rouge">pom.xml</code> file.
-<img src="../../../docs/assets/imgs/ide-update-dep.png" alt="ide-update-dep.png" /></p>
+<p>The project created is a Maven project. Once you open it in the IDE, you’ll see the dependencies updated from the <code class="highlighter-rouge">pom.xml</code> file.</p>
+
+<p><img src="../../../docs/assets/imgs/ide-update-dep.png" alt="ide-update-dep.png" /></p>
+
 <h3 id="project-explorer">Project Explorer</h3>
-<p><img src="../../../docs/assets/imgs/project-tree.png" alt="project-tree.png" />
-On the left side of the IDE, a panel is displaying the project explorer which allow you to browse the sources of your project. You can use your mouse to expand/collapse the folders and packages, but you are also able to navigate in the project explorer using your keyboard. Use:</p>
+<p><img src="../../../docs/assets/imgs/project-tree.png" alt="project-tree.png" /></p>
+
+<p>On the left side of the IDE, a panel is displaying the project explorer which allow you to browse the sources of your project. You can use your mouse to expand/collapse the folders and packages, but you are also able to navigate in the project explorer using your keyboard. Use:</p>
 <ul>
   <li><code class="highlighter-rouge">up arrow</code> and <code class="highlighter-rouge">down arrow</code> to navigate in the tree,</li>
   <li><code class="highlighter-rouge">left arrow</code> and <code class="highlighter-rouge">right arrow</code> to expand/collapse folders and packages,</li>
@@ -177,9 +191,11 @@ On the left side of the IDE, a panel is displaying the project explorer which al
 </ul>
 
 <h3 id="editor-overview">Editor Overview</h3>
-<p>Open the file <code class="highlighter-rouge">HelloWorld.java</code> in the package <code class="highlighter-rouge">org.eclipse.che.examples</code>. The file is displayed with syntax coloration.
-<img src="../../../docs/assets/imgs/editor-simple.png" alt="editor-simple.png" />
-The editor is structured in a common way:</p>
+<p>Open the file <code class="highlighter-rouge">HelloWorld.java</code> in the package <code class="highlighter-rouge">org.eclipse.che.examples</code>. The file is displayed with syntax coloration.</p>
+
+<p><img src="../../../docs/assets/imgs/editor-simple.png" alt="editor-simple.png" /></p>
+
+<p>The editor is structured in a common way:</p>
 <ul>
   <li>at the top: the list of all opened files,</li>
   <li>on the left: line number, breakpoints and error marks,</li>
@@ -188,23 +204,31 @@ The editor is structured in a common way:</p>
 </ul>
 
 <p>If you have error in your files, the editor will display error and warning marks:
-<img src="../../../docs/assets/imgs/editor-errors.png" alt="editor-errors.png" />
-You can use your keyboard to navigate in the file content, but also between files. You can get the complete list of all keyboard shortcut by going into the menu <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Key Bindings</code> and scrolling to the category <code class="highlighter-rouge">Editor</code>
-<img src="../../../docs/assets/imgs/keybindings.png" alt="keybindings.png" /></p>
+<img src="../../../docs/assets/imgs/editor-errors.png" alt="editor-errors.png" /></p>
+
+<p>You can use your keyboard to navigate in the file content, but also between files. You can get the complete list of all keyboard shortcut by going into the menu <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Key Bindings</code> and scrolling to the category <code class="highlighter-rouge">Editor</code></p>
+
+<p><img src="../../../docs/assets/imgs/keybindings.png" alt="keybindings.png" /></p>
+
 <h3 id="java-intellisense">Java Intellisense</h3>
 <p>There is an Assistant menu that includes language specific capabilities. You can perform auto-complete by hitting <code class="highlighter-rouge">ctrl-space</code>.</p>
 
 <h3 id="jump-to-definition">Jump to Definition</h3>
-<p>While you are editing your Java code, you may want a documentation lookup for a particular symbol (class, attribute or method). Get quick documentation by <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Quick Documentation</code> or <code class="highlighter-rouge">^j</code>.
-<img src="../../../docs/assets/imgs/quick-documentation.png" alt="quick-documentation.png" />
-If you need more information about the symbol, you can also navigate to its definition with <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Open Declaration</code> or <code class="highlighter-rouge">F4</code>.  The <code class="highlighter-rouge">String</code> class will open in a new editor.
-<img src="../../../docs/assets/imgs/open-declaration.png" alt="open-declaration.png" /></p>
+<p>While you are editing your Java code, you may want a documentation lookup for a particular symbol (class, attribute or method). Get quick documentation by <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Quick Documentation</code> or <code class="highlighter-rouge">^j</code>.</p>
+
+<p><img src="../../../docs/assets/imgs/quick-documentation.png" alt="quick-documentation.png" /></p>
+
+<p>If you need more information about the symbol, you can also navigate to its definition with <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Open Declaration</code> or <code class="highlighter-rouge">F4</code>.  The <code class="highlighter-rouge">String</code> class will open in a new editor.</p>
+
+<p><img src="../../../docs/assets/imgs/open-declaration.png" alt="open-declaration.png" /></p>
+
 <h3 id="search">Search</h3>
 <p>Che editor provides various ways to search your projects and workspace.</p>
 
 <h4 id="search-with-editor">Search with Editor</h4>
-<p>Use the editor search to find and replace in a particular file via <code class="highlighter-rouge">CTRL+f</code> keyboard shortcut. You can also use regular expressions.
-<img src="../../../docs/assets/imgs/find-editor.png" alt="find-editor.png" /></p>
+<p>Use the editor search to find and replace in a particular file via <code class="highlighter-rouge">CTRL+f</code> keyboard shortcut. You can also use regular expressions.</p>
+
+<p><img src="../../../docs/assets/imgs/find-editor.png" alt="find-editor.png" /></p>
 
 <h4 id="find-usages">Find Usages</h4>
 <p>This will find all references of a particular class, method, field or attribute and search for its usage in your various project’s files. Do this with <code class="highlighter-rouge">Assistant</code> &gt; <code class="highlighter-rouge">Find Usages</code>. A new panel will open and list all references for <code class="highlighter-rouge">String</code> into your project. If you select one of the occurrence and double-click on it, the editor will open the file to the position of the found reference.</p>
@@ -218,16 +242,20 @@ If you need more information about the symbol, you can also navigate to its defi
 <p>Put cursor on method, variable or field that you want to rename, and hit Shift + F6. If this hotkey is pressed once, the selected keyword will be highlighted which means it’s ready for refactoring. You can type a new name and press Enter.</p>
 
 <p>If you press Shift + F6 twice, an advanced Rename mode is called out:
-<img src="../../../docs/assets/imgs/rename.png" alt="rename.png" />
-Preview button will open a side by side comparison window that will show changes that you are about to apply.</p>
+<img src="../../../docs/assets/imgs/rename.png" alt="rename.png" /></p>
+
+<p>Preview button will open a side by side comparison window that will show changes that you are about to apply.</p>
 
 <h4 id="move">Move</h4>
 <p>Choose any Java class you want to move and hit F6. It will call a Move item menu. Choose destination for your class and click OK.</p>
 
-<p><img src="../../../docs/assets/imgs/move-item.png" alt="move-item.png" />
-It’s also possible to preview changes. Choose destination for your class and click Preview. It will show all Java classes and non-Java files (optional), that the replaced class is referenced in.
-<img src="../../../docs/assets/imgs/preview.png" alt="preview.png" />
-###Manage Maven Modules
+<p><img src="../../../docs/assets/imgs/move-item.png" alt="move-item.png" /></p>
+
+<p>It’s also possible to preview changes. Choose destination for your class and click Preview. It will show all Java classes and non-Java files (optional), that the replaced class is referenced in.</p>
+
+<p><img src="../../../docs/assets/imgs/preview.png" alt="preview.png" /></p>
+
+<p>###Manage Maven Modules
 Maven Plugin provides the ability to manage Maven modules in multi-module projects entirely through <code class="highlighter-rouge">pom.xml</code>.</p>
 
 <p>Open any Java multi-module project and create a new folder with a simple Maven project in it. It will be seen as folder in the project tree first. Open your parent project POM and add your newly imported module there:
@@ -235,20 +263,23 @@ Maven Plugin provides the ability to manage Maven modules in multi-module projec
 
 <p>As a result, it will be automatically configured as a Maven module in your project tree. Maven plugin watches changes in <code class="highlighter-rouge">pom.xml</code> and automatically imports changes (dependencies, configuration etc).</p>
 
-<p>###Dependency Management
-If you make changes to dependencies in POM, they will be automatically updated. You can also manually reimport the project: right click on your Maven project, choose <code class="highlighter-rouge">Maven &gt; Reimport</code>.</p>
+<h3 id="dependency-management">Dependency Management</h3>
+<p>If you make changes to dependencies in POM, they will be automatically updated. You can also manually reimport the project: right click on your Maven project, choose <code class="highlighter-rouge">Maven &gt; Reimport</code>.</p>
 
 <p>If you have errors in your POM or add some nonexistent dependency to your POM, the following error will be displayed in the editor:
-<img src="../../../docs/assets/imgs/nonexistent-dependency.png" alt="nonexistent-dependency.png" />
-###Configure Classpath
-It’s possible to view project dependencies at <code class="highlighter-rouge">Project &gt; Configure Classpath</code>. Dependencies in the classpath will be categorized as follows:</p>
+<img src="../../../docs/assets/imgs/nonexistent-dependency.png" alt="nonexistent-dependency.png" /></p>
+
+<h3 id="configure-classpath">Configure Classpath</h3>
+<p>It’s possible to view project dependencies at <code class="highlighter-rouge">Project &gt; Configure Classpath</code>. Dependencies in the classpath will be categorized as follows:</p>
 <ul>
   <li>JRE_CONTAINER - Java 1.8 jars;</li>
-  <li>MAVEN2_CLASSPATH_CONFIGURATION - project dependencies.
-<img src="../../../docs/assets/imgs/configure-classpath.png" alt="configure-classpath.png" />
-###Generate Effective POM
-There is also a possibility to display POM that results from the application of interpolation, inheritance and active profiles. Just open your Maven project and go to <code class="highlighter-rouge">Assistant &gt; Generate Effective Pom</code>.</li>
+  <li>MAVEN2_CLASSPATH_CONFIGURATION - project dependencies.</li>
 </ul>
+
+<p><img src="../../../docs/assets/imgs/configure-classpath.png" alt="configure-classpath.png" /></p>
+
+<h3 id="generate-effective-pom">Generate Effective POM</h3>
+<p>There is also a possibility to display POM that results from the application of interpolation, inheritance and active profiles. Just open your Maven project and go to <code class="highlighter-rouge">Assistant &gt; Generate Effective Pom</code>.</p>
 
           
 
@@ -586,9 +617,7 @@ There is also a possibility to display POM that results from the application of 
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -477,9 +481,10 @@
             </div>
           </div>
           
-<p>This part of the documentation describes how to extend Eclipse Che with custom plugins, e.g. to provide support for new languages. It covers various aspects from adding new file types, extending the code editor, adding intellisense features, defining a specific project-type, and accessing the workspace. Before you start to extend Che, we recommend to get a general technical overview as provided <a href="https://eclipse-che.readme.io/docs/">here</a>.</p>
+<p>This part of the documentation describes how to extend Eclipse Che with custom plugins, e.g. to provide support for new languages. It covers various aspects from adding new file types, extending the code editor, adding intellisense features, defining a specific project-type, and accessing the workspace. Before you start to extend Che, we recommend to get a general technical overview as provided <a href="../../../docs/setup/intro/index.html">here</a>.</p>
 
 <p>In general, Che can be extended in its three different components, the IDE running in the Browser, the Che Server, and the Workspace (see diagram below).</p>
+
 <ul>
   <li>
     <p>First, the IDE running in the Browser can be extended by new local features, such as simple actions, new editors, and views, or immediate syntax highlighting. Some of these extensions can run completely local, some will use the Che server API.</p>
@@ -489,26 +494,27 @@
   </li>
   <li>
     <p>Third, the Workspace can also be extended to provide new API to be consumed by the Che server.
-<img src="../../../docs/assets/imgs/image05.png" alt="image05.png" />
-Therefore, typical extensions of Che are deployed to up to three different components, depending on the use case. However, as many extensions include plugin parts for the IDE, the server and even the Workspace, the extension documentation is not organized by Che components, but by extension use cases (e.g. adding a new file type or implementing a client server communication accessing the workspace).</p>
+<img src="../../../docs/assets/imgs/image05.png" alt="image05.png" /></p>
   </li>
 </ul>
+
+<p>Therefore, typical extensions of Che are deployed to up to three different components, depending on the use case. However, as many extensions include plugin parts for the IDE, the server and even the Workspace, the extension documentation is not organized by Che components, but by extension use cases (e.g. adding a new file type or implementing a client server communication accessing the workspace).</p>
 
 <p>Technically, client and server extensions are different components, however, as they conceptually belong together, they are organized in one plugin containing several sub-components.</p>
 
 <p>This tutorial starts with an introduction on the following prerequisites to build a custom extensions. If you want to follow the tutorial hands-on, you should read those sections, if you are just interested in learning about a specific extension use case, you might skip them for now.</p>
 
 <ul>
-  <li>How to <a href="doc:setup-che-workspace">set-up a workspace</a> for developing a Che extension.</li>
-  <li>How to <a href="https://eclipse-che.readme.io/docs/create-and-build-extensions">create and build extensions</a> including a description of the general plugin structure used in Che</li>
-  <li>A brief introduction on <a href="doc:dependency-injection-basics">dependency injection</a> and its usage in Che, on the client and on the server side. (If you are already familiar with Guice and Gin, you might want to skip this part)</li>
+  <li>How to <a href="../../../docs/plugins/setup-che-workspace/index.html">set-up a workspace</a> for developing a Che extension.</li>
+  <li>How to <a href="../../../docs/plugins/create-and-build-extensions/index.html">create and build extensions</a> including a description of the general plugin structure used in Che</li>
+  <li>A brief introduction on <a href="../../../docs/plugins/dependency-injection-basics/index.html">dependency injection</a> and its usage in Che, on the client and on the server side. (If you are already familiar with Guice and Gin, you might want to skip this part)</li>
 </ul>
 
 <p>The remaining tutorial is structured along extension use cases. For every extension capability, we provide a general introduction containing code examples.</p>
 
-<p>The tutorial often refers to a continuous example: The implementation of simple JSON support in Eclipse Che. If you are interested in learning about a certain extension use case, please directly navigate to the respective part of the tutorial. If you are interested in getting an overview about the most important extension features, please have a look at <a href="https://eclipse-che.readme.io/docs/introduction-1#section-the-json-example">the introduction of the JSON example in the following section</a>. It provides a use case oriented overview of the contents of this tutorial and contains links to the detailed parts.</p>
+<p>The tutorial often refers to a continuous example: The implementation of simple JSON support in Eclipse Che. If you are interested in learning about a certain extension use case, please directly navigate to the respective part of the tutorial. If you are interested in getting an overview about the most important extension features, please have a look at <a href="../../../docs/plugins/introduction/index.html#the-json-example">the introduction of the JSON example in the following section</a>. It provides a use case oriented overview of the contents of this tutorial and contains links to the detailed parts.</p>
 
-<p>##The JSON Example</p>
+<h2 id="the-json-example">The JSON Example</h2>
 
 <p>In this section, we give a functional overview of the continuous example that we use in most parts of this tutorial, the “<strong>JSON Example</strong>”. It provides simple support for creating, modifying and validating JSON files within Eclipse Che. Please note that the JSON example is not designed to provide perfect JSON support in Che. In fact, it is designed to cover most aspects of providing support for a custom language in Eclipse Che while remaining as simple as possible. This section shall provide an overview about the example and at the same time about Che’s various extension use cases.</p>
 
@@ -517,23 +523,25 @@ Therefore, typical extensions of Che are deployed to up to three different compo
 
 <p>The example includes the following parts, which can be found in the respective parts of this tutorial.</p>
 
-<p>###File Type and Code Editor</p>
+<h3 id="file-type-and-code-editor">File Type and Code Editor</h3>
 
-<p>The example provides <a href="code-editors#section-file-types">a custom file type</a> for JSON including a custom icon. For this file type it includes <a href="code-editors">a custom code editor </a> for JSON files. The code editor provides <a href="code-editors#section-syntax-highlighting">syntax highlighting</a> for JSON files.
+<p>The example provides <a href="../../../docs/plugins/code-editors/index.html#file-types">a custom file type</a> for JSON including a custom icon. For this file type it includes <a href="../../../docs/plugins/code-editors/index.html">a custom code editor </a> for JSON files. The code editor provides <a href="../../../docs/plugins/code-editors/index.html#syntax-highlighting">syntax highlighting</a> for JSON files.
 <img src="../../../docs/assets/imgs/image08.png" alt="image08.png" />
-Additionally, the example implements <a href="code-editors">code completion</a> based on a list of suggestions. There are two sources for the list of suggestions, the first and simple one is <a href="code-editors">directly calculated on the client,</a> it can therefore only operate on information available in the context (e.g. the current file opened). The second one is <a href="serverworkspace-access#section-server-services">calculated on the server</a> and can therefore access the complete workspace to calculate the suggestions.</p>
+Additionally, the example implements <a href="../../../docs/plugins/code-editors/index.html#code-completion">code completion</a> based on a list of suggestions. There are two sources for the list of suggestions, the first and simple one is <a href="../../../docs/plugins/code-editors/index.html">directly calculated on the client,</a> it can therefore only operate on information available in the context (e.g. the current file opened). The second one is <a href="../../../docs/plugins/serverworkspace-access/index.html#server-services">calculated on the server</a> and can therefore access the complete workspace to calculate the suggestions.</p>
 
-<p><img src="../../../docs/assets/imgs/image13.png" alt="image13.png" />
-###Project Type</p>
+<p><img src="../../../docs/assets/imgs/image13.png" alt="image13.png" /></p>
 
-<p>There is a <a href="project-types">custom project type</a> for working with JSON files. The example provides<a href="project-types#section-project-creation-wizard"> a custom project creation wizard</a> which allows to enter project specific data. In case of the JSON example, it allows to specify a URL pointing to a JSON schema, which is later used to validate the JSON files within the project. The project wizard is available in the standard “Create New Project” dialog of Che:</p>
+<h3 id="project-type">Project Type</h3>
+
+<p>There is a <a href="../../../docs/plugins/project-types/index.html">custom project type</a> for working with JSON files. The example provides<a href="../../../docs/plugins/project-types/index.html#project-creation-wizard"> a custom project creation wizard</a> which allows to enter project specific data. In case of the JSON example, it allows to specify a URL pointing to a JSON schema, which is later used to validate the JSON files within the project. The project wizard is available in the standard “Create New Project” dialog of Che:</p>
 
 <p><img src="../../../docs/assets/imgs/image03.png" alt="image03.png" />
 The JSON example wizard will initialize a new project with two existing JSON files and a directory to contain custom ones:
-<img src="../../../docs/assets/imgs/image08.png" alt="image08.png" />
-###Actions</p>
+<img src="../../../docs/assets/imgs/image08.png" alt="image08.png" /></p>
 
-<p>The JSON example register two <a href="docs:section-project-perspective-specific-actions-json-example-">project-specific actions</a> for the custom project type. The first one implements <a href="docs:section-project-perspective-specific-actions-json-example-">a simple “Hello World”</a>.<a href="serverworkspace-access#section-workspace-services"> The second one </a>calls a custom service on the server which will access the workspace and count the number of lines of all JSON files within the project. It thereby also includes a template for client/server communication and for accessing source files (e.g. for validation or compilation).</p>
+<h3 id="actions">Actions</h3>
+
+<p>The JSON example register two <a href="../../../docs/plugins/actions/index.html#projectperspective-specific-actions-json-example">project-specific actions</a> for the custom project type. The first one implements <a href="../../../docs/plugins/actions/index.html#authoring-actions">a simple “Hello World”</a>.<a href="../../../docs/plugins/serverworkspace-access/index.html#server-services"> The second one </a> calls a custom service on the server which will access the workspace and count the number of lines of all JSON files within the project. It thereby also includes a template for client/server communication and for accessing source files (e.g. for validation or compilation).</p>
 
 <p><img src="../../../docs/assets/imgs/image00.png" alt="image00.png" /></p>
 
@@ -1477,9 +1485,7 @@ The JSON example wizard will initialize a new project with two existing JSON fil
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

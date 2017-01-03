@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -481,8 +485,8 @@
 
 <p>In this part of the tutorial, we describe how to define a custom project type, how to provide a custom creation wizard, and how to add project-specific actions.</p>
 
-<p>##Custom Project Type
-In this part of the tutorial, we describe how to define a new custom project type including a project initialization (e.g. to add default content). The following diagram shows all components of a project type registration. The classes highlighted in dark grey are to be implemented for the extension.</p>
+<h2 id="custom-project-type">Custom Project Type</h2>
+<p>In this part of the tutorial, we describe how to define a new custom project type including a project initialization (e.g. to add default content). The following diagram shows all components of a project type registration. The classes highlighted in dark grey are to be implemented for the extension.</p>
 
 <p><img src="../../../docs/assets/imgs/ProjectType.png" alt="ProjectType.png" />
 The custom <code class="highlighter-rouge">ProjectTypeDef</code> implementation defines the actual project type. Therefore, it defines an ID, a name and some configuration options. As the ID is referenced from other classes, it is retrieved from a shared constant class <code class="highlighter-rouge">MyConstants</code>.
@@ -500,68 +504,72 @@ Further, it specifies with the remaining three boolean parameters:</p>
 </ul>
 
 <p>After specifying the project, we add a constant and a variable definition to the project type. Constants can not be changed, once they are defined and therefore contain static information about the project type. In our example, we add the information, that the project’s language is “json”. The first parameter specifies a key, the second a description of the Constant, and the third the corresponding value.</p>
+
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-server/src/main/java/org/eclipse/che/plugin/jsonexample/projecttype/JsonExampleProjectType.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Server</span><span class="o">-</span><span class="nl">side:</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">projecttype</span><span class="o">.</span><span class="na">JsonExampleProjectType</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsonExampleProjectType</span> <span class="kd">extends</span> <span class="n">ProjectTypeDef</span> <span class="o">{</span>
 
-	<span class="nd">@Inject</span>
-	<span class="kd">public</span> <span class="nf">JsonExampleProjectType</span><span class="o">()</span> <span class="o">{</span>
-		<span class="kd">super</span><span class="o">(</span><span class="n">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">,</span> <span class="s">"JSON Example\ true, false);
-  	addConstantDefinition(LANGUAGE, LANGUAGE, JSON_EXAMPLE_PROJECT_TYPE_ID);
-  	addVariableDefinition("</span><span class="n">json</span><span class="o">-</span><span class="n">schema</span><span class="o">-</span><span class="n">ref</span><span class="err">\</span> <span class="err">"</span><span class="n">Referenced</span> <span class="n">base</span> <span class="n">schema</span><span class="err">\</span> <span class="cm">/*required*/</span> <span class="kc">true</span><span class="o">);</span>
-	<span class="o">}</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">JsonExampleProjectType</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">(</span><span class="n">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">,</span> <span class="s">"JSON Example"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="n">addConstantDefinition</span><span class="o">(</span><span class="n">LANGUAGE</span><span class="o">,</span> <span class="n">LANGUAGE</span><span class="o">,</span> <span class="n">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">);</span>
+    <span class="n">addVariableDefinition</span><span class="o">(</span><span class="s">"json-schema-ref"</span><span class="o">,</span> <span class="s">"Referenced base schema"</span><span class="o">,</span> <span class="cm">/*required*/</span> <span class="kc">true</span><span class="o">);</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
 </div>
+
 <p>Variables can be changed, e.g. to store values that the user enters on project creation. In the example, we define a custom variable to store a reference to a JSON schema. We will allow the user to set this variable in a custom project wizard in the corresponding part of this tutorial. You can define your own variables to store project specific properties. All String constants of the following code example are defined in a shared constant class, which is listed below.</p>
+
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-shared/src/main/java/org/eclipse/che/plugin/jsonexample/shared/Constants.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">shared</span><span class="o">.</span><span class="na">Constants</span>
 <span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Constants</span> <span class="o">{</span>
 
-	<span class="cm">/**
- 	* Language attribute name.
- 	*/</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LANGUAGE</span>            	<span class="o">=</span> <span class="s">"language"</span><span class="o">;</span>
+  <span class="cm">/**
+  * Language attribute name.
+  */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LANGUAGE</span>             <span class="o">=</span> <span class="s">"language"</span><span class="o">;</span>
 
-	<span class="cm">/**
- 	* Language attribute value.
- 	*/</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_LANG</span>   	<span class="o">=</span> <span class="s">"json"</span><span class="o">;</span>
+  <span class="cm">/**
+  * Language attribute value.
+  */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_LANG</span>    <span class="o">=</span> <span class="s">"json"</span><span class="o">;</span>
 
-	<span class="cm">/**
- 	* JSON Example Project Type ID.
- 	*/</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_PROJECT_TYPE_ID</span> <span class="o">=</span> <span class="s">"json-example"</span><span class="o">;</span>
+  <span class="cm">/**
+  * JSON Example Project Type ID.
+  */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_PROJECT_TYPE_ID</span> <span class="o">=</span> <span class="s">"json-example"</span><span class="o">;</span>
 
-	<span class="cm">/**
- 	* JSON Example Category.
- 	*/</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_CATEGORY</span>  	<span class="o">=</span> <span class="s">"JSON Example"</span><span class="o">;</span>
+  <span class="cm">/**
+  * JSON Example Category.
+  */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_CATEGORY</span>    <span class="o">=</span> <span class="s">"JSON Example"</span><span class="o">;</span>
 
-	<span class="cm">/**
- 	* JSON Schema reference attribute name.
- 	*/</span>
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_SCHEMA_REF_ATTRIBUTE</span> <span class="o">=</span> <span class="s">"json-schem-ref"</span><span class="o">;</span>
+  <span class="cm">/**
+  * JSON Schema reference attribute name.
+  */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">JSON_EXAMPLE_SCHEMA_REF_ATTRIBUTE</span> <span class="o">=</span> <span class="s">"json-schem-ref"</span><span class="o">;</span>
 
-	<span class="kd">private</span> <span class="nf">Constants</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="nf">Constants</span><span class="o">()</span> <span class="o">{</span>
 
-	<span class="o">}</span>
+  <span class="o">}</span>
 <span class="o">}</span>
-
 </code></pre>
 </div>
 
-<p>To make our new project type available in Che, we need to register it using Guice. The following example code registers the <code class="highlighter-rouge">JsonExampleProjectType</code> from above as a <code class="highlighter-rouge">ProjectTypeDef</code>. Che will automatically pick up all bound <code class="highlighter-rouge">ProjectTypeDefs</code>. Please see our [Dependency Injection Basics] (doc:dependency-injection-basics) section for a general introduction of this mechanism.</p>
+<p>To make our new project type available in Che, we need to register it using Guice. The following example code registers the <code class="highlighter-rouge">JsonExampleProjectType</code> from above as a <code class="highlighter-rouge">ProjectTypeDef</code>. Che will automatically pick up all bound <code class="highlighter-rouge">ProjectTypeDefs</code>. Please see our <a href="../../../docs/plugins/dependency-injection-basics/index.html">Dependency Injection Basics</a> section for a general introduction of this mechanism.</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">inject</span><span class="o">.</span><span class="na">JsonExampleGuiceModule</span>
 <span class="nd">@DynaModule</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsonExampleGuiceModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
   <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
-  	<span class="n">Multibinder</span><span class="o">&lt;</span><span class="n">ProjectTypeDef</span><span class="o">&gt;</span> <span class="n">projectTypeDefMultibinder</span> <span class="o">=</span> <span class="n">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span>
-  	<span class="n">ProjectTypeDef</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">Multibinder</span><span class="o">&lt;</span><span class="n">ProjectTypeDef</span><span class="o">&gt;</span> <span class="n">projectTypeDefMultibinder</span> <span class="o">=</span> <span class="n">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span>
+    <span class="n">ProjectTypeDef</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
     <span class="n">projectTypeDefMultibinder</span><span class="o">.</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">JsonExampleProjectType</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
   <span class="o">}</span>
 <span class="o">}</span>
-<span class="err">\</span>
 </code></pre>
 </div>
 <p>By defining the new project type, Che will add a new entry in the “New” menu of the IDE and allow us to create a new and empty project:</p>
@@ -572,42 +580,44 @@ Further, it specifies with the remaining three boolean parameters:</p>
 
 <p>In the following example, we will create the following files: a “person.json” file with some default content that will be stored in a folder named “myJsonFiles” as well as a “package.json” file, which we’ll need later on. The method <code class="highlighter-rouge">#getProjectType</code> needs to provide the project type ID to allow Che to map the <code class="highlighter-rouge">ProjectHandler</code> to the correct type.</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-server/src/main/java/org/eclipse/che/plugin/jsonexample/inject/JsonExampleGuiceModule.java</em></p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">generator</span><span class="o">.</span><span class="na">JsonExampleProjectGenerator</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsonExampleCreateProjectHandler</span> <span class="kd">implements</span> <span class="n">CreateProjectHandler</span> <span class="o">{</span>
 
-	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FILE_NAME</span> <span class="o">=</span> <span class="s">"package.json"</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FILE_NAME</span> <span class="o">=</span> <span class="s">"package.json"</span><span class="o">;</span>
 
-	<span class="nd">@Override</span>
-	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreateProject</span><span class="o">(</span><span class="n">FolderEntry</span> <span class="n">baseFolder</span><span class="o">,</span>
-                            	<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">AttributeValue</span><span class="o">&gt;</span> <span class="n">attributes</span><span class="o">,</span>
-                            	<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">)</span> <span class="kd">throws</span> <span class="o">/.../</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreateProject</span><span class="o">(</span><span class="n">FolderEntry</span> <span class="n">baseFolder</span><span class="o">,</span>
+                              <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">AttributeValue</span><span class="o">&gt;</span> <span class="n">attributes</span><span class="o">,</span>
+                              <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">)</span> <span class="kd">throws</span> <span class="o">/.../</span>
   <span class="o">{</span>
-		<span class="n">InputStream</span> <span class="n">packageJson</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="n">InputStream</span> <span class="n">packageJson</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="n">InputStream</span> <span class="n">personJson</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
     <span class="k">try</span> <span class="o">{</span>
-    	<span class="n">FolderEntry</span> <span class="n">myJsonFiles</span> <span class="o">=</span> <span class="n">baseFolder</span><span class="o">.</span><span class="na">createFolder</span><span class="o">(</span><span class="s">"myJsonFiles"</span><span class="o">);</span>
-    	<span class="n">packageJson</span> <span class="o">=</span> <span class="n">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">()</span>
+      <span class="n">FolderEntry</span> <span class="n">myJsonFiles</span> <span class="o">=</span> <span class="n">baseFolder</span><span class="o">.</span><span class="na">createFolder</span><span class="o">(</span><span class="s">"myJsonFiles"</span><span class="o">);</span>
+      <span class="n">packageJson</span> <span class="o">=</span> <span class="n">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">getResourceAsStream</span><span class="o">(</span><span class="s">"files/default_package"</span><span class="o">);</span>
       <span class="n">personJson</span> <span class="o">=</span> <span class="n">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">getResourceAsStream</span><span class="o">(</span><span class="s">"files/default_person"</span><span class="o">);</span>
-     	<span class="n">baseFolder</span><span class="o">.</span><span class="na">createFile</span><span class="o">(</span><span class="n">FILE_NAME</span><span class="o">,</span> <span class="n">packageJson</span><span class="o">);</span>
-      <span class="n">myJsonFiles</span><span class="o">.</span><span class="na">createFile</span><span class="o">(</span><span class="err">"</span><span class="n">person</span><span class="o">.</span><span class="na">json</span><span class="err">\</span> <span class="n">personJson</span><span class="o">);</span>
+      <span class="n">baseFolder</span><span class="o">.</span><span class="na">createFile</span><span class="o">(</span><span class="n">FILE_NAME</span><span class="o">,</span> <span class="n">packageJson</span><span class="o">);</span>
+      <span class="n">myJsonFiles</span><span class="o">.</span><span class="na">createFile</span><span class="o">(</span><span class="s">"person.json"</span><span class="o">,</span> <span class="n">personJson</span><span class="o">);</span>
     <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-     	<span class="n">Closeables</span><span class="o">.</span><span class="na">closeQuietly</span><span class="o">(</span><span class="n">packageJson</span><span class="o">);</span>
-     	<span class="n">Closeables</span><span class="o">.</span><span class="na">closeQuietly</span><span class="o">(</span><span class="n">personJson</span><span class="o">);</span>
+      <span class="n">Closeables</span><span class="o">.</span><span class="na">closeQuietly</span><span class="o">(</span><span class="n">packageJson</span><span class="o">);</span>
+      <span class="n">Closeables</span><span class="o">.</span><span class="na">closeQuietly</span><span class="o">(</span><span class="n">personJson</span><span class="o">);</span>
     <span class="o">}</span>
-	<span class="o">}</span>
+  <span class="o">}</span>
 
-	<span class="nd">@Override</span>
-	<span class="kd">public</span> <span class="n">String</span> <span class="nf">getProjectType</span><span class="o">()</span> <span class="o">{</span>
-  	<span class="k">return</span> <span class="n">Constants</span><span class="o">.</span><span class="na">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getProjectType</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Constants</span><span class="o">.</span><span class="na">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">;</span>
+  <span class="o">}</span>
 <span class="o">}</span>
-
 </code></pre>
 </div>
 <p>Finally, the ProjectHandler needs to be bound using Guice just as the project type was bound before:</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-server/src/main/java/org/eclipse/che/plugin/jsonexample/inject/JsonExampleGuiceModule.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">inject</span><span class="o">.</span><span class="na">JsonExampleGuiceModule</span>
 
 <span class="o">/...</span>
@@ -615,14 +625,13 @@ Further, it specifies with the remaining three boolean parameters:</p>
      <span class="n">ProjectHandler</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="n">projectHandlerMultibinder</span><span class="o">.</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">JsonExampleCreateProjectHandler</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="o">/...</span>
-<span class="err">\</span>
 </code></pre>
 </div>
 <p>Once the ProjectHandler has been added and executed, the example project will already contain the files  in the IDE:</p>
 
-<p><img src="../../../docs/assets/imgs/image08.png" alt="image08.png" />
-##Project Creation Wizard
-Project creation wizards are executed once the user creates a new project. They allow you to enter general properties (such as a name and a description), but also project-specific properties (e.g. a compiler option, a project dependency, etc.). Without providing a specific project creation wizard, Che already allows you to enter the general properties available for all projects as shown in the following screenshot for the JSON example project type we have defined in the previous section of the tutorial:</p>
+<p><img src="../../../docs/assets/imgs/image08.png" alt="image08.png" /></p>
+<h2 id="project-creation-wizard">Project Creation Wizard</h2>
+<p>Project creation wizards are executed once the user creates a new project. They allow you to enter general properties (such as a name and a description), but also project-specific properties (e.g. a compiler option, a project dependency, etc.). Without providing a specific project creation wizard, Che already allows you to enter the general properties available for all projects as shown in the following screenshot for the JSON example project type we have defined in the previous section of the tutorial:</p>
 
 <p><img src="../../../docs/assets/imgs/image03.png" alt="image03.png" /></p>
 
@@ -644,106 +653,106 @@ As a first step, we need to implement a <code class="highlighter-rouge">ProjectW
 
 <p>Finally, to wire everything up with Gin, all we need to do is to define a module to register our class <code class="highlighter-rouge">JsonExampleProjectWizardRegistrar</code> as an implementation of <code class="highlighter-rouge">ProjectWizardRegistrar</code>:</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/inject/JsonExampleModule.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">inject</span><span class="o">.</span><span class="na">JsonExampleModule</span>
 <span class="nd">@ExtensionGinModule</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsonExampleModule</span> <span class="kd">extends</span> <span class="n">AbstractGinModule</span> <span class="o">{</span>
 
-	<span class="nd">@Override</span>
-	<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
-    	<span class="n">GinMultibinder</span>
-            	<span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">ProjectWizardRegistrar</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-            	<span class="o">.</span><span class="na">addBinding</span><span class="o">()</span>
-            	<span class="o">.</span><span class="na">to</span><span class="o">(</span><span class="n">JsonExampleProjectWizardRegistrar</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">GinMultibinder</span>
+              <span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">ProjectWizardRegistrar</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">addBinding</span><span class="o">()</span>
+              <span class="o">.</span><span class="na">to</span><span class="o">(</span><span class="n">JsonExampleProjectWizardRegistrar</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
        <span class="o">}</span>
-    	<span class="c1">//...</span>
+      <span class="c1">//...</span>
 <span class="o">}</span>
-
-<span class="err">\</span>
 </code></pre>
 </div>
+
 <p>Now let us look at the implementation of all required classes in more detail.
 The <code class="highlighter-rouge">JsonExampleProjectWizardRegistrar</code> is responsible for setting up the <code class="highlighter-rouge">SchemaUrlWizardPage</code> as one of its wizard pages. To do this, it requests a provider for a <code class="highlighter-rouge">SchemaUrlWizardPage</code> injected in its constructor. The provider is just a wrapper around the actual wizard page which is required by the Che framework. In the method <code class="highlighter-rouge">#getWizardPages</code> we can then just return a list of providers for wizard pages containing only the injected provider.</p>
 
 <p>In addition to setting up the wizard page we need to declare the project type and category for which the project wizard is responsible for.</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/JsonExampleProjectWizardRegistrar.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">JsonExampleProjectWizardRegistrar</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JsonExampleProjectWizardRegistrar</span> <span class="kd">implements</span> <span class="n">ProjectWizardRegistrar</span> <span class="o">{</span>
-	<span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Provider</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">WizardPage</span><span class="o">&lt;</span><span class="n">ProjectConfigDto</span><span class="o">&gt;&gt;&gt;</span> <span class="n">wizardPages</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Provider</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">WizardPage</span><span class="o">&lt;</span><span class="n">ProjectConfigDto</span><span class="o">&gt;&gt;&gt;</span> <span class="n">wizardPages</span><span class="o">;</span>
 
-	<span class="nd">@Inject</span>
-	<span class="kd">public</span> <span class="nf">JsonExampleProjectWizardRegistrar</span><span class="o">(</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">JsonExampleProjectWizardRegistrar</span><span class="o">(</span>
          <span class="n">Provider</span><span class="o">&lt;</span><span class="n">SchemaUrlWizardPage</span><span class="o">&gt;</span> <span class="n">wizardPage</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="n">wizardPages</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">wizardPages</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
     <span class="n">wizardPages</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">provider</span><span class="o">);</span>
-	<span class="o">}</span>
+  <span class="o">}</span>
 
-	<span class="nd">@NotNull</span>
-	<span class="kd">public</span> <span class="n">String</span> <span class="nf">getProjectTypeId</span><span class="o">()</span> <span class="o">{</span>
-  	<span class="k">return</span> <span class="n">Constants</span><span class="o">.</span><span class="na">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="nd">@NotNull</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getProjectTypeId</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Constants</span><span class="o">.</span><span class="na">JSON_EXAMPLE_PROJECT_TYPE_ID</span><span class="o">;</span>
+  <span class="o">}</span>
 
-	<span class="nd">@NotNull</span>
-	<span class="kd">public</span> <span class="n">String</span> <span class="nf">getCategory</span><span class="o">()</span> <span class="o">{</span>
-  	<span class="k">return</span> <span class="n">JSON_EXAMPLE_CATEGORY</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="nd">@NotNull</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCategory</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">JSON_EXAMPLE_CATEGORY</span><span class="o">;</span>
+  <span class="o">}</span>
 
-	<span class="nd">@NotNull</span>
-	<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Provider</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">WizardPage</span><span class="o">&lt;</span><span class="n">ProjectConfigDto</span><span class="o">&gt;&gt;&gt;</span> <span class="nf">getWizardPages</span><span class="o">()</span>	<span class="o">{</span>
-  	<span class="k">return</span> <span class="n">wizardPages</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="nd">@NotNull</span>
+  <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Provider</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">WizardPage</span><span class="o">&lt;</span><span class="n">ProjectConfigDto</span><span class="o">&gt;&gt;&gt;</span> <span class="nf">getWizardPages</span><span class="o">()</span>  <span class="o">{</span>
+    <span class="k">return</span> <span class="n">wizardPages</span><span class="o">;</span>
+  <span class="o">}</span>
 <span class="o">}</span>
-<span class="err">\</span>
 </code></pre>
 </div>
 
 <p>The <code class="highlighter-rouge">SchemaUrlWizardPage</code> class defines the actual wizard page for entering a schema URL. In the constructor it requires the injection of a view for displaying the UI of the page called <code class="highlighter-rouge">SchemaUrlPageViewImpl</code>. In the method <code class="highlighter-rouge">#go</code>, which is called when the page is about to be displayed, it will set this view as the only widget on the page and pass a new <code class="highlighter-rouge">SchemaUrlChangedDelegate</code> to the view. The view will later use this delegate to trigger  changes on the page’s <code class="highlighter-rouge">ProjectConfigDto</code> whenever something is entered into the schema URL text box on the view.</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/SchemaUrlWizardPage.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">SchemaUrlWizardPage</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SchemaUrlWizardPage</span> <span class="kd">extends</span> <span class="n">AbstractWizardPage</span><span class="o">&lt;</span><span class="n">ProjectConfigDto</span><span class="o">&gt;</span> <span class="o">{</span>
 
-	<span class="kd">private</span> <span class="kd">final</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="n">view</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="n">view</span><span class="o">;</span>
 
-	<span class="nd">@Inject</span>
-	<span class="kd">public</span> <span class="nf">SchemaUrlWizardPage</span><span class="o">(</span><span class="n">SchemaUrlPageViewImpl</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="k">this</span><span class="o">.</span><span class="na">view</span> <span class="o">=</span> <span class="n">view</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">SchemaUrlWizardPage</span><span class="o">(</span><span class="n">SchemaUrlPageViewImpl</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">view</span> <span class="o">=</span> <span class="n">view</span><span class="o">;</span>
+  <span class="o">}</span>
 
-	<span class="nd">@Override</span>
-	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">go</span><span class="o">(</span><span class="n">AcceptsOneWidget</span> <span class="n">container</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="n">container</span><span class="o">.</span><span class="na">setWidget</span><span class="o">(</span><span class="n">view</span><span class="o">);</span>
-  	<span class="n">view</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="k">new</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">dataObject</span><span class="o">));</span>	  
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">go</span><span class="o">(</span><span class="n">AcceptsOneWidget</span> <span class="n">container</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">container</span><span class="o">.</span><span class="na">setWidget</span><span class="o">(</span><span class="n">view</span><span class="o">);</span>
+    <span class="n">view</span><span class="o">.</span><span class="na">setDelegate</span><span class="o">(</span><span class="k">new</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">dataObject</span><span class="o">));</span>   
   <span class="o">}</span>
 
 <span class="o">}</span>
-
-<span class="err">\</span>
 </code></pre>
 </div>
+
 <p>The <code class="highlighter-rouge">SchemaUrlChangedDelegate</code> receives a <code class="highlighter-rouge">ProjectConfigDto</code> in its constructor which holds all the values that are defined during project creation including the schema URL. Whenever its <code class="highlighter-rouge">#schemaUrlChanged</code> method is fired, it will write the new value into the <code class="highlighter-rouge">ProjectConfigDto</code>.</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/SchemaUrlChangedDelegate.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">SchemaUrlChangedDelegate</span>   
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SchemaUrlChangedDelegate</span> <span class="o">{</span>
 
-	<span class="kd">private</span> <span class="n">ProjectConfigDto</span> <span class="n">dataObject</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">ProjectConfigDto</span> <span class="n">dataObject</span><span class="o">;</span>
 
-	<span class="kd">public</span> <span class="nf">SchemaUrlChangedDelegate</span><span class="o">(</span><span class="n">ProjectConfigDto</span> <span class="n">dataObject</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="k">this</span><span class="o">.</span><span class="na">dataObject</span> <span class="o">=</span> <span class="n">dataObject</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="kd">public</span> <span class="nf">SchemaUrlChangedDelegate</span><span class="o">(</span><span class="n">ProjectConfigDto</span> <span class="n">dataObject</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">dataObject</span> <span class="o">=</span> <span class="n">dataObject</span><span class="o">;</span>
+  <span class="o">}</span>
 
-	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">schemaUrlChanged</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="n">dataObject</span><span class="o">.</span><span class="na">getAttributes</span><span class="o">().</span><span class="na">put</span><span class="o">(</span><span class="err">"</span><span class="n">json</span><span class="o">-</span><span class="n">schema</span><span class="o">-</span><span class="n">ref</span><span class="err">\</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">schemaUrlChanged</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">dataObject</span><span class="o">.</span><span class="na">getAttributes</span><span class="o">().</span><span class="na">put</span><span class="o">(</span><span class="s">"json-schema-ref"</span><span class="o">,</span>
            <span class="n">Collections</span><span class="o">.</span><span class="na">singletonList</span><span class="o">(</span><span class="n">value</span><span class="o">));</span>
-	<span class="o">}</span>
+  <span class="o">}</span>
 <span class="o">}</span>
-
-
 </code></pre>
 </div>
 
 <p><code class="highlighter-rouge">SchemaUrlPageView</code> is just a marker interface required by the framework to declare that our <code class="highlighter-rouge">SchemaUrlPageViewImpl</code> is an implementation of a view with a <code class="highlighter-rouge">SchemaUrlChangedDelegate</code>.</p>
+
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/SchemaUrlPageView.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">SchemaUrlPageView</span>   
 <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SchemaUrlPageView</span> <span class="kd">extends</span> <span class="n">View</span><span class="o">&lt;</span><span class="n">SchemaUrlChangedDelegate</span><span class="o">&gt;</span> <span class="o">{}</span>
-<span class="err">\</span>
 </code></pre>
 </div>
 
@@ -755,61 +764,63 @@ This requires you to define <code class="highlighter-rouge">JsonExamplePageViewU
 
 <p>More about declarative UIs with GWT UI binder can be found on the <a href="http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html">GWT homepage</a>.</p>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/SchemaUrlPageViewImpl.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">jsonexample</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">project</span><span class="o">.</span><span class="na">SchemaUrlPageViewImpl</span>
 <span class="kd">class</span> <span class="nc">SchemaUrlPageViewImpl</span> <span class="kd">extends</span> <span class="n">Composite</span> <span class="kd">implements</span> <span class="n">SchemaUrlPageView</span> <span class="o">{</span>
 
-	<span class="kd">interface</span> <span class="nc">JsonExamplePageViewUiBinder</span> <span class="kd">extends</span> <span class="n">UiBinder</span><span class="o">&lt;</span><span class="n">DockLayoutPanel</span><span class="o">,</span> <span class="n">SchemaUrlPageViewImpl</span><span class="o">&gt;</span> <span class="o">{</span>
-	<span class="o">}</span>
+  <span class="kd">interface</span> <span class="nc">JsonExamplePageViewUiBinder</span> <span class="kd">extends</span> <span class="n">UiBinder</span><span class="o">&lt;</span><span class="n">DockLayoutPanel</span><span class="o">,</span> <span class="n">SchemaUrlPageViewImpl</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="o">}</span>
 
-	<span class="nd">@UiField</span>
-	<span class="n">TextBox</span> <span class="n">schemaUrl</span><span class="o">;</span>
+  <span class="nd">@UiField</span>
+  <span class="n">TextBox</span> <span class="n">schemaUrl</span><span class="o">;</span>
 
-	<span class="kd">private</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="n">delegate</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">SchemaUrlChangedDelegate</span> <span class="n">delegate</span><span class="o">;</span>
 
-	<span class="nd">@Inject</span>
-	<span class="kd">public</span> <span class="nf">SchemaUrlPageViewImpl</span><span class="o">(</span><span class="n">JsonExamplePageViewUiBinder</span> <span class="n">uiBinder</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="n">initWidget</span><span class="o">(</span><span class="n">uiBinder</span><span class="o">.</span><span class="na">createAndBindUi</span><span class="o">(</span><span class="k">this</span><span class="o">));</span>
-	<span class="o">}</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">SchemaUrlPageViewImpl</span><span class="o">(</span><span class="n">JsonExamplePageViewUiBinder</span> <span class="n">uiBinder</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">initWidget</span><span class="o">(</span><span class="n">uiBinder</span><span class="o">.</span><span class="na">createAndBindUi</span><span class="o">(</span><span class="k">this</span><span class="o">));</span>
+  <span class="o">}</span>
 
-	<span class="cm">/** {@inheritDoc} */</span>
-	<span class="nd">@Override</span>
-	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDelegate</span><span class="o">(</span><span class="n">SchemaUrlChangedDelegate</span> <span class="n">delegate</span><span class="o">)</span> <span class="o">{</span>
-  	<span class="k">this</span><span class="o">.</span><span class="na">delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="o">;</span>
-	<span class="o">}</span>
+  <span class="cm">/** {@inheritDoc} */</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDelegate</span><span class="o">(</span><span class="n">SchemaUrlChangedDelegate</span> <span class="n">delegate</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="o">;</span>
+  <span class="o">}</span>
 
-	<span class="nd">@UiHandler</span><span class="o">(</span><span class="s">"schemaUrl"</span><span class="o">)</span>
-	<span class="kt">void</span> <span class="nf">onSchemaUrlChanged</span><span class="o">(</span><span class="n">KeyUpEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
-   	<span class="n">delegate</span><span class="o">.</span><span class="na">schemaUrlChanged</span><span class="o">(</span><span class="n">schemaUrl</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
-	<span class="o">}</span>
+  <span class="nd">@UiHandler</span><span class="o">(</span><span class="s">"schemaUrl"</span><span class="o">)</span>
+  <span class="kt">void</span> <span class="nf">onSchemaUrlChanged</span><span class="o">(</span><span class="n">KeyUpEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">delegate</span><span class="o">.</span><span class="na">schemaUrlChanged</span><span class="o">(</span><span class="n">schemaUrl</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
 </div>
 
+<p><em>che/samples/sample-plugin-json/che-sample-plugin-json-ide/src/main/java/org/eclipse/che/plugin/jsonexample/ide/project/SchemaUrlPageViewImpl.ui.xml</em></p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code>SchemaUrlPageViewImpl.ui.xml
 <span class="nt">&lt;ui:UiBinder</span> <span class="na">xmlns:ui=</span><span class="s">'urn:ui:com.google.gwt.uibinder'</span>
-         	<span class="na">xmlns:g=</span><span class="s">'urn:import:com.google.gwt.user.client.ui'</span>
-         	<span class="na">xmlns:ide=</span><span class="s">'urn:import:org.eclipse.che.ide.ui'</span><span class="nt">&gt;</span>
-	<span class="nt">&lt;g:DockLayoutPanel</span> <span class="na">unit=</span><span class="s">"PX"</span> <span class="nt">&gt;</span>
-    	<span class="nt">&lt;g:north</span> <span class="na">size=</span><span class="s">"200"</span><span class="nt">&gt;</span>
-        	<span class="nt">&lt;g:FlowPanel</span> <span class="na">ui:field=</span><span class="s">"panel"</span><span class="nt">&gt;</span>
-            	<span class="nt">&lt;g:FlowPanel</span> <span class="na">height=</span><span class="s">"90px"</span> <span class="nt">&gt;</span>
-                	<span class="nt">&lt;g:Label</span> <span class="na">text=</span><span class="s">"JSON Schema URL"</span> <span class="nt">/&gt;</span>
-                	<span class="nt">&lt;ide:TextBox</span> <span class="na">ui:field=</span><span class="s">"schemaUrl"</span>
-                             	<span class="na">tabIndex=</span><span class="s">"0"</span>
-                             	<span class="na">debugId=</span><span class="s">"file-createProject-schemaUrl"</span><span class="nt">/&gt;</span>
-                	<span class="nt">&lt;g:Label</span> <span class="na">ui:field=</span><span class="s">"labelUrlError"</span> <span class="na">width=</span><span class="s">"100%"</span> 		<span class="na">wordWrap=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
-            	<span class="nt">&lt;/g:FlowPanel&gt;</span>
-        	<span class="nt">&lt;/g:FlowPanel&gt;</span>
-    	<span class="nt">&lt;/g:north&gt;</span>
-	<span class="nt">&lt;/g:DockLayoutPanel&gt;</span>
+          <span class="na">xmlns:g=</span><span class="s">'urn:import:com.google.gwt.user.client.ui'</span>
+          <span class="na">xmlns:ide=</span><span class="s">'urn:import:org.eclipse.che.ide.ui'</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;g:DockLayoutPanel</span> <span class="na">unit=</span><span class="s">"PX"</span> <span class="nt">&gt;</span>
+      <span class="nt">&lt;g:north</span> <span class="na">size=</span><span class="s">"200"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;g:FlowPanel</span> <span class="na">ui:field=</span><span class="s">"panel"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;g:FlowPanel</span> <span class="na">height=</span><span class="s">"90px"</span> <span class="nt">&gt;</span>
+                  <span class="nt">&lt;g:Label</span> <span class="na">text=</span><span class="s">"JSON Schema URL"</span> <span class="nt">/&gt;</span>
+                  <span class="nt">&lt;ide:TextBox</span> <span class="na">ui:field=</span><span class="s">"schemaUrl"</span>
+                              <span class="na">tabIndex=</span><span class="s">"0"</span>
+                              <span class="na">debugId=</span><span class="s">"file-createProject-schemaUrl"</span><span class="nt">/&gt;</span>
+                  <span class="nt">&lt;g:Label</span> <span class="na">ui:field=</span><span class="s">"labelUrlError"</span> <span class="na">width=</span><span class="s">"100%"</span>    <span class="na">wordWrap=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+              <span class="nt">&lt;/g:FlowPanel&gt;</span>
+          <span class="nt">&lt;/g:FlowPanel&gt;</span>
+      <span class="nt">&lt;/g:north&gt;</span>
+  <span class="nt">&lt;/g:DockLayoutPanel&gt;</span>
 <span class="nt">&lt;/ui:UiBinder&gt;</span>
-
 </code></pre>
 </div>
+
 <p>By adapting the <code class="highlighter-rouge">SchemaUrlPageViewImpl.ui.xml</code> you can customize the layout of the final wizard page. The example page will look like this:
 <img src="../../../docs/assets/imgs/image14.png" alt="image14.png" />
 ##Project-specific Actions
-Actions allow you to add custom behavior to the Che IDE. They can be placed in menus, toolbars or context menus. Some actions shall only be available on a specific project type. In the JSON example, we place two actions in the context menu of the defined project type. The screenshot shows a project-specific <code class="highlighter-rouge">HelloWorldAction</code>, as well as another project specific action implemented in the section <a href="doc:serverworkspace-access">Server/Workspace Access</a>.</p>
+Actions allow you to add custom behavior to the Che IDE. They can be placed in menus, toolbars or context menus. Some actions shall only be available on a specific project type. In the JSON example, we place two actions in the context menu of the defined project type. The screenshot shows a project-specific <code class="highlighter-rouge">HelloWorldAction</code>, as well as another project specific action implemented in the section <a href="../../../docs/plugins/serverworkspace-access/index.html#workspace-services">Server/Workspace Access</a>.</p>
 
 <p><img src="../../../docs/assets/imgs/image00.png" alt="image00.png" /></p>
 
@@ -1753,9 +1764,7 @@ Actions allow you to add custom behavior to the Che IDE. They can be placed in m
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

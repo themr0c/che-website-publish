@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -477,24 +481,25 @@
             </div>
           </div>
           
-<p>../../docs/setup/setup-intro/index.html
-Eclipse Che provides:</p>
+<p>Eclipse Che provides:</p>
 
 <ul>
   <li>Workspaces that include runtimes and IDEs</li>
   <li>RESTful workspace server</li>
   <li>A browser-based IDE</li>
   <li>Plug-ins for languages, framework, and tools</li>
-  <li>An SDK for creating plug-ins and assemblies
-    <h1 id="getting-started">Getting Started</h1>
-    <p>You can get started with Che by:</p>
-  </li>
-  <li><a href="doc:che-getting-started">Installing it locally</a></li>
-  <li><a href="doc:getting-started-saas-cloud">Creating a hosted SaaS account</a></li>
-  <li><a href="doc:usage-bitnami">Installing it in a cloud instance you control</a>
-    <h1 id="workspace-model">Workspace Model</h1>
-  </li>
+  <li>An SDK for creating plug-ins and assemblies</li>
 </ul>
+
+<h1 id="getting-started">Getting Started</h1>
+<p>You can get started with Che by:</p>
+<ul>
+  <li><a href="../../../docs/setup/getting-started/index.html">Installing it locally</a></li>
+  <li><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
+  <li><a href="../../../docs/setup/bitnami/index.html">Installing it in a cloud instance you control</a></li>
+</ul>
+
+<h1 id="workspace-model">Workspace Model</h1>
 
 <p><img src="../../../docs/assets/imgs/Docker--CodenvyMeeting.png" alt="Docker--CodenvyMeeting.png" />
 Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
@@ -538,11 +543,14 @@ Che is a workspace server that runs on top of an application server like Tomcat.
 
 <p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.
-![Capture2<em>.PNG](../../../docs/assets/imgs/Capture2</em>.PNG)
-Che defines the notion of a workspace as the combination of projects, environments, and commands.  A project is the fundamental unit of code available as a set of folders, files, and modules. A project may be mapped 1:1 to an external git or subversion repository from which it is cloned. A workspace may have zero or more projects. Projects have a project type which, depending upon the type selected, causes Che to enable the workspace with different behaviors. For example, a maven project type causes Che to install the maven and Java plug-ins into the workspace.</p>
+<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+
+<p><img src="../../../docs/assets/imgs/Capture_workspace.PNG" alt="Capture2_.PNG" /></p>
+
+<p>Che defines the notion of a workspace as the combination of projects, environments, and commands.  A project is the fundamental unit of code available as a set of folders, files, and modules. A project may be mapped 1:1 to an external git or subversion repository from which it is cloned. A workspace may have zero or more projects. Projects have a project type which, depending upon the type selected, causes Che to enable the workspace with different behaviors. For example, a maven project type causes Che to install the maven and Java plug-ins into the workspace.</p>
 
 <p>A machine is a runtime unit that provides a stack of software and a set of resources to run the projects of the workspace. The machine is bound to the workspace and to the projects. Che synchronizes the project files within the machine. A machine is defined by a recipe that contains the list of software that should be executing within the machine. The default machine implementation in Che is Docker and we use Dockerfiles to define the recipes for different types of runtimes. We also have a concept called, “stacks” which are pre-defined recipes with additional meta-information. Che provides default recipes and stacks, but users can define their own.  The machine’s lifecycle is managed by each Che workspace. As the workspace is booted, so is its underlying runtimes.  Additionally, Che can install additional software into the machine to enable developer services such as Intellisense.  For example, if the Java plug-in is activated because of the project type, Che installs an agent inside of the machine that runs JDT services that are then accessible by the projects synchronized onto the machine.</p>
+
 <h1 id="extensibility">Extensibility</h1>
 <p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.
 <img src="../../../docs/assets/imgs/Extensibility.PNG" alt="Extensibility.PNG" />
@@ -561,11 +569,11 @@ There are a number of aspects that can be modified within Che.</p>
       <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
     </tr>
     <tr>
-      <td>Che Server Extension\n(aka, Worskspace Master)</td>
+      <td>Che Server Extension  (aka, Worskspace Master)</td>
       <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
     </tr>
     <tr>
-      <td>Workspace Extension\n(aka, Workspace Agent)</td>
+      <td>Workspace Extension  (aka, Workspace Agent)</td>
       <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
     </tr>
   </tbody>
@@ -1523,9 +1531,7 @@ There are a number of aspects that can be modified within Che.</p>
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

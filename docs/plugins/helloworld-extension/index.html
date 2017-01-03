@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -479,7 +483,7 @@
           
 <p>This documentation is a step-by-step guide to build your first HelloWorld extension for Eclipse Che.</p>
 
-<p>In order to follow this guide, we consider you have successfully configured Eclipse Che sources inside of Eclipse IDE and have been able to execute your manually built assembly. If not, please refer to the following <a href="https://eclipse-che.readme.io/docs/setup-che-workspace">documentation</a>.</p>
+<p>In order to follow this guide, we consider you have successfully configured Eclipse Che sources inside of Eclipse IDE and have been able to execute your manually built assembly. If not, please refer to the following <a href="../../../docs/plugins/setup-che-workspace/index.html">documentation</a>.</p>
 
 <h2 id="1--create-a-new-maven-project">1- Create a new maven project</h2>
 
@@ -502,7 +506,9 @@ Provide asked information (we will update them in the next step)</p>
   <li>GWT</li>
 </ul>
 
-<p>We also add the Maven repository used to retrieve artifacts and the Build configuration (refer to <a href="https://eclipse-che.readme.io/v5.0/docs/create-and-build-extensions#section-pom-xml">https://eclipse-che.readme.io/v5.0/docs/create-and-build-extensions#section-pom-xml</a>)  .</p>
+<p>We also add the Maven repository used to retrieve artifacts and the <a href="../../../docs/plugins/create-and-build-extensions/index.html#pomxml">Build configuration</a>).</p>
+
+<p><em>pom.xml</em></p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="c">&lt;!--
 
@@ -521,7 +527,7 @@ Provide asked information (we will update them in the next step)</p>
     <span class="nt">&lt;parent&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>che-parent<span class="nt">&lt;/artifactId&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.0.0-M6-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;version&gt;</span>5.0.0<span class="nt">&lt;/version&gt;</span>
     <span class="nt">&lt;/parent&gt;</span>
     <span class="nt">&lt;artifactId&gt;</span>che-helloworld-sample<span class="nt">&lt;/artifactId&gt;</span>
     <span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
@@ -575,6 +581,7 @@ Provide asked information (we will update them in the next step)</p>
 <p>Once your pom.xml file is edited, save it.
 You will see that Eclipse is displaying an error on the <code class="highlighter-rouge">che-helloworld-extension</code> module. Fix this error by doing an “Update Project” with the Eclipse’s Maven plugin:
 <img src="../../../docs/assets/imgs/Screen_Shot_2016-10-13_at_14_17_47.png" alt="Screen_Shot_2016-10-13_at_14_17_47.png" /></p>
+
 <h2 id="3--create-helloworldextension-class">3- Create HelloWorldExtension class</h2>
 
 <p>Create the package <code class="highlighter-rouge">org.eclipse.che.ide.ext.helloworld</code> in <code class="highlighter-rouge">src/main/java</code>:
@@ -586,7 +593,8 @@ In this extension we’ll need to talk to Parts and Action API. Gin and Singleto
 <span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.Extension</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.google.inject.Inject</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.google.inject.Singleton</span><span class="o">;</span>
-<span class="o">...</span><span class="err">\</span>
+<span class="o">...</span>
+
 </code></pre>
 </div>
 <p>We add the following annotations:</p>
@@ -595,13 +603,15 @@ In this extension we’ll need to talk to Parts and Action API. Gin and Singleto
  * @Extension lets us know this is an extension and code injected in it will be executed when launched
  */</span>
 <span class="nd">@Singleton</span>
-<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Hello world\ version = "</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="err">"</span><span class="o">)</span>
+<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Hello world"</span><span class="o">,</span> <span class="n">version</span> <span class="o">=</span> <span class="s">"1.0.0"</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldExtension</span>
 <span class="o">{</span>
 <span class="o">}</span>
 </code></pre>
 </div>
+
 <p>In the constructor, we want our HelloWorld extension to display an “Hello World” message in the Events Panel. In order to do that, we will use the notification manager.</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="o">{</span>
     <span class="nd">@Inject</span>
     <span class="kd">public</span> <span class="nf">HelloWorldExtension</span><span class="o">(</span><span class="n">NotificationManager</span> <span class="n">notificationManager</span><span class="o">)</span> <span class="o">{</span>
@@ -610,7 +620,9 @@ In this extension we’ll need to talk to Parts and Action API. Gin and Singleto
 <span class="o">}</span>
 </code></pre>
 </div>
-<p>Finally, your class should be like this:</p>
+
+<p>Finally, your class should be like this:
+<em>HelloWorldExtension.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="cm">/*******************************************************************************
  * Copyright (c) 2012-2016 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
@@ -641,16 +653,17 @@ In this extension we’ll need to talk to Parts and Action API. Gin and Singleto
  * @Extension lets us know this is an extension and code injected in it will be executed when launched
  */</span>
 <span class="nd">@Singleton</span>
-<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Hello world\ version = "</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="s">")
-public class HelloWorldExtension
-{
-    @Inject
-    public HelloWorldExtension(NotificationManager notificationManager) {
-        notificationManager.notify("</span><span class="n">Hello</span> <span class="n">World</span><span class="err">"</span><span class="o">);</span>
+<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Hello world"</span><span class="o">,</span> <span class="n">version</span> <span class="o">=</span> <span class="s">"1.0.0"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldExtension</span>
+<span class="o">{</span>
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="nf">HelloWorldExtension</span><span class="o">(</span><span class="n">NotificationManager</span> <span class="n">notificationManager</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">notificationManager</span><span class="o">.</span><span class="na">notify</span><span class="o">(</span><span class="s">"Hello World"</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
 </div>
+
 <h2 id="4--create-helloworldextension-gwt-module">4- Create HelloWorldExtension GWT module</h2>
 
 <p>Create the package <code class="highlighter-rouge">org.eclipse.che.ide.ext.helloworld</code> in <code class="highlighter-rouge">src/main/resources</code>:
@@ -658,6 +671,8 @@ public class HelloWorldExtension
 Add <code class="highlighter-rouge">HelloWorldExtension</code> GWT module by creating the file <code class="highlighter-rouge">HelloWorldExtension.gwt.xml</code>:
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at14.59.27.png" alt="ScreenShot2016-10-13at14.59.27.png" />
 Inherits from the GWT modules: User, Inject. We will also inherits from the IDE GWT API.</p>
+
+<p><em>HelloWorldExtension.gwt.xml</em></p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="c">&lt;!--
 
     Copyright (c) 2012-2016 Codenvy, S.A.
@@ -677,6 +692,7 @@ Inherits from the GWT modules: User, Inject. We will also inherits from the IDE 
 <span class="nt">&lt;/module&gt;</span>
 </code></pre>
 </div>
+
 <h2 id="5--build-the-extension">5- Build the Extension</h2>
 
 <p>Create the following <code class="highlighter-rouge">Run Configuration</code>:
@@ -694,9 +710,12 @@ Or you can also open a terminal where you create your HelloWorld Extension and r
 <span class="se">\</span>
 </code></pre>
 </div>
+
 <h2 id="6--add-extension-to-root-pom-of-che">6- Add extension to root pom of Che</h2>
 
 <p>In order to allow your extension to be visible from the root level of Che, add your extension as a dependency in the list of <code class="highlighter-rouge">&lt;dependencies&gt;</code> from the <code class="highlighter-rouge">&lt;dependencyManagement&gt;</code> block. Edit the <code class="highlighter-rouge">pom.xml</code> from <code class="highlighter-rouge">che-parent</code></p>
+
+<p><em>pom.xml</em></p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code>...
 <span class="nt">&lt;dependencyManagement&gt;</span>
   <span class="nt">&lt;dependencies&gt;</span>
@@ -716,11 +735,14 @@ Or you can also open a terminal where you create your HelloWorld Extension and r
 <p><img src="../../../docs/assets/imgs/ScreenShot2016-10-13at15.30.00.png" alt="ScreenShot2016-10-13at15.30.00.png" />
 You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the pom.xml for you.
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at15.34.00.png" alt="ScreenShot2016-10-13at15.34.00.png" /></p>
+
 <h2 id="7--link-to-ide-assembly">7- Link to IDE Assembly</h2>
 
 <p>The HelloWorld extension is only a client-side (IDE) extension. You have to introduce your extension as a dependency in /che/assembly/assembly-ide-war/pom.xml and also have it added as a dependency to the GWT application.</p>
 
-<p>First add the dependency:</p>
+<p>First add the dependency:
+<em>pom.xml</em></p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code>...
 <span class="nt">&lt;dependencies&gt;</span>
 	...
@@ -729,7 +751,7 @@ You can insert the dependency anywhere in the list. After you have inserted it, 
      <span class="nt">&lt;artifactId&gt;</span>che-helloworld-sample<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;/dependency&gt;</span>
   ...
-<span class="nt">&lt;/dependencies&gt;</span>\
+<span class="nt">&lt;/dependencies&gt;</span>
 </code></pre>
 </div>
 <p>You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the pom.xml for you.
@@ -739,14 +761,16 @@ Second, link your GUI extension into the GWT app. You will add an <code class="h
 <p>In <code class="highlighter-rouge">assembly-ide-war/src/main/resources/org/eclipse/che/ide/IDE.gwt.xml</code> add:</p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code>...
 <span class="nt">&lt;inherits</span> <span class="na">name=</span><span class="s">'org.eclipse.che.ide.ext.helloworld.HelloWorldExtension'</span><span class="nt">/&gt;</span>
-...\
+...
 </code></pre>
 </div>
-<p>This means that in our embed sample, there is a file with a *.gwt.xml extension in a folder structure identical to the name above.</p>
+
+<p>This means that in our embed sample, there is a file with a <code class="highlighter-rouge">*.gwt.xml</code> extension in a folder structure identical to the name above.</p>
 
 <p><img src="../../../docs/assets/imgs/ScreenShot2016-10-13at16.35.54.png" alt="ScreenShot2016-10-13at16.35.54.png" /></p>
 
 <p><img src="../../../docs/assets/imgs/ScreenShot2016-10-13at16.34.24.png" alt="ScreenShot2016-10-13at16.34.24.png" /></p>
+
 <h2 id="8--build-che-with-your-extension">8- Build Che with your extension.</h2>
 
 <p>First, we need to rebuild the assembly-ide-war:
@@ -755,20 +779,22 @@ Or you can also do it in a terminal:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
 <span class="c"># This IDE web app will be bundled into the assembly</span>
 <span class="nb">cd </span>che/assembly/assembly-ide-war
-mvn clean install<span class="se">\</span>
+mvn clean install
 </code></pre>
 </div>
+
 <p>Second, we need to rebuild the whole Eclipse Che assembly:</p>
 
 <p>Or you can also do it in a terminal:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a new Che assembly that includes all new client-side extensions</span>
 <span class="nb">cd </span>che/assembly/assembly-main
-mvn clean install<span class="se">\</span>
+mvn clean install
 </code></pre>
 </div>
+
 <h2 id="9--start-your-custom-assembly">9- Start your custom assembly</h2>
 
-<p>To start Che from the custom assembly you just built, you can refer to this <a href="doc:usage-docker#local-eclipse-che-binaries">Usage: Docker Launcher</a>. Remind your custom assembly is located in {workspace-path}\che\assembly\assembly-main\target\eclipse-che-<version>\eclipse-che-<version></version></version></p>
+<p>To start Che from the custom assembly you just built, you can refer to this <a href="http://localhost:9080/docs/setup/configuration/index.html#development-mode">Usage: Development Demo</a>.</p>
 
 <h2 id="10--test-your-extension">10- Test your extension</h2>
 
@@ -1717,9 +1743,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

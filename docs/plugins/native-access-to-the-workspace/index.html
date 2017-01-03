@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -481,13 +485,15 @@
 
 <p>The concept of workspaces makes it very convenient to reuse any existing tool in Che, as those tools can be executed on the workspace runtime. Che already provides several of those tool integrations, such as Maven or Git.</p>
 
-<p>There are two ways to integrate tools running on the workspace: First, you can provide a custom workspace service, which triggers the native workspace call and provides an API to be used by the client IDE. Second, you can use the existing command support of Che, which already allows to execute native commands on the workspace without implementing a custom service. In this tutorial, we will demonstrate the second option, please refer to this tutorial <a href="doc:serverworkspace-access">this tutorial</a> to learn how to implement custom services.</p>
+<p>There are two ways to integrate tools running on the workspace: First, you can provide a custom workspace service, which triggers the native workspace call and provides an API to be used by the client IDE. Second, you can use the existing command support of Che, which already allows to execute native commands on the workspace without implementing a custom service. In this tutorial, we will demonstrate the second option, please refer to this tutorial <a href="../../../docs/plugins/serverworkspace-access/index.html">this tutorial</a> to learn how to implement custom services.</p>
 
 <p>In the following, we implement a simple command, which creates a new file called “che-was-here” using the native “touch” command. The command is finally called by a sample action, however, we encapsulate the execution of the command into a dedicated class called <code class="highlighter-rouge">CommandManager</code> which can execute arbitrary commands on the workspace (see following listing).</p>
 
 <p>To execute a command, Che provides the service <code class="highlighter-rouge">MachineServiceClient</code>. To execute a command, it requires the ID of the machine the command should be executed on, the command to be executed, an output channel and a callback.</p>
 
 <p>The ID can be retrieved from the <code class="highlighter-rouge">AppContext</code>. The <code class="highlighter-rouge">Command</code> is created using the Che <code class="highlighter-rouge">DtoFactory</code>. The parameter <code class="highlighter-rouge">CommandLine</code> specifies the native command to be executed. Finally, we create a sample output channel and execute the command with an empty call back.</p>
+
+<p><em>che/samples/sample-plugin-nativeaccess/che-sample-plugin-nativeaccess-ide/src/main/java/org/eclipse/che/plugin/nativeaccessexample/machine/client/command/CommandManager.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Singleton</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CommandManager</span> <span class="o">{</span>
 
@@ -534,7 +540,10 @@
 <span class="o">}</span>
 </code></pre>
 </div>
+
 <p>Now, the <code class="highlighter-rouge">CommandManager</code> can be used to trigger any kind of command line operation. The following example action uses the native “touch” command to create a new file.</p>
+
+<p><em>che/samples/sample-plugin-nativeaccess/che-sample-plugin-nativeaccess-ide/src/main/java/org/eclipse/che/plugin/nativeaccessexample/ide/action/RunNativeCommandAction.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Singleton</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunNativeCommandAction</span> <span class="kd">extends</span> <span class="n">Action</span> <span class="o">{</span>
 
@@ -1498,9 +1507,7 @@
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -480,30 +484,34 @@
 <p>In the first version of Chedir, each Chedir directory maps to a single Che server containing a single workspace. That workspace can have multiple projects and source repositories that are part of it.</p>
 
 <p>You can boot both a Che server and a worskpace (with its embedded runtimes) with a single command:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>che dir up<span class="se">\</span>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; dir &lt;path-to-project&gt; up
 </code></pre>
 </div>
+
 <p>This command will boot a Che server according to the properties in the Chefile. If necessary, the right Che launcher and Che server Docker images will be downloaded and cached. After the server has booted, Chedir will create a workspace and start its runtime, also as a set of Docker containers.</p>
 
 <p>If there is an existing Che server running with the configuration specified, Chedir will discontinue and recommend that you create a different configuration to avoid conflicts. In a future version of Chedir, we’ll allow creating additional workspaces in an existing Che server, or even in a remote one such as at Codenvy.</p>
 
-<p>When the process of creation has completed, you will be presented with two URLs:
-1: Che server URL - a URL that will open the dashboard to manage the Che instance
+<p>When the process of creation has completed, you will be presented with two URLs:<br />
+1: Che server URL - a URL that will open the dashboard to manage the Che instance<br />
 2: Workspace URL - a URL that will open the browser IDE with the workspace configured</p>
 
 <p>The workspace is a fully functional runtime environment. You can work within the workspace, SSH into it, and also work on code. Any code changes will be synchronized with the local directory. You can also perform git operations such as add, commit, and push from within the IDE.</p>
 
 <p>When you are done working on the workspace, you can suspend the workspace and have it snapshot.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>che dir down<span class="se">\</span>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; dir &lt;path-to-project&gt; down
 </code></pre>
 </div>
-<p>Run <code class="highlighter-rouge">che dir down</code> on the host machine. Chedir will stop the workspace’s runtime, stop the Che server, and return to the host. The workspace and its project will be preserved.  You can run <code class="highlighter-rouge">che dir up</code> to reactivate it. This command is the equivalent of running <code class="highlighter-rouge">che stop</code> with the CLI.</p>
+
+<p>Run Chedir <code class="highlighter-rouge">down</code> command on the host machine. Chedir will stop the workspace’s runtime, stop the Che server, and return to the host. The workspace and its project will be preserved.  You can run Chedir <code class="highlighter-rouge">up</code> to reactivate it. This command is the equivalent of running <code class="highlighter-rouge">docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; stop</code> with the CLI.</p>
 
 <p>To stop the Che server and remove the workspace, you can destroy it.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>che dir destroy<span class="se">\</span>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; dir &lt;path-to-workspace&gt; destroy
 </code></pre>
 </div>
+
 <h2 id="next-steps">NEXT STEPS</h2>
+<p><a href="../../../docs/chedir/chefiles/index.html">Author a custom Chefile</a> to tailor how the workspace is created and adapted to your project.</p>
 
         </article>
       </div>
@@ -1445,9 +1453,7 @@
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

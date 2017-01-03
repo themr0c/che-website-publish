@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -113,7 +117,18 @@
           </div>
           
 <h1 id="1-start-che">1. Start Che</h1>
-<p>Run <code class="highlighter-rouge">docker run --rm -t -v /var/run/docker.sock:/var/run/docker.sock eclipse/che start</code> and open your browser at <code class="highlighter-rouge">http://&lt;your-che-host&gt;:8080</code></p>
+
+<p>Use your SaaS account for the following, or if you have <a href="../../../docs/setup/getting-started/index.html">installed Che</a>, open a terminal and use the Che startup script:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
+docker run -it eclipse/che-cli start
+
+<span class="c"># Or, full start syntax where &lt;path&gt; is a local directory</span>
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che-cli start
+</code></pre>
+</div>
+
+<p>Open your browser at <code class="highlighter-rouge">http://&lt;your-che-host&gt;:8080</code>.</p>
 
 <h1 id="2-start-workspace">2. Start Workspace</h1>
 <p>When in User Dashboard, go to <code class="highlighter-rouge">Workspaces</code> tab and click <code class="highlighter-rouge">(+)</code> button. It will take you to a Wizard with all the steps to create a new workspace.</p>
@@ -121,8 +136,8 @@
 <h3 id="select-source">Select Source</h3>
 <p>We’ll create a new workspace using recipe, so choose an appropriate option in the menu.</p>
 
-<p>###Select Stack
-Our workspace will be created from a <strong>Custom Stack</strong> (tab on the far right). We’ll use a certified Debian based Codenvy image with NodeJS 5.6.0 and Meteor installed (<a href="https://raw.githubusercontent.com/eclispe/che-dockerfiles/master/meteor/latest/Dockerfile">Recipe</a>).</p>
+<h3 id="select-stack">Select Stack</h3>
+<p>Our workspace will be created from a <strong>Custom Stack</strong> (tab on the far right). We’ll use a certified Debian based Codenvy image with NodeJS 5.6.0 and Meteor installed (<a href="https://raw.githubusercontent.com/eclispe/che-dockerfiles/master/meteor/latest/Dockerfile">Recipe</a>).</p>
 
 <p>Our custom recipe will be:</p>
 
@@ -152,11 +167,13 @@ Our workspace will be created from a <strong>Custom Stack</strong> (tab on the f
 
 <p><code class="highlighter-rouge">http://${server.port.3000}</code></p>
 
-<p><code class="highlighter-rouge">${server.port.3000}</code> will return <code class="highlighter-rouge">currentHost:mappedPort</code>. See: IDE Macros.</p>
+<p><code class="highlighter-rouge">${server.port.3000}</code> will return <code class="highlighter-rouge">currentHost:mappedPort</code>.
+See: [IDE Macros]../../../docs/ide/commands/index.html#macros).</p>
 
 <p>If you switch to a Machine perspective, Servers tab, you will find all available port mappings, including the meteor one.</p>
 
 <p>Save your custom command, run it and click the preview URL. Congrats! Your first Meteor app is running.</p>
+
 <h1 id="qa">Q&amp;A</h1>
 <h2 id="what-if-i-need-a-different-node-version">What if I need a different Node version?</h2>
 
@@ -168,10 +185,12 @@ Our workspace will be created from a <strong>Custom Stack</strong> (tab on the f
 
 <p>Yes, if you need things like bower, gulp, ionic and what not, just add an extra RUN instruction to your custom recipe:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>FROM eclipse/meteor
-RUN sudo npm install -g gulp bower grunt ionic<span class="se">\</span>
+RUN sudo npm install -g gulp bower grunt ionic
 </code></pre>
 </div>
+
 <h2 id="can-i-override-the-default-cmd">Can I override the default CMD?</h2>
+<p>Yes, you can, as long as you have a non-terminating process in it, something like sleep 4h or <code class="highlighter-rouge">tail -f /dev/null</code> (the default).</p>
 
           
 
@@ -509,9 +528,7 @@ RUN sudo npm install -g gulp bower grunt ionic<span class="se">\</span>
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -480,6 +484,8 @@
 <p>Many of the IDE components that you build into your extension will need to communicate directly with the Che server or to the workspace the IDE is currently bound to. Che provides helper utilities to make REST calls simpler. Che’s REST library is built on top of Google’s HTTP Java client libraries.</p>
 
 <p>In your extension code, you can create an AsyncRequestFactory object, which has helper methods for creating requests that will have responses.</p>
+
+<p><em>che/core/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/project/ProjectTypeServiceClientImpl.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">getProjectType</span><span class="o">(</span><span class="nd">@NotNull</span> <span class="n">String</span> <span class="n">workspaceId</span><span class="o">,</span>
                             <span class="nd">@NotNull</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span>
                             <span class="nd">@NotNull</span> <span class="n">AsyncCallback</span><span class="o">&lt;</span><span class="n">ProjectTypeDto</span><span class="o">&gt;</span> <span class="n">callback</span><span class="o">)</span> <span class="o">{</span>
@@ -511,6 +517,8 @@
 <p>Che provides different types of <code class="highlighter-rouge">Unmarshallable</code> objects including <a href="https://github.com/eclipse/che/blob/0d0bbf900114e9c9964d386b02f0904a913ae4e0/core/commons/che-core-commons-gwt/src/main/java/org/eclipse/che/ide/rest/StringUnmarshaller.java">StringUnmarshaller</a>, <a href="https://github.com/eclipse/che/blob/0d0bbf900114e9c9964d386b02f0904a913ae4e0/core/commons/che-core-commons-gwt/src/main/java/org/eclipse/che/ide/rest/StringMapUnmarshaller.java">StringMapUnmarshaller</a>, <a href="https://github.com/eclipse/che/blob/0d0bbf900114e9c9964d386b02f0904a913ae4e0/core/commons/che-core-commons-gwt/src/main/java/org/eclipse/che/ide/rest/StringMapListUnmarshaller.java">StringMapListUnmarshaller</a>, <a href="https://github.com/eclipse/che/blob/0d0bbf900114e9c9964d386b02f0904a913ae4e0/core/commons/che-core-commons-gwt/src/main/java/org/eclipse/che/ide/rest/DtoUnmarshaller.java">DtoUnmarshaller</a>, and <a href="https://github.com/eclipse/che/blob/0d0bbf900114e9c9964d386b02f0904a913ae4e0/core/commons/che-core-commons-gwt/src/main/java/org/eclipse/che/ide/rest/LocationUnmarshaller.java">LocationUnmarshaller</a>.  These different marshallers represent the most common types of JSON to Java payload conversions.</p>
 
 <p>For example, this logic comes from the git plugin and is the method that is called when a user asks to delete the local git repository contained within the project.</p>
+
+<p><em>che/plugins/plugin-git/che-plugin-git-ext-git/src/main/java/org/eclipse/che/ide/ext/git/client/delete/DeleteRepositoryPresenter.java</em></p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteRepository</span><span class="o">()</span> <span class="o">{</span>
     <span class="kd">final</span> <span class="n">CurrentProject</span> <span class="n">project</span> <span class="o">=</span> <span class="n">appContext</span><span class="o">.</span><span class="na">getCurrentProject</span><span class="o">();</span>
     <span class="kd">final</span> <span class="n">GitOutputConsole</span> <span class="n">console</span> <span class="o">=</span> <span class="n">gitOutputConsoleFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">DELETE_REPO_COMMAND_NAME</span><span class="o">);</span>
@@ -530,9 +538,11 @@
             <span class="c1">// The logic for what to do if the response generated a failure message</span>
         <span class="o">}</span>
     <span class="o">});</span>
-<span class="o">}</span><span class="err">\</span>
+<span class="o">}</span>
 </code></pre>
 </div>
+
+<p>In this example, the <code class="highlighter-rouge">service.deleteRepository(...)</code> is a method that will generate the <code class="highlighter-rouge">AsyncRequestFactory</code> object for calling the server. This object requires a <code class="highlighter-rouge">AsyncRequestCallback&lt;T&gt;</code>. This method creates a new instance inline with a callback that expects the response to send data of <code class="highlighter-rouge">Void</code> type, which basically means that there is no response payload. In this case, either the server tells us there is success or there is failure. The <code class="highlighter-rouge">AsyncRequestCallback</code> instance needs to implement two methods <code class="highlighter-rouge">onSuccess(&lt;T&gt;)</code> and <code class="highlighter-rouge">onFailure(Throwable)</code>, which will be called by the <code class="highlighter-rouge">AsyncRequestFactory</code> when the response arrives on the wire. It is within these methods that the logic is placed that tells the IDE what to do in each event.</p>
 
         </article>
       </div>
@@ -1474,9 +1484,7 @@
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");

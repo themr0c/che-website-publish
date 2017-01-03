@@ -20,7 +20,11 @@
 
 
 <body class="wrap">
-  <header>
+  
+
+
+
+<header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
   <li class="">
@@ -48,8 +52,8 @@
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
         <a href="/">
-          <span class="sr-only">Codenvy</span>
-          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Codenvy Logo"  width="249" height="115">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
@@ -504,9 +508,10 @@ docker restart che
 
 <span class="c"># Upgrade to a newer version</span>
 docker pull eclipse/che-server:5.0.0-latest
-docker restart che<span class="se">\</span>
+docker restart che
 </code></pre>
 </div>
+
 <p>Che has started when you see <code class="highlighter-rouge">Server startup in ##### ms</code>.  After starting, Che is available at <code class="highlighter-rouge">localhost:8080</code> or a remote IP if Che has been started remotely.  The examples on this page assume that I am running this container on a Windows machine and I would like my workspaces to be saved in <code class="highlighter-rouge">C:\tmp</code>.  Note that on Windows, volume mounts require Linux-formatted syntax, for which they are here.</p>
 
 <h2 id="selinux">SELinux</h2>
@@ -516,9 +521,10 @@ docker run -p 8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data:Z <span class="se">\</span>
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="ports">Ports</h2>
 <p>Tomcat inside the container will bind itself to port 8080 by default. You must map this port to be exposed in your container using <code class="highlighter-rouge">-p 8080:8080</code>.  If you want to change the port at which your browsers connect, then change the first value, such as <code class="highlighter-rouge">p 9000:8080</code>.  This will route requests from port 9000 to the internal Tomcat bound to port 8080.  If you want to change the internal port that Tomcat is bound, you must update the port binding and set <code class="highlighter-rouge">CHE_PORT</code> to the new value.</p>
 <div class="language-text highlighter-rouge"><pre class="highlight"><code>docker run -p 9000:9500 \
@@ -526,9 +532,10 @@ docker run -p 8080:8080 <span class="se">\</span>
            -e CHE_PORT=9500 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /C/tmp:/data \
-           eclipse/che-server:5.0.0-latest\
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="configuration">Configuration</h2>
 <p>Most important configuration properties are defined as environment variables that you pass into the container. You can also optionally pass in a custom <code class="highlighter-rouge">che.properties</code> which has internal Che configuration that is loaded when Che’s tomcat is booted.  For example, to have Che listen on port 9000:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -p:9000:9000 <span class="se">\</span>
@@ -536,9 +543,10 @@ docker run -p 8080:8080 <span class="se">\</span>
            -e <span class="nv">CHE_SERVER_ACTION</span><span class="o">=</span>stop <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <p>There are many variables that can be set.</p>
 
 <table>
@@ -546,81 +554,59 @@ docker run -p 8080:8080 <span class="se">\</span>
     <tr>
       <th>Variable</th>
       <th>Description</th>
-      <th>Defaults»»»»»&gt;</th>
-      <th> </th>
-      <th> </th>
+      <th>Defaults</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code class="highlighter-rouge">CHE_SERVER_ACTION</code></td>
-      <td>The command to send to Tomcat. it can be [run</td>
-      <td>start</td>
-      <td>stop].</td>
+      <td>The command to send to Tomcat. it can be [<code class="highlighter-rouge">run</code>, <code class="highlighter-rouge">start</code> , <code class="highlighter-rouge">stop</code>].</td>
       <td><code class="highlighter-rouge">run</code></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_LOCAL_CONF_DIR</code></td>
       <td>Folder where a custom <code class="highlighter-rouge">che.properties</code> located. If not provided, then the container will copy the system <code class="highlighter-rouge">che.properties</code> into <code class="highlighter-rouge">/data/conf/che.properties</code>. You can reuse this or replace it  with configuration on a different folder using this variable. If you use this variable, you must also mount the same directory.</td>
       <td><code class="highlighter-rouge">/data/conf</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_ASSEMBLY</code></td>
       <td>The path to a Che assembly that is on your host to be used instead of the assembly packaged within the <code class="highlighter-rouge">che-server</code> image. If you set this variable, you must also volume mount the same directory to <code class="highlighter-rouge">/home/user/che</code></td>
       <td><code class="highlighter-rouge">/home/user/che</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_IN_VM</code></td>
       <td>Set to ‘true’ if this container is running inside of a VM providing Docker such as boot2docker, Docker for Mac, or Docker for Windows. We auto-detect this for most situations, but it’s not always perfect.</td>
       <td>auto-detection</td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_LOG_LEVEL</code></td>
       <td>Logging level of output for Che server. Can be <code class="highlighter-rouge">debug</code> or <code class="highlighter-rouge">info</code>.</td>
       <td><code class="highlighter-rouge">info</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_IP</code></td>
       <td>IP address Che server will bind to. Used by browsers to contact workspaces. You must set this IP address if you want to bind the Che server to an external IP address that is not the same as Docker’s.</td>
       <td>The IP address set to the Docker host. This does cover 99% of situations, but on rare occassions we are not able to discover this IP address and you must provide it.</td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_DEBUG_SERVER</code></td>
       <td>If <code class="highlighter-rouge">true</code>, then will launch the Che server with JPDA activated so that you a Java debugger can attach to the Che server for debugging plugins, extensions, and core libraries.</td>
       <td><code class="highlighter-rouge">false</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_DEBUG_SERVER_PORT</code></td>
       <td>The port that the JPDA debugger will listen.</td>
       <td><code class="highlighter-rouge">8000</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_DEBUG_SERVER_SUSPEND</code></td>
       <td>If <code class="highlighter-rouge">true</code>, then activates <code class="highlighter-rouge">JPDA_SUSPEND</code> flag for Tomcat running the Che server. Used for advanced internal debugging of extensions.</td>
       <td><code class="highlighter-rouge">false</code></td>
-      <td> </td>
-      <td> </td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">CHE_PORT</code></td>
       <td>The port the Che server will bind itself to within the Che container.</td>
-      <td>‘8080`</td>
-      <td> </td>
-      <td> </td>
+      <td><code class="highlighter-rouge">8080</code></td>
     </tr>
   </tbody>
 </table>
@@ -634,9 +620,10 @@ docker run -p 8080:8080 <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="run-che-as-a-daemon">Run Che as a Daemon</h2>
 <p>Pass the <code class="highlighter-rouge">--restart always</code> parameter to the docker syntax to have the Docker daemon restart the container on any exit event, including when your host is initially booting. You can also run Che in the background with the <code class="highlighter-rouge">-d</code> option.</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -p:8080:8080 <span class="se">\</span>
@@ -645,9 +632,10 @@ docker run -p 8080:8080 <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="override-che-internals">Override Che Internals</h2>
 <p>Eclipse Che running in the container has its configuration in <code class="highlighter-rouge">/data/conf/che.properties</code>. This file is copied into the directory that you mount into <code class="highlighter-rouge">/data</code>. You can modify this file and restart Che if you want.</p>
 
@@ -659,9 +647,10 @@ docker run -p 8080:8080 <span class="se">\</span>
 sudo docker <span class="nb">exec</span> -it che vi /data/conf/che.properties
 
 <span class="c"># After you finish making changes, restart the contain</span>
-docker restart che<span class="se">\</span>
+docker restart che
 </code></pre>
 </div>
+
 <p>You can save your Che configuration to reside outside of the container to be reusable between different container instances. Create a local <code class="highlighter-rouge">che.properties</code> file, volume mount it into the container, and also tell Che in the container where to locate this file.</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Mount host directory with che.properties into container and inform Che where it is.</span>
 <span class="c"># Place the folder with che.properties as a mount to /conf</span>
@@ -671,12 +660,11 @@ docker run -p:8080:8080 <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-
            -v /C/conf:/conf <span class="se">\</span>
-
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="use-local-che-assembly">Use Local Che Assembly</h2>
 <p>You can run the Che image with a Che assembly that you have installed (or compiled) locally on your host. If you are developing a custom assembly, extension, or developing Che, you can mount your local binaries built on your host into the container by mounting the assembly to <code class="highlighter-rouge">/assembly</code>.</p>
 <div class="language-text highlighter-rouge"><pre class="highlight"><code># If your local assembly is located at /home/my_assembly:
@@ -686,12 +674,11 @@ docker run -p:8080:8080 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /C/tmp:/data \
            -v /C/conf:/conf \
-
-					 -v /home/my_assembly:/assembly \
-
-           eclipse/che-server:5.0.0-latest\
+           -v /home/my_assembly:/assembly \
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
+
 <h2 id="port-exposure">Port Exposure</h2>
 <p>Docker uses the ephemeral port range from <code class="highlighter-rouge">32768-65535</code>.  If you do not want to expose ports <code class="highlighter-rouge">32768-65535</code> because of the large port range, you need to reconfigure your Docker daemon to communicate over the <code class="highlighter-rouge">docker0</code> interface. You need to set  <code class="highlighter-rouge">DOCKER_MACHINE_HOST</code> to <code class="highlighter-rouge">172.17.0.1</code> and modify <code class="highlighter-rouge">machine.docker.che_api.endpoint</code> in the  <code class="highlighter-rouge">che.properties</code> file.</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Modify your local che.properties with:</span>
@@ -703,15 +690,14 @@ docker run -p:8080:8080 <span class="se">\</span>
            --restart always <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-           -v /C/conf:/conf <span class="se">\ </span>          
-					 -v /home/my_assembly:/assembly <span class="se">\</span>
-
+           -v /C/conf:/conf <span class="se">\</span>
+           -v /home/my_assembly:/assembly <span class="se">\</span>
            -e <span class="nv">DOCKER_MACHINE_HOST</span><span class="o">=</span>172.17.0.1 <span class="se">\</span>
-
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
 
+<p><em>Compose File</em></p>
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">che</span><span class="pi">:</span>
    <span class="s">image</span><span class="pi">:</span> <span class="s">eclipse/che-server:5.0.0-latest</span>
    <span class="s">port</span><span class="pi">:</span> <span class="s">8080:8080</span>
@@ -724,10 +710,11 @@ docker run -p:8080:8080 <span class="se">\</span>
      <span class="pi">-</span> <span class="s">/var/run/docker.sock:/var/run/docker.sock</span>
      <span class="pi">-</span> <span class="s">/C/tmp:/data</span>
      <span class="pi">-</span> <span class="s">/C/conf:/conf</span>
-<span class="err">		</span> <span class="s">- /home/my_assembly:/assembly</span>
-   <span class="s">container_name</span><span class="pi">:</span> <span class="s">che\</span>
+     <span class="pi">-</span> <span class="s">/home/my_assembly:/assembly</span>
+   <span class="s">container_name</span><span class="pi">:</span> <span class="s">che</span>
 </code></pre>
 </div>
+
 <p>Save this into a file named <code class="highlighter-rouge">Composefile</code>. Replace the <code class="highlighter-rouge">${IP}</code> with the IP address of the server where you are hosting Eclipse Che.  You can then run this with Docker Compose with <code class="highlighter-rouge">docker-compose -f Composefile -d</code>.</p>
 <h1 id="docker-unix-socket-mounting-vs-tcp-mode">Docker Unix Socket Mounting vs TCP Mode</h1>
 <p>The <code class="highlighter-rouge">-v /var/run/docker.sock:/var/run/docker.sock</code> syntax is for mounting a Unix socket so that when a process inside the container speaks to a Docker daemon, the process is redirected to the same socket on the host system.</p>
@@ -742,19 +729,18 @@ DOCKER_OPTS=" -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"
 http://localhost:2375/containers/json
 </code></pre>
 </div>
+
 <p>Having verified that your Docker daemon is listening, run the Che container with the with <code class="highlighter-rouge">DOCKER_HOST</code> environment variable set to the IP address of <code class="highlighter-rouge">docker0</code> or <code class="highlighter-rouge">eth0</code> network interface. If <code class="highlighter-rouge">docker0</code> is running on 1.1.1.1 then:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -p:8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            --restart always <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp:/data <span class="se">\</span>
-           -v /C/conf:/conf <span class="se">\ </span>          
-					 -v /home/my_assembly:/assembly <span class="se">\</span>
+           -v /C/conf:/conf <span class="se">\</span>
+           -v /home/my_assembly:/assembly <span class="se">\</span>
            -e <span class="nv">DOCKER_MACHINE_HOST</span><span class="o">=</span>172.17.0.1 <span class="se">\</span>
-
            -e <span class="nv">DOCKER_HOST</span><span class="o">=</span>tcp://1.1.1.1:2375 <span class="se">\</span>
-
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
 
@@ -801,7 +787,7 @@ http://localhost:2375/containers/json
            --restart always <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
            -v /C/tmp/:/data <span class="se">\</span>
-           eclipse/che-server:5.0.0-latest<span class="se">\</span>
+           eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
 
@@ -1745,9 +1731,7 @@ http://localhost:2375/containers/json
   </section>
 
 
-=======
 
-=======
   <script>
   var anchorForId = function (id) {
     var anchor = document.createElement("a");
