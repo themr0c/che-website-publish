@@ -56,9 +56,9 @@
   <div class="row">
     <div class="col-md-4">
       <img src="images/img-home-checonf3.png" alt="CheConf 2016" class="img-responsive">
-      <h3>CheConf 2016</h3>
-      <p>Watch sessions on the future of Che, building plugins, Docker, and many more cloud development topics.</p>
-      <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
+      <h3>Eclipse Che 5.0</h3>
+      <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
+      <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-whatsnew2@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
@@ -67,10 +67,10 @@
       <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
     </div>
     <div class="col-md-4">
-      <img src="images/img-home-whatsnew3@2x.png" alt="EclipseCon Keynote" class="img-responsive">
-      <h3>EclipseCon Keynote</h3>
-      <p>Watch Tyler Jewell at EclipseCon talk about Eclipse Che alongside SAP, Red Hat, IBM, and Microsoft.</p>
-      <a href="<?php echo $rootPath; ?>/community/" class="btn-yellow">Watch the Keynote</a>
+      <img src="images/img-home-checonf3.png" alt="CheConf 2016" class="img-responsive">
+      <h3>CheConf 2016</h3>
+      <p>Watch sessions on the future of Che, building plugins, Docker, and many more cloud development topics.</p>
+      <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
     </div>
   </div>
 </div>
@@ -90,7 +90,6 @@
     <li><img src="images/logo-platformio@2x.png" alt="RedHat" style="width: 96px; height: 70px; margin-left: 50px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
-    <li><img src="images/img-logo-sfdc.png" alt="Salesforce" class="img-responsive"></li>
     <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
     <li><img src="images/logo-sap@2x.png" alt="SAP" class="img-responsive"></li>
     <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
@@ -114,7 +113,7 @@
         <td>
           <h2>Chedir - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
           <p>Chedir provides easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chedir launches synchronized workspaces within Eclipse Che, which Chedir will quietly install and run in the background, if necessary.</p>
-          <a href="https://eclipse-che.readme.io/docs/why-chedir" class="btn-yellow" target="_blank">Learn More</a>
+          <a href="https://eclipse.org/che/docs/chedir-portable-workspaces/why-chedir/index.html" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>

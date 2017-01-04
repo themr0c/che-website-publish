@@ -12,50 +12,38 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Eclipse Che - Development Witchcraft</h1>
+    <h1>Eclipse Che: Development Witchcraft</h1>
     <h3>Eclipse Che is an IDE and developer workspace server that allows anyone to contribute to a project without having to install software. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-technology@2x.png" />
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
+<div class="container-fluid content">
+  <h2>The Codenvy Magic</h2>
+  <p>Why Redmonk calls Codenvy "Developer Witchcraft."</p>
+  &nbsp;<br>
+  <h4>1. CREATE A WORKSPACE WITH PRODUCTION RUNTIMES</h4>
+  <p>Codenvy workspaces start with production runtimes. You give Codenvy the Dockerfile or Docker Compose syntax that is already configured for production.</p>
+  &nbsp;<br>
+  <h4>2. “DEV MODE” THE WORKSPACE</h4>
+  <p>Codenvy then configures the runtime to use SSH so that devs can connect to it. Next, workspace agents inject developer capabilities: SSH access, a terminal with root privileges, and language services like auto-completion. Finally, a debugger is hooked up so that you can analyze your code.</p>
+  &nbsp;<br>
+  <h4>3. IMPORT PROJECTS FROM VERSION CONTROL</h4>
+  <p>Codenvy clones your project's source code into the workspace and places a copy in the production runtime. This allows a developer to edit, save, build and debug their code as though it was local...but better because all changes are immediately synced to the runtime for instant feedback. Each project has a type that brings with it special tooling (like Maven types bring Java intellisense and maven build commands). You can have many projects in a single workspace, each project coming from different source repositories like git or SVN.</p> 
+  &nbsp;<br>
+  <h4>4. DEVELOP WITH ANY IDE</h4>
+  <p>Once the workspace is running Codenvy starts the Eclipse Che browser IDE so  a developer can be editing code in seconds, without installing any software. Of course, because the workspace has been "dev moded" there is also SSH so a local IDE can be mounted to the workspace if preferred.</p> 
+  &nbsp;<br>
+  <h4>5. CONNECT YOUR TOOLCHAIN</h4>
+  <p>Codenvy integrates with your LDAP/AD directory, git or Subversion version control, as well as issue management and continuous integration - like JIRA and Jenkins. Any stack and toolset can be integrated. Provide the team with a single link that provisions a complete developer workspace with the ideal toolchain pre-integrated. Alternatively, provide a set of vetted toolchain options for developers to choose from.</p>
+  &nbsp;<br>
+  <h4>6. COLLABORATE WITH YOUR TEAM</h4>
+  <p>Workspaces can be shared at any time and automated by Codenvy “Factories”. Factories are exposed as URLs so they can be integrated into any dev workflow. A Factory defines metadata on how to create the workspace for each user who clicks on its URL. The metadata can be used to take an existing workspace and “substitute” a different project branch, or workspace runtime based on logic. Resources and permissions can also be controlled.</p> 
 
-<div class="features">
-  <div class="container-fluid content">
-    <h2>A new kind of developer workspace.</h2>
+  <a class="btn-yellow" href="../getting-started/">Get Started</a>
 
-    <div class="row">
-      <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" target="_blank"><img alt=""  src="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" class="img-responsive" /></a>
-        <h3>Workspaces with Runtimes</h3>
-        <p>Workspaces are composed of projects and runtimes. Create portable workspace replicas that run anywhere in the cloud or on your desktop... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
-      </div>
-
-      <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" class="img-responsive" /></a>
-        <h3>Docker-Powered Environments</h3>
-        <p>Workspace runtimes are Docker-powered. Use our all-in-one stacks, pull from any registry, or author your own. Snapshot and embed runtimes into... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
-      </div>
-    </div> <!-- .row -->
-
-    <div class="row">
-      <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" class="img-responsive" /></a>
-        <h3>Cloud IDE</h3>
-        <p>A no-installation browser IDE and IOE accessible from any local or remote device. Thin, fast, and beautiful - it's the IDE our own engineers wanted... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
-      </div>
-
-      <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
-        <h3>Any Desktop IDE</h3>
-        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
-      </div>
-    </div> <!-- .row -->
-
-    <a href="<?php echo $rootPath; ?>/features/" class="btn-yellow">Eclipse Che Features</a>
-  </div> <!-- .container-fluid -->
-</div> <!-- .features -->
-
+</div>
 
 <hr class="gray">
 <div class="container-fluid content">
@@ -85,6 +73,44 @@
     </div>
   </div> <!-- .row -->
 </div><!-- .contributors -->
+
+
+<hr class="gray">
+<div class="features">
+  <div class="container-fluid content">
+    <h2>A new kind of developer workspace.</h2>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <a href="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" target="_blank"><img alt=""  src="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" class="img-responsive" /></a>
+        <h3>Production Runtimes</h3>
+        <p>Eclipse Che works with any single or multi-container runtime. Use an image from DockerHub, your own private registry or one of the included Che images... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+      </div>
+
+      <div class="col-sm-6">
+        <a href="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" class="img-responsive" /></a>
+        <h3>“Dev Mode” your Workspace</h3>
+        <p>Workspace runtimes are Docker-powered. Use our all-in-one stacks, pull from any registry, or author your own. Snapshot and embed runtimes into... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+      </div>
+    </div> <!-- .row -->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <a href="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" class="img-responsive" /></a>
+        <h3>Cloud IDE</h3>
+        <p>A no-installation browser IDE and IOE accessible from any local or remote device. Thin, fast, and beautiful - it's the IDE our own engineers wanted... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+      </div>
+
+      <div class="col-sm-6">
+        <a href="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
+        <h3>Any Desktop IDE</h3>
+        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+      </div>
+    </div> <!-- .row -->
+
+    <a href="<?php echo $rootPath; ?>/features/" class="btn-yellow">Eclipse Che Features</a>
+  </div> <!-- .container-fluid -->
+</div> <!-- .features -->
 
 
 <div class="tech">
