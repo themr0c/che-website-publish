@@ -22,21 +22,21 @@
 <div class="container-fluid content options">
   <div class="row">
     <div class="col-md-4">
-      <img src="../images/getting-started/icon-saas-cloud.jpg" alt="Eclipse Che | SaaS Cloud">
+      <img src="../../images/getting-started/icon-saas-cloud.jpg" alt="Eclipse Che | SaaS Cloud">
       <h3>SaaS Cloud</h3>
       <p>Self-service Eclipse Che developer workspaces hosted at Codenvy.com</p>
         <a href="<?php echo $rootPath; ?>/getting-started/cloud/" class="btn-yellow">Create Free Account</a></li>
     </div>
 
     <div class="col-md-4">
-      <img src="../images/getting-started/icon-local-install.jpg" alt="Eclipse Che | Local Install">
+      <img src="../../images/getting-started/icon-local-install.jpg" alt="Eclipse Che | Local Install">
       <h3>Local Install</h3>
       <p>Install Eclipse Che on your computer or a development server.</p>
       <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Downloads</a> 
     </div>
 
     <div class="col-md-4">
-      <img src="../images/getting-started/icon-private-cloud.jpg" alt="Eclipse Che | Private Cloud Install">
+      <img src="../../images/getting-started/icon-private-cloud.jpg" alt="Eclipse Che | Private Cloud Install">
       <h3>Private Cloud Install</h3>
       <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
      <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
@@ -67,4 +67,4 @@
 </div> <!-- .get-help -->
 
 
-<?php include '../includes/footer.php'; ?>
+<?php include '../../includes/footer.php'; ?>

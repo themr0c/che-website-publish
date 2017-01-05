@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>Che 5.0 Released! <a href="<?php echo $rootPath; ?>/technology" target="_blank">Learn More</a>.</h3>
+    <h3>Che 5.0 Released! <a href="<?php echo $rootPath; ?>/technology">Learn More</a>.</h3>
   </div>
 </div>
 
