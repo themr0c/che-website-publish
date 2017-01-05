@@ -494,70 +494,71 @@
 <p>The Docker image which runs Che is the Che CLI. It has various commands for running Che and also for allowing your end users to interact with their workspaces on the command line.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>USAGE:
-  docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; [COMMAND]
+USAGE:
+ docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; [COMMAND]
 
 MANDATORY DOCKER PARAMETERS:
-  -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
+ -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
 
 OPTIONAL DOCKER PARAMETERS:
-  -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
-  -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
-  -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
-  -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
-  -v &lt;LOCAL_PATH&gt;:/repo                Che repo with config and binaries for dev mode
-  -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
-  -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimzing sync command resides
+ -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
+ -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
+ -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
+ -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
+ -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries
+ -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
+ -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimizing sync command resides
 
 COMMANDS:
-  action &lt;action-name&gt;                 Start action on che instance
-  backup                               Backups che configuration and data to /data/backup volume mount
-  config                               Generates a che config from vars; run on any start / restart
-  destroy                              Stops services, and deletes che instance data
-  dir &lt;path&gt; &lt;command&gt;                 Use Chefile feature in the directory &lt;path&gt;
-  download                             Pulls Docker images for the current che version
-  help                                 This message
-  info                                 Displays info about che and the CLI
-  init                                 Initializes a directory with a che install
-  offline                              Saves che Docker images into TAR files for offline install
-  restart                              Restart che services
-  restore                              Restores che configuration and data from /data/backup mount
-  rmi                                  Removes the Docker images for &lt;version&gt;, forcing a repull
-  ssh &lt;wksp-name&gt; [machine-name]       SSH to a workspace if SSH agent enabled
-  start                                Starts che services
-  stop                                 Stops che services
-  sync &lt;wksp-name&gt;                     Synchronize workspace with current working directory
-  test &lt;test-name&gt;                     Start test on che instance
-  upgrade                              Upgrades che from one version to another with migrations and backups
-  version                              Installed version and upgrade paths
+ action &lt;action-name&gt;                 Start action on che instance
+ backup                               Backups che configuration and data to /data/backup volume mount
+ config                               Generates a che config from vars; run on any start / restart
+ destroy                              Stops services, and deletes che instance data
+ dir &lt;path&gt; &lt;command&gt;                 Use Chefile feature in the directory &lt;path&gt;
+ download                             Pulls Docker images for the current che version
+ help                                 This message
+ info                                 Displays info about che and the CLI
+ init                                 Initializes a directory with a che install
+ offline                              Saves che Docker images into TAR files for offline install
+ restart                              Restart che services
+ restore                              Restores che configuration and data from /data/backup mount
+ rmi                                  Removes the Docker images for &lt;version&gt;, forcing a repull
+ ssh &lt;wksp-name&gt; [machine-name]       SSH to a workspace if SSH agent enabled
+ start                                Starts che services
+ stop                                 Stops che services
+ sync &lt;wksp-name&gt;                     Synchronize workspace with current working directory
+ test &lt;test-name&gt;                     Start test on che instance
+ upgrade                              Upgrades che from one version to another with migrations and backups
+ version                              Installed version and upgrade paths
 
-COMMAND OPTIONS:
-  --fast                               Skips networking and version checks, saving 5 secs during boot
-  --debug                              Activates dev mode, which allows debugging binares in che-server
+GLOBAL COMMAND OPTIONS:
+ --fast                               Skips networking and version checks (saves 5 secs during bootstrap)
+ --debug                              Enable debugging of che server
 </code></pre>
 </div>
 
 <p>The CLI will hide most error conditions from standard out. Internal stack traces and error output is redirected to <code class="highlighter-rouge">cli.log</code>, which is saved in the host folder where <code class="highlighter-rouge">:/data</code> is mounted.</p>
 
-<h2 id="action">action</h2>
+<h6 id="action">action</h6>
 <p>Executes some actions on the Eclipse Che instance or on a workspace running inside Che.
 For example to list all workspaces on Che, the following command can be used
 <code class="highlighter-rouge">action list-workspaces</code>.
 To execute a command on a workspace <code class="highlighter-rouge">action execute-command &lt;workspace-name&gt; &lt;action&gt;</code> where action can be any bash command.</p>
 
-<h2 id="backup">backup</h2>
+<h6 id="backup">backup</h6>
 <p>TARS your <code class="highlighter-rouge">/instance</code> into files and places them into <code class="highlighter-rouge">/backup</code>. These files are restoration-ready.</p>
 
-<h2 id="config">config</h2>
+<h6 id="config">config</h6>
 <p>Generates a Che instance configuration thta is placed in <code class="highlighter-rouge">/instance</code>. This command uses puppet to generate Docker Compose configuration files to run Che and its associated server. Che’s server configuration is generated as a che.properties file that is volume mounted into the Che server when it boots. This command is executed on every <code class="highlighter-rouge">start</code> or <code class="highlighter-rouge">restart</code>.</p>
 
 <p>If you are using a <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code> image and it does not match the version that is in <code class="highlighter-rouge">/instance/che.ver</code>, then the configuration will abort to prevent you from running a configuration for a different version than what is currently installed.</p>
 
 <p>This command respects <code class="highlighter-rouge">--no-force</code>, <code class="highlighter-rouge">--pull</code>, <code class="highlighter-rouge">--force</code>, and <code class="highlighter-rouge">--offline</code>.</p>
 
-<h2 id="destroy">destroy</h2>
+<h6 id="destroy">destroy</h6>
 <p>Deletes <code class="highlighter-rouge">/docs</code>, <code class="highlighter-rouge">che.env</code> and <code class="highlighter-rouge">/instance</code>, including destroying all user workspaces, projects, data, and user database. If you pass <code class="highlighter-rouge">--quiet</code> then the confirmation warning will be skipped. Passing <code class="highlighter-rouge">--cli</code> will also destroy the <code class="highlighter-rouge">cli.log</code>. By default this is left behind for traceability.</p>
 
-<h2 id="dir">dir</h2>
+<h6 id="dir">dir</h6>
 <p>Boots a new Eclipse Che instance with a workspace for the folder specified in parameter.
 If for example <code class="highlighter-rouge">$HOME/my-project</code> is given as parameter in <code class="highlighter-rouge">dir $HOME/my-project up</code>, a new Che instance will be created, using <code class="highlighter-rouge">$HOME/my-project</code>as project in the IDE.
 So inside the IDE, <code class="highlighter-rouge">/projects</code> folder will contain a <code class="highlighter-rouge">my-project</code>folder with your host folder.
@@ -573,15 +574,15 @@ Then, any changes inside the IDE will be reflected in your host folder. And the 
   <li><code class="highlighter-rouge">status</code>: Display if an instance of Eclipse Che is running or not for the specified folder.</li>
 </ul>
 
-<h2 id="download">download</h2>
+<h6 id="download">download</h6>
 <p>Used to download Docker images that will be stored in your Docker images repository. This command downloads images that are used by the CLI as utilities, for Che to do initialization and configuration, and for the runtime images that Che needs when it starts.  This command respects <code class="highlighter-rouge">--offline</code>, <code class="highlighter-rouge">--pull</code>, <code class="highlighter-rouge">--force</code>, and <code class="highlighter-rouge">--no-force</code> (default).  This command is invoked by <code class="highlighter-rouge">che init</code>, <code class="highlighter-rouge">che config</code>, and <code class="highlighter-rouge">che start</code>.</p>
 
 <p><code class="highlighter-rouge">download</code> is invoked by <code class="highlighter-rouge">che init</code> before initialization to download images for the version specified by <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code>.</p>
 
-<h2 id="info">info</h2>
+<h6 id="info">info</h6>
 <p>Displays system state and debugging information. <code class="highlighter-rouge">--network</code> runs a test to take your <code class="highlighter-rouge">CHE_HOST</code> value to test for networking connectivity simulating browser &gt; Che and Che &gt; workspace connectivity.</p>
 
-<h2 id="init">init</h2>
+<h6 id="init">init</h6>
 <p>Initializes an empty directory with a Che configuration and instance folder where user data and runtime configuration will be stored. You must provide a <code class="highlighter-rouge">&lt;path&gt;:/data</code> volume mount, then Che creates a <code class="highlighter-rouge">instance</code> and <code class="highlighter-rouge">backup</code> subfolder of <code class="highlighter-rouge">&lt;path&gt;</code>. You can optionally override the location of <code class="highlighter-rouge">instance</code> by volume mounting an additional local folder to <code class="highlighter-rouge">/data/instance</code>. You can optionally override the location of where backups are stored by volume mounting an additional local folder to <code class="highlighter-rouge">/data/backup</code>.  After initialization, a <code class="highlighter-rouge">che.env</code> file is placed into the root of the path that you mounted to <code class="highlighter-rouge">/data</code>.</p>
 
 <p>These variables can be set in your local environment shell before running and they will be respected during initialization:</p>
@@ -617,7 +618,7 @@ Then, any changes inside the IDE will be reflected in your host folder. And the 
 <table>
   <thead>
     <tr>
-      <th>Mode</th>
+      <th>Mode »»»»»</th>
       <th>Description</th>
     </tr>
   </thead>
@@ -643,38 +644,38 @@ Then, any changes inside the IDE will be reflected in your host folder. And the 
 
 <p>You can reinstall Che on a folder that is already initialized and preserve your <code class="highlighter-rouge">che.env</code> values by passing the <code class="highlighter-rouge">--reinit</code> flag.</p>
 
-<h2 id="offline">offline</h2>
+<h6 id="offline">offline</h6>
 <p>Saves all of the Docker images that Che requires into <code class="highlighter-rouge">/backup/*.tar</code> files. Each image is saved as its own file. If the <code class="highlighter-rouge">backup</code> folder is available on a machine that is disconnected from the Internet and you start Che with <code class="highlighter-rouge">--offline</code>, the CLI pre-boot sequence will load all of the Docker images in the <code class="highlighter-rouge">/backup/</code> folder.</p>
 
 <p><code class="highlighter-rouge">--list</code> option will list all of the core images and optional stack images that can be downloaded. The core system images and the CLI will always be saved, if an existing TAR file is not found. <code class="highlighter-rouge">--image:&lt;image-name&gt;</code> will download a single stack image and can be used multiple times on the command line. You can use <code class="highlighter-rouge">--all-stacks</code> or <code class="highlighter-rouge">--no-stacks</code> to download all or none of the optional stack images.</p>
 
-<h2 id="restart">restart</h2>
+<h6 id="restart">restart</h6>
 <p>Performs a <code class="highlighter-rouge">stop</code> followed by a <code class="highlighter-rouge">start</code>, respecting <code class="highlighter-rouge">--pull</code>, <code class="highlighter-rouge">--force</code>, and <code class="highlighter-rouge">--offline</code>.</p>
 
-<h2 id="restore">restore</h2>
+<h6 id="restore">restore</h6>
 <p>Restores <code class="highlighter-rouge">/instance</code> to its previous state. You do not need to worry about having the right Docker images. The normal start / stop / restart cycle ensures that the proper Docker images are available or downloaded, if not found.</p>
 
 <p>This command will destroy your existing <code class="highlighter-rouge">/instance</code> folder, so use with caution, or set these values to different folders when performing a restore.</p>
 
-<h2 id="rmi">rmi</h2>
+<h6 id="rmi">rmi</h6>
 <p>Deletes the Docker images from the local registry that Che has downloaded for this version.</p>
 
-<h2 id="ssh">ssh</h2>
+<h6 id="ssh">ssh</h6>
 <p>Connects the current terminal where the command is started to the terminal of a machine of the workspace. If no machine is specified in the command, it will connect to the default machine which is the dev machine.
 The syntax is <code class="highlighter-rouge">ssh &lt;workspace-name&gt; [machine-name]</code>
 The ssh connection will work only if there is a workspace ssh key setup. A default ssh key is automatically generated when a workspace is created.</p>
 
-<h2 id="start">start</h2>
+<h6 id="start">start</h6>
 <p>Starts Che and its services using <code class="highlighter-rouge">docker-compose</code>. If the system cannot find a valid configuration it will perform an <code class="highlighter-rouge">init</code>. Every <code class="highlighter-rouge">start</code> and <code class="highlighter-rouge">restart</code> will run a <code class="highlighter-rouge">config</code> to generate a new configuration set using the latest configuration. The starting sequence will perform pre-flight testing to see if any ports required by Che are currently used by other services and post-flight checks to verify access to key APIs.</p>
 
-<h2 id="stop">stop</h2>
+<h6 id="stop">stop</h6>
 <p>Stops all of the Che service containers and removes them.</p>
 
-<h2 id="test">test</h2>
+<h6 id="test">test</h6>
 <p>Performs some tests on your local instance of Che. It can for example check the ability to create a workspace, start the workspace by using a custom Workspace runtime and then use it.
 The list of all the tests available can be obtained by providing only <code class="highlighter-rouge">test</code> command.</p>
 
-<h2 id="upgrade">upgrade</h2>
+<h6 id="upgrade">upgrade</h6>
 <p>Manages the sequence of upgrading Che from one version to another. Run <code class="highlighter-rouge">che version</code> to get a list of available versions that you can upgrade to.</p>
 
 <p>Upgrading Che is done by using a <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code> that is newer than the version you currently have installed. For example, if you have 5.0.0-M2 installed and want to upgrade to 5.0.0-M7, then:</p>
@@ -693,7 +694,7 @@ docker run &lt;volume-mounts&gt; eclipse/che-cli:5.0.0-M7 upgrade
 
 <p>You can run <code class="highlighter-rouge">che version</code> to see the list of available versions that you can upgrade to.</p>
 
-<h2 id="version">version</h2>
+<h6 id="version">version</h6>
 <p>Provides information on the current version and the available versions that are hosted in Che’s repositories. <code class="highlighter-rouge">che upgrade</code> enforces upgrade sequences and will prevent you from upgrading one version to another version where data migrations cannot be guaranteed.</p>
 
 <h1 id="cli-development">CLI Development</h1>
