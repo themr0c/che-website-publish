@@ -1,14 +1,33 @@
 
 
 
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/codenvy/commits/master.atom">
+  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -27,55 +46,45 @@
 <header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
   </nav>
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
-        <a href="/">
+        <a href="https://eclipse.org/che/">
           <span class="sr-only">Eclipse Che</span>
           <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
       <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
@@ -473,7 +482,8 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/eclipse/che/blob/master/docs/_docs/write-che-ide-plugins/plugins-helloworld-extension.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/write-che-ide-plugins/plugins-helloworld-extension.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/write-che-ide-plugins/plugins-helloworld-extension.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
             <h1>HelloWorld Extension</h1>
@@ -485,7 +495,7 @@
 
 <p>In order to follow this guide, we consider you have successfully configured Eclipse Che sources inside of Eclipse IDE and have been able to execute your manually built assembly. If not, please refer to the following <a href="../../../docs/plugins/setup-che-workspace/index.html">documentation</a>.</p>
 
-<h2 id="1--create-a-new-maven-project">1- Create a new maven project</h2>
+<h2 id="create-a-new-maven-project">1- Create a new maven project</h2>
 
 <p>Create a new maven project.
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at16.28.28.png" alt="ScreenShot2016-10-13at16.28.28.png" />
@@ -495,7 +505,7 @@ Provide basic information about the Maven project.
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at14.13.02.png" alt="ScreenShot2016-10-13at14.13.02.png" />
 Provide asked information (we will update them in the next step)</p>
 
-<h2 id="2--add-dependencies-and-parent-definition-to-the-pomxml">2- Add dependencies and parent definition to the pom.xml</h2>
+<h2 id="add-dependencies-and-parent-definition-to-the-pomxml">2- Add dependencies and parent definition to the pom.xml</h2>
 
 <p>In order to be properly defined, we will rely on <code class="highlighter-rouge">che-parent</code> for the hello world extension. We will inherit from the global che definition.</p>
 
@@ -582,7 +592,7 @@ Provide asked information (we will update them in the next step)</p>
 You will see that Eclipse is displaying an error on the <code class="highlighter-rouge">che-helloworld-extension</code> module. Fix this error by doing an “Update Project” with the Eclipse’s Maven plugin:
 <img src="../../../docs/assets/imgs/Screen_Shot_2016-10-13_at_14_17_47.png" alt="Screen_Shot_2016-10-13_at_14_17_47.png" /></p>
 
-<h2 id="3--create-helloworldextension-class">3- Create HelloWorldExtension class</h2>
+<h2 id="create-helloworldextension-class">3- Create HelloWorldExtension class</h2>
 
 <p>Create the package <code class="highlighter-rouge">org.eclipse.che.ide.ext.helloworld</code> in <code class="highlighter-rouge">src/main/java</code>:
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at14.24.09.png" alt="ScreenShot2016-10-13at14.24.09.png" />
@@ -664,7 +674,7 @@ In this extension we’ll need to talk to Parts and Action API. Gin and Singleto
 </code></pre>
 </div>
 
-<h2 id="4--create-helloworldextension-gwt-module">4- Create HelloWorldExtension GWT module</h2>
+<h2 id="create-helloworldextension-gwt-module">4- Create HelloWorldExtension GWT module</h2>
 
 <p>Create the package <code class="highlighter-rouge">org.eclipse.che.ide.ext.helloworld</code> in <code class="highlighter-rouge">src/main/resources</code>:
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at14.57.02.png" alt="ScreenShot2016-10-13at14.57.02.png" />
@@ -693,7 +703,7 @@ Inherits from the GWT modules: User, Inject. We will also inherits from the IDE 
 </code></pre>
 </div>
 
-<h2 id="5--build-the-extension">5- Build the Extension</h2>
+<h2 id="build-the-extension">5- Build the Extension</h2>
 
 <p>Create the following <code class="highlighter-rouge">Run Configuration</code>:
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at15.05.00.png" alt="ScreenShot2016-10-13at15.05.00.png" />
@@ -711,7 +721,7 @@ Or you can also open a terminal where you create your HelloWorld Extension and r
 </code></pre>
 </div>
 
-<h2 id="6--add-extension-to-root-pom-of-che">6- Add extension to root pom of Che</h2>
+<h2 id="add-extension-to-root-pom-of-che">6- Add extension to root pom of Che</h2>
 
 <p>In order to allow your extension to be visible from the root level of Che, add your extension as a dependency in the list of <code class="highlighter-rouge">&lt;dependencies&gt;</code> from the <code class="highlighter-rouge">&lt;dependencyManagement&gt;</code> block. Edit the <code class="highlighter-rouge">pom.xml</code> from <code class="highlighter-rouge">che-parent</code></p>
 
@@ -736,7 +746,7 @@ Or you can also open a terminal where you create your HelloWorld Extension and r
 You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the pom.xml for you.
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at15.34.00.png" alt="ScreenShot2016-10-13at15.34.00.png" /></p>
 
-<h2 id="7--link-to-ide-assembly">7- Link to IDE Assembly</h2>
+<h2 id="link-to-ide-assembly">7- Link to IDE Assembly</h2>
 
 <p>The HelloWorld extension is only a client-side (IDE) extension. You have to introduce your extension as a dependency in /che/assembly/assembly-ide-war/pom.xml and also have it added as a dependency to the GWT application.</p>
 
@@ -771,7 +781,7 @@ Second, link your GUI extension into the GWT app. You will add an <code class="h
 
 <p><img src="../../../docs/assets/imgs/ScreenShot2016-10-13at16.34.24.png" alt="ScreenShot2016-10-13at16.34.24.png" /></p>
 
-<h2 id="8--build-che-with-your-extension">8- Build Che with your extension.</h2>
+<h2 id="build-che-with-your-extension">8- Build Che with your extension.</h2>
 
 <p>First, we need to rebuild the assembly-ide-war:
 <img src="../../../docs/assets/imgs/ScreenShot2016-10-13at16.40.08.png" alt="ScreenShot2016-10-13at16.40.08.png" />
@@ -792,11 +802,11 @@ mvn clean install
 </code></pre>
 </div>
 
-<h2 id="9--start-your-custom-assembly">9- Start your custom assembly</h2>
+<h2 id="start-your-custom-assembly">9- Start your custom assembly</h2>
 
-<p>To start Che from the custom assembly you just built, you can refer to this <a href="http://localhost:9080/docs/setup/configuration/index.html#development-mode">Usage: Development Demo</a>.</p>
+<p>To start Che from the custom assembly you just built, you can refer to this <a href="../../../docs/setup/configuration/index.html#development-mode">Usage: Development Demo</a>.</p>
 
-<h2 id="10--test-your-extension">10- Test your extension</h2>
+<h2 id="test-your-extension">10- Test your extension</h2>
 
 <p>First create a new workspace and open it in the IDE.
 Second open the “Events” panel.
@@ -825,11 +835,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
-    <li class=""><a href="../../../docs/setup/intro/index.html">Introduction</a></li>
+    <li class=""><a href="../../../docs/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -851,11 +863,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
   
   
 
+  
   
   
   
@@ -877,11 +891,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/configuration/index.html">Configuration</a></li>
   
   
 
+  
   
   
   
@@ -903,6 +919,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/cli/index.html">CLI Reference</a></li>
   
@@ -916,11 +933,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/glossary/index.html">Glossary</a></li>
   
   
 
+  
   
   
   
@@ -955,11 +974,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/admin-intro/index.html">Workspaces</a></li>
   
   
 
+  
   
   
   
@@ -981,11 +1002,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/recipes/index.html">Runtime Recipes</a></li>
   
   
 
+  
   
   
   
@@ -1007,11 +1030,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/machines/index.html">Runtime Machines</a></li>
   
   
 
+  
   
   
   
@@ -1033,6 +1058,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/agents/index.html">Workspace Agents</a></li>
   
@@ -1046,11 +1072,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/data-model-stacks/index.html">Runtime Stacks Data Model</a></li>
   
   
 
+  
   
   
   
@@ -1085,11 +1113,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/projects/index.html">Projects</a></li>
   
   
 
+  
   
   
   
@@ -1111,11 +1141,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -1137,11 +1169,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/editor-settings/index.html">Editor</a></li>
   
   
 
+  
   
   
   
@@ -1163,11 +1197,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/commands/index.html">Commands</a></li>
   
   
 
+  
   
   
   
@@ -1189,11 +1225,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/previews/index.html">Previews</a></li>
   
   
 
+  
   
   
   
@@ -1215,11 +1253,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/run/index.html">Run</a></li>
   
   
 
+  
   
   
   
@@ -1241,6 +1281,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/debug/index.html">Debug</a></li>
   
@@ -1254,11 +1295,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/docker/index.html">Docker</a></li>
   
   
 
+  
   
   
   
@@ -1293,11 +1336,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/getting-started/index.html">Getting Started</a></li>
   
   
 
+  
   
   
   
@@ -1319,11 +1364,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/installation/index.html">Installation</a></li>
   
   
 
+  
   
   
   
@@ -1345,11 +1392,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/up-and-down/index.html">Up and Down</a></li>
   
   
 
+  
   
   
   
@@ -1371,11 +1420,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -1410,11 +1461,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/rest-api/index.html">REST API</a></li>
   
   
 
+  
   
   
   
@@ -1436,11 +1489,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/build-run/index.html">Editing Files</a></li>
   
   
 
+  
   
   
   
@@ -1462,6 +1517,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/events/index.html">Events</a></li>
   
@@ -1475,11 +1531,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1514,11 +1572,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/introduction/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -1540,11 +1600,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/create-and-build-extensions/index.html">Building Extensions</a></li>
   
   
 
+  
   
   
   
@@ -1566,11 +1628,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/dependency-injection-basics/index.html">Dependency Injection</a></li>
   
   
 
+  
   
   
   
@@ -1592,11 +1656,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1618,11 +1684,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/serverworkspace-access/index.html">Services</a></li>
   
   
 
+  
   
   
   
@@ -1644,11 +1712,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/calling-workspace-apis/index.html">REST APIs</a></li>
   
   
 
+  
   
   
   
@@ -1670,11 +1740,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/che-properties/index.html">Properties</a></li>
   
   
 
+  
   
   
   
@@ -1696,6 +1768,7 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/embed-htmljs/index.html">Native HTML/JS</a></li>
   
@@ -1709,11 +1782,13 @@ You’ll see the “Hello World” notification displayed in the list of events.
   
   
   
+  
    
     <li class="current"><a href="../../../docs/plugins/helloworld-extension/index.html">HelloWorld Extension</a></li>
   
   
 
+  
   
   
   

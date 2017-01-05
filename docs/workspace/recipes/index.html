@@ -1,14 +1,33 @@
 
 
 
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/codenvy/commits/master.atom">
+  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -27,55 +46,45 @@
 <header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
   </nav>
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
-        <a href="/">
+        <a href="https://eclipse.org/che/">
           <span class="sr-only">Eclipse Che</span>
           <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
       <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
@@ -473,7 +482,8 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/eclipse/che/blob/master/docs/_docs/workspace-administration/ws-recipes.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/workspace-administration/ws-recipes.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/workspace-administration/ws-recipes.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
             <h1>Runtime Recipes</h1>
@@ -485,16 +495,16 @@
 
 <p>Workspaces can have a single runtime or multiple runtimes.  Che uses Docker, though Che could handle runtimes other than Docker, to create runtime(s) from <a href="https://docs.docker.com/engine/reference/builder/">Dockerfiles</a> for a single-container runtime, or <a href="https://docs.docker.com/compose/overview/">compose files</a> to create single-container/multi-container runtime(s).</p>
 
-<p>Che provides recipes for all of the <a href="../../../docs/workspace/stacks/index.html#section-ready-to-go-stacks">“Ready-to-go” stacks</a> for things like Java, PHP, Node, ASP.NET, and C++.</p>
+<p>Che provides recipes for all of the <a href="../../../docs/workspace/stacks/index.html#ready-to-go-stacks">“Ready-to-go” stacks</a> for things like Java, PHP, Node, ASP.NET, and C++.</p>
 
 <p>A recipe references either a Dockerfile or compose definition that need to be built into image(s) or reference already-built image(s). When a workspace is created from a particular stack, Che will take a recipe, create or use existing Docker image(s) from it, and then create runtime Docker container(s) from that/those image(s). That/Those runtime Docker container(s) will be your workspace runtime(s).</p>
 
-<p><a href="../../../docs/workspace/agents/index.html">Workspace agents</a> include the additional libraries that you may need, such as yum or npm, along with the runtime services that Che needs, such as Java and Tomcat, a SSH daemon. <a href="../../../docs/workspace/agents/index.html">Workspace agents</a> are then injected into runtime Docker container(s) from Docker images such as certified minimal versions of Linux operating systems like Alpine, Debian or Ubuntu with added <a href="../../../docs/workspace/recipes/index.html#section-che-runtime-dependencies">Che dependencies</a>.</p>
+<p><a href="../../../docs/workspace/agents/index.html">Workspace agents</a> include the additional libraries that you may need, such as yum or npm, along with the runtime services that Che needs, such as Java and Tomcat, a SSH daemon. <a href="../../../docs/workspace/agents/index.html">Workspace agents</a> are then injected into runtime Docker container(s) from Docker images such as certified minimal versions of Linux operating systems like Alpine, Debian or Ubuntu with added <a href="../../../docs/workspace/recipes/index.html#che-runtime-required-dependencies">Che dependencies</a>.</p>
 <h1 id="single-container-recipes">Single-Container Recipes</h1>
 <h2 id="defining">Defining</h2>
 <p>You can author your own recipe as a way to make your workspace runtime shareable. You can provide a URL to a custom recipe (Dockerfile or Docker compose file) or write a new custom recipe (Dockerfile or Docker compose file) from the dashboard.</p>
 
-<p>Please note, Eclipse Che only <a href="../../../docs/workspace/recipes/index.html#section-compose-syntax-support">supports certain compose syntax</a>.
+<p>Please note, Eclipse Che only <a href="../../../docs/workspace/recipes/index.html#multi-container-recipes">supports certain compose syntax</a>.
 <img src="../../../docs/assets/imgs/che-recipe-write.jpg" alt="che-recipe-write.jpg" />
 There are two ways for you to create a custom recipe that can be used within Che:</p>
 <ol>
@@ -510,7 +520,7 @@ There are two ways for you to create a custom recipe that can be used within Che
 FROM codenvy/&lt;image-name&gt;
 
 <span class="c">##Compose</span>
-image: codenvy/&lt;image-name&gt;<span class="se">\</span>
+image: codenvy/&lt;image-name&gt;
 </code></pre>
 </div>
 <p>Codenvy’s base stacks, which include the minimum utilities for everything needed by Eclipse Che are <code class="highlighter-rouge">codenvy/ubuntu_jre</code> and <code class="highlighter-rouge">codenvy/debian_jre</code>.</p>
@@ -518,7 +528,7 @@ image: codenvy/&lt;image-name&gt;<span class="se">\</span>
 <p>In Codenvy’s repository, some recipes have sub-directories which represent tags. For example, the <code class="highlighter-rouge">/php/latest</code> directory in the GitHub repository would be pulled as <code class="highlighter-rouge">codenvy/php:latest</code> from Docker Hub.</p>
 
 <h3 id="inherit-from-non-eclipse-che-base-images">Inherit From Non-Eclipse Che Base Images</h3>
-<p>This will create the best performing workspace image by only installing the minimum dependencies and packages required for your workspace. The trade off is that you have to include <a href="../../../docs/workspace/recipes/index.html#section-che-runtime-required-dependencies">Che’s runtime dependencies</a> so we can work our magic in the workspace.</p>
+<p>This will create the best performing workspace image by only installing the minimum dependencies and packages required for your workspace. The trade off is that you have to include <a href="../../../docs/workspace/recipes/index.html#che-runtime-required-dependencies">Che’s runtime dependencies</a> so we can work our magic in the workspace.</p>
 
 <h3 id="che-runtime-required-dependencies">Che Runtime Required Dependencies</h3>
 
@@ -539,10 +549,10 @@ image: codenvy/&lt;image-name&gt;<span class="se">\</span>
     <tr>
       <td>User with <code class="highlighter-rouge">root</code> privileges</td>
       <td>To install our developer tools agents (like terminal access and intellisense) we need root access or a user who has sudo rights.</td>
-      <td><code class="highlighter-rouge">USER root</code>\n\nor grant your preferred user sudo rights.</td>
+      <td><code class="highlighter-rouge">USER root</code> <br /><br /> or grant your preferred user sudo rights.</td>
     </tr>
     <tr>
-      <td>Dockerfile\n<code class="highlighter-rouge">CMD tail -f /dev/null</code>\n\nCompose\n<code class="highlighter-rouge">command: [tail, -f, /dev/null]</code></td>
+      <td>Dockerfile <br /> <code class="highlighter-rouge">CMD tail -f /dev/null</code> <br /><br /> Compose <br /> <code class="highlighter-rouge">command: [tail, -f, /dev/null]</code></td>
       <td>To keep a container running</td>
       <td>Non-terminating CMD</td>
     </tr>
@@ -554,7 +564,7 @@ image: codenvy/&lt;image-name&gt;<span class="se">\</span>
 CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/null
 
 <span class="c">##Compose</span>
-<span class="nb">command</span>: <span class="o">[</span>sudo, service, apache2, start, <span class="o">&amp;&amp;</span>, tail, -f, /dev/null]<span class="se">\</span>
+<span class="nb">command</span>: <span class="o">[</span>sudo, service, apache2, start, <span class="o">&amp;&amp;</span>, tail, -f, /dev/null]
 </code></pre>
 </div>
 <h3 id="maven-dependencies-optional">Maven Dependencies (Optional)</h3>
@@ -577,7 +587,7 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
     <tr>
       <td><code class="highlighter-rouge">M2_HOME</code> environment variable exported</td>
       <td>Maven plugin uses this variable to detect if Maven is installed.</td>
-      <td>Dockerfile\n<code class="highlighter-rouge">ENV M2_HOME /home/user/apache-maven-3.3.9</code>\n\nCompose\n<code class="highlighter-rouge">\nenvironment:\n  - M2_HOME=/home/user/apache-maven-3.3.9\n</code></td>
+      <td>Dockerfile <br /> <code class="highlighter-rouge">ENV M2_HOME /home/user/apache-maven-3.3.9</code> <br /><br /> Compose <br /><br /> <code class="highlighter-rouge">environment:</code><br /><br /> <code class="highlighter-rouge">- M2_HOME=/home/user/apache-maven-3.3.9</code></td>
     </tr>
   </tbody>
 </table>
@@ -611,7 +621,7 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
     <tr>
       <td>SSH access to a running workspace. If you do not provide this command, when you click <code class="highlighter-rouge">SSH</code> in the IDE, you will be presented with an access error.</td>
       <td><code class="highlighter-rouge">sshd</code></td>
-      <td><code class="highlighter-rouge">apt-get -y install openssh-server -y &amp;&amp; mkdir /var/run/sshd &amp;&amp; sed 's@session\\s*required\\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd</code>\n\nDockerfile\n<code class="highlighter-rouge">CMD /usr/sbin/sshd -D &amp;&amp; tail -f /dev/null</code>\n\nCompose\n<code class="highlighter-rouge">command: [/usr/sbin/sshd, -D, &amp;&amp;, tail, -f, /dev/null]</code></td>
+      <td><code class="highlighter-rouge">apt-get -y install openssh-server -y &amp;&amp; mkdir /var/run/sshd &amp;&amp; sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd</code> <br /><br />Dockerfile<br /><code class="highlighter-rouge">CMD /usr/sbin/sshd -D &amp;&amp; tail -f /dev/null</code><br /><br />Compose<br /> <code class="highlighter-rouge">command: [/usr/sbin/sshd, -D, &amp;&amp;, tail, -f, /dev/null]</code></td>
     </tr>
   </tbody>
 </table>
@@ -625,24 +635,25 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
 <p>To make your app/process accessible:</p>
 
 <ul>
-  <li>Expose the port your app/process is bound to. For example, if your application runs on 3000, add the following instruction to your custom Dockerfile or  Docker compose recipe:
-```shell<br />
-##Exposing a single port in a Dockerfile
-EXPOSE 3000</li>
+  <li>Expose the port your app/process is bound to. For example, if your application runs on 3000, add the following instruction to your custom Dockerfile or  Docker compose recipe:</li>
 </ul>
 
-<p>##Exposing a single port in a compose file
-expose: 3000</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Exposing a single port in a Dockerfile</span>
+EXPOSE 3000
 
-<p>##Exposing multiple ports in a Dockerfile
-EXPOSE 3000 5000</p>
+<span class="c">##Exposing a single port in a compose file</span>
+expose: 3000
 
-<p>##Exposing multiple ports in a compose file
-expose:</p>
+<span class="c">##Exposing multiple ports in a Dockerfile</span>
+EXPOSE 3000 5000
+
+<span class="c">##Exposing multiple ports in a compose file</span>
+expose:
+ - 3000
+ - 5000
+</code></pre>
+</div>
 <ul>
-  <li>3000</li>
-  <li>5000
-```</li>
   <li>Go to Operations perspective (icon in the top right corner) and click the Servers tab. You will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</li>
   <li>You can also get the published port automatically by using a macro in a <a href="../../../docs/ide/commands/index.html">command</a>. When authoring a command, set its preview URL to <code class="highlighter-rouge">${server.port.&lt;your-apps-port&gt;}</code> where <code class="highlighter-rouge">&lt;your-apps-port&gt;</code> is the port in your recipe’s expose command. When the command is executed, this macro is translated into a <code class="highlighter-rouge">host:port</code> URL.</li>
 </ul>
@@ -656,10 +667,11 @@ expose:</p>
 
 <h2 id="unsupported-compose-syntax">Unsupported Compose Syntax</h2>
 
-<h3 id="local-buildcontext-and-builddockerfile">Local <code class="highlighter-rouge">build.context</code> and <code class="highlighter-rouge">build.dockerfile</code></h3>
+<h3 id="local-buildcontext-and-builddockerfile">Local “build.context” and “build.dockerfile”</h3>
 <p>Since Che workspaces can be distributed, you cannot have host-local build and Dockerfile contexts. You can, however, place these aspects so that they are remotely hosted in a git repository. Che will source the file from the remote system and then use it as its build context.</p>
 
 <p>If the Dockerfile or build context requires other files to be <code class="highlighter-rouge">ADD</code> or <code class="highlighter-rouge">COPY</code> into the image that is created, then you could run into a failure, as the local Che workspace generator will not have access to those other remote files. To address this issue, you can pre-package the build context or Dockerfile into an image, push into a registry, and then reference the already-built image in your compose file. This is what we do for internal development at Codenvy.</p>
+
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">build</span><span class="pi">:</span>
   <span class="c1">## remote context will work</span>
   <span class="s">context</span><span class="pi">:</span> <span class="s">https://github.com/eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
@@ -668,8 +680,9 @@ expose:</p>
   <span class="s">context</span><span class="pi">:</span> <span class="s">./my/local/filesystem</span>
 </code></pre>
 </div>
-<h5 id="using-private-repositories">Using Private Repositories</h5>
-<p>If your <code class="highlighter-rouge">build.context</code> or <code class="highlighter-rouge">build.Dockerfile</code> accesses a private remote registry, you need to provide additional configuration.  First, the SSH private key needs to be located in your host machine’s home directory <code class="highlighter-rouge">~/.ssh/id_rsa</code> for Mac/Linux and <code class="highlighter-rouge">C:\Users\&lt;username&gt;\.ssh\id_rsa</code> for Windows with <code class="highlighter-rouge">0600</code> permissions for the user that starts Che.  Second, add the hostname of the private repository to the known hosts of the host machine using <code class="highlighter-rouge">ssh -o StrictHostKeyChecking=no -T git@&lt;hostname&gt;</code>.  Third, add the public key to the git <a href="../../../docs/ide/git-svn/index.html#section-adding-ssh-public-key-to-git-account">repository host</a>. Finally, you can use an SSH git URL in the <code class="highlighter-rouge">build.context</code> of your compose syntax.</p>
+<p>Using Private Repositories:
+If your <code class="highlighter-rouge">build.context</code> or <code class="highlighter-rouge">build.Dockerfile</code> accesses a private remote registry, you need to provide additional configuration.  First, the SSH private key needs to be located in your host machine’s home directory <code class="highlighter-rouge">~/.ssh/id_rsa</code> for Mac/Linux and <code class="highlighter-rouge">C:\Users\&lt;username&gt;\.ssh\id_rsa</code> for Windows with <code class="highlighter-rouge">0600</code> permissions for the user that starts Che.  Second, add the hostname of the private repository to the known hosts of the host machine using <code class="highlighter-rouge">ssh -o StrictHostKeyChecking=no -T git@&lt;hostname&gt;</code>.  Third, add the public key to the git <a href="../../../docs/ide/git-svn/index.html#adding-ssh-public-key-to-repository-account">repository host</a>. Finally, you can use an SSH git URL in the <code class="highlighter-rouge">build.context</code> of your compose syntax.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">## On Linux/Mac host machine</span>
 <span class="c">## To new create ssh keypair</span>
 ssh-keygen
@@ -678,7 +691,7 @@ ssh-keygen
 chmod 0600 ~/.ssh/id_rsa
 
 <span class="c">## Add private repo host such as github to known_hosts file</span>
-ssh -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no -T git@github.com<span class="se">\</span>
+ssh -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no -T git@github.com
 </code></pre>
 </div>
 
@@ -702,7 +715,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
 
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="c1">## The following will use master branch and build in recipes/ubuntu_jre folder</span>
 <span class="s">build</span><span class="pi">:</span>
-  <span class="s">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre\</span>
+  <span class="s">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
 </code></pre>
 </div>
 <h3 id="build-image">Build Image</h3>
@@ -715,7 +728,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
 <p><code class="highlighter-rouge">container_name</code> is skipped during execution. Instead, Che generates container names based on its own internal patterns. Because many developers could be running the same Compose file on the same Che workspace node at the same time naming conflicts need to be avoided.</p>
 
 <h3 id="volumes">Volumes</h3>
-<p>Volumes are not supported in the Che system. Instead we suggest using <code class="highlighter-rouge">volumes_from</code> to gain access to <a href="../../../docs/workspace/recipes/index.html#section-multiple-machines-shared-volumes">volume mount</a> of the <code class="highlighter-rouge">dev-machine</code>.</p>
+<p>Volumes are not supported in the Che system. Instead we suggest using <code class="highlighter-rouge">volumes_from</code> to gain access to <a href="../../../docs/workspace/volume-mounts/index.html#sharing-volumes-between-containers">volume mount</a> of the <code class="highlighter-rouge">dev-machine</code>.</p>
 
 <h3 id="networks">Networks</h3>
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="c1">## Not supported</span>
@@ -756,7 +769,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   <tbody>
     <tr>
       <td>command:</td>
-      <td>Space separated <code class="highlighter-rouge">command</code> syntax is not working. Suggested work around is to use bracket syntax.\n<a href="https://github.com/eclipse/che/issues/2365">https://github.com/eclipse/che/issues/2365</a>\n<code class="highlighter-rouge">\n## Not working\ncommand: tail -f /dev/null\n\n## Working\ncommand: [tail, -f, /dev/null]\n</code></td>
+      <td>Space separated <code class="highlighter-rouge">command</code> syntax is not working. Suggested work around is to use bracket syntax.<br /><a href="https://github.com/eclipse/che/issues/2365">https://github.com/eclipse/che/issues/2365</a><br /><br /> <code class="highlighter highlighter-rouge-td">## Not working<br />command: tail -f /dev/null<br /><br />## Working<br />command: [tail, -f, /dev/null]<br /></code></td>
     </tr>
   </tbody>
 </table>
@@ -783,11 +796,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
-    <li class=""><a href="../../../docs/setup/intro/index.html">Introduction</a></li>
+    <li class=""><a href="../../../docs/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -809,11 +824,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
   
   
 
+  
   
   
   
@@ -835,11 +852,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/configuration/index.html">Configuration</a></li>
   
   
 
+  
   
   
   
@@ -861,6 +880,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/cli/index.html">CLI Reference</a></li>
   
@@ -874,11 +894,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/glossary/index.html">Glossary</a></li>
   
   
 
+  
   
   
   
@@ -913,11 +935,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/admin-intro/index.html">Workspaces</a></li>
   
   
 
+  
   
   
   
@@ -939,11 +963,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class="current"><a href="../../../docs/workspace/recipes/index.html">Runtime Recipes</a></li>
   
   
 
+  
   
   
   
@@ -965,11 +991,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/machines/index.html">Runtime Machines</a></li>
   
   
 
+  
   
   
   
@@ -991,6 +1019,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/agents/index.html">Workspace Agents</a></li>
   
@@ -1004,11 +1033,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/data-model-stacks/index.html">Runtime Stacks Data Model</a></li>
   
   
 
+  
   
   
   
@@ -1043,11 +1074,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/projects/index.html">Projects</a></li>
   
   
 
+  
   
   
   
@@ -1069,11 +1102,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -1095,11 +1130,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/editor-settings/index.html">Editor</a></li>
   
   
 
+  
   
   
   
@@ -1121,11 +1158,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/commands/index.html">Commands</a></li>
   
   
 
+  
   
   
   
@@ -1147,11 +1186,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/previews/index.html">Previews</a></li>
   
   
 
+  
   
   
   
@@ -1173,11 +1214,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/run/index.html">Run</a></li>
   
   
 
+  
   
   
   
@@ -1199,6 +1242,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/debug/index.html">Debug</a></li>
   
@@ -1212,11 +1256,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/docker/index.html">Docker</a></li>
   
   
 
+  
   
   
   
@@ -1251,11 +1297,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/getting-started/index.html">Getting Started</a></li>
   
   
 
+  
   
   
   
@@ -1277,11 +1325,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/installation/index.html">Installation</a></li>
   
   
 
+  
   
   
   
@@ -1303,11 +1353,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/up-and-down/index.html">Up and Down</a></li>
   
   
 
+  
   
   
   
@@ -1329,11 +1381,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -1368,11 +1422,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/rest-api/index.html">REST API</a></li>
   
   
 
+  
   
   
   
@@ -1394,11 +1450,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/build-run/index.html">Editing Files</a></li>
   
   
 
+  
   
   
   
@@ -1420,6 +1478,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/events/index.html">Events</a></li>
   
@@ -1433,11 +1492,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1472,11 +1533,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/introduction/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -1498,11 +1561,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/create-and-build-extensions/index.html">Building Extensions</a></li>
   
   
 
+  
   
   
   
@@ -1524,11 +1589,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/dependency-injection-basics/index.html">Dependency Injection</a></li>
   
   
 
+  
   
   
   
@@ -1550,11 +1617,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1576,11 +1645,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/serverworkspace-access/index.html">Services</a></li>
   
   
 
+  
   
   
   
@@ -1602,11 +1673,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/calling-workspace-apis/index.html">REST APIs</a></li>
   
   
 
+  
   
   
   
@@ -1628,11 +1701,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/che-properties/index.html">Properties</a></li>
   
   
 
+  
   
   
   
@@ -1654,6 +1729,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/embed-htmljs/index.html">Native HTML/JS</a></li>
   
@@ -1667,11 +1743,13 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/helloworld-extension/index.html">HelloWorld Extension</a></li>
   
   
 
+  
   
   
   

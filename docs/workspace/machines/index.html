@@ -1,14 +1,33 @@
 
 
 
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/codenvy/commits/master.atom">
+  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -27,55 +46,45 @@
 <header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
   </nav>
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
-        <a href="/">
+        <a href="https://eclipse.org/che/">
           <span class="sr-only">Eclipse Che</span>
           <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
       <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="current">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
@@ -473,7 +482,8 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/eclipse/che/blob/master/docs/_docs/workspace-administration/ws-machines.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/workspace-administration/ws-machines.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/workspace-administration/ws-machines.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
             <h1>Runtime Machines</h1>
@@ -481,8 +491,6 @@
             </div>
           </div>
           
-<p>=======</p>
-
 <p>A machine is part of an environment, which are in turn part of a Che workspace. The <a href="../../../docs/workspace/admin-intro/index.html">workspace administration introduction</a> explains the details of this relationship.</p>
 
 <p>A machine is created from a <a href="../../../docs/workspace/stacks/index.html">runtime stack</a>. Che supports both single-machine environments and multi-machine environments. The Che server manages the lifecycle of environments and the machines inside, including creating snapshots of machines.  Additionally, the Che server can inject <a href="../../../docs/workspace/agents/index.html">workspace agents</a> into a machine to provide additional capabilities inside the machine.</p>
@@ -510,9 +518,9 @@ sudo apt-get install jetty8
 
 <p>Note that once you’ve snapshotted a workspace, changing the environment or machine names inside the workspace will result in the snapshot being lost.</p>
 
-<p>Snapshots image a machine and then it is committed, tagged, and optionally pushed into a Docker registry. You can use a local Docker registry or a remote one. See <a href="../../../docs/setup/setup-configuration/index.html#section-workspace-snapshots">Configuration</a> for information on how to setup a docker registry.</p>
+<p>Snapshots image a machine and then it is committed, tagged, and optionally pushed into a Docker registry. You can use a local Docker registry or a remote one. See <a href="../../../docs/setup/configuration/index.html#using-snapshots-with-private-registries">Configuration</a> for information on how to setup a docker registry.</p>
 
-<p>To snapshot a machine go to the Operations Perspective by clicking the button on the far right of the menu bar. Choose Machines &gt; Snapshot from the top menu bar. See our other docs <a href="../../../docs/setup/setup-configuration/index.html#section-workspace-snapshots">for details on setting up a local or remote Docker Registry</a>.
+<p>To snapshot a machine go to the Operations Perspective by clicking the button on the far right of the menu bar. Choose Machines &gt; Snapshot from the top menu bar. See our other docs <a href="../../../docs/setup/configuration/index.html#using-snapshots-with-private-registries">for details on setting up a local or remote Docker Registry</a>.
 <img src="../../../docs/assets/imgs/che-create-snapshot.jpg" alt="che-create-snapshot.jpg" />
 By default, Che does not need a local/remote Docker registry to create snapshots. If no registry is used, a container is committed into an image which is then tagged, so that next time a workspace is started with this image. The behavior is regulated with the following environment variables:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Windows use `set` in lieu of `export`</span>
@@ -561,11 +569,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
-    <li class=""><a href="../../../docs/setup/intro/index.html">Introduction</a></li>
+    <li class=""><a href="../../../docs/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -587,11 +597,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
   
   
 
+  
   
   
   
@@ -613,11 +625,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/configuration/index.html">Configuration</a></li>
   
   
 
+  
   
   
   
@@ -639,6 +653,7 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/cli/index.html">CLI Reference</a></li>
   
@@ -652,11 +667,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/setup/glossary/index.html">Glossary</a></li>
   
   
 
+  
   
   
   
@@ -691,11 +708,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/admin-intro/index.html">Workspaces</a></li>
   
   
 
+  
   
   
   
@@ -717,11 +736,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/recipes/index.html">Runtime Recipes</a></li>
   
   
 
+  
   
   
   
@@ -743,11 +764,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class="current"><a href="../../../docs/workspace/machines/index.html">Runtime Machines</a></li>
   
   
 
+  
   
   
   
@@ -769,6 +792,7 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/agents/index.html">Workspace Agents</a></li>
   
@@ -782,11 +806,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/workspace/data-model-stacks/index.html">Runtime Stacks Data Model</a></li>
   
   
 
+  
   
   
   
@@ -821,11 +847,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/projects/index.html">Projects</a></li>
   
   
 
+  
   
   
   
@@ -847,11 +875,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -873,11 +903,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/editor-settings/index.html">Editor</a></li>
   
   
 
+  
   
   
   
@@ -899,11 +931,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/commands/index.html">Commands</a></li>
   
   
 
+  
   
   
   
@@ -925,11 +959,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/previews/index.html">Previews</a></li>
   
   
 
+  
   
   
   
@@ -951,11 +987,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/run/index.html">Run</a></li>
   
   
 
+  
   
   
   
@@ -977,6 +1015,7 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/debug/index.html">Debug</a></li>
   
@@ -990,11 +1029,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/ide/docker/index.html">Docker</a></li>
   
   
 
+  
   
   
   
@@ -1029,11 +1070,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/getting-started/index.html">Getting Started</a></li>
   
   
 
+  
   
   
   
@@ -1055,11 +1098,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/installation/index.html">Installation</a></li>
   
   
 
+  
   
   
   
@@ -1081,11 +1126,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/up-and-down/index.html">Up and Down</a></li>
   
   
 
+  
   
   
   
@@ -1107,11 +1154,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/chedir/ssh/index.html">SSH</a></li>
   
   
 
+  
   
   
   
@@ -1146,11 +1195,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/rest-api/index.html">REST API</a></li>
   
   
 
+  
   
   
   
@@ -1172,11 +1223,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/build-run/index.html">Editing Files</a></li>
   
   
 
+  
   
   
   
@@ -1198,6 +1251,7 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/events/index.html">Events</a></li>
   
@@ -1211,11 +1265,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/server/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1250,11 +1306,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/introduction/index.html">Introduction</a></li>
   
   
 
+  
   
   
   
@@ -1276,11 +1334,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/create-and-build-extensions/index.html">Building Extensions</a></li>
   
   
 
+  
   
   
   
@@ -1302,11 +1362,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/dependency-injection-basics/index.html">Dependency Injection</a></li>
   
   
 
+  
   
   
   
@@ -1328,11 +1390,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/project-types/index.html">Project Types</a></li>
   
   
 
+  
   
   
   
@@ -1354,11 +1418,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/serverworkspace-access/index.html">Services</a></li>
   
   
 
+  
   
   
   
@@ -1380,11 +1446,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/calling-workspace-apis/index.html">REST APIs</a></li>
   
   
 
+  
   
   
   
@@ -1406,11 +1474,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/che-properties/index.html">Properties</a></li>
   
   
 
+  
   
   
   
@@ -1432,6 +1502,7 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/embed-htmljs/index.html">Native HTML/JS</a></li>
   
@@ -1445,11 +1516,13 @@ export </span><span class="nv">CHE_PROPERTY_workspace_runtime_auto__restore</spa
   
   
   
+  
    
     <li class=""><a href="../../../docs/plugins/helloworld-extension/index.html">HelloWorld Extension</a></li>
   
   
 
+  
   
   
   

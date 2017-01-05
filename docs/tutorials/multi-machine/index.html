@@ -1,14 +1,33 @@
 
 
 
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/codenvy/commits/master.atom">
+  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -27,55 +46,45 @@
 <header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="current">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
   </nav>
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
-        <a href="/">
+        <a href="https://eclipse.org/che/">
           <span class="sr-only">Eclipse Che</span>
           <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
       <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="current">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
@@ -108,7 +117,8 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/eclipse/che/blob/master/docs/_docs/tutorials/tutorial-multi-machine.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/tutorials/tutorial-multi-machine.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/tutorials/tutorial-multi-machine.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
             <h1>Multi-Machine Workspaces in Che</h1>
@@ -118,7 +128,7 @@
           
 <p>A multi-machine recipe allows multiple runtimes to communicate/share data. In this tutorial we will be looking at an existing Java and MySQL application called Pet Clinic. The tutorial will help show how to create a multi-machine from an existing <a href="../../../docs/workspace/stacks/index.html">runtime stack</a> called “Java-MySQL”, execute commands on different target runtimes, startup the Pet Clinic Tomcat server, view/interact with the Pet Clinic web page, and take a closer look at the “Java-MySQL” <a href="../../../docs/workspace/stacks/index.html">runtime stack</a> /<a href="../../../docs/workspace/recipes/index.html">runtime recipe</a> to get a better understanding of how multi-machine runtimes are created.</p>
 
-<h1 id="1-start-che">1. Start Che</h1>
+<h1 id="start-che">1. Start Che</h1>
 <p>Use your SaaS account for the following, or if you have <a href="../../../docs/setup/getting-started/index.html">installed Che</a>, open a terminal and use the Che startup script:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
@@ -133,7 +143,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <p>This URL can be used to open Che server’s dashboard. It is where you manage your projects and workspaces.</p>
 
-<h1 id="2-create-workspace">2. Create Workspace</h1>
+<h1 id="create-workspace">2. Create Workspace</h1>
 <p>Click the “Dasboard” menu item in the dashboard. Click the “New Workspace” button if there are existing workspaces or make sure “Select Source” category is set to “New from blank, template, or sample project” if one or more workspace exists.</p>
 
 <p><img src="../../../docs/assets/imgs/che-multimachine-tutorial3.jpg" alt="che-multimachine-tutorial3.jpg" /></p>
@@ -146,7 +156,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <p><img src="../../../docs/assets/imgs/che-multimachine-tutorial2.jpg" alt="che-multimachine-tutorial2.jpg" /></p>
 
-<h1 id="3-using-ide">3. Using IDE</h1>
+<h1 id="using-ide">3. Using IDE</h1>
 <p>Once the workspace is created, the IDE will be loaded in the browser.</p>
 
 <p>Each runtime can be identified in the processes section of the IDE. It will list the runtimes of “dev-machine” and “db” of our multi-machine workspace. The “db” runtime for this tutorial provides the database for the Java Spring application to use.</p>
@@ -165,12 +175,12 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <p><img src="../../../docs/assets/imgs/che-multimachine-tutorial7.jpg" alt="che-multimachine-tutorial7.jpg" /></p>
 
-<h1 id="4-editing-building-and-debugging">4. Editing, Building and Debugging</h1>
+<h1 id="editing-building-and-debugging">4. Editing, Building and Debugging</h1>
 <p>Che is a fully featured IDE that just happens to be in the browser. You can explore the <a href="../../../docs/ide/editor-settings/index.html">editor</a> which includes <a href="../../../docs/ide/intellisense/index.html">intellisense</a> for some languages and <a href="../../../docs/ide/intellisense/index.html#refactoring">refactoring</a>.  It also includes <a href="../../../docs/ide/git-svn/index.html">git and svn</a> support built-in.</p>
 
 <p>The example app has built in commands for <a href="../../../docs/ide/build/index.html">building</a> and <a href="../../../docs/ide/run/index.html#web-apps">running</a> the app.  You can also <a href="../../../docs/ide/debug/index.html">debug</a> right inside Che.</p>
 
-<h1 id="5-about-docker-and-compose">5. About Docker and Compose</h1>
+<h1 id="about-docker-and-compose">5. About Docker and Compose</h1>
 <p>Read this section to understand more about the multi-machine “Java-MySQL” <a href="../../../docs/workspace/stacks/index.html">runtime stack</a> used and it’s <a href="../../../docs/workspace/recipes/index.html">runtime recipe</a>. The “Java-MySQL” stack configuration is located in the “stacks” section in the dashboard. This stack can be found easier by typing “java” in the filter form.</p>
 
 <p><img src="../../../docs/assets/imgs/che-multimachine-tutorial8.jpg" alt="che-multimachine-tutorial8.jpg" /></p>
@@ -305,11 +315,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class="current"><a href="../../../docs/tutorials/multi-machine/index.html">Multi-Machine Workspaces in Che</a></li>
   
   
 
+  
   
   
   
@@ -331,11 +343,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/gradle/index.html">Java+Gradle in Che</a></li>
   
   
 
+  
   
   
   
@@ -357,11 +371,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/swing/index.html">Java Swing in Che</a></li>
   
   
 
+  
   
   
   
@@ -383,11 +399,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/meteor/index.html">Meteor in Che</a></li>
   
   
 
+  
   
   
   
@@ -409,11 +427,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/php/index.html">PHP in Che</a></li>
   
   
 
+  
   
   
   
@@ -435,11 +455,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/spring-boot/index.html">Spring Boot in Che</a></li>
   
   
 
+  
   
   
   
@@ -461,11 +483,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/laravel/index.html">Laravel in Che</a></li>
   
   
 
+  
   
   
   
@@ -487,11 +511,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/che-in-che/index.html">Che in Che</a></li>
   
   
 
+  
   
   
   
@@ -513,11 +539,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/che-and-appfog/index.html">AppFog and Che</a></li>
   
   
 
+  
   
   
   
@@ -539,11 +567,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/ftpsftp/index.html">FTP/SFTP and Che</a></li>
   
   
 
+  
   
   
   
@@ -565,6 +595,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/sourcegraph/index.html">Sourcegraph in Che</a></li>
   
@@ -578,11 +609,13 @@ ENTRYPOINT ["docker-entrypoint.sh"]
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/vaadin/index.html">Vaadin in Che</a></li>
   
   
 
+  
   
   
   

@@ -1,14 +1,33 @@
 
 
 
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/codenvy/commits/master.atom">
+  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -27,55 +46,45 @@
 <header>
   <nav class="mobile-nav show-on-mobiles">
     <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="current">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
   </nav>
   <div class="grid">
     <div class="unit one-third center-on-mobiles">
-        <a href="/">
+        <a href="https://eclipse.org/che/">
           <span class="sr-only">Eclipse Che</span>
           <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
         </a>
     </div>
     <nav class="main-nav unit two-thirds hide-on-mobiles">
       <ul>
-  <li class="">
-    <a href="../../../docs/index.html">Home</a>
-  </li>
   
   <li class="">
-    <a href="../../../docs/setup/intro/index.html">Docs</a>
+    <a href="../../../docs/index.html">Docs</a>
   </li>
   <li class="current">
     <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
   </li>
   <li class="">
-    <a href="../../../docs/artik/start-windows/index.html">Artik</a>
-  </li>
-  <li class="">
     <a href="../../../docs/openshift/config/index.html">Openshift</a>
   </li>
   <li>
-    <a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
+    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
   </li>
 </ul>
 
@@ -108,7 +117,8 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/eclipse/che/blob/master/docs/_docs/tutorials/tutorial-wordpress.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/tutorials/tutorial-wordpress.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/tutorials/tutorial-wordpress.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
             <h1>Wordpress in Che</h1>
@@ -116,7 +126,7 @@
             </div>
           </div>
           
-<h1 id="1-start-che">1. Start Che</h1>
+<h1 id="start-che">1. Start Che</h1>
 <p>Use your SaaS account for the following, or if you have <a href="../../../docs/setup/getting-started/index.html">installed Che</a>, open a terminal and use the Che startup script:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
@@ -131,7 +141,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <p>The Che dashboard will open. It is where you manage your projects and workspaces. If you do not have any projects in Che, you’ll be asked to create a new project.  If you already have projects in Che, click on <code class="highlighter-rouge">New Project</code> button in the menu bar.</p>
 
-<h1 id="2-import-a-wordpress-project">2. Import a Wordpress Project</h1>
+<h1 id="import-a-wordpress-project">2. Import a Wordpress Project</h1>
 <p>Click <code class="highlighter-rouge">New Project</code> and import a Wordpress repository and set up the right environment for it.</p>
 
 <h3 id="select-source">Select Source</h3>
@@ -139,7 +149,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <h3 id="select-stack">Select Stack</h3>
 <p>Che offers a certified PHP image with Apache2, MySQL, git, curl and a number of popular PHP extensions.
-<a href="https://github.com/eclipse/che-dockerfiles/blob/master/php/ubuntu/Dockerfile">Dockerfile</a>.</p>
+<a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/php/ubuntu/Dockerfile">Dockerfile</a>.</p>
 
 <h3 id="configure-workspace">Configure Workspace</h3>
 <p>Give your workspace a nice name and configure RAM, i.e. apply the memory limit to a workspace machine.</p>
@@ -149,7 +159,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;
 
 <p>Click the <code class="highlighter-rouge">Open in IDE</code> button to open your project in the IDE.</p>
 
-<h1 id="3-start-mysql-server">3. Start MySQL Server</h1>
+<h1 id="start-mysql-server">3. Start MySQL Server</h1>
 <p>After the project is successfully created, you can start MySQL server either in the terminal (you can find it on the Consoles panel and open it by clicking <code class="highlighter-rouge">+</code> button) or using a command widget (CMD) - <code class="highlighter-rouge">sudo service mysql start</code></p>
 
 <p>We have already created a sample DB in the base image:</p>
@@ -161,7 +171,7 @@ ENV CHE_MYSQL_USER=che
 
 <p>You may verify that the db is there and MYSQL is running: <code class="highlighter-rouge">mysql -u che -p che</code></p>
 
-<h1 id="4-run-your-project">4. Run Your Project</h1>
+<h1 id="run-your-project">4. Run Your Project</h1>
 
 <p>Let’s start Apache server. You can do that in the terminal, however, using a Commands Widget is a better option. Go to <code class="highlighter-rouge">CMD &gt; Edit Commands…</code> menu, click <code class="highlighter-rouge">+</code> button at Custom section and paste your command name, command itself here.
 Here are some commands that you may use:</p>
@@ -189,7 +199,7 @@ Here are some commands that you may use:</p>
 
 <p>A few steps to install WP and voilà, it’s done.</p>
 
-<h1 id="5-snapshot-workspace">5. Snapshot Workspace</h1>
+<h1 id="snapshot-workspace">5. Snapshot Workspace</h1>
 
 <p>The last step is to save your workspace.</p>
 
@@ -224,11 +234,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/multi-machine/index.html">Multi-Machine Workspaces in Che</a></li>
   
   
 
+  
   
   
   
@@ -250,11 +262,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/gradle/index.html">Java+Gradle in Che</a></li>
   
   
 
+  
   
   
   
@@ -276,11 +290,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/swing/index.html">Java Swing in Che</a></li>
   
   
 
+  
   
   
   
@@ -302,11 +318,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/meteor/index.html">Meteor in Che</a></li>
   
   
 
+  
   
   
   
@@ -328,11 +346,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/php/index.html">PHP in Che</a></li>
   
   
 
+  
   
   
   
@@ -354,11 +374,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/spring-boot/index.html">Spring Boot in Che</a></li>
   
   
 
+  
   
   
   
@@ -380,11 +402,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/laravel/index.html">Laravel in Che</a></li>
   
   
 
+  
   
   
   
@@ -406,11 +430,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/che-in-che/index.html">Che in Che</a></li>
   
   
 
+  
   
   
   
@@ -432,11 +458,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/che-and-appfog/index.html">AppFog and Che</a></li>
   
   
 
+  
   
   
   
@@ -458,11 +486,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/ftpsftp/index.html">FTP/SFTP and Che</a></li>
   
   
 
+  
   
   
   
@@ -484,6 +514,7 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/sourcegraph/index.html">Sourcegraph in Che</a></li>
   
@@ -497,11 +528,13 @@ Here are some commands that you may use:</p>
   
   
   
+  
    
     <li class=""><a href="../../../docs/tutorials/vaadin/index.html">Vaadin in Che</a></li>
   
   
 
+  
   
   
   
