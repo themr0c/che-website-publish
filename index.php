@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>Che 5.0 Released! <a href="https://medium.com/eclipse-che-blog/eclipse-che-5-0-announced-at-checonf-2016-8d7759aca777#.pckp8j876" target="_blank">Learn More</a>.</h3>
+    <h3>Che 5.0 Released! <a href="<?php echo $rootPath; ?>/technology" target="_blank">Learn More</a>.</h3>
   </div>
 </div>
 
@@ -113,7 +113,7 @@
         <td>
           <h2>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
           <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
-          <a href="/docs/chedir/getting-started/" class="btn-yellow" target="_blank">Learn More</a>
+          <a href="<?php echo $rootPath; ?>/docs/chedir/getting-started/" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>

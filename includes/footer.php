@@ -6,7 +6,7 @@
         <div class="sitemap">
           <ul>
             <li><a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></li>
-            <li><a href="<?php echo $rootPath; ?>/getting-started/cloud/" target="_blank">SaaS Cloud</a></li>
+            <li><a href="<?php echo $rootPath; ?>/getting-started/cloud/">SaaS Cloud</a></li>
             <li><a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" target="_blank">Local Install</a></li>
             <li><a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" target="_blank">Private Cloud</a></li>
             <li><a href="<?php echo $rootPath; ?>/docs/" target="_blank">Docs</a></li>

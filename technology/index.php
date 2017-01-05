@@ -74,7 +74,7 @@
       <div class="col-sm-6">
         <a href="../images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="../images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
         <h3>Any Desktop IDE</h3>
-        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="../features/">Read More</a></p>
+        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="../features/index.html">Read More</a></p>
       </div>
     </div> <!-- .row -->
 
@@ -121,16 +121,16 @@
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <h3>Cloud IDE</h3>
-    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Read about how we do this more in our <a href="../docs/setup/intro/">documentation</a>, or check out our <a href="../docs/plugins/introduction/">extension builder's guide</a>.</p>
+    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Read about how we do this more in our <a href="../docs/setup/intro/" target="blank">documentation</a>, or check out our <a href="../docs/plugins/introduction/" target="blank">extension builder's guide</a>.</p>
 
     <h3>Workspace Server</h3>
-    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="..docs/server/rest-api/">documentation</a>, or see all the <a href="../features/">features</a>.</p>
+    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="../docs/server/rest-api/" target="blank">documentation</a>, or see all the <a href="../features/">features</a>.</p>
 
     <h3>Workspaces</h3>
-    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="../docs/workspace/admin-intro/">documentation</a>.</p>
+    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="../docs/workspace/admin-intro/" target="blank">documentation</a>.</p>
 
     <h3>Extensions</h3>
-    <p>Che includes a growing set of extensions. You can also <a href="../docs/plugins/introduction/">create and package</a> your own. You can also extend Che's <a href="../docs/workspace/recipes/">recipes</a>, <a href="../docs/workspace/stacks/">stacks</a>, <a href="../docs/ide/commands/">commands</a>, and <a href="../docs/workspace/machines/">machines</a>.</p>
+    <p>Che includes a growing set of extensions. You can also <a href="../docs/plugins/introduction/" target="blank">create and package</a> your own. You can also extend Che's <a href="../docs/workspace/recipes/" target="blank">recipes</a>, <a href="../docs/workspace/stacks/" target="blank">stacks</a>, <a href="../docs/ide/commands/" target="blank">commands</a>, and <a href="../docs/workspace/machines/" target="blank">machines</a>.</p>
     <div class="row">
       <div class="col-md-3 col-sm-6">
         <h5>Languages</h5>
