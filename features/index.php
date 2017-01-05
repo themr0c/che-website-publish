@@ -14,43 +14,36 @@
 <div class="jumbotron">
   <div class="container-fluid" id="top">
     <h1>Features</h1>
-    <h3>Eclipse Che is the only open source cloud IDE with RESTful workspaces and Docker-based machines. It's as powerful as it sounds. Take a deeper look.</h3>
-  </div> <!-- /.container-fluid -->
-</div> <!-- /.jumbotron -->
-
-
-<hr class="gray">
-<div class="container-fluid content">
-  <h2>Quick Links</h2>
-  <div class="row quick-links">
     <ul class="col-sm-4">
-      <li><a href="#new-workspace">Workspaces with Runtimes</a></li>
-      <li><a href="#docker-powered">Docker Machines</a></li>
-      <li><a href="#workspace-agents">Workspace Agents</a></li>
-      <li><a href="#collaborative">Collaborative Workspaces</a></li>
-      <li><a href="#restful-workspaces">RESTful Workspaces</a></li>
-      <li><a href="#ssh">SSH / Terminal</a></li>
+      <li><a href="#prod-runtimes">Prouduction Runtimes</a></li>
+      <li><a href="#dev-mode">“Dev Mode” your Workspace</a></li>
+      <li><a href="#any-ide">Use any IDE</a></li>
+      <li><a href="#team">Team-Based Development</a></li>
+      <li><a href="#lsp">Language Server Protocol</a></li>
+      <li><a href="#debuggers">Debuggers</a></li>
     </ul>
-
     <ul class="col-sm-4">
+      <li><a href="#ssh">SSH / Terminal</a></li>
+      <li><a href="#stacks">Stacks</a></li>
+      <li><a href="#restful-workspaces">RESTful Workspaces</a></li>
       <li><a href="#cloud-ide">Cloud IDE</a></li>
       <li><a href="#multi-project">Multi-Project</a></li>
       <li><a href="#commands">Commands</a></li>
-      <li><a href="#previews">Previews</a></li>
-      <li><a href="#intellisense-java">Java Intellisense</a></li>
-      <li><a href="#intellisense-js-html-css">JavaScript Intellisense</a></li>
     </ul>
-
-    <ul class="col-sm-4">    
+    <ul class="col-sm-4">
+      <li><a href="#previews">Previews</a></li>
       <li><a href="#light-theme">Light Theme</a></li>
       <li><a href="#plug-in">Plug-Ins</a></li>
       <li><a href="#open-source">Open Source</a></li>
       <li><a href="#love">Dogfooded With Love</a></li>
     </ul>
   </div> <!-- /.quick-links -->
+</div> <!-- /.jumbotron -->
 
 
-  <div class="row" id="new-workspace">
+<hr class="gray">
+<div class="container-fluid content">
+  <div class="row" id="prod-runtimes">
     <div class="col-sm-6">
       <h2>Production Runtimes</h2>
       <p>Eclipse Che works with any Docker container, even Compose multi-container runtimes. Use an image from DockerHub, your own private registry or one of the many that ship with Che. Add agents for SSH, terminal and language services to dev-enable your production images. When stopped, Che workspaces can be snapshotted, saving their state between runs.</p>
@@ -72,7 +65,7 @@
   </div>
 
   
-  <div class="row" id="docker-powered">
+  <div class="row" id="dev-mode">
     <div class="col-sm-6">
       <h2>“Dev Mode” your Workspace</h2>
       <p>Inject developer services into a workspace with agents for syntax auto-complete, error checking and a debugger. Add intellisense for additional languages with language server agents. Enable root-access terminal and SSH access with the flick of a switch.</p>
@@ -90,11 +83,11 @@
     </div>
 
     <div class="col-sm-6">
-      <a href="../images/features/img-technology-stacks.png"><img alt="" class="img-responsive" src="../images/features/img-technology-stacks.png" /></a>
+      <a href="../images/features/img-features-dev-mode.png"><img alt="" class="img-responsive" src="../images/features/img-features-dev-mode.png" /></a>
     </div>
   </div>
 
-  <div class="row" id="workspace-agents">
+  <div class="row" id="any-ide">
     <div class="col-sm-6">
       <h2>Use any IDE</h2>
       <p>Start working from any device without installing software by using the built-in Eclipse Che IDE. Or stick with the desktop IDE you love by mounting into the Che workspace. Your choice.</p>
@@ -114,9 +107,9 @@
     </div>
   </div>
   
-  <div class="row" id="collaborative">
+  <div class="row" id="team">
     <div class="col-sm-6">
-      <h2>Tailor Development for Your Team</h2>
+      <h2>Team-Based Development</h2>
       <p>Create custom stacks - runtimes based on your production images, but with the tools your devs need. Anyone can quickly create a production-compliant app by building on a team stack, or duplicating a workspace. Sample code can even be added for training or to start people on the right foot.</p>
       <p>Under the hood:</p>
       <ul>
@@ -132,18 +125,32 @@
     </div>
   </div>
 
-  <div class="row" id="restful-workspaces">
+  <div class="row" id="lsp">
     <div class="col-sm-6">
-      <h2>RESTful Workspaces</h2>
-      <p>All Che services are reachable through RESTful APIs. Che exposes APIs for managing the workspace master, and also provides RESTful access to each individual workplace through the workspace agent. The Che workspace master provides workspace orchestration and user management. In each workspace agent is a micro Che server that exposes project-specific APIs. For example, Che has RESTful JDT wrappers to enable 100+ forms of distributed Java intellisense. This Java-specific API is injected as a workspace agent by Che. Programming the API is simple - get started by <a href="https://eclipse-che.readme.io/docs/rest-api">browsing our APIs with Swagger</a>.</p>
+      <h2>Language Server Protocol</h2>
+      <p>The <a href="https://github.com/Microsoft/language-server-protocol" alt="LSP on GitHub">Language Server Protocol</a> was developed by Microsoft, Codenvy, Red Hat and IBM as a common protocol to provide language services including syntax analysis, outlining, and refactoring within the Eclipse Che, or the IDE or editor of their own choice. The protocol can be used between client tools and language servers to integrate features such as auto complete, goto definition, and find all references. Language server is a term being applied to the language intelligence programs that are providing the services.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 
     <div class="col-sm-6">
-      <a href="../images/features/img-features-RESTful.png"><img alt="" class="img-responsive" src="../images/features/img-features-RESTful.png" /></a>
+      <a href="../images/features/img-features-intellisense-javascript.png"><img alt="" class="img-responsive" src="../images/features/img-features-intellisense-javascript.png" /></a>
     </div>
   </div>
+
   
+  <div class="row" id="debuggers">
+    <div class="col-sm-6">
+      <h2>Debuggers</h2>
+      <p>Che can inject debugging agents into a developer workspace to allow variable watching and substitutions, breakpoints, step into / over and other common debug operations. Debuggers can be associated with stacks or individual workspaces.</p>
+      <p><a href="#top">Back to Top</a></p>
+    </div>
+
+    <div class="col-sm-6">
+      <a href="../images/features/img-features-intellisense-java.png"><img alt="" class="img-responsive" src="../images/features/img-features-intellisense-java.png" /></a>
+    </div>
+  </div>
+
+
   <div class="row" id="ssh">
     <div class="col-sm-6">
       <h2>SSH / Terminal</h2>
@@ -156,6 +163,31 @@
     </div>
   </div>
 
+  
+  <div class="row" id="stacks">
+    <div class="col-sm-6">
+      <h2>Stacks</h2>
+      <p>A stack is a runtime configuration for a workspace. It contains a runtime recipe, meta information like tags, description, environment name, and security policies. Stacks are displayed within the user dashboard and stack tags are used to filter the project code samples that are available. A stack's recipe is either a Dockerfile or a Docker Compose file that will create a runtime to be embedded into the workspace. You can use any of Che's 30+ built-in stacks or author your own unique stack for your work.</p>
+      <p><a href="#top">Back to Top</a></p>
+    </div>
+
+    <div class="col-sm-6">
+      <a href="../images/features/img-features-stacks.png"><img alt="" class="img-responsive" src="../images/features/img-features-stacks.png" /></a>
+    </div>
+  </div>
+
+  
+  <div class="row" id="restful-workspaces">
+    <div class="col-sm-6">
+      <h2>RESTful Workspaces</h2>
+      <p>All Che services are reachable through RESTful APIs. Che exposes APIs for managing the workspace master, and also provides RESTful access to each individual workplace through the workspace agent. The Che workspace master provides workspace orchestration and user management. In each workspace agent is a micro Che server that exposes project-specific APIs. For example, Che has RESTful JDT wrappers to enable 100+ forms of distributed Java intellisense. This Java-specific API is injected as a workspace agent by Che. Programming the API is simple - get started by <a href="https://eclipse-che.readme.io/docs/rest-api">browsing our APIs with Swagger</a>.</p>
+      <p><a href="#top">Back to Top</a></p>
+    </div>
+
+    <div class="col-sm-6">
+      <a href="../images/features/img-features-RESTful.png"><img alt="" class="img-responsive" src="../images/features/img-features-RESTful.png" /></a>
+    </div>
+  </div>
   
   <div class="row" id="cloud-ide">
     <div class="col-sm-6">
@@ -209,33 +241,6 @@
       <a href="../images/features/img-features-previews.png"><img alt="" class="img-responsive" src="../images/features/img-features-previews.png" /></a>
     </div>
   </div>
-
-  
-  <div class="row" id="intellisense-java">
-    <div class="col-sm-6">
-      <h2>Java Intellisense</h2>
-      <p>Over 100 forms of Java content assist that are so responsive that you will do a double take. Features include modules (sub-folders that can be independently built and run), multi-module structures, dozens of intellisense, multiple forms of refactoring, an embedded debugger, JavaDoc, jump to definition, and class structure navigation.</p>
-      <p><a href="#top">Back to Top</a></p>
-    </div>
-
-    <div class="col-sm-6">
-      <a href="../images/features/img-features-intellisense-java.png"><img alt="" class="img-responsive" src="../images/features/img-features-intellisense-java.png" /></a>
-    </div>
-  </div>
-
-  
-  <div class="row" id="intellisense-js-html-css">
-    <div class="col-sm-6">
-      <h2>JavaScript Intellisense</h2>
-      <p>The <a href="https://orionhub.org/">Orion editor</a> provides dozens of assistants for interpreted languages including JavaScript (and even some hidden templating for Go)! Autocomplete, error marking, recommendations, documentation, and jump to definitions are exposed and ready to go.</p>
-      <p><a href="#top">Back to Top</a></p>
-    </div>
-
-    <div class="col-sm-6">
-      <a href="../images/features/img-features-intellisense-javascript.png"><img alt="" class="img-responsive" src="../images/features/img-features-intellisense-javascript.png" /></a>
-    </div>
-  </div>
-
 </div>
 
 <div class="tech">
@@ -258,8 +263,8 @@
 
   <div class="row" id="plug-in">
     <div class="col-sm-6">
-      <h2>Plug-In Framework</h2>
-      <p>Che is extensible, by customizing built-in plug-ins or authoring your own extensions. Package plug-ins with Che core to create new assemblies installable by your user base. You can write IDE, Che server, or workspace agent plug-ins, with Che injecting the plug-in into the right location at the right time.</p>
+      <h2>Plugins</h2>
+      <p>Che is extensible, by customizing built-in plugins or authoring your own extensions. Package plugins with Che core to create new assemblies installable by your user base. You can write IDE, Che server, or workspace agent plugins, with Che injecting the plug-in into the right location at the right time.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 
@@ -272,7 +277,7 @@
   <div class="row" id="open-source">
     <div class="col-sm-6">
       <h2>Open Source to the Core</h2>
-      <p>Eclipse Che has been developed over 4 years with contributions from Codenvy, eXo Platform, IBM, SAP, Microsoft, Intuit, WSO2, Serli, RedHat, and open source individuals from China, Brazil, France, Ukraine, Russia, Canada, India, Sri Lanka, and the United States. It is part of the Eclipse Cloud Development top-level project, and ecosystem contributions are open and encouraged. </p>
+      <p>Eclipse Che has been developed over 4 years with contributions from Codenvy, eXo Platform, Red Hat, Salesforce, IBM, SAP, Microsoft, Intuit, WSO2, Serli, and open source individuals from China, Brazil, France, Ukraine, Russia, Canada, India, Sri Lanka, and the United States. It is part of the Eclipse Cloud Development top-level project, and ecosystem contributions are open and encouraged. </p>
       <p>Please participate, even if only spiritually. There are many ways to get involved including starring the <a href="https://github.com/codenvy/che/stargazers">GitHub repo</a>, <a href="https://github.com/codenvy/che/issues">submitting issues</a>, <a href="https://eclipse-che.readme.io/docs/">writing docs</a>, or <a href="https://eclipse-che.readme.io/docs/plug-ins">contributing plug-ins</a>.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>

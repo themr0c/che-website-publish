@@ -13,9 +13,9 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Eclipse Che: Development Witchcraft</h1>
-    <h3>Eclipse Che is an IDE and developer workspace server that allows anyone to contribute to a project without having to install software. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
+    <h3>Eclipse Che is an IDE and developer workspace server that allows anyone to contribute to a project without having to install software. <a href="../getting-started/">Get Started</a></h3>
 
-    <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-technology@2x.png" />
+    <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
@@ -46,90 +46,91 @@
 </div>
 
 <hr class="gray">
-<div class="container-fluid content">
-  <div class="row">
-    <div class="col-sm-4">
-      <h3>Developers</h3>
-      <p>Use Che as an IDE for any framework or programming language. Take your projects and runtimes anywhere with workspace portability and cloud export.</p>
-      <p>
-      <a href="<?php echo $rootPath; ?>/getting-started/">Get Started with Che</a><br>
-      <a href="https://eclipse-che.readme.io/docs/get-started-with-java-and-che" target="_blank">Tutorials</a>
-    </div>
-
-    <div class="col-sm-4">
-      <h3>Product Owners</h3>
-      <p>Embed Che in your own product and control it with APIs. Samsung, SAP and Red Hat use custom assemblies to create great developer experiences.</p>
-      <p>
-      <a href="<?php echo $rootPath; ?>/extend/artik/">Samsung ARTIK IDE</a><BR>
-      <a href="<?php echo $rootPath; ?>/extend/sap/">SAP Web IDE</a>
-    </div>
-
-    <div class="col-sm-4">
-      <h3>Plug-in Providers</h3>
-      <p>Package stacks, templates, extensions, and plug-ins to create new developer tooling. Dozens of existing plugins and stacks to leverage.</p>
-      <p>
-      <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md" target="_blank">Customize Che</a><br>
-      <a href="https://eclipse-che.readme.io/docs/openshift-config" target="_blank">OpenShift Plug-In</a>
-    </div>
-  </div> <!-- .row -->
-</div><!-- .contributors -->
-
-
-<hr class="gray">
 <div class="features">
   <div class="container-fluid content">
     <h2>A new kind of developer workspace.</h2>
 
     <div class="row">
       <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" target="_blank"><img alt=""  src="<?php echo $rootPath; ?>/images/features/img-features-a-new-kind-of-workspace.png" class="img-responsive" /></a>
+        <a href="../images/features/img-features-a-new-kind-of-workspace.png" target="_blank"><img alt="" height="300" src="../images/features/img-features-a-new-kind-of-workspace.png" class="img-responsive" /></a>
         <h3>Production Runtimes</h3>
-        <p>Eclipse Che works with any single or multi-container runtime. Use an image from DockerHub, your own private registry or one of the included Che images... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+        <p>Eclipse Che works with any single or multi-container runtime. Use an image from DockerHub, your own private registry or one of the included Che images... <a href="../features/">Read More</a></p>
       </div>
 
       <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-docker-powered.png" class="img-responsive" /></a>
+        <a href="../images/features/img-features-docker-powered.png" target="_blank"><img alt="" height="333" width="500" src="../images/features/img-features-docker-powered.png" class="img-responsive" /></a>
         <h3>“Dev Mode” your Workspace</h3>
-        <p>Workspace runtimes are Docker-powered. Use our all-in-one stacks, pull from any registry, or author your own. Snapshot and embed runtimes into... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+        <p>Workspace runtimes are Docker-powered. Use our all-in-one stacks, pull from any registry, or author your own. Snapshot and embed runtimes into... <a href="../features/">Read More</a></p>
       </div>
     </div> <!-- .row -->
 
     <div class="row">
       <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-cloud-ide.png" class="img-responsive" /></a>
+        <a href="../images/features/img-features-cloud-ide.png" target="_blank"><img alt="" height="333" width="500" src="../images/features/img-features-cloud-ide.png" class="img-responsive" /></a>
         <h3>Cloud IDE</h3>
-        <p>A no-installation browser IDE and IOE accessible from any local or remote device. Thin, fast, and beautiful - it's the IDE our own engineers wanted... <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+        <p>A no-installation browser IDE and IOE accessible from any local or remote device. Thin, fast, and beautiful - it's the IDE our own engineers wanted... <a href="../features/">Read More</a></p>
       </div>
 
       <div class="col-sm-6">
-        <a href="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="<?php echo $rootPath; ?>/images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
+        <a href="../images/features/img-features-eclipse-ide.jpg" target="_blank"><img alt="" height="333" width="500" src="../images/features/img-features-eclipse-ide.jpg" class="img-responsive" /></a>
         <h3>Any Desktop IDE</h3>
-        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="<?php echo $rootPath; ?>/features/">Read More</a></p>
+        <p>Access the workspace file system from your desktop IDE. Using Che remotely? You can mount the Che workspace over SSH. <a href="../features/">Read More</a></p>
       </div>
     </div> <!-- .row -->
 
-    <a href="<?php echo $rootPath; ?>/features/" class="btn-yellow">Eclipse Che Features</a>
+    <a href="../features/" class="btn-yellow">See All Features</a>
   </div> <!-- .container-fluid -->
 </div> <!-- .features -->
+
+
+<hr class="gray">
+<div class="container-fluid content">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Developers</h3>
+      <p>Use Che as an IDE for any framework or programming language. Take your projects and runtimes anywhere with workspace portability and cloud export.</p>
+      <p>
+      <a href="../getting-started/">Get Started with Che</a><br>
+      <a href="../docs/tutorials/multi-machine/" target="_blank">Tutorials</a>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Product Owners</h3>
+      <p>Embed Che in your own product and control it with APIs. Samsung, SAP and Red Hat use custom assemblies to create great developer experiences.</p>
+      <p>
+      <a href="../extend/artik/">Samsung ARTIK IDE</a><BR>
+      <a href="../extend/sap/">SAP Web IDE</a><br>
+      <a href="../extend/codenvy/">Codenvy Enterprise Che</a>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Extension Providers</h3>
+      <p>Package stacks, templates, extensions, and plug-ins to create new developer tooling. Dozens of existing extensions and stacks to leverage.</p>
+      <p>
+      <a href="../docs/plugins/introduction/" target="_blank">Customize Che</a><br>
+      <a href="../docs/openshift/config/" target="_blank">OpenShift Plug-In</a>
+    </div>
+  </div> <!-- .row -->
+</div><!-- .contributors -->
 
 
 <div class="tech">
   <div class="container-fluid content">
     <h2>Technology</h2>
     <p>We are building a world where anyone can contribute to a project without installing software. Che defines a new type of workspace that is composed of projects and runtimes, making its state distributable, portable and versionable. We use VMs, containers, and Web services to bring repeatability, consistency, and performance to workspaces.</p>
-    <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-home-technology.png" />
+    <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <h3>Cloud IDE</h3>
-    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Read about how we do this more in our <a href="https://eclipse-che.readme.io/docs/">documentation</a>, or check out the customization <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">resource center</a>.</p>
+    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Read about how we do this more in our <a href="../docs/setup/intro/">documentation</a>, or check out our <a href="../docs/plugins/introduction/">extension builder's guide</a>.</p>
 
     <h3>Workspace Server</h3>
-    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="https://eclipse-che.readme.io/docs/">documentation</a>, or see all the <a href="<?php echo $rootPath; ?>/features/">features</a>.</p>
+    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="..docs/server/rest-api/">documentation</a>, or see all the <a href="../features/">features</a>.</p>
 
     <h3>Workspaces</h3>
-    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="https://eclipse-che.readme.io/docs/">documentation</a>.</p>
+    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="../docs/workspace/admin-intro/">documentation</a>.</p>
 
-    <h3>Plug-Ins</h3>
-    <p>Che includes a growing set of <a href="https://eclipse-che.readme.io/docs/plug-ins">plug-ins</a>. You can also <a href="https://eclipse-che.readme.io/docs/developing-extensions">create and package</a> your own. You can also extend Che's runtimes, stacks, commands, look-and-feel. We are starting to build out customization <a href="https://github.com/eclipse/che/blob/master/CUSTOMIZING.md">resource center</a>.</p>
+    <h3>Extensions</h3>
+    <p>Che includes a growing set of extensions. You can also <a href="../docs/plugins/introduction/">create and package</a> your own. You can also extend Che's <a href="../docs/workspace/recipes/">recipes</a>, <a href="../docs/workspace/stacks/">stacks</a>, <a href="../docs/ide/commands/">commands</a>, and <a href="../docs/workspace/machines/">machines</a>.</p>
     <div class="row">
       <div class="col-md-3 col-sm-6">
         <h5>Languages</h5>
@@ -149,9 +150,9 @@
         <h5>Frameworks</h5>
         <p>Project types, scaffold tool integration, and syntax analysis.</p>
         <ul>
-          <li><a href="<?php echo $rootPath; ?>/extend/artik/">Samsung ARTIK</a></li>
-          <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP HANA</a></li>
-          <li><a href="https://eclipse-che.readme.io/docs/openshift-config" target="_blank">Red Hat OpenShift</a></li>
+          <li><a href="../extend/artik/">Samsung ARTIK</a></li>
+          <li><a href="../extend/sap/">SAP HANA</a></li>
+          <li><a href="../docs/openshift/config/" target="_blank">Red Hat OpenShift</a></li>
           <li>Angular JS</li>
           <li>Docker</li>
           <li>Yeoman</li>

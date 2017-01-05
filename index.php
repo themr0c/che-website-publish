@@ -32,13 +32,13 @@
       <div class="col-md-4">
         <h3>Local Install</h3>
         <p>Install and host Eclipse Che on your machine or server.</p>
-        <a href="<?php echo $rootPath; ?>/getting-started/download/" class="btn-yellow">Download</a>
+        <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Download</a>
 
       </div>
       <div class="col-md-4">
         <h3>Cloud</h3>
         <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
-        <a href="https://bitnami.com/stack/eclipse-che" class="btn-yellow" target="_blank">One-Click Install</a>
+        <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <h3>Che 5.0 Announcement Blog: <a href="https://medium.com/eclipse-che-blog/eclipse-che-5-0-announced-at-checonf-2016-8d7759aca777#.pckp8j876" target="_blank">Read it here</a>.</h3>
+    <h3>Che 5.0 Released! <a href="https://medium.com/eclipse-che-blog/eclipse-che-5-0-announced-at-checonf-2016-8d7759aca777#.pckp8j876" target="_blank">Learn More</a>.</h3>
   </div>
 </div>
 
@@ -55,13 +55,13 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
-      <img src="images/img-home-checonf3.png" alt="CheConf 2016" class="img-responsive">
+      <img src="images/img-home-che5@2x.png" alt="Che 5.0" class="img-responsive">
       <h3>Eclipse Che 5.0</h3>
       <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
     <div class="col-md-4">
-      <img src="images/img-home-whatsnew2@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
+      <img src="images/img-home-codenvy-ent@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
       <h3>Eclipse Che Enterprise</h3>
       <p>Codenvy uses Eclipse Che to provide dev team collaboration on a scalable workspace platform for DevOps.</p>
       <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
@@ -101,7 +101,7 @@
     <li><img src="images/logo-zend@2x.png" style="width: 190px; height: 70px; margin-top: 15px" alt="Zend"/></li>
   </ul>
 
-  <a href="https://github.com/eclipse/che/" class="btn-yellow" target="_blank">Become a Contributor</a>
+  <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md" class="btn-yellow" target="_blank">Become a Contributor</a>
 </div>
 
 
@@ -111,25 +111,15 @@
       <tr>
         <td><img src="<?php echo $rootPath; ?>/images/img-google-hangout@2x.png" alt=""></td>
         <td>
-          <h2>Chedir - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
-          <p>Chedir provides easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chedir launches synchronized workspaces within Eclipse Che, which Chedir will quietly install and run in the background, if necessary.</p>
-          <a href="https://eclipse.org/che/docs/chedir-portable-workspaces/why-chedir/index.html" class="btn-yellow" target="_blank">Learn More</a>
+          <h2>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
+          <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
+          <a href="/docs/chedir/getting-started/" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>
   </div>
 </div>
 
-<div class="bg-gray5 share-story">
-  <div class="container-fluid content">
-    <h2>Share Your Eclipse Che Story</h2>
-    <p>Are you using Eclipse Che to build your project? Share your story with us and we will publish it on our blog.</p>
-    <a href="<?php echo $rootPath; ?>/community/share/" class="btn-yellow">Share your Story</a>
-  </div>
-</div>
-
-
-<div class="bg-hero">&nbsp;</div>
 
 
 <div class="bg-deep-purple feedback">

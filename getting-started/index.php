@@ -32,14 +32,14 @@
       <img src="../images/getting-started/icon-local-install.jpg" alt="Eclipse Che | Local Install">
       <h3>Local Install</h3>
       <p>Install Eclipse Che on your computer or a development server.</p>
-      <a href="<?php echo $rootPath; ?>/getting-started/download/" class="btn-yellow">Downloads</a> 
+      <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Downloads</a> 
     </div>
 
     <div class="col-md-4">
       <img src="../images/getting-started/icon-private-cloud.jpg" alt="Eclipse Che | Private Cloud Install">
       <h3>Private Cloud Install</h3>
       <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
-     <a href="https://bitnami.com/stack/eclipse-che" class="btn-yellow" target="_blank">One-Click Install</a>
+     <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
     </div>
   </div> <!-- /.row -->
 </div> <!-- /.container-fluid -->
@@ -56,26 +56,15 @@
       </div>
       <div class="col-md-4">
         <h4>Documentation</h4>
-        <p>We put a lot of effort <a href="https://eclipse-che.readme.io/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback.</p>
+        <p>We put a lot of effort <a href="<?php echo $rootPath; ?>/docs/">into our docs.</a> If there are improvements or errors, we'd love that feedback.</p>
       </div>
       <div class="col-md-4">
         <h4>Chat</h4>
-        <p>Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge" target="_blank">Gitter</a>, <a href="http://qwebirc.swiftirc.net/?nick=fromwebsite&channels=%23eclipseche" target="_blank">IRC</a> and Slack.</p>
+        <p>Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge" target="_blank">Gitter</a>.</p>
       </div>
     </div> <!-- .row -->
   </div> <!-- .container-fluid -->
 </div> <!-- .get-help -->
-
-
-<hr class="gray">
-<div class="container-fluid content">
-  <h2>Share Your Eclipse Che Story</h2>
-    <p>Are you using Eclipse Che to build your project? Share your story with us and we will publish it on our blog.</p>
-    <a href="<?php echo $rootPath; ?>/" class="btn-yellow">Share your story</a>
-</div>
-
-
-<div class="bg-hero">&nbsp;</div>
 
 
 <?php include '../includes/footer.php'; ?>
