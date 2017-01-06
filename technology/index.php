@@ -116,6 +116,8 @@
           <li>PHP</li>
           <li>Ruby</li>
           <li>SQL</li>
+          <li>CSharp</li>
+          <li>JSON</li>
         </ul>
       </div>
 
