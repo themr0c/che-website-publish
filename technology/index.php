@@ -19,33 +19,6 @@
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
-<div class="container-fluid content">
-  <h2>The Codenvy Magic</h2>
-  <p>Why Redmonk calls Codenvy "Developer Witchcraft."</p>
-  &nbsp;<br>
-  <h4>1. CREATE A WORKSPACE WITH PRODUCTION RUNTIMES</h4>
-  <p>Codenvy workspaces start with production runtimes. You give Codenvy the Dockerfile or Docker Compose syntax that is already configured for production.</p>
-  &nbsp;<br>
-  <h4>2. “DEV MODE” THE WORKSPACE</h4>
-  <p>Codenvy then configures the runtime to use SSH so that devs can connect to it. Next, workspace agents inject developer capabilities: SSH access, a terminal with root privileges, and language services like auto-completion. Finally, a debugger is hooked up so that you can analyze your code.</p>
-  &nbsp;<br>
-  <h4>3. IMPORT PROJECTS FROM VERSION CONTROL</h4>
-  <p>Codenvy clones your project's source code into the workspace and places a copy in the production runtime. This allows a developer to edit, save, build and debug their code as though it was local...but better because all changes are immediately synced to the runtime for instant feedback. Each project has a type that brings with it special tooling (like Maven types bring Java intellisense and maven build commands). You can have many projects in a single workspace, each project coming from different source repositories like git or SVN.</p> 
-  &nbsp;<br>
-  <h4>4. DEVELOP WITH ANY IDE</h4>
-  <p>Once the workspace is running Codenvy starts the Eclipse Che browser IDE so  a developer can be editing code in seconds, without installing any software. Of course, because the workspace has been "dev moded" there is also SSH so a local IDE can be mounted to the workspace if preferred.</p> 
-  &nbsp;<br>
-  <h4>5. CONNECT YOUR TOOLCHAIN</h4>
-  <p>Codenvy integrates with your LDAP/AD directory, git or Subversion version control, as well as issue management and continuous integration - like JIRA and Jenkins. Any stack and toolset can be integrated. Provide the team with a single link that provisions a complete developer workspace with the ideal toolchain pre-integrated. Alternatively, provide a set of vetted toolchain options for developers to choose from.</p>
-  &nbsp;<br>
-  <h4>6. COLLABORATE WITH YOUR TEAM</h4>
-  <p>Workspaces can be shared at any time and automated by Codenvy “Factories”. Factories are exposed as URLs so they can be integrated into any dev workflow. A Factory defines metadata on how to create the workspace for each user who clicks on its URL. The metadata can be used to take an existing workspace and “substitute” a different project branch, or workspace runtime based on logic. Resources and permissions can also be controlled.</p> 
-
-  <a class="btn-yellow" href="../getting-started/">Get Started</a>
-
-</div>
-
-<hr class="gray">
 <div class="features">
   <div class="container-fluid content">
     <h2>A new kind of developer workspace.</h2>
