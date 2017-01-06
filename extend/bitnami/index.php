@@ -15,7 +15,7 @@
   <div class="container-fluid">
 
     <h1>Bitnami Development Containers</h1>
-    <h3>Integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Development Containers are currently available for many popular frameworks, including Express, Laravel, Rails, Symfony and Swift. <a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started with Che and Bitnami Development Containers.</a></h3>
+    <h3>Integrated with Eclipse Che to make development frameworks incredibly simple to access and use. Development Containers are currently available for many popular frameworks, including Express, Laravel, Rails, Symfony and Swift. <a target="_blank" href="<?php echo $rootPath; ?>/getting-started/">Get Started with Che and Bitnami Development Containers.</a></h3>
     <img alt="Bitnami in Che" class="img-responsive" src="bitnami-hero.png" width="1200" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
@@ -69,7 +69,7 @@
   <div class="container-fluid content">
     <h2>Powered by Eclipse Che</h2>
     <p>Bitnami containers extend Che's runtime stack support, providing environments for <a href="https://github.com/bitnami/bitnami-docker-express" target="_blank">Express</a>, <a href="https://github.com/bitnami/bitnami-docker-laravel" target="_blank">Laravel</a>, <a href="https://github.com/bitnami/bitnami-docker-rails" target="_blank">Rails</a>, <a href="https://github.com/bitnami/bitnami-docker-symfony" target="_blank">Symfony</a>, <a href="https://github.com/bitnami/bitnami-docker-swift" target="_blank">Swift</a> and others.</p>
-    <p>Interested in building your own stacks?  We have <a href="https://eclipse-che.readme.io/docs/stacks" target="_blank">documentation to help you get started with stacks</a> - it's easy! If you have any questions, reach out to <a href="../community/">our community</a>.</p>
+    <p>Interested in building your own stacks?  We have <a href="<?php echo $rootPath; ?>/docs/plugins/introduction/" target="_blank">documentation to help you get started with stacks</a> - it's easy! If you have any questions, reach out to <a href="<?php echo $rootPath; ?>/community/">our community</a>.</p>
   </div> <!-- .container-fluid -->
 </div> <!-- .tech -->
 
@@ -79,8 +79,8 @@
   <div class="container-fluid content">
     <p><img alt="" class="img-responsive" src="bitnami-logo.png"></p>
     <br>
-    <h2><a target="_blank" href="https://www.eclipse.org/che/getting-started/">Get Started</a> with Che and Bitnami Development Containers.</h2>
-    <h3><a  target="_blank" href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.mdgit">Contribute to Eclipse Che</a>
+    <h2><a target="_blank" href="<?php echo $rootPath; ?>/getting-started/">Get Started</a> with Che and Bitnami Development Containers.</h2>
+    <h3><a  target="_blank" href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md">Contribute to Eclipse Che</a>
   </div> <!-- .container-fluid -->
 </div> <!-- .get-help -->
 

@@ -36,25 +36,22 @@
       <h3>Stacks</h3>
       <p>Stacks define new types of workspace runtimes displayed in the dashboard.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/stacks">Add Stacks to Che</a><br>
-      <a href="https://github.com/codenvy/dockerfiles">Stacks Included with Che</a>
-      <a href="https://eclipse-che.readme.io/docs/stack">Che Stacks Data Model</a>
+      <a href="../docs/workspace/stacks/" target="_blank">Add Stacks to Che</a><br>
+      <a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes">Stacks Included with Che</a>
     </div>
 
     <div class="col-sm-4">
       <h3>Recipes</h3>
       <p>Recipes describe a runtime created by a stack. Recipes can be Dockerfiles and soon Compose files.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/recipes#section-custom-recipe">Custom Recipes</a><br>
-      <a href="https://eclipse-che.readme.io/docs/recipes#section-issue-a-pull-request-to-improve-recipes">Improve Che Recipes</a>
+      <a href="../docs/workspace/recipes/" target="blank">Custom Recipes</a><br>
     </div>
 
     <div class="col-sm-4">
-      <h3>Templates</h3>
+      <h3>Samples</h3>
       <p>Sample code that can be used to bootstrap the contents of a new project.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/templates">Custom Templates</a><br>
-      <a href="https://eclipse-che.readme.io/docs/template">Che Templates Data Model</a>
+      <a href="../docs/workspace/samples/" target="blank">Custom Templates</a><br>
     </div>
   </div> <!-- .row -->
 
@@ -65,28 +62,25 @@
      <h3>Commands</h3>
      <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/commands">Custom Commands</a><br>
-      <a href="https://eclipse-che.readme.io/docs/commands#macros">Command Macros</a>
+      <a href="../docs/ide/commands/" target="blank">Custom Commands</a><br>
     </div>
 
     <div class="col-sm-4">
       <h3>Workspace Extensions</h3>
       <p>Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/introduction-1">Developing Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/serverworkspace-access">Server-Side Tutorial</a><br>
+      <a href="../docs/plugins/introduction/" target="blank">Developing Extensions</a><br>
+      <a href="../docs/plugins/helloworld-extension/" target="blank">Hello World Tutorial</a><br>
       <a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/java-class-reference">Che Extension SDK Doc</a><br>
     </div>
 
     <div class="col-sm-4">
       <h3>IDE Extensions</h3>
      <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/introduction-1">Developing Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/actions">Client-Side Tutorial</a><br>
-      <a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a><br>
-      <a href="https://eclipse-che.readme.io/docs/calling-workspace-apis">Invoking Workspace APIs</a>
+      <a href="../docs/plugins/introduction/" target="blank">Developing Extensions</a><br>
+      <a href="../docs/plugins/helloworld-extension/" target="blank">Hello World Tutorial</a><br>
+      <a href="../docs/plugins/calling-workspace-apis/" target="blank">Invoking Workspace APIs</a>
     </div>
   </div> <!-- .row -->
 
@@ -104,17 +98,14 @@
       <h3>REST APIs</h3>
       <p>The Che server and each workspace has all services programmable through REST APIs.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/rest-api">Che Server REST APIs</a><br>
-      <a href="https://eclipse-che.readme.io/docs/rest-api#workspace-agent-apis">Workspace REST APIs</a>
+      <a href="../docs/plugins/calling-workspace-apis/" target="blank">Che REST APIs</a><br>
     </div>
 
     <div class="col-sm-4">
       <h3>Assemblies</h3>
      <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
       <p>
-      <a href="https://eclipse-che.readme.io/docs/assemblies#che-layout">Che Layout</a><br>
-      <a href="https://eclipse-che.readme.io/docs/assemblies#modules">Che Modules</a><br>
-      <a href="https://eclipse-che.readme.io/docs/assemblies#custom-assemblies">Custom Assemblies</a>
+      <a href="../docs/plugins/assemblies/" target="blank">Che Layout</a><br>
     </div>
   </div> <!-- .row -->
 </div><!-- .contributors -->
@@ -141,7 +132,7 @@
         <img src="../images/logo-extend-redhat@2x.jpg" alt="RedHat">
         <h2>Red Hat Open Shift</h2>
         <p>Eclipse Che is the strategic tooling platform for Red Hat. Workspace portability, workspace runtimes powered by Docker, and IDE extensibility are areas of technical collaboration.</p>
-        <a href="https://eclipse-che.readme.io/docs/openshift-config" class="btn-yellow" target="_blank">Learn More</a>
+        <a href="../docs/openshift/config/" target="_blank" class="btn-yellow">Learn More</a>
       </div>
     </div>
 

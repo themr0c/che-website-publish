@@ -84,8 +84,7 @@
 <div class="tech">
   <div class="container-fluid content">
     <h2>Powered by Eclipse Che</h2>
-    <p>The SAP Web IDE uses Eclipse Che's workspace server to provision and manage all developer workspaces. SAP created a custom IDE UI that is tailored to their technical stack, extensions, business logic and integrations. The UI communicates over RESTful interfaces with Che to create a seamless experience for the user. <a href="https://eaexplorer.hana.ondemand.com/_item.html?id=10667#!/overview" target="_blank">Learn more</a> about the SAP Web IDE, or <a href="https://hcp.sap.com/try.html" target="_blank">try it out</a> on the SAP HANA Cloud.</p>
-    <p>Interested in building your own plug-in?  We have <a href="https://eclipse-che.readme.io/docs/calling-workspace-apis" target="_blank">documentation to help you get started</a>, or you can reach out to <a href="../community/">our community</a>.</p>
+    <p>Interested in building your own plug-in?  We have <a href="<?php echo $rootPath; ?>/docs/plugins/introduction/" target="blank">documentation to help you get started</a>, or you can reach out to <a href="<?php echo $rootPath; ?>/community/">our community</a>.</p>
     <img alt="" class="img-responsive" src="../../images/hero-home-technology.png" />
 
     <div class="row">
@@ -107,9 +106,9 @@
         <h5>Frameworks</h5>
         <p>Project types, scaffold tool integration, and syntax analysis.</p>
         <ul>
-          <li><a href="../artik/">Samsung ARTIK</a></li>
-          <li><a href="../sap/">SAP HANA</a></li>
-          <li><a href="https://eclipse-che.readme.io/docs/openshift-config" target="_blank">Red Hat OpenShift</a></li>
+          <li><a href="<?php echo $rootPath; ?>/codenvy/">Codenvy</a></li>
+          <li><a href="<?php echo $rootPath; ?>/sap/">SAP HANA</a></li>
+          <li><a href="<?php echo $rootPath; ?>/docs/openshift/config/" target="_blank">Red Hat OpenShift</a></li>
           <li>Angular JS</li>
           <li>Docker</li>
           <li>Yeoman</li>
@@ -149,7 +148,7 @@
 
 <div class="bg-gray5">
   <div class="container-fluid content">
-    <img alt="" class="img-responsive" src="../../images/artik/artik_ide_black.png"/>
+    <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/artik/artik_ide_black.png"/>
     <br>
     <h2><a target="_blank" href="https://eclipse-che.readme.io/docs/samsung-artik-ide-getting-started">Get Started</a> with the ARTIK IDE.</h2>
     <h3><a  target="_blank" href="https://github.com/codenvy/artik-ide/blob/master/CONTRIBUTING.md">Contribute to the ARTIK IDE</a> or get involved With <a href="<?php echo $rootPath; ?>/community/">Eclipse Che</a>
