@@ -22,7 +22,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <center><h3>Che 5.0.0 tagged!  &nbsp;&nbsp;&nbsp;<a href="<?php echo $rootPath; ?>/technology">View changelog</a> or run with: <code>docker run eclipse/che start</code></h3>
+    <center><h3>Che 5.0.0 tagged!  &nbsp;&nbsp;&nbsp;<a href="https://github.com/eclipse/che/blob/master/CHANGELOG.md">View changelog</a> or run with: <code>docker run eclipse/che start</code></h3>
   </div>
 </div>
 
