@@ -22,7 +22,7 @@
 <div class="tech">
   <div class="container-fluid content">
     <h2>An Extensible, Customizable Platform</h2>
-    <p>Everything in Eclipse Che can be altered, from changing the stack library to creating new assemblies that distribute developer tooling with your own branding.</p>
+    <p>Everything is alterable, from stacks to creating assemblies to distribute Che as your own product.</p>
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <div class="row">
