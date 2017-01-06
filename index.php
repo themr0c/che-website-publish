@@ -20,6 +20,12 @@
 </div> <!-- .jumbotron -->
 
 
+<div class="annoucement">
+  <div class="container-fluid">
+    <center><h3>Che 5.0.0 tagged!  &nbsp;&nbsp;&nbsp;<a href="<?php echo $rootPath; ?>/technology">View changelog</a> or run with: <code>docker run eclipse/che start</code></h3>
+  </div>
+</div>
+
 <div class="bg-dark-space get-started">
   <div class="container-fluid content">
     <div class="row">
@@ -41,12 +47,6 @@
         <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="annoucement">
-  <div class="container-fluid">
-    <h3>Che 5.0 Released! <a href="<?php echo $rootPath; ?>/technology">Learn More</a>.</h3>
   </div>
 </div>
 
@@ -90,6 +90,7 @@
     <li><img src="images/logo-platformio@2x.png" alt="RedHat" style="width: 96px; height: 70px; margin-left: 50px; margin-top: 10px" class="img-responsive"></li>
     <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
     <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
+    <li><img src="images/logo-sfdc@2x.png" alt="Salesforce.com" style="width: 156px; height: 90px; margin-left: 20px" class="img-responsive"></li>
     <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
     <li><img src="images/logo-sap@2x.png" alt="SAP" class="img-responsive"></li>
     <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
