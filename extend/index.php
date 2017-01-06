@@ -124,7 +124,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank"><img src="../images/codenvy/img-extend-codenvy@2x.png" style="width: 333px; height: 188px" alt="Codenvy"></a>
+        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank"><img src="https://codenvy.com/images/logo-codenvy.svg" style="width: 333px; height: 188px" alt="Codenvy"></a>
         <h3>Codenvy</h3>
         <a href="<?php echo $rootPath; ?>/extend/codenvy/">Cloud workspaces for development teams</a></p>
       </div>
