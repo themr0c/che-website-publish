@@ -45,7 +45,7 @@
 
       <div class="col-md-4 col-sm-4">
         <h4>Samples</h4>
-        <p>Project template code used to bootstrap the contents of a new project.</p>
+        <p>Project template code to bootstrap the contents of a new project.</p>
         <ul>
           <li><a href="../docs/workspace/samples/" target="blank">Custom Templates</a></li>
         </ul>
@@ -118,35 +118,38 @@
   </div> <!-- .container-fluid -->
 </div> <!-- .tech -->
 
-<div class="video">
-  <div class="container-fluid content">
+<hr class="gray">
+<div class="container-fluid content">
     <h2>Who is Extending Che?</h2>
 
     <div class="row">
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank"><img src="https://codenvy.com/images/logo-codenvy.svg" style="width: 333px; height: 188px" alt="Codenvy"></a>
-        <h3>Codenvy</h3>
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/">Cloud workspaces for development teams</a></p>
+        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank" style="text-decoration: none"><img src="../images/logo-extend-codenvy@2x.jpg" style="height: 111px" alt="Codenvy"></a>
+        <h3><a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank">Codenvy</a></h3>
+        <p>Cloud workspaces for development teams - think of it as "enterprise Che".</p>
       </div>
 
       <div class="col-md-4">
-        <a href="../docs/openshift/config/" target="_blank"><img src="../images/logo-extend-redhat@2x.jpg" style="width: 333px; height: 188px" class="img-responsive"></a>
-        <h3><a href="../docs/openshift/config/" target="_blank">Red Hat Open Shift</a></h3>
-        <p>Strategic developer tooling platform for Docker orchestration</p>
+        <a href="../docs/openshift/config/" target="_blank"><img src="<?php echo $rootPath; ?>/images/logo-extend-redhat@2x.jpg" style="height: 111px; width:333px" class="img-responsive"></a>
+        <h3><a href="../docs/openshift/config/" target="_blank">Red Hat OpenShift</a></h3>
+        <p>Strategic developer tooling platform for Docker orchestration.</p>
       </div>
 
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/artik/" target="_blank"><img src="../images/logo-extend-samsung@2x.jpg" style="width: 333px; height: 188px" alt="Samsung"></a>
+        <a href="<?php echo $rootPath; ?>/extend/artik/" target="_blank"><img src="../images/logo-extend-samsung@2x.jpg" style="height: 111px" alt="Samsung"></a>
         <h3><a href="<?php echo $rootPath; ?>/extend/artik/" target="_blank">Samsung ARTIK IDE</a></h3>
-        <p>IoT IDE to give ARTIK devs an identical cloud and desktop environment</p>
+        <p>IoT IDE that gives devs an identical cloud and desktop environment.</p>
       </div>
     </div> <!-- .row -->
 
     <div class="row">
+      <p>&nbsp;</p>
+      <br>
       <h3 class="col-sm-12">More Case Studies</h3>
 
       <ul class="col-md-12">
-        <li><a href="<?php echo $rootPath; ?>/extend/bitnami/">Bitnami integrated deverlop convtainers</a> with frameworks for Express, Laravel, Rails, and others</li>
+        <li><a href="<?php echo $rootPath; ?>/extend/sap/">The SAP Web IDE</a> uses Eclipse Che's workspace server to provision and manage all developer workspaces.</li>
+        <li><a href="<?php echo $rootPath; ?>/extend/bitnami/">Bitnami integrates developer convtainers</a> with frameworks for Express, Laravel, Rails, and others.</li>
       </ul>
 
     </div> <!-- .row -->
