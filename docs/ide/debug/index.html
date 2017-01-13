@@ -1,6 +1,7 @@
 
 
 
+
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
 
@@ -26,8 +27,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.2.1">
-  <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -40,6 +39,7 @@
 
 <body class="wrap">
   
+
 
 
 
@@ -107,6 +107,7 @@
 
 
 
+
   
   
   
@@ -160,6 +161,7 @@
 
 
 
+
   
   
   
@@ -210,6 +212,7 @@
     
     <optgroup label="USER GUIDE">
       
+
 
 
 
@@ -296,6 +299,7 @@
 
 
 
+
   
   
   
@@ -344,6 +348,7 @@
 
 
 
+
   
   
   
@@ -384,6 +389,7 @@
     
     <optgroup label="DEVELOPER GUIDE - IDE PLUGINS">
       
+
 
 
 
@@ -491,13 +497,25 @@
             </div>
           </div>
           
+<p>Debuggers are included in Che for:</p>
+<ul>
+  <li><a href="#java">Java</a></li>
+  <li><a href="#gdb">C/C++</a> (via GDB)</li>
+  <li><a href="#php">PHP</a> (via Zend debugger, zDebug and Z-Ray)</li>
+  <li><a href="#nodejs">Node.js</a> (via GDB)</li>
+</ul>
+
 <h1 id="java">Java</h1>
 <p>Java debugger is deployed with the workspace agent, i.e. runs in the workspace. It can connect to local processes (those running in a workspace) or remote ones.</p>
 
-<p>Breakpoints are set with a single click on a line number in the editor. You can set breakpoints before attaching a debugger:
-<img src="../../../docs/assets/imgs/breakpoint.png" alt="breakpoint.png" />
-In a Debug Dialog (<strong>Run &gt; Edit Debug Configurations…</strong>), choose if you want to attach to a process in a local workspace or a remote machine. If localhost is chosen, a drop down menu will show all ports that are exposed in a container. You may either choose an existing port or provide your own.
-<img src="../../../docs/assets/imgs/debug-configurations.png" alt="debug-configurations.png" /></p>
+<p>Breakpoints are set with a single click on a line number in the editor. You can set breakpoints before attaching a debugger:</p>
+
+<p><img src="../../../docs/assets/imgs/breakpoint.png" alt="breakpoint.png" /></p>
+
+<p>In a Debug Dialog (<strong>Run &gt; Edit Debug Configurations…</strong>), choose if you want to attach to a process in a local workspace or a remote machine. If localhost is chosen, a drop down menu will show all ports that are exposed in a container. You may either choose an existing port or provide your own.</p>
+
+<p><img src="../../../docs/assets/imgs/debug-configurations.png" alt="debug-configurations.png" /></p>
+
 <h2 id="java-console-apps">Java Console Apps</h2>
 
 <p>To debug console apps, pass debug arguments to JVM:</p>
@@ -512,6 +530,8 @@ In a Debug Dialog (<strong>Run &gt; Edit Debug Configurations…</strong>), choo
 </div>
 <p>You can add debug commands to CMD widget to permanently save them with the workspace config.</p>
 <h1 id="gdb">GDB</h1>
+<p>GDB can be used to debug <strong>C/C++</strong> and <strong>Node.js</strong> projects.</p>
+
 <h2 id="debugging-local-binary">Debugging Local Binary</h2>
 
 <p>Compile your app with <code class="highlighter-rouge">-g</code> argument, go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations &gt; GDB</code>. Create a new configuration, check <code class="highlighter-rouge">Debug local binary</code> box. By default, binary path is <code class="highlighter-rouge">${current.project.path/a.out}</code>. When the debugger attaches, this macro is translated into an absolute path to a currently selected project. <code class="highlighter-rouge">a.out</code> is the default binary name. If you have compiled binary with a different name, change it:
@@ -538,9 +558,9 @@ Set a breakpoint in code, go to <code class="highlighter-rouge">Run &gt; Debug &
 
 <h2 id="connect-to-gdb-server">Connect to GDB server</h2>
 
-<p>Go to <code class="highlighter-rouge">Run &gt; Debug Configurations &gt; Edit Debug Configurations</code> and enter host (localhost if gdbserver has been started in the same workspace environment), port and path to the binary file being debugged. By default, binary name is <code class="highlighter-rouge">a.out</code>. If you have compiled your binary with <code class="highlighter-rouge">-o</code> argument, you need to provide own custom binary name in a debug configuration.</p>
+<p>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> and enter host (localhost if gdbserver has been started in the same workspace environment), port and path to the binary file being debugged. By default, binary name is <code class="highlighter-rouge">a.out</code>. If you have compiled your binary with <code class="highlighter-rouge">-o</code> argument, you need to provide own custom binary name in a debug configuration.</p>
 
-<p>Save your configuration, choose it at <code class="highlighter-rouge">Run &gt; Debug Configuration</code> and attach the debugger, having previously set breakpoints in source files.</p>
+<p>Save your configuration, choose it at <code class="highlighter-rouge">Run &gt; Debug &gt; &lt;YourDebugConfiguration&gt;</code> and attach the debugger, having previously set breakpoints in source files.</p>
 
 <h3 id="connection-timeouts">Connection Timeouts</h3>
 
@@ -557,6 +577,194 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
 </code></pre>
 </div>
 
+<h1 id="php">PHP</h1>
+
+<p>The PHP and Zend stacks come with the Zend Debugger module installed and configured. Debugging both PHP CLI scripts and PHP web apps is supported.</p>
+
+<p>The debugging workflow involves the following steps:</p>
+
+<ol>
+  <li>Launch the Zend Debugger Client to start listening for new debug sessions.</li>
+  <li>Optionally set breakpoints in the PHP editor.</li>
+  <li>Trigger a debug session from the CLI script or the web app.</li>
+  <li>Use the Web IDE tooling to do the actual debugging.</li>
+</ol>
+
+<p><img src="../../../docs/assets/imgs/php-debugging.gif" alt="php-debugging.gif" /></p>
+
+<h2 id="starting-the-zend-debugger-client">Starting the Zend Debugger Client</h2>
+
+<p>Eclipse Che has the Zend Debugger Client integrated in the Web IDE. For launching the Zend Debugger Client:</p>
+
+<ol>
+  <li>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> from the main menu.</li>
+  <li>Create new <code class="highlighter-rouge">PHP</code> configuration.</li>
+  <li>Change any settings if necessary. The defaults are usually OK.</li>
+  <li>Click the <code class="highlighter-rouge">Debug</code> button.</li>
+</ol>
+
+<p><img src="../../../docs/assets/imgs/php-debug-configuration.png" alt="php-debug-configuration.png" /></p>
+
+<p>The successful launch of the Zend Debugger Client is noted with a notification message. From this moment on the Zend Debugger Client listens for new debug sessions initiated by the Zend Debugger module of the PHP engine.</p>
+
+<p>The Debug Configuration window allows the following configuration for the Zend Debugger Client:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Break at first line</code>. Determines whether to break the execution at the very first line, hit by the PHP interpreter. Enabled by default. It is useful to easily find the app’s entry point. You may want to switch this option off if you defined your own breakpoint and you are not interesting at breaking the execution at the first line.</li>
+  <li><code class="highlighter-rouge">Client host/IP</code>. The host/IP on which to bind the server socket for listening for new debug sessions. The default host is <code class="highlighter-rouge">localhost</code>. Changing it should be only necessary if the PHP engine is running in a different workspace machine or outside of the Che workspace at all.</li>
+  <li><code class="highlighter-rouge">Debug port</code>. The port on which to bind the server socket for listening for new debug sessions. The default port is <code class="highlighter-rouge">10137</code>. It should be rarely necessary to change it.</li>
+  <li><code class="highlighter-rouge">Use SSL encryption</code>. Whether to use SSL encryption for the debugging communication between the PHP engine and the Zend Debugger Client. Disabled by default.</li>
+</ul>
+
+<h2 id="debugging-php-cli-scripts">Debugging PHP CLI Scripts</h2>
+
+<p>PHP CLI scripts can be debugged by setting the <code class="highlighter-rouge">QUERY_STRING</code> environment variable when executing the PHP script. For example, to debug the <code class="highlighter-rouge">hello.php</code> script you should execute the following command in the Terminal:</p>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="nv">QUERY_STRING</span><span class="o">=</span><span class="s2">"start_debug=1&amp;debug_host=localhost&amp;debug_port=10137"</span> php hello.php
+</code></pre>
+</div>
+
+<p>Let’s dissect the value of the <code class="highlighter-rouge">QUERY_STRING</code>:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">start_debug=1</code> says the PHP engine that we want to trigger a debug session for this execution.</li>
+  <li><code class="highlighter-rouge">debug_host=localhost</code> says that the Zend Debugger Client runs on localhost (on the same host where the PHP engine runs).</li>
+  <li><code class="highlighter-rouge">debug_port=10137</code> says that the Zend Debugger Client listens on port 10137.</li>
+</ul>
+
+<p>For convenience the PHP and Zend stacks have the <code class="highlighter-rouge">debug php script</code> command. It will run the PHP script, which is currently opened in the editor, with the required <code class="highlighter-rouge">QUERY_STRING</code> preprended to the launch command. It is a handy way for easily debugging CLI script without the need to remember the exact <code class="highlighter-rouge">QUERY_STRING</code> variable.</p>
+
+<h2 id="debugging-php-web-apps">Debugging PHP Web Apps</h2>
+
+<p>Debugging web apps is done in a similar way. The value of the <code class="highlighter-rouge">QUERY_STRING</code> used for debugging CLI scripts must be added as a query string to the URL of the debugged web page. This can be done either manually or by using a browser toolbar/extension that does it automatically. Such browser extensions also make it easier to debug POST requests.</p>
+
+<h3 id="using-query-params-in-the-url">Using Query Params in the URL</h3>
+
+<p>The <code class="highlighter-rouge">?start_debug=1&amp;debug_host=localhost&amp;debug_port=10137</code> query string must be added to the URL. For example, to debug the <code class="highlighter-rouge">http://localhost:32810/web-php-simple/index.php</code> web page you should request the following URL in the browser:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://localhost:32810/web-php-simple/index.php?start_debug=1&amp;debug_host=localhost&amp;debug_port=10137
+</code></pre>
+</div>
+
+<h3 id="using-the-zdebug-extension-for-chrome">Using the zDebug Extension for Chrome</h3>
+
+<p>The <a href="https://chrome.google.com/webstore/detail/zdebug/gknbnafalimbhgkmichoadhmkaoingil">zDebug</a> extension can be used for easier triggering of debug sessions from the Chrome browser. The <a href="https://chrome.google.com/webstore/detail/zend-debugger-extension/aonajadpeeaijblinaeohfdmbgdpibba">Zend Debugger Extension</a> is another extension that does the same job.</p>
+
+<p>It is important to configure the Chrome extension properly before using it for debugging PHP apps running in a Che workspace:</p>
+
+<ol>
+  <li>Set <code class="highlighter-rouge">Debug Host</code> to <code class="highlighter-rouge">localhost</code> or <code class="highlighter-rouge">127.0.0.1</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Port</code> to <code class="highlighter-rouge">10137</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Local Copy</code> to <code class="highlighter-rouge">No</code>.</li>
+</ol>
+
+<p>Note that it is not the browser that opens the debug session to the Zend Debugger Client. This is done by the PHP engine that runs in the Che workspace. The browser just tells the PHP engine to do so. So the above settings are for the PHP engine (the Zend Debugger module in particular). Thus the <code class="highlighter-rouge">Debug Host</code> must be set to <code class="highlighter-rouge">localhost</code> and not the public host of the docker container running the Che workspace.</p>
+
+<p>In the end the zDebug settings should look like this:</p>
+
+<p><img src="../../../docs/assets/imgs/zdebug-settings.png" alt="zdebug-settings.png" /></p>
+
+<p>Now you are ready to trigger the debug session:</p>
+
+<ol>
+  <li>Open the web page to debug.</li>
+  <li>Click on the zDebug toolbar button.</li>
+  <li>Click on <code class="highlighter-rouge">This Page</code>.</li>
+</ol>
+
+<h3 id="using-the-zend-debugger-toolbar-for-firefox">Using the Zend Debugger Toolbar for Firefox</h3>
+
+<p>The <a href="https://addons.mozilla.org/firefox/addon/zend-debugger-toolbar/">Zend Debugger Toolbar for Firefox</a> can be used for easier triggering of debug sessions from the Firefox browser.</p>
+
+<p>After installing it, go to <code class="highlighter-rouge">Extra Stuff &gt; Setttings</code> to configure the toolbar:</p>
+
+<ol>
+  <li>Disable the <code class="highlighter-rouge">Debug Local Copy</code> option.</li>
+  <li>Switch the <code class="highlighter-rouge">Client/IDE Settings</code> to <code class="highlighter-rouge">Manual Settings</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Port</code> to <code class="highlighter-rouge">10137</code>.</li>
+  <li>Set <code class="highlighter-rouge">IP Address</code> to <code class="highlighter-rouge">127.0.0.1</code>.</li>
+</ol>
+
+<p>In the end the toolbar settings should look like this:</p>
+
+<p><img src="../../../docs/assets/imgs/zend-debugger-firefox-settings.png" alt="zend-debugger-firefox-settings.png" /></p>
+
+<p>Now you are ready to trigger the debug session:</p>
+
+<ol>
+  <li>Open the web page to debug.</li>
+  <li>Click on the <code class="highlighter-rouge">Debug</code> toolbar button.</li>
+</ol>
+
+<h3 id="using-z-ray">Using Z-Ray</h3>
+
+<p><a href="http://www.zend.com/en/products/server/z-ray">Z-Ray</a> is a productivity tool, part of <a href="http://www.zend.com/en/products/zend_server">Zend Server</a>, that is available in the Zend stack. Z-Ray requires no installation or configuraton. It is injected into the response coming from your PHP app and shown right in the browser you are using for development.</p>
+
+<p>Among other features, it also has the capability to trigger a debug session:</p>
+
+<ol>
+  <li>Click on the “bug” button.</li>
+  <li>Click on <code class="highlighter-rouge">Debug current page</code>.</li>
+</ol>
+
+<p><img src="../../../docs/assets/imgs/z-ray-debug.png" alt="z-ray-debug.png" /></p>
+
+<p>That’s all!</p>
+
+<h1 id="nodejs">NodeJS</h1>
+
+<p>The Node.js ready-to-go <a href="../../../docs/workspace/stacks/index.html">stack</a> comes with a Node.js debugger module installed and configured. The Dockerfile is located in the <a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/node/latest/Dockerfile">eclipse/che-dockerfiles</a> repository.</p>
+
+<p>The debugging workflow is:</p>
+
+<ol>
+  <li>Launch the Node.js debugger client to start a debug session</li>
+  <li>Create/Run command to generate a preview URL</li>
+  <li>Click the preview URL to interact with the app</li>
+  <li>Use the debugger panel to perform debug functions</li>
+</ol>
+
+<p>You can set breakpoints in the editor at any time by clicking on the line number.</p>
+
+<h2 id="starting-the-nodejs-debugger-client">Starting the Node.js Debugger Client</h2>
+
+<p>Eclipse Che has the Node.js client integrated in the web IDE. to launch the debugger client:</p>
+
+<ol>
+  <li>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> from the main menu</li>
+  <li>Create a new <code class="highlighter-rouge">NODEJS</code> configuration</li>
+  <li>Change any settings if necessary. The defaults are usually OK</li>
+  <li>Click the <code class="highlighter-rouge">Debug</code> button</li>
+  <li>The debugger will break at first line of code</li>
+</ol>
+
+<p><img src="../../../docs/assets/imgs/debug-nodejs-config.png" alt="debug-nodejs-config.png" /></p>
+
+<h3 id="creating-a-command-to-view-the-preview-url">Creating a Command to View the Preview URL</h3>
+
+<p>Eclipse Che’s workspaces have machine(s) that are docker container(s). Docker container’s exposed ports are given an emphemerial port. The preview url provides an easy way convert an internal port to it’s external emphemerial port counter part.</p>
+
+<ol>
+  <li>Add a command <code class="highlighter-rouge">Run &gt; Edit Commands</code></li>
+  <li>Give the command a name like “View Preview URL”</li>
+  <li>Add a fictitious command <code class="highlighter-rouge">echo</code> for required command line</li>
+  <li>Provide the preview URL for your app such as <code class="highlighter-rouge">http://${server.port.&lt;port&gt;}/</code></li>
+</ol>
+
+<h3 id="using-the-nodejs-debugger">Using the Node.js Debugger</h3>
+
+<ol>
+  <li>Start the debugger <code class="highlighter-rouge">Run &gt; debug &gt; &lt;config-name&gt;</code></li>
+  <li>Click the continue button until server is running</li>
+  <li>Add breakpoints if needed</li>
+  <li>Run the preview URL command (see above)</li>
+  <li>Click the preview URL to open web app in another tab</li>
+  <li>Go back to IDE tab</li>
+  <li>Use the Web IDE tooling to do the actual debugging</li>
+</ol>
+
+<p><img src="../../../docs/assets/imgs/nodejs-debugger-walkthru.gif" alt="nodejs-debugger-walkthru.gif" /></p>
+
         </article>
       </div>
 
@@ -567,6 +775,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     <h4>SETUP</h4>
     
     
+
 
 
 <ul>
@@ -708,6 +917,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     
 
 
+
 <ul>
 
   
@@ -845,6 +1055,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     <h4>USER GUIDE</h4>
     
     
+
 
 
 <ul>
@@ -1070,6 +1281,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     
 
 
+
 <ul>
 
   
@@ -1195,6 +1407,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     
 
 
+
 <ul>
 
   
@@ -1304,6 +1517,7 @@ RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span>
     <h4>DEVELOPER GUIDE - IDE PLUGINS</h4>
     
     
+
 
 
 <ul>

@@ -1,6 +1,7 @@
 
 
 
+
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
 
@@ -26,8 +27,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.2.1">
-  <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -40,6 +39,7 @@
 
 <body class="wrap">
   
+
 
 
 
@@ -107,6 +107,7 @@
 
 
 
+
   
   
   
@@ -160,6 +161,7 @@
 
 
 
+
   
   
   
@@ -210,6 +212,7 @@
     
     <optgroup label="USER GUIDE">
       
+
 
 
 
@@ -296,6 +299,7 @@
 
 
 
+
   
   
   
@@ -344,6 +348,7 @@
 
 
 
+
   
   
   
@@ -384,6 +389,7 @@
     
     <optgroup label="DEVELOPER GUIDE - IDE PLUGINS">
       
+
 
 
 
@@ -491,88 +497,73 @@
             </div>
           </div>
           
-<p>Workspaces are configured with an SSH agent, which runs an SSH daemon within your workspace runtime. You can connect to your workspace on the command line and get root access to the runtime (similar to what the Web terminal provides) from other machines. You can optionally disable the SSH agent for your workspace from within the dashboard.</p>
+<p>Workspaces are configured with an SSH <a href="../../../docs/workspace/agents/index.html#adding-agents-to-a-machine">agent</a>, which runs an SSH daemon within your workspace runtime. You can connect to your workspace on the command line and get root access to the runtime (similar to what the Web terminal provides) from other machines. You can optionally disable the SSH agent for your workspace from within the dashboard.</p>
 
 <h1 id="public--private-key-generation">Public / Private Key Generation</h1>
-<p>If your workspace has the SSH agent activated in the dashboard, then Che runs an SSH daemon within the machines that are part of your workspace. The SSH agent is activated by default with all new workspaces and you can manually disable it within the dashboard. If your workspace is powered by Docker Compose, then the SSH agent is deployed into every container that makes up your compose services. You can optionally remove the agent from selected machines of your compose services from within the dashboard.</p>
+<p>If your workspace has the SSH <a href="../../../docs/workspace/agents/index.html#adding-agents-to-a-machine">agent</a> activated in the <a href="../../../docs/workspace/machines/index.html#dashboard-machine-information">dashboard</a>, then Che runs an SSH daemon within the machines that are part of your workspace. The SSH agent is activated by default with all new workspaces and you can manually disable it within the dashboard. If your workspace is powered by Docker Compose, then the SSH agent is deployed into every container that makes up your compose services. You can optionally remove the SSH <a href="../../../docs/workspace/agents/index.html#adding-agents-to-a-machine">agent</a> from selected machines of your compose services from within the <a href="../../../docs/workspace/machines/index.html#dashboard-machine-information">dashboard</a>.</p>
 
-<p>Each new workspace has a default key-pair generated for it. The private key for the workspace is inserted into each machine and they will all share the same public key. You can generate a new key-pair in the dashboard, or remove the default one to be replaced with yours.</p>
+<p>Each new workspace has a default key-pair generated for it. The private key is inserted into each machine of a workspace and they will all share the same public key. You can generate a new key-pair in the dashboard, or remove the default one to be replaced with yours.
+<img src="../../../docs/assets/imgs/ssh-delete-create-keypair.gif" alt="ssh-delete-create-keypair.gif" /></p>
 
-<p>Eclipse Che does not have any user authentication, so any client can connect to the Che server REST API and then request the public key for the workspace. In Codenvy, API clients must be authenticated with appropriate permissions before they can request the public key for a workspace.</p>
+<p>Eclipse Che does not have any user authentication, so any client can connect to the Che server REST API and then request the private key for the workspace. In Codenvy, API clients must be authenticated with appropriate permissions before they can request the public key for a workspace.</p>
 
-<p>We then provide various client utilities (authored in Docker!) for connecting to a workspace using SSH.</p>
+<p>We provide an optional ssh client built into <a href="#connect">cli</a> for connecting to a workspace using SSH.</p>
 
 <h1 id="list-workspaces">List Workspaces</h1>
 <p>You can get a list of workspaces in a Che server that have an SSH agent deployed. These are the workspaces that you can SSH into.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>che action list-workspaces
-NAME      ID                   STATUS
-florent   workspace93kd748390  STOPPED
-mysql     workspacewia89343k4  RUNNING
 
-<span class="c"># Options</span>
---url &lt;url&gt;           <span class="c"># Che or Codenvy host where workspaces are running</span>
---user &lt;email&gt;        <span class="c"># Codenvy user name</span>
---password &lt;password&gt; <span class="c"># Codenvy password\</span>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>docker run -ti &lt;volume-mounts&gt; eclipse/che action list-workspaces <span class="o">[</span>parameters] 
+
+NAME                      ID                         STATUS
+wksp-v4l8<span class="o">(</span>No Sync Agent<span class="o">)</span>  workspaceolhvwg1bjuepyfar  RUNNING
+
+<span class="c"># Parameters</span>
+    --url &lt;url&gt;           <span class="c"># Che host where workspaces are running</span>
+
 </code></pre>
 </div>
 
 <h1 id="connect">Connect</h1>
-<p>You can connect to your workspace using our Docker containers, the Che CLI, or your off-the-shelf SSH client such as <code class="highlighter-rouge">ssh</code> on Linux/Mac or <code class="highlighter-rouge">putty</code> on Windows.</p>
+<p>You can connect to your workspace using our Docker CLI container or your off-the-shelf SSH client such as <code class="highlighter-rouge">ssh</code> on Linux/Mac or <code class="highlighter-rouge">putty</code> on Windows.</p>
 
 <p>One nice aspect of our SSH capabilities is that they are all done inside of a Docker container, letting any OS connect to a Che workspace using the same sytnax without the user having to install specialized tools for each OS.</p>
 
-<h3 id="ssh-with-che-cli">SSH With Che CLI</h3>
-<p>If you have the Che CLI installed, you can SSH into any workspace.</p>
+<h3 id="ssh-with-cli">SSH With CLI</h3>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Connect to the machine in a workspace that is designated as the dev machine.</span>
 <span class="c"># Each workspace always has one machine that is a dev machine with a dev agent on it.</span>
-che ssh &lt;ws-name&gt;
-che ssh &lt;ws-id&gt;
+<span class="gp">$ </span>docker run -ti &lt;volume-mounts&gt; eclipse/che action ssh &lt;workspace&gt; <span class="o">[</span>machine-name] <span class="o">[</span>parameters] 
 
-<span class="c"># If in Codenvy, you can optionally append a user namespace to a workspace name.</span>
-<span class="c"># For example, &lt;namespace:ws-name&gt; such as "florent:first-workspace".</span>
+<span class="c"># Arguments</span>
+    workspace             <span class="c"># Workspace name or id.  </span>
+    machine-name          <span class="c"># Connect to a secondary machine in the workspace(docker compose)</span>
+<span class="c"># Parameters</span>
+    --url &lt;url&gt;           <span class="c"># Che host where workspaces are running</span>
 
-<span class="c"># Connect to a secondary machine in the workspace if you started multiple machines</span>
-<span class="c"># using Docker compose.</span>
-che ssh &lt;ws-name&gt; <span class="o">[</span>machine-name]
-che ssh &lt;ws-id&gt; <span class="o">[</span>machine-name]
-
-<span class="c"># Options</span>
---url &lt;url&gt;           <span class="c"># Che or Codenvy host where workspaces are running</span>
---user &lt;email&gt;        <span class="c"># Codenvy user name</span>
---password &lt;password&gt; <span class="c"># Codenvy password</span>
 </code></pre>
 </div>
-<p>The CLI is aware of the locally running Che server based upon the configuration that you have provided it within your environment variables. If your Che server only has a single workspace, it will connect to that workspace. If your Che server does not have any workspaces, it will present an error. If your Che server has two or more running workspaces, it will display a list of available workspaces that you can connect to.</p>
 
-<p>The same is true for the machines - if there is a single machine, it will choose a single one. If there are multiple machines, it will present for you a list of different machines that you can connect to.
-<img src="../../../docs/assets/imgs/8f99a700-a696-11e6-8d8a-414e38ec26b2.gif" alt="8f99a700-a696-11e6-8d8a-414e38ec26b2.gif" /></p>
-<h3 id="ssh-with-containers">SSH With Containers</h3>
-<p>We provide a utiltiy <code class="highlighter-rouge">eclipse/che-action</code> which performs various actions against a Che server. One of the actions is to SSH. In Eclipse Che, this utility auto-discovers the right key to use by querying the Che server. In Codenvy, you will need to provide the key or authenticate in advance.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>che action workspace-ssh &lt;ws-name&gt;
-che action workspace-ssh &lt;ws-id&gt;
-
-<span class="gp">[-s,--url]=&lt;value&gt;      </span>Defines the url of Che or Codenvy to connect to
-<span class="gp">[-u,--user]=&lt;value&gt;     </span>Defines the Codenvy user name to authenticate with
-<span class="gp">[-w,--password]=&lt;value&gt; </span>Defines the Codenvy password to authenticate with<span class="se">\</span>
-</code></pre>
-</div>
 <h3 id="ssh-with-native-tools">SSH With Native Tools</h3>
-<p>If you want to use your native SSH tools to connect to a workspace, you can get the connectivity information that you need to use with one of our utilities. You can then pass this information into <code class="highlighter-rouge">ssh</code> or <code class="highlighter-rouge">putty</code> to make a direct connection.</p>
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>$ che action get-ssh-data &lt;ws-name&gt;
-$ che action get-ssh-data &lt;ws-id&gt;
-SSH_IP=192.168.65.2
-SSH_PORT=32900
-SSH_USER=user
-SSH_PRIVATE_KEY='
+<p>If you want to use your native SSH tools to connect to a workspace, you can get the connectivity information that you need to use through the dashboard as described in <a href="#public--private-key-generation">Public/Private Key Generation</a> section on this page or using CLI described below. You can then pass this information into <code class="highlighter-rouge">ssh</code> or <code class="highlighter-rouge">putty</code> to make a direct connection.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Connect to the machine in a workspace that is designated as the dev machine.</span>
+<span class="c"># Each workspace always has one machine that is a dev machine with a dev agent on it.</span>
+<span class="gp">$ </span>docker run -ti &lt;volume-mounts&gt; eclipse/che action get-ssh-data &lt;workspace&gt; <span class="o">[</span>machine-name] <span class="o">[</span>parameters]
+<span class="nv">SSH_IP</span><span class="o">=</span>192.168.65.2
+<span class="nv">SSH_PORT</span><span class="o">=</span>32900
+<span class="nv">SSH_USER</span><span class="o">=</span>user
+<span class="nv">SSH_PRIVATE_KEY</span><span class="o">=</span><span class="s1">'
 -----BEGIN RSA PRIVATE KEY-----
 ws-private-key-listed-here
 -----END RSA PRIVATE KEY-----
+'</span>
 
-# Options
---url &lt;url&gt;           # Che or Codenvy host where workspaces are running
---user &lt;email&gt;        # Codenvy user name
---password &lt;password&gt; # Codenvy password\
+<span class="c"># Arguments</span>
+    workspace             <span class="c"># Workspace name or id.               </span>
+    machine-name          <span class="c"># Connect to a secondary machine in the workspace(docker compose)</span>
+<span class="c"># Parameters</span>
+    --url &lt;url&gt;           <span class="c"># Che host where workspaces are running</span>
+
 </code></pre>
 </div>
 
@@ -586,6 +577,7 @@ ws-private-key-listed-here
     <h4>SETUP</h4>
     
     
+
 
 
 <ul>
@@ -727,6 +719,7 @@ ws-private-key-listed-here
     
 
 
+
 <ul>
 
   
@@ -864,6 +857,7 @@ ws-private-key-listed-here
     <h4>USER GUIDE</h4>
     
     
+
 
 
 <ul>
@@ -1089,6 +1083,7 @@ ws-private-key-listed-here
     
 
 
+
 <ul>
 
   
@@ -1214,6 +1209,7 @@ ws-private-key-listed-here
     
 
 
+
 <ul>
 
   
@@ -1323,6 +1319,7 @@ ws-private-key-listed-here
     <h4>DEVELOPER GUIDE - IDE PLUGINS</h4>
     
     
+
 
 
 <ul>

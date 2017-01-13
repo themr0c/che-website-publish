@@ -1,6 +1,7 @@
 
 
 
+
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
 
@@ -26,8 +27,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.2.1">
-  <link type="application/atom+xml" rel="alternate" href="https://www.eclipse.org/che//feed.xml" title="Eclipse Che Docs" />
-  <link rel="alternate" type="application/atom+xml" title="Recent commits to Jekyll’s master branch" href="https://github.com/codenvy/che-docs//commits/master.atom">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -40,6 +39,7 @@
 
 <body class="wrap">
   
+
 
 
 
@@ -107,6 +107,7 @@
 
 
 
+
   
   
   
@@ -160,6 +161,7 @@
 
 
 
+
   
   
   
@@ -210,6 +212,7 @@
     
     <optgroup label="USER GUIDE">
       
+
 
 
 
@@ -296,6 +299,7 @@
 
 
 
+
   
   
   
@@ -344,6 +348,7 @@
 
 
 
+
   
   
   
@@ -384,6 +389,7 @@
     
     <optgroup label="DEVELOPER GUIDE - IDE PLUGINS">
       
+
 
 
 
@@ -513,18 +519,18 @@
 <p>We put a lot of effort into our docs. Please add suggestions on areas for improvement with a new <a href="https://github.com/codenvy/che-docs/pulls">pull request</a> or <a href="https://github.com/codenvy/che-docs/issues">issue</a>.</p>
 
 <h1 id="quick-start">Quick Start</h1>
-<p>On any computer with Docker 1.11+ installed:</p>
+<p>On any computer with Docker 1.11+ installed (Docker 1.12.5+ is recommended):</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
-docker run -it eclipse/che-cli start
+docker run -it eclipse/che start
 
 <span class="c"># Or, full start syntax where &lt;path&gt; is a local directory</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che-cli start
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che start
 </code></pre>
 </div>
 
 <h1 id="operate-che">Operate Che</h1>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Start Eclipse Che with user data saved on Windows in c:\tmp</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v /c/tmp:/data eclipse/che-cli start
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v /c/tmp:/data eclipse/che start
 INFO: <span class="o">(</span>che cli<span class="o">)</span>: Loading cli...
 INFO: <span class="o">(</span>che cli<span class="o">)</span>: Checking registry <span class="k">for </span>version <span class="s1">'nightly'</span> images
 INFO: <span class="o">(</span>che config<span class="o">)</span>: Generating che configuration...
@@ -541,22 +547,22 @@ INFO: <span class="o">(</span>che start<span class="o">)</span>: Use: http://&lt
 INFO: <span class="o">(</span>che start<span class="o">)</span>: API: http://&lt;your-ip&gt;:8080/swagger
 
 <span class="c"># Stop Che</span>
-docker run &lt;docker-goodness&gt; eclipse/che-cli stop
+docker run &lt;DOCKER_OPTIONS&gt; eclipse/che stop
 
 <span class="c"># Restart Che</span>
-docker run &lt;docker-goodness&gt; eclipse/che-cli restart
+docker run &lt;DOCKER_OPTIONS&gt; eclipse/che restart
 
 <span class="c"># Run a specific version of Che</span>
-docker run &lt;docker-goodness&gt; eclipse/che-cli:&lt;version&gt; start
+docker run &lt;DOCKER_OPTIONS&gt; eclipse/che:&lt;version&gt; start
 
 <span class="c"># Get help</span>
-docker run eclipse/che-cli
+docker run eclipse/che
 
-<span class="c"># If boot2docker on Windows (rare), mount a subdir of `%userprofile%` to `:/data`. For example:</span>
-docker run &lt;docker-goodness&gt; -v /c/Users/tyler/che:/data eclipse/che-cli start
+<span class="c"># If boot2docker on Windows, mount a subdir of `%userprofile%` to `:/data`. For example:</span>
+docker run &lt;DOCKER_OPTIONS&gt; -v /c/Users/tyler/che:/data eclipse/che start
 
 <span class="c"># If Che will be accessed from other machines add your server's external IP</span>
-docker run &lt;docker-goodness&gt; -e <span class="nv">CHE_HOST</span><span class="o">=</span>&lt;your-ip&gt; eclipse/che-cli start
+docker run &lt;DOCKER_OPTIONS&gt; -e <span class="nv">CHE_HOST</span><span class="o">=</span>&lt;your-ip&gt; eclipse/che start
 </code></pre>
 </div>
 
@@ -574,45 +580,46 @@ docker run &lt;docker-goodness&gt; -e <span class="nv">CHE_HOST</span><span clas
 
 <h1 id="syntax">Syntax</h1>
 <div class="highlighter-rouge"><pre class="highlight"><code>USAGE:
- docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; [COMMAND]
+  docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; [COMMAND]
 
 MANDATORY DOCKER PARAMETERS:
- -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
+  -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
 
 OPTIONAL DOCKER PARAMETERS:
- -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
- -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
- -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
- -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
- -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries
- -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
- -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimizing sync command resides
+  -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
+  -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
+  -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
+  -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
+  -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries
+  -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
+  -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimizing sync command resides
+  -v &lt;LOCAL_PATH&gt;:/chedir              Soure repository to convert into workspace with Chedir utility
 
 COMMANDS:
- action &lt;action-name&gt;                 Start action on che instance
- backup                               Backups che configuration and data to /data/backup volume mount
- config                               Generates a che config from vars; run on any start / restart
- destroy                              Stops services, and deletes che instance data
- dir &lt;path&gt; &lt;command&gt;                 Use Chefile feature in the directory &lt;path&gt;
- download                             Pulls Docker images for the current che version
- help                                 This message
- info                                 Displays info about che and the CLI
- init                                 Initializes a directory with a che install
- offline                              Saves che Docker images into TAR files for offline install
- restart                              Restart che services
- restore                              Restores che configuration and data from /data/backup mount
- rmi                                  Removes the Docker images for &lt;version&gt;, forcing a repull
- ssh &lt;wksp-name&gt; [machine-name]       SSH to a workspace if SSH agent enabled
- start                                Starts che services
- stop                                 Stops che services
- sync &lt;wksp-name&gt;                     Synchronize workspace with current working directory
- test &lt;test-name&gt;                     Start test on che instance
- upgrade                              Upgrades che from one version to another with migrations and backups
- version                              Installed version and upgrade paths
+  action &lt;action-name&gt;                 Start action on che instance
+  backup                               Backups che configuration and data to /data/backup volume mount
+  config                               Generates a che config from vars; run on any start / restart
+  destroy                              Stops services, and deletes che instance data
+  dir &lt;command&gt;                        Use Chedir and Chefile in the directory mounted to :/chedir
+  download                             Pulls Docker images for the current che version
+  help                                 This message
+  info                                 Displays info about che and the CLI
+  init                                 Initializes a directory with a che install
+  offline                              Saves che Docker images into TAR files for offline install
+  restart                              Restart che services
+  restore                              Restores che configuration and data from /data/backup mount
+  rmi                                  Removes the Docker images for &lt;version&gt;, forcing a repull
+  ssh &lt;wksp-name&gt; [machine-name]       SSH to a workspace if SSH agent enabled
+  start                                Starts che services
+  stop                                 Stops che services
+  sync &lt;wksp-name&gt;                     Synchronize workspace with local directory mounted to :/sync
+  test &lt;test-name&gt;                     Start test on che instance
+  upgrade                              Upgrades che from one version to another with migrations and backups
+  version                              Installed version and upgrade paths
 
 GLOBAL COMMAND OPTIONS:
- --fast                               Skips networking and version checks (saves 5 secs during bootstrap)
- --debug                              Enable debugging of che server
+  --fast                               Skips networking and version checks (saves 5 secs during bootstrap)
+  --debug                              Enable debugging of che server
 </code></pre>
 </div>
 
@@ -630,7 +637,7 @@ GLOBAL COMMAND OPTIONS:
 
 <h3 id="software">Software</h3>
 <ul>
-  <li>Docker 1.11+</li>
+  <li>Docker 1.12.5+ recommended, Docker 1.11+ minimum</li>
 </ul>
 
 <p>The Che CLI - a Docker image - manages the other Docker images and supporting utilities that Che uses during its configuration or operations phases. The CLI also provides utilities for downloading an offline bundle to run Che while disconnected from the network.</p>
@@ -657,7 +664,7 @@ docker run hello-world
 <p>You can install Che while connected to a network or offline, disconnected from the Internet. If you perform an offline intallation, you need to first download a Che assembly while in a DMZ with a network connection to DockerHub.</p>
 
 <h1 id="versions">Versions</h1>
-<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code class="highlighter-rouge">eclipse/che-cli:5.0.0-M7</code>. You can see all versions available by running <code class="highlighter-rouge">docker run eclipse/che-cli version</code> or by <a href="https://hub.docker.com/r/eclipse/che-cli/tags/">browsing DockerHub</a>.</p>
+<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code class="highlighter-rouge">eclipse/che:5.0.0-M7</code>. You can see all versions available by running <code class="highlighter-rouge">docker run eclipse/che version</code> or by <a href="https://hub.docker.com/r/eclipse/che/tags/">browsing DockerHub</a>.</p>
 
 <p>We maintain “redirection” labels which reference special versions of Che:</p>
 
@@ -684,13 +691,13 @@ docker run hello-world
   </tbody>
 </table>
 
-<p>The software referenced by these labels can change over time. Since Docker will cache images locally, the <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code> image that you are running locally may not be current with the one cached on DockerHub. Additionally, the <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code> image that you are running references a manifest of Docker images that Che depends upon, which can also change if you are using these special redirection tags.</p>
+<p>The software referenced by these labels can change over time. Since Docker will cache images locally, the <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code> image that you are running locally may not be current with the one cached on DockerHub. Additionally, the <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code> image that you are running references a manifest of Docker images that Che depends upon, which can also change if you are using these special redirection tags.</p>
 
 <p>In the case of ‘latest’ images, when you initialize an installation using the CLI, we encode a <code class="highlighter-rouge">/instance/che.ver</code> file with the numbered version that latest references. If you begin using a CLI version that mismatches what was installed, you will be presented with an error.</p>
 
 <p>To avoid issues that can appear from using ‘nightly’ or ‘latest’ redirections, you may:</p>
 <ol>
-  <li>Verify that you have the most recent version with <code class="highlighter-rouge">docker pull eclipse/che-cli:&lt;version&gt;</code>.</li>
+  <li>Verify that you have the most recent version with <code class="highlighter-rouge">docker pull eclipse/che:&lt;version&gt;</code>.</li>
   <li>When running the CLI, commands that use other Docker images have an optional <code class="highlighter-rouge">--pull</code> and <code class="highlighter-rouge">--force</code> command line option <a href="https://hub.docker.com/r/eclipse/che/">which will instruct the CLI to check DockerHub</a> for a newer version and pull it down. Using these flags will slow down performance, but ensures that your local cache is current.</li>
 </ol>
 
@@ -707,18 +714,18 @@ docker run hello-world
                     -v &lt;local-path&gt;:/data
                     -v &lt;a-different-path&gt;:/data/instance
                     -v &lt;another-path&gt;:/data/backup
-                       eclipse/che-cli:&lt;version&gt; [COMMAND]    
+                       eclipse/che:&lt;version&gt; [COMMAND]    
 </code></pre>
 </div>
 
 <h1 id="hosting">Hosting</h1>
-<p>If you are hosting Che at a cloud service like DigitalOcean, <code class="highlighter-rouge">CHE_HOST</code> must be set to the server’s IP address or its DNS.</p>
+<p>If you are hosting Che at a cloud service like DigitalOcean, or <a href="../../../docs/setup/bitnami/index.html">Bitnami</a>  <code class="highlighter-rouge">CHE_HOST</code> must be set to the server’s IP address or its DNS.</p>
 
 <p>We will attempt to auto-set <code class="highlighter-rouge">CHE_HOST</code> by running an internal utility <code class="highlighter-rouge">docker run --net=host eclipse/che-ip:nightly</code>. This approach is not fool-proof. This utility is usually accurate on desktops, but usually fails on hosted servers. You can explicitly set this value to the IP address of your server:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
                     -v &lt;local-path&gt;:/data
                     -e CHE_HOST=&lt;your-ip-or-host&gt;
-                       eclipse/che-cli:&lt;version&gt; [COMMAND]
+                       eclipse/che:&lt;version&gt; [COMMAND]
 </code></pre>
 </div>
 
@@ -752,34 +759,34 @@ CHE_NO_PROXY_FOR_WORKSPACES=localhost,127.0.0.1,&lt;YOUR_CHE_HOST&gt;
 
 <h3 id="save-che-images">1. Save Che Images</h3>
 <p>While connected to the Internet, download Che’s Docker images:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run &lt;docker-goodness&gt; eclipse/che-cli:&lt;version&gt; offline
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run &lt;docker-goodness&gt; eclipse/che:&lt;version&gt; offline
 </code></pre>
 </div>
 <p>The CLI will download images and save them to <code class="highlighter-rouge">/backup/*.tar</code> with each image saved as its own file. You can save these files to a differnet location by volume mounting a local folder to <code class="highlighter-rouge">:/data/backup</code>. The version tag of the CLI Docker image will be used to determine which versions of dependent images to download. There is about 1GB of data that will be saved.</p>
 
-<p>The default execution will download none of the optional stack images, which are needed to launch workspaces of a particular type. There are a few dozen stacks for different programming languages and some of them are over 1GB in size. It is unlikely that your users will need all of the stacks, so you do not need to download all of them. You can get a list of available stack images by running <code class="highlighter-rouge">eclipse/che-cli offline --list</code>. You can download a specific stack by running <code class="highlighter-rouge">eclipse/che-cli offline --image:&lt;image-name&gt;</code> and the <code class="highlighter-rouge">--image</code> flag can be repeatedly used on a single command line.</p>
+<p>The default execution will download none of the optional stack images, which are needed to launch workspaces of a particular type. There are a few dozen stacks for different programming languages and some of them are over 1GB in size. It is unlikely that your users will need all of the stacks, so you do not need to download all of them. You can get a list of available stack images by running <code class="highlighter-rouge">eclipse/che offline --list</code>. You can download a specific stack by running <code class="highlighter-rouge">eclipse/che offline --image:&lt;image-name&gt;</code> and the <code class="highlighter-rouge">--image</code> flag can be repeatedly used on a single command line.</p>
 
 <h3 id="start-che-in-offline-mode">2. Start Che In Offline Mode</h3>
 <p>Place the TAR files into a folder in the offline computer. If the files are in placed in a folder named <code class="highlighter-rouge">/tmp/offline</code>, you can run Che in offline mode with:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Load the CLI</span>
-docker load &lt; /tmp/offline/eclipse_che-cli:&lt;version&gt;.tar
+docker load &lt; /tmp/offline/eclipse_che:&lt;version&gt;.tar
 
 <span class="c"># Start Che in offline mode</span>
-docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che-cli:&lt;version&gt; start --offline
+docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt;version&gt; start --offline
 </code></pre>
 </div>
-<p>The <code class="highlighter-rouge">--offline</code> parameter instructs the Che CLI to load all of the TAR files located in the folder mounted to <code class="highlighter-rouge">/data/backup</code>. These images will then be used instead of routing out to the Internet to check for DockerHub. The preboot sequence takes place before any CLI functions make use of Docker. The <code class="highlighter-rouge">eclipse/che-cli start</code>, <code class="highlighter-rouge">eclipse/che-cli download</code>, and <code class="highlighter-rouge">eclipse/che-cli init</code> commands support <code class="highlighter-rouge">--offline</code> mode which triggers this preboot seequence.</p>
+<p>The <code class="highlighter-rouge">--offline</code> parameter instructs the Che CLI to load all of the TAR files located in the folder mounted to <code class="highlighter-rouge">/data/backup</code>. These images will then be used instead of routing out to the Internet to check for DockerHub. The preboot sequence takes place before any CLI functions make use of Docker. The <code class="highlighter-rouge">eclipse/che start</code>, <code class="highlighter-rouge">eclipse/che download</code>, and <code class="highlighter-rouge">eclipse/che init</code> commands support <code class="highlighter-rouge">--offline</code> mode which triggers this preboot sequence.</p>
 
 <h1 id="uninstall">Uninstall</h1>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Remove your Che configuration and destroy user projects and database</span>
-docker run eclipse/che-cli:&lt;version&gt; destroy <span class="o">[</span>--quiet|--cli]
+docker run eclipse/che:&lt;version&gt; destroy <span class="o">[</span>--quiet|--cli]
 
 <span class="c"># Deletes Che's images from your Docker registry</span>
-docker run eclipse/che-cli:&lt;version&gt; rmi
+docker run eclipse/che:&lt;version&gt; rmi
 
 <span class="c"># Delete the Che CLI</span>
-docker rmi -f eclipse/che-cli
+docker rmi -f eclipse/che
 </code></pre>
 </div>
 
@@ -799,6 +806,7 @@ docker rmi -f eclipse/che-cli
     <h4>SETUP</h4>
     
     
+
 
 
 <ul>
@@ -940,6 +948,7 @@ docker rmi -f eclipse/che-cli
     
 
 
+
 <ul>
 
   
@@ -1077,6 +1086,7 @@ docker rmi -f eclipse/che-cli
     <h4>USER GUIDE</h4>
     
     
+
 
 
 <ul>
@@ -1302,6 +1312,7 @@ docker rmi -f eclipse/che-cli
     
 
 
+
 <ul>
 
   
@@ -1427,6 +1438,7 @@ docker rmi -f eclipse/che-cli
     
 
 
+
 <ul>
 
   
@@ -1536,6 +1548,7 @@ docker rmi -f eclipse/che-cli
     <h4>DEVELOPER GUIDE - IDE PLUGINS</h4>
     
     
+
 
 
 <ul>
