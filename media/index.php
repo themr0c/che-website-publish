@@ -29,7 +29,7 @@
   <tr class="item">
       <td><img src="../images/media/heise.png" alt=""></td>
       <td>
-        <h3>Eclipse Che 5.0 verwendet das Language Server Protocol</h3>
+        <h3>Eclipse Che 5.0 ist fertig</h3>
         <p class="loc">January 13th, 2017</p>
         <p class="desc">German: Die Entwicklerplattform bekommt ein neues CLI und verwendet das Language Server Protocol. Außerdem können Workspaces nun mehrere Container enthalten.....</p>
         <a href="https://m.heise.de/developer/meldung/Eclipse-Che-5-0-ist-fertig-3595147.html" target="_blank">Read More</a>
