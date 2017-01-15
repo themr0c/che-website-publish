@@ -128,21 +128,19 @@
     <h2>Feedback <a href="https://twitter.com/eclipse_che" target="_blank">@eclipse_che</a></h2>
 
     <ul>
+      <li><span><i class="fa fa-twitter"></i> @zepag</span> Yet another incredible release of Eclipse CHE, with Docker images based on CentOS available!</li>
+      <li><span><i class="fa fa-twitter"></i> @mmilinkov</span> "docker run eclipse/che" That is one damn cool way to install an IDE! Congrats to the @eclipse_che team!</li>
       <li><span><i class="fa fa-twitter"></i> @ciberado</span> @eclipse_che is potentially the greatest innovation in tools since Maven.</li>
       <li><span><i class="fa fa-twitter"></i> @monkchips</span> @eclipse_che developer workspace server - what kind of witchcraft is this?</li>
       <li><span><i class="fa fa-twitter"></i> @smithkenny</span> There is some seriously disruptive #Devops technology coming with #Eclipse Che. Solves probs with dev workstations &amp; workspaces.</li>
       <li><span><i class="fa fa-twitter"></i> @puffybsd</span> The stuff eclipse che is doing, particularly workspace server and language server protocol, is seriously cool.</li>
       <li><span><i class="fa fa-twitter"></i> @mogreau</span> Contribute to an open source project in less than 10 minutes with @eclipse_che!</li>
       <li><span><i class="fa fa-twitter"></i> @kevinhooke</span> Moving containerized apps from dev in  Eclipse Che, staging in Ansible container, to prod in OpenShift Enterprise #RedHat #DevNation #yam!</li>
-
       <li><span><i class="fa fa-twitter"></i> @jack-y</span> I develop micro services in Java. @eclispe_che saves my life - I can work on my code out of my office.</li>
       <li><span><i class="fa fa-twitter"></i> @CarlesZ</span> Developers of the world, a big applause!!!</li>
-      <li><span><i class="fa fa-twitter"></i> @kaloyanraev</span> Hooray! Feeling like 10 years ago when I got my very first patch in #Eclipse WTP.</li>
-      <li><span><i class="fa fa-twitter"></i> @ejuliot</span> Several years ago, there were competitors. Now, @eclipse_che and Orion are working together. Great collaboration in the open.</li>
       <li><span><i class="fa fa-twitter"></i> @nilsbundi</span> PS: Your product is pretty awesome and I never want to switch back to desktop Eclipse.</li>
       <li><span><i class="fa fa-twitter"></i> @thomasehardt</span> Not many dev tools blow my mind, but @eclipse_che certain does - it is the future of IDEs!</li>
       <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
-      <li><span><i class="fa fa-twitter"></i> @GaryM03062</span> I've been reading up on @eclipse_che and it sounds brilliant.</li>
       <li><span><i class="fa fa-twitter"></i> @chespinoza_75</span> Interesting, now trying out #EclipseChe with #golang, seems like a good choice for remote jobs.</li>
     </ul>
 
