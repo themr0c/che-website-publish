@@ -138,6 +138,7 @@
       <li><span><i class="fa fa-twitter"></i> @kevinhooke</span> Moving containerized apps from dev in  Eclipse Che, staging in Ansible container, to prod in OpenShift Enterprise #RedHat #DevNation #yam!</li>
       <li><span><i class="fa fa-twitter"></i> @jack-y</span> I develop micro services in Java. @eclispe_che saves my life - I can work on my code out of my office.</li>
       <li><span><i class="fa fa-twitter"></i> @CarlesZ</span> Developers of the world, a big applause!!!</li>
+      <li><span><i class="fa fa-twitter"></i> @ejuliot</span> Several years ago, there were competitors. Now, @eclipse_che and Orion are working together. Great collaboration in the open.</li>
       <li><span><i class="fa fa-twitter"></i> @nilsbundi</span> PS: Your product is pretty awesome and I never want to switch back to desktop Eclipse.</li>
       <li><span><i class="fa fa-twitter"></i> @thomasehardt</span> Not many dev tools blow my mind, but @eclipse_che certain does - it is the future of IDEs!</li>
       <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
