@@ -512,13 +512,13 @@
 
 <h1 id="create-a-new-stack">Create a New Stack</h1>
 
-<p>JSON with stack configurations is sent in a POST request:</p>
+<p>To create a stack, you need to define its configuration according to the <a href="../../../docs/workspace/data-model-stacks/index.html">stack data model</a> and send it in a POST request:</p>
 
-<h4 id="curl---create-a-new-stack">cURL - Create a new stack</h4>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{"name":"my-custom-stack"source":{"origin":"codenvy/ubuntu_jdk8"type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stack15l7wsfqffxokhle","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal"org.eclipse.che.ws-agent"org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default"commands":[],"links":[]},"creator":"che","description":"Default Blank Stack.","scope":"general"}'</span> http://localhost:8080/api/stack
 
 </code></pre>
 </div>
+
 <p>Output:</p>
 <div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-custom-stack"</span><span class="p">,</span><span class="w">
@@ -569,11 +569,10 @@
 </span></code></pre>
 </div>
 
-<h2 id="update-an-existing-stack">Update an Existing Stack</h2>
+<h1 id="update-a-stack">Update a Stack</h1>
 
-<p>JSON with updated stack configs is sent in a PUT request:</p>
+<p>You can update the stack configuration in a PUT request:</p>
 
-<h4 id="curl---update-an-existing-stack">cURL - Update an existing stack</h4>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X PUT --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{"name":"my-custom-stack","source":{"origin":"codenvy/ubuntu_jdk8","type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stacki7jf4x4n2cz6r3cr","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default","commands":[],"links":[]},"creator":"che","description":"NEW-DESCRIPTION","scope":"general"}'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
 </code></pre>
 </div>
@@ -628,9 +627,9 @@
 </span></code></pre>
 </div>
 
-<h2 id="delete-a-stack">Delete a Stack</h2>
+<h1 id="delete-a-stack">Delete a Stack</h1>
+<p>To delete a stack you need to pass the stack ID as a path parameter:</p>
 
-<p>Stack ID is passed as a path parameter:</p>
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X DELETE --header <span class="s1">'Accept: application/json'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
 </code></pre>
 </div>
