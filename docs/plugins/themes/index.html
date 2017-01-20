@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -522,6 +522,7 @@ So, if a user needs to change syntax highlighting there are two ways to do it:</
 <h2 id="adding-own-theme">Adding Own Theme</h2>
 <p>To add a new theme one needs to implement the interface <code class="highlighter-rouge">org.eclipse.che.ide.api.Theme</code>, and register it in a <code class="highlighter-rouge">ThemeAgent</code>.
 This is how it’s done:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">addTheme</span><span class="o">(</span><span class="nd">@NotNull</span> <span class="n">Theme</span> <span class="n">theme</span><span class="o">);</span>
 </code></pre>
 </div>
@@ -529,6 +530,7 @@ This is how it’s done:</p>
 
 <h2 id="using-theme-api-in-own-custom-components">Using Theme API in Own Custom Components</h2>
 <p>To be able to use Themes API one needs to be familiar with <code class="highlighter-rouge">CssResource</code>, where runtime substitution is used:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CoreCss</span> <span class="kd">extends</span> <span class="n">CssResource</span> <span class="o">{</span>
   <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Resources</span> <span class="kd">extends</span> <span class="n">ClientBudnle</span> <span class="o">{</span>
     <span class="nd">@Source</span><span class="o">({</span><span class="s">"Core.css\ "</span><span class="n">org</span><span class="o">/</span><span class="n">eclipse</span><span class="o">/</span><span class="n">che</span><span class="o">/</span><span class="n">ide</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">ui</span><span class="o">/</span><span class="n">style</span><span class="o">.</span><span class="na">css</span><span class="err">"</span><span class="o">})</span>
@@ -553,10 +555,12 @@ This is how it’s done:</p>
 <h1 id="extending-dark-theme">Extending Dark Theme</h1>
 <p>SDK users can easily change looks and feel of the product by adding own themes or extending existing themes developed by Che contributors.
 To get started with creating your own theme based on the existing one, let’s extend Dark Theme which is provided in API.</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DarkThemeExt</span> <span class="kd">extends</span> <span class="n">DarkTheme</span>
 </code></pre>
 </div>
 <p>Next, we override Theme ID and name:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Override</span>
 <span class="kd">public</span> <span class="n">String</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
   <span class="k">return</span> <span class="s">"new theme id"</span><span class="o">;</span>
@@ -570,6 +574,7 @@ To get started with creating your own theme based on the existing one, let’s e
 </div>
 <p>A new name will be displayed in the list of available themes at Window &gt; Preferences &gt; Themes.
 Now, let’s override colors for main font and some panel background:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Override</span>
 <span class="kd">public</span> <span class="n">String</span> <span class="nf">getMainFontColor</span><span class="o">()</span> <span class="o">{</span>
   <span class="k">return</span> <span class="s">"red"</span><span class="o">;</span>
@@ -589,6 +594,7 @@ Now, let’s override colors for main font and some panel background:</p>
 
 <h1 id="register-own-theme-using-gin-multibinding">Register Own Theme Using GIN Multibinding</h1>
 <p>Let’s register a new theme:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">GinMultibinder</span> <span class="n">themeBinder</span> <span class="o">=</span> <span class="n">GinMultibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">Theme</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="n">themeBinder</span><span class="o">.</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">DarkThemeExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 </code></pre>

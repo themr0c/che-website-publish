@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -506,13 +506,18 @@
 <p>A recipe references either a Dockerfile or compose definition that need to be built into image(s) or reference already-built image(s). When a workspace is created from a particular stack, Che will take a recipe, create or use existing Docker image(s) from it, and then create runtime Docker container(s) from that/those image(s). That/Those runtime Docker container(s) will be your workspace runtime(s).</p>
 
 <p><a href="../../../docs/workspace/agents/index.html">Workspace agents</a> include the additional libraries that you may need, such as yum or npm, along with the runtime services that Che needs, such as Java and Tomcat, a SSH daemon. <a href="../../../docs/workspace/agents/index.html">Workspace agents</a> are then injected into runtime Docker container(s) from Docker images such as certified minimal versions of Linux operating systems like Alpine, Debian or Ubuntu with added <a href="../../../docs/workspace/recipes/index.html#che-runtime-required-dependencies">Che dependencies</a>.</p>
+
 <h1 id="single-container-recipes">Single-Container Recipes</h1>
+
 <h2 id="defining">Defining</h2>
 <p>You can author your own recipe as a way to make your workspace runtime shareable. You can provide a URL to a custom recipe (Dockerfile or Docker compose file) or write a new custom recipe (Dockerfile or Docker compose file) from the dashboard.</p>
 
-<p>Please note, Eclipse Che only <a href="../../../docs/workspace/recipes/index.html#multi-container-recipes">supports certain compose syntax</a>.
-<img src="../../../docs/assets/imgs/che-recipe-write.jpg" alt="che-recipe-write.jpg" />
-There are two ways for you to create a custom recipe that can be used within Che:</p>
+<p>Please note, Eclipse Che only <a href="../../../docs/workspace/recipes/index.html#multi-container-recipes">supports certain compose syntax</a>.</p>
+
+<p><img src="../../../docs/assets/imgs/che-recipe-write.jpg" alt="che-recipe-write.jpg" /></p>
+
+<p>There are two ways for you to create a custom recipe that can be used within Che:</p>
+
 <ol>
   <li>Inherit from an Eclipse Che base Docker image and then add your dependencies (easiest).</li>
   <li>Inherit from a non-Eclipse Che base Docker image, then add both your dependencies, and Che’s dependencies (most flexible).</li>
@@ -522,6 +527,7 @@ There are two ways for you to create a custom recipe that can be used within Che
 <p>This is the easiest way to build a workspace from a custom recipe.  Eclipse Che base images are authored by Codenvy and hosted on DockerHub. These base images have all of the dependencies necessary for a Che workspace to operate normally.  These base images may have unnecessary dependencies for your project, like subversion. So if size and performance are essential, you can look to author your own. The Dockerfiles for Che’s base images are located in <a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes">Codenvy’s GitHub repository</a>.</p>
 
 <p>To reference Codenvy’s Docker images in your Dockerfile or Docker compose recipe:</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Dockerfile</span>
 FROM codenvy/&lt;image-name&gt;
 
@@ -529,6 +535,7 @@ FROM codenvy/&lt;image-name&gt;
 image: codenvy/&lt;image-name&gt;
 </code></pre>
 </div>
+
 <p>Codenvy’s base stacks, which include the minimum utilities for everything needed by Eclipse Che are <code class="highlighter-rouge">codenvy/ubuntu_jre</code> and <code class="highlighter-rouge">codenvy/debian_jre</code>.</p>
 
 <p>In Codenvy’s repository, some recipes have sub-directories which represent tags. For example, the <code class="highlighter-rouge">/php/latest</code> directory in the GitHub repository would be pulled as <code class="highlighter-rouge">codenvy/php:latest</code> from Docker Hub.</p>
@@ -566,6 +573,7 @@ image: codenvy/&lt;image-name&gt;
 </table>
 
 <p>All Eclipse Che images must have a non-terminating <code class="highlighter-rouge">CMD</code> command so that the container doesn’t shut down immediately after loading. If you want to override the default <code class="highlighter-rouge">CMD</code>, add <code class="highlighter-rouge">tail -f /dev/null</code> to the execution.  For example:</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Dockerfile</span>
 CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/null
 
@@ -573,6 +581,7 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
 <span class="nb">command</span>: <span class="o">[</span>sudo, service, apache2, start, <span class="o">&amp;&amp;</span>, tail, -f, /dev/null]
 </code></pre>
 </div>
+
 <h3 id="maven-dependencies-optional">Maven Dependencies (Optional)</h3>
 <p>If you want to use Che with the maven plug-in, then you need to add these additional dependencies.</p>
 
@@ -638,11 +647,9 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
 
 <p>All ports exposed in a base image are randomly published by Docker onto host interfaces. Docker uses the <a href="https://docs.docker.com/engine/userguide/networking/default_network/binding/">ephemeral port range</a> to externalize your services’ ports. What Che does with exposed ports is an equivalent to <code class="highlighter-rouge">docker run -P</code> where <code class="highlighter-rouge">-P</code> lets Docker choose local ports.</p>
 
-<p>To make your app/process accessible:</p>
+<p>To make your app/process accessible</p>
 
-<ul>
-  <li>Expose the port your app/process is bound to. For example, if your application runs on 3000, add the following instruction to your custom Dockerfile or  Docker compose recipe:</li>
-</ul>
+<p><strong>1: Expose the port your app/process is bound to</strong>. For example, if your application runs on 3000, add the following instruction to your custom Dockerfile or  Docker compose recipe:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Exposing a single port in a Dockerfile</span>
 EXPOSE 3000
@@ -659,15 +666,18 @@ expose:
  - 5000
 </code></pre>
 </div>
-<ul>
-  <li>Go to Operations perspective (icon in the top right corner) and click the Servers tab. You will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</li>
-  <li>You can also get the published port automatically by using a macro in a <a href="../../../docs/ide/commands/index.html">command</a>. When authoring a command, set its preview URL to <code class="highlighter-rouge">${server.port.&lt;your-apps-port&gt;}</code> where <code class="highlighter-rouge">&lt;your-apps-port&gt;</code> is the port in your recipe’s expose command. When the command is executed, this macro is translated into a <code class="highlighter-rouge">host:port</code> URL.</li>
-</ul>
 
-<p>There is no way to expose a port once the workspace is running. To expose an additional ports, the ports need to be added to the runtime recipe or added directly to the runtime instance via the dashboard <code class="highlighter-rouge">Workspaces&gt;(click workspace name)&gt;Runtime Tab</code>.
-<img src="../../../docs/assets/imgs/Che-recipe-expose-ports.jpg" alt="Che-recipe-expose-ports.jpg" /></p>
+<p><strong>2: Go to user dashboard for your workspace</strong> and click on the Runtimes tab. Select your machine and then in a section called “Server” you will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</p>
+
+<p><strong>3: You can also get the published port automatically by using a macro</strong> in a <a href="../../../docs/ide/commands/index.html">command</a>. When authoring a command, set its preview URL to <code class="highlighter-rouge">${server.port.&lt;your-apps-port&gt;}</code> where <code class="highlighter-rouge">&lt;your-apps-port&gt;</code> is the port in your recipe’s expose command. When the command is executed, this macro is translated into a <code class="highlighter-rouge">host:port</code> URL.</p>
+
+<p>There is no way to expose a port once the workspace is running. To expose an additional ports, the ports need to be added to the runtime recipe or added directly to the runtime instance via the dashboard <code class="highlighter-rouge">Workspaces&gt;(click workspace name)&gt;Runtime Tab</code>.</p>
+
+<p><img src="../../../docs/assets/imgs/Che-recipe-expose-ports.jpg" alt="Che-recipe-expose-ports.jpg" /></p>
+
 <h2 id="issue-a-pull-request-to-improve-recipes">Issue a Pull Request To Improve Recipes</h2>
 <p>We really love pull requests. We are always looking to increase the set of stacks that are available for development. Please suggest a fix or add a new base image recipe.  To do so, issue <a href="https://github.com/codenvy/dockerfiles">pull requests</a>. If you add a new Dockerfile, it will be added as a source for a new automated build at DockerHub.  Please sign the <a href="https://eclipse.org/legal/ECA.php">Eclipse contributor agreement</a> before making a contribution. Your contribution will be licensed as <a href="https://www.eclipse.org/legal/epl-v10.html">EPL 1.0</a>.</p>
+
 <h1 id="multi-container-recipes">Multi-Container Recipes</h1>
 <p>The majority of the Docker Compose file syntax works with Eclipse Che. However, Che is a distributed system that supports multiple users on a single node, and in order to manage this distribution and multi-user capabilities, there are certain compose features that are not supported.</p>
 
@@ -686,6 +696,7 @@ expose:
   <span class="s">context</span><span class="pi">:</span> <span class="s">./my/local/filesystem</span>
 </code></pre>
 </div>
+
 <p>Using Private Repositories:
 If your <code class="highlighter-rouge">build.context</code> or <code class="highlighter-rouge">build.Dockerfile</code> accesses a private remote registry, you need to provide additional configuration.  First, the SSH private key needs to be located in your host machine’s home directory <code class="highlighter-rouge">~/.ssh/id_rsa</code> for Mac/Linux and <code class="highlighter-rouge">C:\Users\&lt;username&gt;\.ssh\id_rsa</code> for Windows with <code class="highlighter-rouge">0600</code> permissions for the user that starts Che.  Second, add the hostname of the private repository to the known hosts of the host machine using <code class="highlighter-rouge">ssh -o StrictHostKeyChecking=no -T git@&lt;hostname&gt;</code>.  Third, add the public key to the git <a href="../../../docs/ide/git-svn/index.html#adding-ssh-public-key-to-repository-account">repository host</a>. Finally, you can use an SSH git URL in the <code class="highlighter-rouge">build.context</code> of your compose syntax.</p>
 
@@ -724,19 +735,23 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   <span class="s">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
 </code></pre>
 </div>
+
 <h3 id="build-image">Build Image</h3>
 <p>In the event that a Compose file includes both build instructions and a build image the build instructions are seen as overriding, so the build image is skipped if it exists.</p>
 
 <h3 id="container-name">Container Name</h3>
+
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">container_name</span><span class="pi">:</span> <span class="s">my_container</span>
 </code></pre>
 </div>
+
 <p><code class="highlighter-rouge">container_name</code> is skipped during execution. Instead, Che generates container names based on its own internal patterns. Because many developers could be running the same Compose file on the same Che workspace node at the same time naming conflicts need to be avoided.</p>
 
 <h3 id="volumes">Volumes</h3>
 <p>Volumes are not supported in the Che system. Instead we suggest using <code class="highlighter-rouge">volumes_from</code> to gain access to <a href="../../../docs/workspace/volume-mounts/index.html#sharing-volumes-between-containers">volume mount</a> of the <code class="highlighter-rouge">dev-machine</code>.</p>
 
 <h3 id="networks">Networks</h3>
+
 <div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="c1">## Not supported</span>
 <span class="s">networks</span><span class="pi">:</span>
   <span class="s">internal</span><span class="pi">:</span>
@@ -747,6 +762,7 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   <span class="s">driver:</span><span class="nv"> </span><span class="s">bridge</span>
 </code></pre>
 </div>
+
 <p>Che does not yet currently support compose networks. We do, however, support the use of aliases through <code class="highlighter-rouge">links</code> command.</p>
 
 <h3 id="hostname">Hostname</h3>

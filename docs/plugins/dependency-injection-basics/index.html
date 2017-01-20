@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -526,6 +526,7 @@ In the following, we first describe how to consume objects (in Guice and Gin) an
 </ul>
 
 <p>In the following example, for the second parameter, the framework will look for an object which is of type <code class="highlighter-rouge">MyClass</code> has been explicitly registered with the key <code class="highlighter-rouge">MyID</code>. Please <a href="../../../docs/plugins/dependency-injection-basics/index.html#providing-objects">see the following</a> section how to provide objects to be consumed that way.</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
 
   <span class="kd">private</span> <span class="n">MyOtherClass</span> <span class="n">myOtherClass</span><span class="o">;</span>
@@ -560,6 +561,7 @@ In the following, we first describe how to consume objects (in Guice and Gin) an
 <p>To provide custom objects, you implement a module class. It is responsible to create the objects to be injected as well as register them using the type and optionally a key. Depending on the general structure of your extension, you could add as many modules as you like, however, most extensions use only one module for the client (Gin) and one for the server part (Guice).</p>
 
 <p>The following code example shows a simple Guice module. All Guice modules inherit from AbstractModule and are marked with the annotation <code class="highlighter-rouge">@DynaModule</code>, which registers the module itself to be executed by Guice. The mandatory method <code class="highlighter-rouge">#configure</code> is responsible for the registration of objects. We will not go into detail about all the different options of Guice/Gin, but focus on relevant use cases in Che. In the following code example, we register a custom object (<code class="highlighter-rouge">CustomObject</code>), which implements an existing Che type (<code class="highlighter-rouge">ExistingCheType</code>). The Che type defines an extension point for Che, e.g. a wizard.</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomObject</span> <span class="kd">implements</span> <span class="n">ExistingCheType</span> <span class="o">{</span>
   <span class="c1">// ...</span>
 <span class="o">}</span>
@@ -584,6 +586,7 @@ In the following, we first describe how to consume objects (in Guice and Gin) an
 </code></pre>
 </div>
 <p>Gin modules inherit from <code class="highlighter-rouge">AbstractGinModule</code> and use the <code class="highlighter-rouge">@ExtensionGinModule</code> annotation. Gin has a different <a href="https://code.google.com/p/google-gin/wiki/GinTutorial">binding mechanism than Guice</a>, however, for the typical use case, the code would look the same:</p>
+
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.ExtensionGinModule</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.AbstractGinModule</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.multibindings.GinMultibinder</span><span class="o">;</span>

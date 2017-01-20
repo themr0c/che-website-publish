@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -506,6 +506,7 @@
 
 <h1 id="adding-agents-to-a-custom-stack">Adding Agents to a Custom Stack</h1>
 <p>Stacks use JSON format for configuration. Agents are included in the machines definition. Each stack requires a machine named <code class="highlighter-rouge">dev-machine</code> which always requires the terminal, ws-agent, and SSH agents. Language server agents need to be added to the dev-machine if you want <a href="../../../docs/ide/intellisense/index.html">intellisense</a> features when using the workspace IDE.</p>
+
 <div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="err">.......</span><span class="w">
   </span><span class="err">workspaceConfig</span><span class="s2">": {
     "</span><span class="err">environments</span><span class="s2">": {
@@ -535,15 +536,16 @@
 </div>
 
 <h1 id="creating-new-agents">Creating New Agents</h1>
-<p>Currently, all agents must be pre-defined within Che and <a href="https://github.com/eclipse/che/tree/master/wsmaster/che-core-api-agent/src/main/resources/agents">saved in this location</a> as part of the Che repository. We are thinking about a public registry for agents where they can be added and removed, but this is a future activity.</p>
+<p>Currently, all agents must be pre-defined within Che and <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent/src/main/resources/agents/">saved in this location</a> as part of the Che repository. We are thinking about a public registry for agents where they can be added and removed, but this is a future activity.</p>
 
 <p>Each agent is saved as a JSON file. The name of the file without the extension is used as the ID for the agent within the agents list in the dashboard.  For example, the CSharp agent is identified as <code class="highlighter-rouge">org.eclipse.che.csharp</code>.  Inside of workspaces and stacks.  In the JSON there is a new data object called <code class="highlighter-rouge">agents : []</code> which is an array of agents that are to be included. The array would list the IDs of each agent to include.</p>
 
-<p>Agents have a name, a set of other agents that they depend upon, properties and a “script”, which defines how the agent’s package is to be installed into the workspace. This script handles only installation and doesn’t define the startup of the agent.  The script section of the agent is difficult to read, but we also include the same scripts in this <a href="https://github.com/eclipse/che/blob/master/wsmaster/che-core-api-agent/src/main/resources/agents/org.eclipse.che.ls.php.json">scripts directory</a> and our CI systems convert those scripts to embed them inline within your agent during the packaging phase.</p>
+<p>Agents have a name, a set of other agents that they depend upon, properties and a “script”, which defines how the agent’s package is to be installed into the workspace. This script handles only installation and doesn’t define the startup of the agent.  The script section of the agent is difficult to read, but we also include the same scripts in this <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent/src/main/resources/agents/scripts/update_agents.sh">scripts directory</a> and our CI systems convert those scripts to embed them inline within your agent during the packaging phase.</p>
 
 <p>The scripts that you must provide with an agent have a large <code class="highlighter-rouge">if</code> block where you provide installation logic for each Linux distribution that we support. You can follow our templates for how to build agents of your own.</p>
 
 <p>To add a custom language server agent you have to accomplish two steps:</p>
+
 <ul>
   <li>Implement a <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">language server launcher</a>. Have a look at <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-json/che-plugin-json-server/src/main/java/org/eclipse/che/plugin/json/languageserver/JsonLanguageServerLauncher.java">Json language server launcher</a></li>
 </ul>

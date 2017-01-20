@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -568,12 +568,14 @@ Similarly, to build the Dashboard submodule, you’ll find the dependencies and 
 </table>
 
 <p>Each module has a directory structure that is based upon maven and will include source code and a target where artifacts are placed.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
 src/main/java/<span class="o">{</span>package-name<span class="o">}</span>/<span class="o">{</span>extensionName<span class="o">}</span>.java
 </code></pre>
 </div>
 
 <p>Depending on the extension, you may also need to include:</p>
+
 <div class="language-text highlighter-rouge"><pre class="highlight"><code># Required for client-side extensions
 src/main/resources/{package-name}/{extensionName}.gwt.xml
 
@@ -597,6 +599,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <h1 id="compiling-extensions">Compiling Extensions</h1>
 <h2 id="pomxml">pom.xml</h2>
 <p>Each extension has a root <code class="highlighter-rouge">pom.xml</code> file. When configuring an extension <code class="highlighter-rouge">pom.xml</code> file, you must define an <code class="highlighter-rouge">&lt;artifactId&gt;</code> tag which will be the unique name identifier given to this extension. This identifier tag will be referenced by the Che assembly to declare that your extension is part of Che. You can override the <code class="highlighter-rouge">groupId</code> and <code class="highlighter-rouge">version</code> parameters from the parent, or if not specified, it will inherit the values set by the <code class="highlighter-rouge">&lt;parent&gt;</code> tag reference.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
@@ -669,6 +672,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 
 <h2 id="licensing">Licensing</h2>
 <p>Referencing the Che parent <code class="highlighter-rouge">pom.xml</code> enforces the Eclipse Che license header to be in place for all source files. You can execute <code class="highlighter-rouge">mvn license:format</code> to add license headers to your files.  Or, to skip the license check add:</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>com.mycila<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>license-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
@@ -682,6 +686,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 
 <h2 id="build-your-extension">Build Your Extension</h2>
 <p>In your extension directory, run <code class="highlighter-rouge">mvn clean install</code>. This will build JAR files that bundle your extension.</p>
+
 <div class="language-text highlighter-rouge"><pre class="highlight"><code>/target
   {your-extension-name}-{version}-sources.jar
   {your-extension-name}-{version}.jar
@@ -730,6 +735,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 
 <h2 id="your-extension-identifier">Your Extension Identifier</h2>
 <p>Every extension has a unique maven identifier. You will need to reference this identifier as a dependency. You can define your own identifiers for extensions or pull the identifier out of the <code class="highlighter-rouge">pom.xml</code> of the extension you are working with.  For example, in the samples that are provided with che the <code class="highlighter-rouge">samples/sample-plugin-embedjs/</code> has a single module for the IDE, and the identifier for the IDE extension is located in <code class="highlighter-rouge">sample/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/pom.xml</code>.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;parent&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-parent<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
@@ -739,6 +745,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 </code></pre>
 </div>
 <p>And the identifier of this extension is the <code class="highlighter-rouge">artifactId</code>, <code class="highlighter-rouge">groupId</code>, and <code class="highlighter-rouge">version</code> tags combined together. Tags can inherit values from parents if they are not explicitly defined in the <code class="highlighter-rouge">pom.xml</code>. So this extension has the identifier of.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
 <span class="nt">&lt;version&gt;</span>5.0.0<span class="nt">&lt;/version&gt;</span>
@@ -746,6 +753,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 </div>
 <h2 id="add-extension-to-root-che-pom">Add Extension To Root Che POM</h2>
 <p>In order to allow your extension to be visible from the root level of Che, add your extension as a dependency in the list of <code class="highlighter-rouge">&lt;dependencies&gt;</code> from the <code class="highlighter-rouge">&lt;dependencyManagement&gt;</code>block.  There are a lot of them in the root <code class="highlighter-rouge">pom.xml</code>. To avoid transitive dependencies, we require every dependency to be explicitly listed and added. While this may seem like a pain in the arse, this will save you a lot of pain in the future from having circular references.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependencyManagement&gt;</span>
   <span class="nt">&lt;dependencies&gt;</span>
     ...
@@ -766,6 +774,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 
 <h2 id="ide-extension-link-to-assembly">IDE Extension: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-ide-war/pom.xml</code> and also have it added as a dependency to the GWT application.  First add the dependency:</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
@@ -775,17 +784,20 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <p>You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the <code class="highlighter-rouge">pom.xml</code> for you.</p>
 
 <p>Second, link your GUI extension into the GWT app. You will add an <code class="highlighter-rouge">&lt;inherits&gt;</code> tag to the module definition. The name of the extension is derived from the direction + package structure that you have given your extension.  For example:</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;inherits</span> <span class="na">name=</span><span class="s">'org.eclipse.che.plugin.embedjsexample.EmbedJSExample'</span><span class="nt">/&gt;</span>
 </code></pre>
 </div>
 
 <p>And this means that in our embed sample, there is a file with a <code class="highlighter-rouge">*.gwt.xml</code> extension in a folder structure identical to the name above.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># This name was derived from the package structure in your sample:</span>
 /che/samples/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/src/main/resources/org/eclipse/che/plugin/embedjsexample/EmbedJSExample.gwt.xml
 </code></pre>
 </div>
 
 <p>Once you have added the IDE extension to both locations, you need to rebuild the IDE.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
 <span class="c"># This IDE web app will be bundled into the assembly</span>
 <span class="nb">cd </span>che/assembly/assembly-ide-war
@@ -808,6 +820,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se
 
 <h2 id="server-side-workspace-extensions-link-to-assembly">Server Side Workspace Extensions: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-wsagent-war/pom.xml</code> and then rebuild the agent server.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-examples-service<span class="nt">&lt;/artifactId&gt;</span>
@@ -839,6 +852,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se
 
 <h2 id="server-side-che-server-extensions-link-to-assembly">Server Side Che Server Extensions: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-wsmaster-war/pom.xml</code> and then rebuild the Che server, which we call master.</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-examples-service<span class="nt">&lt;/artifactId&gt;</span>
@@ -846,6 +860,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se
 </code></pre>
 </div>
 <p>Once you have added the extension to the Che server, you need to rebuild the Che server.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a new Che server web app that includes your Che server extension</span>
 <span class="nb">cd </span>che/assembly/assembly-wsmaster-war
 mvn clean install
@@ -905,6 +920,7 @@ mvn clean install -DskipTests -Dskip-validate-sources -Dgwt.compiler.localWorker
 </div>
 
 <p>In the IDE GWT module:</p>
+
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="c">&lt;!-- In /assembly/assembly-ide-war/src/main/resources/org/eclipse/che/ide/IDE.gwt.xml --&gt;</span>
 
 <span class="c">&lt;!-- Tell Che to only build one type of browser JavaScript --&gt;</span>

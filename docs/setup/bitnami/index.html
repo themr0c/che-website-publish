@@ -3,7 +3,7 @@
 
 
 <!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript" charset="utf8">
   $(document).ready(function(){
@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.2.1">
+  <meta name="generator" content="Jekyll v3.3.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -498,22 +498,28 @@
           </div>
           
 <p>Bitnami provides provides a <a href="https://bitnami.com/stack/eclipse-che">one-click install</a> solution for deploying Eclipse Che to your own cloud account.</p>
-<h1 id="install-che">1. Install Che</h1>
-<p>Bitnami will automatically install Che to your cloud account, just select your provider and then choose “Add Account” from the menu:
-<img src="../../../docs/assets/imgs/ScreenShot2016-06-23at9.40.42AM.png" alt="ScreenShot2016-06-23at9.40.42AM.png" />
-Once your account is connected select the instance size. You should ensure that Che has at least 4GB RAM and 10GB of storage (the Che server itself will need ~2GB RAM). If you plan on running larger or more workspaces, increase your RAM and storage.</p>
+
+<h1 id="1-install-che">1. Install Che</h1>
+<p>Bitnami will automatically install Che to your cloud account, just select your provider and then choose “Add Account” from the menu:</p>
+
+<p><img src="../../../docs/assets/imgs/ScreenShot2016-06-23at9.40.42AM.png" alt="ScreenShot2016-06-23at9.40.42AM.png" /></p>
+
+<p>Once your account is connected select the instance size. You should ensure that Che has at least 4GB RAM and 10GB of storage (the Che server itself will need ~2GB RAM). If you plan on running larger or more workspaces, increase your RAM and storage.</p>
 
 <h4 id="azure-ports">Azure Ports</h4>
 <p>Che runs Docker which uses the ephemeral port range when starting containers and exposing services. On Azure instances, the ephemeral port range has been limited to 50 - if all ports are in use when you try and start a container you’ll receive an error. Try stopping a container or increasing the ephemeral port range for your Azure machine.</p>
 
-<h1 id="usage">2. Usage</h1>
-<p>When your private Che cloud server is ready you will see a page like the following:
-<img src="../../../docs/assets/imgs/ScreenShot2016-11-30at12.40.15PM.png" alt="ScreenShot2016-11-30at12.40.15PM.png" />
-In the Credentials section you’ll find your username and password. Show the password and copy it to the clipboard.  When you click on the IP address for the Che server on this page you will be brought to a welcome page from Bitnami. When you select the login link you will be asked for a username and password. Type the username and paste the password into the form.</p>
+<h1 id="2-usage">2. Usage</h1>
+<p>When your private Che cloud server is ready you will see a page like the following:</p>
+
+<p><img src="../../../docs/assets/imgs/ScreenShot2016-11-30at12.40.15PM.png" alt="ScreenShot2016-11-30at12.40.15PM.png" /></p>
+
+<p>In the Credentials section you’ll find your username and password. Show the password and copy it to the clipboard.  When you click on the IP address for the Che server on this page you will be brought to a welcome page from Bitnami. When you select the login link you will be asked for a username and password. Type the username and paste the password into the form.</p>
 
 <p>You should now have access to the Che user dashboard.</p>
 
 <p>These are some other common URLs on your instance:</p>
+
 <div class="language-text highlighter-rouge"><pre class="highlight"><code>&lt;url&gt;/                   # Loads dashboard or last opened workspace
 &lt;url&gt;/dashboard          # Loads dashboard
 &lt;url&gt;/ide/&lt;wsname&gt;       # Loads specific workspace
@@ -524,6 +530,7 @@ In the Credentials section you’ll find your username and password. Show the pa
 
 <h2 id="running-stopping-and-restarting-che">Running, Stopping and Restarting Che</h2>
 <p>If you have SSH access to the Che instance you can start and stop Che from the command line.</p>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># to start Che</span>
 sudo su eclipseche -- /opt/bitnami/apps/eclipseche/che/bin/che.sh -p:8080 -s:uid start
 
@@ -543,27 +550,25 @@ sudo su eclipseche -- /opt/bitnami/apps/eclipseche/che/bin/che.sh -p:8080 -s:uid
 <p>Passwords are stored in a file at <code class="highlighter-rouge">/opt/bitnami/apps/eclipseche/conf/.htpasswd</code> and the default user is <code class="highlighter-rouge">user</code>. The user and password can be updated using Apache’s <code class="highlighter-rouge">htpasswd</code> command.</p>
 
 <p>To change the password:</p>
+
 <ol>
-  <li>
-    <p>Access the server using an <a href="https://docs.bitnami.com/azure/faq/#how-to-connect-to-the-server-through-ssh">SSH connection</a></p>
-  </li>
-  <li>
-    <p>Change the contents of <code class="highlighter-rouge">/opt/bitnami/apps/eclipseche/conf/.htpasswd</code> to include the password you want to use.</p>
-  </li>
-  <li>
-    <p>Run the following command substituting <code class="highlighter-rouge">new_user</code> for your preferred user name:</p>
-    <div class="language-text highlighter-rouge"><pre class="highlight"><code>sudo /opt/bitnami/apache2/bin/htpasswd /opt/bitnami/apps/eclipseche/conf/.htpasswd new_user\
-</code></pre>
-    </div>
-  </li>
+  <li>Access the server using an <a href="https://docs.bitnami.com/azure/faq/#how-to-connect-to-the-server-through-ssh">SSH connection</a></li>
+  <li>Change the contents of <code class="highlighter-rouge">/opt/bitnami/apps/eclipseche/conf/.htpasswd</code> to include the password you want to use.</li>
+  <li>Run the following command substituting <code class="highlighter-rouge">new_user</code> for your preferred user name:</li>
 </ol>
+
+<div class="language-text highlighter-rouge"><pre class="highlight"><code>sudo /opt/bitnami/apache2/bin/htpasswd /opt/bitnami/apps/eclipseche/conf/.htpasswd new_user\
+</code></pre>
+</div>
 
 <h4 id="advanced-configuration">Advanced Configuration</h4>
 <p>There are many aspects of Eclipse Che like port and hostname that can be configured by setting <a href="../../../docs/setup/configuration/index.html">Eclipse Che properties</a>.</p>
 
-<h1 id="develop-with-che">3. Develop with Che</h1>
-<h1 id="develop-with-che-1">Develop with Che</h1>
+<h1 id="3-develop-with-che">3. Develop with Che</h1>
+
+<h1 id="develop-with-che">Develop with Che</h1>
 <p>Now that Che is running there are a lot of fun things to try:</p>
+
 <ul>
   <li>Become familiar with Che through <a href="../../../docs/tutorials/multi-machine/index.html">one of our tutorials</a>.</li>
   <li><a href="../../../docs/ide/import-a-project/index.html">Import a project</a> and setup <a href="../../../docs/ide/git-svn/index.html">git authentication</a>.</li>
