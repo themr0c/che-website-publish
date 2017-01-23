@@ -14,51 +14,14 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Downloads</h1>
-    <h3>
-      Release: <span class="text-yellow">5.0.0-M8</span><br>
-      Date: <span class="text-yellow">Nov 12, 2016</span>
-    </h3>
+    <h3><a href="../getting-started/">Get Started</a> with Che locally or in the cloud.</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
 
 <hr class="gray">
-<div class="container-fluid content">    
-  
-  <h2><a id="installers">Installers</a></h2>
-  We strongly suggest that you get started with <a href='../getting-started'><b>a private cloud install, hosted SaaS, and local Docker images.</b></a><br>
-  <div class="separator"></div>
-</div> <!-- /. container -->
-
-<hr class="gray">
- <div class="bg-deep-purple feedback">
-  <div class="container-fluid content">    
-
-  <h3><a id="signed">Eclipse Signed Packages</a></h3>
-  <p>Packages let you run Che natively. These packages extract Che into a directory. You must have </a><a href="https://www.java.com/en/download/">Java 1.8</a> and <a href="https://www.docker.com/">Docker</a> installed. Docker for Windows is currently supported. You can optionally use Virtual Box to launch Docker with Boot2Docker.</p>
-
-  <ul>
-    <li><p><strong>ZIP Package for Windows, Mac, and Linux</strong></p></li>
-    <li><i>Installs Che in any directory</i></li>
-    <li><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-latest.zip&r=1">❯ Download signed binaries from Eclipse mirrors (133 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.zip">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.zip">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
-  </ul>
-
-  <ul>
-    <li><p><strong>TGZ Package for Windows, Mac, and Linux</strong></p></li>
-    <li><i>Installs Che in any directory</i></li>
-    <li><a href="https://www.eclipse.org/downloads/download.php?file=/che/eclipse-che-latest.tar.gz&r=1">❯ Download latest signed binaries from Eclipse mirrors (131 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-latest.tar.gz">❯ Download unsigned latest release from Codenvy servers (130 MB)</a></li>
-    <li><a href="https://install.codenvycorp.com/che/eclipse-che-nightly.tar.gz">❯ Download unsigned nightly from Codenvy servers (130 MB)</a></li>
-  </ul>
-
-  <p>Need help getting Che to run? Please check the oodles of <a href="https://eclipse-che.readme.io/docs/">installation and usage docs</a>.</p>
-  <div class="separator"></div>
-
-  <h3>Older Releases</h3>
-  <p>Archived versions of previous releases are maintained on the <b><a href="https://github.com/eclipse/che/releases">Che GitHub release page</a></b>.</p>
+<div class="container-fluid content">      
+  <h4>Choose your preferred install location here: <a href="../getting-started/">https://eclipse.org/che/getting-started/</a></h4>
 </div> <!-- /.container-fluid -->
-</div> <!-- /.purple-container -->
 
 <?php include '../includes/footer.php'; ?>
