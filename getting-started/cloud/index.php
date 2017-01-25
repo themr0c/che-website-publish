@@ -64,7 +64,7 @@
         <button type="submit" class="btn btn-primary">Go!</button>
       </form>
       <p style="font-size:0.7em">This will create a new workspace in Codenvy, an Eclipse Che provider. You will be asked to accept their TOS. The workspace will be powered with an Ubuntu / JDK8 stack. You can customize the runtime and project configuration by adding <samp>.codenvy.dockerfile</samp> or <samp>codenvy.json</samp> files inside your repository.
-        <a href="https://codenvy.readme.io/docs/factories#url-factories">See docs</a>.</p>
+        <a href="https://codenvy.com/docs/integration-guide/workspace-automation/index.html">See docs</a>.</p>
     </div>
   </div>
   <!-- END_URL_FACTORY -->
