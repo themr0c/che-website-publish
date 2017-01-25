@@ -26,6 +26,27 @@
   <table class="wrapper">
 
 
+
+  <tr class="item">
+      <td><img src="../images/media/infoq.png" alt=""></td>
+      <td>
+        <h3>Rust Language Server and Eclipse Che</h3>
+        <p class="loc">Jan 23rd, 2017</p>
+        <p class="desc">The Rust Language Server adds code auto-completion, goto definition, reformatting and other features for any IDE that supports the Language Services Protocol - like Eclipse Che...</p>
+        <a href="https://www.infoq.com/news/2017/01/rust-language-server-alpha" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/jaxenter.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che 5.0 is out</h3>
+        <p class="loc">January 16th, 2017</p>
+        <p class="desc">Eclipse Che 5.0 comes bearing gifts: new CLI, Docker Compose Runtimes, Workspace Snapshots, Language Server Protocol, Stack Editor, new Debuggers...</p>
+        <a href="https://jaxenter.com/eclipse-che-5-0-131183.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
   <tr class="item">
       <td><img src="../images/media/heise.png" alt=""></td>
       <td>
