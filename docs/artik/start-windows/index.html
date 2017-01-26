@@ -57,8 +57,7 @@
     <a href="../../../docs/openshift/config/index.html">OpenShift</a>
   </li>
   <li>
-    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
-    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
   </li>
 </ul>
 
@@ -487,13 +486,10 @@
 <p><strong>Mac and Linux</strong> users <a href="../../../docs/artik/start-mac/index.html">Getting Started</a>.</p>
 
 <h1 id="how-to-get-help">How to Get Help</h1>
-<p><strong>Support:</strong> If the unthinkable happens, or you have a question, you can post <a href="https://github.com/eclipse/che/issues">issues on our GitHub page</a>. Please follow the <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md">guidelines on issue reporting</a>.</p>
-
-<p><strong>Documentation:</strong> We put a lot of effort into our docs. Please add suggestions on areas for improvement.</p>
+<p><strong>Support:</strong> If the unthinkable happens, or you have a question, you can post <a href="https://github.com/codenvy/artik-ide/issues/">issues on our GitHub page</a>.</p>
 
 <h1 id="0-pre-reqs">0. Pre-Reqs</h1>
-
-<p>Before installing the ARTIK IDE you will need:</p>
+<p>Before installing the ARTIK IDE:</p>
 
 <ul>
   <li><strong>Windows 10</strong>
@@ -513,10 +509,11 @@
 </ul>
 
 <h1 id="1-verify-docker">1. Verify Docker</h1>
+<p>Before starting make sure that Docker is installed and you’ve set the <a href="https://docs.docker.com/docker-for-windows/#/shared-drives">shared drives</a> for Docker and, if you’re behind a proxy, <a href="../../../docs/artik/proxies/index.html">added your proxy information</a> to Docker.</p>
 
-<p>Add Git Bash to the system path by setting <code class="highlighter-rouge">PATH=&lt;path-to-git&gt;;%PATH%</code>:</p>
+<p>Add Git Bash to the system path by setting <code class="highlighter-rouge">PATH=&lt;path-to-git&gt;;%PATH%</code> on the Windows command line:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">set </span><span class="nv">PATH</span><span class="o">=</span>C:<span class="se">\P</span>rogram Files<span class="se">\G</span>it<span class="se">\b</span><span class="k">in</span><span class="se">\;</span>%PATH%<span class="se">\</span>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">set </span><span class="nv">PATH</span><span class="o">=</span>C:<span class="se">\P</span>rogram Files<span class="se">\G</span>it<span class="se">\b</span><span class="k">in</span><span class="se">\;</span>%PATH%
 </code></pre>
 </div>
 
@@ -571,7 +568,7 @@ curl -sL https://raw.githubusercontent.com/codenvy/artik-ide/master/artik-ide.sh
 </div>
 
 <h4 id="installing-behind-a-proxy">Installing Behind a Proxy</h4>
-<p>If you are behind a proxy, you need to <a href="../../docs/che-config-proxies/">configure your proxy settings</a> for Docker and the ARTIK IDE.</p>
+<p>If you are behind a proxy, you need to <a href="../../../docs/artik/proxies/index.html">configure your proxy settings</a> for Docker and the ARTIK IDE.</p>
 
 <h1 id="3-start-artik-ide">3. Start ARTIK IDE</h1>
 <p>From the directory where you downloaded the <code class="highlighter-rouge">artik-ide.bat</code> set the <code class="highlighter-rouge">CHE_DATA_FOLDER</code> environment variable. This is persisted for each session. To persist it across sessions set it as a <a href="http://www.computerhope.com/issues/ch000549.htm">system variable</a>.</p>
@@ -619,9 +616,6 @@ artik-ide update
 </code></pre>
 </div>
 
-<h4 id="advanced-configuration">Advanced Configuration</h4>
-<p>There are many aspects of ARTIK IDE like port and hostname that can be configured by <a href="../../docs/usage-docker#environment-variables">setting Eclipse Che properties</a>.</p>
-
 <h1 id="4-create-workspaces-and-projects">4. Create Workspaces and Projects</h1>
 <p>The ARTIK IDE provides a step-by-step wizard for creating your first workspace. It provides stacks for ARTIK and Android, as well as many other languages through the “Stack Library.”  Stacks will populate the workspace with a runtime, SDK, and libraries needed for building new projects that will run on an ARTIK board.</p>
 
@@ -657,6 +651,7 @@ docker run -ti --rm artik-tools jdrummond/artik-tools -i %HOST_IP% -t 20
 </div>
 
 <h4 id="windows-command-prompt">Windows Command Prompt</h4>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#Determine your current computers IP to search network for ARTIK Board.</span>
 <span class="k">for</span> /f <span class="s2">"skip=1 tokens=2 delims=: "</span> %f <span class="k">in</span> <span class="o">(</span><span class="s1">'nslookup %COMPUTERNAME% ^| find /i "Address"'</span><span class="o">)</span> <span class="k">do </span><span class="nb">set </span><span class="nv">HOST_IP</span><span class="o">=</span>%f
 
@@ -669,11 +664,13 @@ docker run -i --rm -t artik-tools jdrummond/artik-tools -i %HOST_IP% -t 20
 <span class="c">#SSH in ARTIK device using ip address from above to test ip address validity.</span>
 <span class="c">#ARTIK device default username/password root/root.</span>
 
+bash
 &gt;ssh root@&lt;ip-address&gt;
 </code></pre>
 </div>
 
 <p><strong>Note: When the ARTIK device is powered up, it will request a new ip address each time. Be sure to determine the new ipaddress each time or give your ARTIK device a static ip address.</strong></p>
+
 <h1 id="7-connect-artik-device-with-artik-ide">7. Connect ARTIK Device with ARTIK IDE</h1>
 <p>Use the ARTIK device manager in a workspace to connect an ARTIK device to the ARTIK IDE.</p>
 
@@ -734,7 +731,7 @@ Because all files in the project are auto-synced to the device it’s not necess
 <p>Profiles are available at <strong>Artik &gt; Profiles</strong> or by right clicking the device in machines panel in the bottom.</p>
 
 <h1 id="11-troubleshooting">11. Troubleshooting</h1>
-<p>If you experience problems, please file an issue on the <a href="https://github.com/eclipse/che/issues">Eclipse Che GitHub page</a> where Che and ARTIK engineers can help you.</p>
+<p>If you experience problems, please file an issue on the <a href="https://github.com/codenvy/artik-ide/issues/">ARTIK IDE GitHub page</a> where engineers can help you.</p>
 
           
 
@@ -995,6 +992,21 @@ Because all files in the project are auto-synced to the device it’s not necess
   
    
     <li class=""><a href="../../../docs/artik/start-mac/index.html">Getting Started - Mac & Linux</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/artik/proxies/index.html">Setup&#58 Proxies</a></li>
   
   
 

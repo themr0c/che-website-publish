@@ -57,8 +57,7 @@
     <a href="../../../docs/openshift/config/index.html">OpenShift</a>
   </li>
   <li>
-    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
-    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
   </li>
 </ul>
 
@@ -578,6 +577,8 @@ Choose the ARTIK stack and then select from one of the many sample projects. <a 
 
 <p>Connect your ARTIK board to your network router/switch via network cable. The ARTIK device will then obtain an IP address automatically using DHCP. To discover your ARTIK IP address log into your router and search the table of clients for the name “localhost”. Also, you can discover your artik board IP address with the following utility.</p>
 
+<h2 id="for-mac-os">For Mac OS</h2>
+
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#Determine your current computers IP to search network for ARTIK Board.</span>
 <span class="nb">export </span><span class="nv">HOST_IP</span><span class="o">=</span><span class="k">$(</span>docker run --rm --net host alpine sh -c <span class="s2">"ip a show eth1"</span> | <span class="se">\</span>
                     grep <span class="s1">'inet '</span> | cut -d/ -f1 | awk <span class="s1">'{ print $2}'</span><span class="k">)</span>
@@ -594,9 +595,43 @@ ssh root@&lt;ip-address&gt;
 </code></pre>
 </div>
 
+<h2 id="for-linux">For Linux</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#Determine your current computers IP to search network for ARTIK Board.</span>
+<span class="k">for</span> /f <span class="s2">"skip=1 tokens=2 delims=: "</span> %f <span class="k">in</span> <span class="o">(</span><span class="s1">'nslookup %COMPUTERNAME% ^| find /i "Address"'</span><span class="o">)</span> <span class="k">do </span><span class="nb">set </span><span class="nv">HOST_IP</span><span class="o">=</span>%f
+
+<span class="c">#Quick search for ARTIK device via open 22 port</span>
+docker run -i --rm -t artik-tools jdrummond/artik-tools -q -i %HOST_IP% -t 5
+
+<span class="c">#When above results in multiple ip addresses</span>
+docker run -i --rm -t artik-tools jdrummond/artik-tools -i %HOST_IP% -t 20
+
+<span class="c">#SSH in ARTIK device using ip address from above to test ip address validity.</span>
+<span class="c">#ARTIK device default username/password root/root.</span>
+bash
+&gt;ssh root@&lt;ip-address&gt;
+</code></pre>
+</div>
+
 <p><strong>Note: When the ARTIK device is powered up, it will request a new IP address each time. Be sure to determine the new IP address each time or give your ARTIK device a static IP address.</strong></p>
-<h1 id="6-connect-artik-device-with-artik-ide">6. Connect ARTIK Device with ARTIK IDE</h1>
-<p>Use the ARTIK device manager in a workspace to connect an ARTIK device to the ARTIK IDE.</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <p>master</p>
+              <h1 id="6-connect-artik-device-with-artik-ide">6. Connect ARTIK Device with ARTIK IDE</h1>
+              <p>Use the ARTIK device manager in a workspace to connect an ARTIK device to the ARTIK IDE.</p>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
 
 <ol>
   <li>Click ARTIK icon on the toolbar in workspace.</li>
@@ -914,6 +949,21 @@ Because all files in the project are auto-synced to the device it’s not necess
   
    
     <li class="current"><a href="../../../docs/artik/start-mac/index.html">Getting Started - Mac & Linux</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/artik/proxies/index.html">Setup&#58 Proxies</a></li>
   
   
 
