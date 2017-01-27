@@ -492,7 +492,7 @@ Windows users use the instructions on <a href="../../../docs/artik/start-windows
 <p>Before installing the ARTIK IDE you will need:</p>
 
 <ol>
-  <li>Docker 1.8+
+  <li>Docker 1.12+
     <ul>
       <li>Docker for <a href="https://docs.docker.com/engine/installation/mac/">Mac</a>.</li>
       <li>Docker for <a href="https://docs.docker.com/engine/installation/">Linux</a>.</li>
@@ -511,54 +511,45 @@ bash&gt;
 </code></pre>
 </div>
 
-<h1 id="1-get-artik-ide-cli">1. Get ARTIK IDE CLI</h1>
-<p>On Linux / Mac, from in a bash shell execute:</p>
+<h1 id="1-start-artik-ide">1. Start ARTIK IDE</h1>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo curl -sL https://raw.githubusercontent.com/codenvy/artik-ide/master/artik-ide.sh &gt; /usr/local/bin/artik-ide
-sudo chmod +x /usr/local/bin/artik-ide
+<p>Start syntax:</p>
+
+<p><code class="highlighter-rouge">docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v /Users/username/artik:/data codenvy/artik-cli start</code></p>
+
+<p>Note that <code class="highlighter-rouge">/Users/Username/artik</code> should be an existing Mac OS path where you want to store Artik IDE configuration and project files. This directory (or its parent directory) must be shared with the VM. On Mac OS <code class="highlighter-rouge">/Users/userName</code> is shared by default.</p>
+
+<p>Once started, you will see <code class="highlighter-rouge">instance</code> and <code class="highlighter-rouge">docs</code> directories in the specified directory, as well as <code class="highlighter-rouge">artik-ide.env</code> and <code class="highlighter-rouge">cli. log</code> files.</p>
+
+<p>After Artik IDE has successfully started, you will see URLs to load Artik IDE and APIs:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>WARN: Bound 'eclipse/che-cli' to 'eclipse/che-cli:5.1.2'
+INFO: (che cli): Checking network... (hint: '--fast' skips version, network, and nightly checks)
+INFO: (che cli): Loading cli...
+INFO: (che cli): Checking registry for version '5.1.2' images
+INFO: (che config): Generating che configuration...
+INFO: (che config): Customizing docker-compose for running in a container
+INFO: (che start): Preflight checks
+         port 8080 (http):        [AVAILABLE]
+
+INFO: (che start): Starting containers...
+INFO: (che start): Services booting...
+INFO: (che start): Server logs at "docker logs -f artik"
+INFO: (che start): Booted and reachable
+INFO: (che start): Ver: 1.3.1
+INFO: (che start): Use: http://192.168.72.2:8080
+INFO: (che start): API: http://192.168.72.2:8080/swagger
 </code></pre>
 </div>
+<p>For your convenience, you may create a shell script with the above docker syntax. You may also add <code class="highlighter-rouge">--restart=always</code> to run command so that Docker launches Artik IDE after it starts (which happens automatically on Mac OS).</p>
 
 <h4 id="installing-behind-a-proxy">Installing Behind a Proxy</h4>
 <p>If you are behind a proxy, you need to <a href="../../../docs/artik/proxies/index.html">configure your proxy settings</a> for Docker and the ARTIK IDE.</p>
 
-<h1 id="2-start-artik-ide">2. Start ARTIK IDE</h1>
+<h4 id="advanced-configuration">Advanced Configuration</h4>
+<p>There are many aspects of ARTIK IDE like port and hostname that can be configured by <a href="../../../docs/artik/start-windows/index.html#saving-configuration-in-version-control">setting Eclipse Che properties</a>.</p>
 
-<h4 id="locahost-on-mac-os">Locahost on Mac OS</h4>
-<p>On Mac OS the ARTIK IDE will be available at http://localhost:8080</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Change where workspaces are saved. Default = /home/user/che</span>
-<span class="c"># export CHE_DATA_FOLDER=/home/user/reginald</span>
-
-<span class="c"># If ARTIK will be accessed from other machines define your host IP</span>
-<span class="c"># export CHE_HOST_IP=&lt;che-host-ip&gt;</span>
-
-<span class="c"># Start ARTIK IDE</span>
-artik-ide start
-INFO: ARTIK-IDE: Found image codenvy/che-launcher:nightly
-INFO: ARTIK-IDE: Starting launcher
-INFO: ARTIK-IDE: Already have image codenvy/artikide:nightly
-INFO: ARTIK-IDE: Starting container...
-INFO: ARTIK-IDE: Server logs at <span class="s2">"docker logs -f artik-ide"</span>
-INFO: ARTIK-IDE: Server booting...
-INFO: ARTIK-IDE: Booted and reachable
-INFO: ARTIK-IDE: http://192.168.99.100:8080
-<span class="c"># Copy the URL shown in the terminal to your browser to open the dashboard</span>
-<span class="c"># Mac OS users will open the IDE at http://localhost:8080</span>
-
-<span class="c"># Stop ARTIK IDE</span>
-artik-ide stop
-
-<span class="c"># Update ARTIK IDE to the newest version</span>
-<span class="nb">export </span><span class="nv">CHE_VERSION</span><span class="o">=</span>latest
-artik-ide update
-
-<span class="c"># List all CLI commands</span>
-artik-ide <span class="nb">help</span>
-</code></pre>
-</div>
-
-<h1 id="3-create-workspaces-and-projects">3. Create Workspaces and Projects</h1>
+<h1 id="2-create-workspaces-and-projects">2. Create Workspaces and Projects</h1>
 <p>The ARTIK IDE provides a step-by-step wizard for creating your first workspace. It provides stacks for ARTIK and Android, as well as many other languages through the “Stack Library.”  Stacks will populate the workspace with a runtime, SDK, and libraries needed for building new projects that will run on an ARTIK board.</p>
 
 <p>A workspace can have one or more projects. Each project can have a different type that supports different kinds of programming languages and build frameworks. When you create your first workspace, you can provide the project from a Git repository or using one of the included templates.</p>
@@ -566,10 +557,10 @@ artik-ide <span class="nb">help</span>
 <p><img src="../../../docs/assets/imgs/createwsandproject.jpg" alt="createwsandproject.jpg" />
 Choose the ARTIK stack and then select from one of the many sample projects. <a href="../../..">Tutorial: Artik Blink LED</a> is a good starter tutorial that uses the Ready-to-run project template <code class="highlighter-rouge">artik-blink-led</code>.</p>
 
-<h1 id="4-setup-an-artik-device">4. Setup an ARTIK Device</h1>
+<h1 id="3-setup-an-artik-device">3. Setup an ARTIK Device</h1>
 <p>Review Samsung ARTIK getting started docs at <a href="https://developer.artik.io/documentation/getting-started-beta/powering-up.html">https://developer.artik.io/documentation/getting-started-beta/powering-up.html</a> and <a href="https://developer.artik.io/documentation/getting-started-beta/communicating-pc.html">https://developer.artik.io/documentation/getting-started-beta/communicating-pc.html</a>. This will help understand how to power up the ARTIK device(connect power and press SW3 switch) and how to setup communication with the ARTIK device.</p>
 
-<h1 id="5-discover-artik-device-ip-address">5. Discover ARTIK Device IP Address</h1>
+<h1 id="4-discover-artik-device-ip-address">4. Discover ARTIK Device IP Address</h1>
 <p>The quickest way to get started is to connect your ARTIK device to the computer running the ARTIK IDE with a male USB to male USB cable: <a href="../../../docs/artik/usb-connection-setup/index.html">quick connection over USB discovery</a>. However, this cable doesn’t ship with the ARTIK device and connecting over the network is often required in the long-term.</p>
 
 <p>Connect your ARTIK board to your network router/switch via network cable. The ARTIK device will then obtain an IP address automatically using DHCP. To discover your ARTIK IP address log into your router and search the table of clients for the name “localhost”. Also, you can discover your artik board IP address with the following utility.</p>
@@ -613,7 +604,7 @@ bash
 <p><strong>Note: When the ARTIK device is powered up, it will request a new IP address each time. Be sure to determine the new IP address each time or give your ARTIK device a static IP address.</strong></p>
 
 <p>=======</p>
-<h1 id="6-connect-artik-device-with-artik-ide">6. Connect ARTIK Device with ARTIK IDE</h1>
+<h1 id="5-connect-artik-device-with-artik-ide">5. Connect ARTIK Device with ARTIK IDE</h1>
 <p>Use the ARTIK device manager in a workspace to connect an ARTIK device to the ARTIK IDE.</p>
 
 <ol>
@@ -628,7 +619,7 @@ bash
 
 <p><img src="../../../docs/assets/imgs/artikmanageradddevice.jpg" alt="artikmanageradddevice.jpg" /></p>
 
-<h1 id="7-build">7. Build</h1>
+<h1 id="6-build">6. Build</h1>
 
 <h4 id="building-in-the-ide">Building in the IDE</h4>
 <p>We recommend only building in the IDE workspace, not on the device itself because this is simpler and the IDE is smart enough to cross-compile the binary and push it to the device so it can be instantly run there.</p>
@@ -645,7 +636,7 @@ bash
 <h4 id="project-replication">Project Replication</h4>
 <p>The project files (including both source and binaries) are automatically synced into the <code class="highlighter-rouge">project replication folder</code> on the device. You can set the project replication folder when adding or editing a device in the Device Manager dialog box (press the ARTIK IDE button on the menu bar). Read more about <a href="#6-connect-artik-device-with-artik-ide">connecting devices</a>.</p>
 
-<h1 id="8-deploy-run-and-debug">8. Deploy, Run and Debug</h1>
+<h1 id="7-deploy-run-and-debug">7. Deploy, Run and Debug</h1>
 <p><strong>Run</strong>
 To run your application. select the project you want to run (it can be a source file as well) and press <strong>Run</strong> button. Note that you should first compile the project. The binary is run on the device, while the output is streamed to consoles panel in the IDE.</p>
 
@@ -661,7 +652,7 @@ Debugging requires <code class="highlighter-rouge">gdbserver</code> to be instal
 <p><strong>Deploy (optional)</strong>
 Because all files in the project are auto-synced to the device it’s not necessary to deploy anything to the device. However, if you want to push files to specific locations on the device (not the project replication folder) you can right-click on the artifact and choose <code class="highlighter-rouge">Push to Device</code> then <code class="highlighter-rouge">Choose Target...</code>.</p>
 
-<h1 id="10-production-and-development-profiles">10. Production and Development Profiles</h1>
+<h1 id="8-production-and-development-profiles">8. Production and Development Profiles</h1>
 <p>Your Artik device needs certain software to make it possible for Artik IDE to debug apps, sync project files, make use of C/C++ and Node SDKs.</p>
 
 <p>Turning on a development profile will install the minimum software package that includes node.js, rsync and a gdbserver.</p>
@@ -670,7 +661,7 @@ Because all files in the project are auto-synced to the device it’s not necess
 
 <p>Profiles are available at <strong>Artik &gt; Profiles</strong> or by right clicking the device in machines panel in the bottom.</p>
 
-<h1 id="11-troubleshooting">11. Troubleshooting</h1>
+<h1 id="9-troubleshooting">9. Troubleshooting</h1>
 <p>If you experience problems, please file an issue on the <a href="https://github.com/eclipse/che/issues">Eclipse Che GitHub page</a> where Che and ARTIK engineers can help you.</p>
 
           
@@ -946,7 +937,52 @@ Because all files in the project are auto-synced to the device it’s not necess
   
   
    
+    <li class=""><a href="../../../docs/artik/setup-cli/index.html">CLI Reference</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
     <li class=""><a href="../../../docs/artik/proxies/index.html">Setup&#58 Proxies</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/artik/config/index.html">Setup&#58 Configuration</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/artik/network/index.html">Setup&#58 Networking</a></li>
   
   
 

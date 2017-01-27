@@ -57,8 +57,7 @@
     <a href="../../../docs/openshift/config/index.html">OpenShift</a>
   </li>
   <li>
-    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
-    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
   </li>
 </ul>
 
@@ -83,8 +82,7 @@
     <a href="../../../docs/openshift/config/index.html">OpenShift</a>
   </li>
   <li>
-    <a href="https://github.com/codenvy/che-docs/tree/master/docs/">GitHub</a>
-    <!-- Fix once moved to eclipse/che-docs<a href="https://github.com/eclipse/che/tree/master/docs/"><span class="hide-on-mobiles">View on </span>GitHub</a>-->
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
   </li>
 </ul>
 
@@ -497,65 +495,33 @@
             </div>
           </div>
           
-<p>Volume mounts are used by Eclipse Che to mount remote external files and directories into the workspaces. Users can mount volumes external to docker and between other containers.</p>
+<p>Volume mounts are used by Eclipse Che to mount remote external files and directories into the workspaces and containers within them.</p>
 
-<h1 id="mounting-a-single-volume">Mounting a Single Volume</h1>
-<p>Mount a single volume to all workspaces/containers by setting the environment variable <code class="highlighter-rouge">CHE_EXTRA_VOLUME_MOUNT</code> with <code class="highlighter-rouge">&lt;host-mount-path&gt;:&lt;ws-mount-path&gt;</code> before starting Che.</p>
+<h1 id="mounting-volumes">Mounting Volumes</h1>
+<p>Mounting volumes makes them available to all your workspaces. You can mount one or more volumes by uncommenting the <code class="highlighter-rouge">CHE_WORKSPACE_VOLUME</code> environment variable in the <code class="highlighter-rouge">che.env</code> file (found in the root of the data directory you mounted into Che when starting it) and adding your directories or files to it. Add multiple entries separated by semicolons to mount multiple volumes.</p>
 
-<p>All workspaces will have access to this volume mount.</p>
+<p>In the <code class="highlighter-rouge">che.env</code>:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Linux/Mac</span>
-<span class="nb">set </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Example of a single mount</span>
+<span class="nv">CHE_WORKSPACE_VOLUME</span><span class="o">=</span>/codenvy/tmp:/home/user/tmp
 
-<span class="c"># Windows</span>
-<span class="nb">export </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh
+<span class="c"># Example of multiple mounts</span>
+<span class="nv">CHE_WORKSPACE_VOLUME</span><span class="o">=</span>/codenvy/tmp:/home/user/tmp;/.ssh:/home/user/.ssh
 </code></pre>
-</div>
-
-<h1 id="mounting-multiple-volumes">Mounting Multiple Volumes</h1>
-<p>Mount multiple volumes to all workspaces/containers by setting the environment variable <code class="highlighter-rouge">CHE_EXTRA_VOLUME_MOUNT</code> with <code class="highlighter-rouge">&lt;host-mount-path1&gt;:&lt;ws-mount-path1&gt;;&lt;host-mount-path2&gt;:&lt;ws-mount-path2&gt;</code> before starting Che. Each volume mount is separated by a semicolon <code class="highlighter-rouge">;</code>.</p>
-
-<p>All workspaces will have access to these mounted volumes.</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Linux/Mac</span>
-<span class="nb">set </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh;~/.m2:/home/user/.m2
-
-<span class="c"># Windows</span>
-<span class="nb">export </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh;~/.m2:/home/user/.m2
-</code></pre>
-</div>
-
-<h1 id="sharing-volumes-between-containers">Sharing Volumes Between Containers</h1>
-<p>Share volumes between containers by using <code class="highlighter-rouge">volumes_from</code> in Docker compose using json syntax. Refer to <a href="../../../docs/workspace/recipes/index.html#multi-container-recipes">Multi-Container recipes</a> for additional information.</p>
-
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="err">...</span><span class="w">
-</span><span class="s2">"volumes_from"</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-  </span><span class="s2">"some-machine\n  "</span><span class="err">db-machine"</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span><span class="err">...</span><span class="w">
-
-</span></code></pre>
 </div>
 
 <h1 id="setting-permissions">Setting Permissions</h1>
-<p>Set read-only or read-write permissions to volumes by adding <code class="highlighter-rouge">:ro</code>(read-only) or <code class="highlighter-rouge">:rw</code>(read-write) to the end of the mount definition(s). When no permissions is set read-write permission is used.</p>
+<p>Set read-only or read-write permissions to volumes by adding <code class="highlighter-rouge">:ro</code>(read-only) or <code class="highlighter-rouge">:rw</code>(read-write) to the end of the mount definition(s). When no permission is set Che assumes a read-write permission.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#Linux/Mac</span>
-<span class="nb">set </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh:ro;~/.m2:/home/user/.m2:rw
+<p>In the <code class="highlighter-rouge">che.env</code>:</p>
 
-<span class="c">#Windows</span>
-<span class="nb">set </span><span class="nv">CHE_EXTRA_VOLUME_MOUNT</span><span class="o">=</span>~/.ssh:/home/user/.ssh:ro;~/.m2:/home/user/.m2:rw
-
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nv">CHE_WORKSPACE_VOLUME</span><span class="o">=</span>~/.ssh:/home/user/.ssh:ro;~/.m2:/home/user/.m2:rw
 </code></pre>
 </div>
 
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>...
-"volumes_from" : [
-  "some-machine:ro\n  "db-machine:rw"
-]
-...
-</code></pre>
-</div>
+<h1 id="private-unshared-label-volume">Private Unshared Label Volume</h1>
+
+<p>For operating systems like CentOS 7 with SELinux activated volume mounts require volumes to be labelled. Providing a <code class="highlighter-rouge">Z</code> option creates a private unshared label volume. For other operating system that do not have SELinux the <code class="highlighter-rouge">Z</code> option does not need to be provided but in all cases will work if provided. More information can be found at <a href="https://docs.docker.com/engine/tutorials/dockervolumes/#/volume-labels">https://docs.docker.com/engine/tutorials/dockervolumes/#/volume-labels</a> and <a href="http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/">http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/</a>.</p>
 
         </article>
       </div>

@@ -9,7 +9,7 @@
           <ul class="mobile-menu-items collapse" id="mobileMenuItems">
             <li><a href="<?php echo $rootPath; ?>/technology/">Technology</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
-            <li><a target="_blank" href="https://eclipse-che.readme.io/docs/">Docs</a></li>
+            <li><a target="_blank" href="<?php echo $rootPath; ?>/docs/">Docs</a></li>
             <li><a target="_blank"  href="https://medium.com/eclipse-che-blog">Blog</a></li>
             <li><a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></li>
           </ul>
