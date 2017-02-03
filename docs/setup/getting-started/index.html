@@ -476,6 +476,16 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -505,14 +515,11 @@
 <h1 id="how-to-get-help">How to Get Help</h1>
 
 <h3 id="support">Support</h3>
-<p>If the unthinkable happens, or you have a question, you can post <a href="https://github.com/eclipse/che/issues">issues on our GitHub page</a>. Please follow the <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md">guidelines on issue reporting</a> and provide:</p>
+<p>Post questions or issues <a href="https://github.com/eclipse/che/issues">on GitHub</a>. Please follow the <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md">guidelines on issue reporting</a> and provide:</p>
 
 <ul>
-  <li>your OS distribution and version</li>
-  <li>output of <code class="highlighter-rouge">docker version</code> command</li>
-  <li>output of <code class="highlighter-rouge">docker info</code> command</li>
-  <li>the full <code class="highlighter-rouge">docker run ...</code> syntax you used on the command line</li>
-  <li>the output of <code class="highlighter-rouge">cli.log</code></li>
+  <li>output of ‘docker run eclipse/che info’ command</li>
+  <li>if requested, a support package with ‘docker run eclipse/che info –bundle’</li>
 </ul>
 
 <h3 id="documentation">Documentation</h3>
@@ -580,52 +587,6 @@ docker run &lt;DOCKER_OPTIONS&gt; -e <span class="nv">CHE_HOST</span><span class
   <li>Create reproducible workspaces with <a href="../../../docs/chedir/getting-started/index.html">chedir</a>.</li>
   <li>Create a <a href="../../../docs/workspace/stacks/index.html">custom runtime stack</a>.</li>
 </ul>
-
-<h1 id="syntax">Syntax</h1>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>USAGE:
-  docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; [COMMAND]
-
-MANDATORY DOCKER PARAMETERS:
-  -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
-
-OPTIONAL DOCKER PARAMETERS:
-  -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
-  -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
-  -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
-  -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
-  -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries
-  -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
-  -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimizing sync command resides
-  -v &lt;LOCAL_PATH&gt;:/chedir              Soure repository to convert into workspace with Chedir utility
-
-COMMANDS:
-  action &lt;action-name&gt;                 Start action on che instance
-  backup                               Backups che configuration and data to /data/backup volume mount
-  config                               Generates a che config from vars; run on any start / restart
-  destroy                              Stops services, and deletes che instance data
-  dir &lt;command&gt;                        Use Chedir and Chefile in the directory mounted to :/chedir
-  download                             Pulls Docker images for the current che version
-  help                                 This message
-  info                                 Displays info about che and the CLI
-  init                                 Initializes a directory with a che install
-  offline                              Saves che Docker images into TAR files for offline install
-  restart                              Restart che services
-  restore                              Restores che configuration and data from /data/backup mount
-  rmi                                  Removes the Docker images for &lt;version&gt;, forcing a repull
-  ssh &lt;wksp-name&gt; [machine-name]       SSH to a workspace if SSH agent enabled
-  start                                Starts che services
-  stop                                 Stops che services
-  sync &lt;wksp-name&gt;                     Synchronize workspace with local directory mounted to :/sync
-  test &lt;test-name&gt;                     Start test on che instance
-  upgrade                              Upgrades che from one version to another with migrations and backups
-  version                              Installed version and upgrade paths
-
-GLOBAL COMMAND OPTIONS:
-  --fast                               Skips networking and version checks (saves 5 secs during bootstrap)
-  --debug                              Enable debugging of che server
-</code></pre>
-</div>
 
 <h1 id="pre-reqs">Pre-Reqs</h1>
 
@@ -739,6 +700,20 @@ docker run hello-world
                        eclipse/che:&lt;version&gt; [COMMAND]
 </code></pre>
 </div>
+
+<h1 id="multiple-containers">Multiple Containers</h1>
+<p>If you want to run multiple Che instances at the same time on the same host, each execution of Che needs to have a different:</p>
+<ol>
+  <li>Port</li>
+  <li>Che container name</li>
+  <li>Data folder</li>
+</ol>
+
+<p>We determine the Che container name with the format <code class="highlighter-rouge">&lt;prefix&gt;-&lt;port&gt;</code>. The default prefix is <code class="highlighter-rouge">che</code> and can be changed on the CLI with <code class="highlighter-rouge">-e CHE_CONTAINER_PREFIX=&lt;name&gt;</code>. If you use the default port, then this value is not added to the container name. However, if you change the port with <code class="highlighter-rouge">-e CHE_PORT=&lt;port&gt;</code> then we will use that value as part of the container name.</p>
+
+<p>When the CLI executes, it creates a configuration that ultimately launches a container from <code class="highlighter-rouge">eclipse/che-server</code> image which is the image that contains the Che container. This container receives the unique name created above.</p>
+
+<p>You can also optionally just set the name of the container with a UUID by setting <code class="highlighter-rouge">-e CHE_CONTAINER=&lt;name&gt;</code>.</p>
 
 <h1 id="proxy-installation">Proxy Installation</h1>
 <p>You can install and operate Che behind a proxy:</p>
@@ -1795,6 +1770,36 @@ docker rmi -f eclipse/che
   
    
     <li class=""><a href="../../../docs/plugins/java-class-reference/index.html">Java Class Reference</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/agents/index.html">Creating Custom Agents</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/languageserver/index.html">Language Server Protocol</a></li>
   
   
 

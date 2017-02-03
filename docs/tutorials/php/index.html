@@ -130,70 +130,105 @@
 
 <p><img src="../../../docs/assets/imgs/php.png" alt="php.png" /></p>
 
-<h1 id="2-start-apache-server">2. Start Apache Server</h1>
-<p>This project has 3 custom commands to start, stop and restart apache2.</p>
+<h1 id="2-explore-and-modify-the-project-code">2. Explore and Modify the Project Code</h1>
+
+<p>The sample project contains just a simple “Hello World!” script written in PHP.</p>
+
+<p>Expand the project’s source tree in the Project Explorer panel on the left side of the screen. Double-click on the <code class="highlighter-rouge">index.php</code> file to open it in the PHP editor.</p>
+
+<p>The <code class="highlighter-rouge">index.php</code> file contains a single instruction that will print “Hello World!” to the standard output.</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="k">echo</span> <span class="s2">"Hello World!"</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>You can use the editor to edit the script. The PHP editor provides rich <a href="../../../docs/ide/intellisense/index.html">IntelliSense</a> features like syntax hightlighting, code completion, code validation, code navigation, etc.</p>
+
+<h1 id="3-execute-as-a-script">3. Execute as a Script</h1>
+
+<p>The PHP stack has the <code class="highlighter-rouge">run php script</code> command that allows you to run the currently opened PHP file as a CLI script, i.e. the output of the PHP script will be printed in the Terminal panel.</p>
+
+<p>While you have the <code class="highlighter-rouge">index.php</code> file on focus in the PHP editor, run the <code class="highlighter-rouge">run php script</code> command in the CMD command widget. “Hello World!” will be printed in the Terminal panel.</p>
+
+<h1 id="4-run-as-a-web-app">4. Run as a Web App</h1>
+
+<p>The PHP stack includes the Apache Web Server and has commands for starting, stopping and restarting it.</p>
 
 <p><code class="highlighter-rouge">start apache</code> will start the server and tail apache error and access logs. It will also produce a preview URL that will point to your current project directory that Apache is already listening (Document root is changed to <code class="highlighter-rouge">projects</code>).</p>
 
 <p>You should see a Hello World page. Open <code class="highlighter-rouge">index.php</code>, edit it, refresh the preview page in your browser to see live changes.</p>
 
-<h1 id="composer-and-unit-tests">Composer and Unit Tests</h1>
-<p>A PHP stack has composer already installed and configured. Composer is used to manage project dependencies, i.e. makes it easy to use 3rd party libs and frameworks.</p>
+<h1 id="5-debug">5. Debug</h1>
 
-<p>Let’s add a PHPUnit framework and white a simple Unit test.</p>
+<p>The PHP stack includes the Zend Debugger module, which allows debugging PHP both as CLI script and Web app. See the <a href="../../../docs/ide/debug/index.html#php">Debug - PHP</a> page for details.</p>
+
+<h1 id="6-composer-and-unit-tests">6. Composer and Unit Tests</h1>
+<p>A PHP stack has <a href="https://getcomposer.org/">Composer</a> already installed and configured. Composer is used to manage project dependencies, i.e. makes it easy to use 3rd party libs and frameworks. Look at the <a href="../../../docs/tutorials/composer/index.html">Composer tutorial</a> for more details on how to work with Composer in Che.</p>
+
+<p>Let’s add the <a href="https://phpunit.de/">PHPUnit</a> testing framework and write a simple Unit test.</p>
 
 <p>In project root, create <code class="highlighter-rouge">composer.json</code> file with the following contents:</p>
+
 <div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"phpunit/phpunit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4.3.*"</span><span class="w">
+        </span><span class="nt">"phpunit/phpunit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.7.*"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 </div>
 
-<p>In the <code class="highlighter-rouge">Consoles</code> panel, click New Terminal (+) button. This will open up a bash terminal:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> /projects/web-php-simple
-composer update --no-dev
+<p>The JSON editor provides IntelliSense too. It provides code completion and validation according to the composer.json schema.</p>
+
+<p>In the <code class="highlighter-rouge">Processes</code> panel, click New Terminal (+) button. This will open up a bash terminal:</p>
+
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> /projects/web-php-simple
+<span class="gp">$ </span>composer update --no-dev
 </code></pre>
 </div>
 
-<p>This will install a <code class="highlighter-rouge">phpunit</code> framework into <code class="highlighter-rouge">vendor</code> directory in the project. Click <code class="highlighter-rouge">refresh</code> button on the project explorer panel to see this new directory.</p>
+<p>This will install the <code class="highlighter-rouge">phpunit</code> framework into <code class="highlighter-rouge">vendor</code> directory in the project.</p>
 
-<p>Now, that a new framework is installed, let’s write a simple test. Create <code class="highlighter-rouge">test.php</code> file:</p>
+<p>Now, let’s write a simple test. Create a <code class="highlighter-rouge">test.php</code> file:</p>
+
 <div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
 
 <span class="k">require_once</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">SimpleTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span> <span class="p">{</span>
 
-<span class="k">public</span> <span class="k">function</span> <span class="nf">testTrueIsTrue</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nv">$foo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertTrue</span><span class="p">(</span><span class="nv">$foo</span><span class="p">);</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">testTrueIsTrue</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$foo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertTrue</span><span class="p">(</span><span class="nv">$foo</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="cp">?&gt;</span>
 </code></pre>
 </div>
 
 <p>This test basically checks nothing but demonstrates use of composer-provided frameworks. Having required <code class="highlighter-rouge">vendor/autoload.php</code> it is possible to use any functions of <code class="highlighter-rouge">phpunit</code>.</p>
 
 <p>Run the test:</p>
-<div class="language-php highlighter-rouge"><pre class="highlight"><code>user@460447f3f849:/projects/web-php-simple$ vendor/bin/phpunit test.php
 
-PHPUnit 4.3.5 by Sebastian Bergmann.
-Time: 17 ms, Memory: 2.50Mb                                                      
-OK (1 test, 1 assertion)            
+<div class="language-sh highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>vendor/bin/phpunit test.php
+PHPUnit 5.7.9 by Sebastian Bergmann and contributors.
+
+.                                                                   1 / 1 <span class="o">(</span>100%<span class="o">)</span>
+
+Time: 27 ms, Memory: 2.75MB
+
+OK <span class="o">(</span>1 <span class="nb">test</span>, 1 assertion<span class="o">)</span>
 </code></pre>
 </div>
 
-<h1 id="3-create-a-rest-service-with-slim">3. Create a REST Service With Slim</h1>
+<h1 id="7-create-a-rest-service-with-slim">7. Create a REST Service With Slim</h1>
 <p>Slim makes it possible to create REST services. Let’s add this framework to <code class="highlighter-rouge">composer.json</code>:</p>
+
 <div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"phpunit/phpunit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4.3.*"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"slim/slim"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.*"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="nt">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"phpunit/phpunit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.7.*"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"slim/slim"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.*"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 </div>
@@ -210,19 +245,18 @@ OK (1 test, 1 assertion)
 <span class="p">});</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
-
-<span class="cp">?&gt;</span>
 </code></pre>
 </div>
 
 <p>This script creates a REST service that takes a path parameter and returns it as <code class="highlighter-rouge">Hello $pathParam</code>. So, <code class="highlighter-rouge">http://&lt;your-che-host&gt;:$port/$appName/Che</code> should return <code class="highlighter-rouge">Hello Che</code>.</p>
 
 <p>This app will need mod_rewrite enabled to avoid using an ugly URL with <code class="highlighter-rouge">index.php</code> in the path. In the project root, create a <code class="highlighter-rouge">.htaccess</code> file:</p>
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>RewriteEngine on             
+
+<div class="language-text highlighter-rouge"><pre class="highlight"><code>RewriteEngine on
 RewriteRule ^ index.php [QSA,L]
 </code></pre>
 </div>
-<p>Apache needs to be restarted. Run <code class="highlighter-rouge">apache restart</code> command in CMD command widget.</p>
+<p>Apache needs to be restarted. Run <code class="highlighter-rouge">restart apache</code> command in the CMD command widget.</p>
 
 <p>Now, navigate to <code class="highlighter-rouge">http://&lt;your-che-host&gt;:$port/$project/Che</code> to find <code class="highlighter-rouge">Hello Che</code> in a response:</p>
 
@@ -382,6 +416,21 @@ RewriteRule ^ index.php [QSA,L]
   
    
     <li class="current"><a href="../../../docs/tutorials/php/index.html">PHP in Che</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/tutorials/composer/index.html">Composer</a></li>
   
   
 

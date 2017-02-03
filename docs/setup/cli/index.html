@@ -476,6 +476,16 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -498,7 +508,7 @@
 <p>The Docker image which runs Che is the Che CLI. It has various commands for running Che and also for allowing your end users to interact with their workspaces on the command line.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>USAGE:
-  docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; [COMMAND]
+  docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; [COMMAND]
 
 MANDATORY DOCKER PARAMETERS:
   -v &lt;LOCAL_PATH&gt;:/data                Where user, instance, and log data saved
@@ -506,13 +516,15 @@ MANDATORY DOCKER PARAMETERS:
 OPTIONAL DOCKER PARAMETERS:
   -e CHE_HOST=&lt;YOUR_HOST&gt;              IP address or hostname where che will serve its users
   -e CHE_PORT=&lt;YOUR_PORT&gt;              Port where che will bind itself to
+  -e CHE_CONTAINER=&lt;YOUR_NAME&gt;         Prefix name for the che container
   -v &lt;LOCAL_PATH&gt;:/data/instance       Where instance, user, log data will be saved
   -v &lt;LOCAL_PATH&gt;:/data/backup         Where backup files will be saved
-  -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries
+  -v &lt;LOCAL_PATH&gt;:/repo                che git repo - uses local binaries and manifests
+  -v &lt;LOCAL_PATH&gt;:/assembly            che assembly - uses local binaries
   -v &lt;LOCAL_PATH&gt;:/sync                Where remote ws files will be copied with sync command
   -v &lt;LOCAL_PATH&gt;:/unison              Where unison profile for optimizing sync command resides
   -v &lt;LOCAL_PATH&gt;:/chedir              Soure repository to convert into workspace with Chedir utility
-
+  
 COMMANDS:
   action &lt;action-name&gt;                 Start action on che instance
   backup                               Backups che configuration and data to /data/backup volume mount
@@ -536,8 +548,10 @@ COMMANDS:
   version                              Installed version and upgrade paths
 
 GLOBAL COMMAND OPTIONS:
-  --fast                               Skips networking and version checks (saves 5 secs during bootstrap)
+  --fast                               Skips networking, version, nightly and preflight checks
+  --offline                            Runs CLI in offline mode, loading images from disk
   --debug                              Enable debugging of che server
+  --trace                              Activates trace output for debugging CLI
 </code></pre>
 </div>
 
@@ -585,7 +599,7 @@ Then, any changes inside the IDE will be reflected in your host folder. And the 
 <p><code class="highlighter-rouge">download</code> is invoked by <code class="highlighter-rouge">che init</code> before initialization to download images for the version specified by <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code>.</p>
 
 <h3 id="info">info</h3>
-<p>Displays system state and debugging information. <code class="highlighter-rouge">--network</code> runs a test to take your <code class="highlighter-rouge">CHE_HOST</code> value to test for networking connectivity simulating browser &gt; Che and Che &gt; workspace connectivity.</p>
+<p>Displays system state and debugging information. <code class="highlighter-rouge">--network</code> runs a test to take your <code class="highlighter-rouge">CHE_HOST</code> value to test for networking connectivity simulating browser &gt; Che and Che &gt; workspace connectivity. <code class="highlighter-rouge">--bundle</code> will generate a support diagnostic bundle in a TAR file which includes the output of certain commands and your execution logs.</p>
 
 <h3 id="init">init</h3>
 <p>Initializes an empty directory with a Che configuration and instance folder where user data and runtime configuration will be stored. You must provide a <code class="highlighter-rouge">&lt;path&gt;:/data</code> volume mount, then Che creates a <code class="highlighter-rouge">instance</code> and <code class="highlighter-rouge">backup</code> subfolder of <code class="highlighter-rouge">&lt;path&gt;</code>. You can optionally override the location of <code class="highlighter-rouge">instance</code> by volume mounting an additional local folder to <code class="highlighter-rouge">/data/instance</code>. You can optionally override the location of where backups are stored by volume mounting an additional local folder to <code class="highlighter-rouge">/data/backup</code>.  After initialization, a <code class="highlighter-rouge">che.env</code> file is placed into the root of the path that you mounted to <code class="highlighter-rouge">/data</code>.</p>
@@ -675,7 +689,7 @@ The ssh connection will work only if there is a workspace ssh key setup. A defau
 <p>Starts Che and its services using <code class="highlighter-rouge">docker-compose</code>. If the system cannot find a valid configuration it will perform an <code class="highlighter-rouge">init</code>. Every <code class="highlighter-rouge">start</code> and <code class="highlighter-rouge">restart</code> will run a <code class="highlighter-rouge">config</code> to generate a new configuration set using the latest configuration. The starting sequence will perform pre-flight testing to see if any ports required by Che are currently used by other services and post-flight checks to verify access to key APIs.</p>
 
 <h3 id="stop">stop</h3>
-<p>Stops all of the Che service containers and removes them.</p>
+<p>The default stop is a graceful stop where each workspace is stopped and confirmed shutdown before stopping system services. If workspaces are configured to snap on stop, then all snaps will be completed before system service shutdown begins. You can ignore workspace stop behavior and shut down only system services with –force flag.</p>
 
 <h3 id="test">test</h3>
 <p>Performs some tests on your local instance of Che. It can for example check the ability to create a workspace, start the workspace by using a custom Workspace runtime and then use it.
@@ -732,8 +746,8 @@ docker run &lt;volume-mounts&gt; eclipse/che:5.0.0-M7 upgrade
 
 <p>If you run the Che CLI in this configuration, then any changes made to the bash files or templates in those repositories will be used without having to first rebuild the CLI image.</p>
 
-<h2 id="custom-cli-assemblies">Custom CLI Assemblies</h2>
-<p>The Che CLI was designed to easily be overridden to allow different CLIs to be created from the same base structure. This is how Codenvy and ARTIK has an identical CLIs to Che. The CLI is created with a few minimal assets:</p>
+<h2 id="custom-cli">Custom CLI</h2>
+<p>The Che CLI was designed to be overridden to allow different CLIs to be created from the same base structure. This is how Codenvy and ARTIK has an identical CLIs to Che. The CLI is created with a few minimal assets:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>/dockerfiles/cli/build.sh               # Local file to build the image
 /dockerfiles/cli/Dockerfile             # Image definition, must FROM eclipse/che-base:nightly
@@ -1738,6 +1752,36 @@ docker run &lt;volume-mounts&gt; eclipse/che:5.0.0-M7 upgrade
   
    
     <li class=""><a href="../../../docs/plugins/java-class-reference/index.html">Java Class Reference</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/agents/index.html">Creating Custom Agents</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/languageserver/index.html">Language Server Protocol</a></li>
   
   
 

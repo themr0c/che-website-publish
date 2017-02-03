@@ -460,6 +460,16 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -479,22 +489,40 @@
             </div>
           </div>
           
-<p>Your users may need their workspaces to operate over a proxy to the Internet. The ARTIK IDE has three dependencies to the Internet:</p>
+<p>(Note that the ARTIK IDE is based on the open source Eclipse Che project - you will see references to Che in these docs).</p>
+
+<p>You can install and operate ARTIK behind a proxy:</p>
 
 <ol>
-  <li>Docker, in order to download Docker images from DockerHub.</li>
-  <li>Importers, in order to clone sample projects or source code at an external repository to mount into a workspace.</li>
-  <li>Workspaces created by users, which have their own internal operating system. Users that want to reach the Internet from within their workspace, such as for <code class="highlighter-rouge">maven</code> or <code class="highlighter-rouge">npm</code>, also need a proxy configuration.</li>
+  <li>Configure each physical node’s Docker daemon with proxy access.</li>
+  <li>Optionally, override workspace proxy settings for users if you want to restrict their Internet access.</li>
 </ol>
 
-<p>When a user creates a workspace, we will perform docker pull. This command will communicate with Docker Hub. You need to configure proxy settings in Docker:</p>
-<ul>
-  <li><a href="https://docs.docker.com/docker-for-windows/#proxies">For Docker on Windows 10</a></li>
-  <li><a href="https://docs.docker.com/engine/admin/systemd/#http-proxy">For Docker on Windows Boot2Docker(Virtualbox)</a></li>
-  <li><a href="https://docs.docker.com/docker-for-mac/#/http-proxy-settings">For Docker on Mac OS</a></li>
-  <li><a href="https://docs.docker.com/engine/admin/systemd/#http-proxy">For Docker on Linux</a></li>
-</ul>
+<table>
+  <tbody>
+    <tr>
+      <td>Before starting ARTIK, configure <a href="https://docs.docker.com/engine/admin/systemd/#/http-proxy">Docker’s daemon for proxy access</a>. If you have Docker for Windows or Docker for Mac installed on your desktop and installing Che, these utilities have a GUI in their settings which let you set the proxy settings directly: <a href="https://docs.docker.com/docker-for-windows/#/proxies">Windows</a></td>
+      <td><a href="https://docs.docker.com/docker-for-mac/#/http-proxy-settings">Mac OSX</a>.</td>
+    </tr>
+  </tbody>
+</table>
 
+<p>Please be mindful that your <code class="highlighter-rouge">HTTP_PROXY</code> and/or <code class="highlighter-rouge">HTTPS_PROXY</code> that you set in the Docker daemon must have a protocol and port number. Proxy configuration is quite finnicky, so please ensure you provide a fully qualified proxy location.</p>
+
+<p>If you configure <code class="highlighter-rouge">HTTP_PROXY</code> or <code class="highlighter-rouge">HTTPS_PROXY</code> in your Docker daemon, we will add <code class="highlighter-rouge">localhost,127.0.0.1,CHE_HOST</code> to your <code class="highlighter-rouge">NO_PROXY</code> value where <code class="highlighter-rouge">CHE_HOST</code> is the DNS or IP address of your ARTIK instance. We recommend that you add the short and long form DNS entry to your Docker’s <code class="highlighter-rouge">NO_PROXY</code> setting if it is not already set.</p>
+
+<p>We will add some values to <code class="highlighter-rouge">artik.env</code> that contain some proxy overrides. You can optionally modify these with overrides:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CHE_HTTP_PROXY=&lt;YOUR_PROXY_FROM_DOCKER&gt;
+CHE_HTTPS_PROXY=&lt;YOUR_PROXY_FROM_DOCKER&gt;
+CHE_NO_PROXY=localhost,127.0.0.1,&lt;YOUR_CHE_HOST&gt;
+CHE_HTTP_PROXY_FOR_WORKSPACES=&lt;YOUR_PROXY_FROM_DOCKER&gt;
+CHE_HTTPS_PROXY_FOR_WORKSPACES=&lt;YOUR_PROXY_FROM_DOCKER&gt;
+CHE_NO_PROXY_FOR_WORKSPACES=localhost,127.0.0.1,&lt;YOUR_CHE_HOST&gt;
+</code></pre>
+</div>
+
+<p>The last three entries are injected into workspaces created by your users. This gives your users access to the Internet from within their workspaces. You can comment out these entries to disable access. However, if that access is turned off, then the default templates with source code will fail to be created in workspaces as those projects are cloned from GitHub.com. Your workspaces are still functional, we just prevent the template cloning.</p>
 
           
 
@@ -502,6 +530,12 @@
 
 
 
+
+  
+  
+
+  
+  
 
   
   
@@ -830,6 +864,21 @@
   
    
     <li class=""><a href="../../../docs/artik/usb-connection-setup/index.html">Setup&#58 ARTIK USB</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="">Error Generating Page Link. Contact Maintainer./docs/artik/docker/</a></li>
   
   
 

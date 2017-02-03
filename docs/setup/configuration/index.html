@@ -476,6 +476,16 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -614,15 +624,23 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 </code></pre>
 </div>
 
-<p>You can also optionally use your local binaries in production mode by volume mounting <code class="highlighter-rouge">:/repo</code> without passing <code class="highlighter-rouge">--debug</code>.</p>
-
-<p>There are two locations that files in your Che source repository will be used instead of those in the image:</p>
+<p>You can also optionally use your local binaries in production mode by volume mounting <code class="highlighter-rouge">:/repo</code> without passing <code class="highlighter-rouge">--debug</code>. There are two locations that files in your Che source repository will be used instead of those in the image:</p>
 
 <ol>
   <li>During the <code class="highlighter-rouge">che config</code> phase, the source repository’s <code class="highlighter-rouge">/dockerfiles/init/modules</code> and <code class="highlighter-rouge">/dockerfiles/init/manifests</code> will be used instead of the ones that are included in the <code class="highlighter-rouge">eclipse/che-init</code> container.</li>
   <li>During the <code class="highlighter-rouge">che start</code> phase, a local assembly from <code class="highlighter-rouge">assembly/assembly-main/target/</code> is mounted into the <code class="highlighter-rouge">eclipse/che-server</code> runtime container. You must <code class="highlighter-rouge">mvn clean install</code> the <code class="highlighter-rouge">assembly/assembly-main/</code> folder prior to activating development mode.</li>
 </ol>
 
+<p>Volume mounting <code class="highlighter-rouge">:/repo</code> will also make use of your repository’s puppet manifests and other files (replacing those that are stored within the CLI’s base image). If you only want to volume mount a new set of assemblies and ignore the other items in a repository, you can do so by volume mounting <code class="highlighter-rouge">:/assembly</code> to a folder that is the base of a binary (we do not yet support volume mounting a <code class="highlighter-rouge">.tgz</code> file).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v &lt;local-path&gt;:/data \
+                    -v &lt;local-assembly-folder&gt;:/assembly \
+                       eclipse/che:&lt;version&gt; [COMMAND]
+</code></pre>
+</div>
+
+<h3 id="debugging-che">Debugging Che</h3>
 <p>To activate jpda suspend mode for debugging Che server initialization, in the <code class="highlighter-rouge">che.env</code>:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>CHE_DEBUG_SUSPEND=true
@@ -1873,6 +1891,36 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
   
    
     <li class=""><a href="../../../docs/plugins/java-class-reference/index.html">Java Class Reference</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/agents/index.html">Creating Custom Agents</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/languageserver/index.html">Language Server Protocol</a></li>
   
   
 

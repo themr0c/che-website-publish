@@ -476,6 +476,16 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -534,19 +544,173 @@
 </div>
 
 <h1 id="creating-new-agents">Creating New Agents</h1>
-<p>Currently, all agents must be pre-defined within Che and <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent/src/main/resources/agents/">saved in this location</a> as part of the Che repository. We are thinking about a public registry for agents where they can be added and removed, but this is a future activity.</p>
 
-<p>Each agent is saved as a JSON file. The name of the file without the extension is used as the ID for the agent within the agents list in the dashboard.  For example, the CSharp agent is identified as <code class="highlighter-rouge">org.eclipse.che.csharp</code>.  Inside of workspaces and stacks.  In the JSON there is a new data object called <code class="highlighter-rouge">agents : []</code> which is an array of agents that are to be included. The array would list the IDs of each agent to include.</p>
+<p>Currently, all agents must be pre-defined within Che. We are thinking about a public registry for agents where they can be added and removed, but this is a future activity.</p>
 
-<p>Agents have a name, a set of other agents that they depend upon, properties and a “script”, which defines how the agent’s package is to be installed into the workspace. This script handles only installation and doesn’t define the startup of the agent.  The script section of the agent is difficult to read, but we also include the same scripts in this <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent/src/main/resources/agents/scripts/update_agents.sh">scripts directory</a> and our CI systems convert those scripts to embed them inline within your agent during the packaging phase.</p>
+<p>A new agent has to implement the <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent-shared/src/main/java/org/eclipse/che/api/agent/shared/model/Agent.java">Agent interface</a> and be bound into the container.</p>
 
-<p>The scripts that you must provide with an agent have a large <code class="highlighter-rouge">if</code> block where you provide installation logic for each Linux distribution that we support. You can follow our templates for how to build agents of your own.</p>
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Agent</span> <span class="o">{</span>
 
-<p>To add a custom language server agent you have to accomplish two steps:</p>
+    <span class="cm">/**
+     * Returns the id of the agent.
+     */</span>
+    <span class="n">String</span> <span class="nf">getId</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns the name of the agent.
+     */</span>
+    <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns the version of the agent.
+     */</span>
+    <span class="n">String</span> <span class="nf">getVersion</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns the description of the agent.
+     */</span>
+    <span class="n">String</span> <span class="nf">getDescription</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns the depending agents, that must be applied before.
+     */</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getDependencies</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns the script to be applied when machine is started.
+     */</span>
+    <span class="n">String</span> <span class="nf">getScript</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns any machine specific properties.
+     */</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="nf">getProperties</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Returns Che servers in the machine.
+     */</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="o">?</span> <span class="kd">extends</span> <span class="n">ServerConf2</span><span class="o">&gt;</span> <span class="nf">getServers</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Agents have an unique ID, a name, a set of other agents that they depend upon, properties, and a “script” that defines how the agent’s packages have to be installed into the workspace. This script handles installation and start of the agent.</p>
+
+<p>The scripts that you must provide with an agent have a large <code class="highlighter-rouge">if</code> block where you provide installation logic for each Linux distribution that we support. You can follow our <a href="https://github.com/eclipse/che/blob/master/agents/ls-json/src/main/resources/org.eclipse.che.ls.json.script.sh">templates</a> for how to build agents of your own.</p>
+
+<h3 id="adding-agents">Adding Agents</h3>
 
 <ul>
-  <li>Implement a <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">language server launcher</a>. Have a look at <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-json/che-plugin-json-server/src/main/java/org/eclipse/che/plugin/json/languageserver/JsonLanguageServerLauncher.java">Json language server launcher</a></li>
+  <li>Create a sub module in the <a href="https://github.com/eclipse/che/tree/master/agents">agents folder</a></li>
+  <li>Create a resource file with the agent description:</li>
 </ul>
+
+<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.my-agent"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My simple agent"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Does some stuff :)"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<ul>
+  <li>Create resource file with agent script:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>...
+
+<span class="nb">unset </span>PACKAGES
+<span class="nb">unset </span>SUDO
+<span class="nb">command</span> -v tar &gt;/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" tar"</span>; <span class="o">}</span>
+<span class="nb">command</span> -v curl &gt;/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" curl"</span>; <span class="o">}</span>
+<span class="nb">test</span> <span class="s2">"</span><span class="k">$(</span>id -u<span class="k">)</span><span class="s2">"</span> <span class="o">=</span> 0 <span class="o">||</span> <span class="nv">SUDO</span><span class="o">=</span><span class="s2">"sudo"</span>
+
+<span class="nv">CHE_DIR</span><span class="o">=</span><span class="nv">$HOME</span>/che
+
+...
+
+<span class="k">if </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"rhel"</span>; <span class="k">then</span>
+    ...  
+
+<span class="c"># Red Hat Enterprise Linux 6</span>
+<span class="c">############################</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"Red Hat"</span>; <span class="k">then</span>
+    ...
+    
+<span class="c"># Ubuntu 14.04 16.04 / Linux Mint 17</span>
+<span class="c">####################################</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"ubuntu"</span>; <span class="k">then</span>
+    ...
+
+<span class="c"># Debian 8</span>
+<span class="c">##########</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"debian"</span>; <span class="k">then</span>
+    ...
+
+<span class="c"># Fedora 23</span>
+<span class="c">###########</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"fedora"</span>; <span class="k">then</span>
+    ...
+
+<span class="c"># CentOS 7.1 &amp; Oracle Linux 7.1</span>
+<span class="c">###############################</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"centos"</span>; <span class="k">then</span>
+    ...
+
+<span class="c"># openSUSE 13.2</span>
+<span class="c">###############</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"opensuse"</span>; <span class="k">then</span>
+    ...
+
+<span class="k">else</span>
+    &gt;&amp;2 <span class="nb">echo</span> <span class="s2">"Unrecognized Linux Type"</span>
+    &gt;&amp;2 cat <span class="nv">$FILE</span>
+    <span class="nb">exit </span>1
+<span class="k">fi</span>
+
+...
+</code></pre>
+</div>
+
+<ul>
+  <li>Create your own agent class extending <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent-shared/src/main/java/org/eclipse/che/api/agent/shared/model/impl/BasicAgent.java">BasicAgent</a>:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Singleton</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAgent</span> <span class="kd">extends</span> <span class="n">BasicAgent</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">AGENT_DESCRIPTOR</span> <span class="o">=</span> <span class="s">"&lt;AGENT_DESCRIPTOR_RESOURCE_NAME&gt;"</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">AGENT_SCRIPT</span>     <span class="o">=</span> <span class="s">"&lt;AGENT_SCRIPT_RESOURCE_NAME&gt;"</span><span class="o">;</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="nf">MyAgent</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">AGENT_DESCRIPTOR</span><span class="o">,</span> <span class="n">AGENT_SCRIPT</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>Bind agent into the container in <a href="https://github.com/eclipse/che/blob/master/assembly/assembly-wsmaster-war/src/main/java/org/eclipse/che/api/deploy/WsMasterModule.java">WsMasterModule</a>:</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@DynaModule</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WsMasterModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
+        <span class="o">...</span>
+        
+        <span class="n">Multibinder</span><span class="o">&lt;</span><span class="n">Agent</span><span class="o">&gt;</span> <span class="n">agents</span> <span class="o">=</span> <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">Agent</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">agents</span><span class="o">.</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">MyAgent</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        
+        <span class="o">...</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Have a look at our example of the <a href="https://github.com/eclipse/che/tree/master/agents/ls-json">JSON language server agent</a> for more ideas.</p>
 
         </article>
       </div>
@@ -1530,6 +1694,36 @@
   
    
     <li class=""><a href="../../../docs/plugins/java-class-reference/index.html">Java Class Reference</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/agents/index.html">Creating Custom Agents</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/plugins/languageserver/index.html">Language Server Protocol</a></li>
   
   
 
