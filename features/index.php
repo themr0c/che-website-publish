@@ -180,7 +180,7 @@
   <div class="row" id="restful-workspaces">
     <div class="col-sm-6">
       <h2>RESTful Workspaces</h2>
-      <p>All Che services are reachable through RESTful APIs. Che exposes APIs for managing the workspace master, and also provides RESTful access to each individual workplace through the workspace agent. The Che workspace master provides workspace orchestration and user management. In each workspace agent is a micro Che server that exposes project-specific APIs. For example, Che has RESTful JDT wrappers to enable 100+ forms of distributed Java intellisense. This Java-specific API is injected as a workspace agent by Che. Programming the API is simple - get started by <a href="https://eclipse-che.readme.io/docs/rest-api">browsing our APIs with Swagger</a>.</p>
+      <p>All Che services are reachable through RESTful APIs. Che exposes APIs for managing the workspace master, and also provides RESTful access to each individual workplace through the workspace agent. The Che workspace master provides workspace orchestration and user management. In each workspace agent is a micro Che server that exposes project-specific APIs. For example, Che has RESTful JDT wrappers to enable 100+ forms of distributed Java intellisense. This Java-specific API is injected as a workspace agent by Che. Programming the API is simple - get started by <a href="https://www.eclipse.org/che/docs/server/rest-api/index.html">browsing our APIs with Swagger</a>.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 
@@ -206,7 +206,7 @@
   <div class="row" id="multi-project">
     <div class="col-sm-6">
       <h2>Multi-Project</h2>
-      <p>Che is a true IDE platform, recognizing projects are bound to a repository and given a type. Project types bestow special behaviors, such as when Che injects the RESTful JDT core into workspace machines when Java projects are added. Workspaces can have multiple projects, each with their own type. Projects can be independently built and run, even though all projects share a common workspace machine. Currently, Che has limited project types for JavaScript, Maven, and ‘blank’. <a href="https://eclipse-che.readme.io/docs/contribute">We'll collaborate with the ecosystem</a> to package new types for frameworks, packaging systems and programming languages.</p>
+      <p>Che is a true IDE platform, recognizing projects are bound to a repository and given a type. Project types bestow special behaviors, such as when Che injects the RESTful JDT core into workspace machines when Java projects are added. Workspaces can have multiple projects, each with their own type. Projects can be independently built and run, even though all projects share a common workspace machine. Currently, Che has limited project types for JavaScript, Maven, and ‘blank’. <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md">We'll collaborate with the ecosystem</a> to package new types for frameworks, packaging systems and programming languages.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 
@@ -278,7 +278,7 @@
     <div class="col-sm-6">
       <h2>Open Source to the Core</h2>
       <p>Eclipse Che has been developed over 4 years with contributions from Codenvy, eXo Platform, Red Hat, Salesforce, IBM, SAP, Microsoft, Intuit, WSO2, Serli, and open source individuals from China, Brazil, France, Ukraine, Russia, Canada, India, Sri Lanka, and the United States. It is part of the Eclipse Cloud Development top-level project, and ecosystem contributions are open and encouraged. </p>
-      <p>Please participate, even if only spiritually. There are many ways to get involved including starring the <a href="https://github.com/codenvy/che/stargazers">GitHub repo</a>, <a href="https://github.com/codenvy/che/issues">submitting issues</a>, <a href="https://eclipse-che.readme.io/docs/">writing docs</a>, or <a href="https://eclipse-che.readme.io/docs/plug-ins">contributing plug-ins</a>.</p>
+      <p>Please participate, even if only spiritually. There are many ways to get involved including starring the <a href="https://github.com/codenvy/che/stargazers">GitHub repo</a>, <a href="https://github.com/codenvy/che/issues">submitting issues</a>, <a href="https://github.com/eclipse/che-docs">writing docs</a>, or <a href="https://www.eclipse.org/che/docs/plugins/introduction/index.html">contributing plug-ins</a>.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 

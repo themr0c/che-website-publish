@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Samsung ARTIK&trade; IDE</h1>
-    <h3>Powered by Eclipse Che, it's a toolset that makes it easy to build, deploy and manage IoT applications. <a target="_blank" href="https://eclipse-che.readme.io/docs/samsung-artik-ide-getting-started">Get Started with the ARTIK IDE.</a></h3>
+    <h3>Powered by Eclipse Che, it's a toolset that makes it easy to build, deploy and manage IoT applications. <a target="_blank" href="https://eclipse.org/che/docs/artik/index.html">Get Started with the ARTIK IDE.</a></h3>
     <img alt="" class="img-responsive" src="../../images/artik/hero-home-artik.png" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
@@ -150,7 +150,7 @@
   <div class="container-fluid content">
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/artik/artik_ide_black.png"/>
     <br>
-    <h2><a target="_blank" href="https://eclipse-che.readme.io/docs/samsung-artik-ide-getting-started">Get Started</a> with the ARTIK IDE.</h2>
+    <h2><a target="_blank" href="https://eclipse.org/che/docs/artik/index.html">Get Started</a> with the ARTIK IDE.</h2>
     <h3><a  target="_blank" href="https://github.com/codenvy/artik-ide/blob/master/CONTRIBUTING.md">Contribute to the ARTIK IDE</a> or get involved With <a href="<?php echo $rootPath; ?>/community/">Eclipse Che</a>
   </div> <!-- .container-fluid -->
 </div> <!-- .get-help -->

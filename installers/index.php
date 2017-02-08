@@ -25,19 +25,11 @@
   <h2>Installation Options</h2>    
     <li>SaaS Cloud: <a href="<?php echo $rootPath; ?>/getting-started/cloud/">Hosted @ Codenvy.com</a></li></br>
     
+    <li>Local Install: <a href="https://www.eclipse.org/che/docs/setup/getting-started/">Quick Install</a></li></br>
+
     <li>Private Cloud: <a href="https://bitnami.com/stack/eclipse-che">Hosted @ AWS / EC2 / Azure by Bitnami</a></li>
 
-    <li>Download with Vagrant: <a href="<?php echo $rootPath; ?>/getting-started/download/">Quick Install</a></li></br>
-
-    <li>Download with Yatta: <a href="https://marketplace.yatta.de/profiles/eclipse.che">Automated Marketplace Install</a></li></br>
-
-    <li>Docker: <a href="https://eclipse-che.readme.io/docs/usage-docker#using-docker-syntax">Run as a Container</a></li></br>
-
-    <li>Download with Installers: <a href="#installers">JAR, EXE Extractors by Codenvy</a></li></br>
-
-    <li>Manual with Packages: <a href="..\download\">Eclipse Signed ZIP/TGZ</a></li></br>
-
-  <p>Need help getting Che to run? Please check the oodles of <a href="https://eclipse-che.readme.io/docs/">installation and usage docs</a>.</p>
+  <p>Need help getting Che to run? Please check the oodles of <a href="https://www.eclipse.org/che/docs/index.html">installation and usage docs</a>.</p>
   <div class="separator"></div>
 
   <h2><a id="installers">Installers</a></h2>
@@ -71,7 +63,7 @@
   <div class="separator"></div>
 
   <h2>Prerequisites</h2>
-  <p>Eclipse Che has different prerequisites for different platforms. The <b><a href="https://eclipse-che.readme.io/docs/install-pre-reqs">prerequisites page</a></b> in our docs itemizes the list of dependencies and how they are used.</p>
+  <p>Eclipse Che has different prerequisites for different platforms. The <b><a href="https://www.eclipse.org/che/docs/setup/getting-started/index.html#pre-reqs">prerequisites page</a></b> in our docs itemizes the list of dependencies and how they are used.</p>
   <div class="separator"></div>
    
   <h2>Build Assembly From Source</h2>

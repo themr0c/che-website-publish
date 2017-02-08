@@ -63,7 +63,7 @@
      <h2>Get Involved</h2>
     <p>Issues and feature requests are filed on Che's GitHub repository. Please check the issue backlog and documentation before opening an issue. Plug-in developers should join the <a href="mailto:che-dev@eclipse.org">che-dev@eclipse.org</a> mailing list.</p></p>
     <ul>
-      <li>Read <a href="https://eclipse-che.readme.io/docs/">documentation</a></li>
+      <li>Read <a href="https://www.eclipse.org/che/docs/index.html">documentation</a></li>
       <li>File <a href="https://github.com/codenvy/che/issues">issues and features</a></li>
       <li>Join <a href="https://github.com/eclipse/che/wiki/Weekly-Meetings-and-Minutes">weekly planning meetings</a></li>
       <li>Watch <a href="https://github.com/codenvy/che">the repository</a></li>

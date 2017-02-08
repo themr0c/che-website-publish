@@ -713,7 +713,7 @@
         <h3>Docs: Step-by-Step Guide to How Workspace Servers Work</h3>
         <p class="loc">July 6th, 2016</p>
         <p class="desc">Eclipse Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run and debug...</p>
-        <a href="https://eclipse-che.readme.io/v4.4/docs/introduction#workspace-model" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://www.eclipse.org/che/docs/workspace/admin-intro/index.html" class="btn-yellow" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
 
@@ -1324,17 +1324,6 @@
 
 </tr><!-- .item -->
         <tr class="item">
-      <td><img src="../images/media/eclipseche.png" alt=""></td>
-      <td>
-        <h3>Deploy Eclipse Che on EC2</h3>
-        <p class="loc">April 13, 2016</p>
-        <p class="desc">Ready to run your own cloud IDE server on EC2? Community user Stuart Ashby has the setup and story...</p>
-        <a href="https://eclipse-che.readme.io/docs/configuration-che-on-ec2" class="btn-yellow" target="_blank">Read More</a>
-      </td>
-
-
-</tr><!-- .item -->
-        <tr class="item">
       <td><img src="../images/media/google.png" alt=""></td>
       <td>
         <h3>Getting GWT into Eclipse Che</h3>
@@ -1648,7 +1637,7 @@
         <h3>Getting Started with Eclipse Che and Meteor</h3>
         <p class="loc">February 16, 2016</p>
         <p class="desc">Meteor is a complete platform for building web and mobile apps in pure JavaScript. In this tutorial, we combine the best practices of creating Meteor workspaces with...</p>
-        <a href="https://eclipse-che.readme.io/docs/get-started-with-meteor" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://www.eclipse.org/che/docs/tutorials/meteor/index.html" class="btn-yellow" target="_blank">Read More</a>
       </td>
 
 </tr><!-- .item -->
@@ -1658,7 +1647,7 @@
         <h3>Getting Started with Eclipse Che and Java</h3>
         <p class="loc">February 09, 2016</p>
         <p class="desc">Eclipse Che was written in Java. Experience the rich intellisense and Java tools in a tutorial...</p>
-        <a href="https://eclipse-che.readme.io/docs/get-started-with-java-and-che" class="btn-yellow" target="_blank">Read More</a>
+        <a href="https://www.eclipse.org/che/docs/tutorials/maven/index.html" class="btn-yellow" target="_blank">Read More</a>
       </td>
 
 </tr><!-- .item -->
