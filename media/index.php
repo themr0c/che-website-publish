@@ -27,7 +27,27 @@
 
 
 
-  <tr class="item">
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>German: How to Install Eclipse Che on Linux and Windows</h3>
+        <p class="loc">Feb 10th, 2017</p>
+        <p class="desc">This week I would like to share with you my experiences concerning the installation and setup of Eclipse Che on Windows / Linux (Ubuntu)...</p>
+        <a href="http://marcelhodan.de/blog/2017/02/10/wie-man-eclipse-che-auf-linux-und-windows-einrichtet/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>How to Get Started with xText and Che</h3>
+        <p class="loc">Feb 1st, 2017</p>
+        <p class="desc">Eclipse Che 5 has support for the Microsoft Language Server Protocol and so has Eclipse Xtext in its new Version 2.11. So let's see how we can bring them both together...</p>
+        <a href="https://blogs.itemis.com/en/how-to-get-started-with-xtext-language-servers-and-che?success=true" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+ <tr class="item">
       <td><img src="../images/media/infoq.png" alt=""></td>
       <td>
         <h3>Rust Language Server and Eclipse Che</h3>
