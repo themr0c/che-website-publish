@@ -38,7 +38,7 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
-        <h3>EMF Support for Che - Day 0: Motivation/h3>
+        <h3>EMF Support for Che - Day 0: Motivation</h3>
         <p class="loc">Feb 9th, 2017</p>
         <p class="desc">At EclipseCon North America 2016, the first public release of Eclipse Che was announced. Almost immediately, there was a new cloud-based IDE in the Eclipse ecosystem. At first glance, it is an IDE running in the browser...</p>
         <a href="http://eclipsesource.com/blogs/2017/02/08/emf-support-for-che-day-0-motivation-and-getting-started/" target="_blank">Read More</a>
