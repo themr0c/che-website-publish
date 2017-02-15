@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Getting Started With Eclipse Che on Windows 10</h3>
+        <p class="loc">Feb 14th, 2017</p>
+        <p class="desc">Over the last year or so there has been a reasonable amount of evolution of the best way to get Eclipse Che running on Windows...</p>
+        <a href="https://kichwacoders.com/2017/02/14/getting-started-with-eclipse-che-on-windows-10/?utm_source=dlvr.it&utm_medium=twitter" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>German: How to Install Eclipse Che on Linux and Windows</h3>
         <p class="loc">Feb 10th, 2017</p>
         <p class="desc">This week I would like to share with you my experiences concerning the installation and setup of Eclipse Che on Windows / Linux (Ubuntu)...</p>
