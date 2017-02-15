@@ -25,6 +25,16 @@
 
   <table class="wrapper">
 
+  <tr class="item">
+      <td><img src="../images/media/jaxenter.png" alt=""></td>
+      <td>
+        <h3>German: Eclipse Weekly: New Board of Directors, Eclipse Che 5.2 and Diversity at the Foundation</h3>
+        <p class="loc">February 15th, 2017</p>
+        <p class="desc">Eclipse Che is enjoying continued popularity, not least due to the relatively regular updates released for the development environment. Recently, Eclipse Che 5.2 was released...</p>
+        <a href="https://jaxenter.com/eclipse-che-5-0-131183.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
