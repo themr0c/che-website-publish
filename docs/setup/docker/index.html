@@ -24,6 +24,10 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+  <title>Docker Installation -
+    
+      Docs
+     - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.3.1">
@@ -510,13 +514,13 @@
 <h1 id="run-the-image">Run the Image</h1>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Run the latest released version of Che</span>
-<span class="c"># Replace &lt;path-for-data&gt; with any host folder</span>
+<span class="c"># Replace &lt;LOCAL_PATH&gt; with any host folder</span>
 <span class="c"># Che will place backup files there - configurable properties, workspaces, lib, storage</span>
 docker run -p 8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            --rm <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v &lt;path-for-data&gt;:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 
 <span class="c"># To run the nightly version of Che, replace eclipse/che-server:5.0.0-latest with</span>
@@ -546,7 +550,9 @@ docker restart che
 docker run -p 8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data:Z <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data:Z <span class="se">\</span>
+           --security-opt label:disable <span class="se">\</span>
+           -e <span class="nv">CHE_DOCKER_SERVER__EVALUATION__STRATEGY</span><span class="o">=</span>docker-local <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
@@ -558,7 +564,7 @@ docker run -p 8080:8080 <span class="se">\</span>
            --name che \
            -e CHE_PORT=9500 \
            -v /var/run/docker.sock:/var/run/docker.sock \
-           -v /C/tmp:/data \
+           -v &lt;LOCAL_PATH&gt;:/data \
            eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
@@ -570,7 +576,7 @@ docker run -p 8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            -e <span class="nv">CHE_SERVER_ACTION</span><span class="o">=</span>stop <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
@@ -648,7 +654,7 @@ docker run -p 8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
@@ -661,7 +667,7 @@ docker run -p 8080:8080 <span class="se">\</span>
            --restart always <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 </code></pre>
 </div>
@@ -690,7 +696,7 @@ docker run -p:8080:8080 <span class="se">\</span>
            --restart always <span class="se">\</span>
            -e <span class="nv">CHE_IP</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            -v /C/conf:/conf <span class="se">\</span>
            eclipse/che-server:5.0.0-latest
 </code></pre>
@@ -704,7 +710,7 @@ docker run -p:8080:8080 \
            --name che \
            --restart always \
            -v /var/run/docker.sock:/var/run/docker.sock \
-           -v /C/tmp:/data \
+           -v &lt;LOCAL_PATH&gt;:/data \
            -v /C/conf:/conf \
            -v /home/my_assembly:/assembly \
            eclipse/che-server:5.0.0-latest
@@ -722,7 +728,7 @@ docker run -p:8080:8080 <span class="se">\</span>
            --name che <span class="se">\</span>
            --restart always <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            -v /C/conf:/conf <span class="se">\</span>
            -v /home/my_assembly:/assembly <span class="se">\</span>
            -e <span class="nv">DOCKER_MACHINE_HOST</span><span class="o">=</span>172.17.0.1 <span class="se">\</span>
@@ -742,7 +748,7 @@ docker run -p:8080:8080 <span class="se">\</span>
      <span class="s">DOCKER_MACHINE_HOST=172.17.0.1</span>
    <span class="s">volumes</span><span class="pi">:</span>
      <span class="pi">-</span> <span class="s">/var/run/docker.sock:/var/run/docker.sock</span>
-     <span class="pi">-</span> <span class="s">/C/tmp:/data</span>
+     <span class="pi">-</span> <span class="s">&lt;LOCAL_PATH&gt;:/data</span>
      <span class="pi">-</span> <span class="s">/C/conf:/conf</span>
      <span class="pi">-</span> <span class="s">/home/my_assembly:/assembly</span>
    <span class="s">container_name</span><span class="pi">:</span> <span class="s">che</span>
@@ -771,7 +777,7 @@ http://localhost:2375/containers/json
            --name che <span class="se">\</span>
            --restart always <span class="se">\</span>
            -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           -v /C/tmp:/data <span class="se">\</span>
+           -v &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
            -v /C/conf:/conf <span class="se">\</span>
            -v /home/my_assembly:/assembly <span class="se">\</span>
            -e <span class="nv">DOCKER_MACHINE_HOST</span><span class="o">=</span>172.17.0.1 <span class="se">\</span>

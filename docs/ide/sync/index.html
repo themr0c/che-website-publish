@@ -24,6 +24,10 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+  <title>Local IDE Sync -
+    
+      Docs
+     - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.3.1">
@@ -558,8 +562,7 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
 </code></pre>
 </div>
 
-<p>This will make a secure connection to the workspace and unison-sync the contents to the local host directory. You will be asked for the password that you retrieved from the SSH configuration. The synchronization will run continuously and the command will not return until you press CTRL-C, at which point the synchronization will be terminated.
-<img src="../../../docs/assets/imgs/fef09b90-a696-11e6-9a37-70f827677830.gif" alt="fef09b90-a696-11e6-9a37-70f827677830.gif" /></p>
+<p>This will make a secure connection to the workspace and unison-sync the contents to the local host directory. You will be asked for the password that you retrieved from the SSH configuration. The synchronization will run continuously and the command will not return until you press CTRL-C, at which point the synchronization will be terminated.</p>
 
 <h2 id="optimize">Optimize</h2>
 <p>The utility is designed to synchronize everything in your <code class="highlighter-rouge">/projects</code> folder that is within the workspace. Synchronization is impacted by the size and nature of files that are contained within the directory. If you have libraries such as with an NPM or maven repository, it may be unnecessary and taxing to synchronization all of those files.</p>
@@ -595,20 +598,24 @@ docker run --rm -it --cap-add SYS_ADMIN --device /dev/fuse
             -v /etc/passwd:/etc/passwd:ro
             -v &lt;path-to-sync-profile&gt;:/profile
             -u <span class="k">$(</span>id -u <span class="k">${</span><span class="nv">USER</span><span class="k">})</span>
-            -v &lt;host-dir&gt;:/mnthost eclipse/che-mount &lt;ws-id|ws-name&gt;
+            -e <span class="nv">CHE_VERSION</span><span class="o">=</span><span class="k">${</span><span class="nv">CHE_VERSION</span><span class="k">}</span>
+            -v &lt;host-dir&gt;:/mnthost 
+                  eclipse/che-mount &lt;ws-id|ws-name&gt;
 
 <span class="c"># On Mac or Windows:</span>
 docker run --rm -it --cap-add SYS_ADMIN --device /dev/fuse
            --name che-mount
            -v &lt;path-to-sync-profile&gt;:/profile
-           -v &lt;host-dir&gt;:/mnthost eclipse/che-mount &lt;ip&gt; &lt;ws-id|ws-name&gt;
+           -v &lt;host-dir&gt;:/mnthost 
+           -e <span class="nv">CHE_VERSION</span><span class="o">=</span><span class="k">${</span><span class="nv">CHE_VERSION</span><span class="k">}</span>
+              eclipse/che-mount &lt;ip&gt; &lt;ws-id|ws-name&gt;
 
-<span class="c"># where &lt;ip&gt; is the IP address of your Docker daemon discoverable by:</span>
+<span class="c"># Where &lt;ip&gt; is the IP address of your Docker daemon discoverable by:</span>
 docker run --rm --net host <span class="se">\</span>
             alpine sh -c <span class="se">\</span>
             “ip a show &lt;network-if&gt;<span class="s2">"
 
-# where &lt;network-if&gt; is ‘eth0’, or if using boot2docker, then ‘eth1’.
+# Where &lt;network-if&gt; is ‘eth0’, or if using boot2docker, then ‘eth1’
 
 # Verify directories are in the mount container:
 docker exec -ti che-mount sh

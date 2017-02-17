@@ -24,6 +24,10 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+  <title>Configuration -
+    
+      Docs
+     - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.3.1">
@@ -592,66 +596,13 @@ CHE_GOOGLE_SECRET=yourSecret
 <h1 id="stacks">Stacks</h1>
 <p><a href="../../../docs/workspace/stacks/index.html">Stacks</a> define the recipes used to create workspace runtimes. They appear in the stack library of the dashboard. You can create your own.</p>
 
-<p>TODO: UPDATE THIS</p>
-
-<p>ONE: WHERE ARE STACKS DEFINED FOR CONFIGURATION PURPOSES WITH NEW CLI?</p>
-
-<p>TWO: LINK TO DOC ON ADDING OR REMOVING</p>
-
 <h1 id="sample-projects">Sample Projects</h1>
 <p>Code <a href="../../../docs/workspace/samples/index.html">sampes</a> allow you to define sample projects that are cloned into a workspace if the user chooses it when creating a new project. You can add your own.</p>
 
-<p>TODO: UPDATE THIS FOR THE NEW LOCATION WITH THE CLI ON HOW TO ADD</p>
+<h1 id="workspace-limits">Workspace Limits</h1>
+<p>You can place limits on how users interact with the system to control overall system resource usage. You can define how many workspaces created, RAM consumed, idle timeout, and a variety of other parameters. See “Workspace Limits” in <code class="highlighter-rouge">che.env</code>.</p>
 
-<h1 id="development-mode">Development Mode</h1>
-<p>You can debug the Che binaries that are running within the Che server. You can debug either the binaries that are included within the <code class="highlighter-rouge">eclipse/che-server</code> image that you download from DockerHub or you can mount a local Che git repository to debug binaries built in a local assembly. By using local binaries, this allows Che developers to perform a rapid edit / build / run cycle without having to rebuild Che’s Docker images.</p>
-
-<p>Dev mode is activated by passing <code class="highlighter-rouge">--debug</code> to any command on the CLI.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code># Activate dev mode with embedded binaries
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                    -v &lt;local-path&gt;:/data \
-                       eclipse/che:&lt;version&gt; [COMMAND] --debug
-</code></pre>
-</div>
-
-<p>You can replace the binaries in your local image with local binaries by volume mounting the Che git repository to <code class="highlighter-rouge">:/repo</code> in your Docker run command.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                    -v &lt;local-path&gt;:/data \
-                    -v &lt;local-repo&gt;:/repo \
-                       eclipse/che:&lt;version&gt; [COMMAND] --debug
-</code></pre>
-</div>
-
-<p>You can also optionally use your local binaries in production mode by volume mounting <code class="highlighter-rouge">:/repo</code> without passing <code class="highlighter-rouge">--debug</code>. There are two locations that files in your Che source repository will be used instead of those in the image:</p>
-
-<ol>
-  <li>During the <code class="highlighter-rouge">che config</code> phase, the source repository’s <code class="highlighter-rouge">/dockerfiles/init/modules</code> and <code class="highlighter-rouge">/dockerfiles/init/manifests</code> will be used instead of the ones that are included in the <code class="highlighter-rouge">eclipse/che-init</code> container.</li>
-  <li>During the <code class="highlighter-rouge">che start</code> phase, a local assembly from <code class="highlighter-rouge">assembly/assembly-main/target/</code> is mounted into the <code class="highlighter-rouge">eclipse/che-server</code> runtime container. You must <code class="highlighter-rouge">mvn clean install</code> the <code class="highlighter-rouge">assembly/assembly-main/</code> folder prior to activating development mode.</li>
-</ol>
-
-<p>Volume mounting <code class="highlighter-rouge">:/repo</code> will also make use of your repository’s puppet manifests and other files (replacing those that are stored within the CLI’s base image). If you only want to volume mount a new set of assemblies and ignore the other items in a repository, you can do so by volume mounting <code class="highlighter-rouge">:/assembly</code> to a folder that is the base of a binary (we do not yet support volume mounting a <code class="highlighter-rouge">.tgz</code> file).</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                    -v &lt;local-path&gt;:/data \
-                    -v &lt;local-assembly-folder&gt;:/assembly \
-                       eclipse/che:&lt;version&gt; [COMMAND]
-</code></pre>
-</div>
-
-<h3 id="debugging-che">Debugging Che</h3>
-<p>To activate jpda suspend mode for debugging Che server initialization, in the <code class="highlighter-rouge">che.env</code>:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>CHE_DEBUG_SUSPEND=true
-</code></pre>
-</div>
-
-<p>To change che debug port, in the <code class="highlighter-rouge">che.env</code>:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>CHE_DEBUG_PORT=8000
-</code></pre>
-</div>
+<p>You can also set limits on Docker’s allocation of CPU to workspaces, which may be necessary if you have a very dense workspace population where users are competing for limited physical resources.</p>
 
 <h1 id="hostname">Hostname</h1>
 <p>The IP address or DNS name of where the Che endpoint will service your users. If you are running this on a local system, we auto-detect this value as the IP address of your Docker daemon. On many systems, especially those from cloud hosters like DigitalOcean, you may have to explicitly set this to the external IP address or DNS entry provided by the provider. You can edit this value in <code class="highlighter-rouge">che.env</code> and restart Che, or you can pass it during initialization:</p>
@@ -660,10 +611,152 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 </code></pre>
 </div>
 
-<h1 id="workspace-limits">Workspace Limits</h1>
-<p>You can place limits on how users interact with the system to control overall system resource usage. You can define how many workspaces created, RAM consumed, idle timeout, and a variety of other parameters. See “Workspace Limits” in <code class="highlighter-rouge">che.env</code>.</p>
+<h1 id="networking">Networking</h1>
+<p>Eclipse Che makes connections between three entities: the browser, the Che server running in a Docker container, and a workspace running in a Docker container.</p>
 
-<p>You can also set limits on Docker’s allocation of CPU to workspaces, which may be necessary if you have a very dense workspace population where users are competing for limited physical resources.</p>
+<p>If you distribute these components onto different nodes, hosts or IP addresses, then you may need to add additional configuration parameters to bridge different networks.</p>
+
+<p>Also, since the Che server and your Che workspaces are within containers governed by a Docker daemon, you also need to ensure that these components have good bridges to communicate with the daemon.</p>
+
+<p>Generally, if your browser, Che server and Che workspace are all on the same node, then <code class="highlighter-rouge">localhost</code> configuration will always work.</p>
+
+<h2 id="websockets">WebSockets</h2>
+<p>Che relies on web sockets to stream content between workspaces and the browser. We have found many networks and firewalls to block portions of Web socket communications. If there are any initial configuration issues that arise, this is a likely cause of the problem.</p>
+
+<h2 id="topology">Topology</h2>
+<p>The Che server runs in its own Docker container, “Che Docker Container”, and each workspace gets an embedded runtime which can be a set of additional Docker containers, “Docker Container(n)”. All containers are managed by a common Docker daemon, “docker-ip”, making them siblings of each other. This includes the Che server and its workspaces - each workspace runtime environment has a set of containers that is a sibling to the Che server, not a child.</p>
+
+<p><img src="../../../docs/assets/imgs/Capture.PNG" alt="Capture.PNG" /></p>
+
+<h2 id="connectivity">Connectivity</h2>
+<p>The browser client initiates communication with the Che server by connecting to <code class="highlighter-rouge">che-ip</code>. This IP address must be accessible by your browser clients. Internally, Che runs on Tomcat which is bound to port <code class="highlighter-rouge">8080</code>. This port can be altered by setting <code class="highlighter-rouge">CHE_PORT</code> during start or in your <code class="highlighter-rouge">che.env</code>.</p>
+
+<p>When a user creates a workspace, the Che server connects to the Docker daemon at <code class="highlighter-rouge">docker-ip</code> and uses the daemon to launch a new set of containers that will power the workspace. These workspace containers will have a Docker-configured IP address, <code class="highlighter-rouge">workspace-container-ip</code>. The <code class="highlighter-rouge">workspace-container-ip</code> isn’t usually reachable by your browser host, <code class="highlighter-rouge">docker-ip</code> will be used to establish the connections between the browser and workspace containers.</p>
+
+<p>Che goes through a progression algorithm to establish the protocol, IP address and port to establish communications when it is booting or starting a workspace. You can override certain parameters in Che’s configuration to overcome issues with the Docker daemon, workspaces, or browsers being on different networks.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># Browser --&gt; Che Server
+#    1. Default is 'http://localhost:${SERVER_PORT}/wsmaster/api'.
+#    2. Else use the value of che.api
+#
+# Che Server --&gt; Docker Daemon Progression:
+#    1. Use the value of che.docker.daemon_url
+#    2. Else, use the value of DOCKER_HOST system variable
+#    3. Else, use Unix socket over unix:///var/run/docker.sock
+#
+# Che Server --&gt; Workspace Connection (see Workspace Address Resolution Strategy, below):
+#    - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'default':
+#        1. Use the value of che.docker.ip
+#        2. Else, use address of docker0 bridge network, if available
+#        3. Else, if server connects over Unix socket, then use localhost
+#        4. Else, use DOCKER_HOST
+#    - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'docker-local':
+#        1. Use the address of the workspace container within the docker network
+#        2. If address cannot be read, use steps 3 and 4 from the default strategy. 
+#
+# Browser --&gt; Workspace Connection:
+#    1. Use the value of che.docker.ip
+#    2. Else, if server connects over Unix socket, then use localhost
+#    3. Else, use DOCKER_HOST
+#
+# Workspace Agent --&gt; Che Server
+#    1. Default is http://che-host:${SERVER_PORT}/wsmaster/api, where che-host is IP of server.
+#    2. Else, use value of che.workspace.che_server_endpoint
+#    3. Else, if 'docker0' interface is unreachable, then che-host replaced with
+#       172.17.42.1 or 192.168.99.1
+#    4. Else, print connection exception
+</code></pre>
+</div>
+
+<p>It is common for configuration with firewalls, routers, networks and hosts to make the default values we detect to establish these connections incorrect. You can run <code class="highlighter-rouge">docker run &lt;DOCKER_OPTIONS&gt; eclipse/che info --network</code> to run a test that makes connections between simulated components to reflect the networking setup of Che as it is configured. You do not need all connections to pass for Che to be properly configured. For example, on a Windows machine, this output may exist, just indicating that <code class="highlighter-rouge">localhost</code> is not an acceptable domain for communications, but the IP address <code class="highlighter-rouge">10.0.75.2</code> is.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>INFO: ---------------------------------------
+INFO: --------   CONNECTIVITY TEST   --------
+INFO: ---------------------------------------
+INFO: Browser    =&gt; Workspace Agent (localhost): Connection failed
+INFO: Browser    =&gt; Workspace Agent (10.0.75.2): Connection succeeded
+INFO: Server     =&gt; Workspace Agent (External IP): Connection failed
+INFO: Server     =&gt; Workspace Agent (Internal IP): Connection succeeded
+</code></pre>
+</div>
+
+<p>You can also perform additional tests yourself against an already-running Che server. You will need to use <code class="highlighter-rouge">docker ps</code> and <code class="highlighter-rouge">docker inspect</code> on the command line to get the container name and IP address of your Che server, and then you can run additional tests:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># Browser =&gt; Workspace Ageent (External IP):
+$ curl http://&lt;che-ip&gt;:&lt;che-port&gt;/wsagent/ext/
+
+# Server =&gt; Workspace Agent (External IP):
+docker exec -ti &lt;che-container-name&gt; curl http://&lt;che-ip&gt;:&lt;che-port&gt;/wsagent/ext/
+
+# Server =&gt; Workspace Agent (Internal IP):
+docker exec -ti &lt;che-container-name&gt; curl http://&lt;workspace-container-ip&gt;:4401/wsagent/ext/
+</code></pre>
+</div>
+
+<h4 id="dns-resolution">DNS Resolution</h4>
+<p>The default behavior is for Che and its workspaces to inherit DNS resolver servers from the host. You can override these resolvers by setting <code class="highlighter-rouge">CHE_DNS_RESOLVERS</code> in the <code class="highlighter-rouge">che.env</code> file and restarting Che. DNS resolvers allow programs and services that are deployed within a user workspace to perform DNS lookups with public or internal resolver servers. In some environments, custom resolution of DNS entries (usually to an internal DNS provider) is required to enable the Che server and the workspace runtimes to have lookup ability for internal services.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Update your che.env with comma separated list of resolvers:</span>
+<span class="nv">CHE_DNS_RESOLVERS</span><span class="o">=</span>10.10.10.10,8.8.8.8
+</code></pre>
+</div>
+
+<h4 id="workspace-address-resolution-strategy">Workspace Address Resolution Strategy</h4>
+<p>By default, the Che server will connect to workspace containers according to the ‘default’ strategy. The order of precedence, Che will use <code class="highlighter-rouge">CHE_DOCKER_IP</code> if it is set, if not, it will use the address <code class="highlighter-rouge">docker-ip</code>. If <code class="highlighter-rouge">docker-ip</code> cannot be determined, it will default to <code class="highlighter-rouge">localhost</code> for Unix socket connections, and <code class="highlighter-rouge">DOCKER_HOST</code>.</p>
+
+<p>An alternative strategy is available, by setting <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY</code> to ‘docker-local’. In this mode, Che will attempt to communicate with workspace containers directly, using <code class="highlighter-rouge">workspace-container-ip</code>, with <code class="highlighter-rouge">localhost</code>/<code class="highlighter-rouge">DOCKER_HOST</code> as a fallback as in the default strategy. This can avoid some issues with ephemeral ports and firewalls (see section ‘Firewalls’, below), but will cause workspace creation to fail if the Che server is configured to not launch workspaces within the same Docker network.</p>
+
+<h2 id="docker-connectivity">Docker Connectivity</h2>
+<p>There are multiple techniques for connecting to Docker including Unix sockets, localhost, and remote connections over TCP protocol. Depending upon the type of connection you require and the location of the machine node running Docker, we use different parameters.</p>
+
+<h2 id="workspace-port-exposure">Workspace Port Exposure</h2>
+<p>Inside your user’s workspace containers, Che launches microservices on port <code class="highlighter-rouge">4401</code> and <code class="highlighter-rouge">4403</code>. We also launch SSH agents on port <code class="highlighter-rouge">22</code>. The bash terminal accessible in the workspace is also launched as an agent in the workspace on port <code class="highlighter-rouge">4411</code>. Custom stacks (configured in the dashboard) may expose additional services on different ports.</p>
+
+<p>Docker uses ephemeral port mapping. The ports accessible to your clients start at port <code class="highlighter-rouge">32768</code> and go through a wide range. When we start services internal to Docker, they are mapped to one of these ports. It is these ports that the browser (or SSH) clients connect to, and would need to be opened if connecting through a firewall.</p>
+
+<p>Additionally, if services are started within the workspace that expose their own ports, then those ports need to have an <code class="highlighter-rouge">EXPOSE &lt;port&gt;</code> command added to the workspace image Dockerfile, or from within the user dashboard these ports need to be explicitly added to the workspace configuration. As a courtesy, in our default stack images, we expose port <code class="highlighter-rouge">80</code> and <code class="highlighter-rouge">8080</code> within the container for any users that want to launch services on those ports.</p>
+
+<h2 id="firewalls">Firewalls</h2>
+<p>On Linux, a firewall may block inbound connections from within Docker containers to your localhost network. As a result, the workspace agent is unable to ping the Che server. You can check for the firewall and then disable it.</p>
+
+<p>Firewalls will typically cause traffic problems to appear when you are starting a new workspace. There are certain network configurations where we direct networking traffic between workspaces and Che through external IP addresses, which can flow through routers or firewalls. If ports or protocols are blocked, then certain functions will be unavailable.</p>
+
+<h3 id="running-behind-a-firewall-linuxmac">Running Behind a Firewall (Linux/Mac)</h3>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Check to see if firewall is running:</span>
+systemctl status firewalld
+
+<span class="c"># Check for list of open ports</span>
+<span class="c"># Verify that ports 8080tcp, 32768-65535tcp are open</span>
+firewall-cmd --list-ports
+
+<span class="c"># Optionally open ports on your local firewall:</span>
+firewall-cmd --permanent --add-port<span class="o">=</span>8080/tcp
+... and so on
+
+<span class="c"># You can also verify that ports are open:</span>
+nmap -Pn -p &lt;port&gt; localhost
+
+<span class="c"># If the port is closed, then you need to open it by editing /etc/pf.conf.</span>
+<span class="c"># For example, open port 1234 for TCP for all interfaces:</span>
+pass <span class="k">in </span>proto tcp from any to any port 1234
+
+<span class="c"># And then restart your firewall</span>
+</code></pre>
+</div>
+
+<h3 id="running-che-behind-a-firewall-windows">Running Che Behind a Firewall (Windows)</h3>
+
+<p>There are many third party firewall services. Different versions of Windows OS also have different firewall configurations. The built-in Windows firewall can be configured in the control panel under “System and Security”:</p>
+
+<ol>
+  <li>In the left pane, right-click <code class="highlighter-rouge">Inbound Rules</code>, and then click <code class="highlighter-rouge">New Rule</code> in the action pane.</li>
+  <li>In the <code class="highlighter-rouge">Rule Type</code> dialog box, select <code class="highlighter-rouge">Port</code>, and then click <code class="highlighter-rouge">Next</code>.</li>
+  <li>In the <code class="highlighter-rouge">Protocol and Ports</code> dialog box, select <code class="highlighter-rouge">TCP</code>.</li>
+  <li>Select speicfic local ports, enter the port number to be opened and click <code class="highlighter-rouge">Next</code>.</li>
+  <li>In the <code class="highlighter-rouge">Action</code> dialog box, select <code class="highlighter-rouge">Allow the Connection</code>, and then click <code class="highlighter-rouge">Next</code>.</li>
+  <li>In the <code class="highlighter-rouge">Name</code> dialog box, type a name and description for this rule, and then click <code class="highlighter-rouge">Finish</code>.</li>
+</ol>
 
 <h1 id="docker">Docker</h1>
 <p>Eclipse Che workspace runtimes are powered by one or more Docker containers. When a user creates a workpace, they do so from a <a href="../../../docs/workspace/stacks/index.html">stack</a> which includes a Dockerfile or reference to a Docker image which will be used to create the containers for the workspace runtimes. Che stacks can pull that image from a public registry, like DockerHub, or a private registry. Images in a registry can be publicly visible or private, which require user credentials to access. You can also set up a private registry to act as a mirror to Docker Hub.  And, if you are running Eclipse Che behind a proxy, you can configure the Docker daemon registry to operate behind a proxy.</p>
@@ -749,7 +842,7 @@ CHE_DOCKER_REGISTRY=&lt;registry-url&gt;
 <p>By default, Che workspaces powered by a Docker container are not configured with Docker privileged mode.  There are many security risks to activating this feature - please review the various issues with blogs posted online.</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Update your che.env:</span>
-<span class="nv">CHE_DOCKER_PRIVILEGED_MODE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">CHE_DOCKER_PRIVILEGED</span><span class="o">=</span><span class="nb">true</span>
 </code></pre>
 </div>
 
@@ -768,146 +861,55 @@ CHE_DOCKER_REGISTRY=&lt;registry-url&gt;
 
 <p>You will need to make sure that your user’s workspaces are powered from a stack that has Docker installed inside of it. Che’s default images do not have Docker installed, but we have sample stacks (see the Che in Che stack).</p>
 
-<h1 id="networking">Networking</h1>
-<p>Eclipse Che makes connections between three entities: the browser, the Che server running in a Docker container, and a workspace running in a Docker container.</p>
+<h1 id="development-mode">Development Mode</h1>
+<p>You can debug the Che binaries that are running within the Che server. You can debug either the binaries that are included within the <code class="highlighter-rouge">eclipse/che-server</code> image that you download from DockerHub or you can mount a local Che git repository to debug binaries built in a local assembly. By using local binaries, this allows Che developers to perform a rapid edit / build / run cycle without having to rebuild Che’s Docker images.</p>
 
-<p>If you distribute these components onto different nodes, hosts or IP addresses, then you may need to add additional configuration parameters to bridge different networks.</p>
+<p>Dev mode is activated by passing <code class="highlighter-rouge">--debug</code> to any command on the CLI.</p>
 
-<p>Also, since the Che server and your Che workspaces are within containers governed by a Docker daemon, you also need to ensure that these components have good bridges to communicate with the daemon.</p>
-
-<p>Generally, if your browser, Che server and Che workspace are all on the same node, then <code class="highlighter-rouge">localhost</code> configuration will always work.</p>
-
-<h2 id="websockets">WebSockets</h2>
-<p>Che relies on web sockets to stream content between workspaces and the browser. We have found many networks and firewalls to block portions of Web socket communications. If there are any initial configuration issues that arise, this is a likely cause of the problem.</p>
-
-<h2 id="topology">Topology</h2>
-<p>The Che server runs in its own Docker container, “Che Docker Container”, and each workspace gets an embedded runtime which can be a set of additional Docker containers, “Docker Container(n)”. All containers are managed by a common Docker daemon, “docker-ip”, making them siblings of each other. This includes the Che server and its workspaces - each workspace runtime environment has a set of containers that is a sibling to the Che server, not a child.</p>
-
-<p><img src="../../../docs/assets/imgs/Capture.PNG" alt="Capture.PNG" /></p>
-
-<h2 id="connectivity">Connectivity</h2>
-<p>The browser client initiates communication with the Che server by connecting to <code class="highlighter-rouge">che-ip</code>. This IP address must be accessible by your browser clients. Internally, Che runs on Tomcat which is bound to port <code class="highlighter-rouge">8080</code>. This port can be altered by setting <code class="highlighter-rouge">CHE_PORT</code> during start or in your <code class="highlighter-rouge">che.env</code>.</p>
-
-<p>When a user creates a workspace, the Che server connects to the Docker daemon at <code class="highlighter-rouge">docker-ip</code> and uses the daemon to launch a new set of containers that will power the workspace. These workspace containers will have a Docker-configured IP address, <code class="highlighter-rouge">workspace-container-ip</code>. The <code class="highlighter-rouge">workspace-container-ip</code> isn’t usually reachable by your browser host, <code class="highlighter-rouge">docker-ip</code> will be used to establish the connections between the browser and workspace containers.</p>
-
-<p>Che goes through a progression algorithm to establish the protocol, IP address and port to establish communications when it is booting or starting a workspace. You can override certain parameters in Che’s configuration to overcome issues with the Docker daemon, workspaces, or browsers being on different networks.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code># Browser --&gt; Che Server
-#    1. Default is 'http://localhost:${SERVER_PORT}/wsmaster/api'.
-#    2. Else use the value of che.api
-#
-# Che Server --&gt; Docker Daemon Progression:
-#    1. Use the value of che.docker.daemon_url
-#    2. Else, use the value of DOCKER_HOST system variable
-#    3. Else, use Unix socket over unix:///var/run/docker.sock
-#
-# Che Server --&gt; Workspace Connection (see Workspace Address Resolution Strategy, below):
-#    - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'default':
-#        1. Use the value of che.docker.ip
-#        2. Else, use address of docker0 bridge network, if available
-#        3. Else, if server connects over Unix socket, then use localhost
-#        4. Else, use DOCKER_HOST
-#    - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'docker-local':
-#        1. Use the address of the workspace container within the docker network
-#        2. If address cannot be read, use steps 3 and 4 from the default strategy. 
-#
-# Browser --&gt; Workspace Connection:
-#    1. Use the value of che.docker.ip
-#    2. Else, if server connects over Unix socket, then use localhost
-#    3. Else, use DOCKER_HOST
-#
-# Workspace Agent --&gt; Che Server
-#    1. Default is http://che-host:${SERVER_PORT}/wsmaster/api, where che-host is IP of server.
-#    2. Else, use value of che.workspace.che_server_endpoint
-#    3. Else, if 'docker0' interface is unreachable, then che-host replaced with
-#       172.17.42.1 or 192.168.99.1
-#    4. Else, print connection exception
+<div class="highlighter-rouge"><pre class="highlight"><code># Activate dev mode with embedded binaries
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v &lt;local-path&gt;:/data \
+                       eclipse/che:&lt;version&gt; [COMMAND] --debug
 </code></pre>
 </div>
 
-<p>It is common for configuration with firewalls, routers, networks and hosts to make the default values we detect to establish these connections incorrect. You can run <code class="highlighter-rouge">docker run &lt;DOCKER_OPTIONS&gt; eclipse/che info --network</code> to run a test that makes connections between simulated components to reflect the networking setup of Che as it is configured. You do not need all connections to pass for Che to be properly configured. For example, on a Windows machine, this output may exist, just indicating that <code class="highlighter-rouge">localhost</code> is not an acceptable domain for communications, but the IP address <code class="highlighter-rouge">10.0.75.2</code> is.</p>
+<p>You can replace the binaries in your local image with local binaries by volume mounting the Che git repository to <code class="highlighter-rouge">:/repo</code> in your Docker run command.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>INFO: ---------------------------------------
-INFO: --------   CONNECTIVITY TEST   --------
-INFO: ---------------------------------------
-INFO: Browser    =&gt; Workspace Agent (localhost): Connection failed
-INFO: Browser    =&gt; Workspace Agent (10.0.75.2): Connection succeeded
-INFO: Server     =&gt; Workspace Agent (External IP): Connection failed
-INFO: Server     =&gt; Workspace Agent (Internal IP): Connection succeeded
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v &lt;local-path&gt;:/data \
+                    -v &lt;local-repo&gt;:/repo \
+                       eclipse/che:&lt;version&gt; [COMMAND] --debug
 </code></pre>
 </div>
 
-<p>You can also perform additional tests yourself against an already-running Che server. You will need to use <code class="highlighter-rouge">docker ps</code> and <code class="highlighter-rouge">docker inspect</code> on the command line to get the container name and IP address of your Che server, and then you can run additional tests:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code># Browser =&gt; Workspace Ageent (External IP):
-$ curl http://&lt;che-ip&gt;:&lt;che-port&gt;/wsagent/ext/
-
-# Server =&gt; Workspace Agent (External IP):
-docker exec -ti &lt;che-container-name&gt; curl http://&lt;che-ip&gt;:&lt;che-port&gt;/wsagent/ext/
-
-# Server =&gt; Workspace Agent (Internal IP):
-docker exec -ti &lt;che-container-name&gt; curl http://&lt;workspace-container-ip&gt;:4401/wsagent/ext/
-</code></pre>
-</div>
-
-<h4 id="workspace-address-resolution-strategy">Workspace Address Resolution Strategy</h4>
-<p>By default, the Che server will connect to workspace containers according to the ‘default’ strategy. The order of precedence, Che will use <code class="highlighter-rouge">CHE_DOCKER_IP</code> if it is set, if not, it will use the address <code class="highlighter-rouge">docker-ip</code>. If <code class="highlighter-rouge">docker-ip</code> cannot be determined, it will default to <code class="highlighter-rouge">localhost</code> for Unix socket connections, and <code class="highlighter-rouge">DOCKER_HOST</code>.</p>
-
-<p>An alternative strategy is available, by setting <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY</code> to ‘docker-local’. In this mode, Che will attempt to communicate with workspace containers directly, using <code class="highlighter-rouge">workspace-container-ip</code>, with <code class="highlighter-rouge">localhost</code>/<code class="highlighter-rouge">DOCKER_HOST</code> as a fallback as in the default strategy. This can avoid some issues with ephemeral ports and firewalls (see section ‘Firewalls’, below), but will cause workspace creation to fail if the Che server is configured to not launch workspaces within the same Docker network.</p>
-
-<h2 id="docker-connectivity">Docker Connectivity</h2>
-<p>There are multiple techniques for connecting to Docker including Unix sockets, localhost, and remote connections over TCP protocol. Depending upon the type of connection you require and the location of the machine node running Docker, we use different parameters.</p>
-
-<p>TODO: LINK TO DOCKER DOCS ON SETTING TCP VS UNIX FOR A DAEMON</p>
-
-<h2 id="workspace-port-exposure">Workspace Port Exposure</h2>
-<p>Inside your user’s workspace containers, Che launches microservices on port <code class="highlighter-rouge">4401</code> and <code class="highlighter-rouge">4403</code>. We also launch SSH agents on port <code class="highlighter-rouge">22</code>. The bash terminal accessible in the workspace is also launched as an agent in the workspace on port <code class="highlighter-rouge">4411</code>. Custom stacks (configured in the dashboard) may expose additional services on different ports.</p>
-
-<p>Docker uses ephemeral port mapping. The ports accessible to your clients start at port <code class="highlighter-rouge">32768</code> and go through a wide range. When we start services internal to Docker, they are mapped to one of these ports. It is these ports that the browser (or SSH) clients connect to, and would need to be opened if connecting through a firewall.</p>
-
-<p>Additionally, if services are started within the workspace that expose their own ports, then those ports need to have an <code class="highlighter-rouge">EXPOSE &lt;port&gt;</code> command added to the workspace image Dockerfile, or from within the user dashboard these ports need to be explicitly added to the workspace configuration. As a courtesy, in our default stack images, we expose port <code class="highlighter-rouge">80</code> and <code class="highlighter-rouge">8080</code> within the container for any users that want to launch services on those ports.</p>
-
-<h2 id="firewalls">Firewalls</h2>
-<p>On Linux, a firewall may block inbound connections from within Docker containers to your localhost network. As a result, the workspace agent is unable to ping the Che server. You can check for the firewall and then disable it.</p>
-
-<p>Firewalls will typically cause traffic problems to appear when you are starting a new workspace. There are certain network configurations where we direct networking traffic between workspaces and Che through external IP addresses, which can flow through routers or firewalls. If ports or protocols are blocked, then certain functions will be unavailable.</p>
-
-<h3 id="running-behind-a-firewall-linuxmac">Running Behind a Firewall (Linux/Mac)</h3>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Check to see if firewall is running:</span>
-systemctl status firewalld
-
-<span class="c"># Check for list of open ports</span>
-<span class="c"># Verify that ports 8080tcp, 7946tcp/udp, 32768-65535tcp are open</span>
-firewall-cmd --list-ports
-
-<span class="c"># Optionally open ports on your local firewall:</span>
-firewall-cmd --permanent --add-port<span class="o">=</span>8080/tcp
-... and so on
-
-<span class="c"># You can also verify that ports are open:</span>
-nmap -Pn -p &lt;port&gt; localhost
-
-<span class="c"># If the port is closed, then you need to open it by editing /etc/pf.conf.</span>
-<span class="c"># For example, open port 1234 for TCP for all interfaces:</span>
-pass <span class="k">in </span>proto tcp from any to any port 1234
-
-<span class="c"># And then restart your firewall</span>
-</code></pre>
-</div>
-
-<h3 id="running-che-behind-a-firewall-windows">Running Che Behind a Firewall (Windows)</h3>
-
-<p>There are many third party firewall services. Different versions of Windows OS also have different firewall configurations. The built-in Windows firewall can be configured in the control panel under “System and Security”:</p>
+<p>You can also optionally use your local binaries in production mode by volume mounting <code class="highlighter-rouge">:/repo</code> without passing <code class="highlighter-rouge">--debug</code>. There are two locations that files in your Che source repository will be used instead of those in the image:</p>
 
 <ol>
-  <li>In the left pane, right-click <code class="highlighter-rouge">Inbound Rules</code>, and then click <code class="highlighter-rouge">New Rule</code> in the action pane.</li>
-  <li>In the <code class="highlighter-rouge">Rule Type</code> dialog box, select <code class="highlighter-rouge">Port</code>, and then click <code class="highlighter-rouge">Next</code>.</li>
-  <li>In the <code class="highlighter-rouge">Protocol and Ports</code> dialog box, select <code class="highlighter-rouge">TCP</code>.</li>
-  <li>Select speicfic local ports, enter the port number to be opened and click <code class="highlighter-rouge">Next</code>.</li>
-  <li>In the <code class="highlighter-rouge">Action</code> dialog box, select <code class="highlighter-rouge">Allow the Connection</code>, and then click <code class="highlighter-rouge">Next</code>.</li>
-  <li>In the <code class="highlighter-rouge">Name</code> dialog box, type a name and description for this rule, and then click <code class="highlighter-rouge">Finish</code>.</li>
+  <li>During the <code class="highlighter-rouge">che config</code> phase, the source repository’s <code class="highlighter-rouge">/dockerfiles/init/modules</code> and <code class="highlighter-rouge">/dockerfiles/init/manifests</code> will be used instead of the ones that are included in the <code class="highlighter-rouge">eclipse/che-init</code> container.</li>
+  <li>During the <code class="highlighter-rouge">che start</code> phase, a local assembly from <code class="highlighter-rouge">assembly/assembly-main/target/</code> is mounted into the <code class="highlighter-rouge">eclipse/che-server</code> runtime container. You must <code class="highlighter-rouge">mvn clean install</code> the <code class="highlighter-rouge">assembly/assembly-main/</code> folder prior to activating development mode.</li>
 </ol>
+
+<p>Volume mounting <code class="highlighter-rouge">:/repo</code> will also make use of your repository’s puppet manifests and other files (replacing those that are stored within the CLI’s base image). If you only want to volume mount a new set of assemblies and ignore the other items in a repository, you can do so by volume mounting <code class="highlighter-rouge">:/assembly</code> to a folder that is the base of a binary (we do not yet support volume mounting a <code class="highlighter-rouge">.tgz</code> file).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v &lt;local-path&gt;:/data \
+                    -v &lt;local-assembly-folder&gt;:/assembly \
+                       eclipse/che:&lt;version&gt; [COMMAND]
+</code></pre>
+</div>
+
+<h3 id="debugging-che">Debugging Che</h3>
+<p>To activate jpda suspend mode for debugging Che server initialization, in the <code class="highlighter-rouge">che.env</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CHE_DEBUG_SUSPEND=true
+</code></pre>
+</div>
+
+<p>To change che debug port, in the <code class="highlighter-rouge">che.env</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CHE_DEBUG_PORT=8000
+</code></pre>
+</div>
 
         </article>
       </div>

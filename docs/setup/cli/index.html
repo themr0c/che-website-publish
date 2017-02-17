@@ -24,6 +24,10 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+  <title>CLI Reference -
+    
+      Docs
+     - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.3.1">
@@ -557,6 +561,8 @@ GLOBAL COMMAND OPTIONS:
 
 <p>The CLI will hide most error conditions from standard out. Internal stack traces and error output is redirected to <code class="highlighter-rouge">cli.log</code>, which is saved in the host folder where <code class="highlighter-rouge">:/data</code> is mounted.</p>
 
+<p>You can override any value in <code class="highlighter-rouge">che.env</code> for a single execution by passing in <code class="highlighter-rouge">-e NAME=VALUE</code> on the command line. The CLI will detect the values on the command line and ignore those imported from <code class="highlighter-rouge">che.env</code>.</p>
+
 <h3 id="action">action</h3>
 <p>Executes some actions on the Eclipse Che instance or on a workspace running inside Che.
 For example to list all workspaces on Che, the following command can be used <code class="highlighter-rouge">action list-workspaces</code>.
@@ -684,6 +690,12 @@ Then, any changes inside the IDE will be reflected in your host folder. And the 
 <p>Connects the current terminal where the command is started to the terminal of a machine of the workspace. If no machine is specified in the command, it will connect to the default machine which is the dev machine.
 The syntax is <code class="highlighter-rouge">ssh &lt;workspace-name&gt; [machine-name]</code>
 The ssh connection will work only if there is a workspace ssh key setup. A default ssh key is automatically generated when a workspace is created.</p>
+
+<h3 id="sync">sync</h3>
+<p>Synchronizes a workspace’s contents with a local folder mounted to :/sync
+The syntax is <code class="highlighter-rouge">-v &lt;path-on-your-machine&gt;:/sync eclipse/che sync &lt;workspace-name&gt;</code></p>
+
+<p>To get extra information, the flag <code class="highlighter-rouge">--unison-verbose</code> can be used to display log of the underlying unison tool.</p>
 
 <h3 id="start">start</h3>
 <p>Starts Che and its services using <code class="highlighter-rouge">docker-compose</code>. If the system cannot find a valid configuration it will perform an <code class="highlighter-rouge">init</code>. Every <code class="highlighter-rouge">start</code> and <code class="highlighter-rouge">restart</code> will run a <code class="highlighter-rouge">config</code> to generate a new configuration set using the latest configuration. The starting sequence will perform pre-flight testing to see if any ports required by Che are currently used by other services and post-flight checks to verify access to key APIs.</p>

@@ -24,6 +24,10 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+  <title>Getting Started&#58 Local -
+    
+      Docs
+     - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="generator" content="Jekyll v3.3.1">
@@ -627,11 +631,108 @@ docker run hello-world
 
 <p>Sometimes Fedora and RHEL/CentOS users will encounter issues with SElinux. Try disabling selinux with <code class="highlighter-rouge">setenforce 0</code> and check if resolves the issue. If using the latest docker version and/or disabling selinux does not fix the issue then please file a issue request on the <a href="https://github.com/eclipse/che/issues">issues</a> page.</p>
 
-<h4 id="ports">Ports</h4>
+<h4 id="internalexternal-ports">Internal/External Ports</h4>
 <p>The default port required to run Che is <code class="highlighter-rouge">8080</code>. Che performs a preflight check when it boots to verify that the port is available. You can pass <code class="highlighter-rouge">-e CHE_PORT=&lt;port&gt;</code> in Docker portion of the start command to change the port that Che starts on.</p>
+
+<p>Internal ports are ports within a local network. This is the most common senerio for most users when Che is installed on their local desktop/laptop. External ports are ports outside a local network. An example senerio of this would be a remote Che server on a cloud host provider. With either case ports need to be open and not blocked by firewalls or other applications already using the same ports.</p>
+
+<p>All ports are TCP unless otherwise noted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Port »»»»»»»»</th>
+      <th>Service »»»»»»»»</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>8080</td>
+      <td>Tomcat Port</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>8000</td>
+      <td>Server Debug Port</td>
+      <td>Users developing Che extensions and custom assemblies would use this debug port to connect a remote debugger to che server.</td>
+    </tr>
+    <tr>
+      <td>32768-65535</td>
+      <td>Docker and Che Agents</td>
+      <td>Users who launch servers in their workspace bind to ephemeral ports in this range. This range can be limited.</td>
+    </tr>
+  </tbody>
+</table>
 
 <h4 id="internet-connection">Internet Connection</h4>
 <p>You can install Che while connected to a network or offline, disconnected from the Internet. If you perform an offline intallation, you need to first download a Che assembly while in a DMZ with a network connection to DockerHub.</p>
+
+<h4 id="networking">Networking</h4>
+<p>Che is a platform that launches workspaces using Docker on different networks. Your browser or desktop IDE then connects to these workspaces. This makes Che a Platform as a Service (PaaS) running on a distributed network. There are essential connections we establish:</p>
+
+<ol>
+  <li>Browser –&gt; Che Server</li>
+  <li>Che Server –&gt; Docker Daemon</li>
+  <li>Che Server –&gt; Workspace</li>
+  <li>Workspace –&gt; Che Server</li>
+  <li>Browser –&gt; Workspace</li>
+</ol>
+
+<p>Che goes through a progression algorithm to establish the protocol, IP address and port to establish a connection for each connection point. If you have launched Che and workspaces do not immediately start, the most common causes are:</p>
+
+<ol>
+  <li>Failed Che -&gt; Workspace (set CHE_DOCKER_IP in <code class="highlighter-rouge">che.env</code>)</li>
+  <li>Failed Browser -&gt; Workspace (set CHE_DOCKER_IP_EXTERNAL in <code class="highlighter-rouge">che.env</code>)</li>
+  <li>Firewall (required ports are not open)</li>
+</ol>
+
+<p>When you first install Che, we will add a <code class="highlighter-rouge">che.env</code> file into the folder you mounted to <code class="highlighter-rouge">:/data</code>, and you can configure many variables to establish proper communications. After changing this file, restart Che for the changes to take affect.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Browser --&gt; Che Server
+   1. Default is 'http://localhost:${SERVER_PORT}/wsmaster/api'.
+   2. Else use the value of CHE_API
+
+Che Server --&gt; Docker Daemon Progression:
+   1. Use the value of CHE_DOCKER_DAEMON__URL
+   2. Else, use the value of DOCKER_HOST system variable
+   3. Else, use Unix socket over unix:///var/run/docker.sock
+
+Che Server --&gt; Workspace Connection:
+   - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'default':
+       1. Use the value of CHE_DOCKER_IP
+       2. Else, if server connects over Unix socket, then use localhost
+       3. Else, use DOCKER_HOST
+   - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'docker-local':
+       1. Use the address of the workspace container within the docker network 
+          and exposed ports
+       2. If address is missing, if server connects over Unix socket, then use 
+          localhost and exposed ports
+       3. Else, use DOCKER_HOST and published ports
+
+Browser --&gt; Workspace Connection:
+   - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'default':
+       1. If set use the value of CHE_DOCKER_IP_EXTERNAL
+       2. Else if set use the value of CHE_DOCKER_IP
+       3. Else, if server connects over Unix socket, then use localhost
+       4. Else, use DOCKER_HOST
+   - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'docker-local':
+       1. If set use the value of CHE_DOCKER_IP_EXTERNAL
+       2. Else use the address of the workspace container within the docker network, 
+          if it is set
+       3. If address is missing, if server connects over Unix socket, then use 
+          localhost
+       4. Else, use DOCKER_HOST
+
+Workspace Agent --&gt; Che Server
+   1. Default is 'http://che-host:${SERVER_PORT}/wsmaster/api', where 'che-host' 
+      is IP of server.
+   2. Else, use value of CHE_WORKSPACE_CHE__SERVER__ENDPOINT
+   3. Else, if 'docker0' interface is unreachable, then 'che-host' replaced with
+      172.17.42.1 or 192.168.99.1
+   4. Else, print connection exception
+</code></pre>
+</div>
 
 <h1 id="versions">Versions</h1>
 <p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code class="highlighter-rouge">eclipse/che:5.0.0-M7</code>. You can see all versions available by running <code class="highlighter-rouge">docker run eclipse/che version</code> or by <a href="https://hub.docker.com/r/eclipse/che/tags/">browsing DockerHub</a>.</p>
