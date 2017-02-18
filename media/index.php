@@ -25,6 +25,16 @@
 
   <table class="wrapper">
 
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che and Eclipse Neon, like potatoes and apple juice!</h3>
+        <p class="loc">Feb 17th, 2017</p>
+        <p class="desc">As a preparation for my presentation at the customer I will go into the differences between Che and Neon....</p>
+        <a href="http://marcelhodan.de/blog/2017/02/17/eclipse-che-und-neon-wie-kartoffeln-und-apfelsaft/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
   <tr class="item">
       <td><img src="../images/media/jaxenter.png" alt=""></td>
       <td>
