@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Why You Should Know the Language Server Protocol</h3>
+        <p class="loc">Feb 17th, 2017</p>
+        <p class="desc">If you are a language developer now you can build just one language server to support many editors, including Visual Studio Code and Eclipse Che or Eclipse IDE...</p>
+        <a href="https://www.javacodegeeks.com/2017/02/know-language-server-protocol.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Eclipse Che and Eclipse Neon, like potatoes and apple juice!</h3>
         <p class="loc">Feb 17th, 2017</p>
         <p class="desc">As a preparation for my presentation at the customer I will go into the differences between Che and Neon....</p>
