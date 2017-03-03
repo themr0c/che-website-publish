@@ -30,7 +30,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -511,6 +511,7 @@
           
 <h2 id="contents">Contents</h2>
 <ul id="markdown-toc">
+  <li><a href="#git-using-custom-ssh-port" id="markdown-toc-git-using-custom-ssh-port">Git Using Custom SSH Port</a></li>
   <li><a href="#git-using-ssh-keys" id="markdown-toc-git-using-ssh-keys">Git Using SSH Keys</a></li>
   <li><a href="#git-using-oauth" id="markdown-toc-git-using-oauth">Git Using oAuth</a></li>
   <li><a href="#svn-using-usernamepassword" id="markdown-toc-svn-using-usernamepassword">SVN Using Username/Password</a></li>
@@ -524,6 +525,9 @@
 <p>Eclipse Che natively supports Git and SVN, which is installed in all pre-defined stacks. Versioning functionality is available in the IDE and in the terminal. When using the Git and SVN menu, commands are injected into the workspace runtime and all output is streamed into the consoles panels. The following sections are in reference to Che’s IDE Git and SVN Menu.</p>
 
 <p>The following sections describe how to connect and authenticate users to a remote git/svn repository. Any operations that involves authentication on the remote repository will need to be done via the IDE interface unless authentication is setup seperately for the workspace machine(terminal/commands). Authentication information setup through the following documentation are stored on Che server for each user and can be used on any of the user workspaces.</p>
+
+<h1 id="git-using-custom-ssh-port">Git Using Custom SSH Port</h1>
+<p>If your Git provider is running SSH on a non-standard port, you will need to use alternate Git URL syntax to access the Git server. In this situation, you need to use the <code class="highlighter-rouge">ssh://user@host:1234/path/to/repo</code> format with the SSH protocol applied to the beginning of the URL.</p>
 
 <h1 id="git-using-ssh-keys">Git Using SSH Keys</h1>
 <p>Private repositories will require a secure SSH connection and most developers who plan to push to a repo will clone it via SSH, so an SSH key pair needs to be generated. SSH keys are saved in user preferences, so you need to generate the SSH key only once and it will be used in all workspaces.</p>
@@ -582,7 +586,7 @@
 
 <p><img src="../../../docs/assets/imgs/Clipboard9.jpg" alt="Clipboard9.jpg" style="width: 30%" /></p>
 
-<h3 id="setup-environment-variables">Setup environment variables.</h3>
+<h3 id="setup-environment-variables">Setup Environment Variables</h3>
 <p>Set the following to environment variables in the <code class="highlighter-rouge">che.env</code> file then start/restart the Eclipse Che server.</p>
 
 <pre><code class="language-YAML">CHE_OAUTH_GITHUB_CLIENTID=yourClientID
@@ -607,7 +611,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS= http://${CHE_HOST_IP}:${SERVER_PORT}/wsmaster/api
 <h2 id="bitbucket-server-oauth">BitBucket Server oAuth</h2>
 <p>You can setup oAuth to a dedicated BitBucket Server to give users access to the pull request panel in their workspace. Each user will still need to setup their own SSH key for authentication to the BitBucket Server which will be similar to <a href="#git-ssh-examples">GitHub/GitLab SSH examples</a>.</p>
 
-<h3 id="1-generate-keys">1. Generate Keys</h3>
+<h3 id="generate-keys">1. Generate Keys</h3>
 <p>SSH to your BitBucket Server instance and generate RSA key-pairs</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># generate the key pairs</span>
@@ -618,7 +622,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS= http://${CHE_HOST_IP}:${SERVER_PORT}/wsmaster/api
 </code></pre>
 </div>
 
-<h3 id="2-setup-codenvy-in-bitbucket-server">2. Setup Codenvy in BitBucket Server</h3>
+<h3 id="setup-codenvy-in-bitbucket-server">2. Setup Codenvy in BitBucket Server</h3>
 <p>In the Bitbucket Server as an Admin:</p>
 
 <ol>
@@ -638,7 +642,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS= http://${CHE_HOST_IP}:${SERVER_PORT}/wsmaster/api
   </li>
 </ol>
 
-<h3 id="3-add-codenvy-oauth-info">3. Add Codenvy oAuth Info</h3>
+<h3 id="add-codenvy-oauth-info">3. Add Codenvy oAuth Info</h3>
 <p>In the following screen press the pencil icon to edit and select the ‘Incoming Authentication’ menu. Fill in the following fields in the ‘OAuth’ tab:</p>
 <ul>
   <li>Consumer Key : {the consumer key from the previous step}</li>
@@ -647,7 +651,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS= http://${CHE_HOST_IP}:${SERVER_PORT}/wsmaster/api
   <li>Consumer Callback : {your Codenvy URL&gt;}/api/oauth/1.0/callback</li>
 </ul>
 
-<h3 id="4-configure-codenvy-properties">4. Configure Codenvy Properties</h3>
+<h3 id="configure-codenvy-properties">4. Configure Codenvy Properties</h3>
 <p>In the <code class="highlighter-rouge">codenvy.env</code> file add (or change if they already exist):</p>
 <ul>
   <li>bitbucket_consumer_key : the consumer key you have entered before</li>
@@ -656,7 +660,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS= http://${CHE_HOST_IP}:${SERVER_PORT}/wsmaster/api
   <li>bitbucket_endpoint : replace the default Bitbucket url by your Bitbucket Server url</li>
 </ul>
 
-<h3 id="5-restart-codenvy">5. Restart Codenvy</h3>
+<h3 id="restart-codenvy">5. Restart Codenvy</h3>
 <p>Restart your Codenvy server to enable the integration.</p>
 
 <h2 id="gitlab-oauth">GitLab oAuth</h2>

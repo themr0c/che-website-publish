@@ -30,7 +30,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.2.1">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -129,12 +129,12 @@
             </div>
           </div>
           
-<h1 id="1-create-a-php-project">1. Create a PHP Project</h1>
+<h1 id="create-a-php-project">1. Create a PHP Project</h1>
 <p>Start Che, create a PHP project using a sample app:</p>
 
 <p><img src="../../../docs/assets/imgs/php.png" alt="php.png" /></p>
 
-<h1 id="2-explore-and-modify-the-project-code">2. Explore and Modify the Project Code</h1>
+<h1 id="explore-and-modify-the-project-code">2. Explore and Modify the Project Code</h1>
 
 <p>The sample project contains just a simple “Hello World!” script written in PHP.</p>
 
@@ -150,13 +150,15 @@
 
 <p>You can use the editor to edit the script. The PHP editor provides rich <a href="../../../docs/ide/intellisense/index.html">IntelliSense</a> features like syntax hightlighting, code completion, code validation, code navigation, etc.</p>
 
-<h1 id="3-execute-as-a-script">3. Execute as a Script</h1>
+<h1 id="execute-as-a-script">3. Execute as a Script</h1>
 
 <p>The PHP stack has the <code class="highlighter-rouge">run php script</code> command that allows you to run the currently opened PHP file as a CLI script, i.e. the output of the PHP script will be printed in the Terminal panel.</p>
 
 <p>While you have the <code class="highlighter-rouge">index.php</code> file on focus in the PHP editor, run the <code class="highlighter-rouge">run php script</code> command in the CMD command widget. “Hello World!” will be printed in the Terminal panel.</p>
 
-<h1 id="4-run-as-a-web-app">4. Run as a Web App</h1>
+<p><img src="../../../docs/assets/imgs/tutorial-php-1.png" alt="php.png" /></p>
+
+<h1 id="run-as-a-web-app">4. Run as a Web App</h1>
 
 <p>The PHP stack includes the Apache Web Server and has commands for starting, stopping and restarting it.</p>
 
@@ -164,11 +166,13 @@
 
 <p>You should see a Hello World page. Open <code class="highlighter-rouge">index.php</code>, edit it, refresh the preview page in your browser to see live changes.</p>
 
-<h1 id="5-debug">5. Debug</h1>
+<p><img src="../../../docs/assets/imgs/tutorial-php-2.png" alt="php.png" /></p>
+
+<h1 id="debug">5. Debug</h1>
 
 <p>The PHP stack includes the Zend Debugger module, which allows debugging PHP both as CLI script and Web app. See the <a href="../../../docs/ide/debug/index.html#php">Debug - PHP</a> page for details.</p>
 
-<h1 id="6-composer-and-unit-tests">6. Composer and Unit Tests</h1>
+<h1 id="composer-and-unit-tests">6. Composer and Unit Tests</h1>
 <p>A PHP stack has <a href="https://getcomposer.org/">Composer</a> already installed and configured. Composer is used to manage project dependencies, i.e. makes it easy to use 3rd party libs and frameworks. Look at the <a href="../../../docs/tutorials/composer/index.html">Composer tutorial</a> for more details on how to work with Composer in Che.</p>
 
 <p>Let’s add the <a href="https://phpunit.de/">PHPUnit</a> testing framework and write a simple Unit test.</p>
@@ -225,46 +229,6 @@ OK <span class="o">(</span>1 <span class="nb">test</span>, 1 assertion<span clas
 </code></pre>
 </div>
 
-<h1 id="7-create-a-rest-service-with-slim">7. Create a REST Service With Slim</h1>
-<p>Slim makes it possible to create REST services. Let’s add this framework to <code class="highlighter-rouge">composer.json</code>:</p>
-
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"require"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"phpunit/phpunit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.7.*"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"slim/slim"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.*"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
-<p>Run <code class="highlighter-rouge">composer update --no-dev</code> to download all <code class="highlighter-rouge">slim</code> dependencies. The framework is ready to be used now. Let’s modify <code class="highlighter-rouge">index.php</code> so that it looks like this:</p>
-
-<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
-
-<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
-
-<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Slim\Slim</span><span class="p">();</span>
-
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/:name'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
-   <span class="k">echo</span> <span class="s2">"Hello </span><span class="nv">$name</span><span class="s2">"</span><span class="p">;</span>
-<span class="p">});</span>
-
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
-</code></pre>
-</div>
-
-<p>This script creates a REST service that takes a path parameter and returns it as <code class="highlighter-rouge">Hello $pathParam</code>. So, <code class="highlighter-rouge">http://&lt;your-che-host&gt;:$port/$appName/Che</code> should return <code class="highlighter-rouge">Hello Che</code>.</p>
-
-<p>This app will need mod_rewrite enabled to avoid using an ugly URL with <code class="highlighter-rouge">index.php</code> in the path. In the project root, create a <code class="highlighter-rouge">.htaccess</code> file:</p>
-
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>RewriteEngine on
-RewriteRule ^ index.php [QSA,L]
-</code></pre>
-</div>
-<p>Apache needs to be restarted. Run <code class="highlighter-rouge">restart apache</code> command in the CMD command widget.</p>
-
-<p>Now, navigate to <code class="highlighter-rouge">http://&lt;your-che-host&gt;:$port/$project/Che</code> to find <code class="highlighter-rouge">Hello Che</code> in a response:</p>
-
-<p><img src="../../../docs/assets/imgs/slim.png" alt="slim.png" /></p>
 
           
 
