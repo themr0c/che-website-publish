@@ -28,6 +28,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Visualizing Docker Containers in Eclipse Che with Weave Scope</h3>
+        <p class="loc">Mar 9th, 2017</p>
+        <p class="desc">When I first started working with Che it took me a while to understand each Eclipse Che workspace is a separate Docker container, but with this visualisation the understanding is immediate...</p>
+        <a href="https://kichwacoders.com/2017/03/09/visualizing-docker-containers-in-eclipse-che-with-weave-scope/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Why You Should Know the Language Server Protocol</h3>
         <p class="loc">Feb 17th, 2017</p>
         <p class="desc">If you are a language developer now you can build just one language server to support many editors, including Visual Studio Code and Eclipse Che or Eclipse IDE...</p>
