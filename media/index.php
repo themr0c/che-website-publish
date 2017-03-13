@@ -22,7 +22,8 @@
   
 
   </table><!-- .wrapper -->
-
+  <table class="wrapper">
+  
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
