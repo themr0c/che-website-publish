@@ -23,10 +23,38 @@
 
   </table><!-- .wrapper -->
 
-  <table class="wrapper">
-
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>In Spanish: Eclipse Che changes the philosophy of work</h3>
+        <p class="loc">March 12, 2017</p>
+        <p class="desc"> When Creating a stock j2ee server with optimizations in Che, I realized that my approach was wrong because it was a classic approach.</p>
+        <a href="https://www.youtube.com/watch?v=J5LVSteYgWo&feature=youtu.be&a" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+   
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>In Italian: Why Choose a Cloud IDE</h3>
+        <p class="loc">March 12, 2017</p>
+        <p class="desc">Programming with a Cloud IDE is a radical choice for a programmer. So why choose to change? The reasons are actually many ...</p>
+        <a href="http://manuelcesarini.it/cloud-ide/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+   
+  <tr class="item">
+      <td><img src="../images/media/heise.png" alt=""></td>
+      <td>
+        <h3>In German: Eclipse Che 5.4 has a diagnostic tool</h3>
+        <p class="loc">March 9, 2017</p>
+        <p class="desc">The tool allows developers to examine the environment for obstacles such as blocked ports.</p>
+        <a href="" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+   
+   <tr class="item">
+      <td><img src="../images/media/kichwacoders.png" alt=""></td>
       <td>
         <h3>Visualizing Docker Containers in Eclipse Che with Weave Scope</h3>
         <p class="loc">Mar 9th, 2017</p>
@@ -34,7 +62,17 @@
         <a href="https://kichwacoders.com/2017/03/09/visualizing-docker-containers-in-eclipse-che-with-weave-scope/" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
-
+   
+   <tr class="item">
+      <td><img src="../images/media/kichwacoders.png" alt=""></td>
+      <td>
+        <h3>Creating a new stack in Eclipse Che from an existing Docker image</h3>
+        <p class="loc">Feb 24th, 2017</p>
+        <p class="desc"></p>
+        <a href="https://kichwacoders.com/2017/02/24/creating-a-new-stack-in-eclipse-che-from-an-existing-docker-image/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+   
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
