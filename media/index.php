@@ -69,7 +69,7 @@
       <td>
         <h3>Creating a new stack in Eclipse Che from an existing Docker image</h3>
         <p class="loc">Feb 24th, 2017</p>
-        <p class="desc"></p>
+        <p class="desc"> Eclipse Che 5.0 provides the ability to quickly create a new stack based on an existing Docker image.</p>
         <a href="https://kichwacoders.com/2017/02/24/creating-a-new-stack-in-eclipse-che-from-an-existing-docker-image/" target="_blank">Read More</a>
       </td>
    </tr><!-- .item -->
