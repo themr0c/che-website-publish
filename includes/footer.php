@@ -37,8 +37,8 @@
             <li><a href="https://www.infoq.com/presentations/eclipse-che-eclipsecon-2016">EclipseCon 2016 Keynote</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/codenvy">Codenvy</a></li>
             <li><a href="<?php echo $rootPath; ?>/docs/openshift/config/" target="_blank">Red Hat</a></li>
-            <li><a href="<?php echo $rootPath; ?>/extend/artik/">Samsung</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP</a></li>
+            <li><a href="<?php echo $rootPath; ?>/extend/bitnami/">Bitnami</a></li>
           </ul>
         </div>
 
