@@ -22,30 +22,32 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <center><h3>Che 5.0 is released!  &nbsp;&nbsp;&nbsp;<a href="https://medium.com/eclipse-che-blog/release-notes-eclipse-che-5-0-fde5626194f1#.koc5f1ln4" target="_blank">Read release notes</a> or run with: <code>docker run eclipse/che start</code></h3>
+    <center><h3>Che 5.0 is released!  &nbsp;&nbsp;&nbsp;Run it now with: <code>docker run eclipse/che start</code></h3>
   </div>
 </div>
 
 <div class="bg-dark-space get-started">
   <div class="container-fluid content">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-6">
         <h3>SaaS</h3>
-        <p>Self-service Eclipse Che workspaces hosted at Codenvy.com</p>
+        <p>Self-service Che workspaces hosted at Codenvy.io</p>
         <a href="<?php echo $rootPath; ?>/getting-started/cloud/" class="btn-yellow">Create Free Account</a></li>
 
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <h3>Local Install</h3>
-        <p>Install and host Eclipse Che on your machine or server.</p>
+        <p>Install and host Eclipse Che anywhere Docker runs.</p>
         <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Download</a>
 
       </div>
+      <!--
       <div class="col-md-4">
         <h3>Cloud</h3>
         <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
         <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
       </div>
+      -->
     </div>
   </div>
 </div>
