@@ -27,10 +27,20 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Codenvy, Eclipse Che, Docker, and Couchbase</h3>
+        <p class="loc">March 23, 2017</p>
+        <p class="desc">I sat down during a break in the conference and knocked out a simple Couchbase Lite Java app.  Codenvy has adopted Eclipse Che, which gives you a full featured editor that runs in your browser.</p>
+        <a href="https://blog.couchbase.com/codenvy-eclipse-che-docker-couchbase-coding-cloud-devoxx-us/" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>In Spanish: Eclipse Che changes the philosophy of work</h3>
         <p class="loc">March 12, 2017</p>
-        <p class="desc"> When Creating a stock j2ee server with optimizations in Che, I realized that my approach was wrong because it was a classic approach.</p>
-        <a href="https://www.youtube.com/watch?v=J5LVSteYgWo&feature=youtu.be&a" target="_blank">Read More</a>
+        <p class="desc">When Creating a stock j2ee server with optimizations in Che, I realized that my approach was wrong because it was a classic approach.</p>
+        <a href="https://www.youtube.com/watch?v=J5LVSteYgWo&feature=youtu.be&a" target="_blank">Learn More</a>
       </td>
    </tr><!-- .item -->
    
