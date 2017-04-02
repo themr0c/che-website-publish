@@ -209,6 +209,11 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -528,7 +533,7 @@
 <p>There are two ways to configure this.</p>
 
 <h3 id="mount-docker-socket">Mount Docker Socket</h3>
-<p>In <code class="highlighter-rouge">che.properties</code>, add <code class="highlighter-rouge">machine.server.extra.volume=/var/run/docker.sock:/var/run/docker.sock</code>. This will have your workspace containers perform a volume mount of the Docker socket so that the Docker client in your workspace will use the parent daemon for any Docker CLI commands. If you are using the Che CLI you can set <code class="highlighter-rouge">CHE_PROPERTY_machine_server_extra_volume=/var/run/docker.sock:/var/run/docker.sock</code> to achieve the same behavior.  You may need to set up permissions for <code class="highlighter-rouge">/var/run/docker.sock</code> on the host with <code class="highlighter-rouge">sudo chmod 777 /var/run/docker.sock</code>.</p>
+<p>In <code class="highlighter-rouge">che.env</code>, add <code class="highlighter-rouge">=/var/run/docker.sock:/var/run/docker.sock</code>. This will have your workspace containers perform a volume mount of the Docker socket so that the Docker client in your workspace will use the parent daemon for any Docker CLI commands. If you are using the Che CLI you can set <code class="highlighter-rouge">-e =/var/run/docker.sock:/var/run/docker.sock</code> to achieve the same behavior.  You may need to set up permissions for <code class="highlighter-rouge">/var/run/docker.sock</code> on the host with <code class="highlighter-rouge">sudo chmod 777 /var/run/docker.sock</code>.</p>
 
 <h3 id="configure-your-docker-daemon">Configure Your Docker Daemon</h3>
 <p>Configure your Docker daemon to listen on TCP.  First, add the following to your Docker configuration file (on Ubuntu it’s <code class="highlighter-rouge">/etc/default/docker</code> - see the Docker docs for the location for your OS):</p>
@@ -556,14 +561,14 @@ Verify that the Docker API is responding at: http://$IP:2375/containers/json
 
 <p><code class="highlighter-rouge">$ docker exec [CONTAINER ID] cat /home/user/.ssh/id_rsa.pub</code></p>
 <h1 id="mount-host-volumes-into-workspaces">Mount Host Volumes Into Workspaces</h1>
-<p>You can have folders on your host system mounted and available for access within your workspaces. In <code class="highlighter-rouge">che.properties</code>, add <code class="highlighter-rouge">machine.server.extra.volume=&lt;host-mount-path&gt;:&lt;ws-mount-path&gt;</code>. You can have multiple volumes mounted by seaparting them with semicolons.</p>
+<p>You can have folders on your host system mounted and available for access within your workspaces. In <code class="highlighter-rouge">che.env</code>, add <code class="highlighter-rouge">=&lt;host-mount-path&gt;:&lt;ws-mount-path&gt;</code>. You can have multiple volumes mounted by seaparting them with semicolons.</p>
 
 <p>When your workspace containers are created, they will volume mount this location from the host.</p>
 
 <p>You can also set this using the Che CLI with an environment variable.
-<code class="highlighter-rouge">CHE_PROPERTY_machine_server_extra_volume=/var/run/docker.sock:/var/run/docker.sock</code> to achieve the same behavior.  You may need to set up permissions for <code class="highlighter-rouge">/var/run/docker.sock</code> on the host with <code class="highlighter-rouge">sudo chmod 777 /var/run/docker.sock</code>.</p>
+<code class="highlighter-rouge">=/var/run/docker.sock:/var/run/docker.sock</code> to achieve the same behavior.  You may need to set up permissions for <code class="highlighter-rouge">/var/run/docker.sock</code> on the host with <code class="highlighter-rouge">sudo chmod 777 /var/run/docker.sock</code>.</p>
 
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>CHE_PROPERTY_machine_server_extra_volume=/c/Users/tyler:/projects/tyler;/c/Users/allsyon:/projects/allyson
+<div class="language-text highlighter-rouge"><pre class="highlight"><code>=/c/Users/tyler:/projects/tyler;/c/Users/allsyon:/projects/allyson
 </code></pre>
 </div>
 
@@ -863,6 +868,21 @@ Verify that the Docker API is responding at: http://$IP:2375/containers/json
   
    
     <li class=""><a href="../../../docs/workspace/data-model-samples/index.html">Project Samples Data Model</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/workspace/data-model-workspaces/index.html">Workspace Data Model</a></li>
   
   
 

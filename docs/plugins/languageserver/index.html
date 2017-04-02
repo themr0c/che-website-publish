@@ -209,6 +209,11 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -598,6 +603,29 @@ to describe the file types that your language server will be registered with.</p
 
 <p>The agent can be added by default in a Stack, our <a href="../../../docs/workspace/stacks/index.html">Stack documentation</a> explains how to create and edit stacks.</p>
 
+<h3 id="4-implement-code-action-commands">4. Implement Code Action Commands</h3>
+<p>Through the LSP command “textDocument/codeAction”, a language server can contribute items to the quick-assist menu in an editor. The language server returns a list of LSP <code class="highlighter-rouge">Command</code> objects. These command objects are mapped to Che actions by looking up an action by id in the <code class="highlighter-rouge">ActionManager</code> using the <code class="highlighter-rouge">command</code> field of the command object. 
+The extra parameters from the command object are passed to the action by using an extended <code class="highlighter-rouge">ActionEvent</code>:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickassistActionEvent</span> <span class="kd">extends</span> <span class="n">ActionEvent</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">;</span>
+
+	<span class="kd">public</span> <span class="nf">QuickassistActionEvent</span><span class="o">(</span><span class="n">Presentation</span> <span class="n">presentation</span><span class="o">,</span> <span class="n">ActionManager</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">PerspectiveManager</span> <span class="n">perspectiveManager</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">presentation</span><span class="o">,</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">perspectiveManager</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">arguments</span><span class="o">=</span> <span class="n">arguments</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getArguments</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">arguments</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Language server launcher IDE plugins may contribute their own actions to be called. The language server plugin itself contributes an action with the id “lsp.applyTextEdit”, which will apply a list of LSP <code class="highlighter-rouge">TextEdit</code> objects in the currently active editor.</p>
+
 
         </article>
       </div>
@@ -895,6 +923,21 @@ to describe the file types that your language server will be registered with.</p
   
    
     <li class=""><a href="../../../docs/workspace/data-model-samples/index.html">Project Samples Data Model</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/workspace/data-model-workspaces/index.html">Workspace Data Model</a></li>
   
   
 

@@ -209,6 +209,11 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -710,7 +715,7 @@ docker exec -ti &lt;che-container-name&gt; curl http://&lt;workspace-container-i
 <p>There are multiple techniques for connecting to Docker including Unix sockets, localhost, and remote connections over TCP protocol. Depending upon the type of connection you require and the location of the machine node running Docker, we use different parameters.</p>
 
 <h2 id="workspace-port-exposure">Workspace Port Exposure</h2>
-<p>Inside your user’s workspace containers, Che launches microservices on port <code class="highlighter-rouge">4401</code> and <code class="highlighter-rouge">4403</code>. We also launch SSH agents on port <code class="highlighter-rouge">22</code>. The bash terminal accessible in the workspace is also launched as an agent in the workspace on port <code class="highlighter-rouge">4411</code>. Custom stacks (configured in the dashboard) may expose additional services on different ports.</p>
+<p>Inside your user’s workspace containers, Che launches microservices on port <code class="highlighter-rouge">4401</code> and <code class="highlighter-rouge">4403</code>. We also launch SSH agents on port <code class="highlighter-rouge">22</code>. The terminal accessible in the workspace is also launched as an agent in the workspace on port <code class="highlighter-rouge">4411</code>. Custom stacks (configured in the dashboard) may expose additional services on different ports.</p>
 
 <p>Docker uses ephemeral port mapping. The ports accessible to your clients start at port <code class="highlighter-rouge">32768</code> and go through a wide range. When we start services internal to Docker, they are mapped to one of these ports. It is these ports that the browser (or SSH) clients connect to, and would need to be opened if connecting through a firewall.</p>
 
@@ -850,16 +855,45 @@ CHE_DOCKER_REGISTRY=&lt;registry-url&gt;
 <p>If you are running a private registry internally to your company, you can <a href="https://docs.docker.com/registry/recipes/mirror/">optionally mirror Docker Hub</a>. Your private registry will download and cache any images that your users reference from the public Docker Hub. You need to <a href="https://docs.docker.com/registry/recipes/mirror">configure your Docker daemon to make use of mirroring</a>.</p>
 
 <h2 id="using-docker-in-workspaces">Using Docker In Workspaces</h2>
-<p>If you’d like your users to work with projects which have their own Docker images and Docker build capabilities inside of their workspace, then you need to configure the workspace to work with Docker. You have two options:</p>
+<p>If you’d like your users to work with projects which have their own Docker images and Docker build capabilities inside of their workspace, then you need to configure the workspace to work with Docker. You have three options:</p>
 
 <ol>
-  <li>Activate Docker’s prvileged mode, where your user workspaces have access to the host.</li>
-  <li>Configure Che to setup workspaces to volume mount your host Daemon</li>
+  <li>Activate Docker’s privileged mode, where your user workspaces have access to the host.
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Update your codenvy.env to allow all Codenvy workspaces machines/containers privileged rights:</span>
+<span class="nv">CHE_DOCKER_PRIVILEGED</span><span class="o">=</span><span class="nb">true</span>;
+</code></pre>
+    </div>
+  </li>
+  <li>Configure Che’s workspaces to volume mount the host docker daemon socket file.
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Update your codenvy.env to allow all Codenvy workspaces to volume mount their host Daemon when starting:</span>
+<span class="nv">CHE_WORKSPACE_VOLUME</span><span class="o">=</span>/var/run/docker.sock:/var/run/docker.sock;
+</code></pre>
+    </div>
+  </li>
+  <li>Configure Docker daemon to listen to listen to tcp socket and specify <code class="highlighter-rouge">DOCKER_HOST</code> environment variable in workspace machine. Each host environment will have different network topology/configuration so below is only to be used as general example.
+Configure your Docker daemon to listen on TCP.  First, add the following to your Docker configuration file (on Ubuntu it’s <code class="highlighter-rouge">/etc/default/docker</code> - see the Docker docs for the location for your OS):</li>
 </ol>
 
-<p>These two tactics will allow user workspaces to perform <code class="highlighter-rouge">docker</code> commands from within their workspace to create and work with Docker containers that will be outside the workspace. In other words, this makes your user’s workspace feel like their laptop where they would normally be performing <code class="highlighter-rouge">docker build</code> and <code class="highlighter-rouge">docker run</code> commands.</p>
+<p>Second, export <code class="highlighter-rouge">DOCKER_HOST</code> variable in your workspace. You can do this in the terminal or make it permanent by adding <code class="highlighter-rouge">ENV DOCKER_HOST=tcp://$IP:2375</code> to a workspace recipe, where <code class="highlighter-rouge">$IP</code> is your docker daemon machine IP.</p>
 
-<p>You will need to make sure that your user’s workspaces are powered from a stack that has Docker installed inside of it. Che’s default images do not have Docker installed, but we have sample stacks (see the Che in Che stack).</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Listen using the default unix socket, and on specific IP address on host.</span>
+<span class="c"># This will vary greatly depending on your host OS.</span>
+sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 
+<span class="c"># Verify that the Docker API is responding at: http://$IP:2375/containers/json</span>
+</code></pre>
+</div>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># In workspace machine</span>
+docker -H tcp://<span class="nv">$IP</span>:2375 ps
+
+<span class="c"># Shorter form</span>
+<span class="nb">export </span><span class="nv">DOCKER_HOST</span><span class="o">=</span><span class="s2">"tcp://</span><span class="nv">$IP</span><span class="s2">:2375"</span>
+docker ps
+</code></pre>
+</div>
+
+<p>These three tactics will allow user workspaces to perform <code class="highlighter-rouge">docker</code> commands from within their workspace to create and work with Docker containers that will be outside the workspace. In other words, this makes your user’s workspace feel like their laptop where they would normally be performing <code class="highlighter-rouge">docker build</code> and <code class="highlighter-rouge">docker run</code> commands.</p>
+
+<p>You will need to make sure that your user’s workspaces are powered from a stack that has Docker installed inside of it. Che’s default Docker recipe images do not have Docker installed, but there is a sample Docker recipe image eclipse/alpine_jdk8 created from our <a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/alpine_jdk8/Dockerfile">dockerfile</a> that includes docker which can be used as new stack’s base image. Refer to the [che-in-che tutorial](../../..(../../../docs/tutorials/che-in-che/index.html) for additional information.</p>
 
 <h1 id="development-mode">Development Mode</h1>
 <p>You can debug the Che binaries that are running within the Che server. You can debug either the binaries that are included within the <code class="highlighter-rouge">eclipse/che-server</code> image that you download from DockerHub or you can mount a local Che git repository to debug binaries built in a local assembly. By using local binaries, this allows Che developers to perform a rapid edit / build / run cycle without having to rebuild Che’s Docker images.</p>
@@ -1207,6 +1241,21 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
   
    
     <li class=""><a href="../../../docs/workspace/data-model-samples/index.html">Project Samples Data Model</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/workspace/data-model-workspaces/index.html">Workspace Data Model</a></li>
   
   
 

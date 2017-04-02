@@ -209,6 +209,11 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -509,14 +514,116 @@
             </div>
           </div>
           
-<p>Commands are script-like instructions that are injected into the workspace machine for execution. Commands are executed at by selecting a command from the IDE toolbar <code class="highlighter-rouge">CMD</code> drop down. You can add or edit commands at <code class="highlighter-rouge">Run &gt; Edit Commands</code> or <code class="highlighter-rouge">CMD &gt; Edit Commands</code> drop down.</p>
+<p>Commands are script-like instructions that are injected into the workspace machine for execution.
+Commands are saved in the configuration storage of your workspace and are part of any workspace export.</p>
 
-<p>Commands are saved in the configuration storage of your workspace and will be part of any workspace export.</p>
+<h1 id="command-overview">Command Overview</h1>
+<p>A command is defined by:</p>
+<ul>
+  <li>A set of instructions to be injected into the workspace machine for execution</li>
+  <li>A goal to organize commands for your workflow</li>
+  <li>A context to scope the command to particular project(s)</li>
+  <li>A previewURL which to expose URL of a running server</li>
+</ul>
 
-<p>Commands have type like projects. Plug-in authors can register different command types that will inject additional behaviors into the command when it is executed. For example, Che provides a Maven command type for any project that has the maven project type. Maven commands have knowledge of how maven works and will auto-set certain flags and simplify the configuration.</p>
+<h2 id="command-goals">Command Goals</h2>
+<p>A command is executed by the developer to achieve a particular step from his flow. We provide the ability to organize commands per goal:</p>
+<ul>
+  <li><em>Build</em>: Commands that build a workspace’s projects.</li>
+  <li><em>Test</em>: Commands related to test execution.</li>
+  <li><em>Run</em>: Commands that run a workspace’s projects.</li>
+  <li><em>Debug</em>: Commands used to start a debugging session.</li>
+  <li><em>Deploy</em>: Commands that are used to deploy a workspace’s projects onto specific servers or services.</li>
+  <li><em>Common</em>: General purpose commands.</li>
+</ul>
 
-<h1 id="authoring">Authoring</h1>
-<p>You can create any number of commands. The name of a command is not restricted to camelCase. A command may contain a single instruction or a succession of commands. For example:</p>
+<h2 id="command-context">Command Context</h2>
+<p>All commands are not applicable to every project. So we wanted to add the notion of context to a command. The context of a command defines the project(s) that the command can be used with. For example: a maven build command will be relevant only if the project is using maven.</p>
+
+<h1 id="managing-commands">Managing commands</h1>
+<p>Workspace’s commands are available thought the <code class="highlighter-rouge">Commands Explorer</code> accessible from the left pane where they are organized by goal.</p>
+
+<p><img src="../../../docs/assets/imgs/command-explorer.png" alt="command-explorer.png" style="width: 40%" /></p>
+
+<p>You can create new commands by using the <code class="highlighter-rouge">+</code> button display next to each goals.
+Alternatively, you can select a command from the tree to edit, duplicate or delete it.</p>
+
+<p><img src="../../../docs/assets/imgs/command-editor.png" alt="command-editor.png" /></p>
+
+<p>The command editor is handled as another tab in the existing editor pane. You get more space to configure the command and benefit from the full screen edit mode (by double clicking on the tab) and the ability to split vertically or horizontally to display multiple editors at the same time.</p>
+
+<ul>
+  <li><strong>Name</strong>: Command name as to be unique in your workspace. The name is not restricted to camelCase.</li>
+  <li><strong>Intructions</strong>: Learn more about instructions and <a href="../../../docs/ide/commands/index.html#macros">macros</a>.</li>
+  <li><strong>Goal</strong>: Use the dropdown to change the goal of the command.</li>
+  <li><strong>Context</strong>: By default, the command is available with all project(s) of the workspace. You can scope the command to be available only for selected project(s).</li>
+  <li><strong>Preview</strong>: Learn more about <a href="../../../docs/ide/previews/index.html">previews</a>.</li>
+</ul>
+
+<h2 id="macros-hints">Macros hints</h2>
+<p>Che provides macros that can be used within a command or preview URL to reference workspace objects. Learn more <a href="../../../docs/ide/commands/index.html#macros">here</a>.</p>
+
+<h4 id="macros-list">Macros list</h4>
+
+<p>When editing a command, you can get an access to all the macros that can be used in the command’s instructions or in the preview URL. To display the complete list of macros, click on the <code class="highlighter-rouge">Macros</code> link.</p>
+
+<p><img src="../../../docs/assets/imgs/command-macros-list.png" alt="command-macros-list.png" /></p>
+
+<h4 id="macros-auto-completion">Macros auto-completion</h4>
+
+<p>You can get auto-complete for all macros used in the editor. To activate this feature hit <code class="highlighter-rouge">&lt;ctrl+space&gt;</code> this will bring up a menu listing all the possible macros based on what’s been typed.</p>
+
+<p><img src="../../../docs/assets/imgs/command-macros-autocompletion.png" alt="command-macros-autocompletion.png" /></p>
+
+<h1 id="use-commands">Use commands</h1>
+<p>You can use commands from multiple widgets:</p>
+<ul>
+  <li>Command palette</li>
+  <li>Command toolbar</li>
+  <li>Contextual menu in project explorer</li>
+</ul>
+
+<h2 id="command-palette">Command Palette</h2>
+<p>Since commands are often run in the heat of coding, you can use a hotkey to open the command palette.</p>
+
+<p><img src="../../../docs/assets/imgs/command-palette.png" alt="command-palette.png" style="width: 40%" /></p>
+
+<p>The command palette allows to quickly select a command to be executed.
+To call the command palette from the keyboard hit <code class="highlighter-rouge">&lt;shift+F10&gt;</code> and then use the cursor keys to navigate and enter to execute the command.</p>
+
+<h2 id="command-toolbar">Command Toolbar</h2>
+
+<p>The  command toolbar provides a way to execute the most common <code class="highlighter-rouge">Run</code> and <code class="highlighter-rouge">Debug</code> goals. It also provides access to all the executed commands and previews from a single place.</p>
+
+<p><img src="../../../docs/assets/imgs/command-toolbar.png" alt="command-toolbar.png" /></p>
+
+<p><strong>Run and Debug Buttons</strong>
+If you have commands defined for those goals, you can trigger them directly from those buttons.</p>
+
+<p>If you have multiple commands defined for the <code class="highlighter-rouge">Run</code> goal and if it’s the first time you are using the <code class="highlighter-rouge">Run</code> button, you’ll be asked to choose the default command associated with the button. The next click on the button will trigger the previously selected command.</p>
+
+<p>By doing a long click on the button you can select the command from the <code class="highlighter-rouge">Run</code> goal to execute. This command will become the default command associated with the <code class="highlighter-rouge">Run</code> button.</p>
+
+<p>The same mechanisms apply to the <code class="highlighter-rouge">Debug</code> button.</p>
+
+<p><strong>Command Controller</strong>
+The command controller allow you to see the state of the workspace and the last command executed. You can see since how long the command started and also decide if it should be stopped or relaunched.</p>
+
+<p>When multiple commands have been executed it’s possible to see the list of all previously executed commands by clicking on the widget.</p>
+
+<p><img src="../../../docs/assets/imgs/command-toolbar-expanded.png" alt="command-toolbar-expanded.png" /></p>
+
+<p>To clean the list, remove the command’s process from the list of processes.</p>
+
+<p><img src="../../../docs/assets/imgs/command-clean-toolbar.png" alt="command-clean-toolbar.png" /></p>
+
+<p><strong>Preview Button</strong>
+If you have a command which start servers (for example, Tomcat) you can define the preview URL to access the running server. Learn more <a href="../../../docs/ide/previews/index.html">here</a>.</p>
+
+<p>The preview button provides quick access to all the servers that are running in workspace’s machines.</p>
+
+<h1 id="authoring-command-instructions">Authoring Command Instructions</h1>
+<p>A command may contain a single instruction or a succession of commands. For example:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># each command starts from a new line</span>
 <span class="nb">cd</span> /projects/spring
@@ -571,6 +678,10 @@ mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.
       <td>Currently selected file in editor</td>
     </tr>
     <tr>
+      <td><code class="highlighter-rouge">${editor.current.file.basename}</code></td>
+      <td>Currently selected file in editor without extension</td>
+    </tr>
+    <tr>
       <td><code class="highlighter-rouge">${editor.current.file.path}</code></td>
       <td>Absolute path to the selected file in editor</td>
     </tr>
@@ -589,6 +700,10 @@ mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.
     <tr>
       <td><code class="highlighter-rouge">${explorer.current.file.name}</code></td>
       <td>Currently selected file in project tree</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">${explorer.current.file.basename}</code></td>
+      <td>Currently selected file in project tree without extension</td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">${explorer.current.file.path}</code></td>
@@ -611,12 +726,16 @@ mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.
       <td>Returns protocol, hostname and port of an internal server. <code class="highlighter-rouge">&lt;port&gt;</code> is defined by the same internal port of the internal service that you have exposed in your workspace recipe. <br /><br /> Returns the hostname and port of a service or application you launch inside of a machine. <br /><br /> The hostname resolves to the hostname or the IP address of the workspace machine. This name varies depending upon where Docker is running and whether it is embedded within a VM.  See <a href="../../../docs/setup/configuration/index.html">Networking</a>. <br /><br /> The port returns the Docker ephemeral port that you can give to your external clients to connect to your internal service. Docker uses ephemeral port mapping to expose a range of ports that your clients may use to connect to your internal service. This port mapping is dynamic.</td>
     </tr>
     <tr>
+      <td><code class="highlighter-rouge">${server.&lt;port&gt;.port}</code></td>
+      <td>Returns resolved port of a server registered by internal port</td>
+    </tr>
+    <tr>
       <td><code class="highlighter-rouge">${server.&lt;port&gt;.protocol}</code></td>
-      <td>Returns protocol of a server registered by name</td>
+      <td>Returns protocol of a server registered by internal port</td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">${server.&lt;port&gt;.hostname}</code></td>
-      <td>Returns hostname of a server registered by name</td>
+      <td>Returns hostname of a server registered by internal port</td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">${server.port.&lt;port&gt;}</code></td>
@@ -936,6 +1055,21 @@ mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.
   
    
     <li class=""><a href="../../../docs/workspace/data-model-samples/index.html">Project Samples Data Model</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/workspace/data-model-workspaces/index.html">Workspace Data Model</a></li>
   
   
 

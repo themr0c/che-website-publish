@@ -209,6 +209,11 @@
   
   <option value=""></option>
 
+  
+  
+  
+  <option value=""></option>
+
 
     </optgroup>
     
@@ -567,11 +572,6 @@ image: eclipse/&lt;image-name&gt;
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">RUN apt-get install bash -y</code></td>
-      <td><code class="highlighter-rouge">bash</code></td>
-      <td>Execs are performed as bash commands. It is uncommon that base Docker images do not have bash. However, some distributions as Alpine or Busybox only provide <code class="highlighter-rouge">sh</code>.</td>
-    </tr>
-    <tr>
       <td>User with <code class="highlighter-rouge">root</code> privileges</td>
       <td>To install our developer tools agents (like terminal access and intellisense) we need root access or a user who has sudo rights.</td>
       <td><code class="highlighter-rouge">USER root</code> <br /><br /> or grant your preferred user sudo rights.</td>
@@ -679,19 +679,32 @@ expose:
 </code></pre>
 </div>
 
-<p><strong>2: Go to user dashboard for your workspace</strong> and click on the Runtimes tab. Select your machine and then in a section called “Server” you will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</p>
+<p><strong>2: Go to user dashboard for your workspace</strong> and click on the Runtimes tab. Select your machine and then in a section called “Servers” you will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</p>
 
 <p><strong>3: You can also get the published port automatically by using a macro</strong> in a <a href="../../../docs/ide/commands/index.html">command</a>. When authoring a command, set its preview URL to <code class="highlighter-rouge">${server.port.&lt;your-apps-port&gt;}</code> where <code class="highlighter-rouge">&lt;your-apps-port&gt;</code> is the port in your recipe’s expose command. When the command is executed, this macro is translated into a <code class="highlighter-rouge">host:port</code> URL.</p>
 
-<p>There is no way to expose a port once the workspace is running. To expose an additional ports, the ports need to be added to the runtime recipe or added directly to the runtime instance via the dashboard <code class="highlighter-rouge">Workspaces&gt;(click workspace name)&gt;Runtime Tab</code>.</p>
+<p>There is no way to expose a port once the workspace is running. To expose an additional ports, the ports need to be added to the runtime recipe or added directly to the runtime instance via the dashboard <code class="highlighter-rouge">Workspaces&gt;(click workspace name)&gt;Runtime Tab&gt;(click machine name)</code>.</p>
 
-<p><img src="../../../docs/assets/imgs/Che-recipe-expose-ports.jpg" alt="Che-recipe-expose-ports.jpg" /></p>
+<p><img src="../../../docs/assets/imgs/che-workspace-runtime.png" alt="che-workspace-runtime.png" /></p>
+
+<p><img src="../../../docs/assets/imgs/che-workspace-runtime-servers.png" alt="che-workspace-runtime-servers.png" /></p>
+
+<p><img src="../../../docs/assets/imgs/che-workspace-runtime-add-server.png" alt="che-workspace-runtime-add-server.png" /></p>
+
+<p>If workspace is stopped the list only contains ports exposed by user. Once workspace is running the list expands with ports exposed by system:</p>
+
+<p><img src="../../../docs/assets/imgs/che-workspace-running-runtime-servers.png" alt="che-workspace-running-runtime-servers.png" /></p>
+
+<p><strong>Note:</strong> You cannot manage ports added by Che’s system, they are exposed for certain <a href="../../../docs/workspace/agents/index.html">agents</a> to allow machine’s management.</p>
 
 <h2 id="issue-a-pull-request-to-improve-recipes">Issue a Pull Request To Improve Recipes</h2>
 <p>We really love pull requests. We are always looking to increase the set of stacks that are available for development. Please suggest a fix or add a new base image recipe.  To do so, issue <a href="https://github.com/codenvy/dockerfiles">pull requests</a>. If you add a new Dockerfile, it will be added as a source for a new automated build at DockerHub.  Please sign the <a href="https://eclipse.org/legal/ECA.php">Eclipse contributor agreement</a> before making a contribution. Your contribution will be licensed as <a href="https://www.eclipse.org/legal/epl-v10.html">EPL 1.0</a>.</p>
 
 <h1 id="multi-container-recipes">Multi-Container Recipes</h1>
 <p>The majority of the Docker Compose file syntax works with Eclipse Che. However, Che is a distributed system that supports multiple users on a single node, and in order to manage this distribution and multi-user capabilities, there are certain compose features that are not supported.</p>
+
+<h2 id="dev-machine">Dev Machine</h2>
+<p>A multi-container workspace must have at least one machine/container designated as “DEV”. This machine will have terminal, SSH and IDE tooling injected into it and have volume mounts such as <code class="highlighter-rouge">/projects</code> and those specified in server <a href="../../../docs/workspace/volume-mounts/index.html#sharing-volumes-between-containers">volume mount</a> configuration.</p>
 
 <h2 id="unsupported-compose-syntax">Unsupported Compose Syntax</h2>
 
@@ -1104,6 +1117,21 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
   
    
     <li class=""><a href="../../../docs/workspace/data-model-samples/index.html">Project Samples Data Model</a></li>
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <li class=""><a href="../../../docs/workspace/data-model-workspaces/index.html">Workspace Data Model</a></li>
   
   
 
