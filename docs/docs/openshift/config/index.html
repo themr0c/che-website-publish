@@ -1,0 +1,547 @@
+
+
+
+
+
+
+
+<!-- jQuery Eclipse IP approval https://dev.eclipse.org/ipzilla/show_bug.cgi?id=10801 -->
+<script type="text/javascript" charset="utf8" src="../../../docs/assets/scripts/jquery-1.8.1.min.js"></script>
+
+<script type="text/javascript" charset="utf8">
+  $(document).ready(function(){
+    var images = document.getElementsByTagName('img');
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i];
+      var parentElement = image.parentElement;
+      var a = document.createElement('a');
+      if (! image.getAttribute('src').includes("logo-codenvy.svg") && ! image.getAttribute('src').includes("codenvy-contribute.svg") ){
+          a.href = image.getAttribute('src');
+          a.target = "_blank";
+          a.appendChild(image);
+          parentElement.appendChild(a);
+      }
+    }
+  });
+</script>
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <title>OpenShift Install -
+    
+      Docs
+     - Eclipse Che</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="generator" content="Jekyll v3.3.1">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
+  <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
+  <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
+  <!--[if lt IE 9]>
+  <script src="/js/html5shiv.min.js"></script>
+  <script src="/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+
+<body class="wrap">
+  
+
+
+
+
+
+
+
+<header>
+  <nav class="mobile-nav show-on-mobiles">
+    <ul>
+  
+  <li class="">
+    <a href="../../../docs/index.html">Docs</a>
+  </li>
+  <li class="">
+    <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
+  </li>
+  <li class="current">
+    <a href="../../../docs/openshift/config/index.html">OpenShift</a>
+  </li>
+  <li>
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
+  </li>
+</ul>
+
+  </nav>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+        <a href="https://eclipse.org/che/">
+          <span class="sr-only">Eclipse Che</span>
+          <img src="../../../docs/assets/imgs/logo-eclipseche.svg" alt="Eclipse Che Logo"  width="249" height="115">
+        </a>
+    </div>
+    <nav class="main-nav unit two-thirds hide-on-mobiles">
+      <ul>
+  
+  <li class="">
+    <a href="../../../docs/index.html">Docs</a>
+  </li>
+  <li class="">
+    <a href="../../../docs/tutorials/multi-machine/index.html">Tutorials</a>
+  </li>
+  <li class="current">
+    <a href="../../../docs/openshift/config/index.html">OpenShift</a>
+  </li>
+  <li>
+    <a href="https://github.com/eclipse/che-docs/tree/master/src/main">GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+    <section class="docs">
+    <div class="grid">
+
+      <div class="docs-nav-mobile unit whole show-on-mobiles">
+  <select onchange="if (this.value) window.location.href=this.value">
+    <option value="">Navigate the docs…</option>
+    
+    
+    <optgroup label="OPENSHIFT PLUG-IN FOR ECLIPSE CHE">
+      
+
+
+
+
+
+
+<ul>
+
+</ul>
+
+       
+      
+
+
+
+
+
+
+<ul>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class="current"><a href="../../../docs/openshift/config/index.html">OpenShift Install</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/openshift/user-guide/index.html">OpenShift Use</a></li>
+  
+
+
+</ul>
+
+      
+    </optgroup>
+    
+
+    
+    
+    
+    
+  </select>
+</div>
+
+
+      <div class="unit four-fifths">
+        <article>
+          <div class="improve right hide-on-mobiles">
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/openshift/openshift-config.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/openshift/openshift-config.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
+          </div>
+          <div class="doc-title">
+            <h1>OpenShift Install</h1>
+            <div class="doc-title-border">
+            </div>
+          </div>
+          
+<h2 id="download">Download</h2>
+<h3 id="binaries">Binaries</h3>
+<p><a href="http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots/org/eclipse/che/openshift-plugin-assembly-main/">Get packaged zip file</a></p>
+
+<h3 id="build-from-source">Build From Source</h3>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/codenvy/plugin-openshift
+<span class="nb">cd </span>plugin-openshift
+mvn clean install
+</code></pre>
+</div>
+
+<h2 id="configure-che">Configure Che</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a directory to host conf files</span>
+mkdir -p /home/user/.che/plugin-conf
+
+<span class="c"># Set CHE_LOCAL_CONF_DIR to be this new folder</span>
+<span class="nb">echo</span> <span class="s2">"export CHE_LOCAL_CONF_DIR=/home/user/.che"</span> &gt;&gt; ~/.bashrc
+</code></pre>
+</div>
+<p>Create <code class="highlighter-rouge">~/.che/che.properties</code> and set OpenShift parameters.</p>
+<div class="language-toml highlighter-rouge"><pre class="highlight"><code><span class="py">openshift.api.endpoint</span><span class="p">=</span><span class="err">https://your.openshift.instance.com/</span>
+<span class="py">oauth.openshift.authuri</span><span class="p">=</span><span class="err">https://your.openshift.instance.com/oauth/authorize</span>
+<span class="py">oauth.openshift.tokenuri</span><span class="p">=</span><span class="err">https://your.openshift.instance.com/oauth/token</span>
+<span class="py">oauth.openshift.clientid</span><span class="p">=</span><span class="err">yourID</span>
+<span class="py">oauth.openshift.clientsecret</span><span class="p">=</span><span class="err">yourSecret</span>
+<span class="py">oauth.openshift.redirecturis</span><span class="p">=</span><span class="err">http://localhost:${SERVER_PORT}/wsmaster/api/oauth/callback</span>
+</code></pre>
+</div>
+<p>Create <code class="highlighter-rouge">~/.che/plugin-conf/che.properties</code> and set a single OpenShift parameter:</p>
+<div class="language-toml highlighter-rouge"><pre class="highlight"><code><span class="py">openshift.api.endpoint</span><span class="p">=</span><span class="err">https://your.openshift.instance.com/</span>
+</code></pre>
+</div>
+<p>Both configuration files are mandatory.</p>
+
+<h4 id="what-is-my-api-endpoint-client-id-and-secret">What is my API endpoint client ID and secret?</h4>
+<p>API endpoint is the URL of your OpenShift installation (can be a domain name or IP address). Client ID and secret should match those registered in a <a href="../../../docs/openshift/config/index.html#register-a-custom-oauth-client">custom oAuth client</a>.</p>
+
+<h2 id="register-a-custom-oauth-client">Register a Custom oAuth Client</h2>
+<p>Che uses oAuth2 to get authentication tokens from OpenShift. You need to register a custom oAuth client in your OpenShift master node. Example, using <code class="highlighter-rouge">oc</code>:</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Requires OpenShift admin privs</span>
+oc create -f &lt;<span class="o">(</span><span class="nb">echo</span> <span class="s1">'
+{
+  "kind": "OAuthClient",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "che"
+  },
+  "secret": "yoursecret",
+  "redirectURIs": [
+    "http://localhost:8080/wsmaster/api/oauth/callback"
+  ]
+}'</span><span class="o">)</span>
+</code></pre>
+</div>
+
+          
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+        </article>
+      </div>
+
+      <div class="unit one-fifth hide-on-mobiles">
+  <aside>
+    
+    
+    <h4>OPENSHIFT PLUG-IN FOR ECLIPSE CHE</h4>
+     
+    
+
+
+
+
+
+
+<ul>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class="current"><a href="../../../docs/openshift/config/index.html">OpenShift Install</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/openshift/user-guide/index.html">OpenShift Use</a></li>
+  
+
+
+</ul>
+
+    
+    
+    
+    
+  </aside>
+</div>
+
+
+      <div class="clear"></div>
+
+    </div>
+  </section>
+
+
+
+  <script>
+  var anchorForId = function (id) {
+    var anchor = document.createElement("a");
+    anchor.className = "header-link";
+    anchor.href      = "#" + id;
+    anchor.innerHTML = "<span class=\"sr-only\">Permalink</span><i class=\"fa fa-link\"></i>";
+    anchor.title = "Permalink";
+    return anchor;
+  };
+
+  var linkifyAnchors = function (level, containingElement) {
+    var headers = containingElement.getElementsByTagName("h" + level);
+    for (var h = 0; h < headers.length; h++) {
+      var header = headers[h];
+
+      if (typeof header.id !== "undefined" && header.id !== "") {
+        header.appendChild(anchorForId(header.id));
+      }
+    }
+  };
+
+  document.onreadystatechange = function () {
+    if (this.readyState === "complete") {
+      var contentBlock = document.getElementsByClassName("artik")[0] || document.getElementsByClassName("openshift")[0] || document.getElementsByClassName("tutorials")[0] || document.getElementsByClassName("docs")[0] || document.getElementsByClassName("news")[0];
+      if (!contentBlock) {
+        return;
+      }
+      for (var level = 1; level <= 6; level++) {
+        linkifyAnchors(level, contentBlock);
+      }
+    }
+  };
+</script>
+
+  
+
+
+
+
+</body>
+</html>
