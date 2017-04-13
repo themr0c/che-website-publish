@@ -25,6 +25,16 @@
   <table class="wrapper">
   
    <tr class="item">
+      <td><img src="../images/media/jaxenter.png" alt=""></td>
+      <td>
+        <h3>Eclipse Che Tutorial: Step by step to your own plug-in</h3>
+        <p class="loc">March 28, 2017</p>
+        <p class="desc">Eclipse Che is one of the most exciting new projects at Eclipse. This tutorial series by Jonas Helming, Maximilian Kögel and Matthias Hansen shows that Che is more than a pure browser IDE.</p>
+        <a href="https://jaxenter.de/eclipse-che-tutorial-55220" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Codenvy, Eclipse Che, Docker, and Couchbase</h3>
