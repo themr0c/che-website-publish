@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.3.1">
+  <meta name="generator" content="Jekyll v3.4.0">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -518,6 +518,20 @@
   
   
    
+    <option value="../../../docs/devops/workspaces-data-model/index.html">Workspace Data Model</option>
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
     <option value="../../../docs/devops/runtime-stacks-data-model/index.html">Runtime Stacks Data Model</option>
   
 
@@ -649,6 +663,21 @@
   
   
     <li class=""><a href="../../../docs/devops/ws-agents/index.html">Workspace Agents</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/devops/workspaces-data-model/index.html">Workspace Data Model</a></li>
   
 
 
@@ -2398,17 +2427,6 @@ FROM my.registry.url:9000/image:latest
 </code></pre>
 </div>
 
-<h3 id="using-snapshots-with-private-registries">Using Snapshots with Private Registries</h3>
-<p>The default configuration of workspace snapshots is to save to local disk but you can configure Che to save your workspace snapshots to a private registry that you have installed, such as JFrog’s Artifactory or Docker’s Enterprise Registry.</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Use a Docker registry for workspace snapshots. If false, snaps are saved to disk.</span>
-<span class="nv">CHE_DOCKER_REGISTRY__FOR__SNAPSHOTS</span><span class="o">=</span><span class="nb">false</span>
-
-<span class="c"># Registry snapshot namespace</span>
-<span class="nv">CHE_DOCKER_NAMESPACE</span><span class="o">=</span>NULL
-</code></pre>
-</div>
-
 <h3 id="save-workspace-snapshots-in-a-private-registry">Save Workspace Snapshots in a Private Registry</h3>
 <p>The default configuration for workspace snapshots is to have them written to disk as TAR files. This is faster, but not centralized. You can have workspace snapshots saved in a private registry instead. In <code class="highlighter-rouge">che.env</code>:</p>
 
@@ -2416,6 +2434,19 @@ FROM my.registry.url:9000/image:latest
 CHE_DOCKER_REGISTRY=&lt;registry-url&gt;
 </code></pre>
 </div>
+
+<h3 id="managing-snapshots-in-registries">Managing Snapshots in Registries</h3>
+<p>Che marks old snapshots for deletion from the registry by deleting the snapshot manifests which reference the image layers. However, the image layers themselves (which consume the disk space) must be removed by the registry itself as part of a garbage collection (it removes layers that have no manifests). Che does not automatically trigger a GC event in the registry because during GC the registry needs to be in read-only mode which could cause new image pushes to fail.</p>
+
+<p>We recommend either triggering the GC manually from time-to-time or when disk space becomes limited and when it’s known that images aren’t being pushed to the registry. Alternatively, registry GCs can be scheduled if there’s a consistent time of day when there’s a low likelihood of pushes to the registry.</p>
+
+<p>To execute the GC in a registry on a host (local or remote):
+<code class="highlighter-rouge">bin/registry garbage-collect &lt;/path/to/config.yml&gt;</code></p>
+
+<p>To execute the GC in a registry inside a container:
+<code class="highlighter-rouge">docker exec -ti &lt;registry container name/id&gt; bin/registry garbage-collect /etc/docker/registry/config.yml</code></p>
+
+<p>Read more about registries in the <a href="https://docs.docker.com/registry/">Docker documentation</a>.</p>
 
 <h2 id="custom-dockerfiles-and-composefiles-for-workspaces">Custom Dockerfiles and Composefiles for Workspaces</h2>
 <p>Within Che, your workspaces are powered by a set of runtime environments. The default runtime is Docker. Typically, admins have pre-built images in a Docker registry which are pulled when the workspace is created. You can optionally provide custom Dockerfiles (or let your users provide their own Dockerfiles), which will dynamically create a workspace image when a user creates a new workspace.</p>
@@ -2803,6 +2834,21 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
   
   
     <li class=""><a href="../../../docs/devops/ws-agents/index.html">Workspace Agents</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/devops/workspaces-data-model/index.html">Workspace Data Model</a></li>
   
 
 
