@@ -23,7 +23,17 @@
 
   </table><!-- .wrapper -->
   <table class="wrapper">
-  
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>New Eclipse IoT Open Testbeds to Drive Industry Adoption</h3>
+        <p class="loc">April 28, 2017</p>
+        <p class="desc">The Asset Tracking Management testbed will demonstrate and test how assets with various sensors can be tracked via different IoT gateways that report in real time the data to an IoT cloud platform, or use the events to automate control of various systems. The participants in the testbed will be Red Hat (lead), Azul Systems, Eurotech, Samsung, and Codenvy.</p>
+        <a href="http://www.prweb.com/releases/2017/04/prweb14281896.htm" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/jaxenter.png" alt=""></td>
       <td>

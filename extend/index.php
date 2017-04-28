@@ -130,7 +130,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank" style="text-decoration: none"><img src="../images/logo-extend-codenvy@2x.jpg" style="height: 111px" alt="Codenvy"></a>
+        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank" style="text-decoration: none"><img src="../images/logo-extend-codenvy.png" style="height: 111px" alt="Codenvy"></a>
         <h3><a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank">Codenvy</a></h3>
         <p>Cloud workspaces for development teams - think of it as "enterprise Che".</p>
       </div>
