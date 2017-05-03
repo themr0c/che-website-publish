@@ -22,7 +22,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <center><h3>Che 5.0 is released!  &nbsp;&nbsp;&nbsp;Run it now with: <code>docker run eclipse/che start</code></h3>
+    <center><h3>Run Eclipse Che now with: <code>docker run eclipse/che start</code></h3>
   </div>
 </div>
 
