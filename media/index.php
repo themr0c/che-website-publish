@@ -27,6 +27,36 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Red Hat kicks off annual Summit by leaning dev-wards</h3>
+        <p class="loc">May 2, 2017</p>
+        <p class="desc">Openshift.io is the company’s free SaaS development environment, specifically designed for cloud-native apps, that lets geographically far-flung teams work together and automatically containerizes code for easy deployment. The environment builds on open source projects like Kubernetes-focused development platform fabric8, IDE Eclipse Che, and automation...</p>
+        <a href="http://www.prweb.com/releases/2017/04/prweb14281896.htm" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/techcrunch.png" alt=""></td>
+      <td>
+        <h3>Red Hat launches OpenShift.io, an online IDE for building container-based applications</h3>
+        <p class="loc">May 2, 2017</p>
+        <p class="desc">OpenShift.io sits on top of the company’s Kubernetes-based OpenShift container management platform and provides developers with the tools they need to build cloud-native, container-based apps. That includes team collaboration services, Agile planning tools, developer workspace management, an IDE for coding and testing, as well as monitoring...</p>
+        <a href="https://techcrunch.com/2017/05/02/red-hat-launches-openshift-io-an-online-ide-for-building-container-based-applications/">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+  <tr class="item">
+      <td><img src="../images/media/infoworld.png" alt=""></td>
+      <td>
+        <h3>Red Hat OpenShift adds containers and microservices features for developers</h3>
+        <p class="loc">May 2, 2017</p>
+        <p class="desc">With OpenShift, Red Hat wants to make its PaaS as friendly to developers as to the rest of an enterprise team. Hence, Red Hat is adding a pair of developer-focused features to OpenShift: a new cloud-native, browser-based development environment for building automatically...</p>
+        <a href="http://www.infoworld.com/article/3193703/cloud-computing/red-hat-openshift-adds-containers-and-microservices-features-for-developers.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>New Eclipse IoT Open Testbeds to Drive Industry Adoption</h3>
         <p class="loc">April 28, 2017</p>
         <p class="desc">The Asset Tracking Management testbed will demonstrate and test how assets with various sensors can be tracked via different IoT gateways that report in real time the data to an IoT cloud platform, or use the events to automate control of various systems. The participants in the testbed will be Red Hat (lead), Azul Systems, Eurotech, Samsung, and Codenvy.</p>
