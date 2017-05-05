@@ -142,7 +142,7 @@
       </div>
 
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/artik/" target="_blank"><img src="../images/logo-extend-sap@2x.jpg" style="height: 111px" alt="Samsung"></a>
+        <a href="<?php echo $rootPath; ?>/extend/sap/" target="_blank"><img src="../images/logo-extend-sap@2x.jpg" style="height: 111px" alt="Samsung"></a>
         <h3><a href="<?php echo $rootPath; ?>/extend/sap/" target="_blank">SAP IDE for HANA</a></h3>
         <p>A tailored development environment for SAP HANA based on Che.</p>
       </div>
@@ -154,7 +154,7 @@
       <h3 class="col-sm-12">More Case Studies</h3>
 
       <ul class="col-md-12">
-        <li><a href="<?php echo $rootPath; ?>/extend/bitnami/">Bitnami integrates developer convtainers</a> with frameworks for Express, Laravel, Rails, and others.</li>
+        <li><a href="<?php echo $rootPath; ?>/extend/bitnami/">Bitnami integrates developer containers</a> with frameworks for Express, Laravel, Rails, and others.</li>
       </ul>
 
     </div> <!-- .row -->

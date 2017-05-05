@@ -44,11 +44,6 @@
       <p>Deploy your Eclipse Che developer workspace with any Bitnami Development Container straight from GitHub!</p>
     </div>
 
-    <div class="col-sm-6">
-      <a href="bitnami-box4.png"><img alt="" class="img-responsive" src="bitnami-box4.png" /></a>
-      <h3>Or In Any Major Cloud Marketplace</h3>
-      <p>Eclipse Che can be launched as a virtual machine on for Amazon Web Services, Azure, Google and Oracle Cloud Platforms.</p>
-    </div>
   </div> <!-- .row -->
 
 <h3 class="text-light">Tutorial Guide: <a target="_blank" href="https://docs.bitnami.com/containers/how-to/use-codenvy-bitnami-containers/">Use Your Favorite Framework In The Cloud With Codenvy And Bitnami Development Containers.</h3>
