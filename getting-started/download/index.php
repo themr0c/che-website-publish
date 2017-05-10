@@ -35,12 +35,13 @@
       <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Downloads</a> 
     </div>
 
-    <div class="col-md-4">
+    <!--<div class="col-md-4">
       <img src="../../images/getting-started/icon-private-cloud.jpg" alt="Eclipse Che | Private Cloud Install">
       <h3>Private Cloud Install</h3>
       <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
      <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
-    </div>
+    </div> -->
+    
   </div> <!-- /.row -->
 </div> <!-- /.container-fluid -->
 
