@@ -27,6 +27,16 @@
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
+        <h3>Red Hat rolls out the announcements at its annual summit</h3>
+        <p class="loc">May 8, 2017</p>
+        <p class="desc">Built from technologies such as Eclipse Che, OpenShift.io includes collaboration tools for remote teams to analyze and assign work. Code is automatically containerized and easily deployed to OpenShift...</p>
+        <a href="http://www.networkworld.com/article/3193910/open-source-tools/red-hat-rolls-out-the-announcements-at-its-annual-summit.html" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
         <h3>Red Hat kicks off annual Summit by leaning dev-wards</h3>
         <p class="loc">May 2, 2017</p>
         <p class="desc">Openshift.io is the company’s free SaaS development environment, specifically designed for cloud-native apps, that lets geographically far-flung teams work together and automatically containerizes code for easy deployment. The environment builds on open source projects like Kubernetes-focused development platform fabric8, IDE Eclipse Che, and automation...</p>
