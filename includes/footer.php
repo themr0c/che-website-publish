@@ -22,20 +22,20 @@
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/workspace/stacks/" target="_blank">Stacks</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/workspace/recipes/" target="_blank">Recipes</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/workspace/samples/" target="_blank">Samples</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/plugins/create-and-build-extensions/" target="_blank">Extensions</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/plugins/calling-workspace-apis/" target="_blank">APIs</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/plugins/assemblies/" target="_blank">Assemblies</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/devops/runtime-stacks/" target="_blank">Stacks</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/devops/runtime-recipes/" target="_blank">Recipes</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/devops/project-samples/" target="_blank">Samples</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/intro/" target="_blank">Assemblies</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/plugin-lifecycle/" target="_blank">Plugins</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/sdk-rest-apis/" target="_blank">APIs</a></li>
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/community/">Community</a></li>
             <li><a href="https://projects.eclipse.org/projects/ecd.che" target="_blank">Eclipse Foundation</a></li>
             <li><a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md" target="_blank">Get Involved</a></li>
-            <li><a href="https://www.infoq.com/presentations/eclipse-che-eclipsecon-2016">EclipseCon 2016 Keynote</a></li>
+            <li><a href="https://www.infoq.com/presentations/eclipse-che-eclipsecon-2016" target="_blank">EclipseCon 2016 Keynote</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/codenvy">Codenvy</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/openshift/config/" target="_blank">Red Hat</a></li>
+            <li><a href="https://openshift.io/" target="_blank">Red Hat</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/sap/">SAP</a></li>
           </ul>
         </div>
