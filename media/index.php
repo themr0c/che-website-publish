@@ -24,6 +24,17 @@
   </table><!-- .wrapper -->
   <table class="wrapper">
 
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Red Hat to Acquire Codenvy, Provider of Agile and Cloud-Native Development Tools</h3>
+        <p class="loc">May 25, 2017</p>
+        <p class="desc">Red Hat, Inc. (NYSE: RHT), the world's leading provider of open source solutions, today announced that it has signed a definitive agreement to acquire Codenvy, provider of cloud-native development tools that enable developers to more easily create modern container-based and cloud-native applications...</p>
+        <a href="https://blog.codenvy.com/redhat-acquires-codenvy-c84e1202a042" target="_blank">Read the Blog</a> or <a href="https://www.redhat.com/en/about/press-releases/red-hat-acquire-codenvy-provider-agile-and-cloud-native-development-tools" target="_blank">Read the Press Release</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
