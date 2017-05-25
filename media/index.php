@@ -26,6 +26,16 @@
 
 
    <tr class="item">
+      <td><img src="../images/media/techcrunch.png" alt=""></td>
+      <td>
+        <h3>Red Hat launches OpenShift.io, an online IDE for building container-based applications</h3>
+        <p class="loc">May 25, 2017</p>
+        <p class="desc">Red Hat, which has made its name as the enterprise Linux company, has been making clear in recent years that it sees the cloud and containerization as a significant part of its future. Today, it announced its intent to acquire San Francisco startup Codenvy to continue building on that strategy and give developers access to a cloud-based integrated development environment...</p>
+        <a href="https://techcrunch.com/2017/05/25/red-hat-to-acquire-codenvy-as-part-of-its-growing-container-strategy/">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
+   <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
       <td>
         <h3>Red Hat to Acquire Codenvy, Provider of Agile and Cloud-Native Development Tools</h3>
