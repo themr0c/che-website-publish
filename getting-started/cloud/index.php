@@ -83,15 +83,15 @@
     <div class="row">
       <div class="col-md-4">
         <h4>Issues</h4>
-        <p>Sometimes the unexpected happens. If it does, <a href="#" target="_blank">post issues to our GitHub page</a>. Please <a href="#" target="_blank">follow the issue reporting guidelines.</a></p>
+        <p>Sometimes the unexpected happens. If it does, <a href="https://github.com/eclipse/che" target="_blank">post issues to our GitHub page</a>. Please <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md" target="_blank">follow the issue reporting guidelines.</a></p>
       </div>
       <div class="col-md-4">
         <h4>Documentation</h4>
-        <p>We put a lot of effort <a href="#" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback. Chat: Che engineers hang out on Gitter, IRC and Slack.</p>
+        <p>We put a lot of effort <a href="https://www.eclipse.org/che/docs/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback. Chat: Che engineers hang out on Gitter, IRC and Slack.</p>
       </div>
       <div class="col-md-4">
         <h4>Chat</h4>
-        <p>Che engineers hang out on <a href="#" target="_blank">Gitter</a>, <a href="#" target="_blank">IRC</a> and <a href="#" target="_blank">Slack</a>.</p>
+        <p>Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge" target="_blank">Gitter</a>, <a href="http://qwebirc.swiftirc.net/?nick=fromwebsite&channels=%23eclipseche" target="_blank">IRC</a>, <a href="https://dev.eclipse.org/mailman/listinfo/che-dev" target="_blank">che-dev@eclipse.org</a> and Slack.</p>
       </div>
     </div> <!-- .row -->
   </div> <!-- .container-fluid -->
