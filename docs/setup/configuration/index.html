@@ -172,20 +172,6 @@
   
   
    
-    <option value="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</option>
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-   
     <option value="../../../docs/setup/configuration/index.html">Configuration</option>
   
 
@@ -299,21 +285,6 @@
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 
@@ -2214,10 +2185,10 @@ CHE_GOOGLE_SECRET=yourSecret
 <p>Refer to <a href="../../../docs/ide/git-svn/index.html#gitlab-oauth">GitLab using OAuth</a> for configuration information.</p>
 
 <h1 id="stacks">Stacks</h1>
-<p><a href="../../../docs/workspace/stacks/index.html">Stacks</a> define the recipes used to create workspace runtimes. They appear in the stack library of the dashboard. You can create your own.</p>
+<p><a href="../../../docs/devops/runtime-stacks/index.html">Stacks</a> define the recipes used to create workspace runtimes. They appear in the stack library of the dashboard. You can create your own.</p>
 
 <h1 id="sample-projects">Sample Projects</h1>
-<p>Code <a href="../../../docs/workspace/samples/index.html">sampes</a> allow you to define sample projects that are cloned into a workspace if the user chooses it when creating a new project. You can add your own.</p>
+<p>Code <a href="../../../docs/devops/project-samples/index.html">samples</a> allow you to define sample projects that are cloned into a workspace if the user chooses it when creating a new project. You can add your own.</p>
 
 <h1 id="workspace-limits">Workspace Limits</h1>
 <p>You can place limits on how users interact with the system to control overall system resource usage. You can define how many workspaces created, RAM consumed, idle timeout, and a variety of other parameters. See “Workspace Limits” in <code class="highlighter-rouge">che.env</code>.</p>
@@ -2324,7 +2295,33 @@ docker exec -ti &lt;che-container-name&gt; curl http://&lt;workspace-container-i
 <h4 id="workspace-address-resolution-strategy">Workspace Address Resolution Strategy</h4>
 <p>By default, the Che server will connect to workspace containers according to the ‘default’ strategy. The order of precedence, Che will use <code class="highlighter-rouge">CHE_DOCKER_IP</code> if it is set, if not, it will use the address <code class="highlighter-rouge">docker-ip</code>. If <code class="highlighter-rouge">docker-ip</code> cannot be determined, it will default to <code class="highlighter-rouge">localhost</code> for Unix socket connections, and <code class="highlighter-rouge">DOCKER_HOST</code>.</p>
 
-<p>An alternative strategy is available, by setting <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY</code> to ‘docker-local’. In this mode, Che will attempt to communicate with workspace containers directly, using <code class="highlighter-rouge">workspace-container-ip</code>, with <code class="highlighter-rouge">localhost</code>/<code class="highlighter-rouge">DOCKER_HOST</code> as a fallback as in the default strategy. This can avoid some issues with ephemeral ports and firewalls (see section ‘Firewalls’, below), but will cause workspace creation to fail if the Che server is configured to not launch workspaces within the same Docker network.</p>
+<p>Alternatives strategies are available by setting <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY</code>.
+By setting it to ‘docker-local’, Che will attempt to communicate with workspace containers directly, using <code class="highlighter-rouge">workspace-container-ip</code>, with <code class="highlighter-rouge">localhost</code>/<code class="highlighter-rouge">DOCKER_HOST</code> as a fallback as in the default strategy. This can avoid some issues with ephemeral ports and firewalls (see section ‘Firewalls’, below), but will cause workspace creation to fail if the Che server is configured to not launch workspaces within the same Docker network.</p>
+
+<p>By setting it to ‘custom’, Che will allow to customize the links by using a template by using the property che.docker.server_evaluation_strategy.custom.template that can be defined by using <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY_CUSTOM_TEMPLATE</code> environment variable.</p>
+
+<p>Here are macros available for the custom server evaluation strategy:</p>
+<ul>
+  <li>serverName: server reference exposing the port (like tomcat8, ws-agent, etc)</li>
+  <li>machineName: name of the machine of the workspace. (like devMachine)</li>
+  <li>workspaceId: id of the workspace</li>
+  <li>internalIp: IP of the internal address of che (che.docker.ip property)</li>
+  <li>externalIP: IP of the external address of che</li>
+  <li>externalAddresss : external address of che (che.docker.ip.external or if null che.docker.ip)</li>
+  <li>chePort : Che listening port number of workspace master</li>
+  <li>wildcardNipDomain : get external address transformed into a nip.io DNS sub-domain</li>
+  <li>wildcardXipDomain : get external address transformed into a xip.io DNS sub-domain</li>
+</ul>
+
+<p>Here is an example <code class="highlighter-rouge">che.docker.server_evaluation_strategy.custom.template=&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.&lt;wildcardNipDomain&gt;:&lt;chePort&gt;</code></p>
+
+<h4 id="single-port-routing">Single-port routing.</h4>
+<p>By enabling single-port, using <code class="highlighter-rouge">CHE_SINGLE_PORT=true</code> in <code class="highlighter-rouge">che.env</code> file , all browser traffic to Che or any workspace will be routed through the value that you have set to <code class="highlighter-rouge">CHE_PORT</code>, or 8080 if not set.
+Setting this property will transform the launch sequence of Che to launch a Traefik reverse proxy. The reverse proxy will act as the traffic endpoint for all browser communications.
+When a new workspace is started or stopped, Che will update Traefik’s configuration with rules for how browser traffic should be routed to Che or a workspace. 
+With single-port, each service running in a workspace and exposing ports has its own hostname. Example : workspace agent will have a hostname like : ws-agent.workspace-id….domain.name. By default the domain name will use nip.io which allow to provide wildcard DNS without any
+user configuration. The strategy used for the hosts is using the template provided by the <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY_CUSTOM_TEMPLATE</code> property with default value <code class="highlighter-rouge">&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.&lt;wildcardNipDomain&gt;:&lt;chePort&gt;</code> 
+If you’ve your own domain and then DNS server, you may want to add wildcard DNS entry matching a pattern. For example updating the property to the value <code class="highlighter-rouge">&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.che.foobar.com:&lt;chePort&gt;</code> will require a wildcard <code class="highlighter-rouge">*.che.foobar.com</code> entry in DNS server resolving to the IP of the che server.</p>
 
 <h2 id="docker-connectivity">Docker Connectivity</h2>
 <p>There are multiple techniques for connecting to Docker including Unix sockets, localhost, and remote connections over TCP protocol. Depending upon the type of connection you require and the location of the machine node running Docker, we use different parameters.</p>
@@ -2379,7 +2376,7 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 </ol>
 
 <h1 id="docker">Docker</h1>
-<p>Eclipse Che workspace runtimes are powered by one or more Docker containers. When a user creates a workpace, they do so from a <a href="../../..">stack</a> which includes a Dockerfile or reference to a Docker image which will be used to create the containers for the workspace runtimes. Che stacks can pull that image from a public registry, like DockerHub, or a private registry. Images in a registry can be publicly visible or private, which require user credentials to access. You can also set up a private registry to act as a mirror to Docker Hub.  And, if you are running Eclipse Che behind a proxy, you can configure the Docker daemon registry to operate behind a proxy.</p>
+<p>Eclipse Che workspace runtimes are powered by one or more Docker containers. When a user creates a workpace, they do so from a <a href="../../../docs/devops/runtime-stacks/index.html">stack</a> which includes a Dockerfile or reference to a Docker image which will be used to create the containers for the workspace runtimes. Che stacks can pull that image from a public registry, like DockerHub, or a private registry. Images in a registry can be publicly visible or private, which require user credentials to access. You can also set up a private registry to act as a mirror to Docker Hub.  And, if you are running Eclipse Che behind a proxy, you can configure the Docker daemon registry to operate behind a proxy.</p>
 
 <h2 id="private-images">Private Images</h2>
 <p>When users create a workspace in Eclipse Che, they must select a Docker image to power the workspace. We provide ready-to-go stacks which reference images hosted at the public Docker Hub, which do not require any authenticated access to pull. You can provide your own images that are stored in a local private registry or at Docker Hub. The images may be publicly or privately visible, even if they are part of a private registry.</p>
@@ -2454,7 +2451,7 @@ CHE_DOCKER_REGISTRY=&lt;registry-url&gt;
 <p>To use your custom Dockerfiles, you can:</p>
 
 <ol>
-  <li>Create a <a href="../../../docs/workspace/stacks/index.html#custom-stack">custom stack</a>, which includes a <a href="../../../docs/workspace/recipes/index.html">recipe</a> with your Dockerfile.</li>
+  <li>Create a <a href="../../../docs/devops/runtime-stacks/index.html#custom-stack">custom stack</a>, which includes a <a href="../../../docs/devops/runtime-recipes/index.html">recipe</a> with your Dockerfile.</li>
   <li>Or, users can create a custom recipe when creating a workspace that references your registry.</li>
 </ol>
 
@@ -2622,21 +2619,6 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 

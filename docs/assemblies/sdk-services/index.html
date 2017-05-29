@@ -172,20 +172,6 @@
   
   
    
-    <option value="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</option>
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-   
     <option value="../../../docs/setup/configuration/index.html">Configuration</option>
   
 
@@ -299,21 +285,6 @@
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 
@@ -2135,16 +2106,16 @@ However, more complex operations, especially when accessing resources from a pro
 <p>Services can either be deployed on the server or directly in a workspace. Server services provide generic features which are not depending on the Workspace or its content, e.g. user management. Workspace services can access the contents of a project (e.g. source files) and also trigger operations in the workspace (such as compilation).
 In the following, we will describe how to create server and workspace services and how they are consumed from the client IDE. As the specification of workspace services is a special case of specifying server services, we will start with a simple server service, including an introduction of general basics about services.
 Based on that, in the subsequent section “Workspace Services”, we will describe a more complex example, which accesses the files of a specific project.
-Server and Workspace services need to be deployed differently, please refer to the section <a href="../../../docs/plugins/create-and-build-extensions/index.html">Create and build extensions</a> to learn how.</p>
+Server and Workspace services need to be deployed differently, please refer to the section <a href="../../../docs/assemblies/plugin-lifecycle/index.html">Create and build extensions</a> to learn how.</p>
 
 <h2 id="server-services">Server Services</h2>
 <p>The following diagram shows all components of server services. The classes highlighted in dark grey are to be implemented for the extension. The <code class="highlighter-rouge">ServerService</code> offers a REST service to be consumed.
 The IDE plugin implements a client class (<code class="highlighter-rouge">MyClient</code>), which calls the REST service using Che helper classes. The result is made available by a Java API, which is to be defined based on the result type. By calling the client class, different components of the IDE, such as <code class="highlighter-rouge">Actions</code> or <code class="highlighter-rouge">CodeCompletionProcessors</code>, can consume the <code class="highlighter-rouge">ServerService</code> without having to deal with the REST API itself.
 <img src="../../../docs/assets/imgs/image15.png" alt="image15.png" />
 In the following, we will describe how to build a simple example server service that accepts a String {name} and responds with “Hello {name} !”.
-Further, we will demonstrate how this service can be consumed from within the client IDE.</p>
-
-<p>Every REST service defines the path under which it is reachable. In the following code example, the path consists of two parts. The first one identifies the service itself and is specified with the @Path annotation of the class itself, in this case “hello”.
+Further, we will demonstrate how this service can be consumed from within the client IDE.
+c
+Every REST service defines the path under which it is reachable. In the following code example, the path consists of two parts. The first one identifies the service itself and is specified with the @Path annotation of the class itself, in this case “hello”.
 The second part of the path defines a parameter for the @GET method to be called and is specified with the @Path annotation at the method <code class="highlighter-rouge">#sayHello</code> itself, in this case “name”.
 In combination, this example will register a service that will listen to localhost:8080/api/hello/{name}, where {name} is an arbitrary String to be passed by the client.
 As specified using the @PathParam annotation, the {name} parameter will be passed as an input and then be used in the return statement.</p>
@@ -2159,7 +2130,7 @@ As specified using the @PathParam annotation, the {name} parameter will be passe
   <span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">return</span> <span class="s">"Hello "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">" !"</span><span class="o">;</span>
   <span class="o">}</span>
-<span class="o">}</span>
+<span class="o">}</span><span class="n">s</span>
 </code></pre>
 </div>
 <p>To make the server service consumable within the IDE, we implement a client encapsulating the REST call (see following code example).
@@ -2167,7 +2138,7 @@ Therefore, the client will offer a method <code class="highlighter-rouge">#getHe
 
 <p>The <code class="highlighter-rouge">AsyncRequestFactory</code> simplifies the creation of REST calls by providing a method <code class="highlighter-rouge">#createGetRequest</code> which will create a request using the provided parameter as a path. It will automatically prefix this path with the current server URL used by the IDE, so the parameter “hello” would be bound to http://serveradress/hello.</p>
 
-<p>The request is sent by passing in an <code class="highlighter-rouge">Unmarshaller</code>. It is responsible for unmarshalling the response from the transport format (JSON) to a Java type, e.g. a String. Che already provides a collection of <code class="highlighter-rouge">Unmarshallers</code>, please see the section <a href="../../../docs/plugins/calling-workspace-apis/index.html">Calling Workspace APIs</a> for details.</p>
+<p>The request is sent by passing in an <code class="highlighter-rouge">Unmarshaller</code>. It is responsible for unmarshalling the response from the transport format (JSON) to a Java type, e.g. a String. Che already provides a collection of <code class="highlighter-rouge">Unmarshallers</code>, please see the section <a href="../../../docs/assemblies/sdk-rest-apis/index.html">Calling Workspace APIs</a> for details.</p>
 
 <p>Finally, the send method returns a <code class="highlighter-rouge">Promise</code>, which can be consumed by callers on <code class="highlighter-rouge">MyClient</code> (see below) to retrieve the answer from the server.</p>
 
@@ -2249,7 +2220,7 @@ In the example, it is passed to the Che <code class="highlighter-rouge">Notifica
 <h2 id="workspace-services">Workspace Services</h2>
 
 <p>Workspace services are special types of server services, they are deployed directly within the workspace agent. Therefore, they can access the content of a workspace, e.g. projects, source files, etc. Furthermore, they can trigger native operations in the running workspace.
-Besides their different scope, workspace services are developed like standard server services using REST. Therefore, we recommend to first cover the previous section about <a href="../../../docs/plugins/serverworkspace-access/index.html#server-services">Server Services</a>. The main difference between workspace and server services is where they are actually deployed to. Please refer to the section <a href="../../../docs/plugins/create-and-build-extensions/index.html">Create and build extensions</a> to learn how to deploy services correctly.</p>
+Besides their different scope, workspace services are developed like standard server services using REST. Therefore, we recommend to first cover the previous section about <a href="../../../docs/assemblies/sdk-services/index.html#server-services">Server Services</a>. The main difference between workspace and server services is where they are actually deployed to. Please refer to the section <a href="../../../docs/assemblies/plugin-lifecycle/index.html">Create and build extensions</a> to learn how to deploy services correctly.</p>
 
 <p>In the following, we describe an example workspace service from the JSON example, which accesses a selected project and counts the number of lines in all JSON files. This demonstrates how to access files and their content. In a custom use case, this could be adapted to do any kind of file operation, e.g. parsing contents for auto completion. After introducing the service, we demonstrate how it can be consumed by an action from within the IDE.</p>
 
@@ -2315,7 +2286,7 @@ Besides their different scope, workspace services are developed like standard se
 </code></pre>
 </div>
 
-<p>Besides the specific path, workspace services can be consumed like any other server service using the REST utilities of Che. Please have a look at the sections <a href="../../../docs/plugins/serverworkspace-access/index.html#server-services">Server Services</a> and Client Server Communication for more details.</p>
+<p>Besides the specific path, workspace services can be consumed like any other server service using the REST utilities of Che. Please have a look at the sections <a href="../../../docs/assemblies/sdk-services/index.html">Server Services</a> and Client Server Communication for more details.</p>
 
 <p>The following example action consumes the workspace service defined above and shows the result using the notification manager.</p>
 
@@ -2447,21 +2418,6 @@ Besides their different scope, workspace services are developed like standard se
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 

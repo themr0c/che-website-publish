@@ -172,20 +172,6 @@
   
   
    
-    <option value="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</option>
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-   
     <option value="../../../docs/setup/configuration/index.html">Configuration</option>
   
 
@@ -299,21 +285,6 @@
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 
@@ -2156,7 +2127,7 @@ The following diagram shows all components of a typical file type registration. 
 The class <code class="highlighter-rouge">MyGinModule</code> is responsible for creating the new file type. The icon for the new file type will go to a GWT resource class (<code class="highlighter-rouge">MyRessources</code>). Finally, the class <code class="highlighter-rouge">MyExtension</code> creates a <code class="highlighter-rouge">FileTypeRegistration</code> in Che’s <code class="highlighter-rouge">FileTypeRegistry</code>.</p>
 
 <p><img src="../../../docs/assets/imgs/image11.png" alt="image11.png" />
-If you haven’t used Gin or dependency injection before, we recommend you have a look at our brief <a href="../../../docs/plugins/dependency-injection-basics/index.html">dependency injection introduction</a>.</p>
+If you haven’t used Gin or dependency injection before, we recommend you have a look at our brief <a href="../../../docs/assemblies/sdk-dependency-injection/index.html">dependency injection introduction</a>.</p>
 
 <p>First, we define a new class <code class="highlighter-rouge">GinModule</code> for the instantiation of the custom <code class="highlighter-rouge">FileType</code>. It enables other classes to access the new file type using dependency injection. When adding more extensions later, the <code class="highlighter-rouge">GinModule</code> class can also create other components and mappings. So we will not call it <code class="highlighter-rouge">FileTypeGinModule</code>, but more generically <code class="highlighter-rouge">MyGinModule</code>. For now, the <code class="highlighter-rouge">GinModule</code> just provides the custom file type using the ID <code class="highlighter-rouge">MyFileType</code>. This makes the custom file type available for injection for other components using the annotation <code class="highlighter-rouge">@Named(“MyFileType”)</code>.</p>
 
@@ -2222,7 +2193,7 @@ If you haven’t used Gin or dependency injection before, we recommend you have 
 
 <p><img src="../../../docs/assets/imgs/image.png" alt="image.png" /></p>
 
-<p>As you can see in the screenshot above, Che will open any new file type in the default editor. This even works without defining any editor extension. You might want to contribute another editor type for the new file type later. This is done by adding an editor extension and associating the file type with an editor provider. We will cover this more in detail in the section <a href="../../../docs/plugins/code-editors/index.html#code-completion">Code Completion</a>. As we do not have a custom editor provider, yet, the following example code associates the example file type with the default text editor. Please note, this step is redundant in this example, as Che will associate any unknown file type with the default editor anyways.</p>
+<p>As you can see in the screenshot above, Che will open any new file type in the default editor. This even works without defining any editor extension. You might want to contribute another editor type for the new file type later. This is done by adding an editor extension and associating the file type with an editor provider. We will cover this more in detail in the section <a href="#code-completion">Code Completion</a>. As we do not have a custom editor provider, yet, the following example code associates the example file type with the default text editor. Please note, this step is redundant in this example, as Che will associate any unknown file type with the default editor anyways.</p>
 
 <p>Since we might want to add more extensions to the editor, again, we use a more generic name for the extension class. As we extend the Che default editor, written in JavaScript and internally referred to a “JSEditor”, we follow the convention of other existing plugins and call the extension <code class="highlighter-rouge">MyJsEditorExtension</code>. The following extension class gets the <code class="highlighter-rouge">EditorRegistry</code>, the file type and the <code class="highlighter-rouge">DefaultTextEditorProvider</code> injected and creates the editor registration. As mentioned, this will have no visible effect in the example. However, if we would replace the Default Text Editor Provider with our own provider (<code class="highlighter-rouge">CustomEditorProvider</code>), we could extend or replace the editor used for our new file type.</p>
 
@@ -2241,12 +2212,12 @@ If you haven’t used Gin or dependency injection before, we recommend you have 
 </code></pre>
 </div>
 
-<p>So far, we have defined a new file type, which can be opened with the default text editor. Currently, the text editor provides no syntax highlighting and code completion, as it knows nothing about the format or grammar of our new language. The syntax highlighting of the default editor is actually provided by the embedded orion editor (referred to as JSEditor). Please refer to the section <a href="../../../docs/plugins/code-editors/index.html#syntax-highlighting">syntax highlighting</a> to learn how to extend it and add syntax highlighting for the new file type.</p>
+<p>So far, we have defined a new file type, which can be opened with the default text editor. Currently, the text editor provides no syntax highlighting and code completion, as it knows nothing about the format or grammar of our new language. The syntax highlighting of the default editor is actually provided by the embedded orion editor (referred to as JSEditor). Please refer to the section <a href="#syntax-highlighting">syntax highlighting</a> to learn how to extend it and add syntax highlighting for the new file type.</p>
 
 <p>Further, the new file type can only be created using the generic “New” action and enter the extension manually. If you want to define a custom action, visible in the “New” menu, please refer to the section New File Actions.</p>
 
 <h2 id="json-file-type-already-supported-by-che">JSON File Type (already supported by Che)</h2>
-<p>The <a href="../../../docs/plugins/introduction/index.html#the-json-example">continuous JSON example</a>, which is used throughout this tutorial uses the file type “.json”. As Che already registeres a JSON file type out of the box, that means, the necessary registrations, described above for the “my” file type example are already existing in the Che core framework. For reference, the corresponding registrations can be found in the following classes and can be used as another example.</p>
+<p>The continuous JSON example, which is used throughout this tutorial uses the file type “.json”. As Che already registeres a JSON file type out of the box, that means, the necessary registrations, described above for the “my” file type example are already existing in the Che core framework. For reference, the corresponding registrations can be found in the following classes and can be used as another example.</p>
 
 <h3 id="file-type-definition">File Type Definition</h3>
 
@@ -2481,7 +2452,7 @@ A <code class="highlighter-rouge">Completion</code> is finally responsible for a
 <h2 id="syntax-highlighting">Syntax Highlighting</h2>
 <p>Syntax highlighting allows you to mark characters and keywords in certain colors, based on a given grammar. To enable syntax highlighting in the browser IDE, Che embeds the existing <a href="https://wiki.eclipse.org/Orion">Orion Editor</a>. It already provides a wide range of supported grammars to be used. Please refer to the section “contentType parameter” within <a href="https://wiki.eclipse.org/Orion/How_Tos/Code_Edit">this document</a> for a list of supported types.</p>
 
-<p>If the orion editor already knows the language you want to support, you need to associate the file extension with the content type defined by orion. As an example, we could associate our a custom file type <code class="highlighter-rouge">.my</code> (<a href="../../../docs/plugins/code-editors/index.html#file-types">see here for its definition</a>) with the existing content type <code class="highlighter-rouge">Json</code>, which is already supported by the Orion editor. Therefore, we add the following line to <code class="highlighter-rouge">org.eclipse.che.ide.jseditor.client.filetype.ExtensionFileTypeIdentifier</code>:</p>
+<p>If the orion editor already knows the language you want to support, you need to associate the file extension with the content type defined by orion. As an example, we could associate our a custom file type <code class="highlighter-rouge">.my</code> (<a href="#file-types">see here for its definition</a>) with the existing content type <code class="highlighter-rouge">Json</code>, which is already supported by the Orion editor. Therefore, we add the following line to <code class="highlighter-rouge">org.eclipse.che.ide.jseditor.client.filetype.ExtensionFileTypeIdentifier</code>:</p>
 
 <p><em>che/core/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/editor/filetype/ExtensionFileTypeIdentifier.java</em></p>
 
@@ -2614,21 +2585,6 @@ Usage example:</li>
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 

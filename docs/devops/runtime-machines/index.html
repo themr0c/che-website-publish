@@ -172,20 +172,6 @@
   
   
    
-    <option value="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</option>
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-   
     <option value="../../../docs/setup/configuration/index.html">Configuration</option>
   
 
@@ -299,21 +285,6 @@
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 
@@ -2129,12 +2100,12 @@
             </div>
           </div>
           
-<p>A machine is part of an environment, which are in turn part of a Che workspace. The <a href="../../..">workspace administration introduction</a> explains the details of this relationship.</p>
+<p>A machine is part of an environment, which are in turn part of a Che workspace. The <a href="../../../docs/devops/intro/index.html">workspace administration introduction</a> explains the details of this relationship.</p>
 
-<p>A machine is created from a <a href="../../..">runtime stack</a>. Che supports both single-machine environments and multi-machine environments. The Che  server manages the lifecycle of environments and the machines inside, including creating snapshots of machines.  Additionally, the Che  server can inject <a href="../../..">workspace agents</a> into a machine to provide additional capabilities inside the machine.</p>
+<p>A machine is created from a <a href="../../../docs/devops/runtime-stacks/index.html">runtime stack</a>. Che supports both single-machine environments and multi-machine environments. The Che  server manages the lifecycle of environments and the machines inside, including creating snapshots of machines.  Additionally, the Che  server can inject <a href="../../../docs/devops/ws-agents/index.html">workspace agents</a> into a machine to provide additional capabilities inside the machine.</p>
 
 <h2 id="add--remove-libraries-and-tools-to-runtime-machines">Add / Remove Libraries and Tools To Runtime Machines</h2>
-<p>You can use the terminal and command line to install additional libraries and tools. After you have created a workspace, open a terminal in the IDE.  You can then perform commands like <code class="highlighter-rouge">npm</code> or <code class="highlighter-rouge">yum install</code> to add software into your workspace.  These changes will only exist for the lifespan of this single workspace. You can capture these changes permanently by creating a snapshot (which can then be used as a <a href="../../..">recipe</a>), or writing a custom stack that includes these commands in a Dockerfile (this method will make your workspace shareable with others).</p>
+<p>You can use the terminal and command line to install additional libraries and tools. After you have created a workspace, open a terminal in the IDE.  You can then perform commands like <code class="highlighter-rouge">npm</code> or <code class="highlighter-rouge">yum install</code> to add software into your workspace.  These changes will only exist for the lifespan of this single workspace. You can capture these changes permanently by creating a snapshot (which can then be used as a <a href="../../../docs/devops/runtime-recipes/index.html">recipe</a>), or writing a custom stack that includes these commands in a Dockerfile (this method will make your workspace shareable with others).</p>
 
 <p><img src="../../../docs/assets/imgs/install-jetty8.png" alt="install-jetty8.png" /></p>
 
@@ -2160,9 +2131,13 @@ sudo apt-get install jetty8
 
 <p>Note that once you’ve snapshotted a workspace, changing the environment or machine names inside the workspace will result in the snapshot being lost.</p>
 
-<p>Snapshots image a machine and then it is committed, tagged, and optionally pushed into a Docker registry. You can use a local Docker registry or a remote one. See <a href="../../../docs/setup/configuration/index.html">Configuration</a> for information on how to setup a docker registry.</p>
+<p>Snapshots image a machine and then commit, tag, and optionally push that image into a Docker registry. By default machines are automatically snapshotted when they are stopped.</p>
 
-<p>By default machines are automatically snapshotted when they are stopped. By default, Che does not need a local/remote Docker registry to create snapshots. If no registry is used, a container is committed into an image which is then tagged, so that next time a workspace is started with this image. The behavior is regulated with the following environment variables:</p>
+<p><strong>Note that snapshots do not include the contents of the machine’s <code class="highlighter-rouge">tmp</code> folder.</strong></p>
+
+<p>By default, Che does not need a local/remote Docker registry to create snapshots. However, you can <a href="../../../docs/setup/configuration/index.html">configure</a> a local or remote Docker registry to use for snapshots.</p>
+
+<p>If no registry is used, a container is committed into an image which is then tagged, so that next time a workspace is started with this image. The behavior is regulated with the following environment variables:</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Provide in che.env</span>
 
@@ -2182,7 +2157,7 @@ sudo apt-get install jetty8
 <p>See our other docs <a href="../../../docs/setup/configuration/index.html">for details on setting up a local or remote Docker Registry</a>.</p>
 
 <h3 id="dashboard-machine-information">Dashboard Machine Information</h3>
-<p>Information on each machine can be viewed in the in the <code class="highlighter-rouge">Dashboard</code>. Information on each machine in a workspace can be viewed after clicking on the workspace name, selecting the <code class="highlighter-rouge">Runtime</code> tab, and clicking the expand button located next to each machine. Machine information includes source, ram, <a href="../../..">agents</a>, exposed ports, and environment variables. All of these configuration items can be changed on a stopped workspace/machine. If the workspace/machine is running, the workspace will be stopped automatically. The saved configuration items will be used the next time the work space is started and will supersede any values given in the original workspace stack. Changes made to the runtime configuration will only effect the workspace and will not be saved to original stack to be create other workspaces from.</p>
+<p>Information on each machine can be viewed in the in the <code class="highlighter-rouge">Dashboard</code>. Information on each machine in a workspace can be viewed after clicking on the workspace name, selecting the <code class="highlighter-rouge">Runtime</code> tab, and clicking the expand button located next to each machine. Machine information includes source, ram, <a href="../../../docs/devops/ws-agents/index.html">agents</a>, exposed ports, and environment variables. All of these configuration items can be changed on a stopped workspace/machine. If the workspace/machine is running, the workspace will be stopped automatically. The saved configuration items will be used the next time the work space is started and will supersede any values given in the original workspace stack. Changes made to the runtime configuration will only effect the workspace and will not be saved to original stack to be create other workspaces from.</p>
 
 <p><img src="../../../docs/assets/imgs/Che-machine-information-edit.jpg" alt="Che-machine-information-edit.jpg" /></p>
 
@@ -2246,21 +2221,6 @@ sudo apt-get install jetty8
   
   
     <li class=""><a href="../../../docs/setup/getting-started-saas-cloud/index.html">Getting Started&#58 SaaS Cloud</a></li>
-  
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <li class=""><a href="../../../docs/setup/bitnami/index.html">Getting Started&#58 Private Cloud</a></li>
   
 
 
