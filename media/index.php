@@ -25,11 +25,24 @@
   <table class="wrapper">
 
 
+
+
+
+   <tr class="item">
+      <td><img src="../images/media/article.png" alt=""></td>
+      <td>
+        <h3>Red Hat expands its container strategy with Codenvy acquisition</h3>
+        <p class="loc">June 15, 2017</p>
+        <p class="desc">Red Hat adds to its OpenShift.io cloud-based integrated development environment with its acquisition of Codenvy, a maker of cloud-native workspace management tools [based on Eclipse Che]...</p>
+        <a href="http://searchcloudapplications.techtarget.com/news/450420864/Red-Hat-expands-its-container-strategy-with-Codenvy-acquisition" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
+
    <tr class="item">
       <td><img src="../images/media/tns.png" alt=""></td>
       <td>
         <h3>Red Hat to Acquire Codenvy, Integrate Its IDE into OpenShift.io</h3>
-        <p class="loc">May 25, 2016</p>
+        <p class="loc">May 25, 2017</p>
         <p class="desc">In the clearest signal to date that the developer tools stack is firming up, development workspace provider Codenvy and Linux leader Red Hat jointly announced Thursday morning their intent to absorb Codenvy’s 40-person team into Red Hat’s OpenShift. Now, the development environment Codenvy has called the “world’s first microservices IDE” will become an integral part of Red Hat’s OpenShift.io platform...</p>
         <a href="https://thenewstack.io/red-hat-acquire-codenvy-integrate-ide-openshift-io/" target="_blank">Read More</a>
       </td>
