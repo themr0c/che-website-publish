@@ -2187,6 +2187,8 @@ CHE_GOOGLE_SECRET=yourSecret
 <h1 id="stacks">Stacks</h1>
 <p><a href="../../../docs/devops/runtime-stacks/index.html">Stacks</a> define the recipes used to create workspace runtimes. They appear in the stack library of the dashboard. You can create your own.</p>
 
+<p><code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START</code> (false by default) defines stack loading policy. When set to false, stacks are loaded from a json file only once - when database is initialized. When set to true, json is sourced every time Che server starts.</p>
+
 <h1 id="sample-projects">Sample Projects</h1>
 <p>Code <a href="../../../docs/devops/project-samples/index.html">samples</a> allow you to define sample projects that are cloned into a workspace if the user chooses it when creating a new project. You can add your own.</p>
 
@@ -2243,7 +2245,7 @@ CHE_GOOGLE_SECRET=yourSecret
 #        4. Else, use DOCKER_HOST
 #    - If CHE_DOCKER_SERVER__EVALUATION__STRATEGY is 'docker-local':
 #        1. Use the address of the workspace container within the docker network
-#        2. If address cannot be read, use steps 3 and 4 from the default strategy. 
+#        2. If address cannot be read, use steps 3 and 4 from the default strategy.
 #
 # Browser --&gt; Workspace Connection:
 #    1. Use the value of che.docker.ip
@@ -2318,9 +2320,9 @@ By setting it to ‘docker-local’, Che will attempt to communicate with worksp
 <h4 id="single-port-routing">Single-port routing.</h4>
 <p>By enabling single-port, using <code class="highlighter-rouge">CHE_SINGLE_PORT=true</code> in <code class="highlighter-rouge">che.env</code> file , all browser traffic to Che or any workspace will be routed through the value that you have set to <code class="highlighter-rouge">CHE_PORT</code>, or 8080 if not set.
 Setting this property will transform the launch sequence of Che to launch a Traefik reverse proxy. The reverse proxy will act as the traffic endpoint for all browser communications.
-When a new workspace is started or stopped, Che will update Traefik’s configuration with rules for how browser traffic should be routed to Che or a workspace. 
+When a new workspace is started or stopped, Che will update Traefik’s configuration with rules for how browser traffic should be routed to Che or a workspace.
 With single-port, each service running in a workspace and exposing ports has its own hostname. Example : workspace agent will have a hostname like : ws-agent.workspace-id….domain.name. By default the domain name will use nip.io which allow to provide wildcard DNS without any
-user configuration. The strategy used for the hosts is using the template provided by the <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY_CUSTOM_TEMPLATE</code> property with default value <code class="highlighter-rouge">&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.&lt;wildcardNipDomain&gt;:&lt;chePort&gt;</code> 
+user configuration. The strategy used for the hosts is using the template provided by the <code class="highlighter-rouge">CHE_DOCKER_SERVER__EVALUATION__STRATEGY_CUSTOM_TEMPLATE</code> property with default value <code class="highlighter-rouge">&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.&lt;wildcardNipDomain&gt;:&lt;chePort&gt;</code>
 If you’ve your own domain and then DNS server, you may want to add wildcard DNS entry matching a pattern. For example updating the property to the value <code class="highlighter-rouge">&lt;serverName&gt;.&lt;machineName&gt;.&lt;workspaceId&gt;.che.foobar.com:&lt;chePort&gt;</code> will require a wildcard <code class="highlighter-rouge">*.che.foobar.com</code> entry in DNS server resolving to the IP of the che server.</p>
 
 <h2 id="docker-connectivity">Docker Connectivity</h2>
@@ -2492,7 +2494,7 @@ Configure your Docker daemon to listen on TCP.  First, add the following to your
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Listen using the default unix socket, and on specific IP address on host.</span>
 <span class="c"># This will vary greatly depending on your host OS.</span>
-sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 
+sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375
 <span class="c"># Verify that the Docker API is responding at: http://$IP:2375/containers/json</span>
 </code></pre>
 </div>
