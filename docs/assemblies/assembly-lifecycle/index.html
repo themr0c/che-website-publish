@@ -2120,7 +2120,7 @@
 <h1 id="archetype">Archetype</h1>
 <p>The CLI has an <code class="highlighter-rouge">archetype</code> command that can be used to generate custom assemblies of Eclipse Che and Codenvy.</p>
 
-<p>An archetype is a maven technique for generating code templates. A single archetype has an ID and generates a complete custom assembly. Differnent archetypes generate assemblies with different types of customizations. We make each archetype customize the minimal number of features to make learning about customizations simpler.</p>
+<p>An archetype is a maven technique for generating code templates. A single archetype has an ID and generates a complete custom assembly. Different archetypes generate assemblies with different types of customizations. We make each archetype customize the minimal number of features to make learning about customizations simpler.</p>
 
 <p>Your host system must have Maven 3.3+ installed to facilitate generation and compiling of custom assemblies. You must pass in your Maven’s M2 repository path on your host. Our archetype generator will download libraries into that repository making repeated compilations faster over time. On most Linux based systems, your M2 repository is located at <code class="highlighter-rouge">/home/user/.m2/repository</code> and it is <code class="highlighter-rouge">%USERPROFILE%/.m2/repository</code> for Windows. We default your M2 repository to <code class="highlighter-rouge">/home/user/.m2/repository</code>. Use the <code class="highlighter-rouge">/m2</code> mount to change this.</p>
 
@@ -2160,7 +2160,7 @@ PARAMETERS:
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
-    eclipse/che-cli:5.7.0
+    eclipse/che-cli:5.14.0
       archetype generate
 </code></pre>
 </div>
@@ -2174,7 +2174,7 @@ PARAMETERS:
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
-    eclipse/che-cli:5.7.0
+    eclipse/che-cli:5.14.0
       archetype all --no:interactive
 </code></pre>
 </div>
@@ -2182,7 +2182,7 @@ PARAMETERS:
 <p>This command:</p>
 
 <h4 id="linux">Linux</h4>
-<p>On Linux, the Maven utility launched by the CLI may have problems writing files to your host system during the generation phase. To overcome this limitation, in the <code class="highlighter-rouge">docker run ...</code> syntax before the image name add <code class="highlighter-rouge">--user={uid}</code> where UID is the user identity of your current users. This user identity will be passed into the various CLI utilities to execute under that user identity.</p>
+<p>On Linux, the Maven utility launched by the CLI may have problems writing files to your host system during the generation phase. To overcome this limitation create the host mount directories before launching docker, and in the <code class="highlighter-rouge">docker run ...</code> syntax before the image name add <code class="highlighter-rouge">--user={uid}</code> where UID is the user identity of your current users. This user identity will be passed into the various CLI utilities to execute under that user identity.</p>
 
 <p>Example</p>
 
@@ -2190,6 +2190,24 @@ PARAMETERS:
       -v /etc/passwd:/etc/passwd:ro \
       --user=1000:100  \
       --group-add 999 \
+</code></pre>
+</div>
+
+<p>Therefore a full set of commands may look like this to do an interactive generate:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir /tmp/archetype
+mkdir /tmp/data
+docker run -it --rm  \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/archetype:/archetype \
+  -v /tmp/data:/data \
+  -v ~/.m2/repository:/m2 \
+  -v /etc/group:/etc/group:ro \
+  -v /etc/passwd:/etc/passwd:ro \
+  --user=1000:1000 \
+  --group-add 999 \
+    eclipse/che-cli:5.14.0 \
+      archetype generate
 </code></pre>
 </div>
 
@@ -2260,7 +2278,7 @@ PARAMETERS:
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
-    eclipse/che-cli:5.7.0
+    eclipse/che-cli:5.14.0
       archetype build
 </code></pre>
 </div>
@@ -2285,10 +2303,18 @@ PARAMETERS:
 
 <p>Example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>      -v /etc/group:/etc/group:ro \
-      -v /etc/passwd:/etc/passwd:ro \
-      --user=1000:1000  \
-      --group-add 999 \
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm  \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/archetype:/archetype \
+  -v /tmp/data:/data \
+  -v ~/:/home/$USER/ \
+  -v /etc/group:/etc/group:ro \
+  -v /etc/passwd:/etc/passwd:ro \
+  --user=1000:1000 \
+  --group-add 999 \
+  -w /archetype/assembly \
+    eclipse/che-dev \
+      mvn clean install
 </code></pre>
 </div>
 
@@ -2319,7 +2345,22 @@ PARAMETERS:
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
-    eclipse/che-cli:5.7.0
+    eclipse/che-cli:5.14.0
+      archetype run
+</code></pre>
+</div>
+
+<p>On Linux:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/archetype:/archetype \
+  -v /tmp/data:/data \
+  -v /etc/group:/etc/group:ro \
+  -v /etc/passwd:/etc/passwd:ro \
+  --user=1000:1000 \
+  --group-add 999 \
+    eclipse/che-cli:5.14.0 \
       archetype run
 </code></pre>
 </div>
@@ -2330,8 +2371,17 @@ PARAMETERS:
 <div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm --name run-che \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /c/tmp:/data \
-           -v /c/archetype/assembly/assembly-main/target/eclipse-che-5.7.0/eclipse-che-5.7.0:/assembly \
-              eclipse/che:5.7.0 start --skip:nightly"
+           -v /c/archetype/assembly/assembly-main/target/eclipse-che-5.14.0/eclipse-che-5.14.0:/assembly \
+              eclipse/che:5.14.0 start --skip:nightly
+</code></pre>
+</div>
+
+<p>On Linux:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm --name run-che \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v /tmp/data:/data \
+           -v /tmp/archetype/assembly/assembly-main/target/eclipse-che-5.14.0/eclipse-che-5.14.0:/assembly \
+              eclipse/che:5.14.0 start --skip:nightly
 </code></pre>
 </div>
 
@@ -2343,7 +2393,22 @@ PARAMETERS:
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
-    eclipse/che-cli:5.7.0
+    eclipse/che-cli:5.14.0
+      archetype stop
+</code></pre>
+</div>
+
+<p>On Linux:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/archetype:/archetype \
+  -v /tmp/data:/data \
+  -v /etc/group:/etc/group:ro \
+  -v /etc/passwd:/etc/passwd:ro \
+  --user=1000:1000 \
+  --group-add 999 \
+    eclipse/che-cli:5.14.0 \
       archetype stop
 </code></pre>
 </div>
