@@ -27,6 +27,15 @@
 
 
 
+   <tr class="item">
+      <td><img src="../images/media/jaxenter.png" alt=""></td>
+      <td>
+        <h3>Interview with Mike Milinkovich, Executive Director of the Eclipse Foundation</h3>
+        <p class="loc">July 11, 2017</p>
+        <p class="desc">We talked to Mike Milinkovich, Executive Director of the Eclipse Foundation about his favorite Eclipse Oxygen features, the upcoming Java 9 support and the future of the classic development environments...</p>
+        <a href="https://codenvy.com/docs/admin-guide/managing/index.html#scaling-with-overlay-network-linux-only" target="_blank">Read More</a>
+      </td>
+   </tr><!-- .item -->
 
    <tr class="item">
       <td><img src="../images/media/article.png" alt=""></td>
