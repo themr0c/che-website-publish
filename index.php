@@ -57,19 +57,28 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
+      <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
+      <h3>Che 6.0 Roadmap</h3>
+      <p>Read project lead Tyler Jewell's blog on multi-user Che, Kubernetes and OpenShift.</p>
+      <a href="https://che.eclipse.org/multi-user-eclipse-che-kubernetes-6aef521a36f5" target="_blank" class="btn-yellow">Learn More</a>
+    </div>
+
+    <div class="col-md-4">
       <img src="images/img-home-che5@2x.png" alt="Che 5.0" class="img-responsive">
       <h3>Eclipse Che 5.0</h3>
       <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
+    <!--
     <div class="col-md-4">
       <img src="images/img-home-codenvy-ent@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
       <h3>Eclipse Che Enterprise</h3>
       <p>Codenvy uses Eclipse Che to provide dev team collaboration on a scalable workspace platform for DevOps.</p>
       <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
     </div>
+    -->
     <div class="col-md-4">
-      <img src="images/img-home-checonf3.png" alt="CheConf 2016" class="img-responsive">
+      <img src="images/img-home-checonf-2016.png" alt="CheConf 2016" class="img-responsive">
       <h3>CheConf 2016</h3>
       <p>Watch sessions on the future of Che, building plugins, Docker, and many more cloud development topics.</p>
       <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
