@@ -231,6 +231,20 @@
     <option value="../../../docs/setup/docker/index.html">Docker Installation</option>
   
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+    <option value="../../../docs/setup/openshift/index.html">OpenShift Installation</option>
+  
+
 </ul>
 
       
@@ -360,6 +374,21 @@
   
   
     <li class=""><a href="../../../docs/setup/docker/index.html">Docker Installation</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/setup/openshift/index.html">OpenShift Installation</a></li>
   
 
 
@@ -2305,10 +2334,6 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
       <td><strong>Client-side (IDE) extensions.</strong> Build file for main Che assembly.client side components, extension dependency should be added to this <code class="highlighter-rouge">pom.xml</code>.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">/che/assembly/assembly-ide-war/src/main/resources/org/eclipse/che/ide/IDE.gwt.xml</code></td>
-      <td><strong>Client-side (IDE) extensions.</strong> Client-side extensions are authored in GWT. Add your extension GWT module as an inheritance to this IDE GWT module.</td>
-    </tr>
-    <tr>
       <td><code class="highlighter-rouge">/che/assembly/assembly-wsagent-war/pom.xml</code></td>
       <td><strong>Server-side workspace extensions.</strong> Build file that generates the Che web application agent that is deployed inside of a running workspace. You can add your extension to be included with this agent by adding it as a dependency in this file. Update this if your extension brings a new server-side service or component, or extends an existing API deployed with a workspace agent.</td>
     </tr>
@@ -2373,20 +2398,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 </div>
 <p>You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the <code class="highlighter-rouge">pom.xml</code> for you.</p>
 
-<p>Second, link your GUI extension into the GWT app. You will add an <code class="highlighter-rouge">&lt;inherits&gt;</code> tag to the module definition. The name of the extension is derived from the direction + package structure that you have given your extension.  For example:</p>
-
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;inherits</span> <span class="na">name=</span><span class="s">'org.eclipse.che.plugin.embedjsexample.EmbedJSExample'</span><span class="nt">/&gt;</span>
-</code></pre>
-</div>
-
-<p>And this means that in our embed sample, there is a file with a <code class="highlighter-rouge">*.gwt.xml</code> extension in a folder structure identical to the name above.</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># This name was derived from the package structure in your sample:</span>
-/che/samples/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/src/main/resources/org/eclipse/che/plugin/embedjsexample/EmbedJSExample.gwt.xml
-</code></pre>
-</div>
-
-<p>Once you have added the IDE extension to both locations, you need to rebuild the IDE.</p>
+<p>Once you have added the IDE extension, you need to rebuild the IDE.</p>
 
 <div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
 <span class="c"># This IDE web app will be bundled into the assembly</span>
@@ -2495,9 +2507,9 @@ CHE RUNTIME
 
 <p>The Che assembly is the root Che project that builds a number of assemblies from a set of system plug-ins together with your custom plug-in. The Che assembly has a master configuration file, <code class="highlighter-rouge">/assembly/assembly-ide-war/src/main/resources/org/eclipse/che/ide/IDE.gwt.xml</code> which defines the modules to compile into the application.</p>
 
-<p>To manually add your plug-in to the Che assembly, you update the <code class="highlighter-rouge">IDE.gwt.xml</code> file and the assembly <code class="highlighter-rouge">pom.xml</code> with information about your plug-in. When the Che assembly is built, it will download your extension as a dependency and compile it into the Che IDE application. The Che IDE application will use dependency injection to load any Gin modules.  When you boot Che within tomcat or another application server, Che uses Guice to load any server-side modules for dependency injection.</p>
+<p>To manually add your plug-in to the Che assembly, you update the assembly <code class="highlighter-rouge">pom.xml</code> with information about your plug-in. Inheritance to gwt.xml is automatically added when an assembly is compiled. When the Che assembly is built, it will download your extension as a dependency and compile it into the Che IDE application. The Che IDE application will use dependency injection to load any Gin modules.  When you boot Che within tomcat or another application server, Che uses Guice to load any server-side modules for dependency injection.</p>
 
-<p>Your extension may require access to types provides by Che or the Che API, i.e. if you are implemenenting a custom project type or wizard. Che objects can be injected with Gin and Guice which enables your extension to make use of them.</p>
+<p>Your extension may require access to types provides by Che or the Che API, i.e. if you are implementing a custom project type or wizard. Che objects can be injected with Gin and Guice which enables your extension to make use of them.</p>
 
 <h1 id="improving-incremental-builds">Improving Incremental Builds</h1>
 <p>There are a number of tweaks you can use to speed up the various stages of development. One possibility to speed up the initial build and packaging process is by disabling tests and skipping certain maven plugins.</p>
@@ -2656,6 +2668,21 @@ mvn clean install -DskipTests -Dskip-validate-sources -Dgwt.compiler.localWorker
   
   
     <li class=""><a href="../../../docs/setup/docker/index.html">Docker Installation</a></li>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <li class=""><a href="../../../docs/setup/openshift/index.html">OpenShift Installation</a></li>
   
 
 
