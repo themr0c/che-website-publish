@@ -68,7 +68,7 @@
       <li>Join <a href="https://github.com/eclipse/che/wiki/Weekly-Meetings-and-Minutes">weekly planning meetings</a></li>
       <li>Watch <a href="https://github.com/codenvy/che">the repository</a></li>
       <li>Discuss <a href="https://dev.eclipse.org/mailman/listinfo/che-dev">che-dev@eclipse.org</a></li>
-      <li>Chat <a href="http://qwebirc.swiftirc.net/?nick=fromwebsite&channels=%23eclipseche">on IRC #eclipseche</a></li>
+      <li>Chat <a href="https://mattermost.eclipse.org/eclipse/channels/eclipse-che" target="_blank">Mattermost</a></li>
     </ul>
   </div>
 </div><!-- /.container-fluid -->
@@ -78,8 +78,7 @@
 <div class="bg-gray5">
   <div class="container-fluid content">
     <h2>Commercial and Enterprise Support</h2>
-    <p>Codenvy offers commercial support options for Eclipse Che, please contact them to discuss your needs.</p>
-    <a href="https://codenvy.com/contact/questions" class="btn-yellow">Talk to Codenvy</a>
+    <p>To discuss commercial support options for Eclipse Che, please contact us at: <a href="https://chat.openshift.io/developers/channels/che-enterprise" target="_blank">.</a>
   </div>
 </div>
 

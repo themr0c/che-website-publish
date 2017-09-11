@@ -87,11 +87,11 @@
       </div>
       <div class="col-md-4">
         <h4>Documentation</h4>
-        <p>We put a lot of effort <a href="https://www.eclipse.org/che/docs/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback. Chat: Che engineers hang out on Gitter, IRC and Slack.</p>
+        <p>We put a lot of effort <a href="https://www.eclipse.org/che/docs/" target="_blank">into our docs.</a> If there are improvements or errors, we'd love that feedback.</p>
       </div>
       <div class="col-md-4">
         <h4>Chat</h4>
-        <p>Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge" target="_blank">Gitter</a>, <a href="http://qwebirc.swiftirc.net/?nick=fromwebsite&channels=%23eclipseche" target="_blank">IRC</a>, <a href="https://dev.eclipse.org/mailman/listinfo/che-dev" target="_blank">che-dev@eclipse.org</a> and Slack.</p>
+        <p>Che engineers hang out on <a href="https://mattermost.eclipse.org/eclipse/channels/eclipse-che" target="_blank">Mattermost</a>.</p> and at <a href="https://dev.eclipse.org/mailman/listinfo/che-dev" target="_blank">che-dev@eclipse.org</a>.</p>
       </div>
     </div> <!-- .row -->
   </div> <!-- .container-fluid -->

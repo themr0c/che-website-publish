@@ -61,7 +61,7 @@
       </div>
       <div class="col-md-4">
         <h4>Chat</h4>
-        <p>Che engineers hang out on <a href="https://gitter.im/eclipse/che?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge" target="_blank">Gitter</a>.</p>
+        <p>Che engineers hang out on <a href="https://mattermost.eclipse.org/eclipse/channels/eclipse-che" target="_blank">Mattermost</a>.</p> and at <a href="https://dev.eclipse.org/mailman/listinfo/che-dev" target="_blank">che-dev@eclipse.org</a>.</p>
       </div>
     </div> <!-- .row -->
   </div> <!-- .container-fluid -->
