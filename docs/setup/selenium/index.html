@@ -27,7 +27,7 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
-  <title>Chedir - Up and Down -
+  <title>How to run selenium tests -
     
       Docs
      - Eclipse Che</title>
@@ -417,7 +417,7 @@
   
   
   
-    <li class=""><a href="../../../docs/setup/selenium/index.html">How to run selenium tests</a></li>
+    <li class="current"><a href="../../../docs/setup/selenium/index.html">How to run selenium tests</a></li>
   
 
 
@@ -1458,7 +1458,7 @@
   
   
   
-    <li class="current"><a href="../../../docs/chedir/up-and-down/index.html">Chedir - Up and Down</a></li>
+    <li class=""><a href="../../../docs/chedir/up-and-down/index.html">Chedir - Up and Down</a></li>
   
 
 
@@ -2149,57 +2149,127 @@
       <div class="unit four-fifths">
         <article>
           <div class="improve right hide-on-mobiles">
-            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/chedir-portable-workspaces/chedir-up-and-down.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
-            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/chedir-portable-workspaces/chedir-up-and-down.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
+            <a href="https://github.com/codenvy/che-docs/blob/master/src/main/_docs/setup/setup-selenium.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>
+            <!--<a href="https://github.com/eclipse/che/blob/master/docs/_docs/setup/setup-selenium.md"><i class="fa fa-pencil"></i> &nbsp;Improve this page</a>-->
           </div>
           <div class="doc-title">
-            <h1>Chedir - Up and Down</h1>
+            <h1>How to run selenium tests</h1>
             <div class="doc-title-border">
             </div>
           </div>
           
-<p>In the first version of Chedir, each Chedir directory maps to a single Che server containing a single workspace. That workspace can have multiple projects and source repositories that are part of it.</p>
+<p>Eclipse Che is providing a set of automated tests. This documentation explain how to configure your system in order to be able to the Selenium tests suite.</p>
 
-<p>You can boot both a Che server and a workspace (with its embedded runtimes) with a single command:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
-                    -v &lt;path&gt;:/data
-                    -v &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir up
+<p>You can find the Selenium tests suite <a href="https://github.com/eclipse/che/tree/master/selenium">here: https://github.com/eclipse/che/tree/master/selenium</a></p>
 
+<h4 id="1-register-oauth-application">1. Register OAuth application</h4>
+
+<p>Go to <a href="https://github.com/settings/applications/new">OAuth application page</a> and register a new application:</p>
+<ul>
+  <li><code class="highlighter-rouge">Application name</code> : <code class="highlighter-rouge">Che</code></li>
+  <li><code class="highlighter-rouge">Homepage URL</code> : <code class="highlighter-rouge">http://&lt;YOUR_IP_ADDRESS&gt;:8080</code></li>
+  <li><code class="highlighter-rouge">Application description</code> : <code class="highlighter-rouge">Che</code></li>
+  <li><code class="highlighter-rouge">Authorization callback URL</code> : <code class="highlighter-rouge">http://&lt;YOUR_IP_ADDRESS&gt;:8080/api/oauth/callback</code></li>
+</ul>
+
+<p>Substitute <code class="highlighter-rouge">CHE_OAUTH_GITHUB_CLIENTID</code> and <code class="highlighter-rouge">CHE_OAUTH_GITHUB_CLIENTSECRET</code> properties in <code class="highlighter-rouge">che.env</code> with <code class="highlighter-rouge">Client ID</code> and <code class="highlighter-rouge">Client Secret</code> taken from 
+newly created <a href="https://github.com/settings/developers">OAuth application</a>.</p>
+
+<h4 id="2-add-configuration-file">2. Add configuration file</h4>
+
+<p>Set <code class="highlighter-rouge">CHE_LOCAL_CONF_DIR</code> environment variable and point to the folder where selenium tests configuration will be stored.
+Create file <code class="highlighter-rouge">selenium.properties</code> in that folder with the following content:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code># GitHub account credentials
+github.username=&lt;MAIN_GITHUB_USERNAME&gt;
+github.password=&lt;MAIN_GITHUB_PASSWORD&gt;
+github.auxiliary.username=&lt;AUXILIARY_GITHUB_USERNAME&gt;
+github.auxiliary.password=&lt;AUXILIARY_GITHUB_PASSWORD&gt;
+
+# Google account credentials (IMAP has to be enabled)
+google.user=&lt;GOOGLE_USER&gt;
+google.password=&lt;GOOGLE_PASSWORD&gt;
 </code></pre>
 </div>
 
-<p>This command will boot a Che server according to the properties in the Chefile. If necessary, the right Che launcher and Che server Docker images will be downloaded and cached. After the server has booted, Chedir will create a workspace and start its runtime, also as a set of Docker containers.</p>
+<h4 id="3-prepare-repository">3. Prepare repository</h4>
+<p>Fork all repositories from <a href="https://github.com/idexmai?tab=repositories">https://github.com/idexmai?tab=repositories</a> into the main GitHub account.
+Fork the repository <a href="https://github.com/iedexmain1/pull-request-plugin-fork-test">https://github.com/iedexmain1/pull-request-plugin-fork-test</a> into the auxiliary GitHub account.</p>
 
-<p>If there is an existing Che server running with the configuration specified, Chedir will discontinue and recommend that you create a different configuration to avoid conflicts. In a future version of Chedir, we’ll allow creating additional workspaces in an existing Che server, or even in a remote one such as at Codenvy.</p>
+<h4 id="4-start-eclipse-che">4. Start Eclipse Che</h4>
 
-<p>When the process of creation has completed, you will be presented with two URLs:<br />
-1: Che server URL - a URL that will open the dashboard to manage the Che instance<br />
-2: Workspace URL - a URL that will open the browser IDE with the workspace configured</p>
+<p>Follow the guide: <a href="https://github.com/eclipse/che">https://github.com/eclipse/che</a></p>
 
-<p>The workspace is a fully functional runtime environment. You can work within the workspace, SSH into it, and also work on code. Any code changes will be synchronized with the local directory. You can also perform git operations such as add, commit, and push from within the IDE.</p>
+<h4 id="5-run-tests">5. Run tests</h4>
 
-<p>When you are done working on the workspace, you can suspend the workspace and have it snapshot.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
-                    -v &lt;path&gt;:/data
-                    -v &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir down
+<p>Simply launch <code class="highlighter-rouge">./selenium-tests.sh</code></p>
 
+<h2 id="run-tests-configuration-properties">Run tests configuration properties</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>Usage: ./selenium-tests.sh [-Mmode] [options] [tests scope]
+
+Options:
+    --http                              Use 'http' protocol to connect to product
+    --https                             Use 'https' protocol to connect to product
+    --host=&lt;PRODUCT_HOST&gt;               Set host where product is deployed
+
+Modes (defines environment to run tests):
+    local                               All tests will be run in a Web browser on the developer machine.
+                                        Recommended if test visualization is needed and for debugging purpose.
+
+        Options that go with 'local' mode:
+        --web-driver-version=&lt;VERSION&gt;  To use the specific version of the WebDriver, be default the latest will be used: 2.30
+        --web-driver-port=&lt;PORT&gt;        To run WebDriver on the specific port, by default: 9515
+        --threads=&lt;THREADS&gt;             Number of tests that will be run simultaneously. It also means the very same number of
+                                        Web browsers will be opened on the developer machine.
+                                        Default value is in range [2,5] and depends on available RAM.
+
+
+    grid (default)                      All tests will be run in parallel among several docker containers.
+                                        One container per thread. Recommended to run test suite.
+
+        Options that go with 'grid' mode:
+            --threads=&lt;THREADS&gt;         Number of tests that will be run simultaneously.
+                                        Default value is in range [2,5] and depends on available RAM.
+
+Define tests scope:
+    --all-tests                         Run all tests within the suite despite of &lt;exclude&gt;/&lt;include&gt; sections in the test suite.
+    --test=&lt;TEST_CLASS&gt;                 Single test to run
+    --suite=&lt;SUITE&gt;                     Test suite to run, found:
+                                            * CheSuite.xml
+
+Handle failing tests:
+    --failed-tests                      Rerun failed tests that left after the previous try
+    --regression-tests                  Rerun regression tests that left after the previous try
+    --rerun                             Automatically rerun failing tests
+    --compare-with-ci                   Compare failed tests with results on CI server
+
+Other options:
+    --debug                             Run tests in debug mode
+
+HOW TO of usage:
+    Test Eclipse Che assembly:
+        ./selenium-tests.sh -Mgrid
+
+    Test Eclipse Che assembly and automatically rerun failing tests:
+        ./selenium-tests.sh -Mgrid --rerun
+
+    Run single test or package of tests:
+        ./selenium-tests.sh &lt;...&gt; --test=&lt;TEST&gt;
+
+    Run suite:
+        ./selenium-tests.sh &lt;...&gt; --suite=&lt;PATH_TO_SUITE&gt;
+
+    Rerun failed tests:
+        ./selenium-tests.sh &lt;...&gt; --failed-tests
+        ./selenium-tests.sh &lt;...&gt; --failed-tests --rerun
+
+    Debug selenium test:
+        ./selenium-tests.sh -Mlocal --test=&lt;TEST&gt; --debug
+
+    Analyse tests results:
+        ./selenium-tests.sh --compare-with-ci [CI job number]
 </code></pre>
 </div>
 
-<p>Run Chedir <code class="highlighter-rouge">down</code> command on the host machine. Chedir will stop the workspace’s runtime, stop the Che server, and return to the host. The workspace and its project will be preserved.  You can run Chedir <code class="highlighter-rouge">up</code> to reactivate it. This command is the equivalent of running <code class="highlighter-rouge">docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; stop</code> with the CLI.</p>
-
-<p>To stop the Che server and remove the workspace, you can destroy it.</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
-                    -v &lt;path&gt;:/data
-                    -v &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir destroy
-</code></pre>
-</div>
-
-<h2 id="next-steps">NEXT STEPS</h2>
-<p><a href="../../../docs/chedir/chefiles/index.html">Author a custom Chefile</a> to tailor how the workspace is created and adapted to your project.</p>
 
         </article>
       </div>
@@ -2365,7 +2435,7 @@
   
   
   
-    <li class=""><a href="../../../docs/setup/selenium/index.html">How to run selenium tests</a></li>
+    <li class="current"><a href="../../../docs/setup/selenium/index.html">How to run selenium tests</a></li>
   
 
 
@@ -2866,7 +2936,7 @@
   
   
   
-    <li class="current"><a href="../../../docs/chedir/up-and-down/index.html">Chedir - Up and Down</a></li>
+    <li class=""><a href="../../../docs/chedir/up-and-down/index.html">Chedir - Up and Down</a></li>
   
 
 
