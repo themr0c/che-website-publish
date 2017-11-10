@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2100,7 +2100,7 @@
 <h1 id="adding-agents-to-a-custom-stack">Adding Agents to a Custom Stack</h1>
 <p>Stacks use JSON format for configuration. Agents are included in the machines definition. Each stack requires a machine named <code class="highlighter-rouge">dev-machine</code> which always requires terminal, exec and ws-agent. Language server agents need to be added to the dev-machine if you want <a href="../../../docs/ide/intellisense/index.html">intellisense</a> features when using the workspace IDE.</p>
 
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="err">.......</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">.......</span><span class="w">
   </span><span class="err">workspaceConfig</span><span class="s2">": {
     "</span><span class="err">environments</span><span class="s2">": {
       "</span><span class="err">default</span><span class="s2">": {
@@ -2118,15 +2118,14 @@
               "</span><span class="err">org.eclipse.che.ls.php</span><span class="s2">"
             ],
             "</span><span class="err">attributes</span><span class="s2">": {
-              "</span><span class="err">memoryLimitBytes</span><span class="s2">": "</span><span class="mi">2147483648</span><span class="err">"</span><span class="w">
-            </span><span class="err">}</span><span class="w">
-          </span><span class="err">}</span><span class="w">
-        </span><span class="err">}</span><span class="w">
-      </span><span class="err">}</span><span class="w">
-    </span><span class="err">},</span><span class="w">
-</span><span class="err">.......</span><span class="w">
-</span></code></pre>
-</div>
+              "</span><span class="err">memoryLimitBytes</span><span class="s2">": "</span><span class="mi">2147483648</span><span class="s2">"
+            }
+          }
+        }
+      }
+    },
+.......
+</span></code></pre></div></div>
 
 <h1 id="creating-new-agents">Creating New Agents</h1>
 
@@ -2134,7 +2133,7 @@
 
 <p>A new agent has to implement the <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent-shared/src/main/java/org/eclipse/che/api/agent/shared/model/Agent.java">Agent interface</a> and be bound into the container.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Agent</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Agent</span> <span class="o">{</span>
 
     <span class="cm">/**
      * Returns the id of the agent.
@@ -2176,8 +2175,7 @@
      */</span>
     <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="o">?</span> <span class="kd">extends</span> <span class="n">ServerConf2</span><span class="o">&gt;</span> <span class="nf">getServers</span><span class="o">();</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Agents have an unique ID, a name, a set of other agents that they depend upon, properties, and a “script” that defines how the agent’s packages have to be installed into the workspace. This script handles installation and start of the agent.</p>
 
@@ -2190,80 +2188,78 @@
   <li>Create a resource file with the agent description:</li>
 </ul>
 
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.my-agent"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My simple agent"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Does some stuff :)"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.my-agent"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My simple agent"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Does some stuff :)"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <ul>
   <li>Create resource file with agent script:</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>...
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
 
 <span class="nb">unset </span>PACKAGES
 <span class="nb">unset </span>SUDO
-<span class="nb">command</span> -v tar &gt;/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" tar"</span>; <span class="o">}</span>
-<span class="nb">command</span> -v curl &gt;/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" curl"</span>; <span class="o">}</span>
-<span class="nb">test</span> <span class="s2">"</span><span class="k">$(</span>id -u<span class="k">)</span><span class="s2">"</span> <span class="o">=</span> 0 <span class="o">||</span> <span class="nv">SUDO</span><span class="o">=</span><span class="s2">"sudo"</span>
+<span class="nb">command</span> <span class="nt">-v</span> <span class="nb">tar</span> <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" tar"</span><span class="p">;</span> <span class="o">}</span>
+<span class="nb">command</span> <span class="nt">-v</span> curl <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">||</span> <span class="o">{</span> <span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" curl"</span><span class="p">;</span> <span class="o">}</span>
+<span class="nb">test</span> <span class="s2">"</span><span class="k">$(</span>id <span class="nt">-u</span><span class="k">)</span><span class="s2">"</span> <span class="o">=</span> 0 <span class="o">||</span> <span class="nv">SUDO</span><span class="o">=</span><span class="s2">"sudo"</span>
 
 <span class="nv">CHE_DIR</span><span class="o">=</span><span class="nv">$HOME</span>/che
 
 ...
 
-<span class="k">if </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"rhel"</span>; <span class="k">then</span>
+<span class="k">if </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"rhel"</span><span class="p">;</span> <span class="k">then</span>
     ...  
 
 <span class="c"># Red Hat Enterprise Linux 6</span>
 <span class="c">############################</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"Red Hat"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"Red Hat"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="c"># Ubuntu 14.04 16.04 / Linux Mint 17</span>
 <span class="c">####################################</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"ubuntu"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"ubuntu"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="c"># Debian 8</span>
 <span class="c">##########</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"debian"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"debian"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="c"># Fedora 23</span>
 <span class="c">###########</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"fedora"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"fedora"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="c"># CentOS 7.1 &amp; Oracle Linux 7.1</span>
 <span class="c">###############################</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"centos"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"centos"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="c"># openSUSE 13.2</span>
 <span class="c">###############</span>
-<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | grep -qi <span class="s2">"opensuse"</span>; <span class="k">then</span>
+<span class="k">elif </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">LINUX_TYPE</span><span class="k">}</span> | <span class="nb">grep</span> <span class="nt">-qi</span> <span class="s2">"opensuse"</span><span class="p">;</span> <span class="k">then</span>
     ...
 
 <span class="k">else</span>
-    &gt;&amp;2 <span class="nb">echo</span> <span class="s2">"Unrecognized Linux Type"</span>
-    &gt;&amp;2 cat <span class="nv">$FILE</span>
+    <span class="o">&gt;</span>&amp;2 <span class="nb">echo</span> <span class="s2">"Unrecognized Linux Type"</span>
+    <span class="o">&gt;</span>&amp;2 <span class="nb">cat</span> <span class="nv">$FILE</span>
     <span class="nb">exit </span>1
 <span class="k">fi</span>
 
 ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>Create your own agent class extending <a href="https://github.com/eclipse/che/blob/master/agents/che-core-api-agent-shared/src/main/java/org/eclipse/che/api/agent/shared/model/impl/BasicAgent.java">BasicAgent</a>:</li>
 </ul>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Singleton</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Singleton</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAgent</span> <span class="kd">extends</span> <span class="n">BasicAgent</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">AGENT_DESCRIPTOR</span> <span class="o">=</span> <span class="s">"&lt;AGENT_DESCRIPTOR_RESOURCE_NAME&gt;"</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">AGENT_SCRIPT</span>     <span class="o">=</span> <span class="s">"&lt;AGENT_SCRIPT_RESOURCE_NAME&gt;"</span><span class="o">;</span>
@@ -2273,14 +2269,13 @@
         <span class="kd">super</span><span class="o">(</span><span class="n">AGENT_DESCRIPTOR</span><span class="o">,</span> <span class="n">AGENT_SCRIPT</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>Bind agent into the container in <a href="https://github.com/eclipse/che/blob/master/assembly/assembly-wsmaster-war/src/main/java/org/eclipse/che/api/deploy/WsMasterModule.java">WsMasterModule</a>:</li>
 </ul>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@DynaModule</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DynaModule</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">WsMasterModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
     <span class="nd">@Override</span>
     <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
@@ -2292,8 +2287,7 @@
         <span class="o">...</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Have a look at our example of the <a href="https://github.com/eclipse/che/tree/master/agents/ls-json">JSON language server agent</a> for more ideas.</p>
 

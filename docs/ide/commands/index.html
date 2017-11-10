@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2201,30 +2201,28 @@ If you have a command which start servers (for example, Tomcat) you can define t
 <h1 id="authoring-command-instructions">Authoring Command Instructions</h1>
 <p>A command may contain a single instruction or a succession of commands. For example:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># each command starts from a new line</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># each command starts from a new line</span>
 <span class="nb">cd</span> /projects/spring
 mvn clean install
 
 <span class="c"># a succession of several commands where `;` stands for a new line</span>
-<span class="nb">cd</span> /projects/spring; mvn clean install
+<span class="nb">cd</span> /projects/spring<span class="p">;</span> mvn clean install
 
 <span class="c"># a succession of several commands where execution of a subsequent command depends on execution of a preceeding one - if there's no /projects/spring directory, `mvn clean install` won't be executed</span>
 <span class="nb">cd</span> /projects/spring <span class="o">&amp;&amp;</span> mvn clean install
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>It is possible to check for conditions, use for loops and other bash syntax:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># copy build artifact only if build is a success</span>
-mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.project.path</span><span class="k">}</span> clean install
-  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> -eq 0 <span class="o">]]</span>; <span class="k">then
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># copy build artifact only if build is a success</span>
+mvn <span class="nt">-f</span> <span class="k">${</span><span class="nv">current</span><span class="p">.project.path</span><span class="k">}</span> clean install
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> <span class="nt">-eq</span> 0 <span class="o">]]</span><span class="p">;</span> <span class="k">then
     </span>cp /projects/kitchensink/target/<span class="k">*</span>.war /home/user/wildfly-10.0.0.Beta2/standalone/deployments/ROOT.war
     <span class="nb">echo</span> <span class="s2">"BUILD ARTIFACT SUCCESSFULLY DEPLOYED..."</span>
 <span class="k">else
     </span><span class="nb">echo</span> <span class="s2">"FAILED TO DEPLOY NEW ARTIFACT DUE TO BUILD FAILURE..."</span>
 <span class="k">fi</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="macros">Macros</h1>
 <p>Che provides macros that can be used within a command or preview URL to reference workspace objects.</p>
@@ -2327,13 +2325,12 @@ mvn -f <span class="k">${</span><span class="nv">current</span><span class="p">.
 <h1 id="machine-environment-variables">Machine Environment Variables</h1>
 <p>The workspace machine has a set of system environment variables that have been exported. They are reachable from within your command scripts using <code class="highlighter-rouge">bash</code> syntax.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># List all available machine system environment variables</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List all available machine system environment variables</span>
 <span class="nb">export</span>
 
 <span class="c"># Reference an environment variable, where $TOMCAT_HOME points to /home/user/tomcat8</span>
 <span class="nv">$TOMCAT_HOME</span>/bin/catalina.sh run
-</code></pre>
-</div>
+</code></pre></div></div>
 
         </article>
       </div>

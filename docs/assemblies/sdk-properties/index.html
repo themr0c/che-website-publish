@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2093,37 +2093,34 @@
 <h1 id="referencing-properties-in-extensions">Referencing Properties in Extensions</h1>
 <p>You can reference properties in Che extensions that you author. Configuration parameters may be injected with a constructor or directly in the fields. The parameter of the field must be annotated with <code class="highlighter-rouge">@javax.inject.Named</code>. The value of the annotation is the name of the property. For example, if the configuration property is: <code class="highlighter-rouge">data_file:/home/user/storage</code> then in your extension code:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
   <span class="o">...</span>
   <span class="nd">@Inject</span>
   <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span> <span class="n">File</span> <span class="n">storage</span><span class="o">)</span> <span class="o">{</span>
       <span class="o">...</span>
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>or</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
   <span class="nd">@Inject</span>
   <span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span>
   <span class="kd">private</span> <span class="n">File</span> <span class="n">storage</span><span class="o">;</span>
   <span class="o">...</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>All system properties and environment variables may be injected into your extensions with prefixes <code class="highlighter-rouge">sys.</code> and <code class="highlighter-rouge">env.</code>, respectively. So, for example, environment variable <code class="highlighter-rouge">HOME</code> name must be <code class="highlighter-rouge">env.HOME</code>. Here is an example of how to inject the value of system property <code class="highlighter-rouge">java.io.tmpdir</code> and value of environment variable <code class="highlighter-rouge">HOME</code>.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
   <span class="nd">@Inject</span>
   <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"sys.java.io.tmpdir"</span><span class="o">)</span> <span class="n">File</span> <span class="n">tmp</span><span class="o">,</span> <span class="nd">@Named</span><span class="o">(</span><span class="s">"env.HOME"</span><span class="o">)</span> <span class="n">File</span> <span class="n">home</span><span class="o">)</span> <span class="o">{</span>
       <span class="o">...</span>
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>Any value can be converted into a <code class="highlighter-rouge">java.lang.String</code> Java type. You can also directly convert properties to the following Java types:</p>
 <ul>
   <li><code class="highlighter-rouge">boolean</code></li>

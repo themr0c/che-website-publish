@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -504,13 +504,12 @@
 <h1 id="1-start-che">1. Start Che</h1>
 <p>Use your SaaS account for the following, or if you have <a href="../../../docs/setup/getting-started/index.html">installed Che</a>, open a terminal and use the Che startup script:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Interactive help</span>
-docker run -it eclipse/che start
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Interactive help</span>
+docker run <span class="nt">-it</span> eclipse/che start
 
 <span class="c"># Or, full start syntax where &lt;path&gt; is a local directory</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che start
-</code></pre>
-</div>
+docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> &lt;path&gt;:/data eclipse/che start
+</code></pre></div></div>
 
 <p>When you execute this command, you’ll see the URL for the user dashboard.</p>
 
@@ -538,11 +537,10 @@ d</p>
 <p>After the project is successfully created, you can start MySQL server either in the terminal (you can find it on the Consoles panel and open it by clicking <code class="highlighter-rouge">+</code> button) or using a command widget (CMD) - <code class="highlighter-rouge">sudo service mysql start</code></p>
 
 <p>We have already created a sample DB in the base image:</p>
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>ENV CHE_MYSQL_PASSWORD=che
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ENV CHE_MYSQL_PASSWORD=che
 ENV CHE_MYSQL_DB=che_db
 ENV CHE_MYSQL_USER=che
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>You may verify that the db is there and MYSQL is running: <code class="highlighter-rouge">mysql -u che -p che_db</code></p>
 
@@ -550,16 +548,15 @@ ENV CHE_MYSQL_USER=che
 
 <p>Let’s start Apache server. You can do that in the terminal, however, using a Commands Widget is a better option. Go to <code class="highlighter-rouge">CMD &gt; Edit Commands…</code> menu, click <code class="highlighter-rouge">+</code> button at Custom section and paste your command name, command itself here.
 Here are some commands that you may use:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Apache start</span>
-  sudo service apache2 start <span class="o">&amp;&amp;</span> sudo tail -f /var/log/apache2/access.log -f /var/log/apache2/error.log
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Apache start</span>
+  <span class="nb">sudo </span>service apache2 start <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>tail <span class="nt">-f</span> /var/log/apache2/access.log <span class="nt">-f</span> /var/log/apache2/error.log
 
 <span class="c"># Apache restart</span>
-  sudo service apache2 restart
+  <span class="nb">sudo </span>service apache2 restart
 
 <span class="c"># Apache stop</span>
-  sudo service apache2 stop
-</code></pre>
-</div>
+  <span class="nb">sudo </span>service apache2 stop
+</code></pre></div></div>
 <p>Preview URL is another important object. It will be <code class="highlighter-rouge">http://${server.port.80}/${current.project.relpath}</code>.</p>
 
 <p><code class="highlighter-rouge">${server.port.80}</code> returns host and port, while <code class="highlighter-rouge">${current.project.relpath}</code> will be interpreted as a relative path to your project (relative to <code class="highlighter-rouge">/projects</code> which is DocumentRoot for Apache in this environment).</p>

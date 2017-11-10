@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2119,13 +2119,12 @@
 
 <p>To reference Che Docker images in your Dockerfile or Docker compose recipe:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Dockerfile</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">##Dockerfile</span>
 FROM eclipse/&lt;image-name&gt;
 
 <span class="c">##Compose</span>
 image: eclipse/&lt;image-name&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Che base stacks, which include the minimum utilities for everything needed by Eclipse Che are <code class="highlighter-rouge">eclipse/stack-base:debian</code> and <code class="highlighter-rouge">eclipse/stack-base:ubuntu</code>. The majority of Che ready to go images are based on Ubuntu. All stacks have the right CMD, so that containers do not exit just after starting.</p>
 
@@ -2160,13 +2159,12 @@ image: eclipse/&lt;image-name&gt;
 
 <p>All Eclipse Che images must have a non-terminating <code class="highlighter-rouge">CMD</code> command so that the container doesn’t shut down immediately after loading. If you want to override the default <code class="highlighter-rouge">CMD</code>, add <code class="highlighter-rouge">tail -f /dev/null</code> to the execution.  For example:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Dockerfile</span>
-CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/null
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">##Dockerfile</span>
+CMD <span class="nb">sudo </span>service apache2 start <span class="o">&amp;&amp;</span> tail <span class="nt">-f</span> /dev/null
 
 <span class="c">##Compose</span>
-<span class="nb">command</span>: <span class="o">[</span>sudo, service, apache2, start, <span class="o">&amp;&amp;</span>, tail, -f, /dev/null]
-</code></pre>
-</div>
+<span class="nb">command</span>: <span class="o">[</span><span class="nb">sudo</span>, service, apache2, start, <span class="o">&amp;&amp;</span>, tail, <span class="nt">-f</span>, /dev/null]
+</code></pre></div></div>
 
 <h3 id="maven-dependencies-optional">Maven Dependencies (Optional)</h3>
 <p>If you want to use Che with the maven plug-in, then you need to add these additional dependencies.</p>
@@ -2224,7 +2222,7 @@ CMD sudo service apache2 start <span class="o">&amp;&amp;</span> tail -f /dev/nu
 
 <p><strong>1: Expose the port your app/process is bound to</strong>. For example, if your application runs on 3000, add the following instruction to your custom Dockerfile or  Docker compose recipe:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">##Exposing a single port in a Dockerfile</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">##Exposing a single port in a Dockerfile</span>
 EXPOSE 3000
 
 <span class="c">##Exposing a single port in a compose file</span>
@@ -2237,8 +2235,7 @@ EXPOSE 3000 5000
 expose:
  - 3000
  - 5000
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>2: Go to user dashboard for your workspace</strong> and click on the Runtimes tab. Select your machine and then in a section called “Server” you will see a table with all the ports exposed in the recipe and their corresponding externally published ports.</p>
 
@@ -2261,19 +2258,18 @@ expose:
 
 <p>If the Dockerfile or build context requires other files to be <code class="highlighter-rouge">ADD</code> or <code class="highlighter-rouge">COPY</code> into the image that is created, then you could run into a failure, as the local Che workspace generator will not have access to those other remote files. To address this issue, you can pre-package the build context or Dockerfile into an image, push into a registry, and then reference the already-built image in your compose file. This is what we do for internal development at Codenvy.</p>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">build</span><span class="pi">:</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">build</span><span class="pi">:</span>
   <span class="c1">## remote context will work</span>
-  <span class="s">context</span><span class="pi">:</span> <span class="s">https://github.com/eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
+  <span class="na">context</span><span class="pi">:</span> <span class="s">https://github.com/eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
 
   <span class="c1">## local context will not work</span>
-  <span class="s">context</span><span class="pi">:</span> <span class="s">./my/local/filesystem</span>
-</code></pre>
-</div>
+  <span class="na">context</span><span class="pi">:</span> <span class="s">./my/local/filesystem</span>
+</code></pre></div></div>
 
 <p>Using Private Repositories:
 If your <code class="highlighter-rouge">build.context</code> or <code class="highlighter-rouge">build.Dockerfile</code> accesses a private remote registry, you need to provide additional configuration.  First, the SSH private key needs to be located in your host machine’s home directory <code class="highlighter-rouge">~/.ssh/id_rsa</code> for Mac/Linux and <code class="highlighter-rouge">C:\Users\&lt;username&gt;\.ssh\id_rsa</code> for Windows with <code class="highlighter-rouge">0600</code> permissions for the user that starts Che.  Second, add the hostname of the private repository to the known hosts of the host machine using <code class="highlighter-rouge">ssh -o StrictHostKeyChecking=no -T git@&lt;hostname&gt;</code>.  Third, add the public key to the git <a href="../../../docs/ide/git-svn/index.html#adding-ssh-public-key-to-repository-account">repository host</a>. Finally, you can use an SSH git URL in the <code class="highlighter-rouge">build.context</code> of your compose syntax.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">## On Linux/Mac host machine</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## On Linux/Mac host machine</span>
 <span class="c">## To new create ssh keypair</span>
 ssh-keygen
 
@@ -2281,42 +2277,38 @@ ssh-keygen
 chmod 0600 ~/.ssh/id_rsa
 
 <span class="c">## Add private repo host such as github to known_hosts file</span>
-ssh -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no -T git@github.com
-</code></pre>
-</div>
+ssh <span class="nt">-o</span> <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no <span class="nt">-T</span> git@github.com
+</code></pre></div></div>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">## On Windows host machine start bash</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## On Windows host machine start bash</span>
 bash
 
 <span class="c">## To new create ssh keypair</span>
-<span class="gp">&gt; </span>ssh-keygen
+<span class="o">&gt;</span> ssh-keygen
 
 <span class="c">## Set permissions to private key file</span>
-<span class="gp">&gt; </span>chmod 0600 ~/.ssh/id_rsa
+<span class="o">&gt;</span> chmod 0600 ~/.ssh/id_rsa
 
 <span class="c">## Add private repo host such as github to known_hosts file</span>
-<span class="gp">&gt; </span>ssh -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no -T git@github.com
-<span class="gp">&gt; </span><span class="nb">exit</span>
+<span class="o">&gt;</span> ssh <span class="nt">-o</span> <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no <span class="nt">-T</span> git@github.com
+<span class="o">&gt;</span> <span class="nb">exit</span>
 
 <span class="c">## If using boot2docker(virtualbox) not HyperV</span>
-docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine sh -c <span class="s2">"cp -r /mnt/.ssh /mnt/linRoot/ &amp;&amp; chmod 0600 /mnt/linRoot/.ssh/id_rsa"</span>
-</code></pre>
-</div>
+docker run <span class="nt">-v</span> /c/Users/%username%/.ssh:/mnt/.ssh <span class="nt">-v</span> /root/:/mnt/linRoot alpine sh <span class="nt">-c</span> <span class="s2">"cp -r /mnt/.ssh /mnt/linRoot/ &amp;&amp; chmod 0600 /mnt/linRoot/.ssh/id_rsa"</span>
+</code></pre></div></div>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="c1">## The following will use master branch and build in recipes/ubuntu_jre folder</span>
-<span class="s">build</span><span class="pi">:</span>
-  <span class="s">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
-</code></pre>
-</div>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## The following will use master branch and build in recipes/ubuntu_jre folder</span>
+<span class="na">build</span><span class="pi">:</span>
+  <span class="na">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/ubuntu_jre</span>
+</code></pre></div></div>
 
 <h3 id="build-image">Build Image</h3>
 <p>In the event that a Compose file includes both build instructions and a build image the build instructions are seen as overriding, so the build image is skipped if it exists.</p>
 
 <h3 id="container-name">Container Name</h3>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">container_name</span><span class="pi">:</span> <span class="s">my_container</span>
-</code></pre>
-</div>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">container_name</span><span class="pi">:</span> <span class="s">my_container</span>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">container_name</code> is skipped during execution. Instead, Che generates container names based on its own internal patterns. Because many developers could be running the same Compose file on the same Che workspace node at the same time naming conflicts need to be avoided.</p>
 
@@ -2325,16 +2317,15 @@ docker run -v /c/Users/%username%/.ssh:/mnt/.ssh -v /root/:/mnt/linRoot alpine s
 
 <h3 id="networks">Networks</h3>
 
-<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="c1">## Not supported</span>
-<span class="s">networks</span><span class="pi">:</span>
-  <span class="s">internal</span><span class="pi">:</span>
-  <span class="s">aliases</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">my.alias’]</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## Not supported</span>
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">internal</span><span class="pi">:</span>
+  <span class="na">aliases</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">my.alias’]</span>
 <span class="s">##</span><span class="nv"> </span><span class="s">Not</span><span class="nv"> </span><span class="s">supported</span>
 <span class="s">networks:</span>
   <span class="s">internal:</span>
   <span class="s">driver:</span><span class="nv"> </span><span class="s">bridge</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Che does not yet currently support compose networks. We do, however, support the use of aliases through <code class="highlighter-rouge">links</code> command.</p>
 

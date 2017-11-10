@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2149,14 +2149,13 @@
 
 <p>Each module has a directory structure that is based upon maven and will include source code and a target where artifacts are placed.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
 src/main/java/<span class="o">{</span>package-name<span class="o">}</span>/<span class="o">{</span>extensionName<span class="o">}</span>.java
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Depending on the extension, you may also need to include:</p>
 
-<div class="language-text highlighter-rouge"><pre class="highlight"><code># Required for client-side extensions
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Required for client-side extensions
 src/main/resources/{package-name}/{extensionName}.gwt.xml
 
 # Optional, required if you use GIN injection (in client-side extensions)
@@ -2169,8 +2168,7 @@ src/main/java/{package-name}/{extensionName}GuiceModule.java
 
 # Optional, required if you want to include static JavaScript or CSS files (in client-side extensions)
 src/main/resources/{full-qualified-extension-name}/your-javascript.js
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Generally you can give Gin and Guice modules any file name, but for the sake of simplicity we suggest sticking to the naming convention above.</p>
 
@@ -2180,7 +2178,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <h6 id="pomxml">pom.xml</h6>
 <p>Each extension has a root <code class="highlighter-rouge">pom.xml</code> file. When configuring an extension <code class="highlighter-rouge">pom.xml</code> file, you must define an <code class="highlighter-rouge">&lt;artifactId&gt;</code> tag which will be the unique name identifier given to this extension. This identifier tag will be referenced by the Che assembly to declare that your extension is part of Che. You can override the <code class="highlighter-rouge">groupId</code> and <code class="highlighter-rouge">version</code> parameters from the parent, or if not specified, it will inherit the values set by the <code class="highlighter-rouge">&lt;parent&gt;</code> tag reference.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
     <span class="nt">&lt;parent&gt;</span>
@@ -2242,8 +2240,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
         <span class="nt">&lt;/resources&gt;</span>
     <span class="nt">&lt;/build&gt;</span>
 <span class="nt">&lt;/project&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>Extensions can choose to reference the <a href="https://github.com/codenvy/che-parent">Che maven dependency management <code class="highlighter-rouge">pom.xml</code></a> which enforces coding standards incorporated throughout Che. It will also set dependencies version automatically. The <code class="highlighter-rouge">&lt;repositories&gt;</code> tag provides a reference to Che’s maven repository hosted by Codenvy.</p>
 
 <p>Please notice the <code class="highlighter-rouge">&lt;version&gt;</code> tag. Make sure you alter the version reference so it points to the correct version of Che that you installed (or merely the Git tag/branch you checked out). You can find out the correct Che version by looking at the che parent pom <code class="highlighter-rouge">/che/pom.xml</code>.</p>
@@ -2253,25 +2250,23 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <h2 id="licensing">Licensing</h2>
 <p>Referencing the Che parent <code class="highlighter-rouge">pom.xml</code> enforces the Eclipse Che license header to be in place for all source files. You can execute <code class="highlighter-rouge">mvn license:format</code> to add license headers to your files.  Or, to skip the license check add:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>com.mycila<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>license-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;configuration&gt;</span>
     <span class="nt">&lt;skip&gt;</span>true<span class="nt">&lt;/skip&gt;</span>
   <span class="nt">&lt;/configuration&gt;</span>
 <span class="nt">&lt;/plugin&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>If you modify the <code class="highlighter-rouge">pom.xml</code> it needs to be sorted. Run <code class="highlighter-rouge">mvn sortpom:sort</code> to sort the <code class="highlighter-rouge">pom.xml</code>.</p>
 
 <h2 id="build-your-extension">Build Your Extension</h2>
 <p>In your extension directory, run <code class="highlighter-rouge">mvn clean install</code>. This will build JAR files that bundle your extension.</p>
 
-<div class="language-text highlighter-rouge"><pre class="highlight"><code>/target
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/target
   {your-extension-name}-{version}-sources.jar
   {your-extension-name}-{version}.jar
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="linking-extensions">Linking Extensions</h1>
 <p>After you compile your extension, they will be packaged as JAR files. Those JAR files will need to be included into Che and then you can create a custom assembly of Che that includes the JAR files of your extensions.</p>
@@ -2312,25 +2307,23 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <h2 id="your-extension-identifier">Your Extension Identifier</h2>
 <p>Every extension has a unique maven identifier. You will need to reference this identifier as a dependency. You can define your own identifiers for extensions or pull the identifier out of the <code class="highlighter-rouge">pom.xml</code> of the extension you are working with.  For example, in the samples that are provided with che the <code class="highlighter-rouge">samples/sample-plugin-embedjs/</code> has a single module for the IDE, and the identifier for the IDE extension is located in <code class="highlighter-rouge">sample/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/pom.xml</code>.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;parent&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;parent&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-parent<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;version&gt;</span>5.4.0<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/parent&gt;</span>
 <span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>And the identifier of this extension is the <code class="highlighter-rouge">artifactId</code>, <code class="highlighter-rouge">groupId</code>, and <code class="highlighter-rouge">version</code> tags combined together. Tags can inherit values from parents if they are not explicitly defined in the <code class="highlighter-rouge">pom.xml</code>. So this extension has the identifier of.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
 <span class="nt">&lt;version&gt;</span>5.0.0<span class="nt">&lt;/version&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <h2 id="add-extension-to-root-che-pom">Add Extension To Root Che POM</h2>
 <p>In order to allow your extension to be visible from the root level of Che, add your extension as a dependency in the list of <code class="highlighter-rouge">&lt;dependencies&gt;</code> from the <code class="highlighter-rouge">&lt;dependencyManagement&gt;</code>block.  There are a lot of them in the root <code class="highlighter-rouge">pom.xml</code>. To avoid transitive dependencies, we require every dependency to be explicitly listed and added. This will save you a lot of pain in the future from having circular references.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependencyManagement&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependencyManagement&gt;</span>
   <span class="nt">&lt;dependencies&gt;</span>
     ...
 		<span class="nt">&lt;dependency&gt;</span>
@@ -2341,8 +2334,7 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
     ...
   <span class="nt">&lt;/dependencies&gt;</span>
 <span class="nt">&lt;/dependencyManagement&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the <code class="highlighter-rouge">pom.xml</code> for you.</p>
 
 <h4 id="optional-skip-enforcement">Optional: Skip Enforcement</h4>
@@ -2351,17 +2343,16 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <h2 id="ide-extension-link-to-assembly">IDE Extension: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-ide-war/pom.xml</code> and also have it added as a dependency to the GWT application.  First add the dependency:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-sample-plugin-embedjs-ide<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>You can insert the dependency anywhere in the list. After you have inserted it, run <code class="highlighter-rouge">mvn sortpom:sort</code> and maven will order the <code class="highlighter-rouge">pom.xml</code> for you.</p>
 
 <p>Once you have added the IDE extension, you need to rebuild the IDE.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
 <span class="c"># This IDE web app will be bundled into the assembly</span>
 <span class="nb">cd </span>che/assembly/assembly-ide-war
 mvn clean install
@@ -2372,25 +2363,23 @@ mvn clean install
 
 
 <span class="c"># Start Che</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-path&gt;:/data <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-repo&gt;:/repo <span class="se">\</span>
+docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-path&gt;:/data <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-repo&gt;:/repo <span class="se">\</span>
                     eclipse/che:&lt;version&gt; start
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="server-side-workspace-extensions-link-to-assembly">Server Side Workspace Extensions: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-wsagent-war/pom.xml</code> and then rebuild the agent server.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-examples-service<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>Once you have added the server-side extension as a dependency, you need to rebuild the agent that is deployed into the workspace.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a new web-app that includes your server-side extension</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a new web-app that includes your server-side extension</span>
 <span class="nb">cd </span>che/assembly/assembly-wsagent-war
 mvn clean install
 
@@ -2403,26 +2392,24 @@ mvn clean install
 mvn clean install
 
 <span class="c"># Start Che</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-path&gt;:/data <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-repo&gt;:/repo <span class="se">\</span>
+docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-path&gt;:/data <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-repo&gt;:/repo <span class="se">\</span>
                     eclipse/che:&lt;version&gt; start
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>To start Che from the custom assembly you just built, you can refer to this <a href="../../../docs/setup/configuration/index.html#development-mode">Usage: Development Mode Launcher</a></p>
 
 <h2 id="server-side-che-server-extensions-link-to-assembly">Server Side Che Server Extensions: Link To Assembly</h2>
 <p>To include your jar files within the Che assemblies you have to introduce your extension as a dependency in <code class="highlighter-rouge">/che/assembly/assembly-wsmaster-war/pom.xml</code> and then rebuild the Che server, which we call master.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>che-examples-service<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>Once you have added the extension to the Che server, you need to rebuild the Che server.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a new Che server web app that includes your Che server extension</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a new Che server web app that includes your Che server extension</span>
 <span class="nb">cd </span>che/assembly/assembly-wsmaster-war
 mvn clean install
 
@@ -2431,12 +2418,11 @@ mvn clean install
 mvn clean install
 
 <span class="c"># Start Che</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-path&gt;:/data <span class="se">\</span>
-                    -v &lt;<span class="nb">local</span>-repo&gt;:/repo <span class="se">\</span>
+docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-path&gt;:/data <span class="se">\</span>
+                    <span class="nt">-v</span> &lt;local-repo&gt;:/repo <span class="se">\</span>
                     eclipse/che:&lt;version&gt; start
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To start Che from the custom assembly you just built, you can refer to this <a href="../../../docs/setup/configuration/index.html#development-mode">Usage: Development Mode Launcher</a></p>
 
@@ -2448,23 +2434,22 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <span class="se
   <li>When the Che server boots your Guice modules are invoked.</li>
 </ol>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>CHE ASSEMBLY                              YOUR PLUGIN <span class="o">(</span>title: YourExtension<span class="o">)</span>
-------------                              ----------------------------------
-IDE.gwt.xml  ------&gt;  references  -----&gt;  YourExtension.gwt.xml
-pom.xml  ----------&gt;  builds  ---------&gt;  YourExtension.java
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE ASSEMBLY                              YOUR PLUGIN <span class="o">(</span>title: YourExtension<span class="o">)</span>
+<span class="nt">------------</span>                              <span class="nt">----------------------------------</span>
+IDE.gwt.xml  <span class="nt">------</span><span class="o">&gt;</span>  references  <span class="nt">-----</span><span class="o">&gt;</span>  YourExtension.gwt.xml
+pom.xml  <span class="nt">----------</span><span class="o">&gt;</span>  builds  <span class="nt">---------</span><span class="o">&gt;</span>  YourExtension.java
   |
   | builds
   |
   🔻
-  Che IDE  --------&gt;  injects  --------&gt;  YourGinModule.java      <span class="o">(</span>optional<span class="o">)</span>
+  Che IDE  <span class="nt">--------</span><span class="o">&gt;</span>  injects  <span class="nt">--------</span><span class="o">&gt;</span>  YourGinModule.java      <span class="o">(</span>optional<span class="o">)</span>
 
 
 CHE RUNTIME
------------
-@boot  ------------&gt;  injects  --------&gt;  YourGuiceModule.java    <span class="o">(</span>optional<span class="o">)</span>
+<span class="nt">-----------</span>
+@boot  <span class="nt">------------</span><span class="o">&gt;</span>  injects  <span class="nt">--------</span><span class="o">&gt;</span>  YourGuiceModule.java    <span class="o">(</span>optional<span class="o">)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The Che assembly is the root Che project that builds a number of assemblies from a set of system plug-ins together with your custom plug-in. The Che assembly has a master configuration file, <code class="highlighter-rouge">/assembly/assembly-ide-war/src/main/resources/org/eclipse/che/ide/IDE.gwt.xml</code> which defines the modules to compile into the application.</p>
 
@@ -2475,14 +2460,13 @@ CHE RUNTIME
 <h1 id="improving-incremental-builds">Improving Incremental Builds</h1>
 <p>There are a number of tweaks you can use to speed up the various stages of development. One possibility to speed up the initial build and packaging process is by disabling tests and skipping certain maven plugins.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Add flags to skip the testing and code analysis phases of maven</span>
-mvn clean install -DskipTests -Dskip-validate-sources -Dgwt.compiler.localWorkers<span class="o">=</span>4 -Dfindbugs.skip<span class="o">=</span><span class="nb">true</span>
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add flags to skip the testing and code analysis phases of maven</span>
+mvn clean install <span class="nt">-DskipTests</span> <span class="nt">-Dskip-validate-sources</span> <span class="nt">-Dgwt</span>.compiler.localWorkers<span class="o">=</span>4 <span class="nt">-Dfindbugs</span>.skip<span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
 
 <p>In the IDE GWT module <code class="highlighter-rouge">ide/che-core-ide-generators/src/main/resources/org/eclipse/che/util/gwt.xml.template</code> keep just one permutation:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="nt">&lt;module</span> <span class="na">rename-to=</span><span class="s">'_app'</span><span class="nt">&gt;</span>
 $config.inherits: { module |     <span class="nt">&lt;inherits</span> <span class="na">name=</span><span class="s">"$module$"</span><span class="nt">/&gt;</span>
 }$
@@ -2501,8 +2485,7 @@ $if(config.loggingEnabled)$
 $endif$
 <span class="nt">&lt;/module&gt;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
         </article>
       </div>

@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2116,15 +2116,15 @@
 
 <p>The syntax is:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>USAGE: DOCKER_PARAMS eclipse/che-cli:nightly archetype ACTION <span class="o">[</span>PARAMETERS]
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: DOCKER_PARAMS eclipse/che-cli:nightly archetype ACTION <span class="o">[</span>PARAMETERS]
 
 Use an archetype to generate, build or run a custom che assembly
 
 MANDATORY DOCKER PARAMETERS:
-  -v &lt;path&gt;:/archetype        Local path where your custom assembly will be generated
+  <span class="nt">-v</span> &lt;path&gt;:/archetype        Local path where your custom assembly will be generated
 
 OPTIONAL DOCKER PARAMETERS:
-  -v &lt;path&gt;:/m2               Local path to your hosts Maven M2 repository
+  <span class="nt">-v</span> &lt;path&gt;:/m2               Local path to your hosts Maven M2 repository
 
 ACTION:
   all                         Generate, build and run a new custom assembly
@@ -2133,41 +2133,38 @@ ACTION:
   run                         Starts che from custom assembly <span class="k">in</span> <span class="s1">'/archetype'</span>
 
 PARAMETERS:
-  --archid<span class="o">=</span>&lt;id&gt;               Different archetypes generate different types of customizations
-  --archversion<span class="o">=</span>&lt;version&gt;     Sets archetype version - default <span class="o">=</span> tag of CLI image
-  --version<span class="o">=</span>&lt;version&gt;         Sets custom assembly version - default <span class="o">=</span> archetype version
-  --group<span class="o">=</span>&lt;group&gt;             Sets groupId of generated assembly - default <span class="o">=</span> com.sample
-  --id<span class="o">=</span>&lt;id&gt;                   Sets artifactId of generated assembly - default <span class="o">=</span> ID of archetype
-  --no:interactive            Disables interactive mode
-</code></pre>
-</div>
+  <span class="nt">--archid</span><span class="o">=</span>&lt;id&gt;               Different archetypes generate different types of customizations
+  <span class="nt">--archversion</span><span class="o">=</span>&lt;version&gt;     Sets archetype version - default <span class="o">=</span> tag of CLI image
+  <span class="nt">--version</span><span class="o">=</span>&lt;version&gt;         Sets custom assembly version - default <span class="o">=</span> archetype version
+  <span class="nt">--group</span><span class="o">=</span>&lt;group&gt;             Sets groupId of generated assembly - default <span class="o">=</span> com.sample
+  <span class="nt">--id</span><span class="o">=</span>&lt;id&gt;                   Sets artifactId of generated assembly - default <span class="o">=</span> ID of archetype
+  <span class="nt">--no</span>:interactive            Disables interactive mode
+</code></pre></div></div>
 
 <h1 id="generate">Generate</h1>
 <p>The <code class="highlighter-rouge">generate</code> action will generate a new Maven multi-module project into the folder you mount to <code class="highlighter-rouge">/archetype</code>. Explaining the nature of the command is best served with an example. For example, on a Windows machine run:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
     eclipse/che-cli:5.14.0
       archetype generate
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This will provide an interactive experience, downloading some utility images and giving you a list of archetypes to choose from. It will generate a new custom assembly from a template. It is essential that you have Maven installed locally on your host and that you mount your Maven’s repository to <code class="highlighter-rouge">/m2</code>. This will allow the archetype Docker command to download various libraries and cache them into your local repository (to be used in the build phase).</p>
 
 <p>You can skip interactive mode along with generate, build and run the new assembly in a single command:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
     eclipse/che-cli:5.14.0
       archetype all --no:interactive
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This command:</p>
 
@@ -2176,16 +2173,15 @@ PARAMETERS:
 
 <p>Example</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>      -v /etc/group:/etc/group:ro \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      -v /etc/group:/etc/group:ro \
       -v /etc/passwd:/etc/passwd:ro \
       --user=1000:100  \
       --group-add 999 \
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Therefore a full set of commands may look like this to do an interactive generate:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir /tmp/archetype
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir /tmp/archetype
 mkdir /tmp/data
 docker run -it --rm  \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -2198,14 +2194,12 @@ docker run -it --rm  \
   --group-add 999 \
     eclipse/che-cli:5.14.0 \
       archetype generate
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To determine which user and group to use in the command type <code class="highlighter-rouge">id</code> in a bash shell - you’ll get output similar to the following:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>uid=1000(florent) gid=100(users) groups=100(users),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),999(docker)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uid=1000(florent) gid=100(users) groups=100(users),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),999(docker)
+</code></pre></div></div>
 
 <p>For <code class="highlighter-rouge">--user</code> you need the ID of your user (1000 in the example above) and their group (100). For <code class="highlighter-rouge">--group-add</code> you need the ID of the group associated with <code class="highlighter-rouge">docker</code> (999).</p>
 
@@ -2263,15 +2257,14 @@ docker run -it --rm  \
 
 <p>Given the example we started above, you compile it with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
   -v /c/Users/Tyler/.m2/repository:/m2
     eclipse/che-cli:5.14.0
       archetype build
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="cli">CLI</h4>
 <p>If you use the CLI to compile the custom assembly, we use a Docker image named <code class="highlighter-rouge">eclipse/che-dev</code> to perform the build. It contains the utilities required to build a Che assembly and every sub-module. Each module, such as agents, dashboard, and IDE, have different dependencies, compilers, and unit test utilities. This image makes getting started really easy, but it’s a monster, weighing in at &gt;1GB!</p>
@@ -2281,19 +2274,18 @@ docker run -it --rm  \
 <p>You can bypass the CLI and use <code class="highlighter-rouge">eclipse/che-dev</code> directly. We maintain an explanation of the syntax for this image in the repository where this image’s Dockerfile is located.  https://github.com/eclipse/che/blob/master/dockerfiles/dev/Dockerfile.</p>
 
 <p>For example, given the sample we started with, the <code class="highlighter-rouge">eclipse/che-dev</code> equivalent would be:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm --name build-che \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm --name build-che \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /c/Users/Tyler/.m2/repository:/home/user/.m2/repository \
            -v /c/archetype/assembly:/home/user/che-build \
            -w /home/user/che-build \
               eclipse/che-dev mvn clean install
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>If this were a Linux system, there would be additional volume mounts required and you must set the user identity with <code class="highlighter-rouge">--user</code>.</p>
 
 <p>Example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm  \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm  \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /tmp/archetype:/archetype \
   -v /tmp/data:/data \
@@ -2305,14 +2297,12 @@ docker run -it --rm  \
   -w /archetype/assembly \
     eclipse/che-dev \
       mvn clean install
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To determine which user and group to use in the command type <code class="highlighter-rouge">id</code> in a bash shell - you’ll get output similar to the following:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>uid=1000(florent) gid=100(users) groups=100(users),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),999(docker)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uid=1000(florent) gid=100(users) groups=100(users),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),999(docker)
+</code></pre></div></div>
 
 <p>For <code class="highlighter-rouge">--user</code> you need the ID of your user (1000 in the example above) and their group (100). For <code class="highlighter-rouge">--group-add</code> you need the ID of the group associated with <code class="highlighter-rouge">docker</code> (999).</p>
 
@@ -2328,18 +2318,17 @@ docker run -it --rm  \
 
 <p>You can run this custom assembly either by using the <code class="highlighter-rouge">archetype</code> command or with the Che CLI. The <code class="highlighter-rouge">archetype run</code> action will use your assembly details and launch the Che CLI automatically with the proper location of the custom assembly. Given the example we have started, this would look like (note that mounting the M2 repository is not required as we are not building with Maven):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
     eclipse/che-cli:5.14.0
       archetype run
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>On Linux:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /tmp/archetype:/archetype \
   -v /tmp/data:/data \
@@ -2349,43 +2338,39 @@ docker run -it --rm  \
   --group-add 999 \
     eclipse/che-cli:5.14.0 \
       archetype run
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Optionally, you can use the Che CLI to run a custom assembly by mounting <code class="highlighter-rouge">/assembly</code> to the exploded location of the assembly that has already been built. While developing Che and Codenvy itself, our engineers keep a branch open, work on customizations, and then build those customizations into an assembly that they mount with the CLI.</p>
 
 <p>The exploded assembly is usually something like <code class="highlighter-rouge">assembly/assembly-main/target/eclipse-che-&lt;version&gt;/eclipse-che-&lt;version&gt;/</code>. You can use the rest of the CLI’s options and parameters as you normally would. For example, given the sample we started with, the CLI direct launch equivalent would be:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm --name run-che \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm --name run-che \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /c/tmp:/data \
            -v /c/archetype/assembly/assembly-main/target/eclipse-che-5.14.0/eclipse-che-5.14.0:/assembly \
               eclipse/che:5.14.0 start --skip:nightly
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>On Linux:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm --name run-che \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm --name run-che \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /tmp/data:/data \
            -v /tmp/archetype/assembly/assembly-main/target/eclipse-che-5.14.0/eclipse-che-5.14.0:/assembly \
               eclipse/che:5.14.0 start --skip:nightly
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="stop">Stop</h1>
 <p>You can stop a custom assembly with the CLI’s <code class="highlighter-rouge">stop</code> command or with <code class="highlighter-rouge">archetype stop</code>:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /c/archetype:/archetype
   -v /c/tmp:/data
     eclipse/che-cli:5.14.0
       archetype stop
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>On Linux:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -it --rm \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /tmp/archetype:/archetype \
   -v /tmp/data:/data \
@@ -2395,8 +2380,7 @@ docker run -it --rm  \
   --group-add 999 \
     eclipse/che-cli:5.14.0 \
       archetype stop
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="che-vs-codenvy">Che vs. Codenvy</h1>
 <p>The <code class="highlighter-rouge">archetype generate</code> command will generate two custom assemblies: one for Eclipse Che and one for Codenvy, which is an enterprise adaptation of Che that adds multi-node scalability, a user database, and security controls. Eclipse Che extensions are deployable within a Codenvy custom assembly. There are some elements of configuration that are slightly different between the assemblies, so we provide both to provide comparison between the various packages.</p>
@@ -2499,7 +2483,7 @@ docker run -it --rm  \
 
 <p>In the appropriate assembly where you want to remove a plugin, such as <code class="highlighter-rouge">assembly-che/assembly-ide-war/pom.xml</code>, add an <code class="highlighter-rouge">&lt;exclusions&gt;</code> code block to the maven definition. You can provide an exclusion for each plugin provided by Che individually:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
   &lt;groupId&gt;org.eclipse.che&lt;/groupId&gt;
   &lt;artifactId&gt;assembly-ide-war&lt;/artifactId&gt;
   &lt;classifier&gt;classes&lt;/classifier&gt;
@@ -2510,12 +2494,11 @@ docker run -it --rm  \
     &lt;/exclusion&gt;
   &lt;/exclusions&gt;
 &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>You can do a similar activity for the Codenvy custom assembly as well located in <code class="highlighter-rouge">assembly-codenvy/assembly-ide-war/pom.xml</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
   &lt;groupId&gt;com.codenvy.onpremises&lt;/groupId&gt;
   &lt;artifactId&gt;compiling-ide-war&lt;/artifactId&gt;
   &lt;classifier&gt;classes&lt;/classifier&gt;
@@ -2526,8 +2509,7 @@ docker run -it --rm  \
     &lt;/exclusion&gt;
   &lt;/exclusions&gt;
 &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">PLUGIN-IDENTIFIER</code> is the <code class="highlighter-rouge">artifactId</code> that is provided by the plugin. You can find this identifier in the <code class="highlighter-rouge">pom.xml</code> that is in the root folder for each plugin in Che and Codenvy’s source repository.</p>
 
@@ -2537,12 +2519,11 @@ docker run -it --rm  \
 
 <h4 id="include">Include</h4>
 <p>You include your plugin by modifying the same assembly <code class="highlighter-rouge">pom.xml</code> and add a new <code class="highlighter-rouge">&lt;dependency&gt;</code> block:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
   &lt;groupId&gt;YOUR-PLUGIN-GROUP-IDENTIFIER&lt;/groupId&gt;
   &lt;artifactId&gt;YOUR-PLUGIN-IDENTIFIER&lt;/artifactId&gt;
 &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We require the maven POM to be sorted. If you get a sorting error, you can sort your modifications on the command line with <code class="highlighter-rouge">mvn sortpom:sort</code>.</p>
 
@@ -2565,24 +2546,22 @@ docker run -it --rm  \
   <li>In your assembly’s primary <code class="highlighter-rouge">pom.xml</code>, change the version in the <code class="highlighter-rouge">&lt;parent&gt;</code> tag to the new version of Che or Codenvy you want to use as a base.</li>
 </ol>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;parent&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;parent&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>maven-depmgt-pom<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.depmgt<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;version&gt;</span>5.5.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/parent&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ol>
   <li>In the same file, update the properties fields with the new version.</li>
 </ol>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;properties&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;properties&gt;</span>
   <span class="nt">&lt;che.version&gt;</span>5.5.0-SNAPSHOT<span class="nt">&lt;/che.version&gt;</span>
   <span class="nt">&lt;codenvy.version&gt;</span>5.5.0-SNAPSHOT<span class="nt">&lt;/codenvy.version&gt;</span>
 <span class="nt">&lt;/properties&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>You can then rebuild your assembly normally. The parent reference will trigger Maven to download the new dependency libraries that relate to that particular version.</p>
 
@@ -2607,104 +2586,94 @@ docker run -it --rm  \
 
 <p><strong>1) Standard IDE core only</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.core&lt;/groupId&gt;
       &lt;artifactId&gt;che-ide-core&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>2) Standard IDE core plus all Che IDE plugins</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.plugin&lt;/groupId&gt;
       &lt;artifactId&gt;*&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="minimal-ide-assembly">Minimal IDE Assembly</h2>
 <p>To make a minimal assembly of the IDE, we need to declare it in <code class="highlighter-rouge">assembly/assembly-ide-war/pom.xml</code>.</p>
 
 <p><strong>1) Minimal IDE core only</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.core&lt;/groupId&gt;
       &lt;artifactId&gt;che-ide-core&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>2) Minimal IDE core plus all Che IDE plugins</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;my.plugin&lt;/groupId&gt;
       &lt;artifactId&gt;plugin-json-ide&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>3) Minimal IDE WAR that will be reused to get some resources</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che&lt;/groupId&gt;
       &lt;artifactId&gt;assembly-ide-war&lt;/artifactId&gt;
       &lt;type&gt;war&lt;/type&gt;
       &lt;scope&gt;runtime&lt;/scope&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="standard-assembly-of-ws-agent-server-war">Standard Assembly of ws-agent Server WAR</h2>
 
 <p><strong>1) Core ws-agent WAR</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.core&lt;/groupId&gt;
       &lt;artifactId&gt;che-wsagent-core&lt;/artifactId&gt;
       &lt;type&gt;war&lt;/type&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>2) Swagger support</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.lib&lt;/groupId&gt;
       &lt;artifactId&gt;che-swagger-module&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>3) All ws-agent plugins</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.plugin&lt;/groupId&gt;
       &lt;artifactId&gt;che-plugin-*&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="custom-assembly-of-minimal-che-ws-agent">Custom Assembly of Minimal Che ws-agent</h2>
 
 <p><strong>1) Core ws-agent war</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;dependency&gt;
       &lt;groupId&gt;org.eclipse.che.core&lt;/groupId&gt;
       &lt;artifactId&gt;che-wsagent-core&lt;/artifactId&gt;
       &lt;type&gt;war&lt;/type&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>2) Server side plugins</strong></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   &lt;dependency&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   &lt;dependency&gt;
       &lt;groupId&gt;my.plugin&lt;/groupId&gt;
       &lt;artifactId&gt;plugin-json-server&lt;/artifactId&gt;
    &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="production-mode">Production Mode</h1>
 
@@ -2714,10 +2683,9 @@ docker run -it --rm  \
   <li>In the root of your custom Che assembly repo, create a directory <code class="highlighter-rouge">dockerfiles</code></li>
   <li>Copy all files and directories as in this <a href="https://github.com/codenvy/plugin-openshift/tree/master/dockerfiles">example</a></li>
   <li>In <a href="https://github.com/codenvy/plugin-openshift/blob/master/dockerfiles/build.include">build.include</a> change values of the following properties:
-    <div class="highlighter-rouge"><pre class="highlight"><code>ORGANIZATION="yourOrg"
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ORGANIZATION="yourOrg"
 PREFIX="yourCustomAssembly"
-</code></pre>
-    </div>
+</code></pre></div>    </div>
     <p>Usually, <code class="highlighter-rouge">ORGANIZATION</code> is your DockerHub/container registry account. <code class="highlighter-rouge">PREFIX</code> is used in image names. With the above properties you will have:</p>
   </li>
 </ol>
@@ -2740,20 +2708,18 @@ PREFIX="yourCustomAssembly"
   <li>In <code class="highlighter-rouge">dockerfiles/cli/version/$TAG/images</code> make sure that your custom images are used. There is no need to change <code class="highlighter-rouge">IMAGE_COMPOSE</code>, just server and init images:</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>IMAGE_INIT=yourOrg/yourCustomAssembly-init:0.1.0
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IMAGE_INIT=yourOrg/yourCustomAssembly-init:0.1.0
 IMAGE_CHE=yourOrg/yourCustomAssembly-server:0.1.0
 IMAGE_COMPOSE=docker/compose:1.8.1
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When building tagged images with <code class="highlighter-rouge">build.sh</code> make sure you use an existing version otherwise CLI won’t be able to find it. It is reasonable to always have <code class="highlighter-rouge">nightly</code>, ‘latest’ tagged tagged with the latest version and all tagged versions as well:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/0.1.0
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/0.1.0
 /latest
 /nightly
 latest.ver
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">latest.ver</code> file should also contain the latest version which makes it convenient to tag images in CI systems. This makes it possible to run images without tags, so that Docker automatically pulls the latest tag. <code class="highlighter-rouge">latest.ver</code> is optional though.</p>
 
@@ -2766,15 +2732,13 @@ latest.ver
   </li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/che-data:/data yourOrg/yourCustomAssembly-cli:nightly start
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/che-data:/data yourOrg/yourCustomAssembly-cli:nightly start
+</code></pre></div></div>
 
 <p>You may run the latest (no tag) or a particular tag too:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/che-data:/data yourOrg/yourCustomAssembly-cli:0.1.0 start
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/che-data:/data yourOrg/yourCustomAssembly-cli:0.1.0 start
+</code></pre></div></div>
 
 <p>Once <code class="highlighter-rouge">dockerfiles</code> directory is a part of your custom Che assembly repo, you may set up CI jobs to regularly build and push nightly and tagged images.</p>
 
@@ -2787,7 +2751,7 @@ latest.ver
 <h1 id="example">Example</h1>
 <p>Let’s walk through the folder structure for the custom assembly generated by the archetype identified by <code class="highlighter-rouge">plugin-wizard-archetype</code>. This is a custom assembly that has a server-side and IDE plugin that work with one another.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
 <span class="c"># Describes dependencies that are used throughout the custom assembly.</span>
 <span class="c"># Disables license and sortpom plugin executions defined in the parent POM.</span>
 
@@ -2820,22 +2784,20 @@ plugins/&lt;artifactid&gt;/&lt;artifactid&gt;-server
 plugins/&lt;artifactid&gt;/&lt;artifactid&gt;-shared
 <span class="c"># Code that is shared between IDE and server (will be packaged in both)</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>And because it is interesting, here is the file composition of the three plugins.</p>
 
 <p><code class="highlighter-rouge">plugins/&lt;artifactid&gt;/&lt;artifactid&gt;-shared</code>:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
 <span class="c"># Basic module descriptor</span>
 
 src/main/java/com/sample/shared/Constants.java
 <span class="c"># Constants that are used across both IDE and server modules</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">plugins/&lt;artifactid&gt;/&lt;artifactid&gt;-server</code>:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
 <span class="c"># Basic module descriptor</span>
 
 src/main/java/com/sample/inject/SampleWizardModule.java
@@ -2843,11 +2805,10 @@ src/main/java/com/sample/inject/SampleWizardModule.java
 
 src/main/java/com/sample/projecttype/SampleProjectType.java
 <span class="c"># Project type definition</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">plugins/&lt;artifactid&gt;/&lt;artifactid&gt;-ide</code>:</p>
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pom.xml
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
 <span class="c"># Basic module descriptor</span>
 
 src/main/java/com/sample/ide/SampleWizardExtension.java
@@ -2909,8 +2870,7 @@ src/main/resouces/com/sample/ide/svg/c_file.svg
 
 src/main/resouceseclipse/che-cli/ide/svg/category.svg
 <span class="c"># SVG icon for custom project type category display in the project wizard form</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
         </article>
       </div>

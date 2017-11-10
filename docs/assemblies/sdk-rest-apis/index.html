@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2097,7 +2097,7 @@
 <h1 id="java-utilities">Java Utilities</h1>
 <p>In your extension code, you can create an <code class="highlighter-rouge">AsyncRequestFactory</code> object, which has helper methods for creating requests that will have responses.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">getProjectType</span><span class="o">(</span><span class="nd">@NotNull</span> <span class="n">String</span> <span class="n">workspaceId</span><span class="o">,</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">getProjectType</span><span class="o">(</span><span class="nd">@NotNull</span> <span class="n">String</span> <span class="n">workspaceId</span><span class="o">,</span>
                             <span class="nd">@NotNull</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span>
                             <span class="nd">@NotNull</span> <span class="n">AsyncCallback</span><span class="o">&lt;</span><span class="n">ProjectTypeDto</span><span class="o">&gt;</span> <span class="n">callback</span><span class="o">)</span> <span class="o">{</span>
 
@@ -2109,8 +2109,7 @@
                                          <span class="n">dtoUnmarshallerFactory</span><span class="o">.</span><span class="na">newUnmarshaller</span><span class="o">(</span><span class="n">ProjectTypeDto</span><span class="o">.</span><span class="na">class</span><span class="o">)));</span>
 
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>This example comes from the class used by the IDE to ask the server to provide a response on what the current project type is within the currently active workspace. The <code class="highlighter-rouge">asyncRequestFactory</code> object was instantiated by the system as an input parameter. Calling the <code class="highlighter-rouge">createGetRequest()</code> method with the GET REST URL ass an input will generate a request and a response. The <code class="highlighter-rouge">.loader()</code> method is an optional display component that will appear on the screen while the contents of the response are loading. The <code class="highlighter-rouge">send()</code> method takes a callback object which will be invoked by the system when a response is delivered.</p>
 
 <p>In the <a href="https://github.com/eclipse/che/blob/e3407ae74674c5f84af89341826ec5e98106f90e/plugins/plugin-java/che-plugin-java-ext-debugger-java-client/src/main/java/org/eclipse/che/ide/ext/java/jdi/client/debug/DebuggerServiceClientImpl.java">debugger implementation class</a>, you can see a range of REST calls for different individual functions such as step into, step over, and  so forth.</p>
@@ -2131,7 +2130,7 @@
 
 <p><em>che/plugins/plugin-git/che-plugin-git-ext-git/src/main/java/org/eclipse/che/ide/ext/git/client/delete/DeleteRepositoryPresenter.java</em></p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteRepository</span><span class="o">()</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteRepository</span><span class="o">()</span> <span class="o">{</span>
     <span class="kd">final</span> <span class="n">CurrentProject</span> <span class="n">project</span> <span class="o">=</span> <span class="n">appContext</span><span class="o">.</span><span class="na">getCurrentProject</span><span class="o">();</span>
     <span class="kd">final</span> <span class="n">GitOutputConsole</span> <span class="n">console</span> <span class="o">=</span> <span class="n">gitOutputConsoleFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">DELETE_REPO_COMMAND_NAME</span><span class="o">);</span>
 
@@ -2151,8 +2150,7 @@
         <span class="o">}</span>
     <span class="o">});</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>In this example, the <code class="highlighter-rouge">service.deleteRepository(...)</code> is a method that will generate the <code class="highlighter-rouge">AsyncRequestFactory</code> object for calling the server. This object requires a <code class="highlighter-rouge">AsyncRequestCallback&lt;T&gt;</code>. This method creates a new instance inline with a callback that expects the response to send data of <code class="highlighter-rouge">Void</code> type, which basically means that there is no response payload. In this case, either the server tells us there is success or there is failure. The <code class="highlighter-rouge">AsyncRequestCallback</code> instance needs to implement two methods <code class="highlighter-rouge">onSuccess(&lt;T&gt;)</code> and <code class="highlighter-rouge">onFailure(Throwable)</code>, which will be called by the <code class="highlighter-rouge">AsyncRequestFactory</code> when the response arrives on the wire. It is within these methods that the logic is placed that tells the IDE what to do in each event.</p>
 
@@ -2167,20 +2165,18 @@
 
 <p><img src="../../../docs/assets/imgs/Swagger.PNG" alt="Swagger.PNG" /></p>
 
-<div class="language-http highlighter-rouge"><pre class="highlight"><code><span class="err">http://localhost:8080/swagger/
-</span></code></pre>
-</div>
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">http://localhost:8080/swagger/
+</span></code></pre></div></div>
 
 <h3 id="workspace-agent-apis">Workspace Agent APIs</h3>
 <p>Each workspace has its own set of APIs. The workspace agent advertises its swagger configuration on a different port.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c"># Example</span>
 http://172.19.20.16:8080/swagger/?url<span class="o">=</span>http://localhost:32824/api/docs/swagger.json
 
 where 32824 is an exposed port mapped to port 4401
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>You can get ws-agent API endpoint from workspace runtime:</li>
@@ -2215,7 +2211,7 @@ where 32824 is an exposed port mapped to port 4401
 
 <p><code class="highlighter-rouge">GET http://localhost:32768/api/project-type</code></p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST -H <span class="s1">'Content-Type: application/json'</span> -d <span class="s1">'{ [
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{ [
   "mixins":[  
      "git"
   ],
@@ -2241,14 +2237,12 @@ where 32824 is an exposed port mapped to port 4401
   }
 ]
 }'</span> http://localhost:32768/api/project/workspacesq6co30qcxi1kqsj/batch
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="remove-a-project">Remove a Project</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X DELETE http://localhost:8080/api/ext/project/workspacex4zl7nvex1yldosj/my-first-sample
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> DELETE http://localhost:8080/api/ext/project/workspacex4zl7nvex1yldosj/my-first-sample
+</code></pre></div></div>
 
 <h1 id="project-type-api">Project Type API</h1>
 
@@ -2270,28 +2264,24 @@ where 32824 is an exposed port mapped to port 4401
 
 <h4 id="estimate-a-project-against-a-project-type">Estimate a Project Against a Project Type</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl http://localhost:32768/api/project/estimate/c-simple-console?type<span class="o">=</span>node-js
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:32768/api/project/estimate/c-simple-console?type<span class="o">=</span>node-js
+</code></pre></div></div>
 
 <h1 id="editing-api">Editing API</h1>
 <h4 id="create-a-new-file">Create a New File</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST -d <span class="s1">'var i = 1;'</span> http://localhost:32768/api/project/file/c-simple-console?name<span class="o">=</span>newfile.js
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-d</span> <span class="s1">'var i = 1;'</span> http://localhost:32768/api/project/file/c-simple-console?name<span class="o">=</span>newfile.js
+</code></pre></div></div>
 
 <h4 id="editing-an-existing-file">Editing an Existing File</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X PUT -d <span class="nv">$'</span>var i <span class="o">=</span> 1;<span class="se">\n</span>var <span class="nb">test</span> <span class="o">=</span> <span class="s2">"hello Eclipse Che"</span>;<span class="s1">' http://localhost:32768/api/project/file/c-simple-console?name=newfile.js
-</span></code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-d</span> <span class="s1">$'var i = 1;</span><span class="se">\n</span><span class="s1">var test = "hello Eclipse Che";'</span> http://localhost:32768/api/project/file/c-simple-console?name<span class="o">=</span>newfile.js
+</code></pre></div></div>
 
 <h4 id="deleting-an-existing-file">Deleting an Existing File</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X DELETE http://localhost:32768/api/project/c-simple-console/newfile.js
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> DELETE http://localhost:32768/api/project/c-simple-console/newfile.js
+</code></pre></div></div>
 
 <h1 id="workspace-api">Workspace API</h1>
 
@@ -2299,7 +2289,7 @@ where 32824 is an exposed port mapped to port 4401
 
 <p>This API calls adds a project to workspace configuration and <strong>does not</strong> physically import a project into a workspace.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
       "links": [],
       "name": "web-java-spring",
       "attributes": {},
@@ -2314,12 +2304,11 @@ where 32824 is an exposed port mapped to port 4401
       "problems": [],
       "mixins": []
  }'</span> <span class="s1">'http://localhost:8080/api/workspace/workspace6y86s5qlnzbczow9/project'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="create-a-command-in-a-workspace">Create a Command In A Workspace</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
   "attributes": {
     "goal": "Run",
     "previewUrl": "http://${server.port.8080}"
@@ -2329,16 +2318,14 @@ where 32824 is an exposed port mapped to port 4401
   "name": "hello world",
   "goal": "run"
 }'</span> <span class="s1">'http://localhost:8080/api/workspace/workspace6y86s5qlnzbczow9/command'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Sample cURL code that creates a workspace named <code class="highlighter-rouge">workspace-debian</code> and displays resulting data in console:</p>
 
 <h4 id="create-a-workspace">Create a Workspace</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST -H <span class="s1">'Content-Type: application/json'</span> -d <span class="s1">'{"name":"myworkspace","projects":[],"commands":[{"name":"build","type":"mvn","attributes":{"goal":"Build","previewUrl":""},"commandLine":"mvn clean install"],"environments":{"myworkspace":{"recipe":{"location":"eclipse/ubuntu_jdk8","type":"dockerimage"},"machines":{"dev-machine":{"attributes":{"memoryLimitBytes":"2147483648"},"agents":["org.eclipse.che.exec","org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"],"servers":{}}}}},"defaultEnv":"myworkspace","links":[]}'</span> http://localhost:8080/api/workspace
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"name":"myworkspace","projects":[],"commands":[{"name":"build","type":"mvn","attributes":{"goal":"Build","previewUrl":""},"commandLine":"mvn clean install"],"environments":{"myworkspace":{"recipe":{"location":"eclipse/ubuntu_jdk8","type":"dockerimage"},"machines":{"dev-machine":{"attributes":{"memoryLimitBytes":"2147483648"},"agents":["org.eclipse.che.exec","org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"],"servers":{}}}}},"defaultEnv":"myworkspace","links":[]}'</span> http://localhost:8080/api/workspace
+</code></pre></div></div>
 
 <h1 id="launching-che-ide-via-rest-api">Launching Che IDE via REST API</h1>
 
@@ -2346,10 +2333,9 @@ where 32824 is an exposed port mapped to port 4401
 
 <h4 id="start-a-workspace">Start a Workspace</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Start a workspace by its ID, with a given environment</span>
-curl -X POST --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> <span class="s1">'http://localhost:8080/api/workspace/workspace01oqb9ptzrperis7/runtime?environment=myworkspace'</span>
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start a workspace by its ID, with a given environment</span>
+curl <span class="nt">-X</span> POST <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="s1">'http://localhost:8080/api/workspace/workspace01oqb9ptzrperis7/runtime?environment=myworkspace'</span>
+</code></pre></div></div>
 
 <h1 id="stacks-api">Stacks API</h1>
 
@@ -2357,9 +2343,8 @@ curl -X POST --header <span class="s1">'Content-Type: application/json'</span> -
 
 <h4 id="list-stacks-tagged-with-node">List Stacks Tagged With ‘Node’</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl --header <span class="s1">'Accept: application/json'</span> http://localhost:8080/api/stack?tags<span class="o">=</span>Node.JS
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> http://localhost:8080/api/stack?tags<span class="o">=</span>Node.JS
+</code></pre></div></div>
 
 <p>Query parameter <code class="highlighter-rouge">tags</code> is optional and used to narrow down search results.</p>
 
@@ -2371,34 +2356,30 @@ curl -X POST --header <span class="s1">'Content-Type: application/json'</span> -
 
 <p>To create a stack, you need to define its configuration according to the <a href="../../../docs/devops/runtime-stacks-data-model/index.html">stack data model</a> and send it in a POST request:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X POST --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{"name":"my-custom-stack"source":{"origin":"codenvy/ubuntu_jdk8"type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stack15l7wsfqffxokhle","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default"commands":[],"links":[]},"creator":"che","description":"Default Blank Stack.","scope":"general"}'</span> http://localhost:8080/api/stack
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"name":"my-custom-stack"source":{"origin":"codenvy/ubuntu_jdk8"type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stack15l7wsfqffxokhle","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default"commands":[],"links":[]},"creator":"che","description":"Default Blank Stack.","scope":"general"}'</span> http://localhost:8080/api/stack
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="update-a-stack">Update a Stack</h4>
 
 <p>You can update the stack configuration in a PUT request:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X PUT --header <span class="s1">'Content-Type: application/json'</span> --header <span class="s1">'Accept: application/json'</span> -d <span class="s1">'{"name":"my-custom-stack","source":{"origin":"codenvy/ubuntu_jdk8","type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stacki7jf4x4n2cz6r3cr","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default","commands":[],"links":[]},"creator":"che","description":"NEW-DESCRIPTION","scope":"general"}'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"name":"my-custom-stack","source":{"origin":"codenvy/ubuntu_jdk8","type":"image"},"components":[],"tags":["my-custom-stack","Ubuntu","Git","Subversion"],"id":"stacki7jf4x4n2cz6r3cr","workspaceConfig":{"environments":{"default":{"machines":{"default":{"attributes":{"memoryLimitBytes":"1048576000"},"servers":{},"agents":["org.eclipse.che.terminal","org.eclipse.che.ws-agent","org.eclipse.che.ssh"]}},"recipe":{"location":"codenvy/ubuntu_jdk8","type":"dockerimage"}}},"defaultEnv":"default","projects":[],"name":"default","commands":[],"links":[]},"creator":"che","description":"NEW-DESCRIPTION","scope":"general"}'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
+</code></pre></div></div>
 
 <h4 id="delete-a-stack">Delete a Stack</h4>
 
 <p>To delete a stack you need to pass the stack ID as a path parameter:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl -X DELETE --header <span class="s1">'Accept: application/json'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> DELETE <span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> http://localhost:8080/api/stack/<span class="k">${</span><span class="nv">id</span><span class="k">}</span>
+</code></pre></div></div>
 
 <h1 id="commands-api-exec-agent">Commands API (Exec Agent)</h1>
 
 <p>When you launch a workspace, an exec agent is injected into a running container and runs there on port 4412 (internal). You can get an external published port exactly the same way it’s done for a ws-agent. Below is an example on how to get exec-agent endpoint in your Java code:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">String</span> <span class="n">execAgentUrl</span> <span class="o">=</span> <span class="n">devMachine</span><span class="o">.</span><span class="na">getExecAgentUrl</span><span class="o">();</span>
-</code></pre>
-</div>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">execAgentUrl</span> <span class="o">=</span> <span class="n">devMachine</span><span class="o">.</span><span class="na">getExecAgentUrl</span><span class="o">();</span>
+</code></pre></div></div>
 
 <h4 id="run-a-command">Run a Command</h4>
 

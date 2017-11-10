@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2092,7 +2092,7 @@
           
 <p>The CLI is a Docker image that comes with a collection of commands to configure, interact and start Che. The CLI also contains commands for end users to interact with workspaces such as sync and ssh.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>USAGE:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:
   docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che-cli:&lt;version&gt; [COMMAND]
 
 MANDATORY DOCKER PARAMETERS:
@@ -2137,8 +2137,7 @@ GLOBAL COMMAND OPTIONS:
   --offline                            Runs CLI in offline mode, loading images from disk
   --debug                              Enable debugging of che server
   --trace                              Activates trace output for debugging CLI
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The CLI has three primary phases: initialization, configuration, and start. The initialization phase is executed by <code class="highlighter-rouge">init</code> and will install version-specific files into the folder mounted to <code class="highlighter-rouge">/data</code>. This includes the universal configuration file named <code class="highlighter-rouge">che.env</code>, a version identifier, and a location where configuration files will be saved. The configuration is executed by the <code class="highlighter-rouge">config</code> command and takes as input your <code class="highlighter-rouge">che.env</code> configuration file, the OS of your host, and then generates an OS-specific set of configuration files in the <code class="highlighter-rouge">/data/instance</code> folder that can be used to run an instance of Che. The configuration phase will run an initialization if a folder is not found. Every execution of the <code class="highlighter-rouge">config</code> command will overwrite the files in <code class="highlighter-rouge">/data/instance</code> with the latest configuration. This way if an admin modifies any configuration file, the instance’s configuration files will be updated to be guaranteed consistent. The CLI generates a large number of configuration files specific to running Che. The configuration files are sourced from Puppet templates that are stored in our GitHub repository under <code class="highlighter-rouge">/dockerfiles/init</code>. The start phase is executed by <code class="highlighter-rouge">start</code> and will use a configuration-generated <code class="highlighter-rouge">docker-compose-container.yml</code> file to launch Eclipse Che. The start phase always executes a <code class="highlighter-rouge">config</code> command, so any files that were edited in <code class="highlighter-rouge">/data/instance</code> will be overwritten with the generated configuration from the CLI.</p>
 
@@ -2215,9 +2214,8 @@ environment variables:</p>
 
 <p>For example if, for both images, you need to use to use a given tag in you own docker account, you can add the following parameters to the docker command:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>-e IMAGE_INIT=myDockerAccount/che-init:givenTag -e IMAGE_CHE=myDockerAccount/che-server:givenTag
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-e IMAGE_INIT=myDockerAccount/che-init:givenTag -e IMAGE_CHE=myDockerAccount/che-server:givenTag
+</code></pre></div></div>
 
 <hr />
 
@@ -2365,14 +2363,13 @@ The list of all the tests available can be obtained by providing only <code clas
 
 <p>Upgrading Che is done by using a <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code> that is newer than the version you currently have installed. For example, if you have 5.0.0-M2 installed and want to upgrade to 5.0.0-M7, then:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code># Get the new version of Che
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Get the new version of Che
 docker pull eclipse/che:5.0.0-M7
 
 # You now have two eclipse/che images (one for each version)
 # Perform an upgrade - use the new image to upgrade old installation
 docker run &lt;volume-mounts&gt; eclipse/che:5.0.0-M7 upgrade
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The upgrade command has numerous checks to prevent you from upgrading Che if the new image and the old version are not compatiable. In order for the upgrade procedure to proceed, the CLI image must be newer than the value of ‘/instance/che.ver’.</p>
 
@@ -2396,37 +2393,34 @@ docker run &lt;volume-mounts&gt; eclipse/che:5.0.0-M7 upgrade
 <h2 id="structure">Structure</h2>
 <p>The Che CLI is constructed of multiple Docker images within the Che source repository.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/dockerfiles/base  # Common functions and commands
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/dockerfiles/base  # Common functions and commands
 /dockerfiles/cli   # CLI entrypoint, overrides, and version information
 /dockerfiles/init  # Manifests used to configure Che on a host installation
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The Che CLI is authored in <code class="highlighter-rouge">bash</code>. The <code class="highlighter-rouge">cli</code> image depends upon both the <code class="highlighter-rouge">base</code> image and the <code class="highlighter-rouge">init</code> image. In the source repository, we have <code class="highlighter-rouge">build.sh</code> commands which will build these Docker images for you either one at a time or collectively as a group.</p>
 
 <p>It can become tedious rebuilding images every time you want to test a small change to a bash script. You can avoid having to rebuild images each time for every change to a bash script by volume mounting the contents during the image execution. You cannot volume mount the <code class="highlighter-rouge">entrypoint.sh</code> file which is where each container has a launch point, but you can volume mount others:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code># Volume mount the contents of the base image
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Volume mount the contents of the base image
 -v &lt;path-to-che-repo&gt;/dockerfiles/scripts/base/scripts:/base/scripts
 
 # Volume mount the contents of the init image
 -v &lt;path-to-che-repo&gt;:/repo
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If you run the Che CLI in this configuration, then any changes made to the bash files or templates in those repositories will be used without having to first rebuild the CLI image.</p>
 
 <h2 id="custom-cli">Custom CLI</h2>
 <p>The Che CLI was designed to be overridden to allow different CLIs to be created from the same base structure. This is how Codenvy and ARTIK has an identical CLIs to Che. The CLI is created with a few minimal assets:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/dockerfiles/cli/build.sh               # Local file to build the image
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/dockerfiles/cli/build.sh               # Local file to build the image
 /dockerfiles/cli/Dockerfile             # Image definition, must FROM eclipse/che-base:nightly
 /dockerfiles/cli/scripts                # Contains additional commands in form of cmd_&lt;name&gt;.sh
 /dockerfiles/cli/scripts/entrypoint.sh  # The entrypoint of the CLI container, with usage() method
 /dockerfiles/cli/scripts/cli.sh         # Defines CLI-specific product names &amp; variables
 /dockerfiles/cli/version                # Contains version-specific data the CLI requires
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>You can add additional commands to the Che CLI beyond the base set of commands that are provided by adding a file of the name <code class="highlighter-rouge">cmd_&lt;name&gt;.sh</code> into the <code class="highlighter-rouge">scripts</code> folder. Codenvy is an <a href="https://github.com/codenvy/codenvy/tree/master/dockerfiles/cli/scripts">example that adds additional commands</a>.</p>
 

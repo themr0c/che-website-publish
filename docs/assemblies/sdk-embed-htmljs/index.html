@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2097,12 +2097,11 @@
 <h1 id="details">Details</h1>
 <p>For instructions on how to build and run an extension, see <a href="../../../docs/assemblies/plugin-lifecycle/index.html">Building Extensions</a>.</p>
 
-<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">Location</span><span class="err">:</span>     <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">eclipse</span><span class="o">/</span><span class="nx">che</span><span class="o">/</span><span class="nx">samples</span><span class="o">/</span><span class="nx">sample</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">embedjs</span>
-<span class="nl">Type</span><span class="p">:</span>         <span class="nx">IDE</span> <span class="nx">extension</span>
-<span class="nl">groupId</span><span class="p">:</span>      <span class="nx">org</span><span class="p">.</span><span class="nx">eclipse</span><span class="p">.</span><span class="nx">che</span><span class="p">.</span><span class="nx">sample</span>
-<span class="nl">artifactId</span><span class="p">:</span>   <span class="nx">che</span><span class="o">-</span><span class="nx">sample</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">embedjs</span><span class="o">-</span><span class="nx">ide</span>
-</code></pre>
-</div>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Location</span><span class="p">:</span>     <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">eclipse</span><span class="o">/</span><span class="nx">che</span><span class="o">/</span><span class="nx">samples</span><span class="o">/</span><span class="nx">sample</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">embedjs</span>
+<span class="nx">Type</span><span class="p">:</span>         <span class="nx">IDE</span> <span class="nx">extension</span>
+<span class="nx">groupId</span><span class="p">:</span>      <span class="nx">org</span><span class="p">.</span><span class="nx">eclipse</span><span class="p">.</span><span class="nx">che</span><span class="p">.</span><span class="nx">sample</span>
+<span class="nx">artifactId</span><span class="p">:</span>   <span class="nx">che</span><span class="o">-</span><span class="nx">sample</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">embedjs</span><span class="o">-</span><span class="nx">ide</span>
+</code></pre></div></div>
 
 <h1 id="steps">Steps</h1>
 <p>In this tutorial, we demonstrate, how to embed a minimal HTML/JavaScript component into Che. We will create a custom part, which shows a “Hello World” produced by a simple JavaScript snippet (see screenshot below). You can extend this example, to embed any HTML/JavaScript component you like.</p>
@@ -2121,15 +2120,14 @@
 
 <p><em>che/samples/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/src/main/resources/org/eclipse/che/plugin/embedjsexample/public/helloworld.js</em></p>
 
-<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">HelloWorld</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">contents</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">HelloWorld</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">contents</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">element</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">contents</span><span class="p">;</span>
 <span class="p">};</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To add the custom JavaScript function to the running application, we use the GWT ScriptInjector library. We load the JavaScript file and add it to the top window of the application. If adding the script was successful, we directly call the method <code class="highlighter-rouge">#sayHelloWorld</code> of the <code class="highlighter-rouge">HelloWordView</code>, which we explain in the following.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Singleton</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Singleton</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldViewPresenter</span> <span class="kd">extends</span> <span class="n">BasePresenter</span> <span class="kd">implements</span> <span class="n">HelloWorldView</span><span class="o">.</span><span class="na">ActionDelegate</span><span class="o">,</span> <span class="n">HasView</span> <span class="o">{</span>
 
     <span class="kd">private</span> <span class="kd">final</span> <span class="n">HelloWorldView</span> <span class="n">helloWorldView</span><span class="o">;</span>
@@ -2158,8 +2156,7 @@
     <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">()</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">helloWorldView</span><span class="o">.</span><span class="na">sayHello</span><span class="o">(</span><span class="s">"Hello from Java Script!"</span><span class="o">);</span>
     <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">HelloWorldViewImpl</code> creates an empty panel (which is defined in <code class="highlighter-rouge">che/samples/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/src/main/java/org/eclipse/che/plugin/embedjsexample/ide/view/HelloWorldViewImpl.ui.xml</code>).</p>
 
@@ -2167,7 +2164,7 @@
 
 <p><em>che/samples/sample-plugin-embedjs/che-sample-plugin-embedjs-ide/src/main/java/org/eclipse/che/plugin/embedjsexample/ide/view/HelloWorldViewImpl.java</em></p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldViewImpl</span> <span class="kd">extends</span> <span class="n">BaseView</span><span class="o">&lt;</span><span class="n">HelloWorldView</span><span class="o">.</span><span class="na">ActionDelegate</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">HelloWorldView</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldViewImpl</span> <span class="kd">extends</span> <span class="n">BaseView</span><span class="o">&lt;</span><span class="n">HelloWorldView</span><span class="o">.</span><span class="na">ActionDelegate</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">HelloWorldView</span> <span class="o">{</span>
 
     <span class="kd">interface</span> <span class="nc">HelloWorldViewImplUiBinder</span> <span class="kd">extends</span> <span class="n">UiBinder</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">,</span> <span class="n">HelloWorldViewImpl</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="o">}</span>
@@ -2190,11 +2187,10 @@
     <span class="o">}</span>
 
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>Finally the <code class="highlighter-rouge">HelloWorldOverlay</code> provides access to the JavaScript function and therefore redirects the Java method to a call of the <code class="highlighter-rouge">HelloWorld</code> function that we added before. Such overlays are used for communicating between the Che IDE, written in Java/GWT and native JavaScript components, which are embedded into it.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldViewOverlay</span> <span class="kd">extends</span> <span class="n">JavaScriptObject</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldViewOverlay</span> <span class="kd">extends</span> <span class="n">JavaScriptObject</span> <span class="o">{</span>
 
     <span class="kd">protected</span> <span class="nf">HelloWorldViewOverlay</span><span class="o">()</span> <span class="o">{</span>
     <span class="o">}</span>
@@ -2204,8 +2200,7 @@
     }-*/</span><span class="o">;</span>
 
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="use">Use</h1>
 <p>This particular extension adds an action to the main context menu group. This is the group that appears when you right click on the project tree. To verify that your plugin is installed, you can also check the Profile &gt; Preferences &gt; Plugins &gt; List to verify that the “Hello world from JavaScript example” plugin has been installed.

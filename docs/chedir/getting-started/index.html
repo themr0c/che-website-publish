@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.5.1">
+  <meta name="generator" content="Jekyll v3.6.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2096,31 +2096,29 @@
 
 <p>Before diving into your first workspace, please check how to use the latest version of Chedir, which is also part of the <a href="../../../docs/setup/cli/index.html">Eclipse Che CLI</a>. And since Docker is required for everything related to Che, make sure that is installed as well.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Clone a source code repo that you want to convert into a workspace</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone a source code repo that you want to convert into a workspace</span>
 git clone https://github.com/che-samples/web-java-spring-petclinic
 <span class="nb">cd </span>web-java-spring-petclinic
 
 <span class="c"># Convert it into a workspace running in a private Che server</span>
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
-                    -v &lt;path&gt;:/data
-                    -v &lt;path-to-web-java-spring-petclinic-folder&gt;:/chedir
+docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
+                    <span class="nt">-v</span> &lt;path&gt;:/data
+                    <span class="nt">-v</span> &lt;path-to-web-java-spring-petclinic-folder&gt;:/chedir
                        eclipse/che:&lt;version&gt; dir up
 
 <span class="c"># Note: Currently requires no other Che servers to be running simultaneously</span>
 <span class="c"># New version coming will allow many directories mounted into a single server</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After running the above commands, you will have a project inside of a workspace inside of a running Che server. The workspace has its own runtime, powered by an Ubuntu Docker image. The project is mounted from the local directory into the workspace and is given full git capabilities.</p>
 
 <p>You can either open the IDE in your browser to work on the project immediately. The Web IDE has a terminal for accessing the Docker image powering the workspace. You can SSH into the workspace by pressing the <code class="highlighter-rouge">SSH</code> button in the IDE to get connectivity details. You can then make modifications, set the project type in the IDE, use language intellisense, or run a debugger. When you are done making modifications, you can use the IDE to commit and push changes with git, or continue to do those on your command line. You can then stop the workspace and unlink it with the following command:</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
-                    -v &lt;path&gt;:/data
-                    -v &lt;path-to-project&gt;:/chedir
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
+                    <span class="nt">-v</span> &lt;path&gt;:/data
+                    <span class="nt">-v</span> &lt;path-to-project&gt;:/chedir
                        eclipse/che:&lt;version&gt; dir down
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Now imagine every repository that you work on being this easy to convert into a debuggable workspace that includes its own pre-configured IDE. Chedir is all you need to convert repositories into workspaces with their own private runtimes, dependencies, networking and synchronized folders.</p>
 
