@@ -140,7 +140,7 @@
   <div class="container-fluid content">
     <table>
       <tr>
-        <td><img src="<?php echo $rootPath; ?>/images/img-google-hangout@2x.png" alt=""></td>
+        <td><img src="<?php echo $rootPath; ?>/images/img-chefile@2x.png" alt=""></td>
         <td>
           <h2>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
           <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
