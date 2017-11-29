@@ -136,8 +136,8 @@
       </div>
 
       <div class="col-md-4">
-        <a href="../docs/openshift/config/" target="_blank"><img src="<?php echo $rootPath; ?>/images/logo-extend-redhat@2x.jpg" style="height: 111px; width:333px" class="img-responsive"></a>
-        <h3><a href="../docs/openshift/config/" target="_blank">Red Hat OpenShift</a></h3>
+        <a href="../docs/setup/openshift/" target="_blank"><img src="<?php echo $rootPath; ?>/images/logo-extend-redhat@2x.jpg" style="height: 111px; width:333px" class="img-responsive"></a>
+        <h3><a href="../docs/setup/openshift/" target="_blank">Red Hat OpenShift</a></h3>
         <p>Strategic developer tooling platform for Docker orchestration.</p>
       </div>
 
