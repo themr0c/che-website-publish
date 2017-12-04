@@ -86,6 +86,9 @@
   </div>
 </div>
 
+
+
+<!--
 <hr class="gray">
 <div class="container-fluid content contributors">
   <h2>Contributors</h2>
@@ -135,6 +138,10 @@
   </div>
   <a href="https://github.com/eclipse/che/blob/master/CONTRIBUTING.md" class="btn-yellow" target="_blank">Become a Contributor</a>
 </div>
+-->
+
+
+
 
 
 <div class="bg-purple chefile">
@@ -153,7 +160,7 @@
 </div>
 
 
-
+<!--
 <div class="bg-deep-purple feedback">
   <div class="container-fluid content">
     <h2>Feedback <a href="https://twitter.com/eclipse_che" target="_blank">@eclipse_che</a></h2>
@@ -179,7 +186,7 @@
     <a href="https://twitter.com/eclipse_che" class="btn-yellow" target="_blank">Follow Us on Twitter</a>
   </div>
 </div>
-
+-->
 
 
 <?php include 'includes/footer.php'; ?>
