@@ -57,6 +57,12 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
+      <img src="images/img-home-checonf2018.png" alt="CheConf 2018" class="img-responsive">
+      <h3>CheConf 2018</h3>
+      <p>Register or submit a session proposal for our virtual Che user conference that streams February 15, 2018.</p>
+      <a href="<?php echo $rootPath; ?>/checonf18/index.html" class="btn-yellow">Learn More</a>
+    </div>
+    <div class="col-md-4">
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
       <h3>Che 6.0 Roadmap</h3>
       <p>Read project lead Tyler Jewell's blog on multi-user Che, Kubernetes and OpenShift.</p>
@@ -77,12 +83,6 @@
       <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
     </div>
     -->
-    <div class="col-md-4">
-      <img src="images/img-home-checonf-2016.png" alt="CheConf 2016" class="img-responsive">
-      <h3>CheConf 2016</h3>
-      <p>Watch sessions on the future of Che, building plugins, Docker, and many more cloud development topics.</p>
-      <a href="<?php echo $rootPath; ?>/checonf/sessions.html" class="btn-yellow">Watch the Sessions</a>
-    </div>
   </div>
 </div>
 
