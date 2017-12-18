@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE. You install, run, and manage Eclipse Che with Docker.">
-<meta name="keywords" content="overviewgetting_started,  overview">
-<title>What Is Eclipse Che? | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="installationopenshift,  openshift, configuration">
+<title>Configuration: OpenShift | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the What Is Eclipse Che? page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Configuration: OpenShift page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="What Is Eclipse Che?">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Configuration: OpenShift">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -212,7 +212,7 @@
           
           
           
-          <li class="active"><a href="index.html">What Is Eclipse Che?</a></li>
+          <li><a href="index.html">What Is Eclipse Che?</a></li>
           
           
           
@@ -293,7 +293,7 @@
           
           
           
-          <li><a href="openshift-config.html">Configuration on OpenShift</a></li>
+          <li class="active"><a href="openshift-config.html">Configuration on OpenShift</a></li>
           
           
           
@@ -721,15 +721,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">What Is Eclipse Che?</h1>
+   <h1 class="post-title-main">Configuration: OpenShift</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE. You install, run, and manage Eclipse Che with Docker.</div>
    
 
     
@@ -760,141 +758,133 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Eclipse Che provides:</p>
+  <p>You can configure deployment of Che on OpenShift with env variables that are defined in <code class="highlighter-rouge">che-config</code> file. You can add new envs or edit existing ones. After the file is saved, run the deployment script with <code class="highlighter-rouge">rollupdate</code> flag. Che deployment will be updated which automatically triggers a new deployment. You can also export envs in your environment, and the script will pick them up.</p>
+
+<h2 id="openshift-flavor">OpenShift Flavor</h2>
+
+<p><code class="highlighter-rouge">OPENSHIFT_FLAVOR</code> defaults to <code class="highlighter-rouge">minishift</code>. Allowed values: <code class="highlighter-rouge">ocp</code>, <code class="highlighter-rouge">osio</code></p>
+
+<h2 id="username-password-token">Username, Password, Token</h2>
+
+<p>Deployment script needs access to a running OpenShift instance either via username/password or a token:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_INFRA_OPENSHIFT_USERNAME
+CHE_INFRA_OPENSHIFT_PASSWORD
+CHE_INFRA_OPENSHIFT_TOKEN
+</code></pre></div></div>
+<p>If token is set, it is used by <code class="highlighter-rouge">oc</code> client to log in and Che server to create namespaces and objects, else default credentials are used (<code class="highlighter-rouge">developer/developer</code>) for MiniShift and OCP.</p>
+
+<h2 id="namespace-for-workspaces">Namespace for Workspaces</h2>
+
+<p>You can instruct Che server in what namespace(s) to create workspace pods. There are two scenarios. By default, every new workspace pod is created in a new namespace which is dictated by the following env:</p>
+
+<p><code class="highlighter-rouge">CHE_INFRA_OPENSHIFT_PROJECT=""</code></p>
+
+<p>You may have one common namespace for all workspace pods:</p>
+
+<p><code class="highlighter-rouge">CHE_INFRA_OPENSHIFT_PROJECT="che-workspaces"</code></p>
+
+<h2 id="volumes">Volumes</h2>
+
+<p><code class="highlighter-rouge">CHE_INFRA_OPENSHIFT_PVC_STRATEGY="unique"</code></p>
+
+<p>There are two <a href="https://docs.openshift.com/container-platform/3.7/dev_guide/persistent_volumes.html">Persistent Volume Claim</a> strategies:</p>
 
 <ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plug-ins for languages, framework, and tools</li>
-  <li>An SDK for creating plug-ins and assemblies</li>
+  <li><strong>unique</strong> - each workspace gets own PVC.  This is the default strategy. When a workspace is deleted, associated PVC is deleted as well. However, an associated PV may not be recycled and tghus cannot be re-used for a new claim. See <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#recycling">k8s docs</a>. If you have started your cluster with <code class="highlighter-rouge">oc cluster up</code>, you need to create a service account for a special recycler pod: <code class="highlighter-rouge">oc create serviceaccount pv-recycler-controller -n openshift-infra</code> (requires admin login)</li>
+  <li><strong>common</strong> - there is one PVC for all workaspaces. When a PVC is shared with all workspaces, there’s a special service pod that starts before workspace is created to create a subpath in the PV for this particular ws. When a workspace is deleted an associated subpath is deleted as well.</li>
 </ul>
 
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
-<ul>
-  <li><a href="single_multi_user.html">Installing it for a single user</a></li>
-  <li><a href="single_multi_user.html">Installing it for multi users</a></li>
-</ul>
+<p>If a common strategy is set, it is impossible to run multiple workspaces simultaneously because of a default <code class="highlighter-rouge">ReadWriteOnce</code> <a href="https://docs.openshift.com/container-platform/3.7/architecture/additional_concepts/storage.html#pv-access-modes">access mode</a> for workspace PVCs.</p>
 
-<h2 id="workspace-model">Workspace Model</h2>
+<p>OpenShift cluster admins may want to study docs on <a href="https://docs.openshift.com/container-platform/3.7/install_config/persistent_storage/index.html">distributed volumes</a> and <a href="https://docs.openshift.com/container-platform/3.7/admin_guide/quota.html">applying resource limits</a>.</p>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting.png" alt="" /><figcaption>Che reinvents the workspace</figcaption></figure>
+<h2 id="https-mode">HTTPS Mode</h2>
 
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, wherever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
+<p>To enable https for server and workspace routes, export the following environment variable:</p>
 
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
+<p><code class="highlighter-rouge">ENABLE_SSL=true</code></p>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(1).png" alt="" /></figure>
+<p>When deploying to OSIO, HTTPS is enabled by default.</p>
 
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
+<h2 id="scalability">Scalability</h2>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(2).png" alt="" /></figure>
+<p>To be able to run more workspaces, <a href="https://docs.openshift.com/container-platform/3.7/admin_guide/manage_nodes.html">add more nodes to your OpenShift cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from OpenShift (usually it’s <code class="highlighter-rouge">no available nodes</code> kind of error).</p>
 
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have modules which are sub-portions of a project that have their own typing and behaviors.</p>
+<h2 id="debug-mode">Debug Mode</h2>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(3).png" alt="" /></figure>
+<p>If you want Che server to run in a debug mode export the following env before running the script (false by default):</p>
 
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
+<p><code class="highlighter-rouge">CHE_DEBUG_SERVER=true</code></p>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(4).png" alt="" /></figure>
+<h2 id="image-pull-policy">Image Pull Policy</h2>
 
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
+<p>If you want to always have the latest nightly image or use own latest tags when developing and testing Che</p>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(5).png" alt="" /></figure>
+<p><code class="highlighter-rouge">IMAGE_PULL_POLICY</code></p>
 
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
+<h2 id="private-docker-registries">Private Docker Registries</h2>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(6).png" alt="" /></figure>
+<p>Refer to <a href="https://docs.openshift.com/container-platform/3.7/security/registries.html">OpenShift documentation</a></p>
 
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
+<h2 id="enable-ssh-and-sudo">Enable ssh and sudo</h2>
 
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(7).png" alt="" /></figure>
-
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
-
-<figure><img class="docimage" src="images/Docker--CodenvyMeeting(8).png" alt="" /></figure>
-
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
-
-<h2 id="users">Users</h2>
-
-<p>Che has three types of users:</p>
+<p>By default, pods are run with an arbitrary user that has a randomly generated UID (the range is defined in OpenShift config file). This security constrain has several consequences for Eclipse Che users:</p>
 
 <ul>
-  <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
-  </li>
-  <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and code-assistant for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
-  </li>
-  <li>
-    <p><strong>Plug-in Providers</strong>. Che provides a SDK to create and package plug-ins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plug-ins can be authored for the client-side IDE or the server-side.</p>
-  </li>
+  <li>installers for language servers will fails since most of them require <code class="highlighter-rouge">sudo</code></li>
+  <li>no way to run any sudo commands in a running workspace</li>
 </ul>
 
-<p>Che is supported by engineers from Bitnami, Codenvy, SAP, IBM, Serli, Red Hat, Tomitribe,and WSO2.  <a href="http://codenvy.com">Codenvy</a> provides a multi-tenant, multi-user infrastructure for Che with enhanced security and deployable on any public or private cloud.</p>
+<p>It is possible to allow root access which in its turn allows running system services such as <code class="highlighter-rouge">sshd</code>. You can change this behavior. See <a href="https://docs.openshift.com/container-platform/3.6/admin_guide/manage_scc.html#enable-images-to-run-with-user-in-the-dockerfile">OpenShift Documentation for details</a>.</p>
 
-<h2 id="logical-architecture">Logical Architecture</h2>
+<h2 id="multi-user-using-own-keycloak-and-psql">Multi-User: Using Own Keycloak and PSQL</h2>
 
-<figure><img class="docimage" src="images/capture_architecture.png" alt="" /></figure>
+<p>Out of the box Che is deployed together with Keycloak and Postgres pods, and all three services are properly configured to be able to communicate. However, it does not matter for Che what Keycloak server and Postgres DB to use, as long as those have compatible versions and meet certain requirements.</p>
 
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
+<p><strong><em>Che Server and Keycloak</em></strong></p>
 
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
+<p>KeyCloak server URL is retrieved from the <code class="highlighter-rouge">CHE_KEYCLOAK_AUTH-SERVER-URL</code> environment variable. A new installation of Che will use its own Keycloak server running in a Docker container pre-configured to communicate with Che server. Realm and client are mandatory environment variables. By default Keycloak environment variables are:</p>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_KEYCLOAK_AUTH__SERVER__URL=http://${KC_ROUTE}:5050/auth
+CHE_KEYCLOAK_REALM=che
+CHE_KEYCLOAK_CLIENT__ID=che-public
+</code></pre></div></div>
 
-<figure><img class="docimage" src="images/capture_workspace.png" alt="" /></figure>
+<p>You can use your own Keycloak server. Create a new realm and a public client. A few things to keep in mind:</p>
 
-<p>Che defines the notion of a workspace as the combination of projects, environments, and commands.  A project is the fundamental unit of code available as a set of folders, files, and modules. A project may be mapped 1:1 to an external git or subversion repository from which it is cloned. A workspace may have zero or more projects. Projects have a project type which, depending upon the type selected, causes Che to enable the workspace with different behaviors. For example, a maven project type causes Che to install the maven and Java plug-ins into the workspace.</p>
+<ul>
+  <li>It must be a public client</li>
+  <li><code class="highlighter-rouge">redirectUris</code> should be <code class="highlighter-rouge">${CHE_SERVER_ROUTE/*</code>. If no or incorrect <code class="highlighter-rouge">redirectUris</code> are provided or the one used is not in the list of <code class="highlighter-rouge">redirectUris</code>, Keycloak will display an error saying that redirect_uri param is invalid.</li>
+  <li><code class="highlighter-rouge">webOrigins</code> should be  either<code class="highlighter-rouge">${CHE_SERVER_ROUTE}</code> or <code class="highlighter-rouge">*</code>. If no or incorrect <code class="highlighter-rouge">webOrigins</code> are provided, Keycloak script won’t be injected into a page because of CORS error.</li>
+</ul>
 
-<p>A machine is a runtime unit that provides a stack of software and a set of resources to run the projects of the workspace. The machine is bound to the workspace and to the projects. Che synchronizes the project files within the machine. A machine is defined by a recipe that contains the list of software that should be executing within the machine. The default machine implementation in Che is Docker and we use Dockerfiles to define the recipes for different types of runtimes. We also have a concept called, “stacks” which are pre-defined recipes with additional meta-information. Che provides default recipes and stacks, but users can define their own.  The machine’s lifecycle is managed by each Che workspace. As the workspace is booted, so is its underlying runtimes.  Additionally, Che can install additional software into the machine to enable developer services such as Intellisense.  For example, if the Java plug-in is activated because of the project type, Che installs an agent inside of the machine that runs JDT services that are then accessible by the projects synchronized onto the machine.</p>
+<p><strong><em>Che Server and PostgreSQL</em></strong></p>
 
-<h2 id="extensibility">Extensibility</h2>
+<p>Che server uses the below defaults to connect to PostgreSQL to store info related to users, user preferences and workspaces:</p>
 
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_JDBC_USERNAME=pgche
+CHE_JDBC_PASSWORD=pgchepassword
+CHE_JDBC_DATABASE=dbche
+CHE_JDBC_URL=jdbc:postgresql://postgres:5432/dbche
+CHE_JDBC_DRIVER__CLASS__NAME=org.postgresql.Driver
+CHE_JDBC_MAX__TOTAL=20
+CHE_JDBC_MAX__IDLE=10
+CHE_JDBC_MAX__WAIT__MILLIS=-1
+</code></pre></div></div>
 
-<figure><img class="docimage" src="images/extensibility.png" alt="" /></figure>
+<p>Che currently uses version 9.6.</p>
 
-<p>There are a number of aspects that can be modified within Che.</p>
+<p><strong><em>Keycloak and PostgreSQL</em></strong></p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
+<p>Database URL, port, database name, user and password are defined as environment variables in Keycloak pod. Defaults are:</p>
 
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
-
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
-
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
-
-<h2 id="machines">Machines</h2>
-
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We use Docker to generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
-
-<h2 id="whats-included">What’s Included</h2>
-
-<p>Che ships with a large number of plug-ins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, Subversion, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.11+ – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POSTGRES_PORT_5432_TCP_ADDR=postgres
+POSTGRES_PORT_5432_TCP_PORT=5432
+POSTGRES_DATABASE=keycloak
+POSTGRES_USER=keycloak
+POSTGRES_PASSWORD=keycloak
+</code></pre></div></div>
 
 
 
@@ -904,9 +894,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
-        <a href="tag_getting_started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting_started</a>
+        
+        <a href="tag_openshift.html" class="btn btn-default navbar-btn cursorNorm" role="button">openshift</a>
         
         
         
