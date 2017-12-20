@@ -1,19 +1,4 @@
 // https://github.com/ghiculescu/jekyll-table-of-contents
-// scroll function
-
-$(function() {
-  $(window).scroll(function() {
-    $(":header").each(function() {
-      if ($(window).scrollTop() >= $(this).offset().top - 100) {
-        var id = $(this).attr('id');
-        $('#toc ul li a').removeClass('active');
-        $(' a[href="#' + id + '"]').addClass('active');
-      }
-    });
-  });
-});
-
-
 (function($){
   $.fn.toc = function(options) {
     var defaults = {
