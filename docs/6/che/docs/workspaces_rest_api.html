@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=" dev docs">
-<title>Developer Documentation Overview | Eclipse Che Documentation</title>
+<meta name="keywords" content="workspaceruntimedockerkubernetes,  workspace, runtime, recipe, docker, yaml, Dockerfile, docker, kubernetes, container, pod">
+<title>Workspace REST API | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Developer Documentation Overview page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Workspace REST API page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Developer Documentation Overview">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Workspace REST API">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -360,7 +360,7 @@
           
           
           
-          <li><a href="workspaces_rest_api.html">REST API</a></li>
+          <li class="active"><a href="workspaces_rest_api.html">REST API</a></li>
           
           
           
@@ -707,7 +707,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Developer Documentation Overview</h1>
+   <h1 class="post-title-main">Workspace REST API</h1>
 </div>
 
 
@@ -744,76 +744,30 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Welcome to Eclipse Che developer documentation. If you are here, you are probably interested in customizing Che, and you are certainly welcome to do so. We try to keep out docs action-driven, i.e. structure information and guides according what a developer wants to achieve. This info however is preceded by an overview of a high level Che architecture and brief description of Che (sub)modules. Before you dive into it, let’s install and debug your first Che plugin using Che itself.</p>
-
-<h2 id="run-eclipse-che">Run Eclipse Che</h2>
-
-<p><code class="highlighter-rouge">docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che start</code></p>
-
-<p>See: <a href="docker.html">Install: Docker</a></p>
-
-<h2 id="create-workspace-and-sample-extension">Create Workspace and Sample Extension</h2>
-
-<p>Search for a stack by keyword <code class="highlighter-rouge">che</code> and choose <code class="highlighter-rouge">che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
-
-<figure><img class="docimage" src="images/devel/create_extension.png" alt="" /></figure>
-
-<h2 id="build-a-deploy-your-extension">Build a Deploy Your Extension</h2>
-
-<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code class="highlighter-rouge">assembly</code> (See: <a href="assemblies.html">Assemblies</a>) and plugins (containing plugins themselves).</p>
-
-<p>Execute <code class="highlighter-rouge">Traefik Start</code>, <code class="highlighter-rouge">Tomcat8-IDE Start</code>, <code class="highlighter-rouge">Deploy IDE</code> and <code class="highlighter-rouge">Deploy Workspace Agent</code> commands:</p>
-
-<figure><img class="docimage" src="images/devel/commands.png" alt="" /></figure>
-
-<ul>
-  <li>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</li>
-  <li>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</li>
-  <li>Deploy IDE - build ide-war module and its dependencies and packages <code class="highlighter-rouge">war</code> artifact and copies ide.war from <code class="highlighter-rouge">assembly-ide-war</code> target dir over to Tomcat’s webapp</li>
-  <li>Deploy Workspace Agent does the same with the agent war artifact</li>
-</ul>
-
-<p>The last two commands have identical preview URLs pointing to <code class="highlighter-rouge">host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code class="highlighter-rouge">?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code class="highlighter-rouge">Hello CheeAllPowerfull</code> message:</p>
-
-<figure><img class="docimage" src="images/devel/sample_action.png" alt="" /></figure>
-
-<h2 id="develop-and-debug-client-side">Develop and Debug Client Side</h2>
-
-<p>Get back to an original IDE instance and execute <code class="highlighter-rouge">GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at [this page][TODO: Super Dev Mode page]. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code class="highlighter-rouge">MyAction.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">super</span><span class="o">(</span><span class="s">"My New Action"</span><span class="o">,</span> <span class="s">"My Action Description"</span><span class="o">);</span>
-</code></pre></div></div>
-
-<p>Return to the 2nd IDE instance, click <strong>Dev Mode On</strong> button and hit <strong>Compile</strong>. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.</p>
-
-<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code class="highlighter-rouge">Chrome's dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code class="highlighter-rouge">My New Action</code> in the context menu.</p>
-
-<figure><img class="docimage" src="images/devel/debug_chrome.png" alt="" /></figure>
-
-<h2 id="develop-and-debug-server-side">Develop and Debug Server Side</h2>
-
-<p>Let’s change response from our REST service in <code class="highlighter-rouge">MyService.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">return</span> <span class="s">"Howdy, "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>Select this submodule in project explorer (<code class="highlighter-rouge">plugin-serverservice-server</code>) and run <code class="highlighter-rouge">Build</code> and <code class="highlighter-rouge">Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code class="highlighter-rouge">webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
-
-<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code class="highlighter-rouge">jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
-
-<p>Open <code class="highlighter-rouge">MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
-
-<p>Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:</p>
-
-<figure><img class="docimage" src="images/devel/debugger.png" alt="" /></figure>
-
-<p>In Variable window, click <code class="highlighter-rouge">Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
-
+  
 
 
     <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_workspace.html" class="btn btn-default navbar-btn cursorNorm" role="button">workspace</a>
+        
+        
+        
+        <a href="tag_runtime.html" class="btn btn-default navbar-btn cursorNorm" role="button">runtime</a>
+        
+        
+        
+        <a href="tag_docker.html" class="btn btn-default navbar-btn cursorNorm" role="button">docker</a>
+        
+        
+        
+        <a href="tag_kubernetes.html" class="btn btn-default navbar-btn cursorNorm" role="button">kubernetes</a>
+        
+        
         
     </div>
 
