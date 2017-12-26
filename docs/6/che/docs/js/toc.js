@@ -1,3 +1,4 @@
+
 // https://github.com/ghiculescu/jekyll-table-of-contents
 // scroll function
 
@@ -6,12 +7,72 @@ $(function() {
     $(":header").each(function() {
       if ($(window).scrollTop() >= $(this).offset().top - 100) {
         var id = $(this).attr('id');
+        var $cache = $('#toc ul');
         $('#toc ul li a').removeClass('active');
         $(' a[href="#' + id + '"]').addClass('active');
       }
+
+
     });
   });
 });
+
+
+
+$(document).ready(function () {
+  var top = $('#toc').offset().top;
+  $(window).scroll(function (event) {
+    var y = $(this).scrollTop();
+    if (y >= top)
+      $('#toc').addClass('fixed');
+    else
+      $('#toc').removeClass('fixed');
+    // $('#toc').width($('#toc').parent().width());
+  });
+});
+
+
+// $(document).ready(function($){
+//     $(window).scroll(function(){if($(this).scrollTop() > 200 ){
+//        if($('#toc ul').css("position") == "absolute"){
+//            $('#toc ul').css({"position":"fixed", "right": "initial", "top": "-20px"});
+//        }
+//     }else{
+//         $('#toc ul').css({"position":"absolute", "right": "initial", "top": "0px"});
+//     }
+//   });
+
+//
+// $(function() {
+//   function fixdiv() {
+//     var $cache = $('#toc ul');
+//     if ($(window).scrollTop() > 200)
+//       $cache.css({
+//         'margin-top': '-60px'
+//       });
+    // else {
+    //   $cache.css({
+    //     'margin-top': '200px',
+    //     'background-color':'cyan'
+    //   });
+    // }
+//   }
+//   $(window).scroll(fixdiv);
+//   fixdiv();
+// });
+//
+//
+// $(window).scroll(function() {
+//    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+//      var $cache = $('#toc ul');
+//      $cache.css({
+//        'bottom': '150px'
+//      });
+//    }
+// });
+
+
+
 
 
 (function($){
