@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="workspaceruntimedockerkubernetes,  workspace, runtime, recipe, docker, stack">
-<title>Stacks | Eclipse Che Documentation</title>
+<meta name="keywords" content="extensionsdev_docs,  framework, plugin, extension, json rpc, communication, events, subscribe">
+<title>Communication: JSON-RPC | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Stacks page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Communication: JSON-RPC page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Stacks">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Communication: JSON-RPC">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -467,7 +467,7 @@
           
           
           
-          <li class="active"><a href="stacks.html">Stacks</a></li>
+          <li><a href="stacks.html">Stacks</a></li>
           
           
           
@@ -694,7 +694,7 @@
           
           
           
-          <li><a href="json-rpc.html">Communication&#58 JSON-RPC</a></li>
+          <li class="active"><a href="json-rpc.html">Communication&#58 JSON-RPC</a></li>
           
           
           
@@ -729,7 +729,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Stacks</h1>
+   <h1 class="post-title-main">Communication: JSON-RPC</h1>
 </div>
 
 
@@ -767,17 +767,80 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<h2 id="what-are-stacks">What Are Stacks</h2>
+<h2 id="overview">Overview</h2>
 
-<p>A stack is a template of <a href="workspace_data_model.html">workspace configuration</a> and some meta-information like scope, tags, components, description, name and ID. Stacks are used by User Dashboard to make it easy to create workspaces and well as filter sample projects compatible with a chosen stack.</p>
+<p>In CHE we use <a href="http://www.jsonrpc.org/specification">JSON-RPC</a> for asynchronous communication between clients and servers. JSON-RPC is asymmetric by nature so in order to be able to  information independently we use duplex approach where both sides (clients and servers) can act both as a JSON-RPC server and as JSON-RPC client. To make it clear, clients (e.g. IDE) can send JSON-RPC requests (acting as JSON-RPC client) and receive requests (acting as JSON-RPC server) and servers (e.g. workspace master or workspace agent) can do the same.</p>
 
-<p>Stacks are displayed in User Dashboard on Create a workspace page. You can filter them by type (single vs multi machine), scope (the ones displayed by default vs others), as well as search for a stack by keyword.</p>
+<h2 id="send-a-json-rpc-request">Send a JSON-RPC request</h2>
 
-<h2 id="stacks-loading">Stacks Loading</h2>
+<p>To send request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestTransmitter.java"><code class="highlighter-rouge">org.eclipse.che.api.core.jsonrpc.commons.RequestTransmitter</code></a>, the most basic use case (actual for both client and server sides) looks quite simple:</p>
 
-<p>Stacks are loaded from a JSON file that is packaged into resources of a special component deployed with a workspace master. This JSON isn’t exposed to users and stack management is performed in User Dashboard (that uses REST API).</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">transmitter</span>
+         <span class="o">.</span><span class="na">newRequest</span><span class="o">()</span>
+         <span class="o">.</span><span class="na">endpointId</span><span class="o">(</span><span class="n">endpointId</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="n">method</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">paramsAsDto</span><span class="o">(</span><span class="n">dto</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">sendAndReceiveResultAsDto</span><span class="o">(</span><span class="n">dtoClass</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">onSuccess</span><span class="o">((</span><span class="n">result</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{})</span>
+         <span class="o">.</span><span class="na">onFailure</span><span class="o">((</span><span class="n">jsonRpcError</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{});</span>
+</code></pre></div></div>
 
-<p>Stacks are loaded from a JSON file only when the database is initialized, i.e. when a user first stats Che. This is the default policy that can be changed. To keep getting updates with new Che stacks, set <code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START=true</code> in <code class="highlighter-rouge">che.env</code>. When set to true, <code class="highlighter-rouge">stacks.json</code> will be used to update Che database, each time Che server starts. This means Che will get all stacks in stacks.json and upload them to a DB. This way, you may make sure that you keep existing custom stacks (user-created) and get stack updates from new Che releases. New and edited stacks (for example those with fixes in stack definition) will be merged in. Conflicts are possible though, since for example, if a new Che version provides a new stack with the name “My Cool Stack” and a stack with this name somehow exists in a database, such a stack won’t be saved to a DB.</p>
+<p><strong>endpointId</strong> - in common sense can be an arbitrary <strong><code class="highlighter-rouge">String</code></strong> identifier that allows to distinguish endpoints. Please note that for server sides these endpoints are statically defined as constants:
+<code class="highlighter-rouge">"ws-agent"</code> for workspace agent and <code class="highlighter-rouge">"ws-master"</code> for workspace master for example, while for clients it is a dynamic identifier because clients are dynamic by their nature.</p>
+
+<p><strong>method</strong> - method name corresponds to it’s definition in JSON-RPC protocol specification. In Che we use the following naming convention: method name in most cases consists of two parts separated be slash - scope and action. For example <code class="highlighter-rouge">project/create</code> where <code class="highlighter-rouge">project</code> is the scope and <code class="highlighter-rouge">create</code> is the action.</p>
+
+<p><strong>dto</strong> - value of parameters passed (in our example it is a <a href="https://en.wikipedia.org/wiki/Data_transfer_object">DTO</a>), please note that though JSON-RPC protocol specification requires parameters either as json objects or arrays, you can use single primitives here as well and they will be automatically converted to a singleton array.</p>
+
+<p><strong>dtoClass</strong> - class of a result that will be contained within the response to our request</p>
+
+<p><strong>result</strong> - result of our request (in our example it is of class <strong>dtoClass</strong>)</p>
+
+<p><strong>jsonRpcError</strong> - error object that contains information about the error if any happened, its structure corresponds to error defined in JSON-RPC protocol specification</p>
+
+<p>Source code example of using of the transmitter can be found here: https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L76</p>
+
+<h2 id="receive-a-json-rpc-request">Receive a JSON-RPC request</h2>
+
+<p>To receive a request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestHandlerConfigurator.java"><code class="highlighter-rouge">org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerConfigurator</code></a>, the use case (actual for both sides):</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">configurator</span>
+         <span class="o">.</span><span class="na">newConfiguration</span><span class="o">()</span>
+         <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="n">method</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">paramsAsDto</span><span class="o">(</span><span class="n">paramsDtoClass</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">resultAsDto</span><span class="o">(</span><span class="n">resultDtoClass</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">withFunction</span><span class="o">((</span><span class="n">endpointId</span><span class="o">,</span> <span class="n">paramsDto</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">resultDto</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p><strong>method</strong> - the name of JSON-RPC method that is to be handled by this configuration</p>
+
+<p><strong>paramsDtoClass</strong> - class of parameters that are passed in a JSON-RPC request (in our example it is a DTO)</p>
+
+<p><strong>resultDtoClass</strong> - class of result that is passed in a JSON-RPC response (in our example it is DTO)</p>
+
+<p><strong>endpointId</strong> - the identifier of an endpoint that sends the request that is handled by this configuration</p>
+
+<p><strong>paramsDto</strong> - the value of parameters passed</p>
+
+<p><strong>resultDto</strong> - the value of result passed</p>
+
+<p>Source code example of using of the transmitter can be found here: https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L117</p>
+
+<h2 id="client-endpoint-identification">Client endpoint identification</h2>
+<p>In order to receive a cross sessional identifier clients (e.g. IDE) can use a <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/websocket/impl/WebsocketIdService.java"><code class="highlighter-rouge">org.eclipse.che.api.core.websocket.impl.WebsocketIdService</code></a>, otherwise client identifier will not be persisted between websocket sessions. The most common use case (client specific):</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">requestTransmitter</span>
+        <span class="o">.</span><span class="na">newRequest</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">endpointId</span><span class="o">(</span><span class="s">"ws-master"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="s">"websocketIdService/getId"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">noParams</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">sendAndReceiveResultAsString</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">onSuccess</span><span class="o">(</span><span class="nl">appContext:</span><span class="o">:</span><span class="n">setApplicationWebsocketId</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>Source code example of using websocket identification service can be found here:
+https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/jsonrpc/WsMasterJsonRpcInitializer.java#L134</p>
+
 
 
     <div class="tags">
@@ -786,19 +849,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_workspace.html" class="btn btn-default navbar-btn cursorNorm" role="button">workspace</a>
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
         
         
         
-        <a href="tag_runtime.html" class="btn btn-default navbar-btn cursorNorm" role="button">runtime</a>
-        
-        
-        
-        <a href="tag_docker.html" class="btn btn-default navbar-btn cursorNorm" role="button">docker</a>
-        
-        
-        
-        <a href="tag_kubernetes.html" class="btn btn-default navbar-btn cursorNorm" role="button">kubernetes</a>
+        <a href="tag_dev_docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev_docs</a>
         
         
         

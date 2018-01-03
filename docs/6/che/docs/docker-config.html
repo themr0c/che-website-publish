@@ -555,7 +555,7 @@
           
           
           
-          <li><a href="organizations.html">Organizations on UD</a></li>
+          <li><a href="organizations.html">Organizations in UD</a></li>
           
           
           
@@ -594,14 +594,14 @@
           
           
           
-          <li><a href="framework.html">Framework</a></li>
-          
-          
-          
-          
-          
-          
           <li><a href="che_in_che_quickstart.html">Quick-Start&#58 Your First Plugin</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="assemblies.html">Assemblies</a></li>
           
           
           
@@ -694,7 +694,14 @@
           
           
           
-          <li><a href="assemblies.html">Assemblies</a></li>
+          <li><a href="json-rpc.html">Communication&#58 JSON-RPC</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="handling-projects-in-plugins.html">Handling Projects in Plugins</a></li>
           
           
           
@@ -857,6 +864,30 @@ machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
 <p>You can also set limits on Docker’s allocation of CPU to workspaces, which may be necessary if you have a very dense workspace population where users are competing for limited physical resources.</p>
 
 <p>Workspace idle timeout can be configured in <code class="highlighter-rouge">che.env</code> , so that inactive workspaces will be shutdown automatically over this length of time in milliseconds. By default, this value is set to 3600000 (1 hour). If set to “0”, then workspaces will not be stopped automatically. Currently, keyboard and mouse interactions in IDE, as well as HTTP requests to ws-agent count as activity</p>
+
+<h2 id="java_opts">JAVA_OPTS</h2>
+
+<p>There can be several Java processes running in a workspace machine. Some of the Java agents are special purpose agents started in a machine to provide core and additional IDE functionality. These are workspace agent and a <a href="dependency_management.html">Maven plugin</a> that are both started in own JVM. On top of that, you can run own Java programs and use build tools like Maven. A set of the following environment variables can help optimize RAM consumption:</p>
+
+<p><strong>User-Defined Envs</strong></p>
+
+<p>A user can provide own <a href="env_variables.html">environment variables</a> per workspace machine:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JAVA_OPTS                                    # machine-wide java opts
+MAVEN_OPTS                                   # machine-wide maven opts
+CHE_WORKSPACE_WSAGENT__JAVA__OPTIONS           # java opts to adjust java opts of ws-agent
+CHE_WORKSPACE_MAVEN__SERVER__JAVA__OPTIONS   # java opts to adjust java opts of the maven server
+</code></pre></div></div>
+
+<p>Che admins (basically whoever has access to <code class="highlighter-rouge">che.env</code> or Che server environment directly) can override user-defined envs:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_WORKSPACE_JAVA__OPTIONS                 # overrides the default value of JAVA_OPTS of all workspaces
+CHE_WORKSPACE_MAVEN__OPTIONS                # overrides the default value of MAVEN_OPTS of all workspaces
+CHE_WORKSPACE_WSAGENT__JAVA__OPTIONS        # overrides the default value of JAVA_OPTS of all ws-agents
+CHE_WORKSPACE_MAVEN__SERVER__JAVA__OPTIONS  # overrides the default value of JAVA_OPTS of all maven servers
+</code></pre></div></div>
+
+<p>You can find default values in <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env#L127-L141">che.env</a>.</p>
 
 <h2 id="hostname">Hostname</h2>
 
@@ -1216,8 +1247,8 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               12/26/17 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Dec 26, 2017 <br />
+               01/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

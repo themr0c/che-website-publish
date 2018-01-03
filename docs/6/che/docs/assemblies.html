@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="workspaceruntimedockerkubernetes,  workspace, runtime, recipe, docker, stack">
-<title>Stacks | Eclipse Che Documentation</title>
+<meta name="keywords" content="extensionsassembly,  dev docs">
+<title>Che Assemblies | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Stacks page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che Assemblies page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Stacks">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Che Assemblies">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -467,7 +467,7 @@
           
           
           
-          <li class="active"><a href="stacks.html">Stacks</a></li>
+          <li><a href="stacks.html">Stacks</a></li>
           
           
           
@@ -601,7 +601,7 @@
           
           
           
-          <li><a href="assemblies.html">Assemblies</a></li>
+          <li class="active"><a href="assemblies.html">Assemblies</a></li>
           
           
           
@@ -729,7 +729,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Stacks</h1>
+   <h1 class="post-title-main">Che Assemblies</h1>
 </div>
 
 
@@ -767,17 +767,151 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<h2 id="what-are-stacks">What Are Stacks</h2>
+<h2 id="what-is-a-che-assembly">What Is a Che Assembly?</h2>
 
-<p>A stack is a template of <a href="workspace_data_model.html">workspace configuration</a> and some meta-information like scope, tags, components, description, name and ID. Stacks are used by User Dashboard to make it easy to create workspaces and well as filter sample projects compatible with a chosen stack.</p>
+<p>An assembly is a Maven module that produces a build artifact. In case of <a href="https://github.com/eclipse/che/tree/master/assembly">Eclipse Che</a>, this is either a <code class="highlighter-rouge">.war</code> with <code class="highlighter-rouge">jars</code> in it, or a Tomcat assembly, which is a Tomcat web server with custom configuration and artifacts, copied to <code class="highlighter-rouge">webapps</code>. The following are Eclipse Che assemblies:</p>
 
-<p>Stacks are displayed in User Dashboard on Create a workspace page. You can filter them by type (single vs multi machine), scope (the ones displayed by default vs others), as well as search for a stack by keyword.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Che Assembly</th>
+      <th>What Is Included</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">assembly-ide-war</code></td>
+      <td>GWT plugins that will be compiled into a new browser IDE as JavaScript</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">assembly-wsagent-war</code></td>
+      <td>Java plugins that will run within a workspace agent, deployed as <code class="highlighter-rouge">.war</code> artifact with numerous jars in it</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">assembly-wsagent-server</code></td>
+      <td>Packages workspace agent into a Tomcat that is then launched in a machine</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">assembly-wsmaster-war</code></td>
+      <td>Java plugins that will run within Che core server - master</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">assembly-main</code></td>
+      <td>Packages all Che modules (including those listed above) into a final Tomcat bundle</td>
+    </tr>
+  </tbody>
+</table>
 
-<h2 id="stacks-loading">Stacks Loading</h2>
+<h2 id="assembly-ide-war">assembly-ide-war</h2>
 
-<p>Stacks are loaded from a JSON file that is packaged into resources of a special component deployed with a workspace master. This JSON isn’t exposed to users and stack management is performed in User Dashboard (that uses REST API).</p>
+<p>Successful build of this module produces <code class="highlighter-rouge">ide.war</code> that is then deployed with Tomcat (produced by <code class="highlighter-rouge">assembly-main</code>) as <code class="highlighter-rouge">ROOT.war</code> that contains a handful or jars as dependencies and what’s more important - <code class="highlighter-rouge">_app</code> directory with JavaScript, CSS and other resources that are loaded into <code class="highlighter-rouge">IDE.html</code> when IDE is initialized.</p>
 
-<p>Stacks are loaded from a JSON file only when the database is initialized, i.e. when a user first stats Che. This is the default policy that can be changed. To keep getting updates with new Che stacks, set <code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START=true</code> in <code class="highlighter-rouge">che.env</code>. When set to true, <code class="highlighter-rouge">stacks.json</code> will be used to update Che database, each time Che server starts. This means Che will get all stacks in stacks.json and upload them to a DB. This way, you may make sure that you keep existing custom stacks (user-created) and get stack updates from new Che releases. New and edited stacks (for example those with fixes in stack definition) will be merged in. Conflicts are possible though, since for example, if a new Che version provides a new stack with the name “My Cool Stack” and a stack with this name somehow exists in a database, such a stack won’t be saved to a DB.</p>
+<p>This module inherits <a href="https://github.com/eclipse/che/blob/da18cd1867210f87a6071ed65930fb47fb8bb775/ide/che-ide-gwt-app/pom.xml"><code class="highlighter-rouge">che-ide-gwt-app</code></a> that it its turn has <a href="https://github.com/eclipse/che/blob/5a6d3910b268feb3c4e67c2ff9aa5640410bf777/ide/che-ide-full/pom.xml"><code class="highlighter-rouge">che-ide-full</code></a> in dependencies. So, <code class="highlighter-rouge">che-ide-full</code> is where all of the client side plugin dependencies are declared.</p>
+
+<p>However, if you build a custom assembly and your plugin provides client side changes, it is root pom.xml of <strong>assembly-ide-war</strong> that dependencies should be added to. See: <a href="ide-extensions-gwt.html">IDE Extensions</a>.</p>
+
+<p>This is the module that is most often extended with custom plugins.</p>
+
+<h2 id="assembly-wsagent-war">assembly-wsagent-war</h2>
+
+<p>Build artifact of this module contains all server side plugins components packaged as jars. Root <code class="highlighter-rouge">pom.xml</code> contains dependencies to all plugins that get deployed with the workspace agent, and this is where dependencies to custom plugins should be added. Once built, <code class="highlighter-rouge">assembly-wsagent-war</code> is copied to <code class="highlighter-rouge">webapps</code> of ws-agent Tomcat as <code class="highlighter-rouge">ROOT.war</code>. This is the module that is most often extended with custom plugins.</p>
+
+<h2 id="assembly-wsagent-server">assembly-wsagent-server</h2>
+
+<p>This module packages <code class="highlighter-rouge">ROOT.war</code> into Tomcat’s <code class="highlighter-rouge">webapps</code> and adds configuration files. This tomcat is packaged as tar.gz archive that is then placed into main Tomcat produced by <code class="highlighter-rouge">assembly-main</code> build.</p>
+
+<h2 id="assembly-wsmaster-war">assembly-wsmaster-war</h2>
+
+<p>The core of Che platform as a workspace server that includes <a href="workspaces_rest_api.html">workspace API</a>, user profile and settings, <a href="spi_implementation.html">implementation of runtime infrastructure</a>. Usually used as a dependency in custom assemblies, however, it is possible to extend it, for example, by providing support of a new infrastructure.</p>
+
+<h2 id="assembly-main">assembly-main</h2>
+
+<p>This module’s name speaks for itself - this is the main assembly that packages all Che components into a Tomcat server. These components include wsmaster as <code class="highlighter-rouge">api.war</code>, User Dashboard as <code class="highlighter-rouge">dashboard.war</code>, documentation - <code class="highlighter-rouge">docs.war</code> and Swagger UI - <code class="highlighter-rouge">swagger.war</code>, agents like terminal and ws-agent (those are packaged into <code class="highlighter-rouge">lib</code> directory in the root of the resulting archive where Che master picks them up and serves, thus making them downloadable for <a href="installers.html">installers</a>).</p>
+
+<h2 id="custom-assemblies">Custom Assemblies</h2>
+
+<p>You may build own custom assembly of Che. To do so, there’s no need to clone/copy the entire Che source code. All artifacts can be used as dependencies. Moreover, unlike assemblies in Che source code, custom assemblies can use minimal artifacts for server and client side.</p>
+
+<p>Here’s an <a href="https://github.com/che-samples/che-ide-server-extension">example</a> of a custom Che assembly that brings in two plugins - server- and client-side. You may clone this repository and use it as a basis for your custom Che assembly.</p>
+
+<p>Note that this example uses core artifacts as dependencies both for <a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L31-L35">client</a>:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>che-ide-core<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;type&gt;</span>gwt-lib<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>and <a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L22-L26">server side</a></p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>che-wsagent-core<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;type&gt;</span>war<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>Core artifacts contain a bare minimum set of platform components and plugins to be able to create and start a workspace, create or import a project, open and edit files in the editor.</p>
+
+<p>You may use full artifacts that include all standard Che plugins:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>che-ide-full<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;type&gt;</span>gwt-lib<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+...
+
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>assembly-wsagent-war<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;type&gt;</span>war<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>These two <code class="highlighter-rouge">pom.xml</code> files are entrypoints to adding custom plugins. This assembly includes two plugins that are declared in:</p>
+
+<ul>
+  <li><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/pom.xml#L54-L64">root pom.xml</a> - artifact version defaults to project version. These dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code class="highlighter-rouge">maven-depmgt-pom</code> or in a root pom of an assembly). What <code class="highlighter-rouge">maven-depmgt-pom</code> parent brings is a set of enforcer plugins, like formatting, dependency management, source validation etc.</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>plugin-serverservice-server<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>${project.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L36-L40">assembly-ide-war pom</a>:</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>plugin-serverservice-ide<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;type&gt;</span>gwt-lib<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>This way, your client side plugin is included into <code class="highlighter-rouge">ide.war</code>. We use <a href="https://maven.apache.org/plugins/maven-war-plugin/overlays.html">Maven’s overlays feature</a> to package custom plugins into the resulting artifact.</p>
+
+<ul>
+  <li><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L27-L30">assembly-wsmaster-war pom</a>:</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.sample<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>plugin-serverservice-server<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>Your custom plugin packaged as jar is automatically added to inherited <code class="highlighter-rouge">wsagent</code> artifact if both are declared as dependencies in <code class="highlighter-rouge">pom.xml</code>. As a result, the final <code class="highlighter-rouge">.war</code> artifact will contain a custom jar.</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>Now that you have got some knowledge about Che assemblies and own cloned a sample assembly, let’s take a closer look at Eclipse Che <a href="ide-extensions-gwt.html">client</a> and <a href="server-side-extensions.html">server-side</a> plugins.</p>
 
 
     <div class="tags">
@@ -786,19 +920,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_workspace.html" class="btn btn-default navbar-btn cursorNorm" role="button">workspace</a>
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
         
         
         
-        <a href="tag_runtime.html" class="btn btn-default navbar-btn cursorNorm" role="button">runtime</a>
-        
-        
-        
-        <a href="tag_docker.html" class="btn btn-default navbar-btn cursorNorm" role="button">docker</a>
-        
-        
-        
-        <a href="tag_kubernetes.html" class="btn btn-default navbar-btn cursorNorm" role="button">kubernetes</a>
+        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
         
         
         
