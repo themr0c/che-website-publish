@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" dev docs">
-<title>SPI&#58 Overview and Motivation | Eclipse Che Documentation</title>
+<title>SPI&#58 Overview | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the SPI&#58 Overview and Motivation page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the SPI&#58 Overview page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="SPI&amp;#58 Overview and Motivation">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="SPI&amp;#58 Overview">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -571,7 +571,7 @@
           
           
           
-          <li class="active"><a href="spi_overview.html">Overview and Motivation</a></li>
+          <li class="active"><a href="spi_overview.html">Overview</a></li>
           
           
           
@@ -729,7 +729,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">SPI&#58 Overview and Motivation</h1>
+   <h1 class="post-title-main">SPI&#58 Overview</h1>
 </div>
 
 
@@ -767,9 +767,46 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<h2 id="heading-1">Heading 1</h2>
+<h2 id="abstraction">Abstraction</h2>
 
-<h2 id="heading-2">Heading 2</h2>
+<p>Che Workspace Runtime composed by set of running Machines can be deployed on top of any Infrastructure is able to provide one or more Machines.</p>
+
+<p>As defined in a <a href="what_are_workspaces.html">workspace model</a>, Machine we mean some set of hardware and|or software
+resources working under control of Operation System. Examples of such Infrastructure including:</p>
+
+<ul>
+  <li>Running Physical Computers</li>
+  <li>Virtual machines</li>
+  <li>Linux Containers</li>
+</ul>
+
+<p>Che Workspace Runtime <strong>Service Provider Interface</strong> (SPI) is a clean abstraction to allow pluggable Environment and Runtime Infrastructure.</p>
+
+<p>It defines two kinds of contracts to be implemented in order to:</p>
+
+<ul>
+  <li>describe Workspace Environment binding logical configuration of Machines along with implementation of a specific Recipe</li>
+  <li>let particular Runtime Infrastructure start and stop resources associated with Workspace Runtime, such as Docker Containers, Kubernetes Pods, volumes etc.</li>
+  <li>allow listening to details infrastructure specific events, machines start/stop sequences, servers health checking thanks to asynchronous <a href="json-rpc.html">JSON-RPC messaging</a>.</li>
+</ul>
+
+<p>Strictly speaking there are 2 kinds of SPI: one for Environment analyzing and transformation and another for applying effective environment and starting Workspace Runtime.</p>
+
+<p>The reason of decoupling <code class="highlighter-rouge">InternalEnvironment</code> from Runtime Infrastructure SPI is that some types of Recipes can be understandable for more than one Infrastructure.</p>
+
+<p>TODO: [sample and diagram]</p>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>SPI is one of the main features of Che 6.</p>
+
+<p>There are several reasons to implement it, main of which include:</p>
+
+<ul>
+  <li>Big demand of using infractructures other than Docker, such as: OpenShift, Kubernetes, local machine which was too hard on Docker oriented implementation.</li>
+  <li>Needs to have more flexibility with deploying different tools on different machines, not to be “dev-machine oriented”.</li>
+  <li>A client has to be better informed during Workspace starting, stopping and running including receiving detailed infrastructure specific events.</li>
+</ul>
 
 
     <div class="tags">
@@ -786,8 +823,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 3, 2018 <br />
+               01/06/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 6, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
