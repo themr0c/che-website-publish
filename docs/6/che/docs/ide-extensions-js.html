@@ -767,6 +767,87 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
+<h2 id="quick-start">Quick-Start</h2>
+
+<p>Before we focus on the mechanism of extending Eclipse Che IDE with JS plugins, let’s run a sample JS plugin in Che. Since this is an experimental API and a new extension mechanism in general, there’s a dedicated Docker image with binaries <a href="https://github.com/eclipse/che/tree/runJsPlugin">built from a branch</a>. There are multiple ways to try this branch.</p>
+
+<p><strong>On Docker:</strong></p>
+
+<ul>
+  <li>build it yourself: <code class="highlighter-rouge">mvn clean install</code> in Che repository root and then:</li>
+</ul>
+
+<p><code class="highlighter-rouge">docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v /path/to/che/repo/root:/repo -v /local/data/path:/data eclipse/che:nightly -e "CHE_PREDEFINED_STACKS_RELOAD__ON__START=true" start --skip:scripts</code> OR</p>
+
+<ul>
+  <li>pull a ready to use image (recommended!):</li>
+</ul>
+
+<p><code class="highlighter-rouge">docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v /local/data/path:/data eivantsov/che:js -e "CHE_PREDEFINED_STACKS_RELOAD__ON__START=true" start</code></p>
+
+<p><code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START=false</code> is required only if you use an existing local data directory for Che, otherwise, if it’s a new dir, drop the env.</p>
+
+<p><strong>On MiniShift:</strong></p>
+
+<p>Create a new Che server deployment:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">CHE_IMAGE_REPO</span><span class="o">=</span>eivantsov/che
+<span class="nb">export </span><span class="nv">CHE_IMAGE_TAG</span><span class="o">=</span><span class="s2">"js"</span>
+<span class="nb">export </span><span class="nv">CHE_PREDEFINED_STACKS_RELOAD__ON__START</span><span class="o">=</span><span class="nb">true
+</span>git clonre https://github.com/eclipse/che <span class="c"># (or wget/curl the script below)</span>
+<span class="nb">cd </span>dockerfiles/init/modules/openshift/files/scripts/
+./deploy_che.sh
+</code></pre></div></div>
+<p>When on MiniShift, it is recommended to execute the following commands before you proceed to make sure you get an updated stack image:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minishift ssh
+docker pull eclipse/che-dev:nightly
+</code></pre></div></div>
+<p>Deployment to OCP may require additional envs. See: <a href="openshift.html#openshift-container-platform">Deploy to OpenShift</a></p>
+
+<p><strong>Create a Workspace</strong></p>
+
+<p>Search for a <code class="highlighter-rouge">Che</code> stack, choose JS Plugin Tools stack and <code class="highlighter-rouge">che-ide-ts-extension</code> as a sample project. Create and start a workspace.</p>
+
+<figure><img class="docimage" src="images/devel/js_ws.png" alt="" /></figure>
+
+<p><strong>Commands</strong></p>
+
+<p>When in a running, workspace, you may want to expand a plugin in the project tree, navigate through files, try TypeScript Language Server capabilities like autocompletion.</p>
+
+<p>Let’s install dependencies for a sample plugin by executing <strong>installDeps</strong> command:</p>
+
+<figure><img class="docimage" src="images/devel/js_ws_commands.png" alt="" /></figure>
+
+<p>This command downloads Che API dependencies runs <code class="highlighter-rouge">npm link</code> - at this moment Che JS API package isn’t published as a global npm module. We plan publishing it soon, and it will be listed in plugin’s <code class="highlighter-rouge">package.json</code> as a dependency, so <code class="highlighter-rouge">npm install</code> will download it to <code class="highlighter-rouge">node_modules</code>.</p>
+
+<p>Once dependencies are installed, let’s build and install a plugin with <strong>installPlugin</strong> command. This command does the following things:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">npm install</code> - get dependencies as node_modules</li>
+  <li><code class="highlighter-rouge">npm link eclipse-che</code> - grab eclipse-che module fetched in a previous command</li>
+  <li><code class="highlighter-rouge">npm run bundle</code> - building the plugin using webpack into <code class="highlighter-rouge">dist/bundle.js</code>. This script is then referenced in package.json that Che rest service gets when the IDE is initialized</li>
+  <li><code class="highlighter-rouge">rm -rf $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0 &amp;&amp; mkdir -p $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0</code> - make sure a plugin directory is empty before copying the plugin. Che REST service will look for all directories in <code class="highlighter-rouge">CHE_JS_PLUGIN_DIR</code> (which is <code class="highlighter-rouge">/home/user/che/js-plugins</code> in our case) that have certain naming pattern - <code class="highlighter-rouge">publisher.plugin-version</code></li>
+  <li><code class="highlighter-rouge">cp -R ${current.project.path}/* $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0</code> - copy plugin to a directory from where Che IDE will pick it up. As of now, this directory is sort of a local plugin registry. This is temporary until a proper registry and plugin delivery mechanism is implemented.</li>
+</ul>
+
+<p>You will also see a preview URL, which is basically your workspace URL with <code class="highlighter-rouge">?pluginServer=${server.wsagent/http}</code> query parameter that signals the IDE to look for plugins in <code class="highlighter-rouge">$CHE_JS_PLUGIN_DIR</code> when initializing.</p>
+
+<p>Click this preview URL, go to <strong>Help</strong> menu:</p>
+
+<figure><img class="docimage" src="images/devel/js_plugin.png" alt="" /></figure>
+
+<p>You will see new actions that will show and hide a new part (with a clock).</p>
+
+<figure><img class="docimage" src="images/devel/js_plugin_clock.png" alt="" /></figure>
+
+<p>Get back to your workspace, open <code class="highlighter-rouge">package.json</code>, look for menu items like <code class="highlighter-rouge">Show Part</code> or <code class="highlighter-rouge">JS Group</code> in actions list. Change the titles, execute <strong>installPlugin</strong> command, return to plugin preview tab and refresh it - you should see your changes there.</p>
+
+<p>Now that you have deployed your first JS plugin in Che, let’s look at how things work.</p>
+
+<h2 id="how-it-works">How It Works</h2>
+
+<h2 id="js-api-spec">JS API Spec</h2>
 
 
     <div class="tags">
@@ -799,8 +880,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/06/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 6, 2018 <br />
+               01/08/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 8, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
