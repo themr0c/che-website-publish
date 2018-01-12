@@ -472,6 +472,55 @@
           
           
           
+          
+          
+          <li><a href="chedir_getting_started.html">Chedir Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="why_chedir.html">Why Chedir?</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_installation.html">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_project_setup.html">Project Setup</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_up_and_down.html">Up and Down</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chefile.html">Chefile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_ssh.html">SSH</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -766,13 +815,15 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>You can configure deployment of Che on OpenShift with env variables that are defined in <code class="highlighter-rouge">che-config</code> file. Either export env in your terminal, or edit this file directly. Once done, run the deployment script with <code class="highlighter-rouge">-c rollupdate</code> flag. Che deployment will be updated which automatically triggers a new deployment. You can also export envs in your environment, and the script will pick them up. It will only update Che server pod. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
+  <h2 id="how-it-works">How It Works</h2>
 
-<p>We use Rolling Update strategy, which means zero downtime for Che server. However, when the initial Che pod is shut down, server forcefully stops all workspace pods. Users working in those workspace will see a notification that the workspace is not running anymore. It does not impact data persistence - all workspace project files mounted through PVCs.</p>
+<p>You can configure deployment of Che on OpenShift with env variables that are defined in <code class="highlighter-rouge">che-config</code> file. Either export env in your terminal, or edit this file directly. Once done, run the deployment script with <code class="highlighter-rouge">-c rollupdate</code> flag. Che deployment will be updated which automatically triggers a new deployment. You can also export envs in your environment, and the script will pick them up. It will only update Che server pod. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
+
+<p>We use recreate strategy. When the initial Che pod is shut down, server forcefully stops all workspace pods. Users working in those workspace will see a notification that the workspace is not running anymore. It does not impact data persistence - all workspace project files mounted through PVCs.</p>
 
 <h2 id="update">Update</h2>
 
-<p>Export <code class="highlighter-rouge">CHE_IMAGE_TAG=${VERSION}</code> before executing <code class="highlighter-rouge">che_deploy.sh</code>, where <code class="highlighter-rouge">${VERSION}</code> is a tag you want to update to. You can get available tags on <a href="https://github.com/eclipse/che/tags">Github</a> or <a href="https://hub.docker.com/r/eclipse/che/tags/">DockerHub</a>.</p>
+<p>Export <code class="highlighter-rouge">CHE_IMAGE_TAG=${VERSION}</code> before executing <code class="highlighter-rouge">che_deploy.sh -c rollupdate</code>, where <code class="highlighter-rouge">${VERSION}</code> is a tag you want to update to. If you have your custom Che server image, you may export <code class="highlighter-rouge">CHE_IMAGE_REPO</code> too. You can get available tags on <a href="https://github.com/eclipse/che/tags">Github</a> or <a href="https://hub.docker.com/r/eclipse/che/tags/">DockerHub</a>.</p>
 
 <p>If you want to always use the latest nightly builds, run <code class="highlighter-rouge">export IMAGE_PULL_POLICY=Always</code> and then re-run the deployment script. This way, OpenShift will always pull the image referenced in the deployment.</p>
 
@@ -792,6 +843,10 @@ CHE_INFRA_OPENSHIFT_TOKEN
 </code></pre></div></div>
 <p>If token is set, it is used by <code class="highlighter-rouge">oc</code> client to log in and Che server to create namespaces and objects, else default credentials are used (<code class="highlighter-rouge">developer/developer</code>) for MiniShift and OCP.</p>
 
+<p>All objects that Che server creates such as workspace pods, services, routes and PVCs are created on behalf of this user. As a result, other OpenShift users who create workspaces in a multi-user Che, have no access to these objects.</p>
+
+<p>This is going to be changed once <a href="https://github.com/eclipse/che/issues/8178">this issue</a> is completed.</p>
+
 <h2 id="namespace-for-workspaces">Namespace for Workspaces</h2>
 
 <p>You can instruct Che server in what namespace(s) to create workspace pods. There are two scenarios. By default, every new workspace pod is created in a new namespace which is dictated by the following env:</p>
@@ -801,6 +856,8 @@ CHE_INFRA_OPENSHIFT_TOKEN
 <p>You may have one common namespace for all workspace pods:</p>
 
 <p><code class="highlighter-rouge">CHE_INFRA_OPENSHIFT_PROJECT="che-workspaces"</code></p>
+
+<p>If workspaces are created in the same namespace with Che server, a service account may be used instead of a token or credentials.</p>
 
 <h2 id="volumes">Volumes</h2>
 
@@ -889,7 +946,7 @@ CHE_INFRA_OPENSHIFT_TOKEN
 
 <p><strong><em>Che Server and Keycloak</em></strong></p>
 
-<p>KeyCloak server URL is retrieved from the <code class="highlighter-rouge">CHE_KEYCLOAK_AUTH-SERVER-URL</code> environment variable. A new installation of Che will use its own Keycloak server running in a Docker container pre-configured to communicate with Che server. Realm and client are mandatory environment variables. By default Keycloak environment variables are:</p>
+<p>KeyCloak server URL is retrieved from the <code class="highlighter-rouge">CHE_KEYCLOAK_AUTH__SERVER__URL</code> environment variable. A new installation of Che will use its own Keycloak server running in a Docker container pre-configured to communicate with Che server. Realm and client are mandatory environment variables. By default Keycloak environment variables are:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_KEYCLOAK_AUTH__SERVER__URL=http://${KC_ROUTE}:5050/auth
 CHE_KEYCLOAK_REALM=che
@@ -963,8 +1020,8 @@ POSTGRES_PASSWORD=keycloak
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/08/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 8, 2018 <br />
+               01/12/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 12, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

@@ -472,6 +472,55 @@
           
           
           
+          
+          
+          <li><a href="chedir_getting_started.html">Chedir Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="why_chedir.html">Why Chedir?</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_installation.html">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_project_setup.html">Project Setup</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_up_and_down.html">Up and Down</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chefile.html">Chefile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_ssh.html">SSH</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -1116,6 +1165,17 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_DEBUG_PORT=8000
 </code></pre></div></div>
 
+<h2 id="production-mode">Production Mode</h2>
+
+<p>You can also build own <code class="highlighter-rouge">INIT</code> and <code class="highlighter-rouge">SERVER</code> images to have custom configuration and binaries. To do so, clone <a href="https://github.com/eclipse/che">Che repo</a> and copy <code class="highlighter-rouge">dockerfiles</code> dir to the root of your custom assembly. If your custom Che server does not need any custom configuration, you may proceed to building Che server image by executing <code class="highlighter-rouge">dockerfiles/build.sh</code>. Once done, tag the resulted image the way you need. If your custom Che server requires custom configuration, and you want to let users override them in <code class="highlighter-rouge">che.env</code>, you will need to build own init image with a custom <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
+
+<p>Once done, you can start your custom binaries this way:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -ti -v '/var/run/docker.sock:/var/run/docker.sock -v /local/data/path:/data -e "IMAGE_CHE=your/che-server" -e "IMAGE_INIT=your/init-image" eclipse/che:$tag start'
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">IMAGE_CHE</code> is the image you have built in <code class="highlighter-rouge">dockerfiles/che</code>, and <code class="highlighter-rouge">IMAGE_INIT</code> is the one from <code class="highlighter-rouge">dockerfiles/init</code>.</p>
+
 <h2 id="docker-unix-socket-mounting-vs-tcp-mode">Docker Unix Socket Mounting vs TCP Mode</h2>
 
 <p>The <code class="highlighter-rouge">-v /var/run/docker.sock:/var/run/docker.sock</code> syntax is for mounting a Unix socket so that when a process inside the container speaks to a Docker daemon, the process is redirected to the same socket on the host system.</p>
@@ -1247,8 +1307,8 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/08/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 8, 2018 <br />
+               01/12/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 12, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

@@ -472,6 +472,55 @@
           
           
           
+          
+          
+          <li><a href="chedir_getting_started.html">Chedir Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="why_chedir.html">Why Chedir?</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_installation.html">Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_project_setup.html">Project Setup</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_up_and_down.html">Up and Down</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chefile.html">Chefile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir_ssh.html">SSH</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -802,6 +851,24 @@ $('#toc').on('click', 'a', function() {
 
 <p>However, it may happen that your browser (the client) cannot connect to a workspace agent. Che server may use an internal IP to reach workspace agent, while you may access a workspace from a machine that is located in a different network. If you see a message saying that IDE cannot be initialized, open browser dev console and take a look at failed requests (there should be a few to /project and project-type API). Odds are that the ephemeral port range is filtered in your network.</p>
 
+<h2 id="bootstrapping-failures">Bootstrapping Failures</h2>
+
+<p>When a workspace starts, Che server creates and starts a container/pod or a set of containers/pods as per environment recipe. Once the container/pod is running, a bootstrapping process begins - bootstrapper binary is downloaded and launched. If you see something about bootstrapping failures in server logs, and/or don’t see any output in machine tab in a workspace view, odds are that bootstrapper has been never downloaded. There can be several reasons for that:</p>
+
+<ul>
+  <li>network conditions (for example, running firewalld).</li>
+  <li>bad bootstrapper binary URL that Che server uses (often reproduced when deploying to OpenShift and missing must have envs)</li>
+</ul>
+
+<p>You may try to manually download bootstrapper binary. When on OpenShift, get a shell into the pod (rsh or terminal in web console) and run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /tmp/bootstrapper
+<span class="nb">ls</span> <span class="nt">-la</span>  <span class="c"># to check if there's a bootstrapper binary</span>
+curl <span class="k">${</span><span class="nv">CHE_URL</span><span class="k">}</span>/agent-binaries/linux_amd64/bootstrapper/bootstrapper
+</code></pre></div></div>
+
+<p>If this curl fails, something in your network blocks port 80, or 443 (if you use https routes on OpenShift).</p>
+
 
     <div class="tags">
         
@@ -841,8 +908,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/08/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 8, 2018 <br />
+               01/12/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 12, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
