@@ -896,9 +896,592 @@ docker pull eclipse/che-dev:nightly
 
 <h2 id="how-it-works">How It Works</h2>
 
+<p>Below is a high level overview of plugin delivery and loading. JavaScript plugin development flow <strong>does not imply replacing GWT extensions</strong>. The monolithic GWT script compiled from GWT code is still loaded into IDE.html. However, the client exposes <a href="https://github.com/eclipse/che/tree/che6-js-plugin/ide/che-core-ide-js-api/src/main/java/org/eclipse/che/ide/js/api">JavaScript extension points</a> that a JavaScript plugin can make use of (you will see interfaces annotated with <code class="highlighter-rouge">@JsType</code>), and a plugin loading mechanism (you may want to take a look at <a href="https://github.com/eclipse/che/blob/che6-js-plugin/ide/che-core-ide-js-api/src/main/java/org/eclipse/che/ide/js/plugin/PluginManager.java">PluginManager</a>. Server side is represented by a REST service that looks for plugins in a particular location and returns a list with contents of <code class="highlighter-rouge">package.json</code> files.</p>
+
 <figure><a class="no_icon" target="_blank" href="images/devel/js_flow.png"><img class="docimage" src="images/devel/js_flow.png" alt="" /></a><figcaption>Click to view a larger image</figcaption></figure>
 
-<h2 id="js-api-spec">JS API Spec</h2>
+<p>When IDE activates a plugin it calls activate function and passes the object which contains all IDE API. Argument that passed to activate function is:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">PluginContext</span> <span class="p">{</span>
+    <span class="nx">getApi</span><span class="p">():</span> <span class="nx">CheApi</span><span class="p">;</span>
+    <span class="nx">addDisposable</span><span class="p">(</span><span class="nx">d</span><span class="p">:</span> <span class="nx">Disposible</span><span class="p">):</span> <span class="k">void</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="packagejson">package.json</h2>
+
+<p>Each plugin has <code class="highlighter-rouge">package.json</code> with a set of mandatory and optional properties:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Mandatory</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>name</strong></td>
+      <td>string</td>
+      <td>name of the plugin, only lowercase and dash</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>version</strong></td>
+      <td>string</td>
+      <td>version of the plugin</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>publisher</strong></td>
+      <td>string</td>
+      <td>unique identificator of the person or organization whom publish plugin.</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>engines</strong></td>
+      <td>object</td>
+      <td>which has one property - <code class="highlighter-rouge">che</code> and value is minimal compatible version of the Che.</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>main</strong></td>
+      <td>string</td>
+      <td>path to the main js file which IDE will load.</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>loader</strong></td>
+      <td>string</td>
+      <td>possible values is “AMD” or “GWT” (reserved for future)</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><strong>description</strong></td>
+      <td>string</td>
+      <td>short description, may be used for plugin store</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><strong>displayName</strong></td>
+      <td>string</td>
+      <td>name, may be used for plugin store</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><strong>keywords</strong></td>
+      <td>array</td>
+      <td>contains keywords, may be useful for search in plugin store</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><strong>pluginDependencies</strong></td>
+      <td>array</td>
+      <td>contains plugin ids. Plugin ID format is <code class="highlighter-rouge">{publisher}.{name}</code></td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><strong>contributes</strong></td>
+      <td>object</td>
+      <td>contains plugin contributes description.</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Sample plugin <a href="https://github.com/evidolob/che-js-plugin/blob/master/package.json">package.json</a></p>
+
+<h2 id="contributes-object">Contributes Object</h2>
+
+<p>This declarative part of <code class="highlighter-rouge">package.json</code> contains actions, groups and themes.</p>
+
+<p><strong>images</strong> - array of image objects that contains image description object.</p>
+
+<p>Image object contains mandatory <strong>id</strong> property which is a unique string identifier and one of two options: <code class="highlighter-rouge">url</code> - the image URL string or “html” - the image html template, may be used for instance for FontAwesome icons.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"images"</span><span class="p">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+       <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.image1"</span><span class="p">,</span>
+       <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://png.icons8.com/download-from-cloud/ios7/32"</span>
+     <span class="p">},</span>
+     <span class="p">{</span>
+       <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.image2"</span><span class="p">,</span>
+       <span class="s2">"html"</span><span class="p">:</span> <span class="s2">"&lt;i class=</span><span class="se">\"</span><span class="s2">fa fa-bath</span><span class="se">\"</span><span class="s2"> aria-hidden=</span><span class="se">\"</span><span class="s2">true</span><span class="se">\"</span><span class="s2">&gt;&lt;/i&gt;"</span>
+     <span class="p">}</span>
+   <span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>actions</strong> - array of action description objects that can be of two types: <strong>action</strong> or <strong>group</strong>.</p>
+
+<p>Action object is object that describe some action. Action object contains:</p>
+
+<ul>
+  <li><strong>id</strong> - mandatory,  unique string identifier, with action will be registred in ActionManager</li>
+  <li><strong>text</strong> - mandatory, string that represents action text (for example in main menu)</li>
+  <li><strong>description</strong> - optional, string that shows in action tooltip</li>
+  <li><strong>icon</strong> - optional, string image id, Image element will be taken from ImageRegistry using id.</li>
+  <li><strong>addToGroup</strong> - array of  AddToGroup objects, specifies that the action should be added to an existing group. Action may be added to several groups. Object structure is:</li>
+  <li><strong>groupId</strong> - mandatory, action group id to which the action is added.</li>
+  <li><strong>anchor</strong> - mandatory, specify the position in the group. Can have values: “first”, “last”, “before” or “after”.</li>
+  <li><strong>relativeTo</strong> - mandatory if anchor set to:”before” or “after”, specifies the action before or after action is inserted.</li>
+  <li><strong>keybinding</strong> - object that describe keyboard shortcut for this action. Object contains fields : “win”, “linux”, “mac” which describes shortcut for all main OS. // TODO specify the keybinding format</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+       <span class="s2">"action"</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.test.action"</span><span class="p">,</span>
+         <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Hello JS API"</span><span class="p">,</span>
+         <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"First Action From JS Plugin"</span><span class="p">,</span>
+         <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"cjp.image1"</span><span class="p">,</span>
+         <span class="s2">"addToGroup"</span><span class="p">:</span> <span class="p">[</span>
+           <span class="p">{</span>
+             <span class="s2">"groupId"</span><span class="p">:</span> <span class="s2">"helpGroup"</span><span class="p">,</span>
+             <span class="s2">"relativeTo"</span><span class="p">:</span> <span class="s2">"someAction"</span><span class="p">,</span>
+             <span class="s2">"anchor"</span><span class="p">:</span> <span class="s2">"before"</span>
+           <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">"keybinding"</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">"win"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+           <span class="s2">"linux"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+           <span class="s2">"mac"</span><span class="p">:</span> <span class="s2">""</span>
+         <span class="p">}</span>
+       <span class="p">}</span>
+     <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Group object describes an action group. All actions, groups and separators described in this object are automatically included in the group. Group object has:</p>
+
+<ul>
+  <li><strong>id</strong> - mandatory,  unique string identifier with which group will be registered in <code class="highlighter-rouge">ActionManager</code></li>
+  <li><strong>text</strong> - optional, string that represents group text (if group used as sub menu)</li>
+  <li><strong>description</strong> - optional, string that shows group tooltip</li>
+  <li><strong>icon</strong> - optional, string image id, image element will be taken from <code class="highlighter-rouge">ImageRegistry</code> by its id</li>
+  <li><strong>popup</strong> - optional, boolean specifies how group presented in menu. If ‘true’, actions in it placed as sub-menu. If ‘false’, actions in it displayed as a section of the same menu delimited by separators</li>
+  <li><strong>addToGroup</strong> - array of  <code class="highlighter-rouge">AddToGroup</code> objects, see Action description</li>
+  <li><strong>actions</strong> - array, contains group, action, reference or delimiter :</li>
+  <li><strong>action</strong> - see Action description</li>
+  <li><strong>group</strong> - see Group description</li>
+  <li><strong>reference</strong> - object, allows to add an existing action to the group. Has one mandatory property “ref” which contains action id to add.</li>
+  <li><strong>separator</strong> - string constant, defines a separator between actions.</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+       <span class="s2">"group"</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.test.group"</span><span class="p">,</span>
+         <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"JS Group"</span><span class="p">,</span>
+         <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"JS Test Group"</span><span class="p">,</span>
+         <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"cjp.image2"</span><span class="p">,</span>
+         <span class="s2">"popup"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">"addToGroup"</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">"groupId"</span><span class="p">:</span> <span class="s2">"helpGroup"</span><span class="p">,</span>
+           <span class="s2">"relativeTo"</span><span class="p">:</span> <span class="s2">"someAction"</span><span class="p">,</span>
+           <span class="s2">"anchor"</span><span class="p">:</span> <span class="s2">"last"</span>
+         <span class="p">},</span>
+         <span class="s2">"actions"</span><span class="p">:</span> <span class="p">[</span>
+           <span class="p">{</span>
+             <span class="s2">"action"</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.action.in.group"</span><span class="p">,</span>
+               <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Action in Group"</span><span class="p">,</span>
+               <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Action defined in group"</span><span class="p">,</span>
+               <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"cjp.imageFactory"</span>
+             <span class="p">}</span>
+           <span class="p">},</span>
+           <span class="s2">"separator"</span><span class="p">,</span>
+           <span class="p">{</span>
+             <span class="s2">"group"</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"cjp.group.in.group"</span>
+             <span class="p">}</span>
+           <span class="p">},</span>
+           <span class="p">{</span>
+             <span class="s2">"reference"</span><span class="p">:</span> <span class="s2">"cjp.test.action"</span>
+           <span class="p">}</span>
+         <span class="p">]</span>
+       <span class="p">}</span>
+     <span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>themes</strong>  - array of object that describe theme, object contains 3 mandatory properties:</p>
+
+<ul>
+  <li><strong>id</strong> - string, the theme id</li>
+  <li><strong>description</strong> - string,  the theme description, used in theme selection dialog</li>
+  <li><strong>path</strong> - string, the path to the theme json file that contains all theme properties</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"themes"</span><span class="p">:[</span>
+     <span class="p">{</span>
+       <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"js.theme"</span><span class="p">,</span>
+       <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Theme Form JS Plugin"</span><span class="p">,</span>
+       <span class="s2">"path"</span><span class="p">:</span> <span class="s2">"theme/theme.json"</span>
+     <span class="p">}</span>
+   <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Example of <code class="highlighter-rouge">theme.json</code> can be found <a href="https://github.com/evidolob/che-js-plugin/blob/master/theme/theme.json">here</a></p>
+
+<h2 id="js-apihelper-file">JS API/Helper File</h2>
+
+<p>Before plugin is packaged as a final script with webpack, Che API dependency needs to be installed first (<strong>installDeps</strong> command in the <a href="#quick-start">quick-start</a>). You can take a look at <a href="https://github.com/eclipse/che/blob/che6-js-plugin/che-types/index.d.ts">index.d.ts</a> which is well documented and is being updated and maintained. You will find all extension points that the IDE offers and an easy way to implement interfaces.</p>
+
+<h2 id="adddisposable">addDisposable</h2>
+
+<p>Used to store any plugin relative disposable object. When plugin is deactivated IDE will call dispose method for all added Disposable objects.</p>
+
+<h2 id="imageregistry">imageRegistry</h2>
+
+<p>Holds and manages all IDE icon resources, each resource mapped to their id. There are 3 ways to provide an image: URL, HTML, image element factory.</p>
+
+<p>TypeScript Declaration:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">ImageRegistry</span> <span class="p">{</span>
+   <span class="cm">/**
+    * Register image url.
+    *
+    * @param id the image id
+    * @param url the image url
+    */</span>
+   <span class="nx">registerUrl</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">url</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="nx">Disposable</span><span class="p">;</span>
+   <span class="cm">/**
+    * Register image html. For example html may be some FontAwesome icon
+    *
+    * @param id the image id
+    * @param html the image html
+    */</span>
+   <span class="nx">registerHtml</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">html</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="nx">Disposable</span><span class="p">;</span>
+   <span class="cm">/**
+    * Register image factory. For example : factory may provided by GWT plugin which use ClientBundle for images or plugin may construct image element manually.
+    *
+    * @param id the image id
+    * @param factory the image factory
+    */</span>
+   <span class="nx">registerFactory</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">factory</span><span class="p">:</span> <span class="nx">ImageFactory</span><span class="p">):</span> <span class="nx">Disposible</span><span class="p">;</span>
+   <span class="cm">/**
+    * Returns new image element each time
+    *
+    * @param id the image id
+    * @return the image element or null if no image provided
+    */</span>
+   <span class="nx">getImage</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="nx">Element</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/**
+* Factory to create some image Element, for example it's may be from GWT Image/SVG resource.
+* Should return new element each time called.
+*/</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">ImageFactory</span> <span class="p">{</span>
+   <span class="p">():</span> <span class="nx">Element</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="actionmanager">actionManager</h2>
+
+<p>A manager for actions which is used to register action handlers.</p>
+
+<p>TypeScript Declaration:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ActionManager</span> <span class="p">{</span>
+  <span class="cm">/**
+   * Register action handlers.
+   * @param actionId the action id
+   * @param updateAction the update handler This method can be called frequently,          for instance, if an action is added to a toolbar, it will be updated twice a second.     This means that this method is supposed to work really fast, no real work should be done at this phase.
+      * @param performAction the perform handler
+      */</span>
+   <span class="nx">registerAction</span><span class="p">(</span><span class="nx">actionId</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">updateAction</span><span class="p">:</span> <span class="nx">UpdateAction</span><span class="p">,</span> <span class="nx">performAction</span><span class="p">:()</span><span class="o">=&gt;</span><span class="k">void</span><span class="p">):</span> <span class="nx">Disposible</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">interface</span> <span class="nx">UpdateAction</span> <span class="p">{</span>
+   <span class="cm">/**
+    * Updates the state of the action.
+    * This method can be called frequently, for
+    * instance, if an action is added to a toolbar, it will be updated twice a second. This means
+    * that this method is supposed to work really fast, no real work should be done at this phase.
+    *
+    * @param actionData the action state data
+    */</span>
+   <span class="p">(</span><span class="nx">d</span><span class="p">:</span> <span class="nx">ActionData</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">interface</span> <span class="nx">ActionData</span> <span class="p">{</span>
+   <span class="nx">getText</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+   <span class="nx">setText</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="nx">getDescription</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+   <span class="nx">setDescription</span><span class="p">(</span><span class="nx">description</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="nx">getImageElement</span><span class="p">():</span> <span class="nx">Element</span><span class="p">;</span>
+   <span class="nx">setImagetElement</span><span class="p">(</span><span class="nx">imageElement</span><span class="p">:</span> <span class="nx">Element</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="nx">isVisible</span><span class="p">():</span> <span class="kr">boolean</span><span class="p">;</span>
+   <span class="nx">setVisible</span><span class="p">(</span><span class="nx">visible</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="nx">isEnabled</span><span class="p">():</span> <span class="kr">boolean</span><span class="p">;</span>
+   <span class="nx">setEnabled</span><span class="p">(</span><span class="nx">enabled</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="nx">setEnabledAndVisible</span><span class="p">(</span><span class="nx">enabled</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="partmanager">partManager</h2>
+
+<p>Handles IDE Perspective, allows to open/close/switch Parts, manages opened Parts. Parts represent the content of the Che workbench, i.e. views and editors within the IDE. Che already provides various parts such as the project explorer, the output console, the build result view, file outline and the code editor. In this part of the tutorial, we describe how to implement a custom view and embed it into the Che IDE.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">PartManager</span> <span class="p">{</span>
+   <span class="cm">/**
+  * Sets passed part as active. Sets focus to part and open it.
+  *
+  * @param part part which will be active
+  */</span>
+   <span class="nx">activatePart</span><span class="p">(</span><span class="nx">part</span><span class="p">:</span> <span class="nx">Part</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="cm">/**
+    * Check is given part is active
+    *
+    * @return true if part is active
+    */</span>
+   <span class="nx">isActivePart</span><span class="p">(</span><span class="nx">part</span><span class="p">:</span> <span class="nx">Part</span><span class="p">):</span> <span class="kr">boolean</span><span class="p">;</span>
+   <span class="cm">/**
+    * Opens given Part
+    *
+    * @param part
+    * @param type
+    */</span>
+   <span class="nx">openPart</span><span class="p">(</span><span class="nx">part</span><span class="p">:</span> <span class="nx">Part</span><span class="p">,</span> <span class="nx">type</span><span class="p">:</span> <span class="nx">che</span><span class="p">.</span><span class="nx">ide</span><span class="p">.</span><span class="nx">parts</span><span class="p">.</span><span class="nx">PartStackType</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="cm">/**
+    * Hides given Part
+    *
+    * @param part
+    */</span>
+   <span class="nx">hidePart</span><span class="p">(</span><span class="nx">part</span><span class="p">:</span> <span class="nx">Part</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+   <span class="cm">/**
+    * Remove given Part
+    *
+    * @param part
+    */</span>
+   <span class="nx">removePart</span><span class="p">(</span><span class="nx">part</span><span class="p">:</span> <span class="nx">Part</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">Part</span> <span class="p">{</span>
+   <span class="cm">/** @return Title of the Part */</span>
+   <span class="nx">getTitle</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+   <span class="cm">/**
+    * Returns count of unread notifications. Is used to display a badge on part button.
+    *
+    * @return count of unread notifications
+    */</span>
+   <span class="nx">getUnreadNotificationsCount</span><span class="p">():</span> <span class="nx">number</span><span class="p">;</span>
+   <span class="cm">/**
+    * Returns the title tool tip text of this part. An empty string result indicates no tool tip. If
+    * this value changes the part must fire a property listener event with &lt;code&gt;PROP_TITLE&lt;/code&gt;.
+    *
+    * &lt;p&gt;The tool tip text is used to populate the title bar of this part's visual container.
+    *
+    * @return the part title tool tip (not &lt;code&gt;null&lt;/code&gt;)
+    */</span>
+   <span class="nx">getTitleToolTip</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+   <span class="cm">/**
+    * Return size of part. If current part is vertical panel then size is height. If current part is
+    * horizontal panel then size is width.
+    *
+    * @return size of part
+    */</span>
+   <span class="nx">getSize</span><span class="p">():</span> <span class="nx">number</span><span class="p">;</span>
+   <span class="cm">/**
+    * This method is called when Part is opened. Note: this method is NOT called when part gets
+    * focused. It is called when new tab in PartStack created.
+    */</span>
+   <span class="nx">onOpen</span><span class="p">():</span> <span class="k">void</span><span class="p">;</span>
+   <span class="cm">/** @return */</span>
+   <span class="nx">getView</span><span class="p">():</span> <span class="nx">Element</span><span class="p">;</span>
+   <span class="nx">getImageId</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+<span class="p">}</span>
+ <span class="kr">enum</span> <span class="nx">PartStackType</span> <span class="p">{</span>
+               <span class="cm">/**
+            * Contains navigation parts. Designed to navigate by project,          types, classes and any other
+            * entities. Usually placed on the LEFT side of the IDE.
+            */</span>
+               <span class="nx">NAVIGATION</span><span class="p">,</span>
+               <span class="cm">/**
+                * Contains informative parts. Designed to display the state of the application, project or
+                * processes. Usually placed on the BOTTOM side of the IDE.
+                */</span>
+               <span class="nx">INFORMATION</span><span class="p">,</span>
+               <span class="cm">/**
+                * Contains editing parts. Designed to provide an ability to edit any resources or settings.
+                * Usually placed in the CENTRAL part of the IDE.
+                */</span>
+               <span class="nx">EDITING</span><span class="p">,</span>
+               <span class="cm">/**
+                * Contains tooling parts. Designed to provide handy features and utilities, access to other
+                * services or any other features that are out of other PartType scopes. Usually placed on the
+                * RIGHT side of the IDE.
+                */</span>
+               <span class="nx">TOOLING</span>
+           <span class="p">}</span>
+<span class="s2">```
+
+## editorManager
+
+Manages Editors, it allows to open a new editor with given file, retrieve current active editor and find all the opened editors.
+
+For now editor manager has two methods for editor and file related events:
+
+`</span><span class="nx">addFileOperationListener</span><span class="p">(</span><span class="nx">listener</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="nx">FileOperationEvent</span><span class="p">):</span> <span class="k">void</span> <span class="p">}):</span><span class="nx">Disposable</span><span class="p">;</span><span class="s2">`
+
+and
+
+```</span><span class="nx">js</span>
+<span class="nx">addEditorOpenedListener</span><span class="p">(</span><span class="nx">listener</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="nx">EditorOpenedEvent</span><span class="p">):</span> <span class="k">void</span> <span class="p">}):</span><span class="nx">Disposable</span><span class="p">;</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">EditorOpenedEvent</span> <span class="p">{</span>
+   <span class="nx">getFile</span><span class="p">():</span> <span class="nx">VirtualFile</span><span class="p">;</span>
+   <span class="nx">getEditor</span><span class="p">():</span> <span class="nx">EditorPartPresenter</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">EditorPartPresenter</span> <span class="p">{</span>
+ <span class="c1">//TODO</span>
+<span class="p">}</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">FileOperationEvent</span> <span class="p">{</span>
+   <span class="nx">getFile</span><span class="p">():</span> <span class="nx">VirtualFile</span><span class="p">;</span>
+   <span class="nx">getOperationType</span><span class="p">():</span> <span class="nx">che</span><span class="p">.</span><span class="nx">ide</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">FileOperation</span>
+<span class="p">}</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">VirtualFile</span> <span class="p">{</span>
+   <span class="nx">getLocation</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+   <span class="nx">getName</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+   <span class="nx">getDisplayName</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+   <span class="nx">isReadOnly</span><span class="p">():</span> <span class="kr">boolean</span><span class="p">;</span>
+   <span class="nx">getContentUrl</span><span class="p">():</span> <span class="nb">String</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="eventbus">eventBus</h2>
+
+<p>The class <code class="highlighter-rouge">com.google.web.bindery.event.shared.EventBus</code> which used in IDE to fire and listen events, but it’s a GWT class and it’s not possible to expose it to JS. Also all events that  <code class="highlighter-rouge">EventBus</code> can handle should extend <code class="highlighter-rouge">com.google.web.bindery.event.shared.Event</code> class which is not possible in JS code. So, a new <code class="highlighter-rouge">EventBus</code> and event system is provided. For now, only a few events will be transmitted to a new <code class="highlighter-rouge">EventBus</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">eventBus</span> <span class="o">-</span> <span class="nx">EventBus</span> <span class="nx">object</span><span class="p">:</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">EventBus</span> <span class="p">{</span>
+   <span class="nx">fire</span><span class="o">&lt;</span><span class="nx">E</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">type</span><span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">E</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">event</span><span class="p">:</span> <span class="nx">E</span><span class="p">):</span> <span class="nx">EventBus</span><span class="p">;</span>
+   <span class="nx">addHandler</span><span class="o">&lt;</span><span class="nx">E</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">type</span><span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">E</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="nx">E</span><span class="p">):</span> <span class="k">void</span> <span class="p">});</span>
+<span class="p">}</span>
+<span class="nx">declare</span> <span class="kr">interface</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">E</span><span class="o">&gt;</span> <span class="p">{</span>
+   <span class="nx">type</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Sample code:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ctx</span><span class="p">.</span><span class="nx">getApi</span><span class="p">().</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">addHandler</span><span class="p">(</span><span class="nx">che</span><span class="p">.</span><span class="nx">ide</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">FileOperationEvent</span><span class="p">.</span><span class="nx">TYPE</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">{</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">getFile</span><span class="p">().</span><span class="nx">getLocation</span><span class="p">()</span> <span class="o">+</span> <span class="s2">"@"</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">getOperationType</span><span class="p">());</span>
+ <span class="p">});</span>
+</code></pre></div></div>
+
+<p>Editor related events:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">enum</span> <span class="nx">FileOperation</span> <span class="p">{</span>
+               <span class="nx">OPEN</span><span class="p">,</span>
+               <span class="nx">SAVE</span><span class="p">,</span>
+               <span class="nx">CLOSE</span>
+           <span class="p">}</span>
+  <span class="kd">class</span> <span class="nx">FileOperationEvent</span> <span class="p">{</span>
+               <span class="kr">static</span> <span class="nx">TYPE</span><span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">FileOperationEvent</span><span class="o">&gt;</span><span class="p">;</span>
+               <span class="nx">getFile</span><span class="p">():</span> <span class="nx">VirtualFile</span><span class="p">;</span>
+               <span class="nx">getOperationType</span><span class="p">():</span> <span class="nx">che</span><span class="p">.</span><span class="nx">ide</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">FileOperation</span>
+   <span class="p">}</span>
+   <span class="kd">class</span> <span class="nx">EditorOpenedEvent</span> <span class="p">{</span>
+               <span class="kr">static</span> <span class="nx">TYPE</span><span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">EditorOpenedEvent</span><span class="o">&gt;</span><span class="p">;</span>
+               <span class="nx">getFile</span><span class="p">():</span> <span class="nx">VirtualFile</span><span class="p">;</span>
+               <span class="nx">getEditor</span><span class="p">():</span> <span class="nx">EditorPartPresenter</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+<p>Workspace server events:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">ServerRunningEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">ServerRunningEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getServerName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">WsAgentServerRunningEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">WsAgentServerRunningEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">TerminalAgentServerRunningEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">TerminalAgentServerRunningEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">ExecAgentServerRunningEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">ExecAgentServerRunningEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">ServerStoppedEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">ServerStoppedEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getServerName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">WsAgentServerStoppedEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">WsAgentServerStoppedEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">TerminalAgentServerStoppedEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">TerminalAgentServerStoppedEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+               <span class="kd">class</span> <span class="nx">ExecAgentServerStoppedEvent</span> <span class="p">{</span>
+                   <span class="kr">static</span> <span class="nx">TYPE</span> <span class="p">:</span> <span class="nx">EventType</span><span class="o">&lt;</span><span class="nx">ExecAgentServerStoppedEvent</span><span class="o">&gt;</span><span class="p">;</span>
+                   <span class="nx">getMachineName</span><span class="p">():</span> <span class="nx">string</span><span class="p">;</span>
+               <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="dialogmanager">dialogManager</h2>
+
+<p>Dialog Manager allows displaying Message, Confirm, Input and Choice dialogues. A message dialogue consists of a title, body/content and confirmation button. Confirmation button text is ‘OK’ by default, but it can be overridden.</p>
+
+<p>Arguments passed to display the dialog:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">dialogData: MessageDialogData</code> - the information necessary to create a Message dialog window</li>
+  <li><code class="highlighter-rouge">confirmButtonClickedHandler: ClickButtonHandler</code> - the handler is used when user click on confirmation button</li>
+</ul>
+
+<p><strong>DialogData</strong> contains fields:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">title: string</code> - title of dialog</li>
+  <li><code class="highlighter-rouge">content: string</code> - content for displaying</li>
+</ul>
+
+<p><code class="highlighter-rouge">MessageDialogData</code> extends <code class="highlighter-rouge">DialogData</code> and allows to override Confirmation button text:</p>
+
+<p><code class="highlighter-rouge">confirmButtonText: string</code> - confirmation button named ‘OK’ by default</p>
+
+<p>Confirmation dialog consists of a title, main part with text as content, confirmation and cancel buttons. Text for confirmation and cancel buttons can be overridden.</p>
+
+<p>Arguments that passed to display the dialog are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">dialogData: ConfirmDialogData</code> - information necessary to create a Confirmation dialog window</li>
+  <li><code class="highlighter-rouge">confirmButtonClickedHandler: ClickButtonHandler</code> - the handler is used when confirmation button is clicked</li>
+  <li><code class="highlighter-rouge">cancelButtonClickedHandler: ClickButtonHandler</code> - the handler is used when cancel button is clicked</li>
+  <li><code class="highlighter-rouge">ConfirmDialogData</code> extends <code class="highlighter-rouge">MessageDialogData</code> and allows to override Cancel button text:</li>
+  <li><code class="highlighter-rouge">cancelButtonText: string</code> - cancel button named ‘Cancel’ by default</li>
+</ul>
+
+<p>Input dialog consists of a title, main part with input field and label for it, confirmation and cancel buttons. Text for confirmation and cancel buttons can be overridden. It’s possible to initialize Input field by initial text. The initial text may be pre-selected.</p>
+
+<p>Arguments that passed to display the dialog are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">dialogData: InputDialogData</code> - the information necessary to create an Input dialog window</li>
+  <li><code class="highlighter-rouge">inputAcceptedHandler: InputAcceptedHandler</code> - the handler is used when user click on confirmation button</li>
+  <li><code class="highlighter-rouge">cancelButtonClickedHandler: ClickButtonHandler</code> - the handler is used when user click on cancel button</li>
+  <li><code class="highlighter-rouge">InputDialogData</code> extends <code class="highlighter-rouge">ConfirmDialogData</code> and contains fields:</li>
+  <li><code class="highlighter-rouge">initialText: string</code> - text used to initialize the input, may be pre-selected. Selection begins at the specified <code class="highlighter-rouge">{@code selectionStartIndex}</code><code class="highlighter-rouge"> and extends to the character at index </code><code class="highlighter-rouge">{@code selectionLength}</code>.</li>
+  <li><code class="highlighter-rouge">selectionStartIndex: number</code> - beginning index of the initial text to select, inclusive.</li>
+  <li><code class="highlighter-rouge">selectionLength: number</code> - number of characters to be selected in the input.</li>
+</ul>
+
+<p>Choice dialog consists of a title, main part with text as content and three buttons to confirm some choice.</p>
+
+<p>Arguments that passed to display the dialog are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">dialogData: ChoiceDialogData</code> - the information necessary to create a Choice dialog window</li>
+  <li><code class="highlighter-rouge">firstButtonClickedHandler: ClickButtonHandler</code> - handler is used when the first button on the right is clicked</li>
+  <li><code class="highlighter-rouge">secondButtonClickedHandler: ClickButtonHandler</code> - handler is used when the second button on the right is clicked</li>
+  <li><code class="highlighter-rouge">thirdButtonClickedHandler: ClickButtonHandler</code> - handler is used when the third button on the right is clicked</li>
+  <li><code class="highlighter-rouge">ChoiceDialogData</code> extends <code class="highlighter-rouge">DialogData</code> and contains fields:</li>
+  <li><code class="highlighter-rouge">firstChoiceButtonText: string</code> - text to display in first choice button.</li>
+  <li><code class="highlighter-rouge">secondChoiceButtonText: string</code> - text to display in second choice button</li>
+  <li><code class="highlighter-rouge">thirdChoiceButtonText: string</code> - text to display in third choice button</li>
+</ul>
 
 
     <div class="tags">
@@ -931,8 +1514,8 @@ docker pull eclipse/che-dev:nightly
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/12/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 12, 2018 <br />
+               01/16/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 16, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
