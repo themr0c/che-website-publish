@@ -590,14 +590,14 @@
           
           
           
+          <li class="active"><a href="authentication.html">Security Model</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="permissions.html">Permissions</a></li>
-          
-          
-          
-          
-          
-          
-          <li><a href="multiuser_api.html">REST API</a></li>
           
           
           
@@ -816,13 +816,109 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<h2 id="auth-filters">Auth Filters</h2>
+<h2 id="auth-filters-on-master">Auth Filters on master</h2>
+<p>Che master can handle both types of signed requests - using Keycloak token or Machine token.
+ Authentication tokens can be send either in a <code class="highlighter-rouge">Authorization</code> header or <code class="highlighter-rouge">token</code> query param.</p>
+
+<p>In case of Keycloak tokens, authentication filter chain contains of two filters:</p>
+
+<ul>
+  <li><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakAuthenticationFilter</strong> - validates signature of the Keycloak JWT token;</li>
+  <li>
+    <p><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakEnvironmentInitalizationFilter</strong> - extracts user data from JWT, finds or creates
+   appropriate user in the Che DB, and set user principal to the session.</p>
+
+    <p>If the request was made using machine token only (e.g. from ws agent) then it is only one auth filter in the chain:</p>
+  </li>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.server.MachineLoginFilter</strong> - finds userId given token belongs to, than retrieves user instance and sets principal to the session.</li>
+</ul>
+
+<h2 id="auth-filters-on-agents">Auth Filters on agents</h2>
+<p>Agents cannot be queried using Keycloak token, so there is only Machine Token option. Machine token can be passed in header or query param.</p>
+
+<ul>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on master, except that user data queried from master’s user REST api.</li>
+</ul>
 
 <h2 id="keycloak-vs-machine-token">Keycloak vs Machine Token</h2>
 
+<p>Machine tokens were introduced to avoid passing the Keycloak tokens to the machine side (which can be potentially insecure). Another reason is that Keycloak tokens may have relatively small lifetime and require periodical renewal/refresh which is hard to manage and keep in sync with same user session tokens on clients e.t.c.</p>
+
+<p>So from implementation side, it is the simple 3-side <strong>User</strong> &lt;-&gt; <strong>Workspace</strong> &lt;-&gt; <strong>Machine Token</strong> mapping, and token is injected into machine during its startup and remains valid until the workspace will be stopped. Unlike JWT, Machine token doesn’t carry any information inside, it’s just a randomly generated string. IDE as a general client, holds both of those tokens in multi-user mode, and uses them depending of where the request goes. Most of the job to obtain/refresh/invalidate of Keycloak tokens on IDE or Dashboard clients is outsourced to the native Keycloak js library.</p>
+
+<h2 id="obtaining-keycloak-endpoints">Obtaining Keycloak endpoints</h2>
+
+<p>There is separate REST service to obtain main Keycloak endpoints for the current installation. It helps to clients to find out URLs for basic operations like login/logout, profile reading, realm name etc. This service is not secured with any authentication and accessible for any client. Service URL is: <code class="highlighter-rouge">http://&lt;wsmaster_host&gt;:&lt;port&gt;/api/keycloak/settings</code>
+Example output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "che.keycloak.token.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/token",
+  "che.keycloak.profile.endpoint": "http://172.19.20.9:5050/auth/realms/che/account",
+  "che.keycloak.client_id": "che-public",
+  "che.keycloak.auth_server_url": "http://172.19.20.9:5050/auth",
+  "che.keycloak.password.endpoint": "http://172.19.20.9:5050/auth/realms/che/account/password",
+  "che.keycloak.logout.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/logout",
+  "che.keycloak.realm": "che"
+}
+</code></pre></div></div>
+
 <h2 id="obtaining-token-from-keycloak">Obtaining Token From Keycloak</h2>
 
+<p>The simplest way to obtain Keycloak auth token, is to perform request to the token endpoint with username and password credentials. This request can be schematically described as following cURL request:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl
+    <span class="nt">--data</span> <span class="s2">"grant_type=password&amp;client_id=&lt;client_name&gt;&amp;username=&lt;username&gt;&amp;password=&lt;password&gt;"</span>
+     http://&lt;keyckloak_host&gt;:5050/auth/realms/&lt;realm_name&gt;/protocol/openid-connect/token
+</code></pre></div></div>
+
+<p>Since the two main Che clients (IDE and Dashboard) utilizes native Keycloak js library, they’re using a customized Keycloak login page and somewhat more complicated authentication mechanism using <code class="highlighter-rouge">grant_type=authorization_code</code>. It’s like a two step authentication, when first step is login and obtaining authorization code, and second step is obtaining token using this code.</p>
+
+<p>Example of correct token response:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+   </span><span class="s2">"access_token"</span><span class="p">:</span><span class="s2">"eyJhb...&lt;rest of JWT token here&gt;"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"refresh_expires_in"</span><span class="p">:</span><span class="mi">1800</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"refresh_token"</span><span class="p">:</span><span class="s2">"Nj0C...&lt;rest of refresh token here&gt;"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"token_type"</span><span class="p">:</span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"not-before-policy"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"session_state"</span><span class="p">:</span><span class="s2">"14de1b98-8065-43e1-9536-43e7472250c9"</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="using-swagger-or-rest-clients">Using Swagger or REST Clients</h2>
+
+<p>User’s Keycloak token is used to execute queries to secured API on his behalf through REST clients. A valid token must be attached as request header or query parameter - <code class="highlighter-rouge">?token=$token</code>. Che Swagger can be accessed from <code class="highlighter-rouge">http://che_host:8080/swagger</code>. A user must be signed-in through Keycloak so that access token is included in request headers.</p>
+
+<p>By default, swagger loads <code class="highlighter-rouge">swagger.json</code> from <a href="che_master.html">Master</a>.</p>
+
+<p>To work with WS Agent, a URL to its <code class="highlighter-rouge">swagger.json</code> should be provided. It can be retrieved from <a href="workspace_data_model.html#runtime">Workspace Runtime</a>, by getting URL to <a href="servers.html">WS Agent server</a> endpoint and adding <code class="highlighter-rouge">api/docs/swagger.json</code> to it. Also, to authenticate on WS Agent API, user must include Machine Token, which can be found in Workspace Runtime as well.</p>
+
+<p>To use Swagger for a workspace agent, user must do following steps:</p>
+
+<ul>
+  <li>get workspace object with runtimes fetched (using <code class="highlighter-rouge">/api/workspace/&lt;workspace_key&gt;</code> service)</li>
+  <li>get WS agent API endpoint URL, and add a path to its <code class="highlighter-rouge">swagger.json</code> (e.g. <code class="highlighter-rouge">http://&lt;che_host&gt;:&lt;machine_port&gt;/api/docs/swagger.json</code> for Docker or <code class="highlighter-rouge">http://&lt;ws-agent-route&gt;/api/docs/swagger.json</code> for OpenShift ). Put it in the upper bar <code class="highlighter-rouge">URL</code> field:</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"wsagent/http"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.180:32777/api"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RUNNING"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li>get machine token from <code class="highlighter-rouge">runtime.machineToken</code> field, and put it in the upper bar <code class="highlighter-rouge">token</code> field</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>machineToken": "machinet9854958jdsdhakdh48hsdg",
+</code></pre></div></div>
+
+<ul>
+  <li>click Explore to load Swagger for WS Agent</li>
+</ul>
+
+<figure><img class="docimage" src="images/devel/swagger.png" alt="" /></figure>
+
 
 
     <div class="tags">
@@ -851,8 +947,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/16/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 16, 2018 <br />
+               01/17/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 17, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
