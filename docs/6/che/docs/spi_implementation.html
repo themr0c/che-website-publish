@@ -1120,6 +1120,49 @@ Note that server URL can be rewritten with <code class="highlighter-rouge">URLRe
 <span class="o">}</span>
 </code></pre></div></div>
 
+<p>In addition there are server probes which may be scheduled to continuously checks server liveness. Here is an example of how to do this:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.eclipse.che.api.workspace.server.hc.probe.ProbeResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.api.workspace.server.hc.probe.ProbeResult.ProbeStatus</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.api.workspace.server.hc.probe.ProbeScheduler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.api.workspace.server.hc.probe.WorkspaceProbesFactory</span><span class="o">;</span>
+
+<span class="kd">private</span> <span class="kd">class</span> <span class="nc">MyInternalRuntime</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">ProbeScheduler</span> <span class="n">probeScheduler</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">WorkspaceProbesFactory</span> <span class="n">probesFactory</span><span class="o">;</span>
+  <span class="o">...</span>
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">doScheduleServersLivenessProbes</span><span class="o">(</span><span class="n">String</span> <span class="n">machineName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InfrastructureException</span> <span class="o">{</span>
+    <span class="n">RuntimeIdentity</span> <span class="n">identity</span> <span class="o">=</span> <span class="n">getContext</span><span class="o">().</span><span class="na">getIdentity</span><span class="o">();</span>
+    <span class="n">probeScheduler</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span>
+      <span class="n">probesFactory</span><span class="o">.</span><span class="na">getProbes</span><span class="o">(</span><span class="n">identity</span><span class="o">.</span><span class="na">getWorkspaceId</span><span class="o">(),</span> <span class="n">machineName</span><span class="o">,</span> <span class="cm">/*resolved machine servers should be here instead of empty map*/</span> <span class="n">emptyMap</span><span class="o">()),</span>
+      <span class="k">new</span> <span class="nf">ServerLivenessHandler</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">class</span> <span class="nc">ServerLivenessHandler</span> <span class="kd">implements</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ProbeResult</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">accept</span><span class="o">(</span><span class="n">ProbeResult</span> <span class="n">probeResult</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">String</span> <span class="n">machineName</span> <span class="o">=</span> <span class="n">probeResult</span><span class="o">.</span><span class="na">getMachineName</span><span class="o">();</span>
+      <span class="n">String</span> <span class="n">serverName</span> <span class="o">=</span> <span class="n">probeResult</span><span class="o">.</span><span class="na">getServerName</span><span class="o">();</span>
+      <span class="n">ProbeStatus</span> <span class="n">probeStatus</span> <span class="o">=</span> <span class="n">probeResult</span><span class="o">.</span><span class="na">getStatus</span><span class="o">();</span>
+      <span class="n">Server</span> <span class="n">server</span> <span class="o">=</span> <span class="cm">/*assign server which has name serverName to which probe is related instead of null*/</span> <span class="kc">null</span><span class="o">;</span>
+      <span class="n">ServerStatus</span> <span class="n">oldServerStatus</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="na">getStatus</span><span class="o">();</span>
+      <span class="n">ServerStatus</span> <span class="n">serverStatus</span><span class="o">;</span>
+
+      <span class="k">if</span> <span class="o">(</span><span class="n">probeStatus</span> <span class="o">==</span> <span class="n">ProbeStatus</span><span class="o">.</span><span class="na">FAILED</span> <span class="o">&amp;&amp;</span> <span class="n">oldServerStatus</span> <span class="o">==</span> <span class="n">ServerStatus</span><span class="o">.</span><span class="na">RUNNING</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">serverStatus</span> <span class="o">=</span> <span class="n">ServerStatus</span><span class="o">.</span><span class="na">STOPPED</span><span class="o">;</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">probeStatus</span> <span class="o">==</span> <span class="n">ProbeStatus</span><span class="o">.</span><span class="na">PASSED</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">oldServerStatus</span> <span class="o">!=</span> <span class="n">ServerStatus</span><span class="o">.</span><span class="na">RUNNING</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">serverStatus</span> <span class="o">=</span> <span class="n">ServerStatus</span><span class="o">.</span><span class="na">RUNNING</span><span class="o">;</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="c1">// set new status serverStatus into machine with name machineName</span>
+
+      <span class="c1">// send event about changing server status</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
 <h2 id="volumes">Volumes</h2>
 
 <p>A <a href="volumes.html">volume</a> is a persistent storage that can be used for sharing data between machines of a workspace or for saving data persistently. Volumes field in a machine configuration is a map where key is volume name and value is volume itself. For now, volume object has only one field <code class="highlighter-rouge">path</code>. It’s an absolute path where volume should be mounted in the machine.</p>
@@ -1168,8 +1211,8 @@ Note that server URL can be rewritten with <code class="highlighter-rouge">URLRe
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               01/17/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Jan 17, 2018 <br />
+               01/22/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Jan 22, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
