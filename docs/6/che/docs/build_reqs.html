@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="extensionsdev_docsassembly,  framework, overview, master, server, REST API">
-<title>REST API | Eclipse Che Documentation</title>
+<meta name="keywords" content="dev_docs,  java. maven, node, npm">
+<title>Build Requirements | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -156,7 +156,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the REST API page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Build Requirements page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -174,7 +174,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="REST API">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Build Requirements">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -316,7 +316,7 @@
           
           
           
-          <li class="active"><a href="rest_api.html">REST API</a></li>
+          <li><a href="rest_api.html">REST API</a></li>
           
           
           
@@ -629,7 +629,7 @@
           
           
           
-          <li><a href="build_reqs.html">Pre-Reqs&#58 Building Che</a></li>
+          <li class="active"><a href="build_reqs.html">Pre-Reqs&#58 Building Che</a></li>
           
           
           
@@ -750,7 +750,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">REST API</h1>
+   <h1 class="post-title-main">Build Requirements</h1>
 </div>
 
 
@@ -788,13 +788,61 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<p>Eclipse Che server side components - both for master and workspace agents - are exposed as REST services which makes it easy to integrate Che in other platforms or use custom clients to create and run workspaces, import and update projects, update/delete workspaces and associated objects etc.</p>
+<h2 id="build-command">Build Command</h2>
 
-<p>You can make yourself familiar with available APIs in Swagger UI page - all methods have swagger annotations. Che master APIs are available at at <code class="highlighter-rouge">${CHE_HOST}/swagger</code>. If you use multi-user Che flavor, you will need <a href="authentication.html">authentication token</a>.</p>
+<p><code class="highlighter-rouge">mvn clean install</code></p>
 
-<p>Probably, <a href="https://github.com/eclipse/che/blob/master/wsmaster/che-core-api-workspace/src/main/java/org/eclipse/che/api/workspace/server/WorkspaceService.java">workspace API</a> is the most interesting one to take a closer look. Workspace API lets you remotely interact with Che master to create developer environments - create, update and delete workspaces, start workspaces by creating and deleting runtime, add, update and delete workspace environments, associate commands with a workspace.</p>
+<p>Execute this command in the root of your custom assembly or Che repo. To make your build faster, you may use the following arguments:</p>
 
-<p>Workspace agent APIs focus on <a href="project_types.html">project types</a>, <a href="projects.html">projects</a> and things related to projects, like <a href="version_control.html">Git</a>. To see the list of available workspace REST APIs, follow instructions in <a href="authentication.html">authentication docs</a>. With <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectService.java">Project API</a> you can programmatically create/import projects in a workspace, update configuration, get file content using custom plugins or 3rd-party clients.</p>
+<p><code class="highlighter-rouge">-Dskip-enforce -DskipTests -Dskip-validate-sources -Dfindbugs.skip -DskipIntegrationTests=true -Dmdep.analyze.skip=true</code></p>
+
+<p>If you prepare a PR to upstream Che, make sure build is a success with just <code class="highlighter-rouge">mvn clean install</code> with all the tests and enforcers. If you have enough CPU, you may also add <code class="highlighter-rouge">-Dgwt.compiler.localWorkers=4</code> so that 4 CPU cores will be used during GWT compilation.</p>
+
+<h2 id="pre-reqs">Pre-Reqs</h2>
+
+<ul>
+  <li>JDK 1.8.0_130+</li>
+  <li>Maven 3.3.5+</li>
+  <li>Go 1.8+</li>
+</ul>
+
+<p>By default, Che is built with docker profile, which means Dashboard is built in a Docker container. You may use a different profile though - <code class="highlighter-rouge">mvn clean install -Pnative</code> - in that case the following Node.JS version needs to be available:</p>
+
+<ul>
+  <li>Node.JS 5.4+</li>
+</ul>
+
+<p>If your <a href="assemblies.html">custom assembly</a> does not bring any changes to Dashboard, <a href="https://github.com/eclipse/che/tree/master/agents">Golang agents</a> and <a href="what_are_workspaces.html#bootstrapper">bootstrapper</a>, you just need JDK 1.8.0_130+ installed.</p>
+
+<p>At least 2 CPUs and 8GB RAM (recommended) is required.</p>
+
+<h2 id="build-in-docker">Build in Docker</h2>
+
+<p>You can use a <a href="https://github.com/eclipse/che/blob/master/dockerfiles/dev/Dockerfile">dev Docker image</a>:</p>
+
+<p><code class="highlighter-rouge">docker run -ti -v ~/.m2:/home/user/.m2 -v /path/to/che/assembly:/che eclipse/che-dev:nightly sh -c "mvn clean install"</code></p>
+
+<p>We recommend mounting Maven repo (<code class="highlighter-rouge">-v ~/.m2:/home/user/.m2</code>) to persist dependencies and make subsequent builds faster.</p>
+
+<h2 id="build-in-che">Build in Che</h2>
+
+<p>See: <a href="che_in_che_quickstart.html">Che in Che quickstart</a></p>
+
+<h2 id="enforcers">Enforcers</h2>
+
+<p>There are a few Maven enforcers brought by a parent pom.</p>
+
+<p><strong>License</strong></p>
+
+<p>All source file should have expected license. If your build fails because of a missing license, you may run <code class="highlighter-rouge">mvn license:format</code></p>
+
+<p><strong>Dependency Convergence</strong></p>
+
+<p>Your custom dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code class="highlighter-rouge">maven-depmgt-pom</code> or in a root pom of an assembly).</p>
+
+<p><strong>Formatting</strong></p>
+
+<p>See: <a href="https://github.com/eclipse/che/wiki/Development-Workflow#code-style">Code Style</a></p>
 
 
     <div class="tags">
@@ -803,15 +851,7 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
-        
-        
-        
         <a href="tag_dev_docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev_docs</a>
-        
-        
-        
-        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
         
         
         
