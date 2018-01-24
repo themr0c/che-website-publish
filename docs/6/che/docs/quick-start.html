@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="chedirfactories,  chedir, factories">
-<title>Getting Started | Eclipse Che Documentation</title>
+<meta name="keywords" content="installationdocker,  docker, installation, minishift, openshift">
+<title>Quick-Start | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Getting Started page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Quick-Start page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Getting Started">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Quick-Start">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -232,7 +232,7 @@
           
           
           
-          <li><a href="quick-start.html">Quick-Start</a></li>
+          <li class="active"><a href="quick-start.html">Quick-Start</a></li>
           
           
           
@@ -464,7 +464,7 @@
           
           
           
-          <li class="active"><a href="chedir_getting_started.html">Chedir Getting Started</a></li>
+          <li><a href="chedir_getting_started.html">Chedir Getting Started</a></li>
           
           
           
@@ -761,7 +761,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Getting Started</h1>
+   <h1 class="post-title-main">Quick-Start</h1>
 </div>
 
 
@@ -799,41 +799,41 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<p>The Chedir getting started guide will walk you through your first Chedir project, and show the basic features Chedir has to offer.</p>
+<h2 id="minishift">MiniShift</h2>
 
-<p>If you are curious what benefits Chedir has to offer, you should also read the <a href="why_chedir.html">Why Chedir</a> page.</p>
+<p>Pre-reqs: Running <a href="https://docs.openshift.org/latest/minishift/getting-started/index.html">MiniShift</a> instance</p>
 
-<p>Before diving into your first workspace, please check how to use the latest version of Chedir, which is also part of the <a href="docker.html">Eclipse Che CLI</a>. And since Docker is required for everything related to Che, make sure that is installed as well.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone a source code repo that you want to convert into a workspace</span>
-git clone https://github.com/che-samples/web-java-spring-petclinic
-<span class="nb">cd </span>web-java-spring-petclinic
-
-<span class="c"># Convert it into a workspace running in a private Che server</span>
-docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
-                    <span class="nt">-v</span> &lt;path&gt;:/data
-                    <span class="nt">-v</span> &lt;path-to-web-java-spring-petclinic-folder&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir up
-
-<span class="c"># Note: Currently requires no other Che servers to be running simultaneously</span>
-<span class="c"># New version coming will allow many directories mounted into a single server</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/minishift/minishift-addons
+minishift addons install &lt;path_to_minishift-addons&gt;
+minishift addons <span class="nb">enable </span>che
+minishift addons apply <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:nightly <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">OPENSHIFT_TOKEN</span><span class="o">=</span><span class="k">$(</span>oc whoami <span class="nt">-t</span><span class="k">)</span> <span class="se">\</span>
+    che
 </code></pre></div></div>
 
-<p>After running the above commands, you will have a project inside of a workspace inside of a running Che server. The workspace has its own runtime, powered by an Ubuntu Docker image. The project is mounted from the local directory into the workspace and is given full git capabilities.</p>
+<p>Installation and configuration docs:</p>
 
-<p>You can either open the IDE in your browser to work on the project immediately. The Web IDE has a terminal for accessing the Docker image powering the workspace. You can SSH into the workspace by pressing the <code class="highlighter-rouge">SSH</code> button in the IDE to get connectivity details. You can then make modifications, set the project type in the IDE, use language intellisense, or run a debugger. When you are done making modifications, you can use the IDE to commit and push changes with git, or continue to do those on your command line. You can then stop the workspace and unlink it with the following command:</p>
+<p><a href="openshift.html">Single</a> and <a href="multi-user-openshift.html">multi User on OpenShift</a></p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
-                    <span class="nt">-v</span> &lt;path&gt;:/data
-                    <span class="nt">-v</span> &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir down
+<p><a href="openshift-config.html">Configuration on OpenShift</a></p>
+
+<h2 id="docker">Docker</h2>
+
+<p>Pre-reqs: Docker 17+ installed</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-ti</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> /local/path:/data eclipse/che start
 </code></pre></div></div>
 
-<p>Now imagine every repository that you work on being this easy to convert into a debuggable workspace that includes its own pre-configured IDE. Chedir is all you need to convert repositories into workspaces with their own private runtimes, dependencies, networking and synchronized folders.</p>
+<p>Note that <code class="highlighter-rouge">/local/path</code> can be any path on your local machine where you want to store Che data and projects.</p>
 
-<p>The rest of this guide will walk you through setting up a more complete project, covering more features of Chedir.</p>
+<p>Installation and configuration docs:</p>
 
-<p>You have just created your first developer workspace with Chedir. Read on to learn more about <a href="chedir_project_setup.html">project setup</a>.</p>
+<p><a href="docker.html">Single and multi-user on Docker</a></p>
+
+<p><a href="docker-config.html">Configuration on Docker</a></p>
+
+<p>Create and <a href="creating_starting_workspaces.html">start your first workspace</a>, import a <a href="projects.html">project</a>, <a href="commands_ide_macro.html">build and run</a> your project.</p>
 
 
     <div class="tags">
@@ -842,11 +842,11 @@ docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class=
         
         
         
-        <a href="tag_chedir.html" class="btn btn-default navbar-btn cursorNorm" role="button">chedir</a>
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
         
-        <a href="tag_factories.html" class="btn btn-default navbar-btn cursorNorm" role="button">factories</a>
+        <a href="tag_docker.html" class="btn btn-default navbar-btn cursorNorm" role="button">docker</a>
         
         
         

@@ -232,6 +232,13 @@
           
           
           
+          <li><a href="quick-start.html">Quick-Start</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="single_multi_user.html">Single vs Multi-User</a></li>
           
           
@@ -798,7 +805,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="pre-reqs">Pre-Reqs</h2>
 
 <ul>
-  <li><a href="https://stedolan.github.io/jq/">jq</a> unility</li>
+  <li><a href="https://stedolan.github.io/jq/">jq</a> utility</li>
   <li><code class="highlighter-rouge">bash</code></li>
 </ul>
 
@@ -814,15 +821,116 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="minishift">MiniShift</h2>
 
-<p>Download and run deployment scripts:</p>
+<p><strong>MiniShift Addon</strong></p>
+
+<p>The best way of deploying Che to MiniShift is using an add-on via the <a href="https://docs.openshift.org/latest/minishift/command-ref/minishift_addons_apply.html"><code class="highlighter-rouge">minishift add-ons apply</code></a> command which is outlined in the following paragraphs.</p>
+
+<p><strong>Install add-On</strong></p>
+
+<p>Clone addons repository onto your local machine and then install the add-on via:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/minishift/minishift-addons
+minishift addons install &lt;path_to_minishift-addons&gt;
+minishift addons enable che
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">enable</code> will setup Eclipse Che when you start Minishift the next time.</p>
+
+<p><strong>Apply add-on</strong></p>
+
+<p>If Minishift is already started and Che addon is installed, it is possible to deploy Che without restarting Minishift:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:nightly <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">OPENSHIFT_TOKEN</span><span class="o">=</span><span class="k">$(</span>oc whoami <span class="nt">-t</span><span class="k">)</span> <span class="se">\</span>
+    che
+</code></pre></div></div>
+
+<p><strong>Deploy a local Che server image</strong></p>
+
+<p>To deploy a local che-server image (e.g. <code class="highlighter-rouge">eclipse/che-server:local</code>) based on Che v5:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:local che
+</code></pre></div></div>
+
+<p>If the local image is based on Che v6:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:local <span class="se">\</span>
+    <span class="nt">--addon-env</span> <span class="nv">OPENSHIFT_TOKEN</span><span class="o">=</span><span class="k">$(</span>oc whoami <span class="nt">-t</span><span class="k">)</span> <span class="se">\</span>
+    che
+</code></pre></div></div>
+
+<p><strong>Addon Variables</strong></p>
+
+<p>To customize the deployment of the Che server, the following variables can be applied to the execution:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Default Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">NAMESPACE</code></td>
+      <td>The OpenShift project where Che service will be deployed</td>
+      <td><code class="highlighter-rouge">che-mini</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">CHE_DOCKER_IMAGE</code></td>
+      <td>The docker image to be used for che.</td>
+      <td><code class="highlighter-rouge">eclipse/che-server:latest</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">GITHUB_CLIENT_ID</code></td>
+      <td>GitHub client ID to be used in Che workspaces</td>
+      <td><code class="highlighter-rouge">changeme</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">GITHUB_CLIENT_SECRET</code></td>
+      <td>GitHub client secred to be used in Che workspaces</td>
+      <td><code class="highlighter-rouge">changeme</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">OPENSHIFT_TOKEN</code></td>
+      <td>For Che v6 only. The token to create workspace resources (pods, services, routes, etc…)</td>
+      <td><code class="highlighter-rouge">changeme</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Variables can be specified by adding <code class="highlighter-rouge">--addon-env &lt;key=value&gt;</code> when the addon is being invoked (either by <code class="highlighter-rouge">minishift start</code> or <code class="highlighter-rouge">minishift addons apply</code>).</p>
+
+<p><strong>Remove add-on</strong></p>
+
+<p>To remove all created template and che project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minishift addons remove <span class="se">\</span>
+<span class="nt">--addon-env</span> <span class="nv">OPENSHIFT_TOKEN</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
+<span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
+<span class="nt">--addon-env</span> <span class="nv">GITHUB_CLIENT_ID</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
+<span class="nt">--addon-env</span> <span class="nv">GITHUB_CLIENT_SECRET</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
+<span class="nt">--addon-env</span> <span class="nv">NAMESPACE</span><span class="o">=</span>mini-che che
+</code></pre></div></div>
+
+<p><strong>Uninstall add-on</strong></p>
+
+<p>To uninstall the addon from the addon list:</p>
+
+<p><code class="highlighter-rouge">minishift addons uninstall che</code></p>
+
+<p><strong>Script-based method:</strong></p>
+
+<p>Alternatively, you may download and run deployment scripts instead of using MiniShift addons:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/deploy_che.sh
 <span class="nv">WAIT_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/wait_until_che_is_available.sh
-<span class="nv">STACKS_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/replace_stacks.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./get-che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">WAIT_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./wait-che.sh
-curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">STACKS_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./stacks-che.sh
-bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh <span class="o">&amp;&amp;</span> bash ./stacks-che.sh
+bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh
 </code></pre></div></div>
 
 <h2 id="openshift-container-platform">OpenShift Container Platform</h2>
@@ -844,16 +952,18 @@ bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh <span cla
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/deploy_che.sh
 <span class="nv">WAIT_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/wait_until_che_is_available.sh
-<span class="nv">STACKS_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/replace_stacks.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./get-che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">WAIT_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./wait-che.sh
-curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">STACKS_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./stacks-che.sh
-bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh <span class="o">&amp;&amp;</span> bash ./stacks-che.sh
+bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh
 </code></pre></div></div>
+
+<h2 id="openshift-dedicated">OpenShift Dedicated</h2>
+
+<p>Instructions to deploy Che to OSD are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a></p>
 
 <h2 id="openshiftio">Openshift.io</h2>
 
-<p>Please note that deploying Che on <a href="openshift.io">OpenShift.io</a> (OSIO) is only intended for Che developers and OSIO contributors. This is useful when a developer wants to test how changes will work on <a href="openshift.io">OpenShift.io</a>. If you are interested in using OpenShift.io you can <a href="https://openshift.io/">sign up</a> for the service.</p>
+<p>Please note that deploying Che on <a href="https://openshift.io">OpenShift.io</a> (OSIO) is only intended for Che developers and OSIO contributors. This is useful when a developer wants to test how changes will work on <a href="https://openshift.io">OpenShift.io</a>. If you are interested in using OpenShift.io you can <a href="https://openshift.io/">sign up</a> for the service.</p>
 
 <p>Use environment variables to set <a href="openshift-config.html">deployment options</a>:</p>
 
@@ -865,11 +975,9 @@ bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh <span cla
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/deploy_che.sh
 <span class="nv">WAIT_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/wait_until_che_is_available.sh
-<span class="nv">STACKS_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/replace_stacks.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./get-che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">WAIT_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./wait-che.sh
-curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">STACKS_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./stacks-che.sh
-bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh <span class="o">&amp;&amp;</span> bash ./stacks-che.sh
+bash ./get-che.sh <span class="o">&amp;&amp;</span> bash ./wait-che.sh
 </code></pre></div></div>
 
 <h2 id="deployment-options-and-configuration">Deployment Options and Configuration</h2>
