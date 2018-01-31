@@ -13,7 +13,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Eclipse Next-Generation IDE</h1>
-    <h3>Eclipse Che is a developer workspace server and cloud IDE. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
+    <h3>Eclipse Che is a developer workspace server and cloud IDE built for teams and workgroups. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-home@2x.jpg" />
   </div> <!-- .container-fluid -->
@@ -37,8 +37,8 @@
       </div>
       <div class="col-md-6">
         <h3>Local Install</h3>
-        <p>Install and host Eclipse Che anywhere Docker runs.</p>
-        <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Download</a>
+        <p>Install and host Eclipse Che anywhere Docker or OpenShift runs.</p>
+        <a href="<?php echo $rootPath; ?>/docs/6/che/docs/quick-start.html" class="btn-yellow">Download</a>
 
       </div>
       <!--
@@ -64,14 +64,14 @@
     </div>
     <div class="col-md-4">
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
-      <h3>Che 6.0 Roadmap</h3>
-      <p>Read project lead Tyler Jewell's blog on multi-user Che, Kubernetes and OpenShift.</p>
+      <h3>Eclipse Che 6.0</h3>
+      <p>Read the release note of the latest major version of Eclipse Che. Multi-user and OpenShift support.</p>
       <a href="https://che.eclipse.org/multi-user-eclipse-che-kubernetes-6aef521a36f5" target="_blank" class="btn-yellow">Learn More</a>
     </div>
 
     <div class="col-md-4">
       <img src="images/img-home-che5@2x.png" alt="Che 5.0" class="img-responsive">
-      <h3>Eclipse Che 5.0</h3>
+      <h3>Eclipse Che</h3>
       <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
