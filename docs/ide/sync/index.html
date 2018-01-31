@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.6.2">
+  <meta name="generator" content="Jekyll v3.7.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2090,6 +2090,9 @@
             </div>
           </div>
           
+          <div class="doc-notification" style="color: rgb(214, 59, 59);border: 1px solid rgb(214, 100, 100);background-color:rgb(255, 238, 238);padding-left:12px">You are reading the documentation for Eclipse Che 5.x. Documentation for Eclipse Che 6.x is <a href="https://www.eclipse.org/che/docs/6/che/docs/">here</a>.</div>
+          <br>
+          
 <p>Che ships a super fast Fuse-based mount and sync mechanism. This is delivered as a Docker container that combines <code class="highlighter-rouge">sshfs</code> with <code class="highlighter-rouge">unison</code>. You can perform a mount on any operating system that supports Docker. However, if you are on Windows using Boot2Docker, you can only mount directories in <code class="highlighter-rouge">%userprofile%</code>.</p>
 
 <h1 id="list-workspaces">List Workspaces</h1>
@@ -2121,20 +2124,20 @@ mysql     workspacewia89343k4  RUNNING
 <h2 id="use">Use</h2>
 <p>To synchronize your IDE you’ll use the <a href="../../../docs/setup/cli/index.html">Eclipse Che CLI</a> installed. The synchronization will take place with the current directory. It is probably best to start in an empty directory, otherwise the utility will synchronize the contents of an existing directory onto the workspace.</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir sync
-<span class="nb">cd </span>sync
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir sync
+cd sync</span>
 
 <span class="c"># Sync a workspace to local directory, &lt;local-sync-point&gt;</span>
 docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
                     <span class="nt">-v</span> &lt;path&gt;:/data
                     <span class="nt">-v</span> &lt;local-sync-point&gt;:/sync
-                    eclipse/che sync &lt;workspace-name&gt;
+                    eclipse/che <span class="nb">sync</span> &lt;workspace-name&gt;
 
 <span class="c"># Or</span>
 docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
                     <span class="nt">-v</span> &lt;path&gt;:/data
                     <span class="nt">-v</span> &lt;local-sync-point&gt;:/sync
-                    eclipse/che sync &lt;workspace-id&gt;
+                    eclipse/che <span class="nb">sync</span> &lt;workspace-id&gt;
 
 <span class="c"># Options</span>
 <span class="nt">--url</span> &lt;url&gt;           <span class="c"># Che or Codenvy host where workspaces are running</span>
@@ -2177,7 +2180,7 @@ docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class=
             <span class="nt">-v</span> /etc/group:/etc/group:ro
             <span class="nt">-v</span> /etc/passwd:/etc/passwd:ro
             <span class="nt">-v</span> &lt;path-to-sync-profile&gt;:/profile
-            <span class="nt">-u</span> <span class="k">$(</span>id <span class="nt">-u</span> <span class="k">${</span><span class="nv">USER</span><span class="k">})</span>
+            <span class="nt">-u</span> <span class="k">$(</span><span class="nb">id</span> <span class="nt">-u</span> <span class="k">${</span><span class="nv">USER</span><span class="k">})</span>
             <span class="nt">-e</span> <span class="nv">CHE_VERSION</span><span class="o">=</span><span class="k">${</span><span class="nv">CHE_VERSION</span><span class="k">}</span>
             <span class="nt">-v</span> &lt;host-dir&gt;:/mnthost
                   eclipse/che-mount &lt;ws-id|ws-name&gt;

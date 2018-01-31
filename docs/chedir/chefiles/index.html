@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.6.2">
+  <meta name="generator" content="Jekyll v3.7.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2090,13 +2090,16 @@
             </div>
           </div>
           
+          <div class="doc-notification" style="color: rgb(214, 59, 59);border: 1px solid rgb(214, 100, 100);background-color:rgb(255, 238, 238);padding-left:12px">You are reading the documentation for Eclipse Che 5.x. Documentation for Eclipse Che 6.x is <a href="https://www.eclipse.org/che/docs/6/che/docs/">here</a>.</div>
+          <br>
+          
 <p>You can create a Chefile and place it into the root of your repository. The Chefile contains the configuration that will be used to setup the Che server and Che workspace.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># USAGE</span>
 docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
                     <span class="nt">-v</span> &lt;path&gt;:/data
                     <span class="nt">-v</span> &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir &lt;<span class="nb">command</span><span class="o">&gt;</span>
+                       eclipse/che:&lt;version&gt; <span class="nb">dir</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
 
 <span class="c"># Commands:</span>
 - init : Initialize the :/chedir volume mount and add a default Chefile file <span class="k">if </span>there is none
@@ -2163,7 +2166,7 @@ workspace.postload.actions[0].name<span class="o">=</span><span class="s2">"my-s
 <span class="c"># Or, by defining inline bash script within the post action.</span>
 workspace.postload.actions[1].script<span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="s1">'this is a post-loading command'</span> <span class="se">\</span>
                                            <span class="o">&amp;&amp;</span> <span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do</span> <span class="se">\</span>
-                                           <span class="nb">echo</span> <span class="k">$(</span>date<span class="k">)</span><span class="p">;</span> sleep 1<span class="p">;</span> <span class="se">\</span>
+                                           <span class="nb">echo</span> <span class="k">$(</span><span class="nb">date</span><span class="k">)</span><span class="p">;</span> <span class="nb">sleep </span>1<span class="p">;</span> <span class="se">\</span>
                                            <span class="k">done</span><span class="sb">`</span>
 
 <span class="c"># A project has type, name, and mapped to a source repository.</span>
@@ -2191,7 +2194,7 @@ workspace.commands[0].commandLine<span class="o">=</span><span class="s2">"mvn c
 
 workspace.commands[1].name<span class="o">=</span><span class="s2">"run"</span>
 workspace.commands[1].commandLine<span class="o">=</span><span class="s1">'export CHE_VERSION="nightly" &amp;&amp; export CHE_BIN_PATH=$(ls -d /projects/che/assembly/assembly-main/target/eclipse-che-*/eclipse-che-*); sudo docker run --rm -t -v /var/run/docker.sock:/var/run/docker.sock'</span>
-workspace.commands[1].commandLine<span class="o">=</span>workspace.commands[1].commandLine+<span class="s2">"  --env CHE_LOCAL_BINARY=</span><span class="k">${</span><span class="nv">CHE_BIN_PATH</span><span class="p">/</span><span class="s1">'/projects/che'</span><span class="p">/</span><span class="k">$(</span><span class="nb">sudo </span>docker inspect <span class="nt">--format</span> <span class="s1">'{{ range .Mounts }}{{ if eq .Destination \"/projects/che\" }}{{ .Source }}{{ end }}{{ end }}'</span> <span class="k">$(</span>hostname<span class="k">))}</span><span class="s2">"</span>
+workspace.commands[1].commandLine<span class="o">=</span>workspace.commands[1].commandLine+<span class="s2">"  --env CHE_LOCAL_BINARY=</span><span class="k">${</span><span class="nv">CHE_BIN_PATH</span><span class="p">/</span><span class="s1">'/projects/che'</span><span class="p">/</span><span class="k">$(</span><span class="nb">sudo </span>docker inspect <span class="nt">--format</span> <span class="s1">'{{ range .Mounts }}{{ if eq .Destination \"/projects/che\" }}{{ .Source }}{{ end }}{{ end }}'</span> <span class="k">$(</span><span class="nb">hostname</span><span class="k">))}</span><span class="s2">"</span>
 workspace.commands[1].commandLine<span class="o">=</span>workspace.commands[1].commandLine+<span class="s1">'  --env CHE_PORT=54321 --env CHE_SERVER_CONTAINER_NAME="che-in-che-server" eclipse/che-launcher:nightly start'</span>
 workspace.commands[1].attributes<span class="o">={</span>
   <span class="s2">"previewUrl"</span>: <span class="s2">"http://localhost:54321"</span>
