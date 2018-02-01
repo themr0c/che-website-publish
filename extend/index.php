@@ -30,7 +30,7 @@
         <h4>Stacks</h4>
         <p>Define workspace runtime templates displayed in the dsahboard.</p>
         <ul>
-          <li><a href="../docs/devops/runtime-stacks/index.html" target="_blank">Add stacks to Che</a></li>
+          <li><a href="../docs/6/che/docs/stacks.html" target="_blank">Add stacks to Che</a></li>
           <li><a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes">Stacks included with Che</a></li>
         </ul>
       </div>
@@ -39,16 +39,13 @@
         <h4>Recipes</h4>
         <p>Describe a runtime created by a stack with Docker or Compose files.</p>
         <ul>
-          <li><a href="../docs/devops/runtime-recipes/index.html" target="blank">Custom Recipes</a></li>
+          <li><a href="../docs/6/che/docs/recipes.html" target="blank">Custom Recipes</a></li>
         </ul>
       </div>
 
       <div class="col-md-4 col-sm-4">
         <h4>Samples</h4>
-        <p>Project template code to bootstrap the contents of a new project.</p>
-        <ul>
-          <li><a href="../docs/devops/project-samples/index.html" target="blank">Custom Templates</a></li>
-        </ul>
+        <p>Add project template code to bootstrap the contents of a new project.</p>
       </div>
 
       <div class="clearfix"></div>
@@ -58,11 +55,9 @@
     <div class="row">
       <div class="col-md-4 col-sm-4">
         <h4>Commands</h4>
-        <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p><ul>
-         <li><a href="../docs/assemblies/intro/index.html" target="blank">Developing Extensions</a></li>
-         <li><a href="../docs/assemblies/assembly-lifecycle/index.html" target="blank">Assembly Lifecycle</a></li>
-         <li><a href="../docs/assemblies/plugin-lifecycle/index.html" target="blank">Plugin Lifecycle</a></li>
-         <li><a href="https://github.com/eclipse/che/tree/master/plugins">Che Extensions</a></li>
+        <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p>
+        <ul>
+         <li><a href="6/che/docs/commands-ide-macro.html" target="blank">Adding Commands</a></li>
         </ul>
       </div>
 
@@ -70,10 +65,7 @@
         <h4>WS Extensions</h4>
         <p>Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
         <ul>
-          <li><a href="../docs/assemblies/intro/index.html" target="blank">Developing Extensions</a></li>
-          <li><a href="../docs/assemblies/assembly-lifecycle/index.html" target="blank">Assembly Lifecycle</a></li>
-          <li><a href="../docs/assemblies/plugin-lifecycle/index.html" target="blank">Plugin Lifecycle</a></li>
-          <li><a href="https://github.com/eclipse/che/tree/master/plugins" target="blank">Che Extrensions</a></li>
+          <li><a href="../docs/6/che/docs/framework-overview.html" target="blank">Developing Extensions</a></li>
         </ul>
       </div>
 
@@ -81,10 +73,7 @@
         <h4>IDE Extensions</h4>
         <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
         <ul>
-          <li><a href="../docs/assemblies/intro/index.html" target="blank">Developing Extensions</a></li>
-          <li><a href="../docs/assemblies/assembly-lifecycle/index.html" target="blank">Assembly Lifecycle</a></li>
-          <li><a href="../docs/assemblies/plugin-lifecycle/index.html" target="blank">Plugin Lifecycle</a></li>
-          <li><a href="../docs/plugins/calling-workspace-apis/" target="blank">Invoking Workspace APIs</a></li>
+          <li><a href="../docs/6/che/docs/ide-extensions-js.html" target="blank">Developing Extensions</a></li>
         </ul>
       </div>
 
@@ -96,7 +85,7 @@
         <h4>Agents</h4>
         <p>Software dynamically installed and run within a user's workspace.</p><ul>
         <ul>
-          <li><a href="../docs/devops/ws-agents/index.html" target="blank">Workspace Agents</a></li>
+          <li><a href="../docs/6/che/docs/installers.html" target="blank">Workspace Agents</a></li>
         </ul>
       </div>
 
@@ -104,7 +93,7 @@
         <h4>REST APIs</h4>
         <p>The Che server and each workspace has all services programmable through REST APIs.</p>
         <ul>
-          <li><a href="../docs/assemblies/sdk-rest-apis/index.html" target="blank">Che REST APIs</a></li>
+          <li><a href="../docs/6/che/docs/rest-api.html" target="blank">Che REST APIs</a></li>
         </ul>
       </div>
 
@@ -112,8 +101,7 @@
         <h4>Assemblies</h4>
         <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
         <ul>
-          <li><a href="../docs/assemblies/assembly-lifecycle/index.html" target="blank">Assembly Lifecycle</a></li>
-          <li><a href="../docs/assemblies/plugin-lifecycle/index.html" target="blank">Plugin Lifecycle</a></li>
+          <li><a href="../docs/6/che/docs/assemblies.html" target="blank">Assembly Lifecycle</a></li>
         </ul>
       </div>
 
@@ -136,9 +124,9 @@
       </div>
 
       <div class="col-md-4">
-        <a href="../docs/setup/openshift/" target="_blank"><img src="<?php echo $rootPath; ?>/images/logo-extend-redhat@2x.jpg" style="height: 111px; width:333px" class="img-responsive"></a>
-        <h3><a href="../docs/setup/openshift/" target="_blank">Red Hat OpenShift</a></h3>
-        <p>Strategic developer tooling platform for Docker orchestration.</p>
+        <a href="<?php echo $rootPath; ?>/extend/silexica/" target="_blank"><img src="<?php echo $rootPath; ?>/images/logo-silexica@2x.png" style="height: 111px" class="img-responsive"></a>
+        <h3><a href="<?php echo $rootPath; ?>/extend/silexica/" target="_blank">Silexica</a></h3>
+        <p>Developer tooling for simplifying multicore platform development based on Che.</p>
       </div>
 
       <div class="col-md-4">
