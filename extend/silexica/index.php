@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>SLX.cloud - Analyze. Optimize. Implement.</h1>
-    <h3>At Silexica, we develop SLX for programming heterogeneous multicore platforms using state-of-the-art compiler technology. With Eclipse Che and SLX.cloud we added a new mode of delivery using a SaaS model with instantly deployed cloud workspaces. Instead of downloading a multiple GB binary, new users can now start immediately with a few clicks. <a target="_blank" href="https://slx.cloud">Try it yourself!</a></h3>
+    <h3><a target="_blank" href="https://www.silexica.com">At Silexica</a>, we develop SLX for programming heterogeneous multicore platforms using state-of-the-art compiler technology. With Eclipse Che and SLX.cloud we added a new mode of delivery using a SaaS model with instantly deployed cloud workspaces. Instead of downloading a multiple GB binary, new users can now start immediately with a few clicks. <a target="_blank" href="https://slx.cloud">Try it yourself!</a></h3>
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/silexica/hero-silexica.png" />  
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
