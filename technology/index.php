@@ -123,11 +123,9 @@
         <h5>Frameworks</h5>
         <p>Project types, scaffold tool integration, and syntax analysis.</p>
         <ul>
-          <li><a href="../extend/artik/">Samsung ARTIK</a></li>
+          <li><a href="../extend/silexica/">Silexica</a></li>
           <li><a href="../extend/sap/">SAP HANA</a></li>
-          <li><a href="../docs/openshift/config/" target="_blank">Red Hat OpenShift</a></li>
           <li>Angular JS</li>
-          <li>Docker</li>
           <li>Yeoman</li>
         </ul>
       </div>
@@ -154,7 +152,6 @@
           <li>Git</li>
           <li>Orion</li>
           <li>SSH</li>
-          <li>Subversion</li>
         </ul>
       </div>
     </div> <!-- .row -->
