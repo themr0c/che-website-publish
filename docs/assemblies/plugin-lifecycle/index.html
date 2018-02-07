@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.6.2">
+  <meta name="generator" content="Jekyll v3.7.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2090,6 +2090,9 @@
             </div>
           </div>
           
+          <div class="doc-notification" style="color: rgb(214, 59, 59);border: 1px solid rgb(214, 100, 100);background-color:rgb(255, 238, 238);padding-left:12px">You are reading the documentation for Eclipse Che 5.x. Documentation for Eclipse Che 6.x is <a href="https://www.eclipse.org/che/docs/6/che/docs/">here</a>.</div>
+          <br>
+          
 <p>This is an advanced section. You should use archetypes to build custom assemblies that have pre-packaged plugins. Ultimately, if you want to modify the IDE or alter the REST API services in Che or a workspace agent, you need to write a plugin that contains extensions. An extension is code that is compiled and packaged for deployment into Che.</p>
 
 <p>This page discusses the details of how plugins are structured and built. If you wanted to author a plugin from scratch, you could use the material in this page to understand how it is composed.</p>
@@ -2355,11 +2358,11 @@ src/main/resources/{full-qualified-extension-name}/your-javascript.js
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build a new IDE.war</span>
 <span class="c"># This IDE web app will be bundled into the assembly</span>
 <span class="nb">cd </span>che/assembly/assembly-ide-war
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Create a new Che assembly that includes all new server- and client-side extensions</span>
 <span class="nb">cd </span>assembly/assembly-main
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 
 <span class="c"># Start Che</span>
@@ -2381,15 +2384,15 @@ docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class=
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a new web-app that includes your server-side extension</span>
 <span class="nb">cd </span>che/assembly/assembly-wsagent-war
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Creates a new agent that includes your server web app that will deploy into workspace</span>
 <span class="nb">cd </span>che/assembly/assembly-wsagent-server
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Create a new Che assembly that includes all new server- and client-side extensions</span>
 <span class="nb">cd </span>assembly/assembly-main
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Start Che</span>
 docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
@@ -2411,11 +2414,11 @@ docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class=
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a new Che server web app that includes your Che server extension</span>
 <span class="nb">cd </span>che/assembly/assembly-wsmaster-war
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Create a new Che assembly that includes all new server- and client-side extensions</span>
 <span class="nb">cd </span>assembly/assembly-main
-mvn clean install
+mvn clean <span class="nb">install</span>
 
 <span class="c"># Start Che</span>
 docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
@@ -2461,7 +2464,7 @@ CHE RUNTIME
 <p>There are a number of tweaks you can use to speed up the various stages of development. One possibility to speed up the initial build and packaging process is by disabling tests and skipping certain maven plugins.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add flags to skip the testing and code analysis phases of maven</span>
-mvn clean install <span class="nt">-DskipTests</span> <span class="nt">-Dskip-validate-sources</span> <span class="nt">-Dgwt</span>.compiler.localWorkers<span class="o">=</span>4 <span class="nt">-Dfindbugs</span>.skip<span class="o">=</span><span class="nb">true</span>
+mvn clean <span class="nb">install</span> <span class="nt">-DskipTests</span> <span class="nt">-Dskip-validate-sources</span> <span class="nt">-Dgwt</span>.compiler.localWorkers<span class="o">=</span>4 <span class="nt">-Dfindbugs</span>.skip<span class="o">=</span><span class="nb">true</span>
 </code></pre></div></div>
 
 <p>In the IDE GWT module <code class="highlighter-rouge">ide/che-core-ide-generators/src/main/resources/org/eclipse/che/util/gwt.xml.template</code> keep just one permutation:</p>

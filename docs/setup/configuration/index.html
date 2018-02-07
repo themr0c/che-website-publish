@@ -33,7 +33,7 @@
      - Eclipse Che</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="generator" content="Jekyll v3.6.2">
+  <meta name="generator" content="Jekyll v3.7.2">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
   <link rel="stylesheet" href="../../../docs/assets/css/screen.css">
   <link rel="icon" type="image/x-icon" href="../../../docs/assets/imgs/favicon.ico">
@@ -2090,6 +2090,9 @@
             </div>
           </div>
           
+          <div class="doc-notification" style="color: rgb(214, 59, 59);border: 1px solid rgb(214, 100, 100);background-color:rgb(255, 238, 238);padding-left:12px">You are reading the documentation for Eclipse Che 5.x. Documentation for Eclipse Che 6.x is <a href="https://www.eclipse.org/che/docs/6/che/docs/">here</a>.</div>
+          <br>
+          
 <p>Configuration is handled by modifying <code class="highlighter-rouge">che.env</code> placed in the host folder volume mounted to <code class="highlighter-rouge">:/data</code>. This configuration file is generated during the <code class="highlighter-rouge">che init</code> phase. If you rerun <code class="highlighter-rouge">che init</code> in an already initialized folder, the process will abort unless you pass <code class="highlighter-rouge">--force</code>, <code class="highlighter-rouge">--pull</code>, or <code class="highlighter-rouge">--reinit</code>.</p>
 
 <p>Each variable is documented with an explanation and usually commented out. If you need to set a variable, uncomment it and configure it with your value. You can then run <code class="highlighter-rouge">che config</code> to apply this configuration to your system. <code class="highlighter-rouge">che start</code> also reapplies the latest configuration.</p>
@@ -2146,6 +2149,35 @@ machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
 /instance/docker-compose.yml            <span class="c"># Docker compose to launch Che from the host without contianer</span>
 /instance/config                        <span class="c"># Configuration files for Che which are volume mounted into containers</span>
 </code></pre></div></div>
+
+<h2 id="logstash-json-encoder">Logstash JSON Encoder</h2>
+<p>Che-server comes with <code class="highlighter-rouge">logstash-json-encoder</code> which allows you to send logs in a JSON format for Logstash or any other log consumers.
+Adding a new appender can be done by adding a <code class="highlighter-rouge">logback-additional-appenders.xml</code> in
+<code class="highlighter-rouge">${CHE_LOCAL_CONF_DIR}/logback/</code> or <code class="highlighter-rouge">${CATALINA_HOME}/conf/</code> folder from your custom assembly or mounted volume:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;included&gt;</span>
+    <span class="nt">&lt;appender</span> <span class="na">name=</span><span class="s">"file-json"</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.RollingFileAppender"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="nt">&lt;/file&gt;</span>
+        <span class="nt">&lt;filter</span> <span class="na">class=</span><span class="s">"ch.qos.logback.classic.filter.ThresholdFilter"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;level&gt;</span>info<span class="nt">&lt;/level&gt;</span>
+        <span class="nt">&lt;/filter&gt;</span>
+        <span class="nt">&lt;rollingPolicy</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="nt">&lt;/fileNamePattern&gt;</span>
+            <span class="nt">&lt;maxHistory&gt;</span>${max.retention.days}<span class="nt">&lt;/maxHistory&gt;</span>
+        <span class="nt">&lt;/rollingPolicy&gt;</span>
+        <span class="nt">&lt;encoder</span> <span class="na">class=</span><span class="s">"net.logstash.logback.encoder.LogstashEncoder"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/appender&gt;</span>
+
+    <span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">"${che.logs.level:-INFO}"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">"file-json"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/root&gt;</span>
+<span class="nt">&lt;/included&gt;</span>
+</code></pre></div></div>
+
+<p>This appender will log in a JSON format to a rolling <code class="highlighter-rouge">/logs/logs/catalina.log.json</code> file.</p>
+
+<p>Other <code class="highlighter-rouge">logback-logstash-encoder</code> appenders can be added as well. See <a href="https://github.com/logstash/logstash-logback-encoder#usage">https://github.com/logstash/logstash-logback-encoder#usage</a>.</p>
 
 <h1 id="oauth">oAuth</h1>
 <p>You can configure Google, GitHub, Microsoft, BitBucket, or WSO2 oAuth for use when users perform git operations.</p>
