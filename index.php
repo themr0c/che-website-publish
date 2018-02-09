@@ -13,7 +13,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Eclipse Next-Generation IDE</h1>
-    <h3>Eclipse Che is a developer workspace server and cloud IDE built for teams and workgroups. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
+    <h3>Eclipse Che is a developer workspace server and cloud IDE built for teams and organizations. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-home@2x.jpg" />
   </div> <!-- .container-fluid -->
@@ -22,7 +22,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <center><h3>Run Eclipse Che now with: <code>docker run eclipse/che start</code></h3>
+    <center><h3><a style="color:white"; href="<?php echo $rootPath; ?>/getting-started/">Che 6 is out: try it with your team or enterprise</a></h3>
   </div>
 </div>
 
@@ -37,17 +37,11 @@
       </div>
       <div class="col-md-6">
         <h3>Local Install</h3>
-        <p>Install and host Eclipse Che anywhere Docker or OpenShift runs.</p>
+        <p>Install Eclipse Che on localhost or shared server.</p>
         <a href="<?php echo $rootPath; ?>/docs/6/che/docs/quick-start.html" class="btn-yellow">Download</a>
 
       </div>
-      <!--
-      <div class="col-md-4">
-        <h3>Cloud</h3>
-        <p>Install Eclipse Che on AWS, Azure or Google private cloud.</p>
-        <a href="<?php echo $rootPath; ?>/docs/setup/bitnami/" class="btn-yellow">One-Click Install</a>
-      </div>
-      -->
+
     </div>
   </div>
 </div>
@@ -59,14 +53,14 @@
     <div class="col-md-4">
       <img src="images/img-home-checonf2018.png" alt="CheConf 2018" class="img-responsive">
       <h3>CheConf 2018</h3>
-      <p>Register or submit a session proposal for our virtual Che user conference that streams February 15, 2018.</p>
+      <p>Register for our virtual Che user conference to hear what's new - streaming February 21, 2018.</p>
       <a href="<?php echo $rootPath; ?>/checonf18/index.html" class="btn-yellow">Learn More</a>
     </div>
     <div class="col-md-4">
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
       <h3>Eclipse Che 6.0</h3>
-      <p>Read the release note of the latest major version of Eclipse Che. Multi-user and OpenShift support.</p>
-      <a href="https://che.eclipse.org/multi-user-eclipse-che-kubernetes-6aef521a36f5" target="_blank" class="btn-yellow">Learn More</a>
+      <p>Multi-tenancy, authentication with LDAP/AD, security and scalable OpenShift install.</p>
+      <a href="https://che.eclipse.org/multi-user-eclipse-che-kubernetes-6aef521a36f5" target="_blank" class="btn-yellow">Read Release Notes</a>
     </div>
 
     <div class="col-md-4">
@@ -75,17 +69,47 @@
       <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
-    <!--
-    <div class="col-md-4">
-      <img src="images/img-home-codenvy-ent@2x.png" alt="Codenvy: Che for Enterprises" class="img-responsive">
-      <h3>Eclipse Che Enterprise</h3>
-      <p>Codenvy uses Eclipse Che to provide dev team collaboration on a scalable workspace platform for DevOps.</p>
-      <a href="<?php echo $rootPath; ?>/extend/codenvy" class="btn-yellow">See How</a>
-    </div>
-    -->
+
   </div>
 </div>
 
+<div class="bg-purple chefile">
+  <div class="container-fluid content">
+    <h2>Core Capabilities</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <h4>One-Click Workspaces</h4>
+        <p>Create workspaces with production runtimes containing your projects and tools. Define single machine or multi-machine workspaces – even mirror production.</p>
+        <ul>
+          <li>Automate workspace creation</li>
+          <li>Mimic production environments</li>
+          <li>Code in kubernetes pods</li>
+          <li>Integrate your version control</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h4>Instant Project Onboarding</h4>
+        <p>Onboard teams with powerful collaboration, workspace automation, and permissions. Developers in a team can use their local IDE or the Che browser IDE.</p>
+        <ul>
+          <li>Share workspaces with anyone</li>
+          <li>Control workspace permissions</li>
+          <li>Use a browser or desktop IDE</li>
+          <li>Define resource limits for teams</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h4>DevOps Workspace Platform</h4>
+        <p>Manage workspaces at scale with programmable and customizable infrastructure that lets you control system performance, availability, and functionality.</p>
+        <ul>
+          <li>Use in the cloud or install locally</li>
+          <li>Scale horizontally or vertically</li>
+          <li>Keep source code off devices</li>
+          <li>Connect to your LDAP/AD</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <hr class="gray">
@@ -150,7 +174,7 @@
         <td>
           <h2>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
           <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
-          <a href="<?php echo $rootPath; ?>/docs/chedir/getting-started/" class="btn-yellow" target="_blank">Learn More</a>
+          <a href="<?php echo $rootPath; ?>/docs/6/che/docs/chedir-getting-started.html" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>
@@ -163,18 +187,15 @@
     <h2>Feedback <a href="https://twitter.com/eclipse_che" target="_blank">@eclipse_che</a></h2>
 
     <ul>
-      <li><span><i class="fa fa-twitter"></i> @zepag</span> Yet another incredible release of Eclipse CHE, with Docker images based on CentOS available!</li>
-      <li><span><i class="fa fa-twitter"></i> @mmilinkov</span> "docker run eclipse/che" That is one damn cool way to install an IDE! Congrats to the @eclipse_che team!</li>
-      <li><span><i class="fa fa-twitter"></i> @nicosommi</span> "I just tried "eclipse che"... it's just brilliant @eclipse_che</li>
       <li><span><i class="fa fa-twitter"></i> @monkchips</span> @eclipse_che developer workspace server - what kind of witchcraft is this?</li>
-      <li><span><i class="fa fa-twitter"></i> @oyku</span> I'm an @intellijidea user and have suffered from @EclipseFdn IDE a lot but everyone should keep an eye on Eclipse Che</li>
+      <li><span><i class="fa fa-twitter"></i> @nicosommi</span> "I just tried "eclipse che"... it's just brilliant @eclipse_che</li>
       <li><span><i class="fa fa-twitter"></i> @ciberado</span> @eclipse_che is potentially the greatest innovation in tools since Maven.</li>
+      <li><span><i class="fa fa-twitter"></i> @oyku</span> I'm an @intellijidea user and have suffered from @EclipseFdn IDE a lot but everyone should keep an eye on Eclipse Che</li>
       <li><span><i class="fa fa-twitter"></i> @puffybsd</span> The stuff eclipse che is doing, particularly workspace server and language server protocol, is seriously cool.</li>
       <li><span><i class="fa fa-twitter"></i> @smithkenny</span> There is some seriously disruptive #Devops technology coming with #Eclipse Che. Solves probs with dev workstations &amp; workspaces.</li>
+      <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
       <li><span><i class="fa fa-twitter"></i> @mogreau</span> Contribute to an open source project in less than 10 minutes with @eclipse_che!</li>
       <li><span><i class="fa fa-twitter"></i> @thomasehardt</span> Not many dev tools blow my mind, but @eclipse_che certain does - it is the future of IDEs!</li>
-      <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
-      <li><span><i class="fa fa-twitter"></i> @twobree</span> A2+ I was using Eclipse Che in the cloud, and wow, it alerts me about SO MANY issues and warnings! I can't imagine coding Java without it.</li>
       <li><span><i class="fa fa-twitter"></i> @nilsbundi</span> PS: Your product is pretty awesome and I never want to switch back to desktop Eclipse.</li>
       <li><span><i class="fa fa-twitter"></i> @jack-y</span> I develop micro services in Java. @eclispe_che saves my life - I can work on my code out of my office.</li>
       <li><span><i class="fa fa-twitter"></i> @CarlesZ</span> Developers of the world, a big applause!!!</li>
