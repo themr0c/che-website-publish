@@ -60,7 +60,7 @@
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
       <h3>Eclipse Che 6.0</h3>
       <p>Multi-tenancy, authentication with LDAP/AD, security and scalable OpenShift install.</p>
-      <a href="https://che.eclipse.org/multi-user-eclipse-che-kubernetes-6aef521a36f5" target="_blank" class="btn-yellow">Read Release Notes</a>
+      <a href="https://che.eclipse.org/release-notes-eclipse-che-6-0-43feff5797e5" target="_blank" class="btn-yellow">Read Release Notes</a>
     </div>
 
     <div class="col-md-4">
