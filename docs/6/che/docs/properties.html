@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="extensionsdev-docsassembly,  dev docs, developer docs, plugins, extensions">
-<title>Develop Your First Plugin Usign Che | Eclipse Che Documentation</title>
+<meta name="keywords" content="extensionsassemblydev-docs,  framework, UI, properties">
+<title>Properties in Extensions | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Develop Your First Plugin Usign Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Properties in Extensions page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Develop Your First Plugin Usign Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Properties in Extensions">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -617,7 +617,7 @@
           
           
           
-          <li class="active"><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
+          <li><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
           
           
           
@@ -738,7 +738,7 @@
           
           
           
-          <li><a href="properties.html">Properties</a></li>
+          <li class="active"><a href="properties.html">Properties</a></li>
           
           
           
@@ -789,7 +789,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Develop Your First Plugin Usign Che</h1>
+   <h1 class="post-title-main">Properties in Extensions</h1>
 </div>
 
 
@@ -826,73 +826,92 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Before you dive into information on how you can <a href="framework-overview.html">extend Che framework</a> and build your own Che <a href="assemblies.html">assembly</a>, let’s install and debug your first Che plugin using Che itself.</p>
+  
+<h2 id="referencing-properties-in-extensions">Referencing Properties in Extensions</h2>
 
-<h2 id="run-eclipse-che">Run Eclipse Che</h2>
+<p>You can reference properties in Che extensions that you author. Configuration parameters may be injected with a constructor or directly in the fields. The parameter of the field must be annotated with <code class="highlighter-rouge">@javax.inject.Named</code>. The value of the annotation is the name of the property. For example, if the configuration property is: <code class="highlighter-rouge">data_file:/home/user/storage</code> then in your extension code:</p>
 
-<p><strong>[Install: Docker][docker]</strong></p>
-
-<p><strong>[Install: OpenShift][openshift]</strong></p>
-
-<h2 id="create-workspace-and-sample-extension">Create Workspace and Sample Extension</h2>
-
-<p>Search for a stack by keyword <code class="highlighter-rouge">che</code> and choose <code class="highlighter-rouge">che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
-
-<figure><img class="docimage" src="images/devel/create_extension.png" alt="" /></figure>
-
-<h2 id="build-a-deploy-your-extension">Build a Deploy Your Extension</h2>
-
-<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code class="highlighter-rouge">assembly</code> (See: <a href="assemblies.html">Assemblies</a>) and plugins (containing plugins themselves).</p>
-
-<p>Execute <code class="highlighter-rouge">Traefik Start</code>, <code class="highlighter-rouge">Tomcat8-IDE Start</code>, <code class="highlighter-rouge">Deploy IDE</code> and <code class="highlighter-rouge">Deploy Workspace Agent</code> commands:</p>
-
-<figure><img class="docimage" src="images/devel/commands.png" alt="" /></figure>
-
-<ul>
-  <li>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</li>
-  <li>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</li>
-  <li>Deploy IDE - build ide-war module and its dependencies and packages <code class="highlighter-rouge">war</code> artifact and copies ide.war from <code class="highlighter-rouge">assembly-ide-war</code> target dir over to Tomcat’s webapp</li>
-  <li>Deploy Workspace Agent does the same with the agent war artifact</li>
-</ul>
-
-<p>The last two commands have identical preview URLs pointing to <code class="highlighter-rouge">host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code class="highlighter-rouge">?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code class="highlighter-rouge">Hello CheeAllPowerfull</code> message:</p>
-
-<figure><img class="docimage" src="images/devel/sample_action.png" alt="" /></figure>
-
-<h2 id="develop-and-debug-client-side">Develop and Debug Client Side</h2>
-
-<p>Get back to an original IDE instance and execute <code class="highlighter-rouge">GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at <a href="ide-extensions-gwt.html#debugging-with-super-devmode">this page</a>. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code class="highlighter-rouge">MyAction.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">super</span><span class="o">(</span><span class="s">"My New Action"</span><span class="o">,</span> <span class="s">"My Action Description"</span><span class="o">);</span>
-</code></pre></div></div>
-
-<p>Return to the 2nd IDE instance, click <strong>Dev Mode On</strong> button and hit <strong>Compile</strong>. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.</p>
-
-<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code class="highlighter-rouge">Chrome's dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code class="highlighter-rouge">My New Action</code> in the context menu.</p>
-
-<figure><img class="docimage" src="images/devel/debug_chrome.png" alt="" /></figure>
-
-<h2 id="develop-and-debug-server-side">Develop and Debug Server Side</h2>
-
-<p>Let’s change response from our REST service in <code class="highlighter-rouge">MyService.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">return</span> <span class="s">"Howdy, "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+  <span class="o">...</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span> <span class="n">File</span> <span class="n">storage</span><span class="o">)</span> <span class="o">{</span>
+      <span class="o">...</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
 
-<p>Select this submodule in project explorer (<code class="highlighter-rouge">plugin-serverservice-server</code>) and run <code class="highlighter-rouge">Build</code> and <code class="highlighter-rouge">Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code class="highlighter-rouge">webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
+<p>or</p>
 
-<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code class="highlighter-rouge">jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+  <span class="nd">@Inject</span>
+  <span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span>
+  <span class="kd">private</span> <span class="n">File</span> <span class="n">storage</span><span class="o">;</span>
+  <span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-<p>Open <code class="highlighter-rouge">MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
+<p>All system properties and environment variables may be injected into your extensions with prefixes <code class="highlighter-rouge">sys.</code> and <code class="highlighter-rouge">env.</code>, respectively. So, for example, environment variable <code class="highlighter-rouge">HOME</code> name must be <code class="highlighter-rouge">env.HOME</code>. Here is an example of how to inject the value of system property <code class="highlighter-rouge">java.io.tmpdir</code> and value of environment variable <code class="highlighter-rouge">HOME</code>.</p>
 
-<p>Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+  <span class="nd">@Inject</span>
+  <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"sys.java.io.tmpdir"</span><span class="o">)</span> <span class="n">File</span> <span class="n">tmp</span><span class="o">,</span> <span class="nd">@Named</span><span class="o">(</span><span class="s">"env.HOME"</span><span class="o">)</span> <span class="n">File</span> <span class="n">home</span><span class="o">)</span> <span class="o">{</span>
+      <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Any value can be converted into a <code class="highlighter-rouge">java.lang.String</code> Java type. You can also directly convert properties to the following Java types:</p>
+<ul>
+  <li><code class="highlighter-rouge">boolean</code></li>
+  <li><code class="highlighter-rouge">byte</code></li>
+  <li><code class="highlighter-rouge">short</code></li>
+  <li><code class="highlighter-rouge">int</code></li>
+  <li><code class="highlighter-rouge">long</code></li>
+  <li><code class="highlighter-rouge">float</code></li>
+  <li><code class="highlighter-rouge">double</code></li>
+  <li><code class="highlighter-rouge">java.net.URI</code></li>
+  <li><code class="highlighter-rouge">java.net.URL</code></li>
+  <li><code class="highlighter-rouge">java.io.File</code></li>
+  <li><code class="highlighter-rouge">String[]</code> (value is a comma separated string)</li>
+</ul>
 
-<figure><img class="docimage" src="images/devel/debugger.png" alt="" /></figure>
+<h2 id="property-aliases">Property Aliases</h2>
 
-<p>In Variable window, click <code class="highlighter-rouge">Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
+<p>Sometimes a developer may need to change property name but support old names as well for the sake of backward compatibility. If this is the case, there is <a href="https://github.com/eclipse/che/blob/master/assembly/assembly-wsmaster-war/src/main/webapp/WEB-INF/classes/che_aliases.properties">aliases file</a> where you can map new property name to old ones:</p>
 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>current_name=old_name, very_old_name
+</code></pre></div></div>
+
+<p>A few gotchas:</p>
+
+<ul>
+  <li>current_name = current_value</li>
+  <li>if <code class="highlighter-rouge">old_name</code> property exists it will be bound to the old_value, so <code class="highlighter-rouge">current_name = old_value</code> and <code class="highlighter-rouge">very_old_name = old_value</code></li>
+  <li>if <code class="highlighter-rouge">very_old_name</code> property exists it will be bound to <code class="highlighter-rouge">very_old_value</code>, so <code class="highlighter-rouge">current_name = very_old_value</code> and <code class="highlighter-rouge">old_name = very_old_value</code></li>
+</ul>
+
+<p><strong>IMPORTANT</strong>: it is prohibited to use a different name for the same property on the same level. From the example above, you can use environment property <code class="highlighter-rouge">CHE_CURRENT_NAME</code> and <code class="highlighter-rouge">CHE_OLD_NAME</code>. However, you can use it on a different level, for instance, environment property and system property.</p>
+
+<h2 id="properties-and-environment-variables">Properties and Environment Variables</h2>
+
+<p>Naming conventions:</p>
+
+<ul>
+  <li>dots in properties separate components (in case of env vars it is a <strong>single</strong> underscore)</li>
+  <li>underscores in properties separate words in a single component item (in case of env vars it is a <strong>double underscore</strong>)</li>
+</ul>
+
+<p>Example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>che.component1.sub_component_2_mb -&gt; CHE_COMPONENT1_SUB__COMPONENT__2__MB
+
+where MB is unit of measurement in case when property is a number
+</code></pre></div></div>
+
+<p>Environment variables have a <strong>higher priority</strong> over properties, so if both are set, value of an environment variable will be used.</p>
+
+<h2 id="workspace-extension-properties">Workspace Extension Properties</h2>
+
+<p>Each workspace is a separate runtime, and has at least one development agent that runs as a miniaturized Che server within the workspace. That agent has its own properties that can be configured as well. If you are authoring custom workspace extensions that are deployed within Che’s agent in the workspace, you can customize.</p>
 
 
     <div class="tags">
@@ -905,11 +924,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
-        
-        
-        
         <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
+        
+        
+        
+        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
         
         
         

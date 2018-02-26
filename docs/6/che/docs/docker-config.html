@@ -285,6 +285,29 @@
       
   
   <li>
+      <a href="#">Che on Kubernetes</a>
+      <ul>
+          
+          
+          
+          <li><a href="kubernetes-single-user.html">Kubernetes - Single User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
       <a href="#">Che on OpenShift</a>
       <ul>
           
@@ -713,6 +736,13 @@
           
           
           
+          
+          
+          <li><a href="properties.html">Properties</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -799,6 +829,8 @@ $('#toc').on('click', 'a', function() {
   
 <p>Configuration is handled by modifying <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> placed in the root of a host folder volume mounted to <code class="highlighter-rouge">:/data</code>. This configuration file is generated during the <code class="highlighter-rouge">che init</code> phase. If you rerun <code class="highlighter-rouge">che init</code> in an already initialized folder, the process will abort unless you pass <code class="highlighter-rouge">--force</code>, <code class="highlighter-rouge">--pull</code>, or <code class="highlighter-rouge">--reinit</code>.</p>
 
+<p>You can also pass an environment variable directly in docker run syntax: <code class="highlighter-rouge">-e CHE_ENV_NAME=value</code>.</p>
+
 <p>Each variable is documented with an explanation and usually commented out. If you need to set a variable, uncomment it and configure it with your value. You can then run <code class="highlighter-rouge">che config</code> to apply this configuration to your system. <code class="highlighter-rouge">che start</code> also reapplies the latest configuration.</p>
 
 <p>You can run <code class="highlighter-rouge">che init</code> to install a new configuration into an empty directory. This command uses the <code class="highlighter-rouge">che/init:&lt;version&gt;</code> Docker container to deliver a version-specific set of puppet templates into the folder.</p>
@@ -824,6 +856,25 @@ $('#toc').on('click', 'a', function() {
 machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
 </code></pre></div></div>
 
+<h2 id="single-port-policy">Single Port Policy</h2>
+
+<p>By default, Che lets Docker publish exposed ports in a random manner - Docker chooses available ports from the ephemeral port range to expose workspace <a href="servers.html">servers</a>. This, however, brings in certain network requirements, namely opening the ephemeral port range (and Keycloak port 5050 for multi user Che) to the world.</p>
+
+<p>To run Che in a single port mode add <code class="highlighter-rouge">-e CHE_SINGLE_PORT=true</code> to your run syntax. In this case, a Traefik container will be used to route traffic through a single port.</p>
+
+<p><strong>Wildcard DNS</strong></p>
+
+<p>In a single port mode, Che builds URLs of workspace services using the following pattern - <code class="highlighter-rouge">serviceName.machineName.ws-ID.IP.wildcardDNSProvider</code>. So, if your external IP is <code class="highlighter-rouge">193.12.34.56</code>, URL of a workspace agent will look like <code class="highlighter-rouge">wsagent-http.dev-machine.workspace0bcgkgkvsqi31b4u.193.12.34.56.nip.io</code></p>
+
+<ul>
+  <li>by default <a href="http://nip.io/">nip.io</a> is used. This is an external wildcard DNS provider, and if it is down for some reason, networking in single port Che is broken.</li>
+  <li>you can use a different wildcard DNS provider with <code class="highlighter-rouge">CHE_SINGLEPORT_WILDCARD__DOMAIN_HOST</code> env.</li>
+</ul>
+
+<p><strong>Multi-User Mode</strong></p>
+
+<p>Make sure <code class="highlighter-rouge">webOrigins</code> and <code class="highlighter-rouge">redirectUris</code> in Keycloak client settings (<code class="highlighter-rouge">che-public</code> client) reference your <code class="highlighter-rouge">CHE_DOCKER_IP_EXTERNAL</code> value, i.e IP that external users will use to log in. Keycloak admin console in multi user Che is available at <code class="highlighter-rouge">http://keycloak.$IP.$wildcardDNSProvider:$chePort/auth/</code> where <code class="highlighter-rouge">$IP</code> is either your <code class="highlighter-rouge">docker0</code> IP or <code class="highlighter-rouge">CHE_DOCKER_IP_EXTERNAL</code> value.</p>
+
 <h2 id="logs-and-user-data">Logs and User Data</h2>
 
 <p>When Che initializes itself, it stores logs, user data, database data, and instance-specific configuration in the folder mounted to <code class="highlighter-rouge">:/data/instance</code> or an <code class="highlighter-rouge">instance</code> subfolder of what you mounted to <code class="highlighter-rouge">:/data</code>.</p>
@@ -836,7 +887,7 @@ machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
 
 <p>User data is stored in:</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/instance/data/che                      <span class="c"># Project backups (we synchronize projs from remote ws here)</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/instance/data/che                      <span class="c"># Project backups (we synchronize projects from remote ws here)</span>
 </code></pre></div></div>
 
 <p>Instance configuration is generated by Che and is updated by our internal configuration utilities. These ‘generated’ configuration files should not be modified and stored in:</p>
@@ -969,7 +1020,7 @@ CHE_WORKSPACE_MAVEN__SERVER__JAVA__OPTIONS  # overrides the default value of JAV
 # Browser --&gt; Workspace Connection:
 #    1. Use the value of che.docker.ip.external
 #    2. Else, use che.docker.ip value
-#    3. Else use value provides by ws container inspect
+#    3. Else use value provided by ws container inspect
 #
 # Workspace Agent --&gt; Che Server
 #    1. If set, use value of CHE_INFRA_DOCKER_MASTER__API__ENDPOINT
@@ -1288,8 +1339,8 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               02/07/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Feb 7, 2018 <br />
+               02/26/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Feb 26, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

@@ -285,6 +285,29 @@
       
   
   <li>
+      <a href="#">Che on Kubernetes</a>
+      <ul>
+          
+          
+          
+          <li><a href="kubernetes-single-user.html">Kubernetes - Single User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
       <a href="#">Che on OpenShift</a>
       <ul>
           
@@ -713,6 +736,13 @@
           
           
           
+          
+          
+          <li><a href="properties.html">Properties</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -803,6 +833,8 @@ $('#toc').on('click', 'a', function() {
 
 <p>Keycloak can create and authenticate users by itself or rely on 3rd party identity management systems and providers.</p>
 
+<p>Default Keycloak credentials are <code class="highlighter-rouge">admin:admin</code>. You can find your Keycloak URL either in OpenShift web console &gt; keycloak namespace (if you deployed to OpenShift) of go to <code class="highlighter-rouge">$CHE_HOST:5050/auth</code> if Che is running on Docker. Admin user is also a pre-defined Che user with privileges on the system scope. So, you may use <code class="highlighter-rouge">admin:admin</code> credentials when loggin in to Che for the first time.</p>
+
 <h2 id="che-and-keycloak">Che and Keycloak</h2>
 
 <p>When Che is deployed on OpenShift or installed on Docker, either deployment script or CLI makes sure that Keycloak is properly configured. When a <code class="highlighter-rouge">che-public</code> client is created, there are two important fields to be populated:</p>
@@ -812,6 +844,12 @@ $('#toc').on('click', 'a', function() {
   <li><strong>Web Origins</strong> - the same concerns Web Origins. An invalid web origin causes CORS error.</li>
 </ul>
 
+<h2 id="keycloak-tokens">Keycloak Tokens</h2>
+
+<p>By default, a user token gets expired after 30 mins. Keycloak admin can fine tune different realm settings related to Keycloak tokens:</p>
+
+<figure><img class="docimage" src="images/keycloak/keycloak_realm.png" alt="" /></figure>
+
 <h2 id="user-federation">User Federation</h2>
 
 <p>Keycloak provides a user friendly page to <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/user-federation.html">connect LDAP/Active Directory</a>. There are a number of <a href="http://www.keycloak.org/docs/3,2/server_admin/topics/user-federation/ldap.html">fields to be populated</a> on the config page, and those are specific to your particular LDAP instance, user filters, preferable mode etc. It is possible to test connection and authentication even before saving any particular storage provider.</p>
@@ -820,11 +858,13 @@ $('#toc').on('click', 'a', function() {
 
 <p>Keycloak offers social login buttons such as GitHub, Facebook, Twitter, OpenShift etc. See: Instructions to <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/identity-broker/social/github.html">enable Login with GitHub</a>.</p>
 
-<p>Default Keycloak credentials are <code class="highlighter-rouge">admin:admin</code>. You can find your Keycloak URL either in OpenShift web console &gt; keycloak namespace (if you deployed to OpenShift) of go to <code class="highlighter-rouge">$CHE_HOST:5050/auth</code> if Che is running on Docker.</p>
-
 <p>If you add GitHub login, you can also enable ssh key upload to Che users’ GitHub accounts. To enable this feature, make sure scopes are <code class="highlighter-rouge">repo,user,write:public_key</code>, and Store Tokens, Stored Tokens Readable are <strong>ON</strong> when you register a GitHub identity provider.</p>
 
 <figure><img class="docimage" src="images/git/kc_provider.png" alt="" /></figure>
+
+<p>Next thing is to add a default read-token role:</p>
+
+<figure><img class="docimage" src="images/git/kc_roles.png" alt="" /></figure>
 
 <p>Read more about <a href="ide_projects.html#project-import-and-ssh-connection">SHH key management</a>.</p>
 
@@ -867,8 +907,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               02/07/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Feb 7, 2018 <br />
+               02/26/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Feb 26, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

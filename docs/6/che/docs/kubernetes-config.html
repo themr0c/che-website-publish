@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="extensionsdev-docsassembly,  dev docs, developer docs, plugins, extensions">
-<title>Develop Your First Plugin Usign Che | Eclipse Che Documentation</title>
+<meta name="keywords" content="installationkubernetes,  kubernetes, configuration">
+<title>Configuration: Kuberentes | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Develop Your First Plugin Usign Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Configuration: Kuberentes page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Develop Your First Plugin Usign Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Configuration: Kuberentes">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -297,7 +297,7 @@
           
           
           
-          <li><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
+          <li class="active"><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
           
           
           
@@ -617,7 +617,7 @@
           
           
           
-          <li class="active"><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
+          <li><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
           
           
           
@@ -789,7 +789,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Develop Your First Plugin Usign Che</h1>
+   <h1 class="post-title-main">Configuration: Kuberentes</h1>
 </div>
 
 
@@ -826,72 +826,68 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Before you dive into information on how you can <a href="framework-overview.html">extend Che framework</a> and build your own Che <a href="assemblies.html">assembly</a>, let’s install and debug your first Che plugin using Che itself.</p>
+  <h2 id="how-it-works">How It Works</h2>
 
-<h2 id="run-eclipse-che">Run Eclipse Che</h2>
+<p>You can configure deployment of Che on Kubernetes by editing env variables that are defined in <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/modules/kubernetes/files/che-kubernetes.yaml">che-kubernetes.yaml</a> file. Once done, execute <code class="highlighter-rouge">kubectl --namespace=che apply -f che-kubernetes.yaml </code>. Che deployment will be updated which automatically triggers a new deployment. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
 
-<p><strong>[Install: Docker][docker]</strong></p>
+<p>We use recreate strategy. When the initial Che pod is shut down, server forcefully stops all workspace pods. Users working in those workspace will see a notification that the workspace is not running anymore. It does not impact data persistence - all workspace project files mounted through PVCs.</p>
 
-<p><strong>[Install: OpenShift][openshift]</strong></p>
+<h2 id="namespace-for-workspaces">Namespace for Workspaces</h2>
 
-<h2 id="create-workspace-and-sample-extension">Create Workspace and Sample Extension</h2>
+<p>You can instruct Che server in what namespace(s) to create workspace pods. There are two scenarios. By default, every new workspace pod is created in a new namespace which is dictated by the following env:</p>
 
-<p>Search for a stack by keyword <code class="highlighter-rouge">che</code> and choose <code class="highlighter-rouge">che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
+<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_NAMESPACE=""</code></p>
 
-<figure><img class="docimage" src="images/devel/create_extension.png" alt="" /></figure>
+<p>You may have one common namespace for all workspace pods:</p>
 
-<h2 id="build-a-deploy-your-extension">Build a Deploy Your Extension</h2>
+<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_NAMESPACE="che-workspaces"</code></p>
 
-<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code class="highlighter-rouge">assembly</code> (See: <a href="assemblies.html">Assemblies</a>) and plugins (containing plugins themselves).</p>
+<h2 id="volumes">Volumes</h2>
 
-<p>Execute <code class="highlighter-rouge">Traefik Start</code>, <code class="highlighter-rouge">Tomcat8-IDE Start</code>, <code class="highlighter-rouge">Deploy IDE</code> and <code class="highlighter-rouge">Deploy Workspace Agent</code> commands:</p>
+<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_STRATEGY="unique"</code></p>
 
-<figure><img class="docimage" src="images/devel/commands.png" alt="" /></figure>
+<p>There are two <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volume Claim</a> strategies:</p>
 
 <ul>
-  <li>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</li>
-  <li>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</li>
-  <li>Deploy IDE - build ide-war module and its dependencies and packages <code class="highlighter-rouge">war</code> artifact and copies ide.war from <code class="highlighter-rouge">assembly-ide-war</code> target dir over to Tomcat’s webapp</li>
-  <li>Deploy Workspace Agent does the same with the agent war artifact</li>
+  <li><strong>unique</strong> - each workspace volume gets own PVC.  This is the default strategy. When a workspace is deleted, associated PVCs are deleted as well. However, an associated PVs may not be recycled and tghus cannot be re-used for a new claim. See <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#recycling">k8s docs</a>.</li>
+  <li><strong>common</strong> - there is one PVC for all workspaces. When a PVC is shared with all workspaces, there’s a special service pod that starts before workspace is created to create a subpath in the PV for this particular ws. When a workspace is deleted an associated subpath is deleted as well.</li>
 </ul>
 
-<p>The last two commands have identical preview URLs pointing to <code class="highlighter-rouge">host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code class="highlighter-rouge">?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code class="highlighter-rouge">Hello CheeAllPowerfull</code> message:</p>
+<p>If a common strategy is set, it is impossible to run multiple workspaces simultaneously because of a default <code class="highlighter-rouge">ReadWriteOnce</code> <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">access mode</a> for workspace PVCs.</p>
 
-<figure><img class="docimage" src="images/devel/sample_action.png" alt="" /></figure>
+<h2 id="https-mode">HTTPS Mode</h2>
 
-<h2 id="develop-and-debug-client-side">Develop and Debug Client Side</h2>
+<p>Che on Kubernetes doesn’t support HTTPS mode yet.</p>
 
-<p>Get back to an original IDE instance and execute <code class="highlighter-rouge">GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at <a href="ide-extensions-gwt.html#debugging-with-super-devmode">this page</a>. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code class="highlighter-rouge">MyAction.java</code>:</p>
+<h2 id="scalability">Scalability</h2>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">super</span><span class="o">(</span><span class="s">"My New Action"</span><span class="o">,</span> <span class="s">"My Action Description"</span><span class="o">);</span>
-</code></pre></div></div>
+<p>To be able to run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from Kubernetes (usually it’s <code class="highlighter-rouge">no available nodes</code> kind of error).</p>
 
-<p>Return to the 2nd IDE instance, click <strong>Dev Mode On</strong> button and hit <strong>Compile</strong>. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.</p>
+<h2 id="debug-mode">Debug Mode</h2>
 
-<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code class="highlighter-rouge">Chrome's dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code class="highlighter-rouge">My New Action</code> in the context menu.</p>
+<p>If you want Che server to run in a debug mode set the following env before running the script (false by default):</p>
 
-<figure><img class="docimage" src="images/devel/debug_chrome.png" alt="" /></figure>
+<p><code class="highlighter-rouge">CHE_DEBUG_SERVER=true</code></p>
 
-<h2 id="develop-and-debug-server-side">Develop and Debug Server Side</h2>
+<h2 id="image-pull-policy">Image Pull Policy</h2>
 
-<p>Let’s change response from our REST service in <code class="highlighter-rouge">MyService.java</code>:</p>
+<p>If you want to always have the latest nightly image or use own latest tags when developing and testing Che</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">return</span> <span class="s">"Howdy, "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre></div></div>
+<p><code class="highlighter-rouge">IMAGE_PULL_POLICY</code></p>
 
-<p>Select this submodule in project explorer (<code class="highlighter-rouge">plugin-serverservice-server</code>) and run <code class="highlighter-rouge">Build</code> and <code class="highlighter-rouge">Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code class="highlighter-rouge">webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
+<h2 id="private-docker-registries">Private Docker Registries</h2>
 
-<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code class="highlighter-rouge">jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
+<p>Refer to <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">Kubernetes documentation</a></p>
 
-<p>Open <code class="highlighter-rouge">MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
+<h2 id="che-server-logs">Che Server Logs</h2>
 
-<p>Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:</p>
+<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/modules/kubernetes/files/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
 
-<figure><img class="docimage" src="images/devel/debugger.png" alt="" /></figure>
-
-<p>In Variable window, click <code class="highlighter-rouge">Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
+<ul>
+  <li><code class="highlighter-rouge">kubectl get log dc/che</code></li>
+  <li><code class="highlighter-rouge">kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code class="highlighter-rouge">oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</li>
+  <li>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</li>
+</ul>
 
 
 
@@ -901,15 +897,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
         
-        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
-        
-        
-        
-        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
+        <a href="tag_kubernetes.html" class="btn btn-default navbar-btn cursorNorm" role="button">kubernetes</a>
         
         
         
