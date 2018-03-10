@@ -849,13 +849,6 @@ $('#toc').on('click', 'a', function() {
   <li>Run <code class="highlighter-rouge">che config</code> or <code class="highlighter-rouge">che start</code>.</li>
 </ol>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># This environment variable:</span>
-<span class="nv">CHE_PROPERTY_machine_ws__agent_max__start__time__ms</span><span class="o">=</span>1000
-
-<span class="c"># Is sent to the Che server as:</span>
-machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
-</code></pre></div></div>
-
 <h2 id="single-port-policy">Single Port Policy</h2>
 
 <p>By default, Che lets Docker publish exposed ports in a random manner - Docker chooses available ports from the ephemeral port range to expose workspace <a href="servers.html">servers</a>. This, however, brings in certain network requirements, namely opening the ephemeral port range (and Keycloak port 5050 for multi user Che) to the world.</p>
@@ -897,6 +890,66 @@ machine.ws_agent.max_start_time_ms<span class="o">=</span>1000
 /instance/docker-compose.yml            <span class="c"># Docker compose to launch Che from the host without container</span>
 /instance/config                        <span class="c"># Configuration files for Che which are volume mounted into containers</span>
 </code></pre></div></div>
+
+<p><strong>Logback configuration</strong></p>
+
+<p>By default ws-master and ws-agent are configured to use logback as default logging backend. With has such configuration</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;configuration&gt;
+    &lt;contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"&gt;
+        &lt;resetJUL&gt;true&lt;/resetJUL&gt;
+    &lt;/contextListener&gt;
+    &lt;contextListener class="org.eclipse.che.commons.logback.EnvironmentVariablesLogLevelPropagator"/&gt;
+
+    &lt;property name="max.retention.days" value="60" /&gt;
+
+    &lt;jmxConfigurator/&gt;
+
+    &lt;appender name="stdout" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+    &lt;appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+        &lt;append&gt;true&lt;/append&gt;
+        &lt;prudent&gt;true&lt;/prudent&gt;
+        &lt;encoder&gt;
+            &lt;charset&gt;utf-8&lt;/charset&gt;
+            &lt;pattern&gt;%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+        &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
+            &lt;fileNamePattern&gt;${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log&lt;/fileNamePattern&gt;
+            &lt;maxHistory&gt;${max.retention.days}&lt;/maxHistory&gt;
+        &lt;/rollingPolicy&gt;
+    &lt;/appender&gt;
+
+
+    &lt;include optional="true" file="${che.local.conf.dir}/logback/logback-additional-appenders.xml"/&gt;
+    &lt;include optional="true" file="${catalina.home}/conf/logback-additional-appenders.xml"/&gt;
+
+    &lt;logger name="org.apache.catalina.loader" level="OFF"/&gt;
+    &lt;logger name="org.apache.catalina.session.PersistentManagerBase" level="OFF"/&gt;
+    &lt;logger name="org.apache.jasper.servlet.TldScanner" level="OFF"/&gt;
+
+    &lt;root level="${che.logs.level:-INFO}"&gt;
+        &lt;appender-ref ref="stdout"/&gt;
+        &lt;appender-ref ref="file"/&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;
+</code></pre></div></div>
+<p>Usually, it stored in tomcat’s conf folder as logback.xml file.
+There are two ways to exted this configuration.</p>
+<ol>
+  <li>Put your configuration in ${che.local.conf.dir}/logback/logback-additional-appenders.xml or ${catalina.home}/conf/logback-additional-appenders.xml file</li>
+  <li>Provide environment variable in such form
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=logger1=logger1_level,logger2=logger2_level
+</code></pre></div>    </div>
+    <p>for example</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=org.eclipse.che=DEBUG,org.eclipse.che.api.installer.server.impl.LocalInstallerRegistry=OFF 
+</code></pre></div>    </div>
+    <p>In case if you are using docker cli you can put this variable to che.env for ws-master or workspace config in case of workspace agent.</p>
+  </li>
+</ol>
 
 <p><strong>Logstash JSON Encoder</strong></p>
 
@@ -1008,7 +1061,7 @@ CHE_WORKSPACE_MAVEN__SERVER__JAVA__OPTIONS  # overrides the default value of JAV
 #    2. Else use the value of che.api
 #
 # Che Server --&gt; Docker Daemon Progression:
-#    1. Use the value of docker.client.daemon_url
+#    1. Use the value of che.infra.docker.daemon_url
 #    2. Else, use the value of DOCKER_HOST system variable
 #    3. Else, use Unix socket over unix:///var/run/docker.sock
 #    4. Else default docker0 IP - 172.17.42.1
@@ -1339,8 +1392,8 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               02/26/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Feb 26, 2018 <br />
+               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Mar 9, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
