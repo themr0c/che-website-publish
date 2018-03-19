@@ -18,7 +18,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>SaaS Cloud</h1>
-    <h3>Self-service Eclipse Che developer workspaces hosted at Codenvy.com</h3>
+    <h3>Self-service Eclipse Che developer workspaces hosted at Codenvy.io</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
