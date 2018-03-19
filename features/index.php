@@ -46,10 +46,10 @@
   <div class="row" id="prod-runtimes">
     <div class="col-sm-6">
       <h2>Production Runtimes</h2>
-      <p>Eclipse Che works with any Docker container, even Compose multi-container runtimes. Use an image from DockerHub, your own private registry or one of the many that ship with Che. Add agents for SSH, terminal and language services to dev-enable your production images. When stopped, Che workspaces can be snapshotted, saving their state between runs.</p>
+      <p>Eclipse Che works with any container, even multi-container runtimes. Run your workspace on Kubernetes, OpenShift or Docker. Use an image from DockerHub, your own private registry or one of the many that ship with Che. Add agents for SSH, terminal and language services to dev-enable your production images. When stopped, Che workspaces your project and key dependency state is persisted between runs.</p>
       <p>Under the hood:</p>
       <ul>
-        <li>Docker Runtimes</li>
+        <li>Container Runtimes</li>
         <li>Compose Runtimes</li>
         <li>Root Access Terminal</li>
         <li>SSH Access</li>
@@ -167,7 +167,7 @@
   <div class="row" id="stacks">
     <div class="col-sm-6">
       <h2>Stacks</h2>
-      <p>A stack is a runtime configuration for a workspace. It contains a runtime recipe, meta information like tags, description, environment name, and security policies. Stacks are displayed within the user dashboard and stack tags are used to filter the project code samples that are available. A stack's recipe is either a Dockerfile or a Docker Compose file that will create a runtime to be embedded into the workspace. You can use any of Che's 30+ built-in stacks or author your own unique stack for your work.</p>
+      <p>A stack is a runtime configuration for a workspace. It contains a runtime recipe, meta information like tags, description, environment name, and security policies. Stacks are displayed within the user dashboard and stack tags are used to filter the project code samples that are available. A stack's recipe can be Kubernetes YAML, a Dockerfile or a Docker Compose file that will create a runtime to be embedded into the workspace. You can use any of Che's 30+ built-in stacks or author your own unique stack for your work.</p>
       <p><a href="#top">Back to Top</a></p>
     </div>
 
