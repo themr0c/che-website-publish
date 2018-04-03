@@ -638,6 +638,13 @@
           
           
           
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
@@ -828,7 +835,7 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="supported-openshift-flavors-and-versions">Supported OpenShift Flavors and Versions</h2>
 
-<p>Che can be deployed to MiniShift, OCP, OSD and OSO v3.5+.</p>
+<p>Single User Eclipse Che can be deployed to Minishift, OCP, OSD and OSO v3.6+.</p>
 
 <h2 id="pre-reqs">Pre-Reqs</h2>
 
@@ -847,11 +854,13 @@ $('#toc').on('click', 'a', function() {
 
 <p>This diagram depicts the default <a href="openshift-config.html#volumes">PVC strategy</a> (PVC per workspace).</p>
 
-<h2 id="minishift">MiniShift</h2>
+<h2 id="minishift">Minishift</h2>
 
-<p><strong>MiniShift Addon</strong></p>
+<p>Before starting <a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html">install Minishift</a> or <a href="https://docs.openshift.org/latest/minishift/getting-started/updating.html">update your Minishift</a> to ensure you’re on the most up-to-date version.</p>
 
-<p>The best way of deploying Che to MiniShift is using an add-on via the <a href="https://docs.openshift.org/latest/minishift/command-ref/minishift_addons_apply.html"><code class="highlighter-rouge">minishift add-ons apply</code></a> command which is outlined in the following paragraphs.</p>
+<p><strong>Minishift Addon</strong></p>
+
+<p>The best way of deploying Che to Minishift is using an add-on via the <a href="https://docs.openshift.org/latest/minishift/command-ref/minishift_addons_apply.html"><code class="highlighter-rouge">minishift add-ons apply</code></a> command which is outlined in the following paragraphs.</p>
 
 <p><strong>Install add-On</strong></p>
 
@@ -936,12 +945,7 @@ minishift addons enable che
 
 <p>To remove all created template and che project:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minishift addons remove <span class="se">\</span>
-<span class="nt">--addon-env</span> <span class="nv">OPENSHIFT_TOKEN</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
-<span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
-<span class="nt">--addon-env</span> <span class="nv">GITHUB_CLIENT_ID</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
-<span class="nt">--addon-env</span> <span class="nv">GITHUB_CLIENT_SECRET</span><span class="o">=</span><span class="s2">""</span> <span class="se">\</span>
-<span class="nt">--addon-env</span> <span class="nv">NAMESPACE</span><span class="o">=</span>mini-che che
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minishift addons remove che
 </code></pre></div></div>
 
 <p><strong>Uninstall add-on</strong></p>
@@ -954,7 +958,7 @@ minishift addons enable che
 
 <p>Alternatively, you may download and run deployment scripts instead of using MiniShift addons:</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_ROOT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_ROOT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/scripts/
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_ROOT_URL</span><span class="k">}</span>/deploy_che.sh <span class="nt">-o</span> get-che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_ROOT_URL</span><span class="k">}</span>/che-openshift.yml <span class="nt">-o</span> che-openshift.yml
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_ROOT_URL</span><span class="k">}</span>/che-config <span class="nt">-o</span> che-config
@@ -980,7 +984,7 @@ bash ./get-che.sh
   <li>Download and run deployment script:</li>
 </ul>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/deploy_che.sh
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/deploy_che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./get-che.sh
 bash ./get-che.sh
 </code></pre></div></div>
@@ -1006,9 +1010,9 @@ bash ./get-che.sh
 
 <p>Download and run deployment script:</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/deploy_che.sh
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEPLOY_SCRIPT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/deploy_che.sh
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> ./get-che.sh
-<span class="nv">CONFIG_FILE</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/che-config
+<span class="nv">CONFIG_FILE</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/che-config
 curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_SCRIPT_URL</span><span class="k">}</span> <span class="nt">-o</span> che-config
 <span class="nb">echo</span> <span class="s2">"CHE_INFRA_KUBERNETES_PVC_QUANTITY: </span><span class="se">\"</span><span class="s2">1Gi</span><span class="se">\"</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> che-config
 bash get-che.sh
@@ -1051,8 +1055,8 @@ bash get-che.sh
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Mar 9, 2018 <br />
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

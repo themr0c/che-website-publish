@@ -638,6 +638,13 @@
           
           
           
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
@@ -857,11 +864,12 @@ $('#toc').on('click', 'a', function() {
 
 <p><strong>Wildcard DNS</strong></p>
 
-<p>In a single port mode, Che builds URLs of workspace services using the following pattern - <code class="highlighter-rouge">serviceName.machineName.ws-ID.IP.wildcardDNSProvider</code>. So, if your external IP is <code class="highlighter-rouge">193.12.34.56</code>, URL of a workspace agent will look like <code class="highlighter-rouge">wsagent-http.dev-machine.workspace0bcgkgkvsqi31b4u.193.12.34.56.nip.io</code></p>
+<p>In a single port mode, Che builds URLs of workspace services using the following pattern - <code class="highlighter-rouge">serviceName-machineName-ws-ID.IP.wildcardDNSProvider</code>. So, if your external IP is <code class="highlighter-rouge">193.12.34.56</code>, URL of a workspace agent will look like <code class="highlighter-rouge">wsagent-http-dev-machine-workspace0bcgkgkvsqi31b4u.193.12.34.56.nip.io</code></p>
 
 <ul>
   <li>by default <a href="http://nip.io/">nip.io</a> is used. This is an external wildcard DNS provider, and if it is down for some reason, networking in single port Che is broken.</li>
   <li>you can use a different wildcard DNS provider with <code class="highlighter-rouge">CHE_SINGLEPORT_WILDCARD__DOMAIN_HOST</code> env.</li>
+  <li>if you don’t want the external IP to be part of the url (<code class="highlighter-rouge">serviceName-machineName-ws-ID.wildcardDNSProvider</code>, for example to use a wildcard SSL certificate), you can specify <code class="highlighter-rouge">CHE_SINGLEPORT_WILDCARD__DOMAIN_IPLESS=true</code> with a custom wildcard DNS (e.g. <code class="highlighter-rouge">CHE_SINGLEPORT_WILDCARD__DOMAIN_HOST=domain.tld</code>. Be aware that you need to have a matching DNS entry for <code class="highlighter-rouge">*.domain.tld</code>. If you are using the multi-user mode, Keycloak will be provided at <code class="highlighter-rouge">keycloak.domain.tld</code>.</li>
 </ul>
 
 <p><strong>Multi-User Mode</strong></p>
@@ -878,6 +886,8 @@ $('#toc').on('click', 'a', function() {
 /instance/logs/che/che-machine-logs     <span class="c"># Workspace logs</span>
 </code></pre></div></div>
 
+<p>Note there might be cases of logs encoding settings when Che master logs are not stored in the location above.</p>
+
 <p>User data is stored in:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/instance/data/che                      <span class="c"># Project backups (we synchronize projects from remote ws here)</span>
@@ -891,93 +901,33 @@ $('#toc').on('click', 'a', function() {
 /instance/config                        <span class="c"># Configuration files for Che which are volume mounted into containers</span>
 </code></pre></div></div>
 
-<p><strong>Logback configuration</strong></p>
+<h2 id="jdbc-configuration">JDBC Configuration</h2>
+<p>Eclipse Che uses <a href="http://www.h2database.com/html/main.html">H2</a> for single-user builds and PostgreSQL database in a multi-user flavor.</p>
 
-<p>By default ws-master and ws-agent are configured to use logback as default logging backend. With has such configuration</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;configuration&gt;
-    &lt;contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"&gt;
-        &lt;resetJUL&gt;true&lt;/resetJUL&gt;
-    &lt;/contextListener&gt;
-    &lt;contextListener class="org.eclipse.che.commons.logback.EnvironmentVariablesLogLevelPropagator"/&gt;
+<p>Depending on the used database, JDBC Connection pool will be initialized with respective default values.
+These values can be overridden through che.env.</p>
 
-    &lt;property name="max.retention.days" value="60" /&gt;
-
-    &lt;jmxConfigurator/&gt;
-
-    &lt;appender name="stdout" class="ch.qos.logback.core.ConsoleAppender"&gt;
-        &lt;encoder&gt;
-            &lt;pattern&gt;%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n&lt;/pattern&gt;
-        &lt;/encoder&gt;
-    &lt;/appender&gt;
-
-    &lt;appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
-        &lt;append&gt;true&lt;/append&gt;
-        &lt;prudent&gt;true&lt;/prudent&gt;
-        &lt;encoder&gt;
-            &lt;charset&gt;utf-8&lt;/charset&gt;
-            &lt;pattern&gt;%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n&lt;/pattern&gt;
-        &lt;/encoder&gt;
-        &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
-            &lt;fileNamePattern&gt;${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log&lt;/fileNamePattern&gt;
-            &lt;maxHistory&gt;${max.retention.days}&lt;/maxHistory&gt;
-        &lt;/rollingPolicy&gt;
-    &lt;/appender&gt;
-
-
-    &lt;include optional="true" file="${che.local.conf.dir}/logback/logback-additional-appenders.xml"/&gt;
-    &lt;include optional="true" file="${catalina.home}/conf/logback-additional-appenders.xml"/&gt;
-
-    &lt;logger name="org.apache.catalina.loader" level="OFF"/&gt;
-    &lt;logger name="org.apache.catalina.session.PersistentManagerBase" level="OFF"/&gt;
-    &lt;logger name="org.apache.jasper.servlet.TldScanner" level="OFF"/&gt;
-
-    &lt;root level="${che.logs.level:-INFO}"&gt;
-        &lt;appender-ref ref="stdout"/&gt;
-        &lt;appender-ref ref="file"/&gt;
-    &lt;/root&gt;
-&lt;/configuration&gt;
-</code></pre></div></div>
-<p>Usually, it stored in tomcat’s conf folder as logback.xml file.
-There are two ways to exted this configuration.</p>
-<ol>
-  <li>Put your configuration in ${che.local.conf.dir}/logback/logback-additional-appenders.xml or ${catalina.home}/conf/logback-additional-appenders.xml file</li>
-  <li>Provide environment variable in such form
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=logger1=logger1_level,logger2=logger2_level
-</code></pre></div>    </div>
-    <p>for example</p>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=org.eclipse.che=DEBUG,org.eclipse.che.api.installer.server.impl.LocalInstallerRegistry=OFF 
-</code></pre></div>    </div>
-    <p>In case if you are using docker cli you can put this variable to che.env for ws-master or workspace config in case of workspace agent.</p>
-  </li>
-</ol>
-
-<p><strong>Logstash JSON Encoder</strong></p>
-
-<p>Che-server comes with <code class="highlighter-rouge">logstash-json-encoder</code> which allows you to send logs in a JSON format for Logstash or any other log consumers. Adding a new appender can be done by adding a <code class="highlighter-rouge">logback-additional-appenders.xml</code> in <code class="highlighter-rouge">${CHE_LOCAL_CONF_DIR}/logback/</code> or <code class="highlighter-rouge">${CATALINA_HOME}/conf/</code> folder from your custom assembly or mounted volume:</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="nt">&lt;included&gt;</span>
-    <span class="nt">&lt;appender</span> <span class="na">name=</span><span class="s">"file-json"</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.RollingFileAppender"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="nt">&lt;/file&gt;</span>
-        <span class="nt">&lt;filter</span> <span class="na">class=</span><span class="s">"ch.qos.logback.classic.filter.ThresholdFilter"</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;level&gt;</span>info<span class="nt">&lt;/level&gt;</span>
-        <span class="nt">&lt;/filter&gt;</span>
-        <span class="nt">&lt;rollingPolicy</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="nt">&lt;/fileNamePattern&gt;</span>
-            <span class="nt">&lt;maxHistory&gt;</span>${max.retention.days}<span class="nt">&lt;/maxHistory&gt;</span>
-        <span class="nt">&lt;/rollingPolicy&gt;</span>
-        <span class="nt">&lt;encoder</span> <span class="na">class=</span><span class="s">"net.logstash.logback.encoder.LogstashEncoder"</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;/appender&gt;</span>
-
-    <span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">"${che.logs.level:-INFO}"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">"file-json"</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/root&gt;</span>
-<span class="nt">&lt;/included&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Example of configuration for using H2 database (default for single-user Che)
+CHE_JDBC_USERNAME=
+CHE_JDBC_PASSWORD=
+CHE_JDBC_DATABASE=jdbc:h2:che
+CHE_JDBC_URL=jdbc:postgresql://postgres:5432/dbche
+CHE_JDBC_DRIVER__CLASS__NAME=org.h2.Driver
+CHE_JDBC_MAX__TOTAL=8
+CHE_JDBC_MAX__IDLE=2
+CHE_JDBC_MAX__WAIT__MILLIS=-1
 </code></pre></div></div>
 
-<p>This appender will log in a JSON format to a rolling <code class="highlighter-rouge">/logs/logs/catalina.log.json</code> file.</p>
-
-<p>Other <code class="highlighter-rouge">logback-logstash-encoder</code> appenders can be added as well. See <a href="https://github.com/logstash/logstash-logback-encoder#usage">https://github.com/logstash/logstash-logback-encoder#usage</a>.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Example of configuration for using PostgreSQL database (default for multi-user Che)
+CHE_JDBC_USERNAME=pgche
+CHE_JDBC_PASSWORD=pgchepassword
+CHE_JDBC_DATABASE=dbche
+CHE_JDBC_URL=jdbc:postgresql://postgres:5432/dbche
+CHE_JDBC_DRIVER__CLASS__NAME=org.postgresql.Driver
+CHE_JDBC_MAX__TOTAL=20
+CHE_JDBC_MAX__IDLE=10
+CHE_JDBC_MAX__WAIT__MILLIS=-1
+</code></pre></div></div>
 
 <h2 id="oauth">oAuth</h2>
 
@@ -1392,8 +1342,8 @@ pass <span class="k">in </span>proto tcp from any to any port 1234
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Mar 9, 2018 <br />
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

@@ -638,6 +638,13 @@
           
           
           
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
@@ -828,7 +835,7 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="how-it-works">How It Works</h2>
 
-<p>You can configure deployment of Che on OpenShift with env variables that are defined in <a href="https://raw.githubusercontent.com/eclipse/che/master/dockerfiles/init/modules/openshift/files/scripts/che-config"><code class="highlighter-rouge">che-config</code></a> file. If you have downloaded only deployment script but need to configure your Che server, download config file that should be located in the same directory with the deployment script.</p>
+<p>You can configure deployment of Che on OpenShift 3.6+ with env variables that are defined in <a href="https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/che-config"><code class="highlighter-rouge">che-config</code></a> file. If you have downloaded only deployment script but need to configure your Che server, download config file that should be located in the same directory with the deployment script.</p>
 
 <p>Once done, run the deployment script with <code class="highlighter-rouge">-c rollupdate</code> flag. Che deployment will be updated which automatically triggers a new deployment. You can also export envs in your environment, and the script will pick them up. It will only update Che server pod. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
 
@@ -945,13 +952,18 @@ CHE_INFRA_KUBERNETES_TOKEN
 
 <h2 id="che-server-logs">Che Server Logs</h2>
 
-<p>When Eclipse Che gets deployed to OpenShift, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/modules/openshift/files/scripts/che-openshift.yml#L30">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
+<h1 id="todo-outdated">TODO OUTDATED</h1>
+<p>When Eclipse Che gets deployed to OpenShift, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/openshift/che-openshift.yml#L7">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
 
 <ul>
   <li><code class="highlighter-rouge">oc get log dc/che</code></li>
   <li><code class="highlighter-rouge">oc describe pvc che-data-claim</code>, find PV it is bound to, then <code class="highlighter-rouge">oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</li>
   <li>in OpenShift web console, eclipse-che project, <strong>pods &gt; che-pod &gt; logs</strong>.</li>
 </ul>
+
+<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash.
+To configure JSON logging instead of plain text environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL</code> should have value <code class="highlighter-rouge">json</code>.
+See more at <a href="logging.html">logging docs</a>.</p>
 
 <h2 id="multi-user-using-own-keycloak-and-psql">Multi-User: Using Own Keycloak and PSQL</h2>
 
@@ -973,6 +985,39 @@ CHE_KEYCLOAK_CLIENT__ID=che-public
   <li><code class="highlighter-rouge">redirectUris</code> should be <code class="highlighter-rouge">${CHE_SERVER_ROUTE}/*</code>. If no or incorrect <code class="highlighter-rouge">redirectUris</code> are provided or the one used is not in the list of <code class="highlighter-rouge">redirectUris</code>, Keycloak will display an error saying that redirect_uri param is invalid.</li>
   <li><code class="highlighter-rouge">webOrigins</code> should be  either<code class="highlighter-rouge">${CHE_SERVER_ROUTE}</code> or <code class="highlighter-rouge">*</code>. If no or incorrect <code class="highlighter-rouge">webOrigins</code> are provided, Keycloak script won’t be injected into a page because of CORS error.</li>
 </ul>
+
+<p><strong><em>Using an alternate OIDC provider instead of Keycloak</em></strong></p>
+
+<p>Instead using a Keycloak server, Che now provides a limited support for alternate authentication servers compatible with the <a href="http://openid.net/specs/openid-connect-core-1_0.html">OpenId Connect specification</a>.</p>
+
+<p>Some limitations restrict the alternate OIDC providers that can be used with Eclipse Che. Supported providers should:</p>
+<ul>
+  <li>implement access tokens as JWT tokens including at least the following claims:
+    <ul>
+      <li><code class="highlighter-rouge">exp</code>: the expiration time (https://tools.ietf.org/html/rfc7519#section-4.1.4)</li>
+      <li><code class="highlighter-rouge">sub</code>: the subject (https://tools.ietf.org/html/rfc7519#section-4.1.2)</li>
+    </ul>
+  </li>
+  <li>allow redirect Urls with wildcards at the end</li>
+  <li>provide an endpoint that returns the <a href="http://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig">OpenID Provider Configuration information</a>. According to the specification, this endpoint should end with sub-path <code class="highlighter-rouge">/.well-known/openid-configuration</code>.</li>
+</ul>
+
+<p>When using an alternate OIDC provider, the following Keycloak environment variables should be set to <code class="highlighter-rouge">NULL</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_KEYCLOAK_AUTH__SERVER__URL=NULL
+CHE_KEYCLOAK_REALM=NULL
+</code></pre></div></div>
+
+<p>Instead, you should set the folowing environement variables:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_KEYCLOAK_CLIENT__ID=&lt;client id provided by the OIDC provider&gt;
+CHE_KEYCLOAK_OIDC__PROVIDER=&lt;base URL of the OIDC provider that provides a configuration endpoint at `/.well-known/openid-configuration` sub-path&gt;
+</code></pre></div></div>
+
+<p>If the optional <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest"><code class="highlighter-rouge">nonce</code> OpenId request parameter</a> is not supported, the following environment variable should be added:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_KEYCLOAK.USE__NONCE=FALSE
+</code></pre></div></div>
 
 <p><strong><em>Che Server and PostgreSQL</em></strong></p>
 
@@ -1005,6 +1050,10 @@ POSTGRES_PASSWORD=keycloak
 
 <p>After you have built your <a href="assemblies.html">custom assembly</a>, execute <code class="highlighter-rouge">build.sh</code> <a href="https://github.com/eclipse/che/tree/master/dockerfiles/che">script</a>. You can then tag it, either push to MiniShift or a public Docker registry, and reference in your Che deployment as <code class="highlighter-rouge">CHE_IMAGE_REPO</code> and <code class="highlighter-rouge">CHE_IMAGE_TAG</code>.</p>
 
+<h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
+
+<p>Info about changing workspace termination grace period can be found in the following <a href="kubernetes-config.html#che-workspace-termination-grace-period">section</a> of the Che Kubernetes config document.</p>
+
 
 
     <div class="tags">
@@ -1033,8 +1082,8 @@ POSTGRES_PASSWORD=keycloak
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Mar 9, 2018 <br />
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

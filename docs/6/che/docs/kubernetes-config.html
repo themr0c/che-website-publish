@@ -638,6 +638,13 @@
           
           
           
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
@@ -828,7 +835,7 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="how-it-works">How It Works</h2>
 
-<p>You can configure deployment of Che on Kubernetes by editing env variables that are defined in <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/modules/kubernetes/files/che-kubernetes.yaml">che-kubernetes.yaml</a> file. Once done, execute <code class="highlighter-rouge">kubectl --namespace=che apply -f che-kubernetes.yaml </code>. Che deployment will be updated which automatically triggers a new deployment. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
+<p>You can configure deployment of Che on Kubernetes by editing env variables that are defined in <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml">che-kubernetes.yaml</a> file. Once done, execute <code class="highlighter-rouge">kubectl --namespace=che apply -f che-kubernetes.yaml </code>. Che deployment will be updated which automatically triggers a new deployment. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
 
 <p>We use recreate strategy. When the initial Che pod is shut down, server forcefully stops all workspace pods. Users working in those workspace will see a notification that the workspace is not running anymore. It does not impact data persistence - all workspace project files mounted through PVCs.</p>
 
@@ -881,13 +888,28 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="che-server-logs">Che Server Logs</h2>
 
-<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/modules/kubernetes/files/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
+<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
 
 <ul>
   <li><code class="highlighter-rouge">kubectl get log dc/che</code></li>
   <li><code class="highlighter-rouge">kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code class="highlighter-rouge">oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</li>
   <li>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</li>
 </ul>
+
+<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash.
+To configure JSON logging instead of plain text environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL</code> should have value <code class="highlighter-rouge">json</code>.
+See more at <a href="logging.html">logging docs</a>.</p>
+
+<h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
+
+<p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults ‘0’, which allows to terminate
+pods almost instantly and significantly decrease the time required for stopping a workspace. For increasing grace termination period the following environment variable should be used:</p>
+
+<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_POD_TERMINATION__GRACE__PERIOD__SEC</code></p>
+
+<p><span style="color:red;"><strong>IMPORTANT!</strong></span></p>
+
+<p>If <code class="highlighter-rouge">terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
 
 
 
@@ -917,8 +939,8 @@ $('#toc').on('click', 'a', function() {
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Mar 9, 2018 <br />
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>

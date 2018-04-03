@@ -638,6 +638,13 @@
           
           
           
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
@@ -826,9 +833,13 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="system-requirements">System Requirements</h2>
+  <h2 id="supported-openshift-flavors-and-versions">Supported OpenShift Flavors and Versions</h2>
 
-<p>Your OpenShift node should have at least 5GB RAM available - 3GB go to Che deployments and 2GB is reserved to run at least one workspace.</p>
+<p>Multi-user Eclipse Che can be deployed to OpenShift Container Platform 3.6+, OpenShift Dedicated and OpenShift Online Pro.</p>
+
+<h2 id="system-requirements">System Requirements</h2>
+
+<p>Eclipse Che requires <strong>OpenShift 3.6</strong> or higher. Your OpenShift node should have at least 5GB RAM available - 3GB go to Che deployments and 2GB is reserved to run at least one workspace. The total RAM required for running workspaces will grow depending on the size of your workspace runtime(s) and the number of concurrent workspace pods you run.</p>
 
 <h2 id="deployment-diagram">Deployment diagram</h2>
 
@@ -848,27 +859,20 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="how-to-get-scripts">How to Get Scripts</h2>
 
-<p>There are two ways to get deployment scripts: either clone Che or run a Docker image:</p>
-
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/eclipse/che
-<span class="nb">cd </span>che/dockerfiles/init/modules/openshift/files/scripts
-</code></pre></div></div>
-<p>or</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-ti</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> <span class="k">${</span><span class="nv">LOCAL_PATH</span><span class="k">}</span>:/data eclipse/che init
-<span class="nb">cd</span> <span class="k">${</span><span class="nv">LOCAL_PATH</span><span class="k">}</span>/instance/config/openshift/scripts
+<span class="nb">cd </span>che/deploy/openshift
 </code></pre></div></div>
 
-<h2 id="minishift">MiniShift</h2>
+<h2 id="minishift">Minishift</h2>
 
-<p>Make sure you have started MiniShift with <code class="highlighter-rouge">--memory=4096</code> or more.</p>
+<p>Due to the size of a multi-user Eclipse Che install, Minishift is not recommended as a base for this configuration. However, if you have to use Minishift ensure you have started Minishift with <code class="highlighter-rouge">--memory=4096</code> or more and <a href="https://docs.openshift.org/latest/minishift/getting-started/updating.html">update Minishift</a> to the latest version.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true
 export </span><span class="nv">WAIT_FOR_CHE</span><span class="o">=</span><span class="nb">true</span>
 ./deploy_che.sh
 </code></pre></div></div>
 
-<h2 id="openshift-container-platform">OpenShift Container platform</h2>
+<h2 id="openshift-container-platform">OpenShift Container Platform</h2>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true
 export </span><span class="nv">OPENSHIFT_ENDPOINT</span><span class="o">=</span>&lt;OCP_ENDPOINT_URL&gt; <span class="c"># e.g. https://api.pro-us-east-1.openshift.com for OpenShift Online Pro</span>
@@ -889,7 +893,7 @@ export </span><span class="nv">OPENSHIFT_ENDPOINT</span><span class="o">=</span>
   <li>If you are a cluster admin, you may grant privileges to <code class="highlighter-rouge">che</code> service account so that it can create objects outside its namespace:</li>
 </ol>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oadm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
 
 <span class="c"># eclipse-che is the default namespace where Che server objects are created.</span>
 <span class="c"># It can be overridden by `CHE_OPENSHIFT_PROJECT`</span>
@@ -899,9 +903,9 @@ export </span><span class="nv">OPENSHIFT_ENDPOINT</span><span class="o">=</span>
 
 <p>Instructions to deploy Che to OSD are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a></p>
 
-<h2 id="openshift-online">OpenShift Online</h2>
+<h2 id="openshift-online-pro">OpenShift Online Pro</h2>
 
-<p>Below is a recommended way to deploy Eclipse Che multi-user flavor on OSO:</p>
+<p>Below is a recommended way to deploy Eclipse Che multi-user on OpenShift Online Pro (OpenShift Online Starter does not have sufficient resources to run multi-user Che):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true
 export </span><span class="nv">OPENSHIFT_ENDPOINT</span><span class="o">=</span>https://api.rh-us-east-1.openshift.com
@@ -914,7 +918,7 @@ export </span><span class="nv">OPENSHIFT_ENDPOINT</span><span class="o">=</span>
 <span class="nb">export </span><span class="nv">CHE_INFRA_OPENSHIFT_PROJECT</span><span class="o">=</span>eclipse-che
 <span class="nb">export </span><span class="nv">WAIT_FOR_CHE</span><span class="o">=</span><span class="nb">true
 
-cd </span>che/dockerfiles/init/modules/openshift/files/scripts
+cd </span>che/deploy/openshift
 
 <span class="nb">echo</span> <span class="s2">"CHE_INFRA_KUBERNETES_PVC_QUANTITY: </span><span class="se">\"</span><span class="s2">1Gi</span><span class="se">\"</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> che-config
 
@@ -964,8 +968,8 @@ This is a prerequisite to use service account rather than a token that may get e
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               03/09/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Mar 9, 2018 <br />
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
