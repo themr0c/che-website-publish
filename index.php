@@ -168,11 +168,12 @@
 
 <div class="bg-purple chefile">
   <div class="container-fluid content">
+    <h2>Feature Highlight</h2>
     <table>
       <tr>
         <td><img src="<?php echo $rootPath; ?>/images/img-chefile@2x.png" alt=""></td>
         <td>
-          <h2>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h2>
+          <h4>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h4>
           <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
           <a href="<?php echo $rootPath; ?>/docs/6/che/docs/chedir-getting-started.html" class="btn-yellow" target="_blank">Learn More</a>
         </td>
@@ -193,12 +194,11 @@
       <li><span><i class="fa fa-twitter"></i> @oyku</span> I'm an @intellijidea user and have suffered from @EclipseFdn IDE a lot but everyone should keep an eye on Eclipse Che</li>
       <li><span><i class="fa fa-twitter"></i> @puffybsd</span> The stuff eclipse che is doing, particularly workspace server and language server protocol, is seriously cool.</li>
       <li><span><i class="fa fa-twitter"></i> @smithkenny</span> There is some seriously disruptive #Devops technology coming with #Eclipse Che. Solves probs with dev workstations &amp; workspaces.</li>
+      <!--
       <li><span><i class="fa fa-twitter"></i> @DaveZaffrey</span> #eclipse che - been waiting for this for many years! Dev workspace that is standardized, clonable, Web UI and highly response.</li>
       <li><span><i class="fa fa-twitter"></i> @mogreau</span> Contribute to an open source project in less than 10 minutes with @eclipse_che!</li>
       <li><span><i class="fa fa-twitter"></i> @thomasehardt</span> Not many dev tools blow my mind, but @eclipse_che certain does - it is the future of IDEs!</li>
-      <li><span><i class="fa fa-twitter"></i> @nilsbundi</span> PS: Your product is pretty awesome and I never want to switch back to desktop Eclipse.</li>
-      <li><span><i class="fa fa-twitter"></i> @jack-y</span> I develop micro services in Java. @eclispe_che saves my life - I can work on my code out of my office.</li>
-      <li><span><i class="fa fa-twitter"></i> @CarlesZ</span> Developers of the world, a big applause!!!</li>
+    -->
     </ul>
 
     <a href="https://twitter.com/eclipse_che" class="btn-yellow" target="_blank">Follow Us on Twitter</a>

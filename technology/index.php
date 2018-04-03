@@ -33,7 +33,7 @@
       <div class="col-sm-6">
         <a href="../images/features/img-features-docker-powered.png" target="_blank"><img alt="" height="333" width="500" src="../images/features/img-features-docker-powered.png" class="img-responsive" /></a>
         <h3>“Dev Mode” your Workspace</h3>
-        <p>Workspace runtimes are Docker-powered. Use our all-in-one stacks, pull from any registry, or author your own. Snapshot and embed runtimes into... <a href="../features/">Read More</a></p>
+        <p>Workspace runtimes are container-powered, run them in Kubernetes, Docker or OpenShift. Use our all-in-one stacks or author your own. Persist state... <a href="../features/">Read More</a></p>
       </div>
     </div> <!-- .row -->
 

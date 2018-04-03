@@ -13,7 +13,8 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1 class="no-margin">Get Started with Eclipse Che</h1>
+    <h1>Get Started with Eclipse Che</h1>
+    <h3>Develop with your team in Kubernetes pods from the start. Che workspaces “dev mode” production images, adding intellisense and debuggers.</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
@@ -31,7 +32,7 @@
     <div class="col-md-6">
       <img src="../images/getting-started/icon-local-install.jpg" alt="Eclipse Che | Local Install">
       <h3>Download</h3>
-      <p>Install Che anywhere that Docker runs.</p>
+      <p>Install anywhere on Kubernetes, OpenShift or Docker.</p>
       <a href="<?php echo $rootPath; ?>/docs/setup/getting-started/" class="btn-yellow">Download</a> 
     </div>
 
