@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE">
-<meta name="keywords" content="overviewgetting-started,  overview">
-<title>Introduction to Eclipse Che | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="extensionsassemblydev-docs,  framework, overview, master, server, che server, framework">
+<title>Installers | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Introduction to Eclipse Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installers page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introduction to Eclipse Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installers">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -216,7 +216,7 @@
           
           
           
-          <li class="active"><a href="index.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -666,7 +666,7 @@
           
           
           
-          <li><a href="custom-installers.html">SDK - Installers</a></li>
+          <li class="active"><a href="custom-installers.html">SDK - Installers</a></li>
           
           
           
@@ -796,15 +796,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Introduction to Eclipse Che</h1>
+   <h1 class="post-title-main">Installers</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE</div>
    
 
     
@@ -835,147 +833,187 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
-<p>Eclipse Che provides:</p>
+  <p>Now that you have made yourself familiar with <a href="installers.html">Installer</a> concept and usage, let’s take a closer look at implementing custom ones.</p>
+
+<p>Let’s take a closer look of a custom installer named <code class="highlighter-rouge">Curl</code>:</p>
+
+<p>The installer can be split into description in json format and shell script.</p>
+
+<p>The description has the following format:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.curl"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Curl"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Embedded Curl"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>As you can see it has the following fields:</p>
+
 <ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plugins for languages, framework, and tools</li>
-  <li>An SDK for creating plugins and assemblies</li>
+  <li>id - unique value that identifier an installer;</li>
+  <li>version - version of the installer;</li>
+  <li>name - readable name of the installer;</li>
+  <li>description - description of the installer;</li>
+  <li>dependencies - declare dependencies to other installers;</li>
+  <li>properties - key:value map, where installer is able to store custom specific fields;</li>
+  <li>servers - list of servers which will be started by the installer.</li>
 </ul>
 
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
-<ul>
-  <li><a href="quick-start.html">Quick start guide</a></li>
-  <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
-  <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
-  <li><a href="https://www.eclipse.org/che/docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
-</ul>
+<p>The second item in resources is an installer script. It’s a shell script that will do all required system changes:</p>
 
-<h2 id="single-and-multi-user-flavors">Single and Multi-User Flavors</h2>
+<p>Here is an example of script that installs <code class="highlighter-rouge">Curl</code> inside a machine:</p>
 
-<p>Eclipse Che is available in two different modes:</p>
-<ul>
-  <li><strong>Single-user</strong>: perfectly suited for personal desktop environment.</li>
-  <li><strong>Multi-user</strong>: secure and best for organization and developer teams.</li>
-</ul>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>is_current_user_root<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">test</span> <span class="s2">"</span><span class="k">$(</span>id <span class="nt">-u</span><span class="k">)</span><span class="s2">"</span> <span class="o">=</span> 0
+<span class="o">}</span>
 
-<p>Learn more about single and multi-user flavors on the following <a href="single-multi-user.html">page</a>.</p>
+is_current_user_sudoer<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">sudo</span> <span class="nt">-n</span> <span class="nb">true</span> <span class="o">&gt;</span> /dev/null 2&gt;&amp;1
+<span class="o">}</span>
 
-<p>Considering the <code class="highlighter-rouge">multi-user</code> mode as an advanced setup of Eclipe Che, the quick starts are covering only the <code class="highlighter-rouge">single-user</code> mode. If you are interested by the <code class="highlighter-rouge">multi-user</code>, please read the following pages:</p>
-<ul>
-  <li><a href="docker-multi-user.html">Multi-user configuration on Docker</a></li>
-  <li><a href="openshift-multi-user.html">Multi-user configuration on OpenShift</a></li>
-</ul>
+set_sudo_command<span class="o">()</span> <span class="o">{</span>
+    <span class="k">if </span>is_current_user_sudoer <span class="o">&amp;&amp;</span> <span class="o">!</span> is_current_user_root<span class="p">;</span> <span class="k">then </span><span class="nv">SUDO</span><span class="o">=</span><span class="s2">"sudo -E"</span><span class="p">;</span> <span class="k">else </span><span class="nb">unset </span>SUDO<span class="p">;</span> <span class="k">fi</span>
+<span class="o">}</span>
 
-<h2 id="docker-and-openshift-support">Docker and OpenShift Support</h2>
+set_sudo_command
+<span class="nb">unset </span>PACKAGES
 
-<p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
-<ul>
-  <li><a href="infra-support.html">Docker</a></li>
-  <li><a href="infra-support.html">OpenShift</a></li>
-  <li>Kubernetes (soon)</li>
-</ul>
+<span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">false
+command</span> <span class="nt">-v</span> curl <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">true</span>
 
-<p>Learn more about the different infrastructure supported by Eclipse Che on the following <a href="infra-support.html">page</a>.</p>
+<span class="c"># no curl, install it</span>
+<span class="k">if</span> <span class="o">[</span> <span class="k">${</span><span class="nv">CURL_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" curl"</span><span class="p">;</span>
+  <span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">true
+</span><span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"Curl is already installed"</span>
+  <span class="nb">exit </span>0
+<span class="k">fi
 
-<h2 id="workspace-model">Workspace Model</h2>
+</span><span class="nb">command</span> <span class="nt">-v</span> yum <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">YUM_INSTALLED</span><span class="o">=</span><span class="nb">true
+command</span> <span class="nt">-v</span> apt-get <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">APT_GET_INSTALLED</span><span class="o">=</span><span class="nb">true
+command</span> <span class="nt">-v</span> dnf <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">DNF_INSTALLED</span><span class="o">=</span><span class="nb">true
+command</span> <span class="nt">-v</span> zypper <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">ZYPPER_INSTALLED</span><span class="o">=</span><span class="nb">true
 
-<figure><img class="docimage" src="images/intro/intro-che-workspace.png" alt="" /></figure>
 
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
+</span><span class="k">if</span> <span class="o">[</span> <span class="k">${</span><span class="nv">YUM_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> yum install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
 
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
+<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">APT_GET_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> apt-get update<span class="p">;</span>
+  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> apt-get <span class="nt">-y</span> install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
 
-<figure><img class="docimage" src="images/intro/intro-workspace-runtimes.png" alt="" /></figure>
+<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">DNF_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> dnf <span class="nt">-y</span> install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
 
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
+<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">ZYPPER_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> zypper install <span class="nt">-y</span> <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
 
-<figure><img class="docimage" src="images/intro/intro-project-mounted.png" alt="" /></figure>
+<span class="k">else</span>
+    <span class="o">&gt;</span>&amp;2 <span class="nb">echo</span> <span class="s2">"Any of Yum, Apt-get, Dnf, Zypper package manager is not available"</span>
+    <span class="nb">exit </span>1
+<span class="k">fi
 
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.</p>
+</span><span class="nb">echo</span> <span class="s2">"Curl is installed successfully"</span>
+</code></pre></div></div>
 
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
+<p>And here is another installer which launches a web server and depends on another installer.
+Here is content of description json file:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.tomcat"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.5.24"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tomcat"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Embedded tomcat server"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.che.curl"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"tomcat"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8090/tcp"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<figure><img class="docimage" src="images/intro/intro-SSH-connect.png" alt="" /></figure>
+<p>This installer needs curl to download tomcat binaries, so it is declared in <code class="highlighter-rouge">dependencies</code> field.
+If an installer depends on other installers, then all required installers will be launched automatically even if a user has not configured it.
+All installers which are defined as <code class="highlighter-rouge">dependencies</code> will be launched before launching the dependent one.</p>
 
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
+<p>Bootstrapper that launches installers tries to connect to all declared servers. No user input is required. Start of a workspace fails if any of servers are not accessible on defined ports during configured timeout.</p>
 
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
+<p>Installers servers may conflict, for example, two installers start servers on the same port.
+Then, infrastructure may want to be able reconfigure servers in its own way.
+So installer must expect environment variable with port for server launching or launch server on a default port if it is absent.</p>
 
-<figure><img class="docimage" src="images/intro/intro-share-workspace.png" alt="" /></figure>
+<p>The environment variable name has the following format <code class="highlighter-rouge">CHE_SERVER_{NORMALISED_SERVER_NAME}_PORT</code>.
+Where <code class="highlighter-rouge">NORMALISED_SERVER_NAME</code> is a server name in the upper case where all characters which are not Latin letters or digits replaced with <code class="highlighter-rouge">_</code> symbol.</p>
 
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
+<p>Here is an installer script that downloads Tomcat binaries with <code class="highlighter-rouge">Curl</code>, configures to use free port and launches it.</p>
 
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">TOMCAT_VERSION</span><span class="o">=</span>8.5.24
+<span class="nv">TOMCAT_BINARIES_URL</span><span class="o">=</span>http://apache.volia.net/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-<span class="nv">$TOMCAT_VERSION</span>.tar.gz
 
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
+<span class="nv">TARGET_FOLDER</span><span class="o">=</span>~/tomcat
+mkdir <span class="nt">-p</span> <span class="nv">$TARGET_FOLDER</span>
 
-<h2 id="users">Users</h2>
-<p>Che has three types of users:</p>
-<ul>
-  <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
-  </li>
-  <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
-  </li>
-  <li>
-    <p><strong>Plugin Providers</strong>. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.</p>
-  </li>
-</ul>
+<span class="nb">echo</span> <span class="s2">"Downloading Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> into </span><span class="nv">$TARGET_FOLDER</span><span class="s2">"</span>
+curl <span class="nv">$TOMCAT_BINARIES_URL</span> | <span class="nb">tar  </span>xzf - <span class="nt">-C</span> <span class="k">${</span><span class="nv">TARGET_FOLDER</span><span class="k">}</span>
+<span class="nv">TOMCAT_FOLDER</span><span class="o">=</span><span class="nv">$TARGET_FOLDER</span>/apache-tomcat-<span class="nv">$TOMCAT_VERSION</span>
 
-<h2 id="logical-architecture">Logical Architecture</h2>
+<span class="nb">echo</span> <span class="s2">"Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> is downloaded and unpacked into </span><span class="nv">$TOMCAT_FOLDER</span><span class="s2">"</span>
 
-<figure><img class="docimage" src="images/intro/intro-che-architecture.png" alt="" /></figure>
+<span class="nv">DEFAULT_TOMCAT_SERVER_PORT</span><span class="o">=</span>8090
+<span class="nv">TOMCAT_SERVER_PORT</span><span class="o">=</span><span class="k">${</span><span class="nv">CHE_SERVER_TOMCAT_PORT</span><span class="k">:-${</span><span class="nv">DEFAULT_TOMCAT_SERVER_PORT</span><span class="k">}}</span>
 
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
+// configure Tomcat
+sed <span class="nt">-i</span> <span class="s2">"s/port=</span><span class="se">\"</span><span class="s2">8080</span><span class="se">\"</span><span class="s2">/port=</span><span class="se">\"</span><span class="k">${</span><span class="nv">TOMCAT_SERVER_PORT</span><span class="k">}</span><span class="se">\"</span><span class="s2">/g"</span> <span class="nv">$TOMCAT_FOLDER</span>/conf/server.xml
 
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
+<span class="nb">echo</span> <span class="s2">"Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> is configured to use </span><span class="nv">$TOMCAT_SERVER_PORT</span><span class="s2"> port"</span>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+<span class="nv">$TOMCAT_FOLDER</span>/bin/catalina.sh run
+</code></pre></div></div>
 
-<h2 id="extensibility">Extensibility</h2>
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
+<p>An installer can be included into Che assembly or added to particular Che Server via REST API.</p>
 
-<p>There are a number of aspects that can be modified within Che.</p>
+<p>To include an installer into Che assembly, two files are required in Che Server resources: installer description in json format and its script.
+The files must be named in the following way: <code class="highlighter-rouge">{INSTALLER_ID}.json</code> for description file and <code class="highlighter-rouge">{INSTALLER_ID}.script.sh</code> for script file.
+These files should be placed into <code class="highlighter-rouge">/installers/{INSTALLER_VERSION}</code> folder.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
+<p>Here is an example of maven module structure:</p>
 
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
+<figure><img class="docimage" src="images/extensibility/installers/curl-installer-module.png" alt="" /></figure>
 
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
+<p>The it is needed to add the corresponding maven module to Workspace Master War archive</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;project</span> <span class="err">...</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;parent&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>che-assembly-parent<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>6.0.X<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;/parent&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>assembly-wsmaster-war<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
+  <span class="nt">&lt;name&gt;</span>Che IDE :: Compiling WS Master WAR
+  <span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>installer-tomcat<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>installer-tomcat<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div></div>
 
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
+<p>Also as it was mentioned an installer can be added via REST API or using Swagger:</p>
 
-<h2 id="machines">Machines</h2>
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
-
-<h2 id="whats-included">What’s Included</h2>
-<p>Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<figure><img class="docimage" src="images/extensibility/installers/add-installer-swagger.png" alt="" /></figure>
 
 
 
@@ -985,9 +1023,15 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
         
         
-        <a href="tag_getting-started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting-started</a>
+        
+        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
+        
+        
+        
+        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
         
         
         

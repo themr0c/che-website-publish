@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE">
-<meta name="keywords" content="overviewgetting-started,  overview">
-<title>Introduction to Eclipse Che | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="workspaceruntimedebugger,  workspace, runtime, project, projects, debugger, debug, debug jar, breakpoint, suspend">
+<title>Debug | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Introduction to Eclipse Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Debug page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introduction to Eclipse Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Debug">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -216,7 +216,7 @@
           
           
           
-          <li class="active"><a href="index.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -429,7 +429,7 @@
           
           
           
-          <li><a href="debug.html">Debug</a></li>
+          <li class="active"><a href="debug.html">Debug</a></li>
           
           
           
@@ -796,15 +796,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Introduction to Eclipse Che</h1>
+   <h1 class="post-title-main">Debug</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE</div>
    
 
     
@@ -835,147 +833,299 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
-<p>Eclipse Che provides:</p>
+  
+<p>Che currently supports debuggers for:</p>
+
 <ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plugins for languages, framework, and tools</li>
-  <li>An SDK for creating plugins and assemblies</li>
+  <li><a href="#java">Java</a></li>
+  <li><a href="#gdb">C/C++</a> (via GDB)</li>
+  <li><a href="#php">PHP</a> (via Zend debugger, zDebug and Z-Ray)</li>
+  <li><a href="#nodejs">Node.js</a> (via GDB)</li>
 </ul>
 
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
+<h2 id="java">Java</h2>
+
+<p>Java debugger is deployed with the workspace agent, i.e. runs in the workspace. It can connect to local processes (those running in a workspace) or remote ones.</p>
+
+<p>Breakpoints are set with a single click on a line number in the editor. You can set breakpoints before attaching a debugger:</p>
+
+<figure><img class="docimage" src="images/debug/breakpoint.png" alt="" /></figure>
+
+<p>In a Debug Dialog (<strong>Run &gt; Edit Debug Configurations…</strong>), choose if you want to attach to a process in a local workspace or a remote machine. If localhost is chosen, a drop down menu will show all ports that are exposed in a container. You may either choose an existing port or provide your own.</p>
+
+<figure><img class="docimage" src="images/debug/debug-configurations.png" alt="" /></figure>
+
+<p><strong>Java Console Apps</strong></p>
+
+<p>To debug console apps, pass debug arguments to JVM:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean install <span class="o">&amp;&amp;</span> java <span class="nt">-jar</span> <span class="nt">-Xdebug</span> <span class="nt">-Xrunjdwp</span>:transport<span class="o">=</span>dt_socket,address<span class="o">=</span>8000,server<span class="o">=</span>y,suspend<span class="o">=</span>y <span class="k">${</span><span class="nv">current</span><span class="p">.project.path</span><span class="k">}</span>/target/<span class="k">*</span>.jar
+</code></pre></div></div>
+
+<p><strong>Java Web Apps</strong></p>
+
+<p>To debug a web application, you need to start a web server in a debug mode. Debug arguments may vary depending on the web server in use. For example, to start Tomcat in a debug mode, run:
+st</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$TOMCAT_HOME/bin/catalina.sh jpda run
+</code></pre></div></div>
+
+<p>You can add debug commands to CMD widget to permanently save them with the workspace config.</p>
+
+<p>Java debugger supports the following features:</p>
+
 <ul>
-  <li><a href="quick-start.html">Quick start guide</a></li>
-  <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
-  <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
-  <li><a href="https://www.eclipse.org/che/docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
+  <li>step into</li>
+  <li>step over</li>
+  <li>run to cursor</li>
+  <li>evaluate expression</li>
+  <li>watch expression</li>
+  <li>conditional breakpoints</li>
+  <li>change variable value/expression</li>
+  <li>suspend current or all threads</li>
 </ul>
 
-<h2 id="single-and-multi-user-flavors">Single and Multi-User Flavors</h2>
+<figure><a class="no_icon" target="_blank" href="images/debug/debug.gif"><img class="docimage" src="images/debug/debug.gif" alt="" /></a><figcaption>Click to view a larger image</figcaption></figure>
 
-<p>Eclipse Che is available in two different modes:</p>
+<h2 id="gdb">GDB</h2>
+
+<p>GDB can be used to debug <strong>C/C++</strong> and <strong>Node.js</strong> projects. In Docker 1.13+, a container requires certain capabilities for gdb and gdbserver to start. In <code class="highlighter-rouge">che.env</code> uncomment the following line and restart Che:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_DOCKER_SECURITYOPT=seccomp:unconfined
+
+</code></pre></div></div>
+
+<h2 id="debugging-local-binary">Debugging Local Binary</h2>
+
+<p>Compile your app with <code class="highlighter-rouge">-g</code> argument, go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations &gt; GDB</code>. Create a new configuration, check <code class="highlighter-rouge">Debug local binary</code> box. By default, binary path is <code class="highlighter-rouge">${current.project.path/a.out}</code>. When the debugger attaches, this macro is translated into an absolute path to a currently selected project. <code class="highlighter-rouge">a.out</code> is the default binary name. If you have compiled binary with a different name, change it:</p>
+
+<figure><img class="docimage" src="images/debug/debug.png" alt="" /></figure>
+
+<p>Set a breakpoint in code, go to <code class="highlighter-rouge">Run &gt; Debug &gt; YourDebugConfiguration</code>. Once a debugger attaches, there’s a notification in the top right corner. A debugger panel will open.</p>
+
+<h2 id="remote-debugging-with-gdb-server">Remote Debugging with GDB server</h2>
+
+<p>Similar to Java debugger, one needs to start a process that a debugger will connect to. In case of GDB, this is <code class="highlighter-rouge">gdbserver</code> which is installed in C/CPP runtime by default.</p>
+
+<p>To <strong>run</strong> gdbserver, execute the following:</p>
+
+<p><code class="highlighter-rouge">gdbserver :$port /path/to/binary/file</code> where <code class="highlighter-rouge">$port</code> is a random port that you will then connect to. It is important to provide an absolute path to a binary file if you run gdbserver in a command.</p>
+
+<p>It is important to make sure that the binary has been compiled with <code class="highlighter-rouge">-g</code> argument, i.e. with attached sources.</p>
+
+<p>When gdbserver starts, it produces some output with info on process ID and port it’s listening on. When a remote client connects to gdbserver, there will be a message with IP address of a remote connection.</p>
+
+<p>To <strong>stop</strong> gdbserver, terminate the command in Consoles panel (if the server has been started as a command). If gdbserver has been started in a terminal, Ctrl+C does not kill it. Open another terminal into a machine, and run:</p>
+
+<p><code class="highlighter-rouge">kill $(ps ax | grep "[g]dbserver" | awk {'print $1;}')</code></p>
+
+<p>This commands grabs gdbserver PID and kills the process.</p>
+
+<p><strong>Connect to GDB server</strong></p>
+
+<p>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> and enter host (localhost if gdbserver has been started in the same workspace environment), port and path to the binary file being debugged. By default, binary name is <code class="highlighter-rouge">a.out</code>. If you have compiled your binary with <code class="highlighter-rouge">-o</code> argument, you need to provide own custom binary name in a debug configuration.</p>
+
+<p>Save your configuration, choose it at <code class="highlighter-rouge">Run &gt; Debug &gt; &lt;YourDebugConfiguration&gt;</code> and attach the debugger, having previously set breakpoints in source files.</p>
+
+<p><strong>Connection Timeouts</strong></p>
+
+<p>Latency or poor connectivity may cause issues with remote debugging. A local GDB may fail to receive a timely response from the remote server. To fix it, set a default timeout for a local GDB. In the terminal, run:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo  "set remotetimeout 10" &gt; ~/.gdbinit
+</code></pre></div></div>
+
+<p>You may set a bigger timeout, say, 20 seconds, if there are serious connectivity issues with a remote GDB server.</p>
+
+<p>It is also possible to add this command as a Dockerfile instruction for a custom recipe:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM eclipse/cpp_gcc
+RUN <span class="nb">echo</span>  <span class="s2">"set remotetimeout 10"</span> <span class="o">&gt;</span> /home/user/.gdbinit
+</code></pre></div></div>
+
+<h2 id="php">PHP</h2>
+
+<p>The PHP and Zend stacks come with the Zend Debugger module installed and configured. Debugging both PHP CLI scripts and PHP web apps is supported.</p>
+
+<p>The debugging workflow involves the following steps:</p>
+
+<ol>
+  <li>Launch the Zend Debugger Client to start listening for new debug sessions.</li>
+  <li>Optionally set breakpoints in the PHP editor.</li>
+  <li>Trigger a debug session from the CLI script or the web app.</li>
+  <li>Use the Web IDE tooling to do the actual debugging.</li>
+</ol>
+
+<figure><img class="docimage" src="images/debug/php-debugging.gif" alt="" /></figure>
+
+<h2 id="starting-the-zend-debugger-client">Starting the Zend Debugger Client</h2>
+
+<p>has the Zend Debugger Client integrated in the Web IDE. For launching the Zend Debugger Client:</p>
+
+<ol>
+  <li>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> from the main menu.</li>
+  <li>Create new <code class="highlighter-rouge">PHP</code> configuration.</li>
+  <li>Change any settings if necessary. The defaults are usually OK.</li>
+  <li>Click the <code class="highlighter-rouge">Debug</code> button.</li>
+</ol>
+
+<figure><img class="docimage" src="images/debug/php-debug-configuration.png" alt="" /></figure>
+
+<p>The successful launch of the Zend Debugger Client is noted with a notification message. From this moment on the Zend Debugger Client listens for new debug sessions initiated by the Zend Debugger module of the PHP engine.</p>
+
+<p>The Debug Configuration window allows the following configuration for the Zend Debugger Client:</p>
+
 <ul>
-  <li><strong>Single-user</strong>: perfectly suited for personal desktop environment.</li>
-  <li><strong>Multi-user</strong>: secure and best for organization and developer teams.</li>
+  <li><code class="highlighter-rouge">Break at first line</code>. Determines whether to break the execution at the very first line, hit by the PHP interpreter. Enabled by default. It is useful to easily find the app’s entry point. You may want to switch this option off if you defined your own breakpoint and you are not interesting at breaking the execution at the first line.</li>
+  <li><code class="highlighter-rouge">Client host/IP</code>. The host/IP on which to bind the server socket for listening for new debug sessions. The default host is <code class="highlighter-rouge">localhost</code>. Changing it should be only necessary if the PHP engine is running in a different workspace machine or outside of the  workspace at all.</li>
+  <li><code class="highlighter-rouge">Debug port</code>. The port on which to bind the server socket for listening for new debug sessions. The default port is <code class="highlighter-rouge">10137</code>. It should be rarely necessary to change it.</li>
+  <li><code class="highlighter-rouge">Use SSL encryption</code>. Whether to use SSL encryption for the debugging communication between the PHP engine and the Zend Debugger Client. Disabled by default.</li>
 </ul>
 
-<p>Learn more about single and multi-user flavors on the following <a href="single-multi-user.html">page</a>.</p>
+<h2 id="debugging-php-cli-scripts">Debugging PHP CLI Scripts</h2>
 
-<p>Considering the <code class="highlighter-rouge">multi-user</code> mode as an advanced setup of Eclipe Che, the quick starts are covering only the <code class="highlighter-rouge">single-user</code> mode. If you are interested by the <code class="highlighter-rouge">multi-user</code>, please read the following pages:</p>
+<p>PHP CLI scripts can be debugged by setting the <code class="highlighter-rouge">QUERY_STRING</code> environment variable when executing the PHP script. For example, to debug the <code class="highlighter-rouge">hello.php</code> script you should execute the following command in the Terminal:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">QUERY_STRING</span><span class="o">=</span><span class="s2">"start_debug=1&amp;debug_host=localhost&amp;debug_port=10137"</span> php hello.php
+</code></pre></div></div>
+
+<p>Let’s dissect the value of the <code class="highlighter-rouge">QUERY_STRING</code>:</p>
+
 <ul>
-  <li><a href="docker-multi-user.html">Multi-user configuration on Docker</a></li>
-  <li><a href="openshift-multi-user.html">Multi-user configuration on OpenShift</a></li>
+  <li><code class="highlighter-rouge">start_debug=1</code> says the PHP engine that we want to trigger a debug session for this execution.</li>
+  <li><code class="highlighter-rouge">debug_host=localhost</code> says that the Zend Debugger Client runs on localhost (on the same host where the PHP engine runs).</li>
+  <li><code class="highlighter-rouge">debug_port=10137</code> says that the Zend Debugger Client listens on port 10137.</li>
 </ul>
 
-<h2 id="docker-and-openshift-support">Docker and OpenShift Support</h2>
+<p>For convenience the PHP and Zend stacks have the <code class="highlighter-rouge">debug php script</code> command. It will run the PHP script, which is currently opened in the editor, with the required <code class="highlighter-rouge">QUERY_STRING</code> preprended to the launch command. It is a handy way for easily debugging CLI script without the need to remember the exact <code class="highlighter-rouge">QUERY_STRING</code> variable.</p>
 
-<p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
-<ul>
-  <li><a href="infra-support.html">Docker</a></li>
-  <li><a href="infra-support.html">OpenShift</a></li>
-  <li>Kubernetes (soon)</li>
-</ul>
+<h2 id="debugging-php-web-apps">Debugging PHP Web Apps</h2>
 
-<p>Learn more about the different infrastructure supported by Eclipse Che on the following <a href="infra-support.html">page</a>.</p>
+<p>Debugging web apps is done in a similar way. The value of the <code class="highlighter-rouge">QUERY_STRING</code> used for debugging CLI scripts must be added as a query string to the URL of the debugged web page. This can be done either manually or by using a browser toolbar/extension that does it automatically. Such browser extensions also make it easier to debug POST requests.</p>
 
-<h2 id="workspace-model">Workspace Model</h2>
+<p><strong>Using Query Params in URL</strong></p>
 
-<figure><img class="docimage" src="images/intro/intro-che-workspace.png" alt="" /></figure>
+<p>The <code class="highlighter-rouge">?start_debug=1&amp;debug_host=localhost&amp;debug_port=10137</code> query string must be added to the URL. For example, to debug the <code class="highlighter-rouge">http://localhost:32810/web-php-simple/index.php</code> web page you should request the following URL in the browser:</p>
 
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:32810/web-php-simple/index.php?start_debug=1&amp;debug_host=localhost&amp;debug_port=10137
+</code></pre></div></div>
 
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
+<h2 id="using-zdebug-extension-for-chrome">Using zDebug Extension for Chrome</h2>
 
-<figure><img class="docimage" src="images/intro/intro-workspace-runtimes.png" alt="" /></figure>
+<p>The <a href="https://chrome.google.com/webstore/detail/zdebug/gknbnafalimbhgkmichoadhmkaoingil">zDebug</a> extension can be used for easier triggering of debug sessions from the Chrome browser. The <a href="https://chrome.google.com/webstore/detail/zend-debugger-extension/aonajadpeeaijblinaeohfdmbgdpibba">Zend Debugger Extension</a> is another extension that does the same job.</p>
 
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
+<p>It is important to configure the Chrome extension properly before using it for debugging PHP apps running in a  workspace:</p>
 
-<figure><img class="docimage" src="images/intro/intro-project-mounted.png" alt="" /></figure>
+<ol>
+  <li>Set <code class="highlighter-rouge">Debug Host</code> to <code class="highlighter-rouge">localhost</code> or <code class="highlighter-rouge">127.0.0.1</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Port</code> to <code class="highlighter-rouge">10137</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Local Copy</code> to <code class="highlighter-rouge">No</code>.</li>
+</ol>
 
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.</p>
+<p>Note that it is not the browser that opens the debug session to the Zend Debugger Client. This is done by the PHP engine that runs in the  workspace. The browser just tells the PHP engine to do so. So the above settings are for the PHP engine (the Zend Debugger module in particular). Thus the <code class="highlighter-rouge">Debug Host</code> must be set to <code class="highlighter-rouge">localhost</code> and not the public host of the docker container running the  workspace.</p>
 
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
+<p>In the end the zDebug settings should look like this:</p>
 
-<figure><img class="docimage" src="images/intro/intro-SSH-connect.png" alt="" /></figure>
+<figure><img class="docimage" src="images/debug/zdebug-settings.png" alt="" /></figure>
 
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
+<p>Now you are ready to trigger the debug session:</p>
 
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
+<ol>
+  <li>Open the web page to debug.</li>
+  <li>Click on the zDebug toolbar button.</li>
+  <li>Click on <code class="highlighter-rouge">This Page</code>.</li>
+</ol>
 
-<figure><img class="docimage" src="images/intro/intro-share-workspace.png" alt="" /></figure>
+<h2 id="using-the-zend-debugger-toolbar-for-firefox">Using the Zend Debugger Toolbar for Firefox</h2>
 
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
+<p>The <a href="https://addons.mozilla.org/firefox/addon/zend-debugger-toolbar/">Zend Debugger Toolbar for Firefox</a> can be used for easier triggering of debug sessions from the Firefox browser.</p>
 
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
+<p>After installing it, go to <code class="highlighter-rouge">Extra Stuff &gt; Setttings</code> to configure the toolbar:</p>
 
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
+<ol>
+  <li>Disable the <code class="highlighter-rouge">Debug Local Copy</code> option.</li>
+  <li>Switch the <code class="highlighter-rouge">Client/IDE Settings</code> to <code class="highlighter-rouge">Manual Settings</code>.</li>
+  <li>Set <code class="highlighter-rouge">Debug Port</code> to <code class="highlighter-rouge">10137</code>.</li>
+  <li>Set <code class="highlighter-rouge">IP Address</code> to <code class="highlighter-rouge">127.0.0.1</code>.</li>
+</ol>
 
-<h2 id="users">Users</h2>
-<p>Che has three types of users:</p>
-<ul>
-  <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
-  </li>
-  <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
-  </li>
-  <li>
-    <p><strong>Plugin Providers</strong>. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.</p>
-  </li>
-</ul>
+<p>In the end the toolbar settings should look like this:</p>
 
-<h2 id="logical-architecture">Logical Architecture</h2>
+<figure><img class="docimage" src="images/debug/zend-debugger-firefox-settings.png" alt="" /></figure>
 
-<figure><img class="docimage" src="images/intro/intro-che-architecture.png" alt="" /></figure>
+<p>Now you are ready to trigger the debug session:</p>
 
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
+<ol>
+  <li>Open the web page to debug.</li>
+  <li>Click on the <code class="highlighter-rouge">Debug</code> toolbar button.</li>
+</ol>
 
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
+<h2 id="using-z-ray">Using Z-Ray</h2>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+<p><a href="http://www.zend.com/en/products/server/z-ray">Z-Ray</a> is a productivity tool, part of <a href="http://www.zend.com/en/products/zend_server">Zend Server</a>, that is available in the Zend stack. Z-Ray requires no installation or configuraton. It is injected into the response coming from your PHP app and shown right in the browser you are using for development.</p>
 
-<h2 id="extensibility">Extensibility</h2>
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
+<p>Among other features, it also has the capability to trigger a debug session:</p>
 
-<p>There are a number of aspects that can be modified within Che.</p>
+<ol>
+  <li>Click on the “bug” button.</li>
+  <li>Click on <code class="highlighter-rouge">Debug current page</code>.</li>
+</ol>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
+<figure><img class="docimage" src="images/debug/z-ray-debug.png" alt="" /></figure>
 
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
+<p>That’s all!</p>
 
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
+<h2 id="nodejs">NodeJS</h2>
 
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
+<p>The Node.js ready-to-go <a href="stacks.html">stack</a> comes with a Node.js debugger module installed and configured. The Dockerfile is located in the <a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/node/Dockerfile">eclipse/che-dockerfiles</a> repository.</p>
 
-<h2 id="machines">Machines</h2>
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
+<p>The debugging workflow is:</p>
 
-<h2 id="whats-included">What’s Included</h2>
-<p>Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<ol>
+  <li>Launch the Node.js debugger client to start a debug session</li>
+  <li>Create/Run command to generate a preview URL</li>
+  <li>Click the preview URL to interact with the app</li>
+  <li>Use the debugger panel to perform debug functions</li>
+</ol>
+
+<p>You can set breakpoints in the editor at any time by clicking on the line number.</p>
+
+<p><strong>Starting Node.js Debugger Client</strong></p>
+
+<p>has the Node.js client integrated in the web IDE. to launch the debugger client:</p>
+
+<ol>
+  <li>Go to <code class="highlighter-rouge">Run &gt; Edit Debug Configurations</code> from the main menu</li>
+  <li>Create a new <code class="highlighter-rouge">NODEJS</code> configuration</li>
+  <li>Change any settings if necessary. The defaults are usually OK</li>
+  <li>Click the <code class="highlighter-rouge">Debug</code> button</li>
+  <li>The debugger will break at first line of code</li>
+</ol>
+
+<figure><img class="docimage" src="images/debug/debug-nodejs-config.png" alt="" /></figure>
+
+<p><strong>Creating a Command with Preview URL</strong></p>
+
+<p>’s workspaces have machine(s) that are docker container(s). Docker container’s exposed ports are given an ephemeral port. The preview url provides an easy way convert an internal port to it’s external ephemeral port counter part.</p>
+
+<ol>
+  <li>Add a command <code class="highlighter-rouge">Run &gt; Edit Commands</code></li>
+  <li>Give the command a name like “View Preview URL”</li>
+  <li>Add a fictitious command <code class="highlighter-rouge">echo</code> for required command line</li>
+  <li>Provide the preview URL for your app such as <code class="highlighter-rouge">http://${server.port.&lt;port&gt;}/</code></li>
+</ol>
+
+<h2 id="using-nodejs-debugger">Using Node.js Debugger</h2>
+
+<ol>
+  <li>Start the debugger <code class="highlighter-rouge">Run &gt; debug &gt; &lt;config-name&gt;</code></li>
+  <li>Click the continue button until server is running</li>
+  <li>Add breakpoints if needed</li>
+  <li>Run the preview URL command (see above)</li>
+  <li>Click the preview URL to open web app in another tab</li>
+  <li>Go back to IDE tab</li>
+  <li>Use the Web IDE tooling to do the actual debugging</li>
+</ol>
+
+<figure><img class="docimage" src="images/debug/nodejs-debugger-walkthru.gif" alt="" /></figure>
 
 
 
@@ -985,9 +1135,15 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_workspace.html" class="btn btn-default navbar-btn cursorNorm" role="button">workspace</a>
         
         
-        <a href="tag_getting-started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting-started</a>
+        
+        <a href="tag_runtime.html" class="btn btn-default navbar-btn cursorNorm" role="button">runtime</a>
+        
+        
+        
+        <a href="tag_debugger.html" class="btn btn-default navbar-btn cursorNorm" role="button">debugger</a>
         
         
         

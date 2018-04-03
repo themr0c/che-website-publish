@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="extensionsassemblydev-docs,  framework, language servers, code assistant, language support, code completion, error marking">
+<title>Language Support | Eclipse Che Documentation</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<!-- most color styles are extracted out to here -->
+<link rel="stylesheet" href="css/theme-che.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Anchor.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="che" href="http://0.0.0.0:4000/feed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> Eclipse Che Documentation</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="release-6.0.0.html">Release Notes</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/che" target="_blank">Source Code</a></li>
+                
+                
+                
+                <li><a href="https://www.eclipse.org/che/docs/5/che/docs" target="_blank">Docs 5.x</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Support<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://github.com/eclipse/che/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Akind%2Fbug" target="_blank">Known Bugs</a></li>
+                        
+                        
+                        
+                        <li><a href="https://github.com/eclipse/che/issues/new" target="_blank">File an Issue</a></li>
+                        
+                        
+                        
+                        <li><a href="https://stackoverflow.com/questions/tagged/eclipse-che" target="_blank">Che on StackOverflow</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                <!-- 
+			<li>
+
+
+
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Language Support page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+
+</li>
+ -->
+		
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Language Support">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle"> </li>
+  
+  
+  
+      
+  
+  <li>
+      <a href="#">Overview</a>
+      <ul>
+          
+          
+          
+          <li><a href="index.html">Introduction</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="quick-start.html">Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="single-multi-user.html">Single and Multi-User Flavors</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="infra-support.html">Supported Infrastructures</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Che on Docker</a>
+      <ul>
+          
+          
+          
+          <li><a href="docker-single-user.html">Docker - Single User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="docker-multi-user.html">Docker - Multi User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="docker-config.html">Docker - Configuration</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="docker-cli.html">Docker - CLI Reference</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Che on Kubernetes</a>
+      <ul>
+          
+          
+          
+          <li><a href="kubernetes-single-user.html">Kubernetes - Single User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Che on OpenShift</a>
+      <ul>
+          
+          
+          
+          <li><a href="openshift-single-user.html">OpenShift - Single User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="openshift-multi-user.html">OpenShift - Multi User</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="openshift-config.html">OpenShift - Configuration</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">User Management</a>
+      <ul>
+          
+          
+          
+          <li><a href="user-management.html">Authentication and Authorization</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="authentication.html">Security Model</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="permissions.html">Permissions</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="organizations.html">Organizations in UD</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="resource-management.html">Resource Management</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">User Guides</a>
+      <ul>
+          
+          
+          
+          <li><a href="creating-starting-workspaces.html">Creating and starting Workspaces</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="ide-projects.html">Projects</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="editor-code-assistance.html">Editor and Code-Assistance</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="dependency-management.html">Dependency Management</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="commands-ide-macro.html">Commands and IDE Macros</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="version-control.html">Version Control</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="debug.html">Debug</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Workspace Administration</a>
+      <ul>
+          
+          
+          
+          <li><a href="what-are-workspaces.html">Workspace Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="stacks.html">Stacks</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="recipes.html">Workspace - Recipes</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="servers.html">Workspace - Servers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="installers.html">Workspace - Installers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="volumes.html">Workspace - Volumes Mount</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="env-variables.html">Workspace - Environment Variables</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="projects.html">Workspace - Projects</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="workspaces-troubleshooting.html">Workspace - Troubleshooting</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="workspace-data-model.html">Workspace Data Model</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Portable Workspaces</a>
+      <ul>
+          
+          
+          
+          <li><a href="chedir-getting-started.html">Chedir - Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="why-chedir.html">Chedir - Why Chedir?</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir-installation.html">Chedir - Installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir-project-setup.html">Chedir - Project Setup</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir-up-and-down.html">Chedir - Up and Down</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chefile.html">Chedir - Chefile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="chedir-ssh.html">Chedir - SSH</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="factories-getting-started.html">Factory - Getting Started</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="creating-factories.html">Factory - Creating</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="factories_json_reference.html">Factory - JSON Reference</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Developer Guides</a>
+      <ul>
+          
+          
+          
+          <li><a href="framework-overview.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="rest-api.html">SDK - REST API</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="build-reqs.html">SDK - Building Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="assemblies.html">SDK - Assemblies</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="logging.html">SDK - Logging</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="ide-extensions-js.html">SDK - JavaScript IDE Extensions</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="server-side-extensions.html">SDK - Server Side Extensions</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="custom-installers.html">SDK - Installers</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="project-types.html">SDK - Project Types</a></li>
+          
+          
+          
+          
+          
+          
+          <li class="active"><a href="language-servers.html">SDK - Language Support</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="parts.html">IDE UI&#58 Parts</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="actions.html">IDE UI&#58 Actions</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Dev Essentials</a>
+      <ul>
+          
+          
+          
+          <li><a href="guice.html">Dependency Injection</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="dto.html">Transport&#58 DTO</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="json-rpc.html">Communication&#58 JSON-RPC</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="handling-projects-in-plugins.html">Handling Projects in Plugins</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="dao.html">Persistence, DAO</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="properties.html">Properties</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      <a href="#">Infrastructure and SPI</a>
+      <ul>
+          
+          
+          
+          <li><a href="spi_overview.html">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="spi-implementation.html">Implementation Notes</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+      <!-- if you aren't using the accordion, uncomment this block:
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+         -->
+</ul>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+            </div>
+
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">Language Support</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2' });
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    <!-- 
+
+
+     -->
+
+  
+<h2 id="overview">Overview</h2>
+
+<p>The Language Server Protocol is used between a tool (the client) and a language intelligence provider (the server) to integrate features like auto complete, goto definition, find references, etc.</p>
+
+<p>You can learn more about the language server specification on the <a href="https://github.com/Microsoft/language-server-protocol">LSP GitHub page</a>.</p>
+
+<p>Currently Eclipse Che implements the <a href="https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md">3.x protocol version</a>.</p>
+
+<p>Note that, Eclipse Che also implements the snippet syntax used in VSCode. It is not versioned in the LSP specification, but the supported syntax is described <a href="https://github.com/Microsoft/vscode/blob/0ebd01213a65231f0af8187acaf264243629e4dc/src/vs/editor/contrib/snippet/browser/snippet.md">here</a>.</p>
+
+<h2 id="adding-support-for-new-languages">Adding Support for New Languages</h2>
+
+<p>There are two approaches to add a new language server:</p>
+
+<ul>
+  <li>via installer and launcher: this way a language server runs in the machine where the respective installer has been enabled</li>
+  <li>adding <a href="#ls-sidecars">language server as a sidecar</a> in workspace configuration - multi-machine recipe + server with required attributes</li>
+</ul>
+
+<h2 id="general-concept">General Concept</h2>
+
+<p>Language server integration is divided into 2 steps: an install followed by a separately triggered start. Language servers aren’t started when the agent starts. Instead they are started in a second step which can be triggered at any time. This is done to reduce resource consumption and reduce workspace startup time.</p>
+
+<ol>
+  <li>The language server agent is launched when the workspace starts - its job is to install all dependencies and prepare the <code class="highlighter-rouge">bash</code> launcher file that will be used to start the language server.</li>
+  <li>The <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">launcher</a> is triggered and starts the language server. We suggest triggering the launcher when the user begins interacting with file types related to the language server. Once launched, the language server is registered with specific file types (covered in more detail below).</li>
+</ol>
+
+<h2 id="adding-a-language-server-installer">Adding a Language Server Installer</h2>
+
+<p>Follow the documentation on how to <a href="custom-installers.html">add new installer</a>.</p>
+
+<p>Examples of existed language server agents you can learn from:</p>
+
+<ul>
+  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-json">JSON</a></li>
+  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-php">PHP</a></li>
+  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-python">Python</a></li>
+  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-csharp">C#</a></li>
+  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-typescript">TypeScript</a></li>
+</ul>
+
+<h2 id="adding-a-language-server-launcher">Adding a Language Server Launcher</h2>
+
+<p>Implement the <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">LanguageServerLauncher interface</a>.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LanguageServerLauncher</span> <span class="o">{</span>
+
+    <span class="c1">//**</span>
+     <span class="o">*</span> <span class="n">Initializes</span> <span class="n">and</span> <span class="n">starts</span> <span class="n">a</span> <span class="n">language</span> <span class="n">server</span><span class="o">.</span>
+     <span class="o">*</span>
+     <span class="o">*</span> <span class="nd">@param</span> <span class="n">projectPath</span>
+     <span class="o">*</span>      <span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">project</span>
+     <span class="o">*</span> <span class="nd">@param</span> <span class="n">client</span>
+     <span class="o">*</span>      <span class="n">an</span> <span class="kd">interface</span> <span class="nc">implementing</span> <span class="n">handlers</span> <span class="k">for</span> <span class="n">server</span><span class="o">-&gt;</span><span class="n">client</span> <span class="n">communication</span>
+     <span class="o">*/</span>
+    <span class="n">LanguageServer</span> <span class="nf">launch</span><span class="o">(</span><span class="n">String</span> <span class="n">projectPath</span><span class="o">,</span> <span class="n">LanguageClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">LanguageServerException</span><span class="o">;</span>
+
+    <span class="cm">/**
+     * Gets the language server description
+     */</span>
+    <span class="n">LanguageServerDescription</span> <span class="nf">getDescription</span><span class="o">();</span>
+
+    <span class="cm">/**
+     * Indicates if language server is installed and is ready to be started.  
+     */</span>
+    <span class="kt">boolean</span> <span class="nf">isAbleToLaunch</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/registry/LanguageServerDescription.java">LanguageServerDescription</a> and <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver-shared/src/main/java/org/eclipse/che/api/languageserver/shared/model/LanguageDescription.java">LanguageDescription</a> are used to describe the types of file your language server will make contributions to.</p>
+
+<p>Follow our language server launchers and descriptions examples:</p>
+
+<ul>
+  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-python/che-plugin-python-lang-server/src/main/java/org/eclipse/che/plugin/python/languageserver/PythonLanguageSeverLauncher.java">Python</a></li>
+  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-server/src/main/java/org/eclipse/che/plugin/csharp/languageserver/CSharpLanguageServerLauncher.java">C#</a></li>
+  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-json/che-plugin-json-server/src/main/java/org/eclipse/che/plugin/json/languageserver/JsonLanguageServerLauncher.java">JSON</a></li>
+</ul>
+
+<h2 id="bind-language-server-launcher-and-language-description">Bind Language Server Launcher and Language Description</h2>
+
+<p>A language description tells the system that an LSP-based editor should be used for a particular file and associates a language identifier with
+those files. It can be configured in your plugin’s module definition:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DynaModule</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyLanguageServerModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">LanguageServerLauncher</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">MyLanguageServerLauncher</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">LanguageDescription</span> <span class="n">description</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LanguageDescription</span><span class="o">();</span>
+        <span class="n">description</span><span class="o">.</span><span class="na">setFileExtensions</span><span class="o">(</span><span class="n">asList</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="s">"bar"</span><span class="o">));</span>
+        <span class="n">description</span><span class="o">.</span><span class="na">setFileNames</span><span class="o">(</span><span class="n">asList</span><span class="o">(</span><span class="s">"foobar.txt"</span><span class="o">,</span> <span class="s">"foobar.xml"</span><span class="o">));</span>
+
+        <span class="n">description</span><span class="o">.</span><span class="na">setLanguageId</span><span class="o">(</span><span class="s">"myLanguage"</span><span class="o">);</span>
+        <span class="n">description</span><span class="o">.</span><span class="na">setMimeType</span><span class="o">(</span><span class="s">"text/foobar"</span><span class="o">);</span>
+        <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">LanguageDescription</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">addBinding</span><span class="o">().</span><span class="na">toInstance</span><span class="o">(</span><span class="n">description</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Any time results from language servers are required, the system finds all contributing language servers by matching the their <code class="highlighter-rouge">LanguageServerDescription</code> against the file URI and the associated language identifier. A language server can register multiple <code class="highlighter-rouge">DocumentFilter</code> instances. The results of the operations are merged. When only a single language server can be used (like when formatting, for example), servers will be prioritized, with those matching “.*” at the end of the list. If multiple servers have the same priority, the first registered will be chosen. For example, here is the language server decription for the JSON server:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">description</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LanguageServerDescription</span><span class="o">(</span>
+    <span class="s">"org.eclipse.che.plugin.json.languageserver"</span><span class="o">,</span>
+    <span class="kc">null</span><span class="o">,</span>
+    <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">DocumentFilter</span><span class="o">(</span><span class="n">JsonModule</span><span class="o">.</span><span class="na">LANGUAGE_ID</span><span class="o">,</span> <span class="s">".*\\.(json|bowerrc|jshintrc|jscsrc|eslintrc|babelrc)"</span><span class="o">,</span>
+    <span class="kc">null</span><span class="o">)));</span>
+</code></pre></div></div>
+
+<p>Once complete, compile and run Che. If everything has worked you will see your installer listed in the list of <a href="installers.html">installers</a>:</p>
+
+<p>The agent can be added by default in a Stack, our <a href="stacks.html">Stack documentation</a> explains how to create and edit stacks.</p>
+
+<h2 id="implement-code-action-commands">Implement Code Action Commands</h2>
+
+<p>Through the LSP command “textDocument/codeAction”, a language server can contribute items to the quick-assist menu in an editor. The language server returns a list of LSP <code class="highlighter-rouge">Command</code> objects. These command objects are mapped to Che actions by looking up an action by id in the <code class="highlighter-rouge">ActionManager</code> using the <code class="highlighter-rouge">command</code> field of the command object.
+The extra parameters from the command object are passed to the action by using an extended <code class="highlighter-rouge">ActionEvent</code>:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickassistActionEvent</span> <span class="kd">extends</span> <span class="n">ActionEvent</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">;</span>
+
+	<span class="kd">public</span> <span class="nf">QuickassistActionEvent</span><span class="o">(</span><span class="n">Presentation</span> <span class="n">presentation</span><span class="o">,</span> <span class="n">ActionManager</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">PerspectiveManager</span> <span class="n">perspectiveManager</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">presentation</span><span class="o">,</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">perspectiveManager</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">arguments</span><span class="o">=</span> <span class="n">arguments</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getArguments</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">arguments</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Language server launcher IDE plugins may contribute their own actions to be called. The language server plugin itself contributes two actions with the ids “lsp.applyTextEdit” and “lsp.applyWorkspaceEdit”. The first will apply a list of LSP <code class="highlighter-rouge">TextEdit</code> objects in the currently active editor. The second one applies a an LSP <code class="highlighter-rouge">WorkspaceEdit</code> to files in the workspace, either in an editor if the file is open, or on disk if they are not.</p>
+
+<h2 id="ls-sidecars">LS-Sidecars</h2>
+
+<p>While the above approach works well for custom assemblies, i.e. you actually need to rebuild Che with a custom plugin that registers a new installer and a language server launcher, there is a mechanism to launch Language Servers in parallel containers/sidecars. This is what you need to do to add a new language server to your workspace as a sidecar.</p>
+
+<ul>
+  <li>Build a Docker image in which language server is started in <code class="highlighter-rouge">ENTRYPOINT</code> or <code class="highlighter-rouge">CMD</code>. Note that some language servers support <code class="highlighter-rouge">tcp</code> arguments in their start syntax. Make sure that the language server acts like a server, rather than attempts to bind to a socket. The best way to check it is to run the image: <code class="highlighter-rouge">docker run -ti ${image}</code>. If the container starts, everything is fine, and if it exits immediately, you need to fix it.</li>
+</ul>
+
+<p>We recommend running language servers in <code class="highlighter-rouge">stdio</code> mode and use sockat as a proxy. Here’s an example of a Dockerfile that builds an image with TyperScript language server:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># inherit an image with node.js and npm - runtime requirements for TypeScript LS
+FROM eclipse/node
+
+# install socat
+RUN sudo apt-get install socat -y &amp;&amp; \
+    sudo npm install -g typescript@2.5.3 typescript-language-server@0.1.4
+
+# run socat that listens on port 4417 with exec command that starts LS
+CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --stdio"
+</code></pre></div></div>
+
+<ul>
+  <li>Create a stack with a <a href="creating-starting-workspaces.html">custom recipe</a>: Create Workspace &gt; Add Stack:</li>
+</ul>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+ <span class="na">typescript-ls-machine</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">ls/image</span>
+  <span class="na">mem_limit</span><span class="pi">:</span> <span class="s">1073741824</span>
+ <span class="na">dev-machine</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">eclipse/ubuntu_jdk8</span>
+  <span class="na">mem_limit</span><span class="pi">:</span> <span class="s">2147483648</span>
+  <span class="na">depends_on</span><span class="pi">:</span>
+   <span class="pi">-</span> <span class="s">typescript-ls-machine</span>
+</code></pre></div></div>
+
+<ul>
+  <li>In User Dashboard, go to <strong>Workspaces &gt; Your Workspace &gt; Config</strong>, and add a server for typescript-ls-machine in <code class="highlighter-rouge">servers:[]</code></li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"ls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"internal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ls"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">tsls</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">languageIds</span><span class="se">\"</span><span class="s2">:[typescript]}"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4417"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li><strong>ls</strong> - server name - can be any string</li>
+  <li><strong>attributes.internal</strong> - <code class="highlighter-rouge">true</code>. Mandatory! Used to get an internal link to server</li>
+  <li><strong>attributes.type</strong> - <code class="highlighter-rouge">ls</code>. Mandatory. Used by the IDE client to identify a server as a language server</li>
+  <li><strong>attributes.config.id</strong> - LS ID - any string. Used as LS identifier</li>
+  <li>
+    <p><strong>attributes.config.languageIds</strong> - List of registered Language IDs. You can either <a href="#bind-language-server-launcher-and-language-description">register own</a> (in this case you need own custom Che assembly) or use any ID from the <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/registry/DefaultLanguages.java">default list</a> that covers most popular languages. Each Language ID has associated file extensions.</p>
+  </li>
+  <li>In User Dashboard, go to Workspaces &gt; Your Workspace &gt; Volumes, add a volume for <strong>each machine</strong>. The two volumes have to share the same name (for example, <code class="highlighter-rouge">projects</code>) and path <code class="highlighter-rouge">/projects</code> so that they actually share one volume. This way a language server container has access to workspace project types.</li>
+</ul>
+
+<figure><img class="docimage" src="images/extensibility/lang_servers/volumes_ls.png" alt="" /></figure>
+
+<ul>
+  <li>Start a workspace. Open a file with one of the extensions bound to a language ID. Che client will attempt to connect to language server over tcp socket. This data is retrieved from workspace runtime. Language server process should be available at the port declared in the server. You can either use Socat or launch a language server in tcp mode if it supports it. It is your Docker image’s responsibility to launch the language server. Adding <code class="highlighter-rouge">ENTRYPOINT</code> or <code class="highlighter-rouge">CMD</code> instruction should work well.</li>
+</ul>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
+        
+        
+        
+        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
+        
+        
+        
+        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
+        
+        
+        
+    </div>
+
+<!-- 
+ -->
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 3, 2018 <br />
+<p><img src="images/che_logo.png" alt="Eclise Che"/></p>
+                </div>
+            </div>
+</footer>
+
+
+
+
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+
+</html>

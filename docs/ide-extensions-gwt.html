@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE">
-<meta name="keywords" content="overviewgetting-started,  overview">
-<title>Introduction to Eclipse Che | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="extensionsassemblydev-docs,  framework, extensions, gwt, client side">
+<title>IDE Extensions: GWT | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Introduction to Eclipse Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the IDE Extensions: GWT page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introduction to Eclipse Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="IDE Extensions: GWT">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -216,7 +216,7 @@
           
           
           
-          <li class="active"><a href="index.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -645,7 +645,7 @@
           
           
           
-          <li><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
+          <li class="active"><a href="ide-extensions-gwt.html">SDK - GWT IDE Extensions</a></li>
           
           
           
@@ -796,15 +796,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Introduction to Eclipse Che</h1>
+   <h1 class="post-title-main">IDE Extensions: GWT</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE</div>
    
 
     
@@ -835,148 +833,196 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
-<p>Eclipse Che provides:</p>
+  
+<h2 id="ide-extension-structure">IDE Extension Structure</h2>
+
+<p>Let’s take a closer look at how an IDE extension should be structured:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ide
+├─ src                                              // sources folder
+│  └─ main
+│     ├─ java
+│     │  └─ org.eclipse.che.plugin.menu.ide
+│     │     ├─ ...
+│     │     ├─ inject
+│     │     │  └─ SampleMenuGinModule.java          // GIN module
+│     │     └─ SampleMenuExtension.java             // IDE extension class
+│     ├─ resources
+│     │  └─ org.eclipse.che.ide.ext.demo.client
+│     └─ module.gwt.xml                             // template for generating GWT module [1]
+├─ target                                           // build output
+│  └─ classes
+│     ├─ META-INF
+│     │  └─ gwt
+│     │     └─ mainModule                           // contains GWT module name [2]
+│     └─ org.eclipse.che.plugin.menu
+│        ├─ ...
+│        └─ SampleMenuExtension.gwt.xml             // generated GWT module [3]
+└─ pom.xml
+</code></pre></div></div>
+<p>Links: <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">1</a> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-metadata-mojo.html">2</a> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">3</a></p>
+
+<h2 id="pomxml">pom.xml</h2>
+
+<p>There are several important parts in the pom.xml of the Che IDE plugin:</p>
+
 <ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plugins for languages, framework, and tools</li>
-  <li>An SDK for creating plugins and assemblies</li>
-</ul>
-
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
-<ul>
-  <li><a href="quick-start.html">Quick start guide</a></li>
-  <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
-  <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
-  <li><a href="https://www.eclipse.org/che/docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
-</ul>
-
-<h2 id="single-and-multi-user-flavors">Single and Multi-User Flavors</h2>
-
-<p>Eclipse Che is available in two different modes:</p>
-<ul>
-  <li><strong>Single-user</strong>: perfectly suited for personal desktop environment.</li>
-  <li><strong>Multi-user</strong>: secure and best for organization and developer teams.</li>
-</ul>
-
-<p>Learn more about single and multi-user flavors on the following <a href="single-multi-user.html">page</a>.</p>
-
-<p>Considering the <code class="highlighter-rouge">multi-user</code> mode as an advanced setup of Eclipe Che, the quick starts are covering only the <code class="highlighter-rouge">single-user</code> mode. If you are interested by the <code class="highlighter-rouge">multi-user</code>, please read the following pages:</p>
-<ul>
-  <li><a href="docker-multi-user.html">Multi-user configuration on Docker</a></li>
-  <li><a href="openshift-multi-user.html">Multi-user configuration on OpenShift</a></li>
-</ul>
-
-<h2 id="docker-and-openshift-support">Docker and OpenShift Support</h2>
-
-<p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
-<ul>
-  <li><a href="infra-support.html">Docker</a></li>
-  <li><a href="infra-support.html">OpenShift</a></li>
-  <li>Kubernetes (soon)</li>
-</ul>
-
-<p>Learn more about the different infrastructure supported by Eclipse Che on the following <a href="infra-support.html">page</a>.</p>
-
-<h2 id="workspace-model">Workspace Model</h2>
-
-<figure><img class="docimage" src="images/intro/intro-che-workspace.png" alt="" /></figure>
-
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
-
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
-
-<figure><img class="docimage" src="images/intro/intro-workspace-runtimes.png" alt="" /></figure>
-
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
-
-<figure><img class="docimage" src="images/intro/intro-project-mounted.png" alt="" /></figure>
-
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.</p>
-
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
-
-<figure><img class="docimage" src="images/intro/intro-SSH-connect.png" alt="" /></figure>
-
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
-
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
-
-<figure><img class="docimage" src="images/intro/intro-share-workspace.png" alt="" /></figure>
-
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
-
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
-
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
-
-<h2 id="users">Users</h2>
-<p>Che has three types of users:</p>
-<ul>
-  <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
+  <li>Packaging of the Maven project is <code class="highlighter-rouge">gwt-lib</code> which triggers <a href="https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib"><code class="highlighter-rouge">gwt-lib</code></a> Maven lifecycle that will build a <a href="https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib">GWT library</a>:
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;packaging&gt;</span>gwt-lib<span class="nt">&lt;/packaging&gt;</span>
+</code></pre></div>    </div>
   </li>
   <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
+    <p>Dependency on the Che IDE API library that provides a <a href="https://docs.google.com/spreadsheets/d/1ijapDnl1G7svy7sIKgTntyTuVsnd9nFcH0-357C0MxE/edit#gid=0">set of APIs</a> for extending Che IDE:</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>che-core-ide-api<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>    </div>
   </li>
   <li>
-    <p><strong>Plugin Providers</strong>. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.</p>
+    <p>Name of the GWT module is defined in the configuration of <code class="highlighter-rouge">gwt-maven-plugin</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>net.ltgt.gwt.maven<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>gwt-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;extensions&gt;</span>true<span class="nt">&lt;/extensions&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>
+        <span class="nt">&lt;moduleName&gt;</span>org.eclipse.che.plugin.menu.SampleMenuExtension<span class="nt">&lt;/moduleName&gt;</span>
+    <span class="nt">&lt;/configuration&gt;</span>
+<span class="nt">&lt;/plugin&gt;</span>
+</code></pre></div>    </div>
+    <p>For details on the generating GWT module, read the <code class="highlighter-rouge">gwt:generate-module</code> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">mojo description</a>. GWT library is a JAR that contains compiled classes, project’s (re-)sources, GWT module descriptor (<code class="highlighter-rouge">*.gwt.xml</code>) and possibly other GWT-specific files.</p>
   </li>
 </ul>
 
-<h2 id="logical-architecture">Logical Architecture</h2>
+<h2 id="gwtxml">gwt.xml</h2>
 
-<figure><img class="docimage" src="images/intro/intro-che-architecture.png" alt="" /></figure>
+<p>Project’s <code class="highlighter-rouge">*.gwt.xml</code> file is generated within the <code class="highlighter-rouge">gwt-lib</code> Maven lifecycle and contains:</p>
+<ul>
+  <li>the declarations for the default source folders:
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;source</span> <span class="na">path=</span><span class="s">"client"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;source</span> <span class="na">path=</span><span class="s">"shared"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;super-source</span> <span class="na">path=</span><span class="s">"super"</span><span class="nt">/&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">&lt;inherits/&gt;</code> directives for the project’s <em>direct</em> dependencies which were packaged as a <code class="highlighter-rouge">gwt-lib</code>.</li>
+</ul>
 
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
+<p><em>Optional</em> template may be provided in <code class="highlighter-rouge">src/main/module.gwt.xml</code> for generating project’s <code class="highlighter-rouge">*.gwt.xml</code> file.</p>
 
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
+<p>The most common cases when you may require a template:</p>
+<ul>
+  <li>need to override the default source folders, like <a href="https://github.com/eclipse/che/blob/f15fbf1cb1248d18acc3ee6fdc41766946ea4a3b/plugins/plugin-java/che-plugin-java-ext-lang-client/src/main/module.gwt.xml#L18">here</a>;</li>
+  <li>need to add <code class="highlighter-rouge">&lt;inherits/&gt;</code> directive for a GWT lib that isn’t packaged as a <code class="highlighter-rouge">gwt-lib</code> artifact (doesn’t contain GWT-specific meta information).</li>
+</ul>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+<h2 id="consuming-shared-libs">Consuming Shared Libs</h2>
 
-<h2 id="extensibility">Extensibility</h2>
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
+<p>The shared libraries don’t require any GWT-specific files or configuration in pom.xml to be consumed by a GWT library.</p>
 
-<p>There are a number of aspects that can be modified within Che.</p>
+<p>To use shared code in a GWT library:</p>
+<ul>
+  <li>declare a dependency on the “normal” artifact (JAR with compiled classes);</li>
+  <li>declare a dependency on the “sources” artifact (with <code class="highlighter-rouge">&lt;classifier&gt;sources&lt;/classifier&gt;</code>).</li>
+</ul>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
+<p>See an example <a href="https://github.com/eclipse/che/blob/19f5fd1f5ae8f165b7306e71cb0d58c2082fafab/plugins/plugin-python/che-plugin-python-lang-ide/pom.xml#L49-L57">here</a>.</p>
 
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
+<h2 id="ide-extension-class">IDE extension class</h2>
 
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
+<p>Che IDE plugin has an entry point - Java class annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java"><code class="highlighter-rouge">@org.eclipse.che.ide.api.extension.Extension</code></a> annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.</p>
 
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
+<p>Here’s an entry point of the plugin that will add a new top level menu group using <a href="actions.html">IDE actions</a>:</p>
 
-<h2 id="machines">Machines</h2>
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">ide</span><span class="o">;</span>
 
-<h2 id="whats-included">What’s Included</h2>
-<p>Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">IdeActions</span><span class="o">.</span><span class="na">GROUP_HELP</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">IdeActions</span><span class="o">.</span><span class="na">GROUP_MAIN_MENU</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">constraints</span><span class="o">.</span><span class="na">Anchor</span><span class="o">.</span><span class="na">AFTER</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">com.google.inject.Inject</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.action.ActionManager</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.action.DefaultActionGroup</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.constraints.Constraints</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.Extension</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.plugin.menu.ide.action.SampleAction</span><span class="o">;</span>
+
+<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Sample Menu"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleMenuExtension</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SAMPLE_GROUP_MAIN_MENU</span> <span class="o">=</span> <span class="s">"Sample"</span><span class="o">;</span>
+
+  <span class="nd">@Inject</span>
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">prepareActions</span><span class="o">(</span><span class="n">SampleAction</span> <span class="n">sampleAction</span><span class="o">,</span> <span class="n">ActionManager</span> <span class="n">actionManager</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="n">DefaultActionGroup</span> <span class="n">mainMenu</span> <span class="o">=</span> <span class="o">(</span><span class="n">DefaultActionGroup</span><span class="o">)</span> <span class="n">actionManager</span><span class="o">.</span><span class="na">getAction</span><span class="o">(</span><span class="n">GROUP_MAIN_MENU</span><span class="o">);</span>
+
+    <span class="n">DefaultActionGroup</span> <span class="n">sampleGroup</span> <span class="o">=</span>
+        <span class="k">new</span> <span class="nf">DefaultActionGroup</span><span class="o">(</span><span class="n">SAMPLE_GROUP_MAIN_MENU</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">actionManager</span><span class="o">);</span>
+    <span class="n">actionManager</span><span class="o">.</span><span class="na">registerAction</span><span class="o">(</span><span class="s">"sampleGroup"</span><span class="o">,</span> <span class="n">sampleGroup</span><span class="o">);</span>
+    <span class="n">mainMenu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">sampleGroup</span><span class="o">,</span> <span class="k">new</span> <span class="n">Constraints</span><span class="o">(</span><span class="n">AFTER</span><span class="o">,</span> <span class="n">GROUP_HELP</span><span class="o">));</span>
+
+    <span class="n">actionManager</span><span class="o">.</span><span class="na">registerAction</span><span class="o">(</span><span class="s">"sayHello"</span><span class="o">,</span> <span class="n">sampleAction</span><span class="o">);</span>
+    <span class="n">sampleGroup</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">sampleAction</span><span class="o">,</span> <span class="n">Constraints</span><span class="o">.</span><span class="na">FIRST</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="dependency-injection">Dependency Injection</h2>
+
+<p>Che IDE use <a href="https://code.google.com/archive/p/google-gin/">Google GIN</a> for dependency injection. Che IDE plugin can provide a GIN module. In order to be picked-up by IDE, plugin’s GIN module should be annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/ExtensionGinModule.java"><code class="highlighter-rouge">@org.eclipse.che.ide.api.extension.ExtensionGinModule</code></a> annotation.</p>
+
+<p>Here’s a GIN module of the plugin:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">inject</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.AbstractGinModule</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.ExtensionGinModule</span><span class="o">;</span>
+
+<span class="nd">@ExtensionGinModule</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleMenuGinModule</span> <span class="kd">extends</span> <span class="n">AbstractGinModule</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>In this example an extension GIN module isn’t really necessary since the plugin does not really need to put anything in a container. Read more about <a href="guice.html">dependency injection</a> and take a look at <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-ide/src/main/java/org/eclipse/che/plugin/csharp/ide/inject/CSharpGinModule.java">example Gin modules</a>.</p>
+
+<h2 id="extension-points">Extension Points</h2>
+
+<p>You can provide or customize existing <a href="actions.html">actions</a>, <a href="parts.html">parts</a>, [themes][themes] and [editor][editor]. This example has registered a new action.</p>
+
+<h2 id="debugging-with-super-devmode">Debugging With Super DevMode</h2>
+
+<p>There are two options available to launch GWT Super DevMode, depending on the state of the Che sources: whether it’s built or not since a lot of sources are generated during the Maven build.</p>
+
+<ul>
+  <li>Case 1: Che sources have been already built. Use the following command:</li>
+</ul>
+
+<p><code class="highlighter-rouge">mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dmaven.main.skip -Dmaven.resources.skip -Dche.dto.skip -Dskip-enforce -Dskip-validate-sources</code></p>
+
+<ul>
+  <li>Case 2: Che sources haven’t been built, e.g. freshly cloned or after executing <code class="highlighter-rouge">mvn clean</code> or you just don’t need to build the whole project. Use the following command:</li>
+</ul>
+
+<p><code class="highlighter-rouge">mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources</code></p>
+
+<p>The second one requires <em>more time</em> to launch GWT CodeServer since it executes <code class="highlighter-rouge">process-classes</code> build phase for each maven module. Thus, using the first command is preferable.</p>
+
+<p><strong>Note</strong>, both commands have to be performed in the root folder of the Che project.</p>
+
+<p>Once codeserver is started, open the prompted URL, drag bookmarks on your bookmarks bar. Note that you may face the error saying there are no GWT modules on the page. It happens because the IDE is opened in an iframe. Just, cut <code class="highlighter-rouge">dashboard/#/ide/</code> from the URL. To debug client side code, follow instructions from <a href="che-in-che-quickstart.html#develop-and-debug-client-side">quickstart</a>.</p>
+
+<h2 id="run-in-che">Run in Che</h2>
+
+<p>Once your extension is ready, you can build, run and debug it in <a href="che-in-che-quickstart.html">Che itself</a>. Just use an existing sample and add a custom plugin with its dependencies.</p>
+
+<h2 id="add-to-a-custom-assembly">Add to a Custom Assembly</h2>
+
+<p>You can build your custom <a href="assemblies.html">Che assembly</a> outside Che and/or use any IDE to develop extensions. Once done, run <code class="highlighter-rouge">mvn clean install</code> in the root of the assembly to get a Tomcat bundle that is ready to be run either in <a href="docker-config.html#development-mode">Docker</a> or deployed to <a href="openshift-config#development-mode">OpenShift</a>.</p>
 
 
     <div class="tags">
@@ -985,9 +1031,15 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
         
         
-        <a href="tag_getting-started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting-started</a>
+        
+        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
+        
+        
+        
+        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
         
         
         

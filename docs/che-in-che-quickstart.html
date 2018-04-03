@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE">
-<meta name="keywords" content="overviewgetting-started,  overview">
-<title>Introduction to Eclipse Che | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="extensionsdev-docsassembly,  dev docs, developer docs, plugins, extensions">
+<title>Develop Your First Plugin Usign Che | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Introduction to Eclipse Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Develop Your First Plugin Usign Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introduction to Eclipse Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Develop Your First Plugin Usign Che">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -216,7 +216,7 @@
           
           
           
-          <li class="active"><a href="index.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -617,7 +617,7 @@
           
           
           
-          <li><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
+          <li class="active"><a href="che-in-che-quickstart.html">SDK - Your First Plugin</a></li>
           
           
           
@@ -796,15 +796,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Introduction to Eclipse Che</h1>
+   <h1 class="post-title-main">Develop Your First Plugin Usign Che</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE</div>
    
 
     
@@ -835,147 +833,73 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
-<p>Eclipse Che provides:</p>
-<ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plugins for languages, framework, and tools</li>
-  <li>An SDK for creating plugins and assemblies</li>
-</ul>
+  <p>Before you dive into information on how you can <a href="framework-overview.html">extend Che framework</a> and build your own Che <a href="assemblies.html">assembly</a>, let’s install and debug your first Che plugin using Che itself.</p>
 
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
+<h2 id="run-eclipse-che">Run Eclipse Che</h2>
+
 <ul>
-  <li><a href="quick-start.html">Quick start guide</a></li>
   <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
   <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
-  <li><a href="https://www.eclipse.org/che/docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
 </ul>
 
-<h2 id="single-and-multi-user-flavors">Single and Multi-User Flavors</h2>
+<h2 id="create-workspace-and-sample-extension">Create Workspace and Sample Extension</h2>
 
-<p>Eclipse Che is available in two different modes:</p>
+<p>Search for a stack by keyword <code class="highlighter-rouge">che</code> and choose <code class="highlighter-rouge">che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
+
+<figure><img class="docimage" src="images/devel/create_extension.png" alt="" /></figure>
+
+<h2 id="build-a-deploy-your-extension">Build a Deploy Your Extension</h2>
+
+<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code class="highlighter-rouge">assembly</code> (See: <a href="assemblies.html">Assemblies</a>) and plugins (containing plugins themselves).</p>
+
+<p>Execute <code class="highlighter-rouge">Traefik Start</code>, <code class="highlighter-rouge">Tomcat8-IDE Start</code>, <code class="highlighter-rouge">Deploy IDE</code> and <code class="highlighter-rouge">Deploy Workspace Agent</code> commands:</p>
+
+<figure><img class="docimage" src="images/devel/commands.png" alt="" /></figure>
+
 <ul>
-  <li><strong>Single-user</strong>: perfectly suited for personal desktop environment.</li>
-  <li><strong>Multi-user</strong>: secure and best for organization and developer teams.</li>
+  <li>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</li>
+  <li>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</li>
+  <li>Deploy IDE - build ide-war module and its dependencies and packages <code class="highlighter-rouge">war</code> artifact and copies ide.war from <code class="highlighter-rouge">assembly-ide-war</code> target dir over to Tomcat’s webapp</li>
+  <li>Deploy Workspace Agent does the same with the agent war artifact</li>
 </ul>
 
-<p>Learn more about single and multi-user flavors on the following <a href="single-multi-user.html">page</a>.</p>
+<p>The last two commands have identical preview URLs pointing to <code class="highlighter-rouge">host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code class="highlighter-rouge">?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code class="highlighter-rouge">Hello CheeAllPowerfull</code> message:</p>
 
-<p>Considering the <code class="highlighter-rouge">multi-user</code> mode as an advanced setup of Eclipe Che, the quick starts are covering only the <code class="highlighter-rouge">single-user</code> mode. If you are interested by the <code class="highlighter-rouge">multi-user</code>, please read the following pages:</p>
-<ul>
-  <li><a href="docker-multi-user.html">Multi-user configuration on Docker</a></li>
-  <li><a href="openshift-multi-user.html">Multi-user configuration on OpenShift</a></li>
-</ul>
+<figure><img class="docimage" src="images/devel/sample_action.png" alt="" /></figure>
 
-<h2 id="docker-and-openshift-support">Docker and OpenShift Support</h2>
+<h2 id="develop-and-debug-client-side">Develop and Debug Client Side</h2>
 
-<p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
-<ul>
-  <li><a href="infra-support.html">Docker</a></li>
-  <li><a href="infra-support.html">OpenShift</a></li>
-  <li>Kubernetes (soon)</li>
-</ul>
+<p>Get back to an original IDE instance and execute <code class="highlighter-rouge">GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at <a href="ide-extensions-gwt.html#debugging-with-super-devmode">this page</a>. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code class="highlighter-rouge">MyAction.java</code>:</p>
 
-<p>Learn more about the different infrastructure supported by Eclipse Che on the following <a href="infra-support.html">page</a>.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">super</span><span class="o">(</span><span class="s">"My New Action"</span><span class="o">,</span> <span class="s">"My Action Description"</span><span class="o">);</span>
+</code></pre></div></div>
 
-<h2 id="workspace-model">Workspace Model</h2>
+<p>Return to the 2nd IDE instance, click <strong>Dev Mode On</strong> button and hit <strong>Compile</strong>. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.</p>
 
-<figure><img class="docimage" src="images/intro/intro-che-workspace.png" alt="" /></figure>
+<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code class="highlighter-rouge">Chrome's dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code class="highlighter-rouge">My New Action</code> in the context menu.</p>
 
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
+<figure><img class="docimage" src="images/devel/debug_chrome.png" alt="" /></figure>
 
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
+<h2 id="develop-and-debug-server-side">Develop and Debug Server Side</h2>
 
-<figure><img class="docimage" src="images/intro/intro-workspace-runtimes.png" alt="" /></figure>
+<p>Let’s change response from our REST service in <code class="highlighter-rouge">MyService.java</code>:</p>
 
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="s">"Howdy, "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-<figure><img class="docimage" src="images/intro/intro-project-mounted.png" alt="" /></figure>
+<p>Select this submodule in project explorer (<code class="highlighter-rouge">plugin-serverservice-server</code>) and run <code class="highlighter-rouge">Build</code> and <code class="highlighter-rouge">Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code class="highlighter-rouge">webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
 
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.</p>
+<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code class="highlighter-rouge">jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
 
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
+<p>Open <code class="highlighter-rouge">MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
 
-<figure><img class="docimage" src="images/intro/intro-SSH-connect.png" alt="" /></figure>
+<p>Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:</p>
 
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
+<figure><img class="docimage" src="images/devel/debugger.png" alt="" /></figure>
 
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
-
-<figure><img class="docimage" src="images/intro/intro-share-workspace.png" alt="" /></figure>
-
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
-
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
-
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
-
-<h2 id="users">Users</h2>
-<p>Che has three types of users:</p>
-<ul>
-  <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
-  </li>
-  <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
-  </li>
-  <li>
-    <p><strong>Plugin Providers</strong>. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.</p>
-  </li>
-</ul>
-
-<h2 id="logical-architecture">Logical Architecture</h2>
-
-<figure><img class="docimage" src="images/intro/intro-che-architecture.png" alt="" /></figure>
-
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
-
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
-
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
-
-<h2 id="extensibility">Extensibility</h2>
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
-
-<p>There are a number of aspects that can be modified within Che.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
-
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
-
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
-
-<h2 id="machines">Machines</h2>
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
-
-<h2 id="whats-included">What’s Included</h2>
-<p>Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<p>In Variable window, click <code class="highlighter-rouge">Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
 
 
 
@@ -985,9 +909,15 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_extensions.html" class="btn btn-default navbar-btn cursorNorm" role="button">extensions</a>
         
         
-        <a href="tag_getting-started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting-started</a>
+        
+        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
+        
+        
+        
+        <a href="tag_assembly.html" class="btn btn-default navbar-btn cursorNorm" role="button">assembly</a>
         
         
         

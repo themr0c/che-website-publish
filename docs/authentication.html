@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eclipse Che is a developer workspace server and cloud IDE">
-<meta name="keywords" content="overviewgetting-started,  overview">
-<title>Introduction to Eclipse Che | Eclipse Che Documentation</title>
+<meta name="description" content="">
+<meta name="keywords" content="ldapkeycloak,  organizations, user management, permissions, authentication">
+<title>Keycloak Authentication | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Introduction to Eclipse Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Keycloak Authentication page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introduction to Eclipse Che">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Keycloak Authentication">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -216,7 +216,7 @@
           
           
           
-          <li class="active"><a href="index.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -350,7 +350,7 @@
           
           
           
-          <li><a href="authentication.html">Security Model</a></li>
+          <li class="active"><a href="authentication.html">Security Model</a></li>
           
           
           
@@ -796,15 +796,13 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Introduction to Eclipse Che</h1>
+   <h1 class="post-title-main">Keycloak Authentication</h1>
 </div>
 
 
 
 <div class="post-content">
 
-   
-    <div class="summary">Eclipse Che is a developer workspace server and cloud IDE</div>
    
 
     
@@ -835,147 +833,109 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
-<p>Eclipse Che provides:</p>
+  
+<h2 id="auth-filters-on-master">Auth Filters on master</h2>
+<p>Che master can handle both types of signed requests - using Keycloak token or Machine token.
+ Authentication tokens can be send either in a <code class="highlighter-rouge">Authorization</code> header or <code class="highlighter-rouge">token</code> query param.</p>
+
+<p>In case of Keycloak tokens, authentication filter chain contains of two filters:</p>
+
 <ul>
-  <li>Workspaces that include runtimes and IDEs</li>
-  <li>RESTful workspace server</li>
-  <li>A browser-based IDE</li>
-  <li>Plugins for languages, framework, and tools</li>
-  <li>An SDK for creating plugins and assemblies</li>
-</ul>
-
-<h2 id="getting-started">Getting Started</h2>
-<p>You can get started with Che by:</p>
-<ul>
-  <li><a href="quick-start.html">Quick start guide</a></li>
-  <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
-  <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
-  <li><a href="https://www.eclipse.org/che/docs/setup/getting-started-saas-cloud/index.html">Creating a hosted SaaS account</a></li>
-</ul>
-
-<h2 id="single-and-multi-user-flavors">Single and Multi-User Flavors</h2>
-
-<p>Eclipse Che is available in two different modes:</p>
-<ul>
-  <li><strong>Single-user</strong>: perfectly suited for personal desktop environment.</li>
-  <li><strong>Multi-user</strong>: secure and best for organization and developer teams.</li>
-</ul>
-
-<p>Learn more about single and multi-user flavors on the following <a href="single-multi-user.html">page</a>.</p>
-
-<p>Considering the <code class="highlighter-rouge">multi-user</code> mode as an advanced setup of Eclipe Che, the quick starts are covering only the <code class="highlighter-rouge">single-user</code> mode. If you are interested by the <code class="highlighter-rouge">multi-user</code>, please read the following pages:</p>
-<ul>
-  <li><a href="docker-multi-user.html">Multi-user configuration on Docker</a></li>
-  <li><a href="openshift-multi-user.html">Multi-user configuration on OpenShift</a></li>
-</ul>
-
-<h2 id="docker-and-openshift-support">Docker and OpenShift Support</h2>
-
-<p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
-<ul>
-  <li><a href="infra-support.html">Docker</a></li>
-  <li><a href="infra-support.html">OpenShift</a></li>
-  <li>Kubernetes (soon)</li>
-</ul>
-
-<p>Learn more about the different infrastructure supported by Eclipse Che on the following <a href="infra-support.html">page</a>.</p>
-
-<h2 id="workspace-model">Workspace Model</h2>
-
-<figure><img class="docimage" src="images/intro/intro-che-workspace.png" alt="" /></figure>
-
-<p>Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.</p>
-
-<p>Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.</p>
-
-<figure><img class="docimage" src="images/intro/intro-workspace-runtimes.png" alt="" /></figure>
-
-<p>A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of “machines” that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.</p>
-
-<figure><img class="docimage" src="images/intro/intro-project-mounted.png" alt="" /></figure>
-
-<p>A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a “type”, such as “maven”, which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.</p>
-
-<p>Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.</p>
-
-<figure><img class="docimage" src="images/intro/intro-SSH-connect.png" alt="" /></figure>
-
-<p>By default, each workspace also configures its own SSH server.  This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.</p>
-
-<p>Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon.  The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.</p>
-
-<figure><img class="docimage" src="images/intro/intro-share-workspace.png" alt="" /></figure>
-
-<p>Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access.  We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.</p>
-
-<p>Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server.  You will never have the “but it runs on that computer” issue again.  Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.</p>
-
-<p>Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.</p>
-
-<h2 id="users">Users</h2>
-<p>Che has three types of users:</p>
-<ul>
+  <li><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakAuthenticationFilter</strong> - validates signature of the Keycloak JWT token;</li>
   <li>
-    <p><strong>Developers</strong>. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.</p>
+    <p><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakEnvironmentInitalizationFilter</strong> - extracts user data from JWT, finds or creates
+   appropriate user in the Che DB, and set user principal to the session.</p>
+
+    <p>If the request was made using machine token only (e.g. from ws agent) then it is only one auth filter in the chain:</p>
   </li>
-  <li>
-    <p><strong>Product Owners</strong>. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.</p>
-  </li>
-  <li>
-    <p><strong>Plugin Providers</strong>. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.</p>
-  </li>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.server.MachineLoginFilter</strong> - finds userId given token belongs to, than retrieves user instance and sets principal to the session.</li>
 </ul>
 
-<h2 id="logical-architecture">Logical Architecture</h2>
+<h2 id="auth-filters-on-agents">Auth Filters on agents</h2>
+<p>Agents cannot be queried using Keycloak token, so there is only Machine Token option. Machine token can be passed in header or query param.</p>
 
-<figure><img class="docimage" src="images/intro/intro-che-architecture.png" alt="" /></figure>
+<ul>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on master, except that user data queried from master’s user REST api.</li>
+</ul>
 
-<p>Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at <code class="highlighter-rouge">http://localhost:8080/</code>. The browser downloads the IDE as a single page web app from the Che server.  The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.</p>
+<h2 id="keycloak-vs-machine-token">Keycloak vs Machine Token</h2>
 
-<p>As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.</p>
+<p>Machine tokens were introduced to avoid passing the Keycloak tokens to the machine side (which can be potentially insecure). Another reason is that Keycloak tokens may have relatively small lifetime and require periodical renewal/refresh which is hard to manage and keep in sync with same user session tokens on clients e.t.c.</p>
 
-<p>The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as JDT core Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.</p>
+<p>So from implementation side, it is the simple 3-side <strong>User</strong> &lt;-&gt; <strong>Workspace</strong> &lt;-&gt; <strong>Machine Token</strong> mapping, and token is injected into machine during its startup and remains valid until the workspace will be stopped. Unlike JWT, Machine token doesn’t carry any information inside, it’s just a randomly generated string. IDE as a general client, holds both of those tokens in multi-user mode, and uses them depending of where the request goes. Most of the job to obtain/refresh/invalidate of Keycloak tokens on IDE or Dashboard clients is outsourced to the native Keycloak js library.</p>
 
-<h2 id="extensibility">Extensibility</h2>
-<p>Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.</p>
+<h2 id="obtaining-keycloak-endpoints">Obtaining Keycloak endpoints</h2>
 
-<p>There are a number of aspects that can be modified within Che.</p>
+<p>There is separate REST service to obtain main Keycloak endpoints for the current installation. It helps to clients to find out URLs for basic operations like login/logout, profile reading, realm name etc. This service is not secured with any authentication and accessible for any client. Service URL is: <code class="highlighter-rouge">http://&lt;wsmaster_host&gt;:&lt;port&gt;/api/keycloak/settings</code>
+Example output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "che.keycloak.token.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/token",
+  "che.keycloak.profile.endpoint": "http://172.19.20.9:5050/auth/realms/che/account",
+  "che.keycloak.client_id": "che-public",
+  "che.keycloak.auth_server_url": "http://172.19.20.9:5050/auth",
+  "che.keycloak.password.endpoint": "http://172.19.20.9:5050/auth/realms/che/account/password",
+  "che.keycloak.logout.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/logout",
+  "che.keycloak.realm": "che"
+}
+</code></pre></div></div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>IDE Extension</td>
-      <td>Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.</td>
-    </tr>
-    <tr>
-      <td>Che Server Extension  (aka, Worskspace Master)</td>
-      <td>Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.</td>
-    </tr>
-    <tr>
-      <td>Workspace Extension  (aka, Workspace Agent)</td>
-      <td>Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs JDT core services from Eclipse to do local intellisense operations against the remote workspace.</td>
-    </tr>
-  </tbody>
-</table>
+<h2 id="obtaining-token-from-keycloak">Obtaining Token From Keycloak</h2>
 
-<p>Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.</p>
+<p>The simplest way to obtain Keycloak auth token, is to perform request to the token endpoint with username and password credentials. This request can be schematically described as following cURL request:</p>
 
-<p>Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl
+    <span class="nt">--data</span> <span class="s2">"grant_type=password&amp;client_id=&lt;client_name&gt;&amp;username=&lt;username&gt;&amp;password=&lt;password&gt;"</span>
+     http://&lt;keyckloak_host&gt;:5050/auth/realms/&lt;realm_name&gt;/protocol/openid-connect/token
+</code></pre></div></div>
 
-<p>Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.</p>
+<p>Since the two main Che clients (IDE and Dashboard) utilizes native Keycloak js library, they’re using a customized Keycloak login page and somewhat more complicated authentication mechanism using <code class="highlighter-rouge">grant_type=authorization_code</code>. It’s like a two step authentication, when first step is login and obtaining authorization code, and second step is obtaining token using this code.</p>
 
-<h2 id="machines">Machines</h2>
-<p>When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed.  When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and <code class="highlighter-rouge">mvn clean install</code> are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type.  This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.</p>
+<p>Example of correct token response:</p>
 
-<h2 id="whats-included">What’s Included</h2>
-<p>Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is licensed as EPL 1.0.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+   </span><span class="s2">"access_token"</span><span class="p">:</span><span class="s2">"eyJhb...&lt;rest of JWT token here&gt;"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"refresh_expires_in"</span><span class="p">:</span><span class="mi">1800</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"refresh_token"</span><span class="p">:</span><span class="s2">"Nj0C...&lt;rest of refresh token here&gt;"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"token_type"</span><span class="p">:</span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"not-before-policy"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"session_state"</span><span class="p">:</span><span class="s2">"14de1b98-8065-43e1-9536-43e7472250c9"</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="using-swagger-or-rest-clients">Using Swagger or REST Clients</h2>
+
+<p>User’s Keycloak token is used to execute queries to secured API on his behalf through REST clients. A valid token must be attached as request header or query parameter - <code class="highlighter-rouge">?token=$token</code>. Che Swagger can be accessed from <code class="highlighter-rouge">http://che_host:8080/swagger</code>. A user must be signed-in through Keycloak so that access token is included in request headers.</p>
+
+<p>By default, swagger loads <code class="highlighter-rouge">swagger.json</code> from [Master][che-master].</p>
+
+<p>To work with WS Agent, a URL to its <code class="highlighter-rouge">swagger.json</code> should be provided. It can be retrieved from <a href="workspace-data-model.html#runtime">Workspace Runtime</a>, by getting URL to <a href="servers.html">WS Agent server</a> endpoint and adding <code class="highlighter-rouge">api/docs/swagger.json</code> to it. Also, to authenticate on WS Agent API, user must include Machine Token, which can be found in Workspace Runtime as well.</p>
+
+<p>To use Swagger for a workspace agent, user must do following steps:</p>
+
+<ul>
+  <li>get workspace object with runtimes fetched (using <code class="highlighter-rouge">/api/workspace/&lt;workspace_key&gt;</code> service)</li>
+  <li>get WS agent API endpoint URL, and add a path to its <code class="highlighter-rouge">swagger.json</code> (e.g. <code class="highlighter-rouge">http://&lt;che_host&gt;:&lt;machine_port&gt;/api/docs/swagger.json</code> for Docker or <code class="highlighter-rouge">http://&lt;ws-agent-route&gt;/api/docs/swagger.json</code> for OpenShift ). Put it in the upper bar <code class="highlighter-rouge">URL</code> field:</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"wsagent/http"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.180:32777/api"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RUNNING"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li>get machine token from <code class="highlighter-rouge">runtime.machineToken</code> field, and put it in the upper bar <code class="highlighter-rouge">token</code> field</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>machineToken": "machinet9854958jdsdhakdh48hsdg",
+</code></pre></div></div>
+
+<ul>
+  <li>click Explore to load Swagger for WS Agent</li>
+</ul>
+
+<figure><img class="docimage" src="images/devel/swagger.png" alt="" /></figure>
 
 
 
@@ -985,9 +945,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
+        <a href="tag_ldap.html" class="btn btn-default navbar-btn cursorNorm" role="button">ldap</a>
         
         
-        <a href="tag_getting-started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting-started</a>
+        
+        <a href="tag_keycloak.html" class="btn btn-default navbar-btn cursorNorm" role="button">keycloak</a>
         
         
         
