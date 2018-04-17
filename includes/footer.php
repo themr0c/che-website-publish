@@ -7,7 +7,7 @@
           <ul>
             <li><a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></li>
             <li><a href="<?php echo $rootPath; ?>/getting-started/cloud/">SaaS</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/6/che/docs/quick-start.html" target="_blank">Install</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/quick-start.html" target="_blank">Install</a></li>
             <li><a href="<?php echo $rootPath; ?>/docs/" target="_blank">Docs</a></li>
             <li><a href="<?php echo $rootPath; ?>/extend/codenvy">Commercial Support</a></li>
           </ul>
@@ -22,12 +22,12 @@
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/devops/runtime-stacks/" target="_blank">Stacks</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/devops/runtime-recipes/" target="_blank">Recipes</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/devops/project-samples/" target="_blank">Samples</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/intro/" target="_blank">Assemblies</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/plugin-lifecycle/" target="_blank">Plugins</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/sdk-rest-apis/" target="_blank">APIs</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/stacks/" target="_blank">Stacks</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/recipes/" target="_blank">Recipes</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/projects/" target="_blank">Projects</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/" target="_blank">Assemblies</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/che-in-che-quickstart/" target="_blank">Plugins</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/rest-api/" target="_blank">APIs</a></li>
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/community/">Community</a></li>

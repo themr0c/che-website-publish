@@ -30,7 +30,7 @@
         <h4>Stacks</h4>
         <p>Define workspace runtime templates displayed in the dsahboard.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/stacks.html" target="_blank">Add stacks to Che</a></li>
+          <li><a href="../docs/stacks.html" target="_blank">Add stacks to Che</a></li>
           <li><a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes">Stacks included with Che</a></li>
         </ul>
       </div>
@@ -39,7 +39,7 @@
         <h4>Recipes</h4>
         <p>Describe a runtime created by a stack with Docker or Compose files.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/recipes.html" target="blank">Custom Recipes</a></li>
+          <li><a href="../docs/recipes.html" target="blank">Custom Recipes</a></li>
         </ul>
       </div>
 
@@ -57,7 +57,7 @@
         <h4>Commands</h4>
         <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p>
         <ul>
-         <li><a href="6/che/docs/commands-ide-macro.html" target="blank">Adding Commands</a></li>
+         <li><a href="docs/commands-ide-macro.html" target="blank">Adding Commands</a></li>
         </ul>
       </div>
 
@@ -65,7 +65,7 @@
         <h4>WS Extensions</h4>
         <p>Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/framework-overview.html" target="blank">Developing Extensions</a></li>
+          <li><a href="../docs/framework-overview.html" target="blank">Developing Extensions</a></li>
         </ul>
       </div>
 
@@ -73,7 +73,7 @@
         <h4>IDE Extensions</h4>
         <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/ide-extensions-js.html" target="blank">Developing Extensions</a></li>
+          <li><a href="../docs/ide-extensions-gwt.html" target="blank">Developing Extensions</a></li>
         </ul>
       </div>
 
@@ -85,7 +85,7 @@
         <h4>Agents</h4>
         <p>Software dynamically installed and run within a user's workspace.</p><ul>
         <ul>
-          <li><a href="../docs/6/che/docs/installers.html" target="blank">Workspace Agents</a></li>
+          <li><a href="../docs/installers.html" target="blank">Workspace Agents</a></li>
         </ul>
       </div>
 
@@ -93,7 +93,7 @@
         <h4>REST APIs</h4>
         <p>The Che server and each workspace has all services programmable through REST APIs.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/rest-api.html" target="blank">Che REST APIs</a></li>
+          <li><a href="../docs/rest-api.html" target="blank">Che REST APIs</a></li>
         </ul>
       </div>
 
@@ -101,7 +101,7 @@
         <h4>Assemblies</h4>
         <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
         <ul>
-          <li><a href="../docs/6/che/docs/assemblies.html" target="blank">Assembly Lifecycle</a></li>
+          <li><a href="../docs/assemblies.html" target="blank">Assembly Lifecycle</a></li>
         </ul>
       </div>
 
