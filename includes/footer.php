@@ -22,12 +22,12 @@
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/extend/">Extend</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/stacks/" target="_blank">Stacks</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/recipes/" target="_blank">Recipes</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/projects/" target="_blank">Projects</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/assemblies/" target="_blank">Assemblies</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/che-in-che-quickstart/" target="_blank">Plugins</a></li>
-            <li><a href="<?php echo $rootPath; ?>/docs/rest-api/" target="_blank">APIs</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/stacks.html" target="_blank">Stacks</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/recipes.html" target="_blank">Recipes</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/projects.html" target="_blank">Projects</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/assemblies.html" target="_blank">Assemblies</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/che-in-che-quickstart.html" target="_blank">Plugins</a></li>
+            <li><a href="<?php echo $rootPath; ?>/docs/rest-api.html" target="_blank">APIs</a></li>
           </ul>
           <ul>
             <li><a href="<?php echo $rootPath; ?>/community/">Community</a></li>
