@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="chedirfactories,  chedir, factories">
-<title>Chedir Up and Down | Eclipse Che Documentation</title>
+<meta name="keywords" content="installationkubernetes,  kubernetes, installation, pvc, deployment">
+<title>Multi-User&#58 Deploy to Kubernetes | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Chedir Up and Down page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Multi-User&#58 Deploy to Kubernetes page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Chedir Up and Down">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Multi-User&amp;#58 Deploy to Kubernetes">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -297,7 +297,7 @@
           
           
           
-          <li><a href="kubernetes-multi-user.html">Kubernetes - Multi User</a></li>
+          <li class="active"><a href="kubernetes-multi-user.html">Kubernetes - Multi User</a></li>
           
           
           
@@ -573,7 +573,7 @@
           
           
           
-          <li class="active"><a href="chedir-up-and-down.html">Chedir - Up and Down</a></li>
+          <li><a href="chedir-up-and-down.html">Chedir - Up and Down</a></li>
           
           
           
@@ -810,7 +810,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Chedir Up and Down</h1>
+   <h1 class="post-title-main">Multi-User&#58 Deploy to Kubernetes</h1>
 </div>
 
 
@@ -847,42 +847,107 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
-<p>In the first version of Chedir, each Chedir directory maps to a single Che server containing a single workspace. That workspace can have multiple projects and source repositories that are part of it.</p>
+  <h2 id="prerequisites">Prerequisites</h2>
 
-<p>You can boot both a Che server and a workspace (with its embedded runtimes) with a single command:</p>
+<ul>
+  <li>
+    <p>A Kubernetes cluster with at least 4GB RAM and RBAC:</p>
+  </li>
+  <li>for MiniKube 0.26.0 and above <code class="highlighter-rouge">minikube start --cpus 2 --memory 4096 --extra-config=apiserver.authorization-mode=RBAC</code></li>
+  <li>for MiniKube 0.25.2 and lower <code class="highlighter-rouge">minikube start --cpus 2 --memory 4096 --extra-config=apiserver.Authorization.Mode=RBAC</code></li>
+</ul>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
-                    <span class="nt">-v</span> &lt;path&gt;:/data
-                    <span class="nt">-v</span> &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir up
+<p><code class="highlighter-rouge">kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default</code></p>
+<ul>
+  <li>
+    <p>Install the <a href="https://github.com/kubernetes/helm/blob/master/docs/install.md">Helm</a> CLI</p>
+  </li>
+  <li>Set your default Kubernetes context (this is required to use helm):
+    <ul>
+      <li>In MiniKube this is set for you automatically</li>
+      <li>Otherwise, you may have to modify the KUBECONFIG environment variable and then type <code class="highlighter-rouge">kubectl config use-context &lt;my-context&gt;</code></li>
+    </ul>
+  </li>
+  <li>Install tiller on your cluster:
+    <ul>
+      <li>Create a <a href="https://github.com/kubernetes/helm/blob/master/docs/rbac.md">tiller serviceAccount</a>: <code class="highlighter-rouge">kubectl create serviceaccount tiller --namespace kube-system</code></li>
+      <li>Bind it to the almighty cluster-admin role: <code class="highlighter-rouge">kubectl apply -f ./tiller-rbac.yaml</code></li>
+      <li>Install tiller itself: <code class="highlighter-rouge">helm init --service-account tiller</code></li>
+    </ul>
+  </li>
+  <li>Ensure that you have an NGINX-based ingress controller. Note: This is the default ingress controller on MiniKube. You can start it with <code class="highlighter-rouge">minikube addons enable ingress</code></li>
+  <li>DNS discovery should be enabled. Note: It is enabled by default in minikube.</li>
+</ul>
 
+<h2 id="cluster-ip">Cluster IP</h2>
+
+<ul>
+  <li>If your cluster is running on MiniKube, simply type <code class="highlighter-rouge">minikube ip</code> at your terminal</li>
+  <li>If your cluster is in the cloud, obtain the hostname or ip address from your cloud provider</li>
+</ul>
+
+<p>In production, you should specify a hostname (see <a href="https://github.com/eclipse/che/issues/8694">here</a> why). In case you don’t have a hostname (e.g. during development), and would still want to use a host-based configuration, you can use services such as nip.io or xip.io.</p>
+
+<p>In case you’re specifying a hostname, simply pass it as the value of the <code class="highlighter-rouge">ingressDomain</code> parameter below.</p>
+
+<p>If you must use IP address (e.g. your corporate policy prevents you from using nip.io), you would also have to set <code class="highlighter-rouge">isHostBased</code> to <code class="highlighter-rouge">false</code>.</p>
+
+<h2 id="deploy-syntax">Deploy Syntax</h2>
+
+<p>The context of the commands below is <code class="highlighter-rouge">che/deploy/kubernetes/helm/che</code></p>
+
+<ul>
+  <li>
+    <p>Override default values by changing the values.yaml file and then typing:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml ./
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Or, you can override default values during installation, using the <code class="highlighter-rouge">--set</code> flag:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;my-hostname&gt; <span class="nt">--set</span> <span class="nv">cheImage</span><span class="o">=</span>&lt;my-image&gt; ./
+</code></pre></div>    </div>
+  </li>
+  <li>Master: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain</code></li>
+  <li>Keycloak:  <code class="highlighter-rouge">https://keycloak-&lt;che-namespace&gt;.domain</code></li>
+  <li>Workspaces servers: <code class="highlighter-rouge">https://server-host.domain</code></li>
+</ul>
+
+<h2 id="default-host">Default Host</h2>
+<p>All Ingress specs are created without a host attribute (defaults to <code class="highlighter-rouge">*</code>).
+Path based routing to all components.
+Multi User configuration is enabled.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm upgrade <span class="nt">--install</span> &lt;che-release-name&gt; <span class="nt">--namespace</span> &lt;che-namespace&gt; <span class="nt">-f</span> ./values/default-host.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;domain&gt; ./
 </code></pre></div></div>
 
-<p>This command will boot a Che server according to the properties in the Chefile. If necessary, the right Che launcher and Che server Docker images will be downloaded and cached. After the server has booted, Chedir will create a workspace and start its runtime, also as a set of Docker containers.</p>
+<ul>
+  <li>Master: <code class="highlighter-rouge">http://&lt;domain&gt;/</code></li>
+  <li>Keycloak:  <code class="highlighter-rouge">http://&lt;domain&gt;/auth/</code></li>
+  <li>Workspaces servers: <code class="highlighter-rouge">http://&lt;domain&gt;/&lt;path-to-server&gt;</code></li>
+</ul>
 
-<p>If there is an existing Che server running with the configuration specified, Chedir will discontinue and recommend that you create a different configuration to avoid conflicts.</p>
+<h2 id="tls">TLS</h2>
 
-<p>When the process of creation has completed, you will be presented with two URLs:</p>
+<p>Cert-Manager is used to issue LetsEncrypt certificates. To avoid rate-limit issues, we use a single hostname for all ingresses. Path based routing to all components. Multi User configuration is enabled.</p>
 
-<p>1: Che server URL - a URL that will open the dashboard to manage the Che instance<br />
-2: Workspace URL - a URL that will open the browser IDE with the workspace configured</p>
-
-<p>The workspace is a fully functional runtime environment. You can work within the workspace, SSH into it, and also work on code. Any code changes will be synchronized with the local directory. You can also perform git operations such as add, commit, and push from within the IDE.</p>
-
-<p>Run Chedir <code class="highlighter-rouge">down</code> command on the host machine. Chedir will stop the workspace runtime, stop the Che server, and return to the host. The workspace and its project will be preserved.  You can run Chedir <code class="highlighter-rouge">up</code> to reactivate it. This command is the equivalent of running <code class="highlighter-rouge">docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; stop</code> with the CLI.</p>
-
-<p>To stop the Che server and remove the workspace, you can destroy it.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock
-                    <span class="nt">-v</span> &lt;path&gt;:/data
-                    <span class="nt">-v</span> &lt;path-to-project&gt;:/chedir
-                       eclipse/che:&lt;version&gt; dir destroy
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm install <span class="nt">--name</span> &lt;cert-manager-release-name&gt; stable/cert-manager
+  helm upgrade <span class="nt">--install</span> &lt;che-release-name&gt; <span class="nt">--namespace</span> &lt;che-namespace&gt; <span class="nt">-f</span> ./values/tls.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;domain&gt; ./
 </code></pre></div></div>
 
-<p><strong>NEXT STEPS</strong></p>
+<ul>
+  <li>Master: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/</code></li>
+  <li>Keycloak:  <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/auth/</code></li>
+  <li>Workspaces servers: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/&lt;path-to-server&gt;</code></li>
+</ul>
 
-<p><a href="chefile.html">Author a custom Chefile</a> to tailor how the workspace is created and adapted to your project.</p>
+<h2 id="delete-che-deployment">Delete Che Deployment</h2>
+
+<p>You can delete a deployment using the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm delete &lt;che-release-name&gt;
+</code></pre></div></div>
 
 
     <div class="tags">
@@ -891,11 +956,11 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_chedir.html" class="btn btn-default navbar-btn cursorNorm" role="button">chedir</a>
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
         
-        <a href="tag_factories.html" class="btn btn-default navbar-btn cursorNorm" role="button">factories</a>
+        <a href="tag_kubernetes.html" class="btn btn-default navbar-btn cursorNorm" role="button">kubernetes</a>
         
         
         

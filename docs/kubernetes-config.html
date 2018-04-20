@@ -297,7 +297,21 @@
           
           
           
+          <li><a href="kubernetes-multi-user.html">Kubernetes - Multi User</a></li>
+          
+          
+          
+          
+          
+          
           <li class="active"><a href="kubernetes-config.html">Kubernetes - Configuration</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="kubernetes-admin-guide.html">Kubernetes - Admin Guide</a></li>
           
           
           
@@ -328,6 +342,13 @@
           
           
           <li><a href="openshift-config.html">OpenShift - Configuration</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="openshift-admin-guide.html">OpenShift - Admin Guide</a></li>
           
           
           
@@ -452,7 +473,7 @@
           
           
           
-          <li><a href="stacks.html">Stacks</a></li>
+          <li><a href="stacks.html">Workspace - Stacks</a></li>
           
           
           
@@ -652,13 +673,6 @@
           
           
           
-          <li><a href="ide-extensions-js.html">SDK - JavaScript IDE Extensions</a></li>
-          
-          
-          
-          
-          
-          
           <li><a href="server-side-extensions.html">SDK - Server Side Extensions</a></li>
           
           
@@ -835,81 +849,34 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="how-it-works">How It Works</h2>
 
-<p>You can configure deployment of Che on Kubernetes by editing env variables that are defined in <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml">che-kubernetes.yaml</a> file. Once done, execute <code class="highlighter-rouge">kubectl --namespace=che apply -f che-kubernetes.yaml </code>. Che deployment will be updated which automatically triggers a new deployment. This page focuses on some of the envs. You can either look at <a href="docker-config.html">Docker configuration page</a> or <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a> file.</p>
+<p>Che server behavior can be configured by passing environment variables to Che deployment.</p>
 
-<p>We use recreate strategy. When the initial Che pod is shut down, server forcefully stops all workspace pods. Users working in those workspace will see a notification that the workspace is not running anymore. It does not impact data persistence - all workspace project files mounted through PVCs.</p>
-
-<h2 id="namespace-for-workspaces">Namespace for Workspaces</h2>
-
-<p>You can instruct Che server in what namespace(s) to create workspace pods. There are two scenarios. By default, every new workspace pod is created in a new namespace which is dictated by the following env:</p>
-
-<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_NAMESPACE=""</code></p>
-
-<p>You may have one common namespace for all workspace pods:</p>
-
-<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_NAMESPACE="che-workspaces"</code></p>
-
-<h2 id="volumes">Volumes</h2>
-
-<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_STRATEGY="unique"</code></p>
-
-<p>There are two <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volume Claim</a> strategies:</p>
+<p>There are multiple ways to edit Che deployment to add new or edit existing envs:</p>
 
 <ul>
-  <li><strong>unique</strong> - each workspace volume gets own PVC.  This is the default strategy. When a workspace is deleted, associated PVCs are deleted as well. However, an associated PVs may not be recycled and tghus cannot be re-used for a new claim. See <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#recycling">k8s docs</a>.</li>
-  <li><strong>common</strong> - there is one PVC for all workspaces. When a PVC is shared with all workspaces, there’s a special service pod that starts before workspace is created to create a subpath in the PV for this particular ws. When a workspace is deleted an associated subpath is deleted as well.</li>
+  <li><code class="highlighter-rouge">kubectl edit dc/che</code> opens Che deployment yaml in nano editor (VIM is used by default)</li>
+  <li>manually in Kubernetes web console &gt; deployments &gt; Che &gt; Edit</li>
+  <li><code class="highlighter-rouge">kubectl set env dc/che KEY=VALUE KEY1=VALUE1</code> updates Che deployment with new envs or modifies values of existing ones</li>
 </ul>
 
-<p>If a common strategy is set, it is impossible to run multiple workspaces simultaneously because of a default <code class="highlighter-rouge">ReadWriteOnce</code> <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">access mode</a> for workspace PVCs.</p>
+<h2 id="what-can-be-configured">What Can Be Configured?</h2>
 
-<h2 id="https-mode">HTTPS Mode</h2>
+<p>You can find deployment env or config map in yaml files. However, they do not reference a complete list of environment variables that Che server will respect.</p>
 
-<p>Che on Kubernetes doesn’t support HTTPS mode yet.</p>
+<p>Here is a <a href="https://github.com/eclipse/che/tree/master/assembly/assembly-wsmaster-war/src/main/webapp/WEB-INF/classes/che">complete</a> list of all properties that are configurable for Che server.</p>
 
-<h2 id="scalability">Scalability</h2>
+<p>You can manually convert properties into envs, just make sure to follow <a href="properties.html#properties-and-environment-variables">instructions on properties page</a></p>
 
-<p>To be able to run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from Kubernetes (usually it’s <code class="highlighter-rouge">no available nodes</code> kind of error).</p>
+<h2 id="admin-guide">Admin Guide</h2>
 
-<h2 id="debug-mode">Debug Mode</h2>
+<p>Find more information on most critical configuration options at <a href="kubernetes-admin-guide.html">Kubernetes admin guide</a></p>
 
-<p>If you want Che server to run in a debug mode set the following env before running the script (false by default):</p>
+<h2 id="che-workspace-unrecoverable-events">Che Workspace Unrecoverable Events</h2>
 
-<p><code class="highlighter-rouge">CHE_DEBUG_SERVER=true</code></p>
+<p>By default, if one of the following Kubernetes / OpenShift events (<code class="highlighter-rouge">Failed Mount</code> / <code class="highlighter-rouge">Failed Scheduling</code> / <code class="highlighter-rouge">Failed</code>) occurs during a startup, workspace will be immediately terminated before timeout.
+For changing or disabling (via a blank value) default unrecoverable events the following environment variable should be used:</p>
 
-<h2 id="image-pull-policy">Image Pull Policy</h2>
-
-<p>If you want to always have the latest nightly image or use own latest tags when developing and testing Che</p>
-
-<p><code class="highlighter-rouge">IMAGE_PULL_POLICY</code></p>
-
-<h2 id="private-docker-registries">Private Docker Registries</h2>
-
-<p>Refer to <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">Kubernetes documentation</a></p>
-
-<h2 id="che-server-logs">Che Server Logs</h2>
-
-<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">kubectl get log dc/che</code></li>
-  <li><code class="highlighter-rouge">kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code class="highlighter-rouge">oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</li>
-  <li>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</li>
-</ul>
-
-<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash.
-To configure JSON logging instead of plain text environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL</code> should have value <code class="highlighter-rouge">json</code>.
-See more at <a href="logging.html">logging docs</a>.</p>
-
-<h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
-
-<p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults ‘0’, which allows to terminate
-pods almost instantly and significantly decrease the time required for stopping a workspace. For increasing grace termination period the following environment variable should be used:</p>
-
-<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_POD_TERMINATION__GRACE__PERIOD__SEC</code></p>
-
-<p><span style="color:red;"><strong>IMPORTANT!</strong></span></p>
-
-<p>If <code class="highlighter-rouge">terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
+<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_WORKSPACE_UNRECOVERABLE_EVENTS</code></p>
 
 
 
@@ -939,8 +906,8 @@ pods almost instantly and significantly decrease the time required for stopping 
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               04/03/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Apr 3, 2018 <br />
+               04/20/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
+ Site last generated: Apr 20, 2018 <br />
 <p><img src="images/che_logo.png" alt="Eclise Che"/></p>
                 </div>
             </div>
