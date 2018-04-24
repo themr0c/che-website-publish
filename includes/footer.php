@@ -15,7 +15,7 @@
             <li><a href="<?php echo $rootPath; ?>/">Eclipse Che</a></li>
             <li><a href="<?php echo $rootPath; ?>/technology/">Technology</a></li>
             <li><a href="<?php echo $rootPath; ?>/features/">Features</a></li>
-            <li><a href="<?php echo $rootPath; ?>/checonf/">CheConf</a></li>
+            <li><a href="<?php echo $rootPath; ?>/checonf18/">CheConf</a></li>
             <!--<li><a href="<?php echo $rootPath; ?>/media/">Articles</a></li>-->
             <li><a href="https://medium.com/eclipse-che-blog" target="_blank">Blog</a></li>
             <li><a href="https://github.com/eclipse/che/" target="_blank">GitHub</a></li>

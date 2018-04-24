@@ -1,4 +1,4 @@
-<?php 
+<?php
   include '../includes/variables.php';
 
   // Define page title
@@ -15,8 +15,8 @@
   <div class="container-fluid" id="top">
     <h1>Features</h1>
     <ul class="col-sm-4">
-      <li><a href="#prod-runtimes">Prouduction Runtimes</a></li>
-      <li><a href="#dev-mode">“Dev Mode” your Workspace</a></li>
+      <li><a href="#prod-runtimes">Production Runtimes</a></li>
+      <li><a href="#dev-mode">“Dev Mode” Your Workspace</a></li>
       <li><a href="#any-ide">Use any IDE</a></li>
       <li><a href="#team">Team-Based Development</a></li>
       <li><a href="#lsp">Language Server Protocol</a></li>
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="dev-mode">
     <div class="col-sm-6">
       <h2>“Dev Mode” your Workspace</h2>
@@ -106,7 +106,7 @@
       <a href="../images/features/img-technology-eclipse-desktop.png"><img alt="" class="img-responsive" src="../images/features/img-technology-eclipse-desktop.png" /></a>
     </div>
   </div>
-  
+
   <div class="row" id="team">
     <div class="col-sm-6">
       <h2>Team-Based Development</h2>
@@ -137,7 +137,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="debuggers">
     <div class="col-sm-6">
       <h2>Debuggers</h2>
@@ -163,7 +163,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="stacks">
     <div class="col-sm-6">
       <h2>Stacks</h2>
@@ -176,7 +176,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="restful-workspaces">
     <div class="col-sm-6">
       <h2>RESTful Workspaces</h2>
@@ -188,7 +188,7 @@
       <a href="../images/features/img-features-RESTful.png"><img alt="" class="img-responsive" src="../images/features/img-features-RESTful.png" /></a>
     </div>
   </div>
-  
+
   <div class="row" id="cloud-ide">
     <div class="col-sm-6">
       <h2>Cloud IDE</h2>
@@ -202,7 +202,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="multi-project">
     <div class="col-sm-6">
       <h2>Multi-Project</h2>
@@ -215,7 +215,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="commands">
     <div class="col-sm-6">
       <h2>Commands</h2>
@@ -229,7 +229,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="previews">
     <div class="col-sm-6">
       <h2>Previews</h2>
@@ -273,7 +273,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="open-source">
     <div class="col-sm-6">
       <h2>Open Source to the Core</h2>
@@ -287,7 +287,7 @@
     </div>
   </div>
 
-  
+
   <div class="row" id="love">
     <div class="col-sm-6">
       <h2>Dogfooded With Love</h2>
