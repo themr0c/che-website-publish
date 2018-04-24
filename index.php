@@ -38,7 +38,7 @@
       <div class="col-md-6">
         <h3>Local Install</h3>
         <p>Install Eclipse Che on localhost or shared server.</p>
-        <a href="<?php echo $rootPath; ?>/docs/6/che/docs/quick-start.html" class="btn-yellow">Download</a>
+        <a href="<?php echo $rootPath; ?>/docs/quick-start.html" class="btn-yellow">Download</a>
 
       </div>
 
@@ -175,7 +175,7 @@
         <td>
           <h4>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h4>
           <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
-          <a href="<?php echo $rootPath; ?>/docs/6/che/docs/chedir-getting-started.html" class="btn-yellow" target="_blank">Learn More</a>
+          <a href="<?php echo $rootPath; ?>/docs/chedir-getting-started.html" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>

@@ -79,7 +79,7 @@
       <h3>Extension Providers</h3>
       <p>Package stacks, templates, extensions, and plug-ins to create new developer tooling. Dozens of existing extensions and stacks to leverage.</p>
       <p>
-      <a href="../docs/6/che/docs/framework-overview.html">Customize Che</a><br>
+      <a href="../docs/framework-overview.html">Customize Che</a><br>
     </div>
   </div> <!-- .row -->
 </div><!-- .contributors -->
@@ -92,16 +92,16 @@
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <h3>Cloud IDE</h3>
-    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Want to extend the IDE? Check out our <a href="../docs/6/che/docs/framework-overview.html" target="blank">extension builder's guide</a> for help.</p>
+    <p>Che’s browser IDE is built on an extensible plug-in platform that enables panels, menus, wizards, popups and tools. With an Orion editor experience, server-side RESTful code intellisense, and distributable workspaces, the developer experience and non-blocking performance will surprise you. Want to extend the IDE? Check out our <a href="../docs/framework-overview.html" target="blank">extension builder's guide</a> for help.</p>
 
     <h3>Workspace Server</h3>
-    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="../docs/6/che/docs/what-are-workspaces.html" target="blank">documentation</a>, or see the <a href="../docs/6/che/docs/rest-api.html">API</a>.</p>
+    <p>The Che server controls the lifecycle of workspaces and can be customized with plug-ins. Any client can communicate with the workspace server and any spawned workspaces. Read more in our <a href="../docs/what-are-workspaces.html" target="blank">documentation</a>, or see the <a href="../docs/rest-api.html">API</a>.</p>
 
     <h3>Workspaces</h3>
-    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="../docs/6/che/docs/what-are-workspaces.html" target="blank">documentation</a>.</p>
+    <p>Workspaces are isolated and personal spaces for developer work. Whether developers use an API, browser, CLI, or SSH to access a workspace, their projects are synchronized and kept consistent. Plug-ins enable service injection into workspaces based upon project type, making every workspace tailored to the projects it manages. Read more in our <a href="../docs/what-are-workspaces.html" target="blank">documentation</a>.</p>
 
     <h3>Extensions</h3>
-    <p>Che includes a growing set of extensions. You can <a href="../docs/6/che/docs/framework-overview.html" target="blank">create and package</a> your own. You can also extend Che's <a href="../docs/6/che/docs/recipes.html" target="blank">recipes</a>, <a href="../docs/6/che/docs/stacks.html" target="blank">stacks</a>, <a href="../docs/6/che/docs/commands-ide-macro.html" target="blank">commands</a>, and <a href="../docs/6/che/docs/servers.html" target="blank">machines</a>.</p>
+    <p>Che includes a growing set of extensions. You can <a href="../docs/framework-overview.html" target="blank">create and package</a> your own. You can also extend Che's <a href="../docs/recipes.html" target="blank">recipes</a>, <a href="../docs/stacks.html" target="blank">stacks</a>, <a href="../docs/commands-ide-macro.html" target="blank">commands</a>, and <a href="../docs/servers.html" target="blank">machines</a>.</p>
     <div class="row">
       <div class="col-md-3 col-sm-6">
         <h5>Languages</h5>
