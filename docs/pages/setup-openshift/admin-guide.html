@@ -9,7 +9,7 @@
 <title> | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
 <link rel="stylesheet" href="css/modern-business.css">
 <!-- Latest compiled and minified CSS -->
@@ -19,16 +19,16 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
 <script src="js/jquery.navgoco.min.js"></script>
 
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!-- Anchor.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
@@ -1057,6 +1057,21 @@ See more at <a href="logging.html">logging docs</a>.</p>
 
 <p>Workspace logs are stored in an PV bound to <code class="highlighter-rouge">che-claim-workspace</code> PVC. Workspace logs include logs from workspace agent, [boostrapper][boostrapper] and other agents if applicable.</p>
 
+<h2 id="che-master-states">Che Master States</h2>
+
+<p>There is three possible states of the master - <code class="highlighter-rouge">RUNNING</code>, <code class="highlighter-rouge">PREPARING_TO_SHUTDOWN</code> and <code class="highlighter-rouge">READY_TO_SHUTDOWN</code>.
+<code class="highlighter-rouge">PREPARING_TO_SHUTDOWN</code> state may imply two different behaviors:</p>
+<ul>
+  <li>When no new workspace startups allowed, and all running workspaces are forcibly stopped;</li>
+  <li>When no new workspace startups allowed, any workspaces that are currently starting or stopping is allowed to finish that process,
+ and running workspaces doesn’t stopped.
+This option is possible only for the infrastructures that support workspaces recovery. For those are didn’t, automatic fallback to the shutdown with
+full workspaces stopping will be performed.
+Therefore, <code class="highlighter-rouge">/api/system/stop</code>  API contract changed slightly - now it tries to do the second behavior by default. Full shutdown with workspaces stop
+can be requested with <code class="highlighter-rouge">shutdown=true</code> parameter.
+When preparation process in finished, <code class="highlighter-rouge">READY_TO_SHUTDOWN</code> state will be set which allows to stop current Che master instance.</li>
+</ul>
+
 <h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
 
 <p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults ‘0’, which allows to terminate
@@ -1067,6 +1082,22 @@ pods almost instantly and significantly decrease the time required for stopping 
 <p><span style="color:red;"><strong>IMPORTANT!</strong></span></p>
 
 <p>If <code class="highlighter-rouge">terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
+
+<h2 id="recreate-update">Recreate Update</h2>
+<p>To perform Recreate type update without stopping active workspaces:</p>
+
+<ul>
+  <li>Make sure there is full compatibility between new master and old ws agent versions (API etc);</li>
+  <li>Make sure deployment update strategy set to Recreate</li>
+  <li>
+    <p>Make POST request to the /api/system/stop api to start WS master suspend
+(means that all new attempts to start workspaces will be refused, and all current starts/stops will be finished).
+Note that this method requires system admin credentials.</p>
+  </li>
+  <li>Make periodical GET requests to /api/system/state api, until it returns READY_TO_SHUTDOWN state.
+Also, it may be visually controlled by line “System is ready to shutdown” in the server logs</li>
+  <li>Perform new deploy.</li>
+</ul>
 
 <h2 id="delete-deployments">Delete deployments</h2>
 
@@ -1111,9 +1142,14 @@ kubectl delete pvc <span class="nt">-l</span><span class="o">=</span><span class
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               04/20/18 <br /> Eclipse Che: Eclipse Public License - v 1.0. <br />
- Site last generated: Apr 20, 2018 <br />
-<p><img src="images/che_logo.png" alt="Eclise Che"/></p>
+                    Eclipse Che - Documentation <br/>
+                    Site last generated: May 18, 2018 <br/>
+                    <hr>
+                    <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
+                    <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
+                    <a href="http://www.eclipse.org/legal/termsofuse.php" target="_blank">Terms of Use</a><br/>
+                    <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">Eclipse Public License</a><br/>
+                    <a href="http://www.eclipse.org/legal" target="_blank">Legal Resources</a><br/>
                 </div>
             </div>
 </footer>
