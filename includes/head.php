@@ -36,8 +36,8 @@
 
     <title><?php echo $pageTitle; ?></title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css' crossorigin="anonymous">
     <link href="<?php echo $rootPath; ?>/stylesheets/all.css" rel="stylesheet" />
     <?php
     if ($customCss) {
