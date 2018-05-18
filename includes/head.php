@@ -48,6 +48,18 @@
     <script src="<?php echo $rootPath; ?>/javascripts/all.js"></script>
     <script src="<?php echo $rootPath; ?>/javascripts/bootstrap.min.js"></script>
 
+
+    <!-- Eclipse Foundation cookie consent: -->
+    <link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+    <script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+    </head>
+
     <!-- Tracking Snippets -->
     <!-- GOOGLE TAG MANAGER -->
     <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-T9PJ53"
