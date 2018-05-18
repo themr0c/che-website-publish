@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Community</h1>
-    <h3>A big thank you to the speakers, Eclipse Foundation, our contributors, and the open source community for making our first CheConf a huge success. <br><a href="../checonf/sessions.html" target="_blank">Watch CheConf Sessions</a></h3>
+    <h3>A big thank you to the speakers, Eclipse Foundation, our contributors, and the open source community for making our first CheConf a huge success. <br><a href="../checonf18/sessions.html" target="_blank">Watch CheConf Sessions</a></h3>
 
     <a href="http://www.infoq.com/presentations/eclipse-che-eclipsecon-2016" target="_blank"><img src="../images/hero-eclipsecon@2x.jpg" alt="Watch the Keynote" class="img-responsive"></a>
   </div> <!-- /.container-fluid -->
@@ -26,7 +26,7 @@
   <div class="row">
     <div class="col-sm-6">
       <img src="../images/img-comm-highlights-octocat@2x.png" alt="3000 Github Stars">
-      <h2>3500+ GitHub Stars</h2>
+      <h2>4700+ GitHub Stars</h2>
       <p>Thank you for the love! The Che GitHub repo is now a featured showcase and frequently one of the fastest growing Java projects. We are getting 50 new GitHub issues / week. Let's keep collaborating together.</p>
       <a href="https://github.com/eclipse/che/" target="_blank" class="btn-yellow">GitHub Repo</a>
     </div>
