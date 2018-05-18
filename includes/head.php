@@ -71,6 +71,8 @@
     })(window,document,'script','dataLayer','GTM-5WLCZXC');</script>
     <!-- END GOOGLE TAG MANAGER -->
 
+    <!-- GITHUB BUTTON -->
+    <script async defer src="https://buttons.github.io/buttons.js" crossorigin="anonymous"></script>
 
 
   </head>
