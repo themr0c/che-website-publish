@@ -875,8 +875,6 @@ $('#toc').on('click', 'a', function() {
 
 <p>To enable https for server and workspace routes, follow instructions in <a href="openshift-single-user.html">setup docs single user</a> and <a href="openshift-multi-user.html">multi-user</a>. To migrate an existing Che deployment to https, do the following:</p>
 
-<p><span style="color:red;">IMPORTANT!</span> Self-signed certificates aren’t acceptable.</p>
-
 <ol>
   <li>Update Che deployment with <code class="highlighter-rouge">PROTOCOL=https, WS_PROTOCOL=wss, TLS=true</code></li>
   <li>Manually edit or recreate routes for Che and Keycloak <code class="highlighter-rouge">oc apply -f https</code></li>
@@ -885,6 +883,54 @@ Default credentials are <code class="highlighter-rouge">admin:admin</code>.
 Go to Clients, <code class="highlighter-rouge">che-public</code> client and edit <strong>Valid Redirect URIs</strong> and <strong>Web Origins</strong> URLs so that they use <strong>https</strong> protocol.
 You do not need to do that if you initially deploy Che with https support.</li>
 </ol>
+
+<h2 id="https-mode---self-signed-certs">HTTPS Mode - Self-Signed Certs</h2>
+
+<p>If you enable HTTPS mode for multi-user Che on an OpenShift installation that does not have certificates signed by a public authority, it won’t be possible to start workspaces or even login.
+There is a lot of communication between Che server and workspace agents, Che server and Keycloak. Therefore, self signed certs should be added to Java trust store of Che server and Keycloak (only for a multi user Che deployment) pods, as well as workspace images. While there is automation for Che server and Keycloak, certs should be manually added to workspace images, since adding a root certificate requires sudo privileges which an arbitrary OpenShift user may not have.</p>
+
+<ul>
+  <li>Create a secret with certificate:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CERTIFICATE=$(cat /path/to/openshift/ca.crt)
+oc new-app -f deploy/openshift/templates/multi/openshift-certificate-secret.yaml -p CERTIFICATE="${CERTIFICATE}"
+</code></pre></div></div>
+<p>Once created, <code class="highlighter-rouge">OPENSHIFT_IDENTITY_PROVIDER_CERTIFICATE</code> env takes cert file content as a value and is then used in entrypoints of Che server and Keycloak images.</p>
+
+<ul>
+  <li>
+    <p>Deploy Che in https mode: <a href="openshift-single-user.html#https-mode">single user</a>, <a href="openshift-multi-user.html#openshift-container-platform">multi-user</a></p>
+  </li>
+  <li>
+    <p>Build an image with your certificate and push it to a registry. Example of a Dockerfile:</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM eclipse/ubuntu_jdk8
+ADD ca.crt /usr/local/share/ca-certificates/ca.crt
+RUN sudo update-ca-certificates
+RUN cd ${HOME} &amp;&amp; \
+    echo yes | keytool -keystore minishift.jks -importcert -alias HOSTDOMAIN -file /usr/local/share/ca-certificates/ca.crt -storepass minishift
+</code></pre></div></div>
+
+<p>Then run <code class="highlighter-rouge">docker build -t yourOrg/yourImage:yourTag .</code> You need to have OpenShift self signed cert (<code class="highlighter-rouge">ca.crt</code> in this example) in the same directory with a Dockerfile.</p>
+
+<p>If you inherit from Fedora, CentOS or RHEL image, the Dockerfile will look a bit different:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ADD ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
+RUN sudo update-ca-trust
+</code></pre></div></div>
+
+<ul>
+  <li>Add self signed cert to your browser. In Chrome, go to <code class="highlighter-rouge">chrome://settings/certificates &gt; Authorities &gt; Import</code></li>
+</ul>
+
+<figure><img class="docimage" src="images/workspaces/chrome_certs.png" alt="" /></figure>
+
+<ul>
+  <li>Create a <a href="creating-starting-workspaces.html#creating workspaces">custom stack</a> (or update existing one) with the newly built image.</li>
+</ul>
 
 <h2 id="private-docker-registries">Private Docker Registries</h2>
 
@@ -1038,7 +1084,7 @@ POSTGRES_PASSWORD=keycloak
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: May 18, 2018 <br/>
+                    Site last generated: Jun 5, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

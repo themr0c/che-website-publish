@@ -925,6 +925,10 @@ $('#toc').on('click', 'a', function() {
   </tbody>
 </table>
 
+<p><strong>OpenShift-specific feature: create workspace objects in a personal namespace</strong></p>
+
+<p>When Che is deployed on OpenShift in multi-user mode, there is an additional option that allows creating workspace objects <strong>on behalf of the currently logged-in user</strong>, instead of using the configured user described above. Refer to the <a href="openshift-admin-guide#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</p>
+
 <h2 id="storage-overview">Storage Overview</h2>
 
 <p>Che server, Keycloak and Postgres pods, as well as workspace pods use PVCs that are then bound to PVs with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. Che PVCs are defined in deployment yamls, while <a href="#che-workspaces-storage">workspace PVC</a> access mode and claim size is configurable through Che deployment environment variables.</p>
@@ -1088,7 +1092,7 @@ pods almost instantly and significantly decrease the time required for stopping 
 
 <ul>
   <li>Make sure there is full compatibility between new master and old ws agent versions (API etc);</li>
-  <li>Make sure deployment update strategy set to Recreate</li>
+  <li>Make sure deployment update strategy set to Recreate;</li>
   <li>
     <p>Make POST request to the /api/system/stop api to start WS master suspend
 (means that all new attempts to start workspaces will be refused, and all current starts/stops will be finished).
@@ -1098,6 +1102,44 @@ Note that this method requires system admin credentials.</p>
 Also, it may be visually controlled by line “System is ready to shutdown” in the server logs</li>
   <li>Perform new deploy.</li>
 </ul>
+
+<h2 id="rolling-update">Rolling Update</h2>
+<p>To perform Rolling type update without stopping active workspaces, the following preconditions required:</p>
+
+<ul>
+  <li>Make sure deployment update strategy set to Rolling;</li>
+  <li>Make sure there is full API compatibility between new master and old ws agent versions, as well as database compatibility
+(since it is impossible to use DB migrations on this update mode);</li>
+  <li>Make sure <code class="highlighter-rouge">terminationGracePeriodSeconds</code> deployment parameter has enough value (see details below).</li>
+</ul>
+
+<p>After that preconditions is done, press Deploy button or execute <code class="highlighter-rouge">oc rollout latest che</code> from cli client will start the process.</p>
+
+<p>Unlike the Recreate update, the Rolling update type does not imply any Che server downtime,
+since new deployment is starting in parallel and traffic is hot-switched.
+(Typically there is 5-6 sec period of Che server API unavailability due to routes switching).</p>
+
+<h4 id="known-issues">Known issues</h4>
+
+<ul>
+  <li>
+    <p>Workspaces that are started shortly (5-30sec) before the network traffic is switched to the new pod, may fallback to the stopped state.
+That happens because bootstrappers uses Che server route URL for notifying Che Server when bootstrapping is done. Since traffic is already switched
+to the new Che server, old one cannot get bootstrapper-s report, and fails the start after waiting timeout reached.
+If old Che server will be killed before this timeout, workspaces can stuck in the <code class="highlighter-rouge">STARTING</code> state.
+So the <code class="highlighter-rouge">terminationGracePeriodSeconds</code> parameter must define time enough to cover workspace start timeout timeout (which is 8 min by def.) plus some additional timings.
+Typically, setting  <code class="highlighter-rouge">terminationGracePeriodSeconds</code> to 540 sec is enough to cover all timeouts.</p>
+  </li>
+  <li>
+    <p>Some users may experience problems with websocket reconnections or missed events published by WebSocket connection(when a workspace is STARTED but dashboard displays that it is STARTING); Need to reload page to restore connections and actual workspaces states.</p>
+  </li>
+</ul>
+
+<h2 id="update-with-db-migrations-or-api-incompatibility">Update with DB migrations or API incompatibility</h2>
+<p>If new version of Che server contains some DB migrations, but there is still API compatibility between old and new version,
+recreate update type may be used, without stopping running workspaces.</p>
+
+<p>API incompatible versions should be updated with full workspaces stop. It means that <code class="highlighter-rouge">/api/system/stop?shutdown=true</code> must be called prior to update.</p>
 
 <h2 id="delete-deployments">Delete deployments</h2>
 
@@ -1143,7 +1185,7 @@ kubectl delete pvc <span class="nt">-l</span><span class="o">=</span><span class
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: May 18, 2018 <br/>
+                    Site last generated: Jun 5, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

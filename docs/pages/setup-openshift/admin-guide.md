@@ -50,6 +50,10 @@ Advantages and disadvantages of using token, username/pass, and service account:
 |**Username/Password** | Objects can be created outside Che namespace | If username/pass are changed, they need to be updated in Che deployment as well. Many authentication types like oAuth make it impossible to login with username/pass
 | **Service account**   | No expiration risks                          | Cannot create objects outside its namespace unless given admin privileges
 
+**OpenShift-specific feature: create workspace objects in a personal namespace**
+
+When Che is deployed on OpenShift in multi-user mode, there is an additional option that allows creating workspace objects **on behalf of the currently logged-in user**, instead of using the configured user described above. Refer to the [OpenShift Admin Guide](openshift-admin-guide#create-workspace-objects-in-personal-namespaces) for more details about how it works.
+
 ## Storage Overview
 
 Che server, Keycloak and Postgres pods, as well as workspace pods use PVCs that are then bound to PVs with [ReadWriteOnce access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes). Che PVCs are defined in deployment yamls, while [workspace PVC](#che-workspaces-storage) access mode and claim size is configurable through Che deployment environment variables.
@@ -185,7 +189,7 @@ If `terminationGracePeriodSeconds` have been explicitly set in Kubernetes / Open
 To perform Recreate type update without stopping active workspaces:
 
 - Make sure there is full compatibility between new master and old ws agent versions (API etc);
-- Make sure deployment update strategy set to Recreate
+- Make sure deployment update strategy set to Recreate;
 - Make POST request to the /api/system/stop api to start WS master suspend
 (means that all new attempts to start workspaces will be refused, and all current starts/stops will be finished).
 Note that this method requires system admin credentials.
@@ -193,6 +197,39 @@ Note that this method requires system admin credentials.
 - Make periodical GET requests to /api/system/state api, until it returns READY_TO_SHUTDOWN state.
 Also, it may be visually controlled by line "System is ready to shutdown" in the server logs
 - Perform new deploy.
+
+
+##  Rolling Update
+To perform Rolling type update without stopping active workspaces, the following preconditions required:
+
+- Make sure deployment update strategy set to Rolling;
+- Make sure there is full API compatibility between new master and old ws agent versions, as well as database compatibility
+  (since it is impossible to use DB migrations on this update mode);
+- Make sure `terminationGracePeriodSeconds` deployment parameter has enough value (see details below).
+
+After that preconditions is done, press Deploy button or execute `oc rollout latest che` from cli client will start the process.
+
+Unlike the Recreate update, the Rolling update type does not imply any Che server downtime,
+since new deployment is starting in parallel and traffic is hot-switched.
+(Typically there is 5-6 sec period of Che server API unavailability due to routes switching).
+
+####  Known issues
+
+- Workspaces that are started shortly (5-30sec) before the network traffic is switched to the new pod, may fallback to the stopped state.
+That happens because bootstrappers uses Che server route URL for notifying Che Server when bootstrapping is done. Since traffic is already switched
+to the new Che server, old one cannot get bootstrapper-s report, and fails the start after waiting timeout reached.
+If old Che server will be killed before this timeout, workspaces can stuck in the `STARTING` state.
+So the `terminationGracePeriodSeconds` parameter must define time enough to cover workspace start timeout timeout (which is 8 min by def.) plus some additional timings.
+Typically, setting  `terminationGracePeriodSeconds` to 540 sec is enough to cover all timeouts.
+
+- Some users may experience problems with websocket reconnections or missed events published by WebSocket connection(when a workspace is STARTED but dashboard displays that it is STARTING); Need to reload page to restore connections and actual workspaces states.
+
+
+## Update with DB migrations or API incompatibility
+If new version of Che server contains some DB migrations, but there is still API compatibility between old and new version,
+recreate update type may be used, without stopping running workspaces.
+
+API incompatible versions should be updated with full workspaces stop. It means that `/api/system/stop?shutdown=true` must be called prior to update.
 
 ## Delete deployments
 

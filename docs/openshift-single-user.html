@@ -1003,6 +1003,21 @@ oc apply <span class="nt">-f</span> che-server-pvc.yaml
 oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
 </code></pre></div></div>
 
+<h2 id="https-mode">HTTPS Mode</h2>
+
+<p><span style="color:red;">IMPORTANT!</span> Find instructions on adding self signed certs at <a href="openshift-config.html#https-mode---self-signed-certs">OpenShift Configuration page</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-project che
+
+oc new-app -f che-server-template.yaml -p ROUTING_SUFFIX=$(minishift ip).nip.io \
+                                       -p PROTOCOL=https \
+                                       -p WS_PROTOCOL=wss \
+                                       -p TLS=true
+oc apply -f che-server-pvc.yaml
+oc set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume
+oc apply -f https/che-route-tls.yaml
+</code></pre></div></div>
+
 <h2 id="openshift-container-platform">OpenShift Container Platform</h2>
 
 <p>Same instructions as in <a href="#minishift-templates">MiniShift</a>, however, you need to provide a valid <a href="#what-is-my-routing-suffix">ROUTING_SUFFIX</a>.</p>
@@ -1052,7 +1067,7 @@ oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: May 18, 2018 <br/>
+                    Site last generated: Jun 5, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

@@ -865,47 +865,18 @@ $('#toc').on('click', 'a', function() {
   <li><strong>org.eclipse.che.multiuser.machine.authentication.server.MachineLoginFilter</strong> - finds userId given token belongs to, than retrieves user instance and sets principal to the session.</li>
 </ul>
 
-<h2 id="auth-on-agents">Auth on agents</h2>
+<h2 id="auth-filters-on-agents">Auth Filters on agents</h2>
 <p>Agents cannot be queried using Keycloak token, so there is only Machine Token option. Machine token can be passed in header or query param.</p>
 
 <ul>
-  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on a master, the only thing that is different it’s a way how agent obtains the public signature part. The public key for the signature check is placed in a machine environment, with algorithm description.</li>
-  <li><strong>auth.auth.go</strong> - the entry point for all request that is proceeding on go agents side, the logic of token verification is similar with MachineLoginFilter.</li>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on master, except that user data queried from master’s user REST api.</li>
 </ul>
-
-<p>The way how Che master interacts with agents with enabled authentication mechanism is the following:</p>
-<figure><img class="docimage" src="images/diagrams/machine_auth_flow.png" alt="" /></figure>
 
 <h2 id="keycloak-vs-machine-token">Keycloak vs Machine Token</h2>
 
 <p>Machine tokens were introduced to avoid passing the Keycloak tokens to the machine side (which can be potentially insecure). Another reason is that Keycloak tokens may have relatively small lifetime and require periodical renewal/refresh which is hard to manage and keep in sync with same user session tokens on clients e.t.c.</p>
 
-<p>So from the implementation side, it is the simple 3-side <strong>User</strong> &lt;-&gt; <strong>Workspace</strong> &lt;-&gt; <strong>Machine Token</strong> mapping, and a token is injected into the machine during its startup and remains valid until the workspace will be stopped.
-Like the JWT machine token contains the header, payload and signature. The structure of token and the signature are different to Keycloak and have the following view:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">#</span><span class="w"> </span><span class="err">Header</span><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="s2">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS512"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"machine_token"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span><span class="err">#</span><span class="w"> </span><span class="err">Payload</span><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="s2">"wsid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"workspacekrh99xjenek3h571"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b07e3a58-ed50-4a6e-be17-fcf49ff8b242"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"jti"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c73349-2242-45f8-a94c-722e081bb6fd"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span><span class="err">#</span><span class="w"> </span><span class="err">Signature</span><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RSASHA512(base64UrlEncode(header) + . +  base64UrlEncode(payload))"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span></code></pre></div></div>
-<p>The algorithm that is used for signing machine tokens is <code class="highlighter-rouge">SHA-512</code> and it’s not configurable for now. Also, there is no public service that distributes the public part of the key pair with which the token was signed. But in each machine, there must be environment variables that contains key value. Environment properties description:</p>
-
-<p>Contains information about the algorithm which the token was signed<br />
-<code class="highlighter-rouge">CHE_MACHINE_AUTH_SIGNATURE__ALGORITHM</code><br />
-Contains public key value encoded in Base64<br />
-<code class="highlighter-rouge">CHE_MACHINE_AUTH_SIGNATURE__PUBLIC__KEY</code></p>
+<p>So from implementation side, it is the simple 3-side <strong>User</strong> &lt;-&gt; <strong>Workspace</strong> &lt;-&gt; <strong>Machine Token</strong> mapping, and token is injected into machine during its startup and remains valid until the workspace will be stopped. Unlike JWT, Machine token doesn’t carry any information inside, it’s just a randomly generated string. IDE as a general client, holds both of those tokens in multi-user mode, and uses them depending of where the request goes. Most of the job to obtain/refresh/invalidate of Keycloak tokens on IDE or Dashboard clients is outsourced to the native Keycloak js library.</p>
 
 <h2 id="obtaining-keycloak-endpoints">Obtaining Keycloak endpoints</h2>
 
@@ -971,7 +942,7 @@ Example output:</p>
   <li>get machine token from <code class="highlighter-rouge">runtime.machineToken</code> field, and put it in the upper bar <code class="highlighter-rouge">token</code> field</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"machineToken": "eyJhbGciOiJSUzUxMiIsImtpbmQiOiJtYWNoaW5lX3Rva2VuIn0.eyJ3c2lkIjoid29ya3NwYWNlMzEiLCJ1aWQiOiJ1c2VyMTMiLCJ1bmFtZSI6InRlc3RVc2VyIiwianRpIjoiOTAwYTUwNWYtYWY4ZS00MWQxLWFhYzktMTFkOGI5OTA5Y2QxIn0.UwU7NDzqnHxTr4vu8UqjZ7-cjIfQBY4gP70Nqxkwfx8EsPfZMpoHGPt8bfqLWVWkpp3OacQVaswAOMOG9Uc9FtLnQWnup_6vvyMo6gchZ1lTZFJMVHIw9RnSJAGFl98adWe3NqE_DdM02PyHb23MoHqE_xd8z3eFhngyaMImhc4",
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>machineToken": "machinet9854958jdsdhakdh48hsdg",
 </code></pre></div></div>
 
 <ul>
@@ -1009,7 +980,7 @@ Example output:</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: May 18, 2018 <br/>
+                    Site last generated: Jun 5, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
