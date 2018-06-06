@@ -854,6 +854,42 @@ $('#toc').on('click', 'a', function() {
 
 <p>Stacks are displayed in User Dashboard on Create a workspace page. You can filter them by type (single vs multi machine), scope (the ones displayed by default vs others), as well as search for a stack by keyword.</p>
 
+<h2 id="how-stacks-are-used">How Stacks Are Used?</h2>
+
+<p>As stacks are workspace templates, they are used to create workspace when in User Dashboard. See: <a href="creating-starting-workspaces.html">User Guide: Creating and Starting Workspaces</a>.</p>
+
+<h2 id="stack-sharing-and-system-stacks">Stack Sharing and System Stacks</h2>
+
+<p>Stacks that a user creates are available only for this user. Che users with system privileges can share created stacks with selected users or all users in the system. Currently, there are no UI controls for that, so a couple of REST calls need to be made:</p>
+
+<ul>
+  <li>Log in as admin</li>
+  <li>Find your stack ID: go to <code class="highlighter-rouge">/swagger/#!/stack/searchStacks</code> to get a list of all stacks (you may filter search by tags). Find your stack my name and get its ID.</li>
+  <li>The next API to use is: <code class="highlighter-rouge">/swagger/#!/permissions</code></li>
+  <li>Find the below POST method:</li>
+</ul>
+
+<figure><img class="docimage" src="images/workspaces/stack_permissions.png" alt="" /></figure>
+
+<ul>
+  <li>use the following JSON (replace <code class="highlighter-rouge">${STACK_ID}</code> with an actual ID)</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+</span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"domainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stack"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"instanceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${STACK_ID}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"read"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"search"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If you get 204, all users in the system will be able to see this stack. If you want to share a stack with a particular user, get its ID and use it instead of <code class="highlighter-rouge">*</code> in JSON.</p>
+
+<p>Similarly, an admin can remove permissions from stacks or remove out of the box stacks to replace them with custom ones. Stacks can be created wither in User Dashboard or using any REST client, for instance Swagger (<code class="highlighter-rouge">$CHE_HOST:$CHE_PORT/swagger</code>) bundled with Che.</p>
+
 <h2 id="stacks-loading">Stacks Loading</h2>
 
 <p>Stacks are loaded from a JSON file that is packaged into resources of a special component deployed with a workspace master. This JSON isn’t exposed to users and stack management is performed in User Dashboard (that uses REST API).</p>

@@ -932,6 +932,34 @@ RUN sudo update-ca-trust
   <li>Create a <a href="creating-starting-workspaces.html#creating workspaces">custom stack</a> (or update existing one) with the newly built image.</li>
 </ul>
 
+<h2 id="https-mode---letsencrypt">HTTPS Mode - Letsencrypt</h2>
+
+<p>Letsencrypt can issue wildcard certificates. There’s only one pre-requisite - your OpenShift installation should be under a <strong>public DNS name</strong>. The best way to solve TLS issue with Eclipse Che is to get Letsencrypt certs for <code class="highlighter-rouge">*.${OPENSHIFT_ROUTING_SUFFIX}</code> domain and then configure OpenShift router to use those certs. Once done, it will automatically make all secure routes that your OpenShift cluster generates trusted by all clients.</p>
+
+<p>To obtain a wildcard Letsencrypt certificate for your OpenShift router visit <a href="https://certbot.eff.org/">Certbot</a> page and follow instructions for your OS. Once done and key are generated, there are a few things you should do (requires OpenShift admin privileges) in default OpenShift namespace where router is deployed:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add the key to the cert
+cat fullchain.pem privkey.pem &gt; both.pem
+
+#  Backup the old config
+oc export secret router-certs &gt; ~/old-router-certs-secret.yaml
+
+# Replace the router certificate
+oc secrets new router-certs tls.crt=both.pem tls.key=privkey.pem -o json --type='kubernetes.io/tls' --confirm | oc replace -f -
+
+# Rollout the latest DC for the router
+oc rollout latest router
+</code></pre></div></div>
+
+<p>You may also find the following docs/blog posts helpful:</p>
+
+<ul>
+  <li><a href="https://docs.openshift.org/latest/install_config/redeploying_certificates.html#redeploying-custom-registry-or-router-certificates">OpenShift Docs</a></li>
+  <li><a href="https://blog.openshift.com/lets-encrypt-acme-v2-api/">OpenShift Blog</a></li>
+</ul>
+
+<p>After a router restarts, all secure routes in the cluster should be trusted, and you can deploy Che in https mode: <a href="openshift-single-user.html#https-mode">single user</a> or <a href="openshift-multi-user.html#openshift-container-platform">multi-user</a> or update your http Che installation.</p>
+
 <h2 id="private-docker-registries">Private Docker Registries</h2>
 
 <p>Refer to <a href="https://docs.openshift.com/container-platform/3.7/security/registries.html">OpenShift documentation</a></p>
