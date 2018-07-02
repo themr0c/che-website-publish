@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="ldapkeycloak,  organizations, user management, permissions, authentication">
-<title>Keycloak Authentication | Eclipse Che Documentation</title>
+<meta name="keywords" content="keycloak,  user management, permissions, authentication">
+<title>Che Authentication | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -160,7 +160,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Keycloak Authentication page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che Authentication page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Keycloak Authentication">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Che Authentication">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -810,7 +810,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Keycloak Authentication</h1>
+   <h1 class="post-title-main">Che Authentication</h1>
 </div>
 
 
@@ -848,61 +848,88 @@ $('#toc').on('click', 'a', function() {
      -->
 
   
-<h2 id="auth-filters-on-master">Auth Filters on master</h2>
-<p>Che master can handle both types of signed requests - using Keycloak token or Machine token.
- Authentication tokens can be send either in a <code class="highlighter-rouge">Authorization</code> header or <code class="highlighter-rouge">token</code> query param.</p>
+<h2 id="authentication-on-che-master">Authentication on Che Master</h2>
 
-<p>In case of Keycloak tokens, authentication filter chain contains of two filters:</p>
+<h3 id="openid">OpenId</h3>
+
+<p>OpenId authentication on Che master, implies presence of an external OpenId provider and has 2 main steps:</p>
+<ol>
+  <li>
+    <p>Authenticate the user through the JWT token he brought or redirect him to login;</p>
+
+    <p>(Authentication tokens should be send in a <code class="highlighter-rouge">Authorization</code> header. Also, in limited cases when it’s not possible to use <code class="highlighter-rouge">Authorization</code> header, 
+  token can be send in <code class="highlighter-rouge">token</code> query parameter. 
+  An example of such exceptional case can be: OAuth authentification initialization, IDE shows javadoc in iframe where authentication must be initialized.)</p>
+  </li>
+  <li>
+    <p>Compose internal “subject” object which represents the current user inside of the Che master code.</p>
+  </li>
+</ol>
+
+<p>At the time of writing the only supported/tested OpenId provider is Keycloak, so all examples/links will refer to this implementation.</p>
+
+<p>The flow starts from the settings service where clients can find all the necessary URLs and properties of the OpenId provider such as <code class="highlighter-rouge">jwks.endpoint</code>, <code class="highlighter-rouge">token.endpoint</code>, <code class="highlighter-rouge">logout.endpoint</code>, <code class="highlighter-rouge">realm.name</code>, <code class="highlighter-rouge">client_id</code> etc returned. in JSON format.
+ Service class is <strong>org.eclipse.che.multiuser.keycloak.server.KeycloakSettings</strong>, and it is bound only in multi-user version of Che,
+ so by its presence it is possible to detect if authentication enabled in current deployment or not.</p>
+
+<p>Example output:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"che.keycloak.token.endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/token"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.profile.endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.9:5050/auth/realms/che/account"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"che-public"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.auth_server_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.9:5050/auth"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.password.endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.9:5050/auth/realms/che/account/password"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.logout.endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/logout"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"che.keycloak.realm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"che"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Also, this service allows to download JS client library to interact with provider.
+ Service URL is <code class="highlighter-rouge">&lt;che.host&gt;:&lt;che.port&gt;/api/keycloak/settings</code> for retrieving settings JSON and <code class="highlighter-rouge">&lt;che.host&gt;:&lt;che.port&gt;/api/keycloak/OIDCKeycloak.js</code> for JS adapter library.</p>
+
+<p>Next step is redirection of user to the appropriate provider’s login page with all the necessary params like client_id, return redirection path etc. This can be basically done with any client library (JS or Java etc).</p>
+
+<p>After user logged in on provider’s side and client side code obtained and passed the JWT token, validation of it and creation of subject begins.</p>
+
+<p>Verification of tokens signature occurs in the two main filters chain:</p>
 
 <ul>
-  <li><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakAuthenticationFilter</strong> - validates signature of the Keycloak JWT token;</li>
-  <li>
-    <p><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakEnvironmentInitalizationFilter</strong> - extracts user data from JWT, finds or creates
-   appropriate user in the Che DB, and set user principal to the session.</p>
+  <li><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakAuthenticationFilter</strong> class. 
+   Token is extracted from <code class="highlighter-rouge">Authorization</code> header or <code class="highlighter-rouge">token</code> query param and tried to being parsed using public key retrieved from provider. 
+   In case of expired/invalid/malformed token, 403 error is sent to user. As noted above, usage of query parameter should be minimised as much as possible, 
+   since support of it may be limited/dropped at some point.</li>
+</ul>
 
-    <p>If the request was made using machine token only (e.g. from ws agent) then it is only one auth filter in the chain:</p>
-  </li>
+<p>If validation was successful, token is passed to the</p>
+
+<ul>
+  <li><strong>org.eclipse.che.multiuser.keycloak.server.KeycloakEnvironmentInitalizationFilter</strong> filter in the parsed form. This filter simply extracts data from JWT token claims, creates user in the local DB if it is not yet present, and constructs subject object and sets it into per-request <code class="highlighter-rouge">EnvironmentContext</code> object which is statically accessible everywhere.</li>
+</ul>
+
+<p>If the request was made using machine token only (e.g. from ws agent) then it is only one auth filter in the chain:</p>
+
+<ul>
   <li><strong>org.eclipse.che.multiuser.machine.authentication.server.MachineLoginFilter</strong> - finds userId given token belongs to, than retrieves user instance and sets principal to the session.</li>
 </ul>
 
-<h2 id="auth-filters-on-agents">Auth Filters on agents</h2>
-<p>Agents cannot be queried using Keycloak token, so there is only Machine Token option. Machine token can be passed in header or query param.</p>
+<p>Master-to-master requests are performed using <strong>org.eclipse.che.multiuser.keycloak.server.KeycloakHttpJsonRequestFactory</strong> which signs every request with the current subject token obtained from EnvironmentContext.</p>
 
-<ul>
-  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on master, except that user data queried from master’s user REST api.</li>
-</ul>
+<h4 id="user-profile">User Profile</h4>
+<p>Since keycloak may store user specific information (first/last name, phone number, job title etc), there is special implementation of the ProfileDao which can provide this data
+  to consumers inside Che. Implementation is read-only, so no create/update operations are possible.
+  Class is <strong>org.eclipse.che.multiuser.keycloak.server.dao.KeycloakProfileDao</strong>.</p>
 
-<h2 id="keycloak-vs-machine-token">Keycloak vs Machine Token</h2>
+<h4 id="obtaining-token-from-keycloak">Obtaining Token From Keycloak</h4>
 
-<p>Machine tokens were introduced to avoid passing the Keycloak tokens to the machine side (which can be potentially insecure). Another reason is that Keycloak tokens may have relatively small lifetime and require periodical renewal/refresh which is hard to manage and keep in sync with same user session tokens on clients e.t.c.</p>
-
-<p>So from implementation side, it is the simple 3-side <strong>User</strong> &lt;-&gt; <strong>Workspace</strong> &lt;-&gt; <strong>Machine Token</strong> mapping, and token is injected into machine during its startup and remains valid until the workspace will be stopped. Unlike JWT, Machine token doesn’t carry any information inside, it’s just a randomly generated string. IDE as a general client, holds both of those tokens in multi-user mode, and uses them depending of where the request goes. Most of the job to obtain/refresh/invalidate of Keycloak tokens on IDE or Dashboard clients is outsourced to the native Keycloak js library.</p>
-
-<h2 id="obtaining-keycloak-endpoints">Obtaining Keycloak endpoints</h2>
-
-<p>There is separate REST service to obtain main Keycloak endpoints for the current installation. It helps to clients to find out URLs for basic operations like login/logout, profile reading, realm name etc. This service is not secured with any authentication and accessible for any client. Service URL is: <code class="highlighter-rouge">http://&lt;wsmaster_host&gt;:&lt;port&gt;/api/keycloak/settings</code>
-Example output:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "che.keycloak.token.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/token",
-  "che.keycloak.profile.endpoint": "http://172.19.20.9:5050/auth/realms/che/account",
-  "che.keycloak.client_id": "che-public",
-  "che.keycloak.auth_server_url": "http://172.19.20.9:5050/auth",
-  "che.keycloak.password.endpoint": "http://172.19.20.9:5050/auth/realms/che/account/password",
-  "che.keycloak.logout.endpoint": "http://172.19.20.9:5050/auth/realms/che/protocol/openid-connect/logout",
-  "che.keycloak.realm": "che"
-}
-</code></pre></div></div>
-
-<h2 id="obtaining-token-from-keycloak">Obtaining Token From Keycloak</h2>
-
-<p>The simplest way to obtain Keycloak auth token, is to perform request to the token endpoint with username and password credentials. This request can be schematically described as following cURL request:</p>
+<p>For the clients which cannot run JS or other type clients (like CLI or selenium tests), auth token may be requested directly from Keycloak. 
+The simplest way to obtain Keycloak auth token, is to perform request to the token endpoint with username and password credentials. This request can be schematically described as following cURL request:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl
     <span class="nt">--data</span> <span class="s2">"grant_type=password&amp;client_id=&lt;client_name&gt;&amp;username=&lt;username&gt;&amp;password=&lt;password&gt;"</span>
      http://&lt;keyckloak_host&gt;:5050/auth/realms/&lt;realm_name&gt;/protocol/openid-connect/token
 </code></pre></div></div>
 
-<p>Since the two main Che clients (IDE and Dashboard) utilizes native Keycloak js library, they’re using a customized Keycloak login page and somewhat more complicated authentication mechanism using <code class="highlighter-rouge">grant_type=authorization_code</code>. It’s like a two step authentication, when first step is login and obtaining authorization code, and second step is obtaining token using this code.</p>
+<p>Since the two main Che clients (IDE and Dashboard) utilizes native Keycloak js library, they’re using a customized Keycloak login page and somewhat more complicated authentication mechanism using <code class="highlighter-rouge">grant_type=authorization_code</code>. It’s a two step authentication: first step is login and obtaining authorization code, and second step is obtaining token using this code.</p>
 
 <p>Example of correct token response:</p>
 
@@ -916,6 +943,94 @@ Example output:</p>
    </span><span class="s2">"session_state"</span><span class="p">:</span><span class="s2">"14de1b98-8065-43e1-9536-43e7472250c9"</span><span class="w">
  </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h3 id="other-authentication-implementations">Other authentication implementations</h3>
+
+<p>If you want to adapt authentication implementation other than Keycloak, the following steps must be done:</p>
+
+<ul>
+  <li>Write own or refactor existing info service which will provide list of configured provider endpoints to the clients;</li>
+  <li>Write single or chain of filters to validate tokens, create user in Che DB and compose the Subject object;</li>
+  <li>If the new auth provider supports OpenId protocol, OIDC JS client available at settings endpoint can be used as well since it is maximally decoupled of specific implementations.</li>
+  <li>If the selected provider stores some additional data about user (first/last name, job title etc), it is a good idea to write an provider-specific ProfileDao 
+implementation which will provide such kind of information;</li>
+</ul>
+
+<h3 id="oauth">OAuth</h3>
+<p>OAuth authentication part has 2 main flows  - internal and external based on Keycloak brokering mechanism.
+So, there are 2 main OAuth API implementations - 
+<strong>org.eclipse.che.security.oauth.EmbeddedOAuthAPI</strong> and <strong>org.eclipse.che.multiuser.keycloak.server.oauth2.DelegatedOAuthAPI</strong>.</p>
+
+<p>They can be switched using <code class="highlighter-rouge">che.oauth.service_mode=&lt;embedded|delegated&gt;</code> configuration property.</p>
+
+<p>Also, there is support of OAuth1 protocol can be found at <strong>org.eclipse.che.security.oauth1</strong> package.</p>
+
+<p>The main REST endpoint in tha OAuth API is <strong>org.eclipse.che.security.oauth.OAuthAuthenticationService</strong>,  which  contains <code class="highlighter-rouge">authenticate</code> method to start OAuth authentication flow, <code class="highlighter-rouge">callback</code> method to process callbacks from provider, <code class="highlighter-rouge">token</code> to retrieve current user’s oauth token, etc.</p>
+
+<p>Those methods refer to the currently activated embedded/delegated OAuthAPI which is doing all the undercover stuff (finds appropriate authenticator, initializes the login process, user forwarding etc).</p>
+
+<h2 id="authentication-on-che-agents">Authentication on Che Agents</h2>
+
+<p>Machines may contain services that must be protected with authentication, e.g. agents like workspace agent and terminal. For this purpose, machine authentication mechanism should be used. Machine tokens were introduced to avoid passing the Keycloak tokens to the machine side (which can be potentially insecure). Another reason is that Keycloak tokens may have relatively small lifetime and require periodical renewal/refresh which is hard to manage and keep in sync with same user session tokens on clients etc.</p>
+
+<p>As agents cannot be queried using Keycloak token, there is only Machine Token option. Machine token can be also passed in header or query parameter.</p>
+
+<h3 id="machine-jwt-token">Machine JWT Token</h3>
+
+<p>Machine token is <a href="https://jwt.io/">JWT</a> that contains the following information in its claim:</p>
+<ul>
+  <li><strong>uid</strong> - id of user who owns this token</li>
+  <li><strong>uname</strong>	- name of user who owns this token</li>
+  <li><strong>wsid</strong> - id of a workspace which can be queried with this token</li>
+</ul>
+
+<p>Each user is provided with unique personal token for each workspace.</p>
+
+<p>The structure of token and the signature are different to Keycloak and have the following view:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">#</span><span class="w"> </span><span class="err">Header</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS512"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"machine_token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">#</span><span class="w"> </span><span class="err">Payload</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"wsid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"workspacekrh99xjenek3h571"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b07e3a58-ed50-4a6e-be17-fcf49ff8b242"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"jti"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c73349-2242-45f8-a94c-722e081bb6fd"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">#</span><span class="w"> </span><span class="err">Signature</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RSASHA512(base64UrlEncode(header) + . +  base64UrlEncode(payload))"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The algorithm that is used for signing machine tokens is <code class="highlighter-rouge">SHA-512</code> and it’s not configurable for now. Also, there is no public service that distributes the public part of the key pair with which the token was signed. But in each machine, there must be environment variables that contains key value. So, agents can verify machine JWT token using the following environment variables:</p>
+<ul>
+  <li><code class="highlighter-rouge">CHE_MACHINE_AUTH_SIGNATURE__ALGORITHM</code> - contains information about the algorithm which the token was signed</li>
+  <li><code class="highlighter-rouge">CHE_MACHINE_AUTH_SIGNATURE__PUBLIC__KEY</code> - contains public key value encoded in Base64</li>
+</ul>
+
+<p>It’s all that is needed for verifying machine token inside of machine. To make sure that specified token is related to current workspace, it is needed to fetch <code class="highlighter-rouge">wsid</code> from JWT token claims and compare it with <code class="highlighter-rouge">CHE_WORKSPACE_ID</code> environment variable.</p>
+
+<p>Also, if agents need to query Che Master they can use machine token provided in <code class="highlighter-rouge">CHE_MACHINE_TOKEN</code> environment, actually it is token of user who starts a workspace.</p>
+
+<h3 id="authentication-schema">Authentication schema</h3>
+
+<p>The way how Che master interacts with agents with enabled authentication mechanism is the following:</p>
+<figure><img class="docimage" src="images/diagrams/machine_auth_flow_old.png" alt="" /></figure>
+
+<figure><img class="docimage" src="images/diagrams/machine_auth_flow.png" alt="" /></figure>
+
+<p>Machine token verification on agents is done by the following components:</p>
+<ul>
+  <li><strong>org.eclipse.che.multiuser.machine.authentication.agent.MachineLoginFilter</strong> - doing basically the same as the appropriate filter on a master, the only thing that is different it’s a way how agent obtains the public signature part. The public key for the signature check is placed in a machine environment, with algorithm description.</li>
+  <li><strong>auth.auth.go</strong> - the entry point for all request that is proceeding on go agents side, the logic of token verification is similar with MachineLoginFilter.</li>
+</ul>
+
+<h3 id="obtaining-machine-token">Obtaining Machine Token</h3>
+
+<p>A machine token is provided for users in runtime object. It can be fetched by using get workspace by key (id or namespace/name) method which path equals to <code class="highlighter-rouge">/api/workspace/&lt;workspace_key&gt;</code>. The machine token will be placed in <code class="highlighter-rouge">runtime.machineToken</code> field.</p>
 
 <h2 id="using-swagger-or-rest-clients">Using Swagger or REST Clients</h2>
 
@@ -942,7 +1057,7 @@ Example output:</p>
   <li>get machine token from <code class="highlighter-rouge">runtime.machineToken</code> field, and put it in the upper bar <code class="highlighter-rouge">token</code> field</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>machineToken": "machinet9854958jdsdhakdh48hsdg",
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"machineToken": "eyJhbGciOiJSUzUxMiIsImtpbmQiOiJtYWNoaW5lX3Rva2VuIn0.eyJ3c2lkIjoid29ya3NwYWNlMzEiLCJ1aWQiOiJ1c2VyMTMiLCJ1bmFtZSI6InRlc3RVc2VyIiwianRpIjoiOTAwYTUwNWYtYWY4ZS00MWQxLWFhYzktMTFkOGI5OTA5Y2QxIn0.UwU7NDzqnHxTr4vu8UqjZ7-cjIfQBY4gP70Nqxkwfx8EsPfZMpoHGPt8bfqLWVWkpp3OacQVaswAOMOG9Uc9FtLnQWnup_6vvyMo6gchZ1lTZFJMVHIw9RnSJAGFl98adWe3NqE_DdM02PyHb23MoHqE_xd8z3eFhngyaMImhc4",
 </code></pre></div></div>
 
 <ul>
@@ -956,10 +1071,6 @@ Example output:</p>
     <div class="tags">
         
         <b>Tags: </b>
-        
-        
-        
-        <a href="tag_ldap.html" class="btn btn-default navbar-btn cursorNorm" role="button">ldap</a>
         
         
         
@@ -980,7 +1091,7 @@ Example output:</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2018 <br/>
+                    Site last generated: Jul 2, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

@@ -890,99 +890,22 @@ $('#toc').on('click', 'a', function() {
   <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-typescript">TypeScript</a></li>
 </ul>
 
-<h2 id="adding-a-language-server-launcher">Adding a Language Server Launcher</h2>
+<h2 id="adding-a-language-server-config">Adding a Language Server Config</h2>
 
-<p>Implement the <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">LanguageServerLauncher interface</a>.</p>
+<p>In order to start/initialize a language server for the desired language, you need to implement [LanguageServerConfig interface] (https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/LanguageServerConfig.java) which pretty much defines what needs to be accomplished to start a ‘local’ language server.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LanguageServerLauncher</span> <span class="o">{</span>
+<p>Here is how a typical LanguageServerConfig looks like: (Clangd)[https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/languageserver/ClangDLanguageServerConfig.java].</p>
 
-    <span class="c1">//**</span>
-     <span class="o">*</span> <span class="n">Initializes</span> <span class="n">and</span> <span class="n">starts</span> <span class="n">a</span> <span class="n">language</span> <span class="n">server</span><span class="o">.</span>
-     <span class="o">*</span>
-     <span class="o">*</span> <span class="nd">@param</span> <span class="n">projectPath</span>
-     <span class="o">*</span>      <span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">project</span>
-     <span class="o">*</span> <span class="nd">@param</span> <span class="n">client</span>
-     <span class="o">*</span>      <span class="n">an</span> <span class="kd">interface</span> <span class="nc">implementing</span> <span class="n">handlers</span> <span class="k">for</span> <span class="n">server</span><span class="o">-&gt;</span><span class="n">client</span> <span class="n">communication</span>
-     <span class="o">*/</span>
-    <span class="n">LanguageServer</span> <span class="nf">launch</span><span class="o">(</span><span class="n">String</span> <span class="n">projectPath</span><span class="o">,</span> <span class="n">LanguageClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">LanguageServerException</span><span class="o">;</span>
-
-    <span class="cm">/**
-     * Gets the language server description
-     */</span>
-    <span class="n">LanguageServerDescription</span> <span class="nf">getDescription</span><span class="o">();</span>
-
-    <span class="cm">/**
-     * Indicates if language server is installed and is ready to be started.  
-     */</span>
-    <span class="kt">boolean</span> <span class="nf">isAbleToLaunch</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p><a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/registry/LanguageServerDescription.java">LanguageServerDescription</a> and <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver-shared/src/main/java/org/eclipse/che/api/languageserver/shared/model/LanguageDescription.java">LanguageDescription</a> are used to describe the types of file your language server will make contributions to.</p>
-
-<p>Follow our language server launchers and descriptions examples:</p>
+<p>Things to pay attention to:</p>
 
 <ul>
-  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-python/che-plugin-python-lang-server/src/main/java/org/eclipse/che/plugin/python/languageserver/PythonLanguageSeverLauncher.java">Python</a></li>
-  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-server/src/main/java/org/eclipse/che/plugin/csharp/languageserver/CSharpLanguageServerLauncher.java">C#</a></li>
-  <li><a href="https://github.com/eclipse/che/blob/master/plugins/plugin-json/che-plugin-json-server/src/main/java/org/eclipse/che/plugin/json/languageserver/JsonLanguageServerLauncher.java">JSON</a></li>
+  <li><strong>REGEX</strong> defines regexp for desired files. It can be a path, all fines with certain extension or particular file names etc.</li>
+  <li><strong>launchScript</strong> is usually created by an installer script and contains command(s) to launch a language server in a stdio mode</li>
+  <li><strong>LANGUAGE_ID</strong> is defined in a guice module. See: <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java">ClangdModule</a></li>
+  <li>add binding in <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java#L37">guice module</a></li>
 </ul>
 
-<h2 id="bind-language-server-launcher-and-language-description">Bind Language Server Launcher and Language Description</h2>
-
-<p>A language description tells the system that an LSP-based editor should be used for a particular file and associates a language identifier with
-those files. It can be configured in your plugin’s module definition:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DynaModule</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyLanguageServerModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
-    <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">LanguageServerLauncher</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">addBinding</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="n">MyLanguageServerLauncher</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-        <span class="n">LanguageDescription</span> <span class="n">description</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LanguageDescription</span><span class="o">();</span>
-        <span class="n">description</span><span class="o">.</span><span class="na">setFileExtensions</span><span class="o">(</span><span class="n">asList</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="s">"bar"</span><span class="o">));</span>
-        <span class="n">description</span><span class="o">.</span><span class="na">setFileNames</span><span class="o">(</span><span class="n">asList</span><span class="o">(</span><span class="s">"foobar.txt"</span><span class="o">,</span> <span class="s">"foobar.xml"</span><span class="o">));</span>
-
-        <span class="n">description</span><span class="o">.</span><span class="na">setLanguageId</span><span class="o">(</span><span class="s">"myLanguage"</span><span class="o">);</span>
-        <span class="n">description</span><span class="o">.</span><span class="na">setMimeType</span><span class="o">(</span><span class="s">"text/foobar"</span><span class="o">);</span>
-        <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">LanguageDescription</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">addBinding</span><span class="o">().</span><span class="na">toInstance</span><span class="o">(</span><span class="n">description</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>Any time results from language servers are required, the system finds all contributing language servers by matching the their <code class="highlighter-rouge">LanguageServerDescription</code> against the file URI and the associated language identifier. A language server can register multiple <code class="highlighter-rouge">DocumentFilter</code> instances. The results of the operations are merged. When only a single language server can be used (like when formatting, for example), servers will be prioritized, with those matching “.*” at the end of the list. If multiple servers have the same priority, the first registered will be chosen. For example, here is the language server decription for the JSON server:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">description</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LanguageServerDescription</span><span class="o">(</span>
-    <span class="s">"org.eclipse.che.plugin.json.languageserver"</span><span class="o">,</span>
-    <span class="kc">null</span><span class="o">,</span>
-    <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">DocumentFilter</span><span class="o">(</span><span class="n">JsonModule</span><span class="o">.</span><span class="na">LANGUAGE_ID</span><span class="o">,</span> <span class="s">".*\\.(json|bowerrc|jshintrc|jscsrc|eslintrc|babelrc)"</span><span class="o">,</span>
-    <span class="kc">null</span><span class="o">)));</span>
-</code></pre></div></div>
-
-<p>Once complete, compile and run Che. If everything has worked you will see your installer listed in the list of <a href="installers.html">installers</a>:</p>
-
-<p>The agent can be added by default in a Stack, our <a href="stacks.html">Stack documentation</a> explains how to create and edit stacks.</p>
-
-<h2 id="implement-code-action-commands">Implement Code Action Commands</h2>
-
-<p>Through the LSP command “textDocument/codeAction”, a language server can contribute items to the quick-assist menu in an editor. The language server returns a list of LSP <code class="highlighter-rouge">Command</code> objects. These command objects are mapped to Che actions by looking up an action by id in the <code class="highlighter-rouge">ActionManager</code> using the <code class="highlighter-rouge">command</code> field of the command object.
-The extra parameters from the command object are passed to the action by using an extended <code class="highlighter-rouge">ActionEvent</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickassistActionEvent</span> <span class="kd">extends</span> <span class="n">ActionEvent</span> <span class="o">{</span>
-
-	<span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">;</span>
-
-	<span class="kd">public</span> <span class="nf">QuickassistActionEvent</span><span class="o">(</span><span class="n">Presentation</span> <span class="n">presentation</span><span class="o">,</span> <span class="n">ActionManager</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">PerspectiveManager</span> <span class="n">perspectiveManager</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">arguments</span><span class="o">)</span> <span class="o">{</span>
-		<span class="kd">super</span><span class="o">(</span><span class="n">presentation</span><span class="o">,</span> <span class="n">actionManager</span><span class="o">,</span> <span class="n">perspectiveManager</span><span class="o">);</span>
-		<span class="k">this</span><span class="o">.</span><span class="na">arguments</span><span class="o">=</span> <span class="n">arguments</span><span class="o">;</span>
-	<span class="o">}</span>
-
-	<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getArguments</span><span class="o">()</span> <span class="o">{</span>
-		<span class="k">return</span> <span class="n">arguments</span><span class="o">;</span>
-	<span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>Language server launcher IDE plugins may contribute their own actions to be called. The language server plugin itself contributes two actions with the ids “lsp.applyTextEdit” and “lsp.applyWorkspaceEdit”. The first will apply a list of LSP <code class="highlighter-rouge">TextEdit</code> objects in the currently active editor. The second one applies a an LSP <code class="highlighter-rouge">WorkspaceEdit</code> to files in the workspace, either in an editor if the file is open, or on disk if they are not.</p>
+<p>Installers are packaged into wsmaster, so you will need to add required dependencies there. LanguageServerConfigs are usually part of plugins packages with a workspace agent.</p>
 
 <h2 id="ls-sidecars">LS-Sidecars</h2>
 
@@ -1027,9 +950,10 @@ CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --std
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="s2">"ls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"go-ls"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"internal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ls"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">tsls</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">languageIds</span><span class="se">\"</span><span class="s2">:[typescript]}"</span><span class="w">
+      </span><span class="s2">"languageRegexes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[ {</span><span class="se">\"</span><span class="s2">languageId</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">golang</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">regex</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">.*</span><span class="se">\\\\</span><span class="s2">.go$</span><span class="se">\"</span><span class="s2">}]"</span><span class="p">,</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4417"</span><span class="w">
@@ -1038,11 +962,12 @@ CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --std
 </span></code></pre></div></div>
 <ul>
   <li><strong>ls</strong> - server name - can be any string</li>
+  <li><strong>attributes.id</strong> - can be any unique identifier</li>
   <li><strong>attributes.internal</strong> - <code class="highlighter-rouge">true</code>. Mandatory! Used to get an internal link to server</li>
   <li><strong>attributes.type</strong> - <code class="highlighter-rouge">ls</code>. Mandatory. Used by the IDE client to identify a server as a language server</li>
-  <li><strong>attributes.config.id</strong> - LS ID - any string. Used as LS identifier</li>
+  <li><strong>languageRegexes.languageId</strong> - language identifier, either one of those supported in [LSP specification] (https://microsoft.github.io/language-server-protocol/specification#textdocumentitem) or own.</li>
   <li>
-    <p><strong>attributes.config.languageIds</strong> - List of registered Language IDs. You can either <a href="#bind-language-server-launcher-and-language-description">register own</a> (in this case you need own custom Che assembly) or use any ID from the <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/registry/DefaultLanguages.java">default list</a> that covers most popular languages. Each Language ID has associated file extensions.</p>
+    <p><strong>languageRegexes.regex</strong> - regexp expression to match either extension or file name + extension, or whatever match you need (for example, path, say, initialize language server only for config/config.xml files). Pay attention to regexp syntax since errors are not validated by server, and bad regexp will result in the client ignoring your files.</p>
   </li>
   <li>In User Dashboard, go to Workspaces &gt; Your Workspace &gt; Volumes, add a volume for <strong>each machine</strong>. The two volumes have to share the same name (for example, <code class="highlighter-rouge">projects</code>) and path <code class="highlighter-rouge">/projects</code> so that they actually share one volume. This way a language server container has access to workspace project types.</li>
 </ul>
@@ -1052,6 +977,8 @@ CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --std
 <ul>
   <li>Start a workspace. Open a file with one of the extensions bound to a language ID. Che client will attempt to connect to language server over tcp socket. This data is retrieved from workspace runtime. Language server process should be available at the port declared in the server. You can either use Socat or launch a language server in tcp mode if it supports it. It is your Docker image’s responsibility to launch the language server. Adding <code class="highlighter-rouge">ENTRYPOINT</code> or <code class="highlighter-rouge">CMD</code> instruction should work well.</li>
 </ul>
+
+<p>See: <a href="https://gist.githubusercontent.com/eivantsov/4e86b4d51cf23fbd8fd68410170f06e3/raw/e9c1edc600d0ff82e15d2d68d2ac5c6304a981b9/go-workspace.json">Sample configuration</a> of a workspace featuring 2 machines, one of which is a language server machine.</p>
 
 
     <div class="tags">
@@ -1085,7 +1012,7 @@ CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --std
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2018 <br/>
+                    Site last generated: Jul 2, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

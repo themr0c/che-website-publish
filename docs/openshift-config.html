@@ -886,8 +886,21 @@ You do not need to do that if you initially deploy Che with https support.</li>
 
 <h2 id="https-mode---self-signed-certs">HTTPS Mode - Self-Signed Certs</h2>
 
-<p>If you enable HTTPS mode for multi-user Che on an OpenShift installation that does not have certificates signed by a public authority, it won’t be possible to start workspaces or even login.
-There is a lot of communication between Che server and workspace agents, Che server and Keycloak. Therefore, self signed certs should be added to Java trust store of Che server and Keycloak (only for a multi user Che deployment) pods, as well as workspace images. While there is automation for Che server and Keycloak, certs should be manually added to workspace images, since adding a root certificate requires sudo privileges which an arbitrary OpenShift user may not have.</p>
+<p>If you enable HTTPS mode for multi-user Che on an OpenShift installation that does not have certificates signed by a public authority, it won’t be possible to start workspaces or even login.</p>
+
+<p>There is a lot of communication between Che server and workspace agents, Che server and Keycloak. Therefore, self signed certs should be added to Java trust store of Che server and Keycloak (only for a multi user Che deployment) pods, as well as workspace images. While there is automation for Che server and Keycloak, certs should be manually added to workspace images, since adding a root certificate requires sudo privileges which an arbitrary OpenShift user may not have.</p>
+
+<ul>
+  <li>Export certificate:</li>
+</ul>
+
+<p>This has to be the certificate that your OpenShift <strong>router</strong> uses since OpenShift Web Console may use a different cert or even use a different (sub)domain. If you are not certain where to find the cert, you may export it:</p>
+
+<figure><img class="docimage" src="images/workspaces/chrome_cert.png" alt="" /></figure>
+
+<figure><img class="docimage" src="images/workspaces/chrome_cert_export.png" alt="" /></figure>
+
+<p>Choose the top certificate hierarchy and export a single certificate.</p>
 
 <ul>
   <li>Create a secret with certificate:</li>
@@ -897,6 +910,10 @@ There is a lot of communication between Che server and workspace agents, Che ser
 oc new-app -f deploy/openshift/templates/multi/openshift-certificate-secret.yaml -p CERTIFICATE="${CERTIFICATE}"
 </code></pre></div></div>
 <p>Once created, <code class="highlighter-rouge">OPENSHIFT_IDENTITY_PROVIDER_CERTIFICATE</code> env takes cert file content as a value and is then used in entrypoints of Che server and Keycloak images.</p>
+
+<figure><img class="docimage" src="images/workspaces/ca_secret.png" alt="" /></figure>
+
+<figure><img class="docimage" src="images/workspaces/cert_env.png" alt="" /></figure>
 
 <ul>
   <li>
@@ -1112,7 +1129,7 @@ POSTGRES_PASSWORD=keycloak
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2018 <br/>
+                    Site last generated: Jul 2, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

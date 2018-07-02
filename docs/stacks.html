@@ -858,6 +858,34 @@ $('#toc').on('click', 'a', function() {
 
 <p>As stacks are workspace templates, they are used to create workspace when in User Dashboard. See: <a href="creating-starting-workspaces.html">User Guide: Creating and Starting Workspaces</a>.</p>
 
+<h2 id="community-supported-stacks">Community Supported Stacks</h2>
+
+<p>The list of stacks Che offers out of the box references tested stacks and sample applications with commands on how to build, run and debug them. There are also stacks contributed by the community which work fine with Che but do not go through daily tests. It is possible however that sample applications may be incompatible with certain stacks.</p>
+
+<p>Community supported stacks and sample apps (if any) are located in <a href="https://github.com/che-samples/community-stacks">Community stacks GitHub repo</a>.</p>
+
+<p>Each directory has <code class="highlighter-rouge">${technology}-stack.json</code> and <code class="highlighter-rouge">${technology}-samples.json</code>. If you want to import a chosen stack, follow the below instructions:</p>
+
+<ol>
+  <li>Copy content of a chosen json</li>
+  <li>Go to <code class="highlighter-rouge">${CHE_HOST}/swagger/#!/stack/createStack</code>, paste JSON content to request body field</li>
+  <li>Hit <strong>Try it out</strong> button.</li>
+</ol>
+
+<p>If there’s a conflict with stack ID or name, use a different name or ID (make sure it is unique).</p>
+
+<p>For a multi-user setup, you may want to make your stack available for a particular user or all users in the system. If this is the case, see <a href="#stack-sharing-and-system-stacks">stack sharing</a>.</p>
+
+<p>To import <strong>sample applications</strong>, move chosen <code class="highlighter-rouge">*-stacks.json</code> files to:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">${LOCAL_STORAGE}/instance/data/templates</code> for Docker infra</li>
+  <li><code class="highlighter-rouge">${mount-path-of-che-data-volume}/templates</code> for OpenShift/K8S infra. You will need admin privileges to get PV details (host path) and access to host directory.
+Also, make sure the new jsons have the same permissions as the original <code class="highlighter-rouge">samples.json</code> that you will find there.</li>
+</ul>
+
+<p>You can find Dockerfiles for all stacks in <a href="https://github.com/eclipse/che-dockerfiles">Che Dockerfiles repository</a>.</p>
+
 <h2 id="stack-sharing-and-system-stacks">Stack Sharing and System Stacks</h2>
 
 <p>Stacks that a user creates are available only for this user. Che users with system privileges can share created stacks with selected users or all users in the system. Currently, there are no UI controls for that, so a couple of REST calls need to be made:</p>
@@ -932,7 +960,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2018 <br/>
+                    Site last generated: Jul 2, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

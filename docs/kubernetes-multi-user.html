@@ -896,6 +896,8 @@ $('#toc').on('click', 'a', function() {
 
 <p>The context of the commands below is <code class="highlighter-rouge">che/deploy/kubernetes/helm/che</code></p>
 
+<h3 id="to-deploy-with-dedicated-keycloak-as-authentication-server">To deploy with dedicated keycloak as authentication server:</h3>
+
 <ul>
   <li>
     <p>Override default values by changing the values.yaml file and then typing:</p>
@@ -912,6 +914,17 @@ $('#toc').on('click', 'a', function() {
   <li>Master: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain</code></li>
   <li>Keycloak:  <code class="highlighter-rouge">https://keycloak-&lt;che-namespace&gt;.domain</code></li>
   <li>Workspaces servers: <code class="highlighter-rouge">https://server-host.domain</code></li>
+</ul>
+
+<h3 id="to-deploy-without-keycloak-in-multi-user-mode">To deploy without keycloak in multi-user mode</h3>
+<p>In this case you have to supply custom OpenIdConnect provider (see <a href="https://github.com/eclipse/che-docs/blob/b2310017b1a75901cbec3b9c665d7ffa1cb23177/src/main/pages/setup-openshift/openshift-config.md">here</a> for more details), using the following flags:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;my-hostname&gt;,cheImage<span class="o">=</span>&lt;my-image&gt;,global.cheDedicatedKeycloak<span class="o">=</span><span class="nb">false</span>,customOidcProvider<span class="o">=</span>&lt;oidc-url&gt;,cheKeycloakClientId<span class="o">=</span>&lt;oidc_clientId&gt;,customOidcUsernameClaim<span class="o">=</span>&lt;user_name_claim&gt; ./
+</code></pre></div></div>
+<ul>
+  <li>cheKeycloakClientId - is your authentication server client ID</li>
+  <li>customOidcUsernameClaim - is optional, and should be used if your authentication server does not support ‘preferred_username’ 
+  claim in the JWT token (This can be checked by accessing oidc-url/.well-known/openid-configuration response). This parameter defines,
+  which claim should be used to determine user name instead.</li>
 </ul>
 
 <h2 id="default-host">Default Host</h2>
@@ -977,7 +990,7 @@ Multi User configuration is enabled.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2018 <br/>
+                    Site last generated: Jul 2, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
