@@ -851,21 +851,28 @@ $('#toc').on('click', 'a', function() {
 
 <p>See: <a href="openshift-admin-guide.html">OpenShift Admin Guide</a> to general information that works both for OS and K8S.</p>
 
-<h2 id="how-it-works">How It Works</h2>
+<h2 id="configure-che-server">Configure Che Server</h2>
 
-<p>Che server is configured via environment variables passed to Che deployment. You can do it when initially deploying Che (See: <a href="openshift-single-user.html">Installation Single User</a>, <a href="openshift-multi-user.html">Multi-User</a>) or afterwards, by editing Che deployment.</p>
+<p>Che server is configured by updating environment variables passed to Che deployment. You can configure Che Server when initially deploying Che (See: <a href="openshift-single-user.html">Installation Single User</a>, <a href="openshift-multi-user.html">Multi-User</a>) or afterwards, by modifying Che deployment.</p>
 
-<p>There are multiple ways to edit Che deployment to add new or edit existing envs:</p>
+<p>There are multiple ways to modify Che deployment to add new or modify existing environment variables. You can either:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">OC_EDITOR="nano" oc edit dc/che</code> opens Che deployment yaml in nano editor (VIM is used by default)</li>
-  <li>manually in OpenShift web console &gt; deployments &gt; Che &gt; Environment</li>
-  <li><code class="highlighter-rouge">oc set env dc/che KEY=VALUE KEY1=VALUE1</code> updates Che deployment with new envs or modifies values of existing ones</li>
+  <li>
+    <p><strong>Option 1: Update Che deployment yaml.</strong> To update Che deployment yaml and update in nano editor (VIM is used by default), run this command: 
+ <code class="highlighter-rouge">$ OC_EDITOR="nano" oc edit dc/che</code></p>
+  </li>
+  <li>
+    <p><strong>Option 2: Update manually in OpenShift web console.</strong> To update manually in OpenShift web console &gt; deployments &gt; Che &gt; Environment</p>
+  </li>
+  <li>
+    <p><strong>Option 3: Modify environment variables.</strong> To update Che deployment with new environment variables or modify existing variables, run this command: <code class="highlighter-rouge">$ oc set env dc/che KEY=VALUE KEY1=VALUE1</code></p>
+  </li>
 </ul>
 
 <h2 id="what-can-be-configured">What Can Be Configured?</h2>
 
-<p>You can find deployment env or config map in yaml files. However, they do not reference a complete list of environment variables that Che server will respect.</p>
+<p>You can find deployment env or config map in yaml files.</p>
 
 <p>Here is a <a href="https://github.com/eclipse/che/tree/master/assembly/assembly-wsmaster-war/src/main/webapp/WEB-INF/classes/che">complete</a> list of all properties that are configurable for Che server.</p>
 
@@ -873,7 +880,9 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="https-mode">HTTPS Mode</h2>
 
-<p>To enable https for server and workspace routes, follow instructions in <a href="openshift-single-user.html">setup docs single user</a> and <a href="openshift-multi-user.html">multi-user</a>. To migrate an existing Che deployment to https, do the following:</p>
+<p>To enable https for server and workspace routes, follow instructions in <a href="openshift-single-user.html">setup docs single user</a> and <a href="openshift-multi-user.html">multi-user</a>.</p>
+
+<p>To migrate an existing Che deployment to https, do the following:</p>
 
 <ol>
   <li>Update Che deployment with <code class="highlighter-rouge">PROTOCOL=https, WS_PROTOCOL=wss, TLS=true</code></li>
@@ -1129,7 +1138,7 @@ POSTGRES_PASSWORD=keycloak
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 2, 2018 <br/>
+                    Site last generated: Jul 20, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
