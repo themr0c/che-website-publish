@@ -119,15 +119,11 @@
                 
                 
                 
-                <li><a href="release-6.0.0.html">Release Notes</a></li>
+                <li><a href="https://medium.com/eclipse-che-blog/" target="_blank">Blog</a></li>
                 
                 
                 
                 <li><a href="https://github.com/eclipse/che" target="_blank">Source Code</a></li>
-                
-                
-                
-                <li><a href="https://www.eclipse.org/che/docs/5/che/docs" target="_blank">Docs 5.x</a></li>
                 
                 
                 
@@ -879,55 +875,19 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="who-creates-workspace-objects">Who Creates Workspace Objects?</h2>
 
-<p>All workspace objects for all Eclipse Che users are <strong>created on behalf of one OpenShift user</strong>, typically the one who deployed Che or whose credentials or token is used in Che deployment environment. Eclipse Che uses fabric8 client to talk to Kubernetes/OpenShift API, and the client uses token, username/password or service account, if available.</p>
+<p>Eclipse Che currently supports two different configurations: in the single OpenShift project case, workspace objects are created using a service account that can be configured for Che server, whereas in the multi OpenShift project case, workspace objects are created on behalf of each OpenShift user as they use Eclipse Che. As Eclipse Che communicates with the Kubernetes/OpenShift API through the fabric8 client, an authorization token is required.</p>
 
 <ul>
-  <li>
-    <p>If you passed <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_USERNAME</code> and <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PASSWORD</code> to Che deployment, those credentials will be used to create workspace objects.</p>
-  </li>
-  <li>
-    <p>If there’s <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_OAUTH__TOKEN</code> fabric8 client will use it. If both are available, token has a priority over username/pass.</p>
-  </li>
-  <li>
-    <p>If none are available <strong>che service account</strong> is used to create workspace objects. This is default behavior. Since che service account cannot create objects outside a namespace it’s bound to, all workspace objects are created in Che namespace. Admins can grant <code class="highlighter-rouge">che</code> <a href="https://kubernetes.io/docs/admin/authorization/rbac/#service-account-permissions">service account super user permissions</a>, and this way it will be possible to use this SA to create objects outside Che namespace. OpenShift cluster admins can do it this way using oc CLI:</p>
-  </li>
-</ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
+  <li>In the single project case, the environment variable <code class="highlighter-rouge">CHE_OPENSHIFT_SERVICEACCOUNTNAME</code> governs which service account is used to create workspace objects. This service account must be visible to the Che server (i.e. in the same namespace) and have appropriate permissions to create and edit OpenShift resources. This means that if objects are to be created outside of the service accounts bound namespace the service account will require cluster-admin rights, which can be enabled by an admin via the <code class="highlighter-rouge">oc</code> CLI:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
 
 <span class="c"># eclipse-che is Che namespace</span>
-</code></pre></div></div>
+</code></pre></div>    </div>
+  </li>
+  <li>In the multi project case, Eclipse Che will use individual user’s OpenShift tokens to create resources <strong>on behalf of the currently logged-in user</strong>. Refer to the <a href="openshift-admin-guide#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</li>
+</ul>
 
-<p>Advantages and disadvantages of using token, username/pass, and service account:</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>Auth type</td>
-      <td>Pros</td>
-      <td>Cons</td>
-    </tr>
-    <tr>
-      <td><strong>Token</strong></td>
-      <td>Objects can be created outside Che namespace</td>
-      <td>Tokens tend to expire</td>
-    </tr>
-    <tr>
-      <td><strong>Username/Password</strong></td>
-      <td>Objects can be created outside Che namespace</td>
-      <td>If username/pass are changed, they need to be updated in Che deployment as well. Many authentication types like oAuth make it impossible to login with username/pass</td>
-    </tr>
-    <tr>
-      <td><strong>Service account</strong></td>
-      <td>No expiration risks</td>
-      <td>Cannot create objects outside its namespace unless given admin privileges</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>OpenShift-specific feature: create workspace objects in a personal namespace</strong></p>
-
-<p>When Che is deployed on OpenShift in multi-user mode, there is an additional option that allows creating workspace objects <strong>on behalf of the currently logged-in user</strong>, instead of using the configured user described above. Refer to the <a href="openshift-admin-guide#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</p>
+<p>The environment variable <code class="highlighter-rouge">CHE_INFRA_OPENSHIFT_PROJECT</code> controls the namespace in which workspace objects are created. In the multi-project case, it should be set to <code class="highlighter-rouge">NULL</code> to create workspace objects in different namespaces for each user. In the single project case, if the che service accout does not have cluster-admin rights, it should be set to the same project that hosts the Che server. Refer to the <a href="openshift-config">OpenShift Configuration Guide</a> for more details on how to configure Che.</p>
 
 <h2 id="storage-overview">Storage Overview</h2>
 
@@ -1278,7 +1238,7 @@ and refer to it in the environment variable.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 20, 2018 <br/>
+                    Site last generated: Aug 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

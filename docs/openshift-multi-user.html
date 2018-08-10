@@ -119,15 +119,11 @@
                 
                 
                 
-                <li><a href="release-6.0.0.html">Release Notes</a></li>
+                <li><a href="https://medium.com/eclipse-che-blog/" target="_blank">Blog</a></li>
                 
                 
                 
                 <li><a href="https://github.com/eclipse/che" target="_blank">Source Code</a></li>
-                
-                
-                
-                <li><a href="https://www.eclipse.org/che/docs/5/che/docs" target="_blank">Docs 5.x</a></li>
                 
                 
                 
@@ -847,108 +843,104 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="supported-openshift-flavors-and-versions">Supported OpenShift Flavors and Versions</h2>
+  <h2 id="deploying-che-on-supported-openshift-flavors-and-versions">Deploying Che on supported OpenShift flavors and versions</h2>
 
-<p>Multi-user Eclipse Che can be deployed to OpenShift Container Platform 3.6+, OpenShift Dedicated and OpenShift Online Pro.</p>
+<p>Multi-user Eclipse Che can be deployed to OpenShift Container Platform 3.6 and later, OpenShift Dedicated, and OpenShift Online Pro.</p>
+
+<p>The deployment script creates three DeploymentConfigs for Che, Postgres, and Keycloak.  PVCs, services, and routes (Che and Keycloak only) are also created by the deployment script.</p>
 
 <h2 id="deployment-diagram">Deployment diagram</h2>
 
-<p>The deployment script creates 3 DeploymentConfigs for Che, Postgres and Keycloak, as well as PVCs, services and routes (Che and Keycloak only).</p>
-
 <figure><img class="docimage" src="images/diagrams/ocp_multi_user.png" alt="" /></figure>
 
-<h2 id="how-to-get-deployment-yamls">How to Get Deployment YAMLs</h2>
+<h2 id="getting-deployment-yaml-files">Getting deployment YAML files</h2>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/eclipse/che
-<span class="nb">cd </span>che/deploy/openshift/templates
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/eclipse/che
+<span class="nv">$ </span><span class="nb">cd </span>che/deploy/openshift/templates
 </code></pre></div></div>
 
-<p>Context of all commands below is <code class="highlighter-rouge">che/deploy/openshift/templates</code></p>
+<p>The context of all commands below is <code class="highlighter-rouge">che/deploy/openshift/templates</code>.</p>
 
-<h2 id="templates-and-parameters">Templates and Parameters</h2>
+<h2 id="using-templates-and-modifying-their-parameters">Using templates and modifying their parameters</h2>
 
-<p>Templates are provided with a set of predefined params which you can override with with <code class="highlighter-rouge">-p key=value</code>.
-You can list all params before applying a template: <code class="highlighter-rouge">oc process --parameters -f &lt;filename&gt;</code>.
-If you miss envs and parameters, you can add them to your template both as a parameters env variables.</p>
+<p>Templates are provided with a set of predefined parameters. You can add parameters and environment variables to your template. You can also override parameters by using this option: <code class="highlighter-rouge">-p key=value</code>. The <code class="highlighter-rouge">oc new-app</code> command accepts parameters, environment variables, or environment files, which makes it possible to override default parameters and pass environment variables to chosen deployments (even if they are not in a template). You can view all parameters by using this command: <code class="highlighter-rouge">$ oc process --parameters -f &lt;filename&gt;</code>.</p>
 
-<p>Examples below reference <code class="highlighter-rouge">oc-new app</code> and <code class="highlighter-rouge">oc apply</code> commands.
-<code class="highlighter-rouge">oc new-app</code> accepts parameters envs or env file which makes it possible to override default params and pass envs to chosen deployments (even if they are not in a template):</p>
+<p>The examples below reference the <code class="highlighter-rouge">oc process</code>, <code class="highlighter-rouge">oc-new app</code>, and <code class="highlighter-rouge">oc apply</code> commands.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-app -f example.yaml -p PARAM=VALUE -e ENV=VALUE --env-file=che.env
-</code></pre></div></div>
-<p>More info is available in <a href="https://docs.openshift.com/container-platform/3.7/dev_guide/application_lifecycle/new_app.html#specifying-a-template">OpenShift documentation</a>.</p>
-
-<p>Env file has a simple format: <code class="highlighter-rouge">KEY=VALUE</code> per line.</p>
-
-<p>You can also use <code class="highlighter-rouge">oc process</code> and then apply the resulted output <code class="highlighter-rouge">| oc apply -f -</code>, for example:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc process -f che-server-template.yaml -p ROUTING_SUFFIX=$(minishift ip).nip.io | oc apply -f -
-</code></pre></div></div>
-<p>In this case, however, it is not possible to pass envs, only params are available.</p>
-
-<h2 id="minishift">Minishift</h2>
-
-<p>Due to the size of a multi-user Eclipse Che install, MiniShift is not recommended as a base for this configuration. However, if you have to use Minishift ensure you have started MiniShift with <code class="highlighter-rouge">--memory=4096</code> or more and <a href="https://docs.openshift.org/latest/minishift/getting-started/updating.html">update Minishift</a> to the latest version.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-project che
-
-oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
-oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">$(</span>minishift ip<span class="k">)</span>.nip.io
-oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
-oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">$(</span>minishift ip<span class="k">)</span>.nip.io <span class="nt">-p</span> <span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true
-</span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ oc new-app -f example.yaml -p PARAM=VALUE -e ENV=VALUE --env-file=che.env
 </code></pre></div></div>
 
-<h2 id="openshift-container-platform">OpenShift Container Platform</h2>
+<p>The environment file has a simple format: <code class="highlighter-rouge">KEY=VALUE</code> per line.</p>
+
+<p>In the following example, you can use the <code class="highlighter-rouge">oc process</code> command and then apply the resulting output by adding <code class="highlighter-rouge">| oc apply -f -</code>, for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ oc process -f che-server-template.yaml -p ROUTING_SUFFIX=$(minishift ip).nip.io | oc apply -f -
+</code></pre></div></div>
+
+<p>In this case, it is not possible to pass environment variables; only parameters are available.</p>
+
+<h2 id="using-minishift-to-deploy-che">Using Minishift to deploy Che</h2>
+
+<p>Due to the size of a multi-user Eclipse Che installation, Minishift is not recommended as the base for this configuration.  If you have to use Minishift, start it with at least 4GB of memory by including the <code class="highlighter-rouge">--memory=4096</code> parameter, and <a href="https://docs.openshift.org/latest/minishift/getting-started/updating.html">update Minishift</a> to the latest version.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>oc new-project che
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">$(</span>minishift ip<span class="k">)</span>.nip.io
+<span class="nv">$ </span>oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">$(</span>minishift ip<span class="k">)</span>.nip.io <span class="nt">-p</span> <span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">$ </span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
+</code></pre></div></div>
+
+<h2 id="using-openshift-container-platform-to-deploy-che">Using OpenShift Container Platform to deploy Che</h2>
 
 <p><strong>HTTP Setup</strong></p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-project che
-
-oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
-oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span>
-oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
-oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="nt">-p</span> <span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true
-</span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>oc new-project che
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span>
+<span class="nv">$ </span>oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="nt">-p</span> <span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">$ </span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
 </code></pre></div></div>
 
-<p>More info about routing suffix <a href="openshift-single-user.html#what-is-my-routing-suffix">here</a>.</p>
+<p>More information about the <a href="openshift-single-user.html#what-is-my-routing-suffix">routing suffix</a>.</p>
 
 <p><strong>HTTPS Setup</strong></p>
 
-<p><span style="color:red;">IMPORTANT!</span> Find instructions on adding self signed certs at <a href="openshift-config.html#https-mode---self-signed-certs">OpenShift Configuration page</a>.</p>
+<p><span style="color:red;">IMPORTANT!</span> Find instructions on adding self-signed certificates at the <a href="openshift-config.html#https-mode---self-signed-certs">OpenShift Configuration page</a>.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-project che
-
-oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
-oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="nt">-p</span> <span class="nv">PROTOCOL</span><span class="o">=</span>https
-oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
-oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>oc new-project che
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/postgres-template.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> multi/keycloak-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="nt">-p</span> <span class="nv">PROTOCOL</span><span class="o">=</span>https
+<span class="nv">$ </span>oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
+<span class="nv">$ </span>oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">${</span><span class="nv">ROUTING_SUFFIX</span><span class="k">}</span> <span class="se">\</span>
 	<span class="nt">-p</span> <span class="nv">CHE_MULTIUSER</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
  	<span class="nt">-p</span> <span class="nv">PROTOCOL</span><span class="o">=</span>https <span class="se">\</span>
 	<span class="nt">-p</span> <span class="nv">WS_PROTOCOL</span><span class="o">=</span>wss <span class="se">\</span>
-	<span class="nt">-p</span> <span class="nv">TLS</span><span class="o">=</span><span class="nb">true
-</span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
-oc apply <span class="nt">-f</span> https
+	<span class="nt">-p</span> <span class="nv">TLS</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">$ </span>oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
+<span class="nv">$ </span>oc apply <span class="nt">-f</span> https
 </code></pre></div></div>
 
-<p>More info about routing suffix <a href="openshift-single-user.html#what-is-my-routing-suffix">here</a>.</p>
+<p>More information about the <a href="openshift-single-user.html#what-is-my-routing-suffix">routing suffix</a>.</p>
 
-<h2 id="openshift-dedicated">OpenShift Dedicated</h2>
+<h2 id="using-openshift-dedicated-to-deploy-che">Using OpenShift Dedicated to deploy Che</h2>
 
-<p>Instructions to deploy Che to OSD are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a>.</p>
+<p>The instructions to deploy Che to OpenShift Dedicated are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a>.</p>
 
-<h2 id="openshift-online-pro">OpenShift Online Pro</h2>
+<h2 id="using-openshift-online-pro-to-deploy-che">Using OpenShift Online Pro to deploy Che</h2>
 
-<p>Instructions to deploy Che to OSO PRO are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a>.</p>
+<p>The instructions to deploy Che to OpenShift Online PRO are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a>.</p>
 
-<h2 id="admin-guide">Admin Guide</h2>
+<h2 id="what-is-next">What is next?</h2>
 
-<p>See: Kubernetes <a href="kubernetes-admin-guide.html">Admin Guide</a></p>
+<p>Now that you have a running Che multi-user instance, <a href="user-management.html">create a user, set up GitHub oAuth, and log in</a>.</p>
 
-<h2 id="whats-next">What’s Next?</h2>
+<h2 id="additional-resources">Additional Resources</h2>
 
-<p>Now that you have a running Che Multi-User instance, let’s <a href="user-management.html">create a user, setup GitHub oAuth and login</a>.</p>
+<p>Kubernetes <a href="kubernetes-admin-guide.html">Admin Guide</a></p>
+
+<p><a href="https://docs.openshift.com/container-platform/3.7/dev_guide/application_lifecycle/new_app.html#specifying-a-template">OpenShift documentation</a></p>
 
 
 
@@ -979,7 +971,7 @@ oc apply <span class="nt">-f</span> https
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 20, 2018 <br/>
+                    Site last generated: Aug 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
