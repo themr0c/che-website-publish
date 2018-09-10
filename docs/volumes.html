@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,32 +846,50 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="default-volumes">Default Volumes</h2>
-
-<p>By default workspace containers/pods start with one default volume/PVC that persists <code class="highlighter-rouge">/projects</code> where workspace projects are physically located. When a workspace is stopped its machines are destroyed, however, volumes stay there.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default workspace containers/pods start with one default volume/PVC that persists <code>/projects</code> where workspace projects are physically located. When a workspace is stopped its machines are destroyed, however, volumes stay there.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="user-provided-volumes">User-Provided Volumes</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Your workspace may need additional volumes though, say, to persist a local Maven repo, node_modules, ruby jems, authorized_keys for ssh connections etc. You can add additional volumes for your workspace machines - each machine can get as many volumes as an underlying infrastructure can afford, or depending on imposed limits (that’s mostly true for OpenShift).</p>
-
+</div>
+<div class="paragraph">
 <p>Volumes can be added either in User Dashboard or directly in machine configuration:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"volumes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"myvolume"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path/in/workspace"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">volumes</span><span class="delimiter">&quot;</span></span>: {
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">myvolume</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">path</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/absolute/path/in/workspace</span><span class="delimiter">&quot;</span></span>
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>When adding a volume in User Dashboard using UI or config window, volume name and path are validated to avoid potential failures to create data volumes in Docker and PVCs in OpenShift. If you somehow update workspace configuration using REST API, there can be failures to attach volumes if:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>path containers <code class="highlighter-rouge">~</code> - an absolute path should be used</li>
-  <li>name and path contains special characters, including <code class="highlighter-rouge">-</code> and <code class="highlighter-rouge">_</code></li>
+<li>
+<p>path containers <code>~</code> - an absolute path should be used</p>
+</li>
+<li>
+<p>name and path contains special characters, including <code>-</code> and <code>_</code></p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>If you want your workspace machines to share volumes, just create volumes for each machine with an identical name. This way, machines will share the same volume.</p>
-
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -905,7 +926,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

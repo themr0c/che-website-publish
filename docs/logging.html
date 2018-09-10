@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,81 +846,96 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="logging-in-che">Logging in Che</h2>
-<p>By default ws-master and ws-agent are configured to use logback as default logging backend. Their configuration produces plaintext logs to output of Che assembly and stores it to files.
-There are several options on how to customize logs producing in Che.
-Che is bundled with 2 variants of logger format and location settings <code class="highlighter-rouge">json</code> and <code class="highlighter-rouge">plaintext</code>.<br />
-JSON setting produces logs in JSON stream format and doesn’t store them in any files.<br />
-Plaintext setting produces logs in the format of plain text and stores it in directory Che logs dir.<br />
-To switch these encodings set environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL</code> to <code class="highlighter-rouge">json</code> or <code class="highlighter-rouge">plaintext</code>. Value <code class="highlighter-rouge">plaintext</code> is default setting.</p>
-
-<p>To add a custom implementation of logger producing create <a href="assemblies.html">custom assembly</a>, set environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL=myimpl</code> and add files <code class="highlighter-rouge">logback-file-myimpl-appenders.xml</code> and <code class="highlighter-rouge">tomcat-file-myimpl-appenders.xml</code> to <code class="highlighter-rouge">tomcat/conf</code> folder.<br />
-An example of these files which adds storing logs in JSON format in files:<br />
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default ws-master and ws-agent are configured to use logback as default logging backend. Their configuration produces plaintext logs to output of Che assembly and stores it to files. There are several options on how to customize logs producing in Che. Che is bundled with 2 variants of logger format and location settings <code>json</code> and <code>plaintext</code>.<br>
+JSON setting produces logs in JSON stream format and doesn’t store them in any files.<br>
+Plaintext setting produces logs in the format of plain text and stores it in directory Che logs dir.<br>
+To switch these encodings set environment variable <code>CHE_LOGS_APPENDERS_IMPL</code> to <code>json</code> or <code>plaintext</code>. Value <code>plaintext</code> is default setting.</p>
+</div>
+<div class="paragraph">
+<p>To add a custom implementation of logger producing create <a href="assemblies">custom assembly</a>, set environment variable <code>CHE_LOGS_APPENDERS_IMPL=myimpl</code> and add files <code>logback-file-myimpl-appenders.xml</code> and <code>tomcat-file-myimpl-appenders.xml</code> to <code>tomcat/conf</code> folder.<br>
+An example of these files which adds storing logs in JSON format in files:<br>
 logback-file-json-appenders.xml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;included&gt;</span>
+    <span class="tag">&lt;appender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">file-json</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.core.rolling.RollingFileAppender</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="tag">&lt;/file&gt;</span>
+        <span class="tag">&lt;filter</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.classic.filter.ThresholdFilter</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;level&gt;</span>info<span class="tag">&lt;/level&gt;</span>
+        <span class="tag">&lt;/filter&gt;</span>
+        <span class="tag">&lt;rollingPolicy</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.core.rolling.TimeBasedRollingPolicy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="tag">&lt;/fileNamePattern&gt;</span>
+            <span class="tag">&lt;maxHistory&gt;</span>${max.retention.days}<span class="tag">&lt;/maxHistory&gt;</span>
+        <span class="tag">&lt;/rollingPolicy&gt;</span>
+        <span class="tag">&lt;encoder</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">net.logstash.logback.encoder.LogstashEncoder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;includeMdcKeyName&gt;</span>identity_id<span class="tag">&lt;/includeMdcKeyName&gt;</span>
+            <span class="tag">&lt;includeMdcKeyName&gt;</span>req_id<span class="tag">&lt;/includeMdcKeyName&gt;</span>
+        <span class="tag">&lt;/encoder&gt;</span>
+    <span class="tag">&lt;/appender&gt;</span>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="nt">&lt;included&gt;</span>
-    <span class="nt">&lt;appender</span> <span class="na">name=</span><span class="s">"file-json"</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.RollingFileAppender"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="nt">&lt;/file&gt;</span>
-        <span class="nt">&lt;filter</span> <span class="na">class=</span><span class="s">"ch.qos.logback.classic.filter.ThresholdFilter"</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;level&gt;</span>info<span class="nt">&lt;/level&gt;</span>
-        <span class="nt">&lt;/filter&gt;</span>
-        <span class="nt">&lt;rollingPolicy</span> <span class="na">class=</span><span class="s">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="nt">&lt;/fileNamePattern&gt;</span>
-            <span class="nt">&lt;maxHistory&gt;</span>${max.retention.days}<span class="nt">&lt;/maxHistory&gt;</span>
-        <span class="nt">&lt;/rollingPolicy&gt;</span>
-        <span class="nt">&lt;encoder</span> <span class="na">class=</span><span class="s">"net.logstash.logback.encoder.LogstashEncoder"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;includeMdcKeyName&gt;</span>identity_id<span class="nt">&lt;/includeMdcKeyName&gt;</span>
-            <span class="nt">&lt;includeMdcKeyName&gt;</span>req_id<span class="nt">&lt;/includeMdcKeyName&gt;</span>
-        <span class="nt">&lt;/encoder&gt;</span>
-    <span class="nt">&lt;/appender&gt;</span>
-
-    <span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">"${che.logs.level:-INFO}"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">"file-json"</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/root&gt;</span>
-<span class="nt">&lt;/included&gt;</span>
-</code></pre></div></div>
+    <span class="tag">&lt;root</span> <span class="attribute-name">level</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${che.logs.level:-INFO}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;appender-ref</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">file-json</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/root&gt;</span>
+<span class="tag">&lt;/included&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>tomcat-file-json-appenders.xml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;included&gt;</span>
+    <span class="tag">&lt;appender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">file-json</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.apache.juli.logging.ch.qos.logback.core.rolling.RollingFileAppender</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="tag">&lt;/file&gt;</span>
+        <span class="tag">&lt;filter</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.apache.juli.logging.ch.qos.logback.classic.filter.ThresholdFilter</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;level&gt;</span>info<span class="tag">&lt;/level&gt;</span>
+        <span class="tag">&lt;/filter&gt;</span>
+        <span class="tag">&lt;rollingPolicy</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.apache.juli.logging.ch.qos.logback.core.rolling.TimeBasedRollingPolicy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="tag">&lt;/fileNamePattern&gt;</span>
+            <span class="tag">&lt;maxHistory&gt;</span>${max.retention.days}<span class="tag">&lt;/maxHistory&gt;</span>
+        <span class="tag">&lt;/rollingPolicy&gt;</span>
+        <span class="tag">&lt;encoder</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">net.logstash.logback.encoder.LogstashEncoder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;includeMdcKeyName&gt;</span>identity_id<span class="tag">&lt;/includeMdcKeyName&gt;</span>
+            <span class="tag">&lt;includeMdcKeyName&gt;</span>req_id<span class="tag">&lt;/includeMdcKeyName&gt;</span>
+        <span class="tag">&lt;/encoder&gt;</span>
+    <span class="tag">&lt;/appender&gt;</span>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="nt">&lt;included&gt;</span>
-    <span class="nt">&lt;appender</span> <span class="na">name=</span><span class="s">"file-json"</span> <span class="na">class=</span><span class="s">"org.apache.juli.logging.ch.qos.logback.core.rolling.RollingFileAppender"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;file&gt;</span>${che.logs.dir}/logs/catalina.log.json<span class="nt">&lt;/file&gt;</span>
-        <span class="nt">&lt;filter</span> <span class="na">class=</span><span class="s">"org.apache.juli.logging.ch.qos.logback.classic.filter.ThresholdFilter"</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;level&gt;</span>info<span class="nt">&lt;/level&gt;</span>
-        <span class="nt">&lt;/filter&gt;</span>
-        <span class="nt">&lt;rollingPolicy</span> <span class="na">class=</span><span class="s">"org.apache.juli.logging.ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;fileNamePattern&gt;</span>${che.logs.dir}/archive/%d{yyyy/MM/dd}/catalina.log.json<span class="nt">&lt;/fileNamePattern&gt;</span>
-            <span class="nt">&lt;maxHistory&gt;</span>${max.retention.days}<span class="nt">&lt;/maxHistory&gt;</span>
-        <span class="nt">&lt;/rollingPolicy&gt;</span>
-        <span class="nt">&lt;encoder</span> <span class="na">class=</span><span class="s">"net.logstash.logback.encoder.LogstashEncoder"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;includeMdcKeyName&gt;</span>identity_id<span class="nt">&lt;/includeMdcKeyName&gt;</span>
-            <span class="nt">&lt;includeMdcKeyName&gt;</span>req_id<span class="nt">&lt;/includeMdcKeyName&gt;</span>
-        <span class="nt">&lt;/encoder&gt;</span>
-    <span class="nt">&lt;/appender&gt;</span>
-
-    <span class="nt">&lt;root</span> <span class="na">level=</span><span class="s">"${che.logs.level:-INFO}"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">"file-json"</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/root&gt;</span>
-<span class="nt">&lt;/included&gt;</span>
-</code></pre></div></div>
-<p>Other <code class="highlighter-rouge">logback-logstash-encoder</code> appenders can be added as well. See <a href="https://github.com/logstash/logstash-logback-encoder#usage">https://github.com/logstash/logstash-logback-encoder#usage</a>.  <br />
-Note that to change logging settings for workspace environment variable should be set in workspaces and assembly of ws-agent should be extended in addition to the same actions for Che master.<br />
+    <span class="tag">&lt;root</span> <span class="attribute-name">level</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${che.logs.level:-INFO}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;appender-ref</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">file-json</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/root&gt;</span>
+<span class="tag">&lt;/included&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other <code>logback-logstash-encoder</code> appenders can be added as well. See <a href="https://github.com/logstash/logstash-logback-encoder#usage" class="bare">https://github.com/logstash/logstash-logback-encoder#usage</a>.<br>
+Note that to change logging settings for workspace environment variable should be set in workspaces and assembly of ws-agent should be extended in addition to the same actions for Che master.<br>
 On the other hand, customizing of ws-agent logs is uncommon practise, so it can be avoided.</p>
-
-<p>Also, there are two ways to extend chosen configuration.</p>
-<ol>
-  <li>Put your configuration in <code class="highlighter-rouge">${che.local.conf.dir}/logback/logback-additional-appenders.xml</code> or <code class="highlighter-rouge">${catalina.home}/conf/logback-additional-appenders.xml</code> file</li>
-  <li>Provide environment variable in such form
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=logger1=logger1_level,logger2=logger2_level
-</code></pre></div>    </div>
-    <p>for example</p>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHE_LOGGER_CONFIG=org.eclipse.che=DEBUG,org.eclipse.che.api.installer.server.impl.LocalInstallerRegistry=OFF 
-</code></pre></div>    </div>
-  </li>
-</ol>
-
+</div>
+<div class="paragraph">
+<p>Also, there are two ways to extend chosen configuration. 1. Put your configuration in <code>${che.local.conf.dir}/logback/logback-additional-appenders.xml</code> or <code>${catalina.home}/conf/logback-additional-appenders.xml</code> file 2. Provide environment variable in such form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_LOGGER_CONFIG=logger1=logger1_level,logger2=logger2_level</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>for example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_LOGGER_CONFIG=org.eclipse.che=DEBUG,org.eclipse.che.api.installer.server.impl.LocalInstallerRegistry=OFF</pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -952,7 +970,7 @@ On the other hand, customizing of ws-agent logs is uncommon practise, so it can 
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

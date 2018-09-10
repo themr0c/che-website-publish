@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,60 +846,88 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="paragraph">
 <p>A data transfer object (DTO) is an object to exchange data with the client and server. DTOs are responsible for serializing (and deserializing) themselves into JSON. You can prepare custom DTOs for your extensions and plugins. You define a DTO interface and then our DTO utilities will generate implementations that can be included in your extension.</p>
-
+</div>
+<div class="sect1">
 <h2 id="interfaces">Interfaces</h2>
-
-<p>Every DTO requires interfaces that must contain get-methods. Mark these interfaces with the <code class="highlighter-rouge">org.eclipse.che.dto.shared.DTO</code> annotation. Possible names for getter-methods are:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get...
-is...
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every DTO requires interfaces that must contain get-methods. Mark these interfaces with the <code>org.eclipse.che.dto.shared.DTO</code> annotation. Possible names for getter-methods are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>get...
+is...</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">com.codenvy.test.dto</span>;
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">codenvy</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">dto</span><span class="o">;</span>
+<span class="keyword">import</span> <span class="include">org.eclipse.che.dto.shared.DTO</span>;
 
-<span class="kn">import</span> <span class="nn">org.eclipse.che.dto.shared.DTO</span><span class="o">;</span>
-
-<span class="nd">@DTO</span>
-<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Item</span> <span class="o">{</span>
-    <span class="n">String</span> <span class="nf">getStatus</span><span class="o">();</span>
-    <span class="kt">void</span> <span class="nf">setStatus</span><span class="o">(</span><span class="n">String</span> <span class="n">status</span><span class="o">);</span>
-    <span class="kt">boolean</span> <span class="nf">isHidden</span><span class="o">();</span>
-    <span class="kt">void</span> <span class="nf">setHidden</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">hidden</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+<span class="annotation">@DTO</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">Item</span> {
+    <span class="predefined-type">String</span> getStatus();
+    <span class="type">void</span> setStatus(<span class="predefined-type">String</span> status);
+    <span class="type">boolean</span> isHidden();
+    <span class="type">void</span> setHidden(<span class="type">boolean</span> hidden);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="pom">POM</h2>
-
-<p>Update the <code class="highlighter-rouge">&lt;plugins&gt;</code> section of a <code class="highlighter-rouge">pom.xml</code> to include the DTO.</p>
-
-<ol>
-  <li><code class="highlighter-rouge">maven-compiler-plugin</code> - helps to run compilation of project in two steps.</li>
-  <li><code class="highlighter-rouge">che-core-api-dto-maven-plugin</code> - generates DTO implementations.</li>
-  <li><code class="highlighter-rouge">build-helper-maven-plugin</code> - adds generated files to project’s sources.</li>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Update the <code>&lt;plugins&gt;</code> section of a <code>pom.xml</code> to include the DTO.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>maven-compiler-plugin</code> - helps to run compilation of project in two steps.</p>
+</li>
+<li>
+<p><code>che-core-api-dto-maven-plugin</code> - generates DTO implementations.</p>
+</li>
+<li>
+<p><code>build-helper-maven-plugin</code> - adds generated files to project’s sources.</p>
+</li>
 </ol>
-
-<p><code class="highlighter-rouge">che-core-api-dto-maven-plugin</code> has the following configuration parameters (all required):</p>
-
-<p><code class="highlighter-rouge">dtoPackages</code>: names of packages which contains DTO interfaces.</p>
-
-<p><code class="highlighter-rouge">outputDirectory</code>: name of directory to store generated files. Usually just set one property, e.g. <code class="highlighter-rouge">dto-generator-out-directory</code> and reuse it in configurations of plugins.</p>
-
-<p><code class="highlighter-rouge">genClassName</code>: sets the name of an enclosing class where generated classes are placed.</p>
-
-<p><code class="highlighter-rouge">impl</code>: either <code class="highlighter-rouge">server</code> or <code class="highlighter-rouge">client</code> to define which kind of DTO to generate.</p>
-
-<p><code class="highlighter-rouge">dependencies</code> - each maven plugin has its own classloader. Plugin cannot see dependencies or build output of current project. So it’s necessary to add current project as dependency for <code class="highlighter-rouge">che-core-api-dto-maven-plugin</code>. If DTOs from current project use DTOs from another project, then need add dependency to that project too.</p>
-
-<p>The following <code class="highlighter-rouge">pom.xml</code> snippet demonstrates how you can generate server-side DTOs:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+</div>
+<div class="paragraph">
+<p><code>che-core-api-dto-maven-plugin</code> has the following configuration parameters (all required):</p>
+</div>
+<div class="paragraph">
+<p><code>dtoPackages</code>: names of packages which contains DTO interfaces.</p>
+</div>
+<div class="paragraph">
+<p><code>outputDirectory</code>: name of directory to store generated files. Usually just set one property, e.g. <code>dto-generator-out-directory</code> and reuse it in configurations of plugins.</p>
+</div>
+<div class="paragraph">
+<p><code>genClassName</code>: sets the name of an enclosing class where generated classes are placed.</p>
+</div>
+<div class="paragraph">
+<p><code>impl</code>: either <code>server</code> or <code>client</code> to define which kind of DTO to generate.</p>
+</div>
+<div class="paragraph">
+<p><code>dependencies</code> - each maven plugin has its own classloader. Plugin cannot see dependencies or build output of current project. So it’s necessary to add current project as dependency for <code>che-core-api-dto-maven-plugin</code>. If DTOs from current project use DTOs from another project, then need add dependency to that project too.</p>
+</div>
+<div class="paragraph">
+<p>The following <code>pom.xml</code> snippet demonstrates how you can generate server-side DTOs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>...
 &lt;properties&gt;
     &lt;dto-generator-out-directory&gt;${project.build.directory}/generated-sources/dto/&lt;/dto-generator-out-directory&gt;
 &lt;/properties&gt;
-....
+...
 &lt;build&gt;
 &lt;plugins&gt;
     &lt;plugin&gt;
@@ -977,12 +1008,15 @@ is...
     &lt;/plugin&gt;
 &lt;/plugins&gt;
 &lt;/build&gt;
-...
-</code></pre></div></div>
-
-<p>The following <code class="highlighter-rouge">pom.xml</code> snippet demonstrates how you can generate both types of DTOs (client and server):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
-...
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following <code>pom.xml</code> snippet demonstrates how you can generate both types of DTOs (client and server):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>...
 &lt;properties&gt;
     &lt;dto-generator-out-directory&gt;${project.build.directory}/generated-sources/dto/&lt;/dtogenerator-out-directory&gt;
 &lt;/properties&gt;
@@ -1087,188 +1121,258 @@ is...
     &lt;/resource&gt;
 &lt;/resources&gt;
 &lt;/build&gt;
-...
-</code></pre></div></div>
-
+...</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Make sure that the directory with generated client-side DTOs is included in classpath resources.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="generate">Generate</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>In order to generate DTOs, you build your project with maven:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean install
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn clean install</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="use-server-side">Use: Server-Side</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// server-side DTO</span>
+<span class="keyword">import</span> <span class="include">org.eclipse.che.dto.server.DtoFactory</span>;
+...
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// server-side DTO</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.dto.server.DtoFactory</span><span class="o">;</span>
-<span class="o">...</span>
+<span class="comment">// create instance and set fields</span>
+MyJob job = DtoFactory.getInstance().createDto(MyJob.class);
+job.setStatus(<span class="string"><span class="delimiter">&quot;</span><span class="content">success</span><span class="delimiter">&quot;</span></span>);
+job.setExitCode(<span class="integer">0</span>);
 
-<span class="c1">// create instance and set fields</span>
-<span class="n">MyJob</span> <span class="n">job</span> <span class="o">=</span> <span class="n">DtoFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">createDto</span><span class="o">(</span><span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">job</span><span class="o">.</span><span class="na">setStatus</span><span class="o">(</span><span class="s">"success"</span><span class="o">);</span>
-<span class="n">job</span><span class="o">.</span><span class="na">setExitCode</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+<span class="comment">// serialize to JSON</span>
+<span class="predefined-type">String</span> json = DtoFactory.getInstance().toJson(job);
 
-<span class="c1">// serialize to JSON</span>
-<span class="n">String</span> <span class="n">json</span> <span class="o">=</span> <span class="n">DtoFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">toJson</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
-
-<span class="c1">// deserialize from JSON</span>
-<span class="n">MyJob</span> <span class="n">job2</span> <span class="o">=</span> <span class="n">DtoFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">createDtoFromJson</span><span class="o">(</span><span class="n">json</span><span class="o">,</span> <span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-</code></pre></div></div>
-
-<p>You can also use the static method <code class="highlighter-rouge">DtoFactory.newDto(MyJob.class)</code> that is a shortcut for <code class="highlighter-rouge">DtoFactory.getInstance().createDto(MyJob.class)</code>. See: <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-dto/src/main/java/org/eclipse/che/dto/server/DtoFactory.java">DtoFactory</a> for server side.</p>
-
+<span class="comment">// deserialize from JSON</span>
+MyJob job2 = DtoFactory.getInstance().createDtoFromJson(json, MyJob.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also use the static method <code>DtoFactory.newDto(MyJob.class)</code> that is a shortcut for <code>DtoFactory.getInstance().createDto(MyJob.class)</code>. See: <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-dto/src/main/java/org/eclipse/che/dto/server/DtoFactory.java">DtoFactory</a> for server side.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="use-client-side">Use: Client-Side</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// client-side DTO</span>
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.dto.DtoFactory</span>;
+<span class="annotation">@Singleton</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyPresenter</span> {
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> MyPresenter(DtoFactory dtoFactory) {
+        <span class="comment">// create instance and set fields</span>
+        MyJob job = dtoFactory.createDto(MyJob.class);
+        job.setStatus(<span class="string"><span class="delimiter">&quot;</span><span class="content">success</span><span class="delimiter">&quot;</span></span>);
+        job.setExitCode(<span class="integer">0</span>);
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// client-side DTO</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.dto.DtoFactory</span><span class="o">;</span>
-<span class="nd">@Singleton</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyPresenter</span> <span class="o">{</span>
-    <span class="nd">@Inject</span>
-    <span class="kd">public</span> <span class="nf">MyPresenter</span><span class="o">(</span><span class="n">DtoFactory</span> <span class="n">dtoFactory</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// create instance and set fields</span>
-        <span class="n">MyJob</span> <span class="n">job</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">createDto</span><span class="o">(</span><span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-        <span class="n">job</span><span class="o">.</span><span class="na">setStatus</span><span class="o">(</span><span class="s">"success"</span><span class="o">);</span>
-        <span class="n">job</span><span class="o">.</span><span class="na">setExitCode</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+        <span class="comment">// serialize to JSON</span>
+        <span class="predefined-type">String</span> json = dtoFactory.toJson(job);
 
-        <span class="c1">// serialize to JSON</span>
-        <span class="n">String</span> <span class="n">json</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">toJson</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
-
-        <span class="c1">// deserialize from JSON</span>
-        <span class="n">MyJob</span> <span class="n">job2</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">createDtoFromJson</span><span class="o">(</span><span class="n">json</span><span class="o">,</span> <span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
+        <span class="comment">// deserialize from JSON</span>
+        MyJob job2 = dtoFactory.createDtoFromJson(json, MyJob.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>See: client side <a href="https://github.com/eclipse/che/blob/master/ide/commons-gwt/src/main/java/org/eclipse/che/ide/dto/DtoFactory.java">DtoFactory</a>.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="method-chaining">Method Chaining</h2>
-
-<p>In addition to the standard getter and setter methods, our generator also adds a method <code class="highlighter-rouge">withXXX(T value)</code>. This is seimilar to a setter method, but also returns <code class="highlighter-rouge">this</code>. You can use this to do chaining. Instead of:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MyJob</span> <span class="n">job</span> <span class="o">=</span> <span class="n">DtoFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">createDto</span><span class="o">(</span><span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">job</span><span class="o">.</span><span class="na">setStatus</span><span class="o">(</span><span class="s">"success"</span><span class="o">);</span>
-<span class="n">job</span><span class="o">.</span><span class="na">setExitCode</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</code></pre></div></div>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition to the standard getter and setter methods, our generator also adds a method <code>withXXX(T value)</code>. This is seimilar to a setter method, but also returns <code>this</code>. You can use this to do chaining. Instead of:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">MyJob job = DtoFactory.getInstance().createDto(MyJob.class);
+job.setStatus(<span class="string"><span class="delimiter">&quot;</span><span class="content">success</span><span class="delimiter">&quot;</span></span>);
+job.setExitCode(<span class="integer">0</span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>use:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MyJob</span> <span class="n">job</span> <span class="o">=</span>
-<span class="n">DtoFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">createDto</span><span class="o">(</span><span class="n">MyJob</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">withStatus</span><span class="o">(</span><span class="s">"success"</span><span class="o">).</span><span class="na">withExitCode</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">MyJob job =
+DtoFactory.getInstance().createDto(MyJob.class).withStatus(<span class="string"><span class="delimiter">&quot;</span><span class="content">success</span><span class="delimiter">&quot;</span></span>).withExitCode(<span class="integer">0</span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Generator always add such methods in generated implementation for your DTO interfaces, but you still should add them to you interfaces so that they are externally accessible:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">codenvy</span><span class="o">.</span><span class="na">test</span><span class="o">.</span><span class="na">dto</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.dto.shared.DTO</span><span class="o">;</span>
-<span class="nd">@DTO</span>
-<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MyJob</span> <span class="o">{</span>
-     <span class="n">String</span> <span class="nf">getStatus</span><span class="o">();</span>
-     <span class="kt">void</span> <span class="nf">setStatus</span><span class="o">(</span><span class="n">String</span> <span class="n">status</span><span class="o">);</span>
-     <span class="kt">int</span> <span class="nf">getExitCode</span><span class="o">();</span>
-     <span class="kt">void</span> <span class="nf">setExitCode</span><span class="o">(</span><span class="kt">int</span> <span class="n">code</span><span class="o">);</span>
-     <span class="n">String</span> <span class="nf">getError</span><span class="o">();</span>
-     <span class="kt">void</span> <span class="nf">setError</span><span class="o">(</span><span class="n">String</span> <span class="n">error</span><span class="o">);</span>
-     <span class="c1">// for chaining</span>
-     <span class="n">MyJob</span> <span class="nf">withStatus</span><span class="o">(</span><span class="n">String</span> <span class="n">status</span><span class="o">);</span>
-     <span class="n">MyJob</span> <span class="nf">withExitCode</span><span class="o">(</span><span class="kt">int</span> <span class="n">code</span><span class="o">);</span>
-     <span class="n">MyJob</span> <span class="nf">withError</span><span class="o">(</span><span class="n">String</span> <span class="n">error</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">com.codenvy.test.dto</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.dto.shared.DTO</span>;
+<span class="annotation">@DTO</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">MyJob</span> {
+     <span class="predefined-type">String</span> getStatus();
+     <span class="type">void</span> setStatus(<span class="predefined-type">String</span> status);
+     <span class="type">int</span> getExitCode();
+     <span class="type">void</span> setExitCode(<span class="type">int</span> code);
+     <span class="predefined-type">String</span> getError();
+     <span class="type">void</span> setError(<span class="predefined-type">String</span> error);
+     <span class="comment">// for chaining</span>
+     MyJob withStatus(<span class="predefined-type">String</span> status);
+     MyJob withExitCode(<span class="type">int</span> code);
+     MyJob withError(<span class="predefined-type">String</span> error);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="delegate-dto-methods">Delegate DTO Methods</h2>
-
-<p>In some case we may need more then just getters and setters in DTO, but there is no common mechanism to generate such implementation for DTO interface. In this case <code class="highlighter-rouge">org.eclipse.che.dto.shared.DelegateTo</code> annotation may help. DTO interface bellow contains getters, setters and with methods and one more complex method for getting full name of user.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DTO</span>
-<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">User</span> <span class="o">{</span>
-     <span class="n">String</span> <span class="nf">getFirstName</span><span class="o">();</span>
-     <span class="kt">void</span> <span class="nf">setFirstName</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">);</span>
-     <span class="n">User</span> <span class="nf">withFirstName</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">);</span>
-     <span class="n">String</span> <span class="nf">getLastName</span><span class="o">();</span>
-     <span class="kt">void</span> <span class="nf">setLastName</span><span class="o">(</span><span class="n">String</span> <span class="n">lastName</span><span class="o">);</span>
-     <span class="n">User</span> <span class="nf">withLastName</span><span class="o">(</span><span class="n">String</span> <span class="n">lastName</span><span class="o">);</span>
-     <span class="nd">@DelegateTo</span><span class="o">(</span><span class="n">client</span> <span class="o">=</span> <span class="nd">@DelegateRule</span><span class="o">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">Util</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">"fullName"</span><span class="o">),</span>
-     <span class="n">server</span> <span class="o">=</span> <span class="nd">@DelegateRule</span><span class="o">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">Util</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">"fullName"</span><span class="o">))</span>
-     <span class="n">String</span> <span class="nf">getFullName</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>For method <code class="highlighter-rouge">getFullName</code> add annotation <code class="highlighter-rouge">DelegateTo</code>. Annotations may contains different delegate rules for client and server code.</p>
-
-<p><code class="highlighter-rouge">DelegateTo</code> annotation:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">client</code></td>
-      <td>Rules for client code generator</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">server</code></td>
-      <td>Rules for server code generator</td>
-    </tr>
-  </tbody>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In some case we may need more then just getters and setters in DTO, but there is no common mechanism to generate such implementation for DTO interface. In this case <code>org.eclipse.che.dto.shared.DelegateTo</code> annotation may help. DTO interface bellow contains getters, setters and with methods and one more complex method for getting full name of user.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DTO</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">User</span> {
+     <span class="predefined-type">String</span> getFirstName();
+     <span class="type">void</span> setFirstName(<span class="predefined-type">String</span> firstName);
+     User withFirstName(<span class="predefined-type">String</span> firstName);
+     <span class="predefined-type">String</span> getLastName();
+     <span class="type">void</span> setLastName(<span class="predefined-type">String</span> lastName);
+     User withLastName(<span class="predefined-type">String</span> lastName);
+     <span class="annotation">@DelegateTo</span>(client = <span class="annotation">@DelegateRule</span>(type = <span class="predefined-type">Util</span>.class, method = <span class="string"><span class="delimiter">&quot;</span><span class="content">fullName</span><span class="delimiter">&quot;</span></span>),
+     server = <span class="annotation">@DelegateRule</span>(type = <span class="predefined-type">Util</span>.class, method = <span class="string"><span class="delimiter">&quot;</span><span class="content">fullName</span><span class="delimiter">&quot;</span></span>))
+     <span class="predefined-type">String</span> getFullName();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For method <code>getFullName</code> add annotation <code>DelegateTo</code>. Annotations may contains different delegate rules for client and server code.</p>
+</div>
+<div class="paragraph">
+<p><code>DelegateTo</code> annotation:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>client</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rules for client code generator</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rules for server code generator</p></td>
+</tr>
+</tbody>
 </table>
-
-<p><code class="highlighter-rouge">DelegateRule</code> annotation</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">type</code></td>
-      <td>Class that contains method to delegate method call</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">method</code></td>
-      <td>Name of method</td>
-    </tr>
-  </tbody>
+<div class="paragraph">
+<p><code>DelegateRule</code> annotation</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class that contains method to delegate method call</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of method</p></td>
+</tr>
+</tbody>
 </table>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Util</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">fullName</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="na">getFirstName</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getLastName</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>Fragment of generated code for method <code class="highlighter-rouge">getFullName()</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">getFullName</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">Util</span><span class="o">.</span><span class="na">fullName</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Util</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> fullName(User user) {
+        <span class="keyword">return</span> user.getFirstName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + user.getLastName();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Fragment of generated code for method <code>getFullName()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">String</span> getFullName() {
+    <span class="keyword">return</span> <span class="predefined-type">Util</span>.fullName(<span class="local-variable">this</span>);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Requirements for methods to delegate DTO methods calls:</p>
-
-<ol>
-  <li>Method must be public and static.</li>
-  <li>Method must accept DTO interface as first parameter, if DTO method contains other parameters then the delegate method must accept the whole set of DTO method parameters starting from the second position.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Method must be public and static.</p>
+</li>
+<li>
+<p>Method must accept DTO interface as first parameter, if DTO method contains other parameters then the delegate method must accept the whole set of DTO method parameters starting from the second position.</p>
+</li>
 </ol>
-
+</div>
+<div class="paragraph">
 <p>For example:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DelegateTo</span><span class="o">(</span><span class="n">client</span> <span class="o">=</span> <span class="nd">@DelegateRule</span><span class="o">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">Util</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">"fullName"</span><span class="o">),</span>
-            <span class="n">server</span> <span class="o">=</span> <span class="nd">@DelegateRule</span><span class="o">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">Util</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">"fullName"</span><span class="o">))</span>
-<span class="n">String</span> <span class="nf">getFullNameWithPrefix</span><span class="o">(</span><span class="n">String</span> <span class="n">prefix</span><span class="o">);</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DelegateTo</span>(client = <span class="annotation">@DelegateRule</span>(type = <span class="predefined-type">Util</span>.class, method = <span class="string"><span class="delimiter">&quot;</span><span class="content">fullName</span><span class="delimiter">&quot;</span></span>),
+            server = <span class="annotation">@DelegateRule</span>(type = <span class="predefined-type">Util</span>.class, method = <span class="string"><span class="delimiter">&quot;</span><span class="content">fullName</span><span class="delimiter">&quot;</span></span>))
+<span class="predefined-type">String</span> getFullNameWithPrefix(<span class="predefined-type">String</span> prefix);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Delegate method:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">fullName</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="n">String</span> <span class="n">prefix</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getFirstName</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getLastName</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> fullName(User user, <span class="predefined-type">String</span> prefix) {
+    <span class="keyword">return</span> prefix + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + user.getFirstName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + user.getLastName();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1297,7 +1401,7 @@ is...
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

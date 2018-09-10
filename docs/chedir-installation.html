@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,63 +846,97 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
-<p>Installing Chedir is extremely easy. Just [get the Che CLI][docker] and you have everything you need to run Chedir on any operating system. Docker and Git Bash (installed by Docker) are required for the Che CLI.</p>
-
+  <div class="paragraph">
+<p>Installing Chedir is extremely easy. Just <a href="docker">get the Che CLI</a> and you have everything you need to run Chedir on any operating system. Docker and Git Bash (installed by Docker) are required for the Che CLI.</p>
+</div>
+<div class="sect1">
 <h2 id="backwards-compatibility">Backwards Compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Chedir requires Eclipse Che 4.7+. Chefiles are not supported to run on older versions of Che.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="upgrading">Upgrading</h2>
-<p>You will automatically get newer versions of Chedir when you upgrade Eclipse Che. You can upgrade Eclipse Che with the CLI by <code class="highlighter-rouge">docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; upgrade</code>. If you want to use a particular version of Chedir you can set <code class="highlighter-rouge">CHE_VERSION</code> as an environment variable and Chedir will use that particular version. You can run multiple versions of Chedir at the same time.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will automatically get newer versions of Chedir when you upgrade Eclipse Che. You can upgrade Eclipse Che with the CLI by <code>docker run -it --rm &lt;DOCKER_PARAMETERS&gt; eclipse/che:&lt;version&gt; upgrade</code>. If you want to use a particular version of Chedir you can set <code>CHE_VERSION</code> as an environment variable and Chedir will use that particular version. You can run multiple versions of Chedir at the same time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="from-source">From Source</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Chedir is provided as a Docker container which you can run instead of using the CLI. The CLI captures your environmental information and invokes the container with the appropriate syntax.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Mac / Linux
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+           -v "$PWD":"$PWD" --rm eclipse/che-dir \
+           $PWD &lt;init|up&gt;
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Mac / Linux</span>
-docker run <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span>:<span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span> <span class="nt">--rm</span> eclipse/che-dir <span class="se">\</span>
-           <span class="nv">$PWD</span> &lt;init|up&gt;
-
-<span class="c"># Windows</span>
-<span class="c"># Replace $PWD to be the absolute path to the current directory.</span>
-<span class="c"># Use case-sensitive format with forward slashes: /c/Users/some_path/</span>
-</code></pre></div></div>
-
+# Windows
+# Replace $PWD to be the absolute path to the current directory.
+# Use case-sensitive format with forward slashes: /c/Users/some_path/</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="build-chedir-docker-container">Build Chedir Docker Container</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>You can build Chedir Docker Container by using the following commands:</p>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone http://github.com/eclipse/che
-<span class="nb">cd </span>che/dockerfiles/dir
-./build.sh
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>git clone http://github.com/eclipse/che
+cd che/dockerfiles/dir
+./build.sh</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="uninstallation">Uninstallation</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>You can remove Chedir by deleting the Chedir docker image from your system.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker rmi <span class="nt">-f</span> eclipse/che-dir
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker rmi -f eclipse/che-dir</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong><em>Remove Che</em></strong></p>
-
+</div>
+<div class="paragraph">
 <p>If you’d also like to remove the Che CLI and Che:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Remove the Che container
+docker rmi -f eclipse/che-server
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Remove the Che container</span>
-docker rmi <span class="nt">-f</span> eclipse/che-server
+# Remove your workspaces and the CLI
 
-<span class="c"># Remove your workspaces and the CLI</span>
-
-<span class="c"># Linux / Mac</span>
-rm <span class="nt">-rf</span> <span class="nv">$CHE_DATA_FOLDER</span>
-rm <span class="nt">-rf</span> /usr/local/bin/che
+# Linux / Mac
+rm -rf $CHE_DATA_FOLDER
+rm -rf /usr/local/bin/che
 
 
-<span class="c"># Windows</span>
+# Windows
 rmdir /s %CHE_DATA_FOLDER%
 del che.bat
-del che.sh<span class="se">\</span>
-</code></pre></div></div>
-
+del che.sh\</pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -928,7 +965,7 @@ del che.sh<span class="se">\</span>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

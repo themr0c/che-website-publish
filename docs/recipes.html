@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,207 +846,287 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="supported-recipe-formats">Supported Recipe Formats</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Depending on the infrastructure, Che supports the following recipes out of the box (default Che build):</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td><strong>Infrastructure</strong></td>
-      <td><strong>Docker Image</strong></td>
-      <td><strong>Dockerfile</strong></td>
-      <td><strong>Composefile</strong></td>
-      <td><strong>Kubernetes yaml</strong></td>
-    </tr>
-    <tr>
-      <td><strong>Docker</strong></td>
-      <td>Supported</td>
-      <td>Supported</td>
-      <td>Supported</td>
-      <td>Not supported</td>
-    </tr>
-    <tr>
-      <td><strong>OpenShift</strong></td>
-      <td>Supported</td>
-      <td>Not supported</td>
-      <td>Not supported</td>
-      <td>Supported</td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Infrastructure</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Docker Image</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Dockerfile</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Composefile</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Kubernetes yaml</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OpenShift</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+<div class="sect1">
 <h2 id="docker-image">Docker Image</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>DockerImage recipe type implies that Che will pull an image from a Docker registry or use the one that is local and run it (in case of Docker) or create a pod that references this image in container spec. There are certain requirements and limitations for a Docker image to be a workspace machine:</p>
-
-<ol>
-  <li>Non-terminating <code class="highlighter-rouge">CMD</code> or <code class="highlighter-rouge">ENTRYPOINT</code>. If you use your custom image, make sure it has something like <code class="highlighter-rouge">tail -f /dev/null</code> as one of its main processes.</li>
-  <li>No processes and operations with <code class="highlighter-rouge">sudo</code> in <code class="highlighter-rouge">CMD</code> (OpenShift only, see <a href="openshift-cnfig#enable-ssh-and-sudo">Enable sudo</a>)</li>
-  <li>OpenShift only - it is recommended to use <a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes/stack-base">Che base stacks</a> that are certified to run OK on OpenShift. You can also build your own image, but inherit from one of base stacks.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Non-terminating <code>CMD</code> or <code>ENTRYPOINT</code>. If you use your custom image, make sure it has something like <code>tail -f /dev/null</code> as one of its main processes.</p>
+</li>
+<li>
+<p>No processes and operations with <code>sudo</code> in <code>CMD</code> (OpenShift only, see <a href="openshift-cnfig#enable-ssh-and-sudo">Enable sudo</a>)</p>
+</li>
+<li>
+<p>OpenShift only - it is recommended to use <a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes/stack-base">Che base stacks</a> that are certified to run OK on OpenShift. You can also build your own image, but inherit from one of base stacks.</p>
+</li>
 </ol>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="dockerfile">Dockerfile</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>A Dockerfile is a set of instructions that Docker performs to build an image. After you provide a Dockerfile for your workspace machine, Che will initiate Docker build, and once successful, run the resulting image. There are certain limitations here as well:</p>
-
-<ol>
-  <li>There’s no context in docker build in Che. It means that commands like <code class="highlighter-rouge">COPY</code> and <code class="highlighter-rouge">ADD</code> will fail.</li>
-  <li>Build of huge images may take much time, so, if you have a long Dockerfile, it’s better to build an image locally, push it to DockerHub and then use it as DockerImage recipe type (see above). Che has a reasonable timeout for a workspace to start which is 5 mins.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>There’s no context in docker build in Che. It means that commands like <code>COPY</code> and <code>ADD</code> will fail.</p>
+</li>
+<li>
+<p>Build of huge images may take much time, so, if you have a long Dockerfile, it’s better to build an image locally, push it to DockerHub and then use it as DockerImage recipe type (see above). Che has a reasonable timeout for a workspace to start which is 5 mins.</p>
+</li>
 </ol>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="composefile">Composefile</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>When on Docker, you can run multi-container workspaces using Composefiles. However, there is some unsupported syntax:</p>
-
-<p><strong>Local “build.context” and “build.dockerfile”</strong></p>
-
+</div>
+<div class="paragraph">
+<p><strong>Local "build.context" and "build.dockerfile"</strong></p>
+</div>
+<div class="paragraph">
 <p>Since Che workspaces can be distributed, you cannot have host-local build and Dockerfile contexts. You can, however, place these aspects so that they are remotely hosted in a git repository. Che will source the file from the remote system and then use it as its build context.</p>
+</div>
+<div class="paragraph">
+<p>If the Dockerfile or build context requires other files to be <code>ADD</code> or <code>COPY</code> into the image that is created, then you could run into a failure, as the local Che workspace generator will not have access to those other remote files. To address this issue, you can pre-package the build context or Dockerfile into an image, push into a registry, and then reference the already-built image in your compose file. This is what we do for internal development at Codenvy.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">build</span>:
+  <span class="comment">## remote context will work</span>
+  <span class="key">context</span>: <span class="string"><span class="content">https://github.com/eclipse/che-dockerfiles.git#master:recipes/stack-base/ubuntu</span></span>
 
-<p>If the Dockerfile or build context requires other files to be <code class="highlighter-rouge">ADD</code> or <code class="highlighter-rouge">COPY</code> into the image that is created, then you could run into a failure, as the local Che workspace generator will not have access to those other remote files. To address this issue, you can pre-package the build context or Dockerfile into an image, push into a registry, and then reference the already-built image in your compose file. This is what we do for internal development at Codenvy.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">build</span><span class="pi">:</span>
-  <span class="c1">## remote context will work</span>
-  <span class="na">context</span><span class="pi">:</span> <span class="s">https://github.com/eclipse/che-dockerfiles.git#master:recipes/stack-base/ubuntu</span>
-
-  <span class="c1">## local context will not work</span>
-  <span class="na">context</span><span class="pi">:</span> <span class="s">./my/local/filesystem</span>
-</code></pre></div></div>
-
+  <span class="comment">## local context will not work</span>
+  <span class="key">context</span>: <span class="string"><span class="content">./my/local/filesystem</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Using Private Repositories:</p>
-
+</div>
+<div class="paragraph">
 <p>To use private repositories in a remote build context, you need to setup ssh keys on your host machine and add remote repository hostname/IP to the list of known hosts.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## The following will use master branch and build in recipes/stack-base/ubuntu folder</span>
-<span class="na">build</span><span class="pi">:</span>
-  <span class="na">context</span><span class="pi">:</span> <span class="s">git@github.com:eclipse/che-dockerfiles.git#master:recipes/stack-base/ubuntu</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="comment">## The following will use master branch and build in recipes/stack-base/ubuntu folder</span>
+<span class="key">build</span>:
+  <span class="key">context</span>: <span class="string"><span class="content">git@github.com:eclipse/che-dockerfiles.git#master:recipes/stack-base/ubuntu</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Build Image</strong></p>
-
+</div>
+<div class="paragraph">
 <p>In the event that a Compose file includes both build instructions and a build image the build instructions are seen as overriding, so the build image is skipped if it exists.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Container Name</strong></p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">container_name</span><span class="pi">:</span> <span class="s">my_container</span>
-</code></pre></div></div>
-
-<p><code class="highlighter-rouge">container_name</code> is skipped during execution. Instead, Che generates container names based on its own internal patterns. Because many developers could be running the same Compose file on the same Che workspace node at the same time naming conflicts need to be avoided.</p>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">container_name</span>: <span class="string"><span class="content">my_container</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>container_name</code> is skipped during execution. Instead, Che generates container names based on its own internal patterns. Because many developers could be running the same Compose file on the same Che workspace node at the same time naming conflicts need to be avoided.</p>
+</div>
+<div class="paragraph">
 <p><strong>Volumes</strong></p>
-
-<p>To define volumes for workspace machines, see Volumes<a href="volumes.html">volumes</a>. Volume instructions in a Composefile are not supported.</p>
-
+</div>
+<div class="paragraph">
+<p>To define volumes for workspace machines, see Volumes[volumes]. Volume instructions in a Composefile are not supported.</p>
+</div>
+<div class="paragraph">
 <p><strong>Networks</strong></p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## Not supported</span>
-<span class="na">networks</span><span class="pi">:</span>
-  <span class="na">internal</span><span class="pi">:</span>
-  <span class="na">aliases</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">my.alias’]</span>
-<span class="s">##</span><span class="nv"> </span><span class="s">Not</span><span class="nv"> </span><span class="s">supported</span>
-<span class="s">networks:</span>
-  <span class="s">internal:</span>
-  <span class="s">driver:</span><span class="nv"> </span><span class="s">bridge</span>
-</code></pre></div></div>
-
-<p>Che does not yet currently support compose networks. We do, however, support the use of aliases through <code class="highlighter-rouge">links</code> command.</p>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="comment">## Not supported</span>
+<span class="key">networks</span>:
+  <span class="key">internal</span>:
+  <span class="key">aliases</span>: <span class="string"><span class="content">['my.alias’]</span></span>
+<span class="comment">## Not supported</span>
+<span class="key">networks</span>:
+  <span class="key">internal</span>:
+  <span class="key">driver</span>: <span class="string"><span class="content">bridge</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Che does not yet currently support compose networks. We do, however, support the use of aliases through <code>links</code> command.</p>
+</div>
+<div class="paragraph">
 <p><strong>Hostname</strong></p>
-
-<p>Hostname is not supported and the machine’s name will be used for the hostname. User can use <code class="highlighter-rouge">links</code> aliases syntax to add additional hostname(s) to a machine.</p>
-
+</div>
+<div class="paragraph">
+<p>Hostname is not supported and the machine’s name will be used for the hostname. User can use <code>links</code> aliases syntax to add additional hostname(s) to a machine.</p>
+</div>
+<div class="paragraph">
 <p><strong>Ports</strong></p>
-
-<p>Binding ports to the host system is not supported. This is done to ensure that each container does not used already assigned host ports because many developers could be running the same compose file on the same Che server host at the same time. Users can add <a href="servers.html">servers</a> to machines though.</p>
-
+</div>
+<div class="paragraph">
+<p>Binding ports to the host system is not supported. This is done to ensure that each container does not used already assigned host ports because many developers could be running the same compose file on the same Che server host at the same time. Users can add <a href="servers">servers</a> to machines though.</p>
+</div>
+<div class="paragraph">
 <p><strong>Privileged</strong></p>
-
-<p>To secure the underlying host system <code class="highlighter-rouge">privileged</code> compose command is not supported.</p>
-
-<p>The Che server can be configured to give all containers privileged access by setting the environment variable <code class="highlighter-rouge">CHE_PROPERTY_machine_docker_privilege__mode=true</code>. However, this makes the host system vulnerable and gives all containers access to the host system.</p>
-
-<p><strong>Environment File</strong>
-The <code class="highlighter-rouge">env_file</code> compose command is not supported. Environment variables can be manually entered in compose file or machine configuration. See: <a href="env-variables.html">Environment variables</a>.</p>
-
+</div>
+<div class="paragraph">
+<p>To secure the underlying host system <code>privileged</code> compose command is not supported.</p>
+</div>
+<div class="paragraph">
+<p>The Che server can be configured to give all containers privileged access by setting the environment variable <code>CHE_PROPERTY_machine_docker_privilege__mode=true</code>. However, this makes the host system vulnerable and gives all containers access to the host system.</p>
+</div>
+<div class="paragraph">
+<p><strong>Environment File</strong> The <code>env_file</code> compose command is not supported. Environment variables can be manually entered in compose file or machine configuration. See: <a href="env-variables">Environment variables</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="kubernetes-yaml">Kubernetes YAML</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>When a workspace is being started, Che creates a <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod/">Kubernetes pod</a>. A few gotchas:</p>
-
-<ol>
-  <li>Che allows user to create pods and services only</li>
-  <li>Other object kinds will be ignored (PVC and route) or a workspace fails to start with an exception from Kubernetes.</li>
-  <li>Volumes are not supported both in container and pod definition. See: <a href="volumes.html">Volumes</a> for info about persisting ans sharing data between pods.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Che allows user to create pods and services only</p>
+</li>
+<li>
+<p>Other object kinds will be ignored (PVC and route) or a workspace fails to start with an exception from Kubernetes.</p>
+</li>
+<li>
+<p>Volumes are not supported both in container and pod definition. See: <a href="volumes">Volumes</a> for info about persisting ans sharing data between pods.</p>
+</li>
 </ol>
-
+</div>
+<div class="paragraph">
 <p>Below is an example of a custom recipe with two containers and one pod, and a service that is bound to port 8081:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">kind</span>: <span class="string"><span class="content">List</span></span>
+<span class="key">items</span>:
+-
+ <span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+ <span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+ <span class="key">metadata</span>:
+  <span class="key">name</span>: <span class="string"><span class="content">my-service</span></span>
+ <span class="key">spec</span>:
+  <span class="key">selector</span>:
+    <span class="key">name</span>: <span class="string"><span class="content">app</span></span>
+  <span class="key">ports</span>:
+  - <span class="string"><span class="content">protocol: TCP</span></span>
+    <span class="key">port</span>: <span class="string"><span class="content">8081</span></span>
+    <span class="key">targetPort</span>: <span class="string"><span class="content">8081</span></span>
+-
+  <span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+  <span class="key">kind</span>: <span class="string"><span class="content">Pod</span></span>
+  <span class="key">metadata</span>:
+    <span class="key">name</span>: <span class="string"><span class="content">app</span></span>
+  <span class="key">spec</span>:
+    <span class="key">containers</span>:
+      -
+        <span class="key">image</span>: <span class="string"><span class="content">eclipse/ubuntu_jdk8:latest</span></span>
+        <span class="key">name</span>: <span class="string"><span class="content">main</span></span>
+        <span class="key">ports</span>:
+         -
+          <span class="key">containerPort</span>: <span class="string"><span class="content">8081</span></span>
+          <span class="key">protocol</span>: <span class="string"><span class="content">TCP</span></span>
+      -
+        <span class="key">image</span>: <span class="string"><span class="content">eclipse/ubuntu_jdk8:latest</span></span>
+        <span class="key">name</span>: <span class="string"><span class="content">main1</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also have one pod and several containers in it. Che will treat those containers as workspace machines. You can also define machine names in annotations. <code>PodName/Container Name</code> is the default naming pattern for a machine. You can use annotations though:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">kind</span>: <span class="string"><span class="content">List</span></span>
+<span class="key">items</span>:
+-
+  <span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+  <span class="key">kind</span>: <span class="string"><span class="content">Pod</span></span>
+  <span class="key">metadata</span>:
+    <span class="key">name</span>: <span class="string"><span class="content">any123123</span></span>
+    <span class="key">annotations</span>:
+      <span class="key">org.eclipse.che.container.main.machine_name</span>: <span class="string"><span class="content">myMachine</span></span>
+      <span class="key">org.eclipse.che.container.main1.machine_name</span>: <span class="string"><span class="content">myMachine1</span></span>
+  <span class="key">spec</span>:
+    <span class="key">containers</span>:
+      -
+        <span class="key">image</span>: <span class="string"><span class="content">rhche/spring-boot:latest</span></span>
+        <span class="key">name</span>: <span class="string"><span class="content">main</span></span>
+        <span class="key">ports</span>:
+          -
+            <span class="key">containerPort</span>: <span class="string"><span class="content">8080</span></span>
+            <span class="key">protocol</span>: <span class="string"><span class="content">TCP</span></span>
+        <span class="key">resources</span>: <span class="string"><span class="content">{}</span></span>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">List</span>
-<span class="na">items</span><span class="pi">:</span>
-<span class="pi">-</span>
- <span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
- <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
- <span class="na">metadata</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="s">my-service</span>
- <span class="na">spec</span><span class="pi">:</span>
-  <span class="na">selector</span><span class="pi">:</span>
-    <span class="na">name</span><span class="pi">:</span> <span class="s">app</span>
-  <span class="na">ports</span><span class="pi">:</span>
-  <span class="pi">-</span> <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-    <span class="na">port</span><span class="pi">:</span> <span class="s">8081</span>
-    <span class="na">targetPort</span><span class="pi">:</span> <span class="s">8081</span>
-<span class="pi">-</span>
-  <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
-  <span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
-  <span class="na">metadata</span><span class="pi">:</span>
-    <span class="na">name</span><span class="pi">:</span> <span class="s">app</span>
-  <span class="na">spec</span><span class="pi">:</span>
-    <span class="na">containers</span><span class="pi">:</span>
-      <span class="pi">-</span>
-        <span class="na">image</span><span class="pi">:</span> <span class="s">eclipse/ubuntu_jdk8:latest</span>
-        <span class="na">name</span><span class="pi">:</span> <span class="s">main</span>
-        <span class="na">ports</span><span class="pi">:</span>
-         <span class="pi">-</span>
-          <span class="na">containerPort</span><span class="pi">:</span> <span class="s">8081</span>
-          <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-      <span class="pi">-</span>
-        <span class="na">image</span><span class="pi">:</span> <span class="s">eclipse/ubuntu_jdk8:latest</span>
-        <span class="na">name</span><span class="pi">:</span> <span class="s">main1</span>
-</code></pre></div></div>
-
-<p>You can also have one pod and several containers in it. Che will treat those containers as workspace machines. You can also define machine names in annotations. <code class="highlighter-rouge">PodName/Container Name</code> is the default naming pattern for a machine. You can use annotations though:</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">List</span>
-<span class="na">items</span><span class="pi">:</span>
-<span class="pi">-</span>
-  <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
-  <span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
-  <span class="na">metadata</span><span class="pi">:</span>
-    <span class="na">name</span><span class="pi">:</span> <span class="s">any123123</span>
-    <span class="na">annotations</span><span class="pi">:</span>
-      <span class="s">org.eclipse.che.container.main.machine_name</span><span class="pi">:</span> <span class="s">myMachine</span>
-      <span class="s">org.eclipse.che.container.main1.machine_name</span><span class="pi">:</span> <span class="s">myMachine1</span>
-  <span class="na">spec</span><span class="pi">:</span>
-    <span class="na">containers</span><span class="pi">:</span>
-      <span class="pi">-</span>
-        <span class="na">image</span><span class="pi">:</span> <span class="s">rhche/spring-boot:latest</span>
-        <span class="na">name</span><span class="pi">:</span> <span class="s">main</span>
-        <span class="na">ports</span><span class="pi">:</span>
-          <span class="pi">-</span>
-            <span class="na">containerPort</span><span class="pi">:</span> <span class="s">8080</span>
-            <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-        <span class="na">resources</span><span class="pi">:</span> <span class="pi">{}</span>
-
-      <span class="pi">-</span>
-        <span class="na">image</span><span class="pi">:</span> <span class="s">rhche/spring-boot:latest</span>
-        <span class="na">name</span><span class="pi">:</span> <span class="s">main1</span>
-        <span class="na">ports</span><span class="pi">:</span>
-          <span class="pi">-</span>
-            <span class="na">containerPort</span><span class="pi">:</span> <span class="s">8080</span>
-            <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
-        <span class="na">resources</span><span class="pi">:</span> <span class="pi">{}</span>
-</code></pre></div></div>
-
+      -
+        <span class="key">image</span>: <span class="string"><span class="content">rhche/spring-boot:latest</span></span>
+        <span class="key">name</span>: <span class="string"><span class="content">main1</span></span>
+        <span class="key">ports</span>:
+          -
+            <span class="key">containerPort</span>: <span class="string"><span class="content">8080</span></span>
+            <span class="key">protocol</span>: <span class="string"><span class="content">TCP</span></span>
+        <span class="key">resources</span>: <span class="string"><span class="content">{}</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1080,7 +1163,7 @@ The <code class="highlighter-rouge">env_file</code> compose command is not suppo
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

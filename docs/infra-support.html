@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,124 +846,180 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="introduction">Introduction</h2>
+  <div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Eclipse Che runs on different kind of infrastructure and container engine:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Docker</li>
-  <li>OpenShift: <strong><a href="https://www.openshift.com/container-platform/index.html">OpenShift Container Platform (OCP)</a></strong>, <strong><a href="https://www.openshift.com/features/index.html">OpenShift Online (OSO)</a></strong>, <strong><a href="https://access.redhat.com/products/openshift-dedicated-red-hat/">OpenShift Dedicated (OCD)</a></strong>, <strong><a href="https://www.openshift.org/minishift/">MiniShift</a></strong></li>
-  <li>Kubernetes</li>
+<li>
+<p>Docker</p>
+</li>
+<li>
+<p>OpenShift: <strong><a href="https://www.openshift.com/container-platform/index.html">OpenShift Container Platform (OCP)</a></strong>, <strong><a href="https://www.openshift.com/features/index.html">OpenShift Online (OSO)</a></strong>, <strong><a href="https://access.redhat.com/products/openshift-dedicated-red-hat/">OpenShift Dedicated (OCD)</a></strong>, <strong><a href="https://www.openshift.org/minishift/">MiniShift</a></strong></p>
+</li>
+<li>
+<p>Kubernetes</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>Each of the infrastructures is providing its own specificities which are detailed in this page.</p>
-
+</div>
+<div class="sect2">
 <h3 id="comparison-table">Comparison Table</h3>
-
-<table>
-  <tbody>
-    <tr>
-      <td>Feature</td>
-      <td><strong>Docker</strong></td>
-      <td><strong>OpenShift</strong></td>
-      <td><strong>Kubernetes</strong></td>
-    </tr>
-    <tr>
-      <td>root access</td>
-      <td>yes</td>
-      <td>yes (See: <a href="openshift-config.html#enable-ssh-and-sudo">Configuration</a>)</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>https</td>
-      <td>no</td>
-      <td>yes (See: <a href="openshift-config.html#https-mode">Configuration</a>)</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>scalability</td>
-      <td>no</td>
-      <td>yes (See: <a href="openshift-config.html#scalability">Configuration</a>)</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>priviliged containers</td>
-      <td>yes</td>
-      <td>yes (configurable in <a href="https://docs.openshift.com/container-platform/3.6/admin_guide/manage_scc.html#grant-access-to-the-privileged-scc">OpenShift</a>)</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>health checks</td>
-      <td>no</td>
-      <td>yes</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>persistent preview URLs</td>
-      <td>no</td>
-      <td>yes</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>installers</td>
-      <td>yes</td>
-      <td>yes (some installers may require <a href="openshift-config.html#enable-ssh-and-sudo">sudo access</a>)</td>
-      <td>yes</td>
-    </tr>
-    <tr>
-      <td>file system permissions</td>
-      <td>not limited</td>
-      <td>limited to directories owned by root <a href="openshift-config.html#filesystem-permissions">group</a></td>
-      <td>not limited</td>
-    </tr>
-  </tbody>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> Feature</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OpenShift</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Kubernetes</strong></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">root access</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (See: <a href="openshift-config.html#enable-ssh-and-sudo">Configuration</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">https</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (See: <a href="openshift-config.html#https-mode">Configuration</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scalability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (See: <a href="openshift-config.html#scalability">Configuration</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">priviliged containers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (configurable in <a href="https://docs.openshift.com/container-platform/3.6/admin_guide/manage_scc.html#grant-access-to-the-privileged-scc">OpenShift</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">health checks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">persistent preview URLs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">installers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (some installers may require <a href="openshift-config.html#enable-ssh-and-sudo">sudo access</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file system permissions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not limited</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">limited to directories owned by root <a href="openshift-config.html#filesystem-permissions">group</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not limited</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="running-che-on-docker">Running Che on Docker</h2>
-
-<p>Che on Docker isn’t scalable, i.e. one cannot add more nodes to run workspaces. Of course, it is possible to use a fairly large instance with 8+ CPUs and 32+ RAM, however at some point a great number of running containers (with heavy processes running in them) can make the node unresponsive. This will both affect workspace master and all running workspaces. At the same time, Che on Docker is flexible and easily configurable for an ordinary user.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che on Docker isn’t scalable, i.e. one cannot add more nodes to run workspaces. Of course, it is possible to use a fairly large instance with 8+ CPUs and 32+ RAM, however at some point a great number of running containers (with heavy processes running in them) can make the node unresponsive. This will both affect workspace master and all running workspaces. At the same time, Che on Docker is flexible and easily configurable for an ordinary user.</p>
+</div>
+<div class="paragraph">
 <p><strong>Root Access</strong></p>
-
+</div>
+<div class="paragraph">
 <p>With Che on Docker, users can have root access in workspace containers. This means you can run system services and install software in runtime.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>SSH Access</strong></p>
-
-<p>By default, <code class="highlighter-rouge">sshd</code> starts in all ready-to-go stack images. You can connect to a remote workspace using ssh keys or username/password (available in custom stacks only) or sync workspace project files to a local machine.</p>
-
+</div>
+<div class="paragraph">
+<p>By default, <code>sshd</code> starts in all ready-to-go stack images. You can connect to a remote workspace using ssh keys or username/password (available in custom stacks only) or sync workspace project files to a local machine.</p>
+</div>
+<div class="paragraph">
 <p><strong>Privileged Containers</strong></p>
-
+</div>
+<div class="paragraph">
 <p>Che on Docker allows workspace containers to be running in a <a href="docker-config.html#privileged-mode">privileged mode</a>.</p>
-
+</div>
+<div class="paragraph">
 <p>Though deploying administering Che on Docker may seem a little bit easier than doing it in OpenShift, it’s OpenShift that unleashes the power of Eclipse Che as a workspace server and cloud IDE.</p>
-
-<p><strong><a href="docker-single-user.html">Install Single-User Che on Docker</a></strong></p>
-
-<p><strong><a href="docker-multi-user.html">Install Multi-User Che on Docker</a></strong></p>
-
+</div>
+<div class="paragraph">
+<p><strong><a href="docker-single-user">Install Single-User Che on Docker</a></strong></p>
+</div>
+<div class="paragraph">
+<p><strong><a href="docker-multi-user">Install Multi-User Che on Docker</a></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deploying-to-openshift">Deploying to OpenShift</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>When deployed to OpenShift, Che provides the following features that are not available in Che on Docker:</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Scalability</strong></p>
-
+</div>
+<div class="paragraph">
 <p>Che talks to OpenShift API to create workspace pods, and it is OpenShift that schedules them to available nodes. OpenShift cluster admin can add and remove nodes (or label them as those that are not ready to run pods) depending on demand for running Che workspaces.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>HTTPS support</strong></p>
-
+</div>
+<div class="paragraph">
 <p>HAProxy that runs in an OpenShift cluster takes care of creating secure routes, thus HTTPS support is provided by OpenShift itself.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Persistent Preview URLs</strong></p>
-
+</div>
+<div class="paragraph">
 <p>To access running applications and processes in Che workspaces, Che creates services and routes that are persistent URLs.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Health Checks</strong></p>
-
+</div>
+<div class="paragraph">
 <p>OpenShift restarts failed deployments and offers health checks for pods. This can significantly minimize the effect of infrastructure outages.</p>
-
-<p><strong><a href="openshift-single-user.html">Deploy Single User Che to OpenShift</a></strong></p>
-
-<p><strong><a href="openshift-single-user.html">Deploy Multi-User Che to OpenShift</a></strong></p>
-
-
+</div>
+<div class="paragraph">
+<p><strong><a href="openshift-single-user">Deploy Single User Che to OpenShift</a></strong></p>
+</div>
+<div class="paragraph">
+<p><strong><a href="openshift-single-user">Deploy Multi-User Che to OpenShift</a></strong></p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -995,7 +1054,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

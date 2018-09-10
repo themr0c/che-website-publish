@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,475 +846,656 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="pre-requisites">Pre-Requisites</h2>
-
+  <div class="sect1">
+<h2 id="pre-requisites">Pre-Requisites</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>Docker 17+ recommended, ideally the <a href="http://docs.docker.com/engine/installation/">latest Docker version</a>. Even though Che may not have any issues with Docker 1.13+, all tests use Docker 17+.</li>
+<li>
+<p>Docker 17+ recommended, ideally the <a href="http://docs.docker.com/engine/installation/">latest Docker version</a>. Even though Che may not have any issues with Docker 1.13+, all tests use Docker 17+.</p>
+</li>
 </ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-qO-</span> https://get.docker.com/ | sh
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>wget -qO- https://get.docker.com/ | sh</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>OS: Linux, MacOS, Windows.</li>
+<li>
+<p>OS: Linux, MacOS, Windows.</p>
+</li>
 </ul>
-
-<p><span style="color:red; margin-left:41px;"><strong>IMPORTANT!</strong></span></p>
-
-<p>Mac-OS users need to create IP alias: <code class="highlighter-rouge">sudo ifconfig lo0 alias $IP</code> where <code class="highlighter-rouge">$IP</code> is IP that you get either in your Docker for Mac app <strong>Preferences &gt; Advanced &gt; Docker subnet</strong> or by running the following command:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm --net host eclipse/che-ip:nightly
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p><strong>IMPORTANT!</strong></p>
+</div>
+<div class="paragraph">
+<p>Mac-OS users need to create IP alias: <code>sudo ifconfig lo0 alias $IP</code> where <code>$IP</code> is IP that you get either in your Docker for Mac app <strong>Preferences &gt; Advanced &gt; Docker subnet</strong> or by running the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run --rm --net host eclipse/che-ip:nightly</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Min 1 CPU, 2GM RAM, 3GB disc space</li>
+<li>
+<p>Min 1 CPU, 2GM RAM, 3GB disc space</p>
+</li>
 </ul>
-
-<p>The default port required to run Che is <code class="highlighter-rouge">8080</code>. Che performs a preflight check when it boots to verify that the port is available. You can pass <code class="highlighter-rouge">-e CHE_PORT=&lt;port&gt;</code> in Docker portion of the start command to change the port that Che starts on.</p>
-
+</div>
+<div class="paragraph">
+<p>The default port required to run Che is <code>8080</code>. Che performs a preflight check when it boots to verify that the port is available. You can pass <code>-e CHE_PORT=&lt;port&gt;</code> in Docker portion of the start command to change the port that Che starts on.</p>
+</div>
+<div class="paragraph">
 <p>Internal ports are ports within a local network. This is the most common scenario for most users when Che is installed on their local desktop/laptop. External ports are ports outside a local network. An example scenario of this would be a remote Che server on a cloud host provider. With either case ports need to be open and not blocked by firewalls or other applications already using the same ports.</p>
-
+</div>
+<div class="paragraph">
 <p>All ports are TCP unless otherwise noted.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Port »»»»»»»»</th>
-      <th>Service »»»»»»»»</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>8080</td>
-      <td>Tomcat Port</td>
-      <td>Che server default port</td>
-    </tr>
-    <tr>
-      <td>8000</td>
-      <td>Server Debug Port</td>
-      <td>Users developing Che extensions and custom assemblies would use this debug port to connect a remote debugger to Che server.</td>
-    </tr>
-    <tr>
-      <td>32768-65535</td>
-      <td>Docker and Che Agents</td>
-      <td>Users who launch servers in their workspace bind to ephemeral ports in this range. This range can be limited.</td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</th>
+<th class="tableblock halign-left valign-top">Service &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8080</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tomcat Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Che server default port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Server Debug Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users developing Che extensions and custom assemblies would use this debug port to connect a remote debugger to Che server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32768-65535</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker and Che Agents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users who launch servers in their workspace bind to ephemeral ports in this range. This range can be limited.</p></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+<div class="sect1">
 <h2 id="known-issues">Known Issues</h2>
-
-<p>You can search Che’s GitHub issues for items labeled <code class="highlighter-rouge">kind/bug</code> to see <a href="https://github.com/eclipse/che/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Akind%2Fbug">known issues</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can search Che’s GitHub issues for items labeled <code>kind/bug</code> to see <a href="https://github.com/eclipse/che/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Akind%2Fbug">known issues</a>.</p>
+</div>
+<div class="paragraph">
 <p>There are two known issues where features work on Docker 1.13+, but do not on Docker 1.12:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>SELinux: <a href="https://github.com/eclipse/che/issues/4747">https://github.com/eclipse/che/issues/4747</a></li>
-  <li><code class="highlighter-rouge">CHE_DOCKER_ALWAYS__PULL__IMAGE</code>: <a href="https://github.com/eclipse/che/issues/5503">https://github.com/eclipse/che/issues/5503</a></li>
+<li>
+<p>SELinux: <a href="https://github.com/eclipse/che/issues/4747" class="bare">https://github.com/eclipse/che/issues/4747</a></p>
+</li>
+<li>
+<p><code>CHE_DOCKER_ALWAYS<em>PULL</em>IMAGE</code>: <a href="https://github.com/eclipse/che/issues/5503" class="bare">https://github.com/eclipse/che/issues/5503</a></p>
+</li>
 </ul>
-
-<p>Sometimes Fedora and RHEL/CentOS users will encounter issues with SElinux. Try disabling selinux with <code class="highlighter-rouge">setenforce 0</code> and check if resolves the issue. If using the latest docker version and/or disabling SElinux does not fix the issue then please file a issue request on the <a href="https://github.com/eclipse/che/issues">issues</a> page.</p>
-
+</div>
+<div class="paragraph">
+<p>Sometimes Fedora and RHEL/CentOS users will encounter issues with SElinux. Try disabling selinux with <code>setenforce 0</code> and check if resolves the issue. If using the latest docker version and/or disabling SElinux does not fix the issue then please file a issue request on the <a href="https://github.com/eclipse/che/issues">issues</a> page.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="quick-start">Quick Start</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre># Interactive help. This command will fail by default but the CLI will print a prompt on how to proceed
+docker run -it eclipse/che start
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Interactive help. This command will fail by default but the CLI will print a prompt on how to proceed</span>
-docker run <span class="nt">-it</span> eclipse/che start
+# Or, full start syntax where &lt;path&gt; is a local directory
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che start
 
-<span class="c"># Or, full start syntax where &lt;path&gt; is a local directory</span>
-docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> &lt;path&gt;:/data eclipse/che start
+# Example output
 
-<span class="c"># Example output</span>
+$ docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/Documents/che-data1:/data eclipse/che start
+WARN: Bound 'eclipse/che' to 'eclipse/che:5.20.1'
+INFO: (che cli): 5.20.1 - using docker 17.10.0-ce / native
+WARN: Newer version '5.21.0' available
+INFO: (che config): Generating che configuration...
+INFO: (che config): Customizing docker-compose for running in a container
+INFO: (che start): Preflight checks
+         mem (1.5 GiB):           [OK]
+         disk (100 MB):           [OK]
+         port 8080 (http):        [AVAILABLE]
+         conn (browser =&gt; ws):    [OK]
+         conn (server =&gt; ws):     [OK]
 
-<span class="nv">$ </span>docker run <span class="nt">-ti</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="nt">-v</span> ~/Documents/che-data1:/data eclipse/che start
-WARN: Bound <span class="s1">'eclipse/che'</span> to <span class="s1">'eclipse/che:5.20.1'</span>
-INFO: <span class="o">(</span>che cli<span class="o">)</span>: 5.20.1 - using docker 17.10.0-ce / native
-WARN: Newer version <span class="s1">'5.21.0'</span> available
-INFO: <span class="o">(</span>che config<span class="o">)</span>: Generating che configuration...
-INFO: <span class="o">(</span>che config<span class="o">)</span>: Customizing docker-compose <span class="k">for </span>running <span class="k">in </span>a container
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Preflight checks
-         mem <span class="o">(</span>1.5 GiB<span class="o">)</span>:           <span class="o">[</span>OK]
-         disk <span class="o">(</span>100 MB<span class="o">)</span>:           <span class="o">[</span>OK]
-         port 8080 <span class="o">(</span>http<span class="o">)</span>:        <span class="o">[</span>AVAILABLE]
-         conn <span class="o">(</span>browser <span class="o">=&gt;</span> ws<span class="o">)</span>:    <span class="o">[</span>OK]
-         conn <span class="o">(</span>server <span class="o">=&gt;</span> ws<span class="o">)</span>:     <span class="o">[</span>OK]
-
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Starting containers...
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Services booting...
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Server logs at <span class="s2">"docker logs -f che"</span>
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Booted and reachable
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Ver: 5.20.1
-INFO: <span class="o">(</span>che start<span class="o">)</span>: Use: http://172.19.20.180:8080
-INFO: <span class="o">(</span>che start<span class="o">)</span>: API: http://172.19.20.180:8080/swagger
-</code></pre></div></div>
-
-<p>The Che CLI - a Docker image - manages the other Docker images and supporting utilities that Che uses during its configuration or operations phases. Che installation with the CLI is a recommended installation method, however it is possible to run <code class="highlighter-rouge">che-server</code> image directly. See: <a href="#run-without-cli">Run Che-Server directly</a>.</p>
-
+INFO: (che start): Starting containers...
+INFO: (che start): Services booting...
+INFO: (che start): Server logs at "docker logs -f che"
+INFO: (che start): Booted and reachable
+INFO: (che start): Ver: 5.20.1
+INFO: (che start): Use: http://172.19.20.180:8080
+INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Che CLI - a Docker image - manages the other Docker images and supporting utilities that Che uses during its configuration or operations phases. Che installation with the CLI is a recommended installation method, however it is possible to run <code>che-server</code> image directly. See: <a href="#run-without-cli">Run Che-Server directly</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="versions">Versions</h2>
-
-<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code class="highlighter-rouge">eclipse/che:6.0.0</code>. You can see all versions available by running <code class="highlighter-rouge">docker run eclipse/che version</code> or by <a href="https://hub.docker.com/r/eclipse/che/tags/">browsing DockerHub</a>.</p>
-
-<p>We maintain “redirection” labels which reference special versions of Che:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">latest</code></td>
-      <td>The most recent stable release.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">6.0.0-latest</code></td>
-      <td>The most recent stable release on the 6.x branch.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">nightly</code></td>
-      <td>The nightly build.</td>
-    </tr>
-  </tbody>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code>eclipse/che:6.0.0</code>. You can see all versions available by running <code>docker run eclipse/che version</code> or by <a href="https://hub.docker.com/r/eclipse/che/tags/">browsing DockerHub</a>.</p>
+</div>
+<div class="paragraph">
+<p>We maintain "redirection" labels which reference special versions of Che:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The most recent stable release.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0.0-latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The most recent stable release on the 6.x branch.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nightly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The nightly build.</p></td>
+</tr>
+</tbody>
 </table>
-
-<p>The software referenced by these labels can change over time. Since Docker will cache images locally, the <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code> image that you are running locally may not be current with the one cached on DockerHub. Additionally, the <code class="highlighter-rouge">eclipse/che:&lt;version&gt;</code> image that you are running references a manifest of Docker images that Che depends upon, which can also change if you are using these special redirection tags.</p>
-
-<p>In the case of ‘latest’ images, when you initialize an installation using the CLI, we encode a <code class="highlighter-rouge">/instance/che.ver</code> file with the numbered version that latest references. If you begin using a CLI version that mismatches what was installed, you will be presented with an error.</p>
-
-<p>To avoid issues that can appear from using ‘nightly’ or ‘latest’ redirections, you may:</p>
-
-<ol>
-  <li>Verify that you have the most recent version with <code class="highlighter-rouge">docker pull eclipse/che:&lt;version&gt;</code>.</li>
-  <li>When running the CLI, commands that use other Docker images have an optional <code class="highlighter-rouge">--pull</code> and <code class="highlighter-rouge">--force</code> command line option <a href="https://hub.docker.com/r/eclipse/che/">which will instruct the CLI to check DockerHub</a> for a newer version and pull it down. Using these flags will slow down performance, but ensures that your local cache is current.</li>
+<div class="paragraph">
+<p>The software referenced by these labels can change over time. Since Docker will cache images locally, the <code>eclipse/che:&lt;version&gt;</code> image that you are running locally may not be current with the one cached on DockerHub. Additionally, the <code>eclipse/che:&lt;version&gt;</code> image that you are running references a manifest of Docker images that Che depends upon, which can also change if you are using these special redirection tags.</p>
+</div>
+<div class="paragraph">
+<p>In the case of 'latest' images, when you initialize an installation using the CLI, we encode a <code>/instance/che.ver</code> file with the numbered version that latest references. If you begin using a CLI version that mismatches what was installed, you will be presented with an error.</p>
+</div>
+<div class="paragraph">
+<p>To avoid issues that can appear from using 'nightly' or 'latest' redirections, you may:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify that you have the most recent version with <code>docker pull eclipse/che:&lt;version&gt;</code>.</p>
+</li>
+<li>
+<p>When running the CLI, commands that use other Docker images have an optional <code>--pull</code> and <code>--force</code> command line option <a href="https://hub.docker.com/r/eclipse/che/">which will instruct the CLI to check DockerHub</a> for a newer version and pull it down. Using these flags will slow down performance, but ensures that your local cache is current.</p>
+</li>
 </ol>
-
-<p>If you are running Che using a tagged version that is a not a redirection label, such as <code class="highlighter-rouge">6.0.0</code>, then these caching issues will not happen, as the software installed is tagged and specific to that particular version, never changing over time.</p>
-
+</div>
+<div class="paragraph">
+<p>If you are running Che using a tagged version that is a not a redirection label, such as <code>6.0.0</code>, then these caching issues will not happen, as the software installed is tagged and specific to that particular version, never changing over time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="volume-mounts">Volume Mounts</h2>
-
-<p>We use volume mounts to configure certain parts of Che. The presence or absence of certain volume mounts will trigger certain behaviors in the system. For example, you can volume mount a Che source git repository with <code class="highlighter-rouge">:/repo</code> to use Che source code instead of the binaries and configuration that is shipped with our Docker images.</p>
-
-<p>At a minimum, you must volume mount a local path to <code class="highlighter-rouge">:/data</code>, which will be the location that Che installs its configuration, user data, version and log information. Che also leaves behind a <code class="highlighter-rouge">cli.log</code> file in this location to debug any odd behaviors while running the system. In this folder we also create a <code class="highlighter-rouge">che.env</code> file which contains all of the admin configuration that you can set or override in a single location.</p>
-
-<p>You can also use volume mounts to override the location of where your user or backup data is stored. By default, these folders will be created as sub-folders of the location that you mount to <code class="highlighter-rouge">:/data</code>. However, if you do not want your <code class="highlighter-rouge">/instance</code>, and <code class="highlighter-rouge">/backup</code> folder to be children, you can set them individually with separate overrides.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
+<div class="sectionbody">
+<div class="paragraph">
+<p>We use volume mounts to configure certain parts of Che. The presence or absence of certain volume mounts will trigger certain behaviors in the system. For example, you can volume mount a Che source git repository with <code>:/repo</code> to use Che source code instead of the binaries and configuration that is shipped with our Docker images.</p>
+</div>
+<div class="paragraph">
+<p>At a minimum, you must volume mount a local path to <code>:/data</code>, which will be the location that Che installs its configuration, user data, version and log information. Che also leaves behind a <code>cli.log</code> file in this location to debug any odd behaviors while running the system. In this folder we also create a <code>che.env</code> file which contains all of the admin configuration that you can set or override in a single location.</p>
+</div>
+<div class="paragraph">
+<p>You can also use volume mounts to override the location of where your user or backup data is stored. By default, these folders will be created as sub-folders of the location that you mount to <code>:/data</code>. However, if you do not want your <code>/instance</code>, and <code>/backup</code> folder to be children, you can set them individually with separate overrides.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
                     -v &lt;local-path&gt;:/data
                     -v &lt;a-different-path&gt;:/data/instance
                     -v &lt;another-path&gt;:/data/backup
-                       eclipse/che:&lt;version&gt; [COMMAND]    
-</code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th>Local Location</th>
-      <th>Container Location</th>
-      <th>Usage</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">/var/run/docker.sock</code></td>
-      <td><code class="highlighter-rouge">/var/run/docker.sock</code></td>
-      <td>This is how Che gets access to Docker daemon. This instructs the container to use your local Docker daemon when Che wants to create its own containers.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">/&lt;your-path&gt;/lib</code></td>
-      <td><code class="highlighter-rouge">/data/lib</code></td>
-      <td>Inside the container, we make a copy of important libraries that your workspaces will need and place them into <code class="highlighter-rouge">/lib</code>. When Che creates a workspace container, that container will be using your local Docker daemon and the Che workspace will look for these libraries in your local <code class="highlighter-rouge">/lib</code>. This is a tactic we use to get files from inside the container out onto your local host.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">/&lt;your-path&gt;/workspaces</code></td>
-      <td><code class="highlighter-rouge">/data/workspaces</code></td>
-      <td>The location of your workspace and project files.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">/&lt;your-path&gt;/storage</code>  </td>
-      <td><code class="highlighter-rouge">/data/storage</code>  </td>
-      <td>The location where Che stores the meta information that describes the various workspaces, projects and user preferences.  </td>
-    </tr>
-  </tbody>
+                       eclipse/che:&lt;version&gt; [COMMAND]</pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Local Location</th>
+<th class="tableblock halign-left valign-top">Container Location</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/var/run/docker.sock</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/var/run/docker.sock</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is how Che gets access to Docker daemon. This instructs the container to use your local Docker daemon when Che wants to create its own containers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/&lt;your-path&gt;/lib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/data/lib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inside the container, we make a copy of important libraries that your workspaces will need and place them into <code>/lib</code>. When Che creates a workspace container, that container will be using your local Docker daemon and the Che workspace will look for these libraries in your local <code>/lib</code>. This is a tactic we use to get files from inside the container out onto your local host.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/&lt;your-path&gt;/workspaces</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/data/workspaces</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The location of your workspace and project files.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/&lt;your-path&gt;/storage</code>  </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/data/storage</code>  </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The location where Che stores the meta information that describes the various workspaces, projects and user preferences.  </p></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+<div class="sect1">
 <h2 id="hosting">Hosting</h2>
-
-<p>If you are hosting Che at a cloud service like DigitalOcean, AWS or Scaleways <code class="highlighter-rouge">CHE_HOST</code> must be set to the server public IP address or its DNS.</p>
-
-<p>We will attempt to auto-set <code class="highlighter-rouge">CHE_HOST</code> by running an internal utility <code class="highlighter-rouge">docker run --net=host eclipse/che-ip:nightly</code>. This approach is not fool-proof. This utility is usually accurate on desktops, but usually fails on hosted servers. You can explicitly set this value to the IP address of your server:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are hosting Che at a cloud service like DigitalOcean, AWS or Scaleways <code>CHE_HOST</code> must be set to the server public IP address or its DNS.</p>
+</div>
+<div class="paragraph">
+<p>We will attempt to auto-set <code>CHE_HOST</code> by running an internal utility <code>docker run --net=host eclipse/che-ip:nightly</code>. This approach is not fool-proof. This utility is usually accurate on desktops, but usually fails on hosted servers. You can explicitly set this value to the IP address of your server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock
                     -v &lt;local-path&gt;:/data
                     -e CHE_HOST=&lt;your-ip-or-host&gt;
-                       eclipse/che:&lt;version&gt; [COMMAND]
-</code></pre></div></div>
-
+                       eclipse/che:&lt;version&gt; [COMMAND]</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="run-on-different-port">Run on Different Port</h2>
-
-<p>Either set <code class="highlighter-rouge">CHE_PORT=$your_port</code> in <a href="docker-config.html#saving-configuration-in-version-control">che.env</a> or pass it as env in your docker run syntax: <code class="highlighter-rouge">-e CHE_PORT=$your_port</code>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Either set <code>CHE_PORT=$your_port</code> in <a href="docker-config.html#saving-configuration-in-version-control">che.env</a> or pass it as env in your docker run syntax: <code>-e CHE_PORT=$your_port</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="run-as-user">Run As User</h2>
-
-<p>On Linux or Mac, you can run Eclipse Che container with a different user identity. The default is to run the Che container as root. You can  pass <code class="highlighter-rouge">--user uid:gid</code> or <code class="highlighter-rouge">-e CHE_USER=uid:gid</code> as a <code class="highlighter-rouge">docker run</code> parameter before the <code class="highlighter-rouge">eclipse/che</code> Docker image. The CLI will start the <code class="highlighter-rouge">eclipse/che-server</code> image with the same <code class="highlighter-rouge">uid:gid</code> combination along with mounting <code class="highlighter-rouge">/etc/group</code> and <code class="highlighter-rouge">etc/passwd</code>. When Che is run as a custom user, all files written from within the Che server to the host (such as <code class="highlighter-rouge">che.env</code> or <code class="highlighter-rouge">cli.log</code> will be written to disk with the custom user as the owner of the files. This feature is not available on Windows.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>On Linux or Mac, you can run Eclipse Che container with a different user identity. The default is to run the Che container as root. You can pass <code>--user uid:gid</code> or <code>-e CHE_USER=uid:gid</code> as a <code>docker run</code> parameter before the <code>eclipse/che</code> Docker image. The CLI will start the <code>eclipse/che-server</code> image with the same <code>uid:gid</code> combination along with mounting <code>/etc/group</code> and <code>etc/passwd</code>. When Che is run as a custom user, all files written from within the Che server to the host (such as <code>che.env</code> or <code>cli.log</code> will be written to disk with the custom user as the owner of the files. This feature is not available on Windows.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="offline-installation">Offline Installation</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>We support offline (disconnected from the Internet) installation and operation. This is helpful for restricted environments, regulated datacenters, or offshore installations. The offline installation downloads the CLI, core system images, and any stack images while you are within a network DMZ with DockerHub access. You can then move those files to a secure environment and start Che.</p>
-
-<ol>
-  <li>Save Che Images</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Save Che Images</p>
+</li>
 </ol>
-
+</div>
+<div class="paragraph">
 <p>While connected to the Internet, download Che Docker images:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run &lt;docker-goodness&gt; eclipse/che:&lt;version&gt; offline
-</code></pre></div></div>
-
-<p>The CLI will download images and save them to <code class="highlighter-rouge">/backup/*.tar</code> with each image saved as its own file. You can save these files to a different location by volume mounting a local folder to <code class="highlighter-rouge">:/data/backup</code>. The version tag of the CLI Docker image will be used to determine which versions of dependent images to download. There is about 1GB of data that will be saved.</p>
-
-<p>The default execution will download none of the optional stack images, which are needed to launch workspaces of a particular type. There are a few dozen stacks for different programming languages and some of them are over 1GB in size. It is unlikely that your users will need all of the stacks, so you do not need to download all of them. You can get a list of available stack images by running <code class="highlighter-rouge">eclipse/che offline --list</code>. You can download a specific stack by running <code class="highlighter-rouge">eclipse/che offline --image:&lt;image-name&gt;</code> and the <code class="highlighter-rouge">--image</code> flag can be repeatedly used on a single command line.</p>
-
-<ol>
-  <li>Start Che In Offline Mode</li>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run &lt;docker-goodness&gt; eclipse/che:&lt;version&gt; offline</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CLI will download images and save them to <code>/backup/*.tar</code> with each image saved as its own file. You can save these files to a different location by volume mounting a local folder to <code>:/data/backup</code>. The version tag of the CLI Docker image will be used to determine which versions of dependent images to download. There is about 1GB of data that will be saved.</p>
+</div>
+<div class="paragraph">
+<p>The default execution will download none of the optional stack images, which are needed to launch workspaces of a particular type. There are a few dozen stacks for different programming languages and some of them are over 1GB in size. It is unlikely that your users will need all of the stacks, so you do not need to download all of them. You can get a list of available stack images by running <code>eclipse/che offline --list</code>. You can download a specific stack by running <code>eclipse/che offline --image:&lt;image-name&gt;</code> and the <code>--image</code> flag can be repeatedly used on a single command line.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start Che In Offline Mode</p>
+</li>
 </ol>
-
-<p>Place the TAR files into a folder in the offline computer. If the files are in placed in a folder named <code class="highlighter-rouge">/tmp/offline</code>, you can run Che in offline mode with:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Load the CLI</span>
+</div>
+<div class="paragraph">
+<p>Place the TAR files into a folder in the offline computer. If the files are in placed in a folder named <code>/tmp/offline</code>, you can run Che in offline mode with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Load the CLI
 docker load &lt; /tmp/offline/eclipse_che:&lt;version&gt;.tar
 
-<span class="c"># Start Che in offline mode</span>
-docker run &lt;other-properties&gt; <span class="nt">-v</span> /tmp/offline:/data/backup eclipse/che:&lt;version&gt; start <span class="nt">--offline</span>
-</code></pre></div></div>
-
-<p>The <code class="highlighter-rouge">--offline</code> parameter instructs the Che CLI to load all of the TAR files located in the folder mounted to <code class="highlighter-rouge">/data/backup</code>. These images will then be used instead of routing out to the Internet to check for DockerHub. The preboot sequence takes place before any CLI functions make use of Docker. The <code class="highlighter-rouge">eclipse/che start</code>, <code class="highlighter-rouge">eclipse/che download</code>, and <code class="highlighter-rouge">eclipse/che init</code> commands support <code class="highlighter-rouge">--offline</code> mode which triggers this preboot sequence.</p>
-
+# Start Che in offline mode
+docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt;version&gt; start --offline</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>--offline</code> parameter instructs the Che CLI to load all of the TAR files located in the folder mounted to <code>/data/backup</code>. These images will then be used instead of routing out to the Internet to check for DockerHub. The preboot sequence takes place before any CLI functions make use of Docker. The <code>eclipse/che start</code>, <code>eclipse/che download</code>, and <code>eclipse/che init</code> commands support <code>--offline</code> mode which triggers this preboot sequence.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="upgrade">Upgrade</h2>
-
-<p>Upgrading Che is done by downloading a <code class="highlighter-rouge">eclipse/che-cli:&lt;version&gt;</code> that is newer than the version you currently have installed. You can run <code class="highlighter-rouge">eclipse/che-cli version</code> to see the list of available versions that you can upgrade to.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Upgrading Che is done by downloading a <code>eclipse/che-cli:&lt;version&gt;</code> that is newer than the version you currently have installed. You can run <code>eclipse/che-cli version</code> to see the list of available versions that you can upgrade to.</p>
+</div>
+<div class="paragraph">
 <p>For example, if you have 6.0.0 installed and want to upgrade to 6.0.1, then:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Get the new version of Che
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Get the new version of Che
 docker pull eclipse/che-cli:6.0.0
 
 # You now have two eclipse/che-cli images (one for each version)
 # Perform an upgrade - use the new image to upgrade old installation
-docker run &lt;volume-mounts&gt; eclipse/che-cli:6.0.1 upgrade
-</code></pre></div></div>
-
-<p>The upgrade command has numerous checks to prevent you from upgrading Che if the new image and the old version are not compatible. In order for the upgrade procedure to advance, the CLI image must be newer that the version in <code class="highlighter-rouge">/instance/che.ver</code>.</p>
-
+docker run &lt;volume-mounts&gt; eclipse/che-cli:6.0.1 upgrade</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The upgrade command has numerous checks to prevent you from upgrading Che if the new image and the old version are not compatible. In order for the upgrade procedure to advance, the CLI image must be newer that the version in <code>/instance/che.ver</code>.</p>
+</div>
+<div class="paragraph">
 <p>The upgrade process:</p>
-
-<ol>
-  <li>Performs a version compatibility check</li>
-  <li>Downloads new Docker images that are needed to run the new version of Che</li>
-  <li>Stops Che if it is currently running</li>
-  <li>Triggers a maintenance window</li>
-  <li>Backs up your installation</li>
-  <li>Initializes the new version</li>
-  <li>Starts Che</li>
-  <li>Important! If <code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START</code> is set to false, stacks packaged into new binaries will not be saved into a database.</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Performs a version compatibility check</p>
+</li>
+<li>
+<p>Downloads new Docker images that are needed to run the new version of Che</p>
+</li>
+<li>
+<p>Stops Che if it is currently running</p>
+</li>
+<li>
+<p>Triggers a maintenance window</p>
+</li>
+<li>
+<p>Backs up your installation</p>
+</li>
+<li>
+<p>Initializes the new version</p>
+</li>
+<li>
+<p>Starts Che</p>
+</li>
+<li>
+<p>Important! If <code>CHE_PREDEFINED_STACKS_RELOAD<em>ON</em>START</code> is set to false, stacks packaged into new binaries will not be saved into a database.</p>
+</li>
 </ol>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="backup">Backup</h2>
-
-<p>You can run <code class="highlighter-rouge">che backup</code> to create a copy of the relevant configuration information, user data, projects, and workspaces. We do not save workspace snapshots as part of a routine backup exercise. You can run <code class="highlighter-rouge">che restore</code> to recover Che from a particular backup snapshot. The backup is saved as a TAR file that you can keep in your records. You can then use <code class="highlighter-rouge">che restore</code> to recover your user data and configuration.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can run <code>che backup</code> to create a copy of the relevant configuration information, user data, projects, and workspaces. We do not save workspace snapshots as part of a routine backup exercise. You can run <code>che restore</code> to recover Che from a particular backup snapshot. The backup is saved as a TAR file that you can keep in your records. You can then use <code>che restore</code> to recover your user data and configuration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuration">Configuration</h2>
-
-<p>Che CLI allows a wide range of config changes to setup port, hostname, oAuth, Docker, git, and solve networking issues. See: <a href="docker-config.html">Che configuration on Docker</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che CLI allows a wide range of config changes to setup port, hostname, oAuth, Docker, git, and solve networking issues. See: <a href="docker-config">Che configuration on Docker</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="run-without-cli">Run Without CLI</h2>
-
-<p>You can run the Che server directly by launching a Docker image. This approach bypasses the CLI, which has additional utilities to simplify administration and operation. The <code class="highlighter-rouge">eclipse/che-server</code> Docker image is appropriate for running Che within clusters, orchestrators, or by third party tools with automation.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run the latest released version of Che</span>
-<span class="c"># Replace &lt;LOCAL_PATH&gt; with any host folder</span>
-<span class="c"># Che will place backup files there - configurable properties, workspaces, lib, storage</span>
-docker run <span class="nt">-p</span> 8080:8080 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">--rm</span> <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can run the Che server directly by launching a Docker image. This approach bypasses the CLI, which has additional utilities to simplify administration and operation. The <code>eclipse/che-server</code> Docker image is appropriate for running Che within clusters, orchestrators, or by third party tools with automation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Run the latest released version of Che
+# Replace &lt;LOCAL_PATH&gt; with any host folder
+# Che will place backup files there - configurable properties, workspaces, lib, storage
+docker run -p 8080:8080 \
+           --name che \
+           --rm \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data \
            eclipse/che-server:6.0.0
 
-<span class="c"># To run the nightly version of Che, replace eclipse/che-server:5.0.0-latest with</span>
+# To run the nightly version of Che, replace eclipse/che-server:5.0.0-latest with
 eclipse/che-server:nightly
 
-<span class="c"># To run a specific tagged version of Che, replace eclipse/che-server:5.0.0-latest with</span>
+# To run a specific tagged version of Che, replace eclipse/che-server:5.0.0-latest with
 eclipse/che-server:&lt;version&gt;
 
-<span class="c"># Stop the container running Che</span>
+# Stop the container running Che
 docker stop che
 
-<span class="c"># Restart the container running Che and restart the Che server</span>
+# Restart the container running Che and restart the Che server
 docker restart che
 
-<span class="c"># Upgrade to a newer version</span>
+# Upgrade to a newer version
 docker pull eclipse/che-server:6.0.0-latest
-docker restart che
-</code></pre></div></div>
-
-<p>Che has started when you see <code class="highlighter-rouge">Server startup in ##### ms</code>.  After starting, Che is available at <code class="highlighter-rouge">localhost:8080</code> or a remote IP if Che has been started remotely.</p>
-
+docker restart che</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Che has started when you see <code>Server startup in <mark>#</mark> ms</code>. After starting, Che is available at <code>localhost:8080</code> or a remote IP if Che has been started remotely.</p>
+</div>
+<div class="paragraph">
 <p><strong>SELinux</strong></p>
-
+</div>
+<div class="paragraph">
 <p>If SELinux is enabled, then run this instead:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run the latest released version of Che</span>
-docker run <span class="nt">-p</span> 8080:8080 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data:Z <span class="se">\</span>
-           <span class="nt">--security-opt</span> label:disable <span class="se">\</span>
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Run the latest released version of Che
+docker run -p 8080:8080 \
+           --name che \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data:Z \
+           --security-opt label:disable \
+           eclipse/che-server:6.0.0</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Ports</strong></p>
-
-<p>Tomcat inside the container will bind itself to port 8080 by default. You must map this port to be exposed in your container using <code class="highlighter-rouge">-p 8080:8080</code>.  If you want to change the port at which your browsers connect, then change the first value, such as <code class="highlighter-rouge">p 9000:8080</code>.  This will route requests from port 9000 to the internal Tomcat bound to port 8080.  If you want to change the internal port that Tomcat is bound, you must update the port binding and set <code class="highlighter-rouge">CHE_PORT</code> to the new value.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -p 9000:9500 \
+</div>
+<div class="paragraph">
+<p>Tomcat inside the container will bind itself to port 8080 by default. You must map this port to be exposed in your container using <code>-p 8080:8080</code>. If you want to change the port at which your browsers connect, then change the first value, such as <code>p 9000:8080</code>. This will route requests from port 9000 to the internal Tomcat bound to port 8080. If you want to change the internal port that Tomcat is bound, you must update the port binding and set <code>CHE_PORT</code> to the new value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">docker run -p 9000:9500 \
            --name che \
            -e CHE_PORT=9500 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+           eclipse/che-server:6.0.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Configuration</strong></p>
-
+</div>
+<div class="paragraph">
 <p>Most important configuration properties are defined as environment variables that you pass into the container. For example, to have Che listen on port 9000:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-p</span>:9000:9000 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">-e</span> <span class="nv">CHE_SERVER_ACTION</span><span class="o">=</span>stop <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -p:9000:9000 \
+           --name che \
+           -e CHE_SERVER_ACTION=stop \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data \
+           eclipse/che-server:6.0.0</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>There are many variables that can be set.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Description</th>
-      <th>Defaults</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_SERVER_ACTION</code></td>
-      <td>The command to send to Tomcat. it can be [<code class="highlighter-rouge">run</code>, <code class="highlighter-rouge">start</code> , <code class="highlighter-rouge">stop</code>].</td>
-      <td><code class="highlighter-rouge">run</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_ASSEMBLY</code></td>
-      <td>The path to a Che assembly that is on your host to be used instead of the assembly packaged within the <code class="highlighter-rouge">che-server</code> image. If you set this variable, you must also volume mount the same directory to <code class="highlighter-rouge">/home/user/che</code></td>
-      <td><code class="highlighter-rouge">/home/user/che</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_IN_VM</code></td>
-      <td>Set to ‘true’ if this container is running inside of a VM providing Docker such as boot2docker, Docker for Mac, or Docker for Windows. We auto-detect this for most situations, but it’s not always perfect.</td>
-      <td>auto-detection</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LOG_LEVEL</code></td>
-      <td>Logging level of output for Che server. Can be <code class="highlighter-rouge">debug</code> or <code class="highlighter-rouge">info</code>.</td>
-      <td><code class="highlighter-rouge">info</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_HOST</code></td>
-      <td>IP address/hostname Che server will bind to. Used by browsers to contact workspaces. You must set this IP address if you want to bind the Che server to an external IP address that is not the same as Docker’s.</td>
-      <td>The IP address set to the Docker host. This does cover 99% of situations, but on rare occassions we are not able to discover this IP address and you must provide it.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_DEBUG_SERVER</code></td>
-      <td>If <code class="highlighter-rouge">true</code>, then will launch the Che server with JPDA activated so that you a Java debugger can attach to the Che server for debugging plugins, extensions, and core libraries.</td>
-      <td><code class="highlighter-rouge">false</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_DEBUG_SERVER_PORT</code></td>
-      <td>The port that the JPDA debugger will listen.</td>
-      <td><code class="highlighter-rouge">8000</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_DEBUG_SERVER_SUSPEND</code></td>
-      <td>If <code class="highlighter-rouge">true</code>, then activates <code class="highlighter-rouge">JPDA_SUSPEND</code> flag for Tomcat running the Che server. Used for advanced internal debugging of extensions.</td>
-      <td><code class="highlighter-rouge">false</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_PORT</code></td>
-      <td>The port the Che server will bind itself to within the Che container.</td>
-      <td><code class="highlighter-rouge">8080</code></td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Defaults</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_SERVER_ACTION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command to send to Tomcat. it can be [<code>run</code>, <code>start</code> , <code>stop</code>].</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>run</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ASSEMBLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The path to a Che assembly that is on your host to be used instead of the assembly packaged within the <code>che-server</code> image. If you set this variable, you must also volume mount the same directory to <code>/home/user/che</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/home/user/che</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_IN_VM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to 'true' if this container is running inside of a VM providing Docker such as boot2docker, Docker for Mac, or Docker for Windows. We auto-detect this for most situations, but it’s not always perfect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">auto-detection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LOG_LEVEL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging level of output for Che server. Can be <code>debug</code> or <code>info</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>info</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_HOST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IP address/hostname Che server will bind to. Used by browsers to contact workspaces. You must set this IP address if you want to bind the Che server to an external IP address that is not the same as Docker’s.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address set to the Docker host. This does cover 99% of situations, but on rare occassions we are not able to discover this IP address and you must provide it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_DEBUG_SERVER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, then will launch the Che server with JPDA activated so that you a Java debugger can attach to the Che server for debugging plugins, extensions, and core libraries.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_DEBUG_SERVER_PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The port that the JPDA debugger will listen.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8000</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_DEBUG_SERVER_SUSPEND</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, then activates <code>JPDA_SUSPEND</code> flag for Tomcat running the Che server. Used for advanced internal debugging of extensions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The port the Che server will bind itself to within the Che container.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8080</code></p></td>
+</tr>
+</tbody>
 </table>
-
+<div class="paragraph">
 <p>You can find list of envs in <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env">che.env</a>.</p>
-
+</div>
+<div class="paragraph">
 <p>You can create a file with envs you want to pass to che-server:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-p</span>:8080:8080 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
-           <span class="nt">--env-file</span> /home/user/che.env <span class="se">\</span>
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -p:8080:8080 \
+           --name che \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data \
+           --env-file /home/user/che.env \
+           eclipse/che-server:6.0.0</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Run Che on Public IP Address</strong></p>
-
-<p>If you want to have remote browser clients connect to the Che server (as opposed to local browser clients) and override the defaults that we detect, set <code class="highlighter-rouge">CHE_IP</code> to the Docker host IP address that will have requests forwarded to the <code class="highlighter-rouge">che-server</code> container.</p>
-
-<p>We run an auto-detection algorithm within the che-server container to determine this IP.  If Docker is running on <code class="highlighter-rouge">boot2docker</code> this is usually the <code class="highlighter-rouge">eth1</code> interface. If you are running Docker for Windows or Docker for Mac this is usually the <code class="highlighter-rouge">eth0</code> interface. If you are running Docker natively on Linux, this is the <code class="highlighter-rouge">docker0</code> interface. If your host that is running Docker has its IP at 10.0.75.4 and you wanted to allow remote clients access to this container then:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-p</span>:8080:8080 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">-e</span> <span class="nv">CHE_HOST</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p>If you want to have remote browser clients connect to the Che server (as opposed to local browser clients) and override the defaults that we detect, set <code>CHE_IP</code> to the Docker host IP address that will have requests forwarded to the <code>che-server</code> container.</p>
+</div>
+<div class="paragraph">
+<p>We run an auto-detection algorithm within the che-server container to determine this IP. If Docker is running on <code>boot2docker</code> this is usually the <code>eth1</code> interface. If you are running Docker for Windows or Docker for Mac this is usually the <code>eth0</code> interface. If you are running Docker natively on Linux, this is the <code>docker0</code> interface. If your host that is running Docker has its IP at 10.0.75.4 and you wanted to allow remote clients access to this container then:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -p:8080:8080 \
+           --name che \
+           -e CHE_HOST=10.0.75.4 \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data \
+           eclipse/che-server:6.0.0</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Run Che as a Daemon</strong></p>
-
-<p>Pass the <code class="highlighter-rouge">--restart always</code> parameter to the docker syntax to have the Docker daemon restart the container on any exit event, including when your host is initially booting. You can also run Che in the background with the <code class="highlighter-rouge">-d</code> option.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-p</span>:8080:8080 <span class="se">\</span>
-           <span class="nt">--name</span> che <span class="se">\</span>
-           <span class="nt">--restart</span> always <span class="se">\</span>
-           <span class="nt">-e</span> <span class="nv">CHE_HOST</span><span class="o">=</span>10.0.75.4 <span class="se">\</span>
-           <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
-           <span class="nt">-v</span> &lt;LOCAL_PATH&gt;:/data <span class="se">\</span>
-           eclipse/che-server:6.0.0
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p>Pass the <code>--restart always</code> parameter to the docker syntax to have the Docker daemon restart the container on any exit event, including when your host is initially booting. You can also run Che in the background with the <code>-d</code> option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker run -p:8080:8080 \
+           --name che \
+           --restart always \
+           -e CHE_HOST=10.0.75.4 \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v &lt;LOCAL_PATH&gt;:/data \
+           eclipse/che-server:6.0.0</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Run With Docker Compose</strong></p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">che</span><span class="pi">:</span>
-   <span class="na">image</span><span class="pi">:</span> <span class="s">eclipse/che-server:6.0.0</span>
-   <span class="na">port</span><span class="pi">:</span> <span class="s">8080:8080</span>
-   <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
-   <span class="na">volumes</span><span class="pi">:</span>
-     <span class="pi">-</span> <span class="s">/var/run/docker.sock:/var/run/docker.sock</span>
-     <span class="pi">-</span> <span class="s">&lt;LOCAL_PATH&gt;:/data</span>
-   <span class="na">container_name</span><span class="pi">:</span> <span class="s">che</span>
-</code></pre></div></div>
-
-<p>Save this into a file named <code class="highlighter-rouge">Composefile</code>. You can then run this with Docker Compose with <code class="highlighter-rouge">docker-compose -f Composefile -d --env-file=che.env</code>. Environment file should contain one must have env:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># $IP is a public IP of your server
-CHE_HOST=$IP
-</code></pre></div></div>
-
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">che</span>:
+   <span class="key">image</span>: <span class="string"><span class="content">eclipse/che-server:6.0.0</span></span>
+   <span class="key">port</span>: <span class="string"><span class="content">8080:8080</span></span>
+   <span class="key">restart</span>: <span class="string"><span class="content">always</span></span>
+   <span class="key">volumes</span>:
+     - <span class="string"><span class="content">/var/run/docker.sock:/var/run/docker.sock</span></span>
+     - <span class="string"><span class="content">&lt;LOCAL_PATH&gt;:/data</span></span>
+   <span class="key">container_name</span>: <span class="string"><span class="content">che</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Save this into a file named <code>Composefile</code>. You can then run this with Docker Compose with <code>docker-compose -f Composefile -d --env-file=che.env</code>. Environment file should contain one must have env:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># $IP is a public IP of your server
+CHE_HOST=$IP</pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1340,7 +1524,7 @@ CHE_HOST=$IP
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

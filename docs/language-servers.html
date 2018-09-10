@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,77 +846,141 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="overview">Overview</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>The Language Server Protocol is used between a tool (the client) and a language intelligence provider (the server) to integrate features like auto complete, goto definition, find references, etc.</p>
-
+</div>
+<div class="paragraph">
 <p>You can learn more about the language server specification on the <a href="https://github.com/Microsoft/language-server-protocol">LSP GitHub page</a>.</p>
-
+</div>
+<div class="paragraph">
 <p>Currently Eclipse Che implements the <a href="https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md">3.x protocol version</a>.</p>
-
+</div>
+<div class="paragraph">
 <p>Note that, Eclipse Che also implements the snippet syntax used in VSCode. It is not versioned in the LSP specification, but the supported syntax is described <a href="https://github.com/Microsoft/vscode/blob/0ebd01213a65231f0af8187acaf264243629e4dc/src/vs/editor/contrib/snippet/browser/snippet.md">here</a>.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="adding-support-for-new-languages">Adding Support for New Languages</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are two approaches to add a new language server:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>via installer and launcher: this way a language server runs in the machine where the respective installer has been enabled</li>
-  <li>adding <a href="#ls-sidecars">language server as a sidecar</a> in workspace configuration - multi-machine recipe + server with required attributes</li>
+<li>
+<p>via installer and launcher: this way a language server runs in the machine where the respective installer has been enabled</p>
+</li>
+<li>
+<p>adding <a href="#ls-sidecars">language server as a sidecar</a> in workspace configuration - multi-machine recipe + server with required attributes</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="general-concept">General Concept</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Language server integration is divided into 2 steps: an install followed by a separately triggered start. Language servers aren’t started when the agent starts. Instead they are started in a second step which can be triggered at any time. This is done to reduce resource consumption and reduce workspace startup time.</p>
-
-<ol>
-  <li>The language server agent is launched when the workspace starts - its job is to install all dependencies and prepare the <code class="highlighter-rouge">bash</code> launcher file that will be used to start the language server.</li>
-  <li>The <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">launcher</a> is triggered and starts the language server. We suggest triggering the launcher when the user begins interacting with file types related to the language server. Once launched, the language server is registered with specific file types (covered in more detail below).</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The language server agent is launched when the workspace starts - its job is to install all dependencies and prepare the <code>bash</code> launcher file that will be used to start the language server.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java">launcher</a> is triggered and starts the language server. We suggest triggering the launcher when the user begins interacting with file types related to the language server. Once launched, the language server is registered with specific file types (covered in more detail below).</p>
+</li>
 </ol>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="adding-a-language-server-installer">Adding a Language Server Installer</h2>
-
-<p>Follow the documentation on how to <a href="custom-installers.html">add new installer</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Follow the documentation on how to <a href="custom-installers">add new installer</a>.</p>
+</div>
+<div class="paragraph">
 <p>Examples of existed language server agents you can learn from:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-json">JSON</a></li>
-  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-php">PHP</a></li>
-  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-python">Python</a></li>
-  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-csharp">C#</a></li>
-  <li><a href="https://github.com/eclipse/che/tree/master/agents/ls-typescript">TypeScript</a></li>
+<li>
+<p><a href="https://github.com/eclipse/che/tree/master/agents/ls-json">JSON</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che/tree/master/agents/ls-php">PHP</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che/tree/master/agents/ls-python">Python</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che/tree/master/agents/ls-csharp">C#</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che/tree/master/agents/ls-typescript">TypeScript</a></p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="adding-a-language-server-config">Adding a Language Server Config</h2>
-
-<p>In order to start/initialize a language server for the desired language, you need to implement <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/LanguageServerConfig.java">LanguageServerConfig interface</a> which pretty much defines what needs to be accomplished to start a ‘local’ language server.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to start/initialize a language server for the desired language, you need to implement <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/LanguageServerConfig.java">LanguageServerConfig interface</a> which pretty much defines what needs to be accomplished to start a 'local' language server.</p>
+</div>
+<div class="paragraph">
 <p>Here is how a typical LanguageServerConfig looks like: <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/languageserver/ClangDLanguageServerConfig.java">Clangd</a>.</p>
-
+</div>
+<div class="paragraph">
 <p>Things to pay attention to:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li><strong>REGEX</strong> defines regexp for desired files. It can be a path, all fines with certain extension or particular file names etc.</li>
-  <li><strong>launchScript</strong> is usually created by an installer script and contains command(s) to launch a language server in a stdio mode</li>
-  <li><strong>LANGUAGE_ID</strong> is defined in a guice module. See: <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java">ClangdModule</a></li>
-  <li>add binding in <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java#L37">guice module</a></li>
+<li>
+<p><strong>REGEX</strong> defines regexp for desired files. It can be a path, all fines with certain extension or particular file names etc.</p>
+</li>
+<li>
+<p><strong>launchScript</strong> is usually created by an installer script and contains command(s) to launch a language server in a stdio mode</p>
+</li>
+<li>
+<p><strong>LANGUAGE_ID</strong> is defined in a guice module. See: <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java">ClangdModule</a></p>
+</li>
+<li>
+<p>add binding in <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java#L37">guice module</a></p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>Installers are packaged into wsmaster, so you will need to add required dependencies there. LanguageServerConfigs are usually part of plugins packages with a workspace agent.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ls-sidecars">LS-Sidecars</h2>
-
-<p>While the above approach works well for custom assemblies, i.e. you actually need to rebuild Che with a custom plugin that registers a new installer and a language server launcher, there is a mechanism to launch Language Servers in parallel containers/sidecars. This is what you need to do to add a new language server to your workspace as a sidecar.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>While the above approach works well for custom assemblies, i.e. you actually need to rebuild Che with a custom plugin that registers a new installer and a language server launcher, there is a mechanism to launch Language Servers in parallel containers/sidecars. This is what you need to do to add a new language server to your workspace as a sidecar.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Build a Docker image in which language server is started in <code class="highlighter-rouge">ENTRYPOINT</code> or <code class="highlighter-rouge">CMD</code>. Note that some language servers support <code class="highlighter-rouge">tcp</code> arguments in their start syntax. Make sure that the language server acts like a server, rather than attempts to bind to a socket. The best way to check it is to run the image: <code class="highlighter-rouge">docker run -ti ${image}</code>. If the container starts, everything is fine, and if it exits immediately, you need to fix it.</li>
+<li>
+<p>Build a Docker image in which language server is started in <code>ENTRYPOINT</code> or <code>CMD</code>. Note that some language servers support <code>tcp</code> arguments in their start syntax. Make sure that the language server acts like a server, rather than attempts to bind to a socket. The best way to check it is to run the image: <code>docker run -ti ${image}</code>. If the container starts, everything is fine, and if it exits immediately, you need to fix it.</p>
+</li>
 </ul>
-
-<p>We recommend running language servers in <code class="highlighter-rouge">stdio</code> mode and use sockat as a proxy. Here’s an example of a Dockerfile that builds an image with TyperScript language server:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># inherit an image with node.js and npm - runtime requirements for TypeScript LS
+</div>
+<div class="paragraph">
+<p>We recommend running language servers in <code>stdio</code> mode and use sockat as a proxy. Here’s an example of a Dockerfile that builds an image with TyperScript language server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># inherit an image with node.js and npm - runtime requirements for TypeScript LS
 FROM eclipse/node
 
 # install socat
@@ -921,61 +988,94 @@ RUN sudo apt-get install socat -y &amp;&amp; \
     sudo npm install -g typescript@2.5.3 typescript-language-server@0.1.4
 
 # run socat that listens on port 4417 with exec command that starts LS
-CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --stdio"
-</code></pre></div></div>
-
+CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --stdio"</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Create a stack with a <a href="creating-starting-workspaces.html">custom recipe</a>: Create Workspace &gt; Add Stack:</li>
+<li>
+<p>Create a stack with a <a href="creating-starting-workspaces">custom recipe</a>: Create Workspace &gt; Add Stack:</p>
+</li>
 </ul>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
- <span class="na">typescript-ls-machine</span><span class="pi">:</span>
-  <span class="na">image</span><span class="pi">:</span> <span class="s">ls/image</span>
-  <span class="na">mem_limit</span><span class="pi">:</span> <span class="s">1073741824</span>
- <span class="na">dev-machine</span><span class="pi">:</span>
-  <span class="na">image</span><span class="pi">:</span> <span class="s">eclipse/ubuntu_jdk8</span>
-  <span class="na">mem_limit</span><span class="pi">:</span> <span class="s">2147483648</span>
-  <span class="na">depends_on</span><span class="pi">:</span>
-   <span class="pi">-</span> <span class="s">typescript-ls-machine</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">services</span>:
+ <span class="key">typescript-ls-machine</span>:
+  <span class="key">image</span>: <span class="string"><span class="content">ls/image</span></span>
+  <span class="key">mem_limit</span>: <span class="string"><span class="content">1073741824</span></span>
+ <span class="key">dev-machine</span>:
+  <span class="key">image</span>: <span class="string"><span class="content">eclipse/ubuntu_jdk8</span></span>
+  <span class="key">mem_limit</span>: <span class="string"><span class="content">2147483648</span></span>
+  <span class="key">depends_on</span>:
+   - <span class="string"><span class="content">typescript-ls-machine</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>In User Dashboard, go to <strong>Workspaces &gt; Your Workspace &gt; Config</strong>, and add a server for typescript-ls-machine in <code class="highlighter-rouge">servers:[]</code></li>
+<li>
+<p>In User Dashboard, go to <strong>Workspaces &gt; Your Workspace &gt; Config</strong>, and add a server for typescript-ls-machine in <code>servers:[]</code></p>
+</li>
 </ul>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"ls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"go-ls"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"internal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ls"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"languageRegexes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[ {</span><span class="se">\"</span><span class="s2">languageId</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">golang</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">regex</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">.*</span><span class="se">\\\\</span><span class="s2">.go$</span><span class="se">\"</span><span class="s2">}]"</span><span class="p">,</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4417"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">servers</span><span class="delimiter">&quot;</span></span>: {
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">ls</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributes</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">go-ls</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">internal</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">ls</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">languageRegexes</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">[ {</span><span class="char">\&quot;</span><span class="content">languageId</span><span class="char">\&quot;</span><span class="content">:</span><span class="char">\&quot;</span><span class="content">golang</span><span class="char">\&quot;</span><span class="content">, </span><span class="char">\&quot;</span><span class="content">regex</span><span class="char">\&quot;</span><span class="content">:</span><span class="char">\&quot;</span><span class="content">.*</span><span class="char">\\</span><span class="char">\\</span><span class="content">.go$</span><span class="char">\&quot;</span><span class="content">}]</span><span class="delimiter">&quot;</span></span>,
+    },
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">protocol</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">tcp</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">port</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">4417</span><span class="delimiter">&quot;</span></span>
+  }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li><strong>ls</strong> - server name - can be any string</li>
-  <li><strong>attributes.id</strong> - can be any unique identifier</li>
-  <li><strong>attributes.internal</strong> - <code class="highlighter-rouge">true</code>. Mandatory! Used to get an internal link to server</li>
-  <li><strong>attributes.type</strong> - <code class="highlighter-rouge">ls</code>. Mandatory. Used by the IDE client to identify a server as a language server</li>
-  <li><strong>languageRegexes.languageId</strong> - language identifier, either one of those supported in [LSP specification] (https://microsoft.github.io/language-server-protocol/specification#textdocumentitem) or own.</li>
-  <li>
-    <p><strong>languageRegexes.regex</strong> - regexp expression to match either extension or file name + extension, or whatever match you need (for example, path, say, initialize language server only for config/config.xml files). Pay attention to regexp syntax since errors are not validated by server, and bad regexp will result in the client ignoring your files.</p>
-  </li>
-  <li>In User Dashboard, go to Workspaces &gt; Your Workspace &gt; Volumes, add a volume for <strong>each machine</strong>. The two volumes have to share the same name (for example, <code class="highlighter-rouge">projects</code>) and path <code class="highlighter-rouge">/projects</code> so that they actually share one volume. This way a language server container has access to workspace project types.</li>
+<li>
+<p><strong>ls</strong> - server name - can be any string</p>
+</li>
+<li>
+<p><strong>attributes.id</strong> - can be any unique identifier</p>
+</li>
+<li>
+<p><strong>attributes.internal</strong> - <code>true</code>. Mandatory! Used to get an internal link to server</p>
+</li>
+<li>
+<p><strong>attributes.type</strong> - <code>ls</code>. Mandatory. Used by the IDE client to identify a server as a language server</p>
+</li>
+<li>
+<p><strong>languageRegexes.languageId</strong> - language identifier, either one of those supported in [LSP specification] (<a href="https://microsoft.github.io/language-server-protocol/specification#textdocumentitem" class="bare">https://microsoft.github.io/language-server-protocol/specification#textdocumentitem</a>) or own.</p>
+</li>
+<li>
+<p><strong>languageRegexes.regex</strong> - regexp expression to match either extension or file name + extension, or whatever match you need (for example, path, say, initialize language server only for config/config.xml files). Pay attention to regexp syntax since errors are not validated by server, and bad regexp will result in the client ignoring your files.</p>
+</li>
+<li>
+<p>In User Dashboard, go to Workspaces &gt; Your Workspace &gt; Volumes, add a volume for <strong>each machine</strong>. The two volumes have to share the same name (for example, <code>projects</code>) and path <code>/projects</code> so that they actually share one volume. This way a language server container has access to workspace project types.</p>
+</li>
 </ul>
-
-<figure><img class="docimage" src="images/extensibility/lang_servers/volumes_ls.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/extensibility/lang_servers/volumes_ls.png" alt="volumes ls">
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Start a workspace. Open a file with one of the extensions bound to a language ID. Che client will attempt to connect to language server over tcp socket. This data is retrieved from workspace runtime. Language server process should be available at the port declared in the server. You can either use Socat or launch a language server in tcp mode if it supports it. It is your Docker image’s responsibility to launch the language server. Adding <code class="highlighter-rouge">ENTRYPOINT</code> or <code class="highlighter-rouge">CMD</code> instruction should work well.</li>
+<li>
+<p>Start a workspace. Open a file with one of the extensions bound to a language ID. Che client will attempt to connect to language server over tcp socket. This data is retrieved from workspace runtime. Language server process should be available at the port declared in the server. You can either use Socat or launch a language server in tcp mode if it supports it. It is your Docker image’s responsibility to launch the language server. Adding <code>ENTRYPOINT</code> or <code>CMD</code> instruction should work well.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>See: <a href="https://gist.githubusercontent.com/eivantsov/4e86b4d51cf23fbd8fd68410170f06e3/raw/e9c1edc600d0ff82e15d2d68d2ac5c6304a981b9/go-workspace.json">Sample configuration</a> of a workspace featuring 2 machines, one of which is a language server machine.</p>
-
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1008,7 +1108,7 @@ CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --std
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

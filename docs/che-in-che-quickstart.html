@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,75 +846,136 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Before you dive into information on how you can <a href="framework-overview.html">extend Che framework</a> and build your own Che <a href="assemblies.html">assembly</a>, let’s install and debug your first Che plugin using Che itself.</p>
-
+  <div class="paragraph">
+<p>Before you dive into information on how you can <a href="framework-overview">extend Che framework</a> and build your own Che <a href="assemblies">assembly</a>, let’s install and debug your first Che plugin using Che itself.</p>
+</div>
+<div class="sect1">
 <h2 id="run-eclipse-che">Run Eclipse Che</h2>
-
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>Installing it on Docker: <a href="docker-single-user.html">Single-user</a> or <a href="docker-multi-user.html">Multi-user</a></li>
-  <li>Installing it on OpenShift: <a href="openshift-single-user.html">Single-user</a> or <a href="openshift-multi-user.html">Multi-user</a></li>
+<li>
+<p>Installing it on Docker: <a href="docker-single-user">Single-user</a> or <a href="docker-multi-user">Multi-user</a></p>
+</li>
+<li>
+<p>Installing it on OpenShift: <a href="openshift-single-user">Single-user</a> or <a href="openshift-multi-user">Multi-user</a></p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="create-workspace-and-sample-extension">Create Workspace and Sample Extension</h2>
-
-<p>Search for a stack by keyword <code class="highlighter-rouge">che</code> and choose <code class="highlighter-rouge">che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
-
-<figure><img class="docimage" src="images/devel/create_extension.png" alt="" /></figure>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Search for a stack by keyword <code>che</code> and choose <code>che-ide-server-extension</code> as a sample project. This extension is both IDE and server side extension. It will bring a new menu item, an action to the IDE and a notification returned from a simple REST service.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/create_extension.png" alt="create extension">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="build-a-deploy-your-extension">Build a Deploy Your Extension</h2>
-
-<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code class="highlighter-rouge">assembly</code> (See: <a href="assemblies.html">Assemblies</a>) and plugins (containing plugins themselves).</p>
-
-<p>Execute <code class="highlighter-rouge">Traefik Start</code>, <code class="highlighter-rouge">Tomcat8-IDE Start</code>, <code class="highlighter-rouge">Deploy IDE</code> and <code class="highlighter-rouge">Deploy Workspace Agent</code> commands:</p>
-
-<figure><img class="docimage" src="images/devel/commands.png" alt="" /></figure>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the project shows up in project explorer, you will find 2 main Maven modules: <code>assembly</code> (See: <a href="assemblies">Assemblies</a>) and plugins (containing plugins themselves).</p>
+</div>
+<div class="paragraph">
+<p>Execute <code>Traefik Start</code>, <code>Tomcat8-IDE Start</code>, <code>Deploy IDE</code> and <code>Deploy Workspace Agent</code> commands:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/commands.png" alt="commands">
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</li>
-  <li>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</li>
-  <li>Deploy IDE - build ide-war module and its dependencies and packages <code class="highlighter-rouge">war</code> artifact and copies ide.war from <code class="highlighter-rouge">assembly-ide-war</code> target dir over to Tomcat’s webapp</li>
-  <li>Deploy Workspace Agent does the same with the agent war artifact</li>
+<li>
+<p>Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server</p>
+</li>
+<li>
+<p>Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)</p>
+</li>
+<li>
+<p>Deploy IDE - build ide-war module and its dependencies and packages <code>war</code> artifact and copies ide.war from <code>assembly-ide-war</code> target dir over to Tomcat’s webapp</p>
+</li>
+<li>
+<p>Deploy Workspace Agent does the same with the agent war artifact</p>
+</li>
 </ul>
-
-<p>The last two commands have identical preview URLs pointing to <code class="highlighter-rouge">host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code class="highlighter-rouge">?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code class="highlighter-rouge">Hello CheeAllPowerfull</code> message:</p>
-
-<figure><img class="docimage" src="images/devel/sample_action.png" alt="" /></figure>
-
+</div>
+<div class="paragraph">
+<p>The last two commands have identical preview URLs pointing to <code>host:port</code> Tomcat 8 with two extensions is bound to. You will notice <code>?wsagent-ref-prefix=dev-</code> appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find <strong>MyAction</strong>. Click it to see a notification with <code>Hello CheeAllPowerfull</code> message:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/sample_action.png" alt="sample action">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="develop-and-debug-client-side">Develop and Debug Client Side</h2>
-
-<p>Get back to an original IDE instance and execute <code class="highlighter-rouge">GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at <a href="ide-extensions-gwt.html#debugging-with-super-devmode">this page</a>. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code class="highlighter-rouge">MyAction.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">super</span><span class="o">(</span><span class="s">"My New Action"</span><span class="o">,</span> <span class="s">"My Action Description"</span><span class="o">);</span>
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Get back to an original IDE instance and execute <code>GWT SDM</code> command which will run <a href="http://www.gwtproject.org/articles/superdevmode.html">GWT Super Dev Mode</a>. You can find more info about Super Dev Mode in Che at <a href="ide-extensions-gwt.html#debugging-with-super-devmode">this page</a>. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in <code>MyAction.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="local-variable">super</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">My New Action</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">My Action Description</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Return to the 2nd IDE instance, click <strong>Dev Mode On</strong> button and hit <strong>Compile</strong>. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.</p>
-
-<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code class="highlighter-rouge">Chrome's dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code class="highlighter-rouge">My New Action</code> in the context menu.</p>
-
-<figure><img class="docimage" src="images/devel/debug_chrome.png" alt="" /></figure>
-
+</div>
+<div class="paragraph">
+<p>You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open <code>Chrome dev console &gt; Sources &gt; Ctrl + P &gt; MyAction.java</code>. Set a breakpoint in this class and call <code>My New Action</code> in the context menu.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/debug_chrome.png" alt="debug chrome">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="develop-and-debug-server-side">Develop and Debug Server Side</h2>
-
-<p>Let’s change response from our REST service in <code class="highlighter-rouge">MyService.java</code>:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@PathParam</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">return</span> <span class="s">"Howdy, "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"!"</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>Select this submodule in project explorer (<code class="highlighter-rouge">plugin-serverservice-server</code>) and run <code class="highlighter-rouge">Build</code> and <code class="highlighter-rouge">Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code class="highlighter-rouge">webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
-
-<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code class="highlighter-rouge">jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
-
-<p>Open <code class="highlighter-rouge">MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let’s change response from our REST service in <code>MyService.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">String</span> sayHello(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> name) {
+  <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Howdy, </span><span class="delimiter">&quot;</span></span> + name + <span class="string"><span class="delimiter">&quot;</span><span class="content">!</span><span class="delimiter">&quot;</span></span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Select this submodule in project explorer (<code>plugin-serverservice-server</code>) and run <code>Build</code> and <code>Workspace Agent Hot Deploy</code> commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s <code>webapps/ROOT/WEB-INF/lib/</code> that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.</p>
+</div>
+<div class="paragraph">
+<p>It’s time to <strong>debug</strong> this REST service. By default, we have started Tomcat in a debug mode (<code>jpda run</code>) on port 9000 which we will use to attach Che debugger.</p>
+</div>
+<div class="paragraph">
+<p>Open <code>MyService.java</code> and set a breakpoint on line 31 (where response is returned). Go to <strong>Run &gt; Edit Debug Configurations &gt; Java &gt; Connect to process on a workspace machine &gt; port 9000</strong>. Save this configuration and click Debug. You will also see this configuration at <strong>Run &gt; Debug</strong>.</p>
+</div>
+<div class="paragraph">
 <p>Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:</p>
-
-<figure><img class="docimage" src="images/devel/debugger.png" alt="" /></figure>
-
-<p>In Variable window, click <code class="highlighter-rouge">Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
-
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/debugger.png" alt="debugger">
+</div>
+</div>
+<div class="paragraph">
+<p>In Variable window, click <code>Change variable</code> icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -944,7 +1008,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

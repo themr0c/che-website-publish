@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,82 +846,116 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="overview">Overview</h2>
-
-<p>In CHE we use <a href="http://www.jsonrpc.org/specification">JSON-RPC</a> for asynchronous communication between clients and servers. JSON-RPC is asymmetric by nature so in order to be able to  information independently we use duplex approach where both sides (clients and servers) can act both as a JSON-RPC server and as JSON-RPC client. To make it clear, clients (e.g. IDE) can send JSON-RPC requests (acting as JSON-RPC client) and receive requests (acting as JSON-RPC server) and servers (e.g. workspace master or workspace agent) can do the same.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>In CHE we use <a href="http://www.jsonrpc.org/specification">JSON-RPC</a> for asynchronous communication between clients and servers. JSON-RPC is asymmetric by nature so in order to be able to information independently we use duplex approach where both sides (clients and servers) can act both as a JSON-RPC server and as JSON-RPC client. To make it clear, clients (e.g. IDE) can send JSON-RPC requests (acting as JSON-RPC client) and receive requests (acting as JSON-RPC server) and servers (e.g. workspace master or workspace agent) can do the same.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="send-a-json-rpc-request">Send a JSON-RPC request</h2>
-
-<p>To send request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestTransmitter.java"><code class="highlighter-rouge">org.eclipse.che.api.core.jsonrpc.commons.RequestTransmitter</code></a>, the most basic use case (actual for both client and server sides) looks quite simple:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">transmitter</span>
-         <span class="o">.</span><span class="na">newRequest</span><span class="o">()</span>
-         <span class="o">.</span><span class="na">endpointId</span><span class="o">(</span><span class="n">endpointId</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="n">method</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">paramsAsDto</span><span class="o">(</span><span class="n">dto</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">sendAndReceiveResultAsDto</span><span class="o">(</span><span class="n">dtoClass</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">onSuccess</span><span class="o">((</span><span class="n">result</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{})</span>
-         <span class="o">.</span><span class="na">onFailure</span><span class="o">((</span><span class="n">jsonRpcError</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{});</span>
-</code></pre></div></div>
-
-<p><strong>endpointId</strong> - in common sense can be an arbitrary <strong><code class="highlighter-rouge">String</code></strong> identifier that allows to distinguish endpoints. Please note that for server sides these endpoints are statically defined as constants:
-<code class="highlighter-rouge">"ws-agent"</code> for workspace agent and <code class="highlighter-rouge">"ws-master"</code> for workspace master for example, while for clients it is a dynamic identifier because clients are dynamic by their nature.</p>
-
-<p><strong>method</strong> - method name corresponds to it’s definition in JSON-RPC protocol specification. In Che we use the following naming convention: method name in most cases consists of two parts separated be slash - scope and action. For example <code class="highlighter-rouge">project/create</code> where <code class="highlighter-rouge">project</code> is the scope and <code class="highlighter-rouge">create</code> is the action.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>To send request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestTransmitter.java"><code>org.eclipse.che.api.core.jsonrpc.commons.RequestTransmitter</code></a>, the most basic use case (actual for both client and server sides) looks quite simple:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">transmitter
+         .newRequest()
+         .endpointId(endpointId)
+         .methodName(method)
+         .paramsAsDto(dto)
+         .sendAndReceiveResultAsDto(dtoClass)
+         .onSuccess((result) -&gt; {})
+         .onFailure((jsonRpcError) -&gt; {});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>endpointId</strong> - in common sense can be an arbitrary <strong><code>String</code></strong> identifier that allows to distinguish endpoints. Please note that for server sides these endpoints are statically defined as constants: <code>"ws-agent"</code> for workspace agent and <code>"ws-master"</code> for workspace master for example, while for clients it is a dynamic identifier because clients are dynamic by their nature.</p>
+</div>
+<div class="paragraph">
+<p><strong>method</strong> - method name corresponds to it’s definition in JSON-RPC protocol specification. In Che we use the following naming convention: method name in most cases consists of two parts separated be slash - scope and action. For example <code>project/create</code> where <code>project</code> is the scope and <code>create</code> is the action.</p>
+</div>
+<div class="paragraph">
 <p><strong>dto</strong> - value of parameters passed (in our example it is a <a href="https://en.wikipedia.org/wiki/Data_transfer_object">DTO</a>), please note that though JSON-RPC protocol specification requires parameters either as json objects or arrays, you can use single primitives here as well and they will be automatically converted to a singleton array.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>dtoClass</strong> - class of a result that will be contained within the response to our request</p>
-
+</div>
+<div class="paragraph">
 <p><strong>result</strong> - result of our request (in our example it is of class <strong>dtoClass</strong>)</p>
-
+</div>
+<div class="paragraph">
 <p><strong>jsonRpcError</strong> - error object that contains information about the error if any happened, its structure corresponds to error defined in JSON-RPC protocol specification</p>
-
-<p>Source code example of using of the transmitter can be found here: https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L76</p>
-
+</div>
+<div class="paragraph">
+<p>Source code example of using of the transmitter can be found here: <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L76" class="bare">https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L76</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="receive-a-json-rpc-request">Receive a JSON-RPC request</h2>
-
-<p>To receive a request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestHandlerConfigurator.java"><code class="highlighter-rouge">org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerConfigurator</code></a>, the use case (actual for both sides):</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">configurator</span>
-         <span class="o">.</span><span class="na">newConfiguration</span><span class="o">()</span>
-         <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="n">method</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">paramsAsDto</span><span class="o">(</span><span class="n">paramsDtoClass</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">resultAsDto</span><span class="o">(</span><span class="n">resultDtoClass</span><span class="o">)</span>
-         <span class="o">.</span><span class="na">withFunction</span><span class="o">((</span><span class="n">endpointId</span><span class="o">,</span> <span class="n">paramsDto</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">resultDto</span><span class="o">);</span>
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>To receive a request you can use <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/jsonrpc/commons/RequestHandlerConfigurator.java"><code>org.eclipse.che.api.core.jsonrpc.commons.RequestHandlerConfigurator</code></a>, the use case (actual for both sides):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">configurator
+         .newConfiguration()
+         .methodName(method)
+         .paramsAsDto(paramsDtoClass)
+         .resultAsDto(resultDtoClass)
+         .withFunction((endpointId, paramsDto) -&gt; resultDto);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>method</strong> - the name of JSON-RPC method that is to be handled by this configuration</p>
-
+</div>
+<div class="paragraph">
 <p><strong>paramsDtoClass</strong> - class of parameters that are passed in a JSON-RPC request (in our example it is a DTO)</p>
-
+</div>
+<div class="paragraph">
 <p><strong>resultDtoClass</strong> - class of result that is passed in a JSON-RPC response (in our example it is DTO)</p>
-
+</div>
+<div class="paragraph">
 <p><strong>endpointId</strong> - the identifier of an endpoint that sends the request that is handled by this configuration</p>
-
+</div>
+<div class="paragraph">
 <p><strong>paramsDto</strong> - the value of parameters passed</p>
-
+</div>
+<div class="paragraph">
 <p><strong>resultDto</strong> - the value of result passed</p>
-
-<p>Source code example of using of the transmitter can be found here: https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L117</p>
-
+</div>
+<div class="paragraph">
+<p>Source code example of using of the transmitter can be found here: <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L117" class="bare">https://github.com/eclipse/che/blob/master/wsagent/che-core-api-debug/src/main/java/org/eclipse/che/api/debugger/server/DebuggerJsonRpcMessenger.java#L117</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="client-endpoint-identification">Client endpoint identification</h2>
-<p>In order to receive a cross sessional identifier clients (e.g. IDE) can use a <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/websocket/impl/WebsocketIdService.java"><code class="highlighter-rouge">org.eclipse.che.api.core.websocket.impl.WebsocketIdService</code></a>, otherwise client identifier will not be persisted between websocket sessions. The most common use case (client specific):</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">requestTransmitter</span>
-        <span class="o">.</span><span class="na">newRequest</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">endpointId</span><span class="o">(</span><span class="s">"ws-master"</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="s">"websocketIdService/getId"</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">noParams</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">sendAndReceiveResultAsString</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">onSuccess</span><span class="o">(</span><span class="nl">appContext:</span><span class="o">:</span><span class="n">setApplicationWebsocketId</span><span class="o">);</span>
-</code></pre></div></div>
-
-<p>Source code example of using websocket identification service can be found here:
-https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/jsonrpc/WsMasterJsonRpcInitializer.java#L134</p>
-
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to receive a cross sessional identifier clients (e.g. IDE) can use a <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-core/src/main/java/org/eclipse/che/api/core/websocket/impl/WebsocketIdService.java"><code>org.eclipse.che.api.core.websocket.impl.WebsocketIdService</code></a>, otherwise client identifier will not be persisted between websocket sessions. The most common use case (client specific):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">requestTransmitter
+        .newRequest()
+        .endpointId(<span class="string"><span class="delimiter">&quot;</span><span class="content">ws-master</span><span class="delimiter">&quot;</span></span>)
+        .methodName(<span class="string"><span class="delimiter">&quot;</span><span class="content">websocketIdService/getId</span><span class="delimiter">&quot;</span></span>)
+        .noParams()
+        .sendAndReceiveResultAsString()
+        .onSuccess(appContext::setApplicationWebsocketId);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Source code example of using websocket identification service can be found here: <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/jsonrpc/WsMasterJsonRpcInitializer.java#L134" class="bare">https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/jsonrpc/WsMasterJsonRpcInitializer.java#L134</a></p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -947,7 +984,7 @@ https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/or
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

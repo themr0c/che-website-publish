@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,191 +846,230 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="supported-openshift-flavors-and-versions">Supported OpenShift Flavors and Versions</h2>
-
+  <div class="sect1">
+<h2 id="supported-openshift-flavors-and-versions">Supported OpenShift Flavors and Versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Single User Eclipse Che can be deployed to Minishift, OCP, OSD and OSO v3.6+.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="pre-requisites">Pre-Requisites</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>OpenShift oc client installed locally</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="admin-guide">Admin Guide</h2>
-
-<p>See: <a href="kubernetes-admin-guide.html">Kubernetes Admin Guide</a></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>See: <a href="kubernetes-admin-guide">Kubernetes Admin Guide</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deployment-diagram">Deployment Diagram</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are a few essential Kubernetes and OpenShift objects that are created when Che is deployed to OpenShift. When a workspace is started additional objects are created. See the diagram below:</p>
-
-<figure><img class="docimage" src="images/diagrams/ocp_single_user.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/diagrams/ocp_single_user.png" alt="ocp single user">
+</div>
+</div>
+<div class="paragraph">
 <p>This diagram depicts the default <a href="openshift-config.html#volumes">PVC strategy</a> (PVC per workspace).</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="minishift-addon">Minishift Addon</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Before starting <a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html">install Minishift</a> or <a href="https://docs.openshift.org/latest/minishift/getting-started/updating.html">update your Minishift</a> to ensure you’re on the most up-to-date version.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Minishift Addon</strong></p>
-
-<p>The best way of deploying Che to Minishift is using an add-on via the <a href="https://docs.openshift.org/latest/minishift/command-ref/minishift_addons_apply.html"><code class="highlighter-rouge">minishift add-ons apply</code></a> command which is outlined in the following paragraphs.</p>
-
+</div>
+<div class="paragraph">
+<p>The best way of deploying Che to Minishift is using an add-on via the <a href="https://docs.openshift.org/latest/minishift/command-ref/minishift_addons_apply.html"><code>minishift add-ons apply</code></a> command which is outlined in the following paragraphs.</p>
+</div>
+<div class="paragraph">
 <p><strong>Install add-On</strong></p>
-
-<p>Clone addons repository onto your local machine and then install the add-on via:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/minishift/minishift-addons
-minishift addons install &lt;path_to_minishift-addons&gt;/add-ons/che
-minishift addons enable che
-</code></pre></div></div>
-
-<p><code class="highlighter-rouge">enable</code> will setup Eclipse Che when you start Minishift the next time.</p>
-
-<p><strong>Apply add-on</strong></p>
-
-<p>If Minishift is already started and Che addon is installed, it is possible to deploy Che without restarting Minishift:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="se">\</span>
-    <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:nightly <span class="se">\</span>
-    che
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p>Starting with minishift v1.23.0 Che addon is pre-installed. To start Che we need to <code>enable</code> the addon and <code>apply</code> it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ minishift addons enable che &amp;&amp; minishift addons apply che</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Deploy a local Che server image</strong></p>
-
-<p>To deploy a local che-server image (e.g. <code class="highlighter-rouge">eclipse/che-server:local</code>) based on Che v5:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:local che
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p>To deploy a local che-server image (e.g. <code>eclipse/che-server:local</code>) based on Che v5:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ minishift addons apply --addon-env CHE_DOCKER_IMAGE=eclipse/che-server:local che</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>If the local image is based on Che v6:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>minishift addons apply <span class="se">\</span>
-    <span class="nt">--addon-env</span> <span class="nv">CHE_DOCKER_IMAGE</span><span class="o">=</span>eclipse/che-server:local <span class="se">\</span>
-    che
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ minishift addons apply \
+    --addon-env CHE_DOCKER_IMAGE=eclipse/che-server:local \
+    che</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Addon Variables</strong></p>
-
+</div>
+<div class="paragraph">
 <p>To customize the deployment of the Che server, the following variables can be applied to the execution:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">NAMESPACE</code></td>
-      <td>The OpenShift project where Che service will be deployed</td>
-      <td><code class="highlighter-rouge">che-mini</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_DOCKER_IMAGE</code></td>
-      <td>The docker image to be used for che.</td>
-      <td><code class="highlighter-rouge">eclipse/che-server:latest</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">GITHUB_CLIENT_ID</code></td>
-      <td>GitHub client ID to be used in Che workspaces</td>
-      <td><code class="highlighter-rouge">changeme</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">GITHUB_CLIENT_SECRET</code></td>
-      <td>GitHub client secred to be used in Che workspaces</td>
-      <td><code class="highlighter-rouge">changeme</code></td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 15%;">
+<col style="width: 39%;">
+<col style="width: 46%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NAMESPACE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The OpenShift project where Che service will be deployed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-mini</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_DOCKER_IMAGE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The docker image to be used for che.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-server:latest</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GITHUB_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub client ID to be used in Che workspaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeme</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GITHUB_CLIENT_SECRET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub client secred to be used in Che workspaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeme</code></p></td>
+</tr>
+</tbody>
 </table>
-
-<p>Variables can be specified by adding <code class="highlighter-rouge">--addon-env &lt;key=value&gt;</code> when the addon is being invoked (either by <code class="highlighter-rouge">minishift start</code> or <code class="highlighter-rouge">minishift addons apply</code>).</p>
-
+<div class="paragraph">
+<p>Variables can be specified by adding <code>--addon-env &lt;key=value&gt;</code> when the addon is being invoked (either by <code>minishift start</code> or <code>minishift addons apply</code>).</p>
+</div>
+<div class="paragraph">
 <p><strong>Remove add-on</strong></p>
-
+</div>
+<div class="paragraph">
 <p>To remove all created template and che project:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minishift addons remove che
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>minishift addons remove che</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Uninstall add-on</strong></p>
-
+</div>
+<div class="paragraph">
 <p>To uninstall the addon from the addon list:</p>
-
-<p><code class="highlighter-rouge">minishift addons uninstall che</code></p>
-
-<h2 id="what-is-my-routing-suffix">What is my routing suffix?</h2>
-
-<p>Deployment methods below will require a valid routing suffix to be passed as a template parameter.</p>
-
-<p>By default <code class="highlighter-rouge">oc cluster up</code> command uses <code class="highlighter-rouge">nip.io</code> as wildcard DNS provider, so your routing suffix will be <code class="highlighter-rouge">$IP.nip.io</code>.
-A routing suffix can be provided when a cluster starts. If you have existing routes in your OpenShift installation, you can extract ROUTING_SUFFIX.
-A route has the following format: <code class="highlighter-rouge">${route}-${namespace}.${ROUTING_SUFFIX}</code>.
-On MiniShift your ROUTING_SUFFIX will be <code class="highlighter-rouge">$(minishift ip).nip.io</code>.</p>
-
-<p>Here’s a few simple commands to get your routing suffix:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc create service clusterip test --tcp=80:80
-oc expose service test
-oc get route test -o=jsonpath='{.spec.host}{"\n"}'
-</code></pre></div></div>
-
-<p>Everything that comes after namespace in a route URL is your routing suffix. Don’t forget to delete test service and route.</p>
-
-<h2 id="minishift-templates">MiniShift: Templates</h2>
-
-<p>Alternatively, you may download templates and run deployment manually instead of using MiniShift addons:</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># get yamls</span>
-
-<span class="nv">DEPLOY_ROOT_URL</span><span class="o">=</span>https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/templates
-curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_ROOT_URL</span><span class="k">}</span>/che-server-template.yaml <span class="nt">-o</span> che-server-template.yaml
-curl <span class="nt">-fsSL</span> <span class="k">${</span><span class="nv">DEPLOY_ROOT_URL</span><span class="k">}</span>/pvc/che-server-pvc.yaml <span class="nt">-o</span> che-server-pvc.yaml
-
-<span class="c"># create a project</span>
-oc new-project che
-
-oc new-app <span class="nt">-f</span> che-server-template.yaml <span class="nt">-p</span> <span class="nv">ROUTING_SUFFIX</span><span class="o">=</span><span class="k">$(</span>minishift ip<span class="k">)</span>.nip.io
-oc apply <span class="nt">-f</span> pvc/che-server-pvc.yaml
-oc <span class="nb">set </span>volume dc/che <span class="nt">--add</span> <span class="nt">-m</span> /data <span class="nt">--name</span><span class="o">=</span>che-data-volume <span class="nt">--claim-name</span><span class="o">=</span>che-data-volume
-</code></pre></div></div>
-
+</div>
+<div class="paragraph">
+<p><code>minishift addons uninstall che</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="minishift-script">MiniShift: Deployment Script</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Alternatively, you may download deployment script and run deployment manually instead of using MiniShift addons:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl -fsSL https://raw.githubusercontent.com/eclipse/che/master/deploy/openshift/deploy_che.sh -o deploy_che.sh
+./deploy_che.sh</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script will download deployment templates, check your current oc session and context. Run <code>./deploy_che.sh --help</code> to get a list of all deployment options.</p>
+</div>
+<div class="paragraph">
+<p>You can use the same script to deploy to a local Origin/OKD cluster (oc cluster up)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="https-mode">HTTPS Mode</h2>
-
-<p><span style="color:red;">IMPORTANT!</span> Find instructions on adding self signed certs at <a href="openshift-config.html#https-mode---self-signed-certs">OpenShift Configuration page</a>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc new-project che
-
-oc new-app -f che-server-template.yaml -p ROUTING_SUFFIX=$(minishift ip).nip.io \
-                                       -p PROTOCOL=https \
-                                       -p WS_PROTOCOL=wss \
-                                       -p TLS=true
-oc apply -f pvc/che-server-pvc.yaml
-oc set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume
-oc apply -f https/che-route-tls.yaml
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>IMPORTANT! Find instructions on adding self signed certs at <a href="openshift-config.html#https-mode---self-signed-certs">OpenShift Configuration page</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./deploy_che.sh -s</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="openshift-container-platform">OpenShift Container Platform</h2>
-
-<p>Same instructions as in <a href="#minishift-templates">MiniShift</a>, however, you need to provide a valid <a href="#what-is-my-routing-suffix">ROUTING_SUFFIX</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Same instructions as in <a href="#minishift-script">MiniShift</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="openshift-dedicated">OpenShift Dedicated</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Instructions to deploy Che to OSD are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a></p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="openshift-online">OpenShift Online</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Instructions to deploy Che to OSO Pro are identical to those for <a href="#openshift-container-platform">OpenShift Container Platform</a></p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deployment-options-and-configuration">Deployment Options and Configuration</h2>
-
-<p>See: <a href="openshift-config.html">OpenShift Deployment Config</a> and <a href="kubernetes-admin-guide.html">Admin Guide</a></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>See: <a href="openshift-config">OpenShift Deployment Config</a> and <a href="kubernetes-admin-guide">Admin Guide</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="whats-next">What’s Next</h2>
-
-<p>Create and <a href="creating-starting-workspaces.html">start your first workspace</a>, <a href="version-control.html">import a project</a>.</p>
-
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create and <a href="creating-starting-workspaces">start your first workspace</a>, <a href="version-control">import a project</a>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1056,7 +1098,7 @@ oc apply -f https/che-route-tls.yaml
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,142 +846,185 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>In Che there is a bunch of project operations that can be performed via REST, JSON-RPC or programmatically (on server side). Most valuable will be covered by this chapter.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="project-import">Project import</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>In is possible to import a project using several ways, Che supports project import via REST, JSON-RPC and ProjectManager, those will be described further with examples.</p>
-
+</div>
+<div class="sect2">
 <h3 id="using-rest-to-import-a-project">Using REST to import a project</h3>
-<p>Most popular way of project import for clients is using corresponding REST service <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectService.java"><code class="highlighter-rouge">org.eclipse.che.api.project.server.ProjectService</code></a>. It has quite extensive API, so please check the service to have complete understanding of it’s capabilities. In Eclipse Che IDE there is already implemented <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/project/ProjectServiceClient.java"><code class="highlighter-rouge">org.eclipse.che.ide.project.ProjectServiceClient</code></a> that we can use in order to communicate with project service. Most basic use case is:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Path</span> <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="s">"/DemoProject"</span><span class="o">);</span>
+<div class="paragraph">
+<p>Most popular way of project import for clients is using corresponding REST service <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectService.java"><code>org.eclipse.che.api.project.server.ProjectService</code></a>. It has quite extensive API, so please check the service to have complete understanding of it’s capabilities. In Eclipse Che IDE there is already implemented <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/project/ProjectServiceClient.java"><code>org.eclipse.che.ide.project.ProjectServiceClient</code></a> that we can use in order to communicate with project service. Most basic use case is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">Path path = Path.valueOf(<span class="string"><span class="delimiter">&quot;</span><span class="content">/DemoProject</span><span class="delimiter">&quot;</span></span>);
 
-<span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="s">"location"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">storage</span> <span class="o">=</span> <span class="s">"git"</span><span class="o">;</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">parameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-                  <span class="o">{</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"branch"</span><span class="o">,</span> <span class="s">"master"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"commitId"</span><span class="o">,</span> <span class="s">"123456"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepVcs"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"fetch"</span><span class="o">,</span> <span class="s">"12345"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepDir"</span><span class="o">,</span> <span class="s">"/src"</span><span class="o">);</span>
-                  <span class="o">}</span>
-                <span class="o">}</span>
+<span class="predefined-type">String</span> location = <span class="string"><span class="delimiter">&quot;</span><span class="content">location</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">String</span> storage = <span class="string"><span class="delimiter">&quot;</span><span class="content">git</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; parameters = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt;() {
+                  {
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">branch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">master</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">commitId</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">123456</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepVcs</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">fetch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">12345</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepDir</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/src</span><span class="delimiter">&quot;</span></span>);
+                  }
+                }
 
-<span class="n">SourceStorageDto</span> <span class="n">sourceStorage</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">createDto</span><span class="o">(</span><span class="n">SourceStorageDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setLocation</span><span class="o">(</span><span class="n">location</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setStorage</span><span class="o">(</span><span class="n">git</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setParameters</span><span class="o">();</span>
-				
-<span class="n">projectServiceClient</span><span class="o">.</span><span class="na">importProject</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">sourceStorage</span><span class="o">)</span>
-                    <span class="o">.</span><span class="na">then</span><span class="o">((</span><span class="n">ignored</span><span class="o">)-&gt;{});</span>
-</code></pre></div></div>
+SourceStorageDto sourceStorage = dtoFactory.createDto(SourceStorageDto.class);
+sourceStorage.setLocation(location);
+sourceStorage.setStorage(git);
+sourceStorage.setParameters();
+
+projectServiceClient.importProject(path, sourceStorage)
+                    .then((ignored)-&gt;{});</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Where:</p>
-
-<p><strong><code class="highlighter-rouge">path</code></strong> - project path in workspace file system</p>
-
-<p><strong><code class="highlighter-rouge">sourceStorage</code></strong> - source storage metadata container</p>
-
-<p><strong><code class="highlighter-rouge">location</code></strong> - project location in a storage (can be URL, or any other storage dependent location descriptor)</p>
-
-<p><strong><code class="highlighter-rouge">storage</code></strong> - storage identifier, in our example it is “git”</p>
-
-<p><strong><code class="highlighter-rouge">parameters</code></strong> - storage related parameters</p>
-
+</div>
+<div class="paragraph">
+<p><strong><code>path</code></strong> - project path in workspace file system</p>
+</div>
+<div class="paragraph">
+<p><strong><code>sourceStorage</code></strong> - source storage metadata container</p>
+</div>
+<div class="paragraph">
+<p><strong><code>location</code></strong> - project location in a storage (can be URL, or any other storage dependent location descriptor)</p>
+</div>
+<div class="paragraph">
+<p><strong><code>storage</code></strong> - storage identifier, in our example it is "git"</p>
+</div>
+<div class="paragraph">
+<p><strong><code>parameters</code></strong> - storage related parameters</p>
+</div>
+<div class="paragraph">
 <p>Example can be found <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-app/src/main/java/org/eclipse/che/ide/resources/impl/ResourceManager.java#L497">here</a></p>
-
+</div>
+</div>
+<div class="sect2">
 <h3 id="using-json-rpc-to-import-a-project">Using JSON-RPC to import a project</h3>
-<p>Another approach is to use JSON-RPC calls instead of REST, that may be more convenient for JSON-RPC based clients. JSON-RPC service is represented by a range of JSON-RPC method handlers that are all configured within <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectJsonRpcServiceConfigurator.java"><code class="highlighter-rouge">org.eclipse.che.api.project.server.ProjectJsonRpcServiceConfigurator</code></a> class and utilize JSON-RPC protocol Eclipse Che implementation. In order to import a project we must call <code class="highlighter-rouge">"project/import"</code> method, that has <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project-shared/src/main/java/org/eclipse/che/api/project/shared/dto/service/ImportRequestDto.java"><code class="highlighter-rouge">org.eclipse.che.api.project.shared.dto.service.ImportRequestDto</code></a> as request params and <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project-shared/src/main/java/org/eclipse/che/api/project/shared/dto/service/ImportResponseDto.java"><code class="highlighter-rouge">org.eclipse.che.api.project.shared.dto.service.ImportResponseDto</code></a> as a result. Inside those DTOs you will need to configure <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-model/src/main/java/org/eclipse/che/api/core/model/workspace/config/SourceStorage.java"><code class="highlighter-rouge">org.eclipse.che.api.core.model.workspace.config.SourceStorage</code></a> in order to start import procedure and will receive <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-model/src/main/java/org/eclipse/che/api/core/model/workspace/config/ProjectConfig.java"><code class="highlighter-rouge">org.eclipse.che.api.core.model.workspace.config.ProjectConfig</code></a> after import is finished. Most basic example is:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="n">String</span> <span class="n">projectWsPath</span> <span class="o">=</span> <span class="s">"/DemoProject"</span>
+<div class="paragraph">
+<p>Another approach is to use JSON-RPC calls instead of REST, that may be more convenient for JSON-RPC based clients. JSON-RPC service is represented by a range of JSON-RPC method handlers that are all configured within <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectJsonRpcServiceConfigurator.java"><code>org.eclipse.che.api.project.server.ProjectJsonRpcServiceConfigurator</code></a> class and utilize JSON-RPC protocol Eclipse Che implementation. In order to import a project we must call <code>"project/import"</code> method, that has <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project-shared/src/main/java/org/eclipse/che/api/project/shared/dto/service/ImportRequestDto.java"><code>org.eclipse.che.api.project.shared.dto.service.ImportRequestDto</code></a> as request params and <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project-shared/src/main/java/org/eclipse/che/api/project/shared/dto/service/ImportResponseDto.java"><code>org.eclipse.che.api.project.shared.dto.service.ImportResponseDto</code></a> as a result. Inside those DTOs you will need to configure <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-model/src/main/java/org/eclipse/che/api/core/model/workspace/config/SourceStorage.java"><code>org.eclipse.che.api.core.model.workspace.config.SourceStorage</code></a> in order to start import procedure and will receive <a href="https://github.com/eclipse/che/blob/master/core/che-core-api-model/src/main/java/org/eclipse/che/api/core/model/workspace/config/ProjectConfig.java"><code>org.eclipse.che.api.core.model.workspace.config.ProjectConfig</code></a> after import is finished. Most basic example is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">String</span> projectWsPath = <span class="string"><span class="delimiter">&quot;</span><span class="content">/DemoProject</span><span class="delimiter">&quot;</span></span>
 
-<span class="n">String</span> <span class="n">method</span> <span class="o">=</span> <span class="s">"project/import"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">endpointId</span> <span class="o">=</span> <span class="s">"ws-agent"</span><span class="o">;</span>
+<span class="predefined-type">String</span> method = <span class="string"><span class="delimiter">&quot;</span><span class="content">project/import</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">String</span> endpointId = <span class="string"><span class="delimiter">&quot;</span><span class="content">ws-agent</span><span class="delimiter">&quot;</span></span>;
 
-<span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="s">"location"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">storage</span> <span class="o">=</span> <span class="s">"git"</span><span class="o">;</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">parameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-                  <span class="o">{</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"branch"</span><span class="o">,</span> <span class="s">"master"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"commitId"</span><span class="o">,</span> <span class="s">"123456"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepVcs"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"fetch"</span><span class="o">,</span> <span class="s">"12345"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepDir"</span><span class="o">,</span> <span class="s">"/src"</span><span class="o">);</span>
-                  <span class="o">}</span>
-                <span class="o">}</span>
+<span class="predefined-type">String</span> location = <span class="string"><span class="delimiter">&quot;</span><span class="content">location</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">String</span> storage = <span class="string"><span class="delimiter">&quot;</span><span class="content">git</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; parameters = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt;() {
+                  {
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">branch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">master</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">commitId</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">123456</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepVcs</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">fetch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">12345</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepDir</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/src</span><span class="delimiter">&quot;</span></span>);
+                  }
+                }
 
-<span class="n">SourceStorageDto</span> <span class="n">sourceStorage</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">createDto</span><span class="o">(</span><span class="n">SourceStorageDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setLocation</span><span class="o">(</span><span class="n">location</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setStorage</span><span class="o">(</span><span class="n">git</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setParameters</span><span class="o">();</span>
-				
-				
-<span class="n">ImportRequestDto</span> <span class="n">params</span> <span class="o">=</span> <span class="n">dtoFactory</span><span class="o">.</span><span class="na">createDto</span><span class="o">(</span><span class="n">ImportRequestDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">params</span><span class="o">.</span><span class="na">setWsPath</span><span class="o">(</span><span class="n">projectWsPath</span><span class="o">);</span>
-<span class="n">params</span><span class="o">.</span><span class="na">setSourceStorage</span><span class="o">(</span><span class="n">sourceStorage</span><span class="o">);</span>
+SourceStorageDto sourceStorage = dtoFactory.createDto(SourceStorageDto.class);
+sourceStorage.setLocation(location);
+sourceStorage.setStorage(git);
+sourceStorage.setParameters();
 
-<span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">resultClass</span> <span class="o">=</span> <span class="n">ImportResponseDto</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
 
-    <span class="n">requestTransmitter</span>
-        <span class="o">.</span><span class="na">newRequest</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">endpointId</span><span class="o">(</span><span class="n">endpointId</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">methodName</span><span class="o">(</span><span class="n">method</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">paramsAsDto</span><span class="o">(</span><span class="n">params</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">sendAndReceiveResultAsDto</span><span class="o">(</span><span class="n">resultClass</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">onSuccess</span><span class="o">((</span><span class="n">importResponse</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{})</span>
-		<span class="o">.</span><span class="na">onFailure</span><span class="o">((</span><span class="n">jsonRpcError</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{});</span>
-</code></pre></div></div>
+ImportRequestDto params = dtoFactory.createDto(ImportRequestDto.class);
+params.setWsPath(projectWsPath);
+params.setSourceStorage(sourceStorage);
 
+<span class="predefined-type">Class</span>&lt;?&gt; resultClass = ImportResponseDto.class;
+
+    requestTransmitter
+        .newRequest()
+        .endpointId(endpointId)
+        .methodName(method)
+        .paramsAsDto(params)
+        .sendAndReceiveResultAsDto(resultClass)
+        .onSuccess((importResponse) -&gt; {})
+        .onFailure((jsonRpcError) -&gt; {});</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Where:</p>
-
-<p><strong><code class="highlighter-rouge">method</code></strong> - JSON-RPC compliant method name that we want to call on server side, in our case it is <code class="highlighter-rouge">"project/import"</code></p>
-
-<p><strong><code class="highlighter-rouge">endpointId</code></strong> - identifier of endpoint where we want to call our method, in our case it is <code class="highlighter-rouge">"ws-agent"</code></p>
-
-<p><strong><code class="highlighter-rouge">projectWsPath</code></strong> - project path in workspace file system</p>
-
-<p><strong><code class="highlighter-rouge">resultClass</code></strong> - class of resulting dto</p>
-
-<p><strong><code class="highlighter-rouge">importResponse</code></strong> - import response DTO that contains business logic objects, in our case it contains imported project configuration</p>
-
+</div>
+<div class="paragraph">
+<p><strong><code>method</code></strong> - JSON-RPC compliant method name that we want to call on server side, in our case it is <code>"project/import"</code></p>
+</div>
+<div class="paragraph">
+<p><strong><code>endpointId</code></strong> - identifier of endpoint where we want to call our method, in our case it is <code>"ws-agent"</code></p>
+</div>
+<div class="paragraph">
+<p><strong><code>projectWsPath</code></strong> - project path in workspace file system</p>
+</div>
+<div class="paragraph">
+<p><strong><code>resultClass</code></strong> - class of resulting dto</p>
+</div>
+<div class="paragraph">
+<p><strong><code>importResponse</code></strong> - import response DTO that contains business logic objects, in our case it contains imported project configuration</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="using-projectmanager-to-import-a-project">Using ProjectManager to import a project</h3>
-<p>On server side we can use <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectManager.java"><code class="highlighter-rouge">org.eclipse.che.api.project.server.ProjectManager</code></a> in order to perform project import operations. Most basic use case:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BiConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="o">(</span><span class="n">s1</span><span class="o">,</span> <span class="n">s2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{};</span>
+<div class="paragraph">
+<p>On server side we can use <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectManager.java"><code>org.eclipse.che.api.project.server.ProjectManager</code></a> in order to perform project import operations. Most basic use case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">BiConsumer&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; consumer = (s1, s2) -&gt; {};
 
-<span class="kt">boolean</span> <span class="n">rewrite</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<span class="type">boolean</span> rewrite = <span class="predefined-constant">false</span>;
 
-<span class="n">String</span> <span class="n">projectWsPath</span> <span class="o">=</span> <span class="s">"/DemoProject"</span>
+<span class="predefined-type">String</span> projectWsPath = <span class="string"><span class="delimiter">&quot;</span><span class="content">/DemoProject</span><span class="delimiter">&quot;</span></span>
 
-<span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="s">"location"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">storage</span> <span class="o">=</span> <span class="s">"git"</span><span class="o">;</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">parameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-                  <span class="o">{</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"branch"</span><span class="o">,</span> <span class="s">"master"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"commitId"</span><span class="o">,</span> <span class="s">"123456"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepVcs"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"fetch"</span><span class="o">,</span> <span class="s">"12345"</span><span class="o">);</span>
-                    <span class="n">put</span><span class="o">(</span><span class="s">"keepDir"</span><span class="o">,</span> <span class="s">"/src"</span><span class="o">);</span>
-                  <span class="o">}</span>
-                <span class="o">}</span>
+<span class="predefined-type">String</span> location = <span class="string"><span class="delimiter">&quot;</span><span class="content">location</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">String</span> storage = <span class="string"><span class="delimiter">&quot;</span><span class="content">git</span><span class="delimiter">&quot;</span></span>;
+<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; parameters = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt;() {
+                  {
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">branch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">master</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">commitId</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">123456</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepVcs</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">fetch</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">12345</span><span class="delimiter">&quot;</span></span>);
+                    put(<span class="string"><span class="delimiter">&quot;</span><span class="content">keepDir</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/src</span><span class="delimiter">&quot;</span></span>);
+                  }
+                }
 
-<span class="n">SourceStorageDto</span> <span class="n">sourceStorage</span> <span class="o">=</span> <span class="n">DtoFactory</span><span class="o">.</span><span class="na">newInstance</span><span class="o">().</span><span class="na">createDto</span><span class="o">(</span><span class="n">SourceStorageDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setLocation</span><span class="o">(</span><span class="n">location</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setStorage</span><span class="o">(</span><span class="n">git</span><span class="o">);</span>
-<span class="n">sourceStorage</span><span class="o">.</span><span class="na">setParameters</span><span class="o">();</span>
+SourceStorageDto sourceStorage = DtoFactory.newInstance().createDto(SourceStorageDto.class);
+sourceStorage.setLocation(location);
+sourceStorage.setStorage(git);
+sourceStorage.setParameters();
 
-<span class="n">projectManager</span><span class="o">.</span><span class="na">doImport</span><span class="o">(</span><span class="n">projectWsPath</span><span class="o">,</span> <span class="n">sourceStorage</span><span class="o">,</span> <span class="n">rewrite</span><span class="o">,</span> <span class="n">consumer</span><span class="o">);</span>
-
-</code></pre></div></div>
-
+projectManager.doImport(projectWsPath, sourceStorage, rewrite, consumer);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Where:</p>
-
-<p><strong><code class="highlighter-rouge">consumer</code></strong> - binary consumer that may accept project import progression reports as string lines and pass it further, e.g. it is used to track project import progression on clients</p>
-
-<p><strong><code class="highlighter-rouge">rewrite</code></strong> - boolean parameter to indicate if an old project can be rewritten by new one during import</p>
-
+</div>
+<div class="paragraph">
+<p><strong><code>consumer</code></strong> - binary consumer that may accept project import progression reports as string lines and pass it further, e.g. it is used to track project import progression on clients</p>
+</div>
+<div class="paragraph">
+<p><strong><code>rewrite</code></strong> - boolean parameter to indicate if an old project can be rewritten by new one during import</p>
+</div>
+<div class="paragraph">
 <p>Example can be found <a href="https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/impl/SynchronizingProjectManager.java#L227">here</a></p>
-
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1007,7 +1053,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
