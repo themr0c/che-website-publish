@@ -18,7 +18,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>SaaS Cloud</h1>
-    <h3>Self-service Eclipse Che developer workspaces hosted at Codenvy.io</h3>
+    <h3>Self-service Eclipse Che developer workspaces hosted at che.openshift.io</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
@@ -41,9 +41,9 @@
            <h4>Custom</h4>
            <p class="small">Create workspaces for any language/framework.</p>
          </div>
-         <a href="https://codenvy.io/site/login" class="btn-green">Create a free account</a>
+         <a href="https://che.openshift.io/" class="btn-green">Create a free account</a>
        </div>
-       <p style="font-size:0.7em">Requires a Codenvy account. You will be asked to accept their TOS.
+       <p style="font-size:0.7em">Requires an OpenShift.IO account. You will be asked to accept their TOS.
 
      </div> <!-- /.col -->
    </div> <!-- /.row -->
@@ -57,14 +57,14 @@
   <div class="row">
     <div class="col-md-12">
       <small>Enter a git URL to import</small>
-      <form class="form-inline" method="get" action="https://codenvy.io/f/" target="_blank">
+      <form class="form-inline" method="get" action="https://che.openshift.io/f/" target="_blank">
         <div class="form-group" style="width: 80%">
           <input type="text" class="form-control" name="url" value="https://github.com/che-samples/console-java-simple" placeholder="Enter GitHub or GitLab project URL" style="width: 100%">
         </div>
         <button type="submit" class="btn btn-primary">Go!</button>
       </form>
-      <p style="font-size:0.7em">This will create a new workspace in Codenvy, an Eclipse Che provider. You will be asked to accept their TOS. The workspace will be powered with an Ubuntu / JDK8 stack. You can customize the runtime and project configuration by adding <samp>.codenvy.dockerfile</samp> or <samp>codenvy.json</samp> files inside your repository.
-        <a href="https://codenvy.com/docs/integration-guide/workspace-automation/index.html">See docs</a>.</p>
+      <p style="font-size:0.7em">This will create a new workspace in che.openshift.io, an Eclipse Che provider. You will be asked to accept their TOS. The workspace will be powered with an Ubuntu / JDK8 stack. You can customize the runtime and project configuration by adding <samp>che.json</samp> files inside your repository.
+        <a href="/docs/factories-getting-started.html">See docs</a>.</p>
     </div>
   </div>
   <!-- END_URL_FACTORY -->
