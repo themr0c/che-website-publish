@@ -34,7 +34,7 @@
      <div class="col-md-4 col-sm-6">
        <div class="border media">
          <div class="media-left">
-           <img src="../../.../../images/getting-started/codenvy.png" alt="Codenvy">
+           <img src="../../.../../images/getting-started/che-logo.png" alt="Eclipse Che">
          </div>
 
          <div class="media-body">
