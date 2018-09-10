@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,60 +846,113 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="system-requirements">System Requirements</h2>
-
+  <div class="sect1">
+<h2 id="system-requirements">System Requirements</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>Minimum 4GB RAM (just for the 3 Che containers and one 2GB workspace)</li>
-  <li>2 CPU</li>
-  <li>Ports 8080, 5050 and the <a href="(https://en.wikipedia.org/wiki/Ephemeral_port)">ephemeral port</a> range publicly available for inbound connections (<code class="highlighter-rouge">32768-65535</code>)</li>
+<li>
+<p>Minimum 4GB RAM (just for the 3 Che containers and one 2GB workspace)</p>
+</li>
+<li>
+<p>2 CPU</p>
+</li>
+<li>
+<p>Ports 8080, 5050 and the (<a href="https://en.wikipedia.org/wiki/Ephemeral_port)">ephemeral port</a> range publicly available for inbound connections (<code>32768-65535</code>)</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="known-issues">Known Issues</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Currently, when running Che Multi User on Windows, PostgreSQL has issues with file permissions that prevents DB from starting. As a workaround, mount a local storage path that is not a Win file system mount:</p>
-
-<p><code class="highlighter-rouge">-v /chedata/:/data</code></p>
-
+</div>
+<div class="paragraph">
+<p><code>-v /chedata/:/data</code></p>
+</div>
+<div class="paragraph">
 <p>We generally do not recommend running Che multi user on Windows for production use.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="run-syntax">Run Syntax</h2>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -it -e CHE_MULTIUSER=true -e CHE_HOST=${EXTERNAL_IP} -v /var/run/docker.sock:/var/run/docker.sock -v ~/.che-multiuser:/data eclipse/che start
-</code></pre></div></div>
-
-<p><code class="highlighter-rouge">~/.che-multiuser</code> is any local path. This is where Che data and configuration will be stored.</p>
-
-<p><code class="highlighter-rouge">${EXTERNAL_IP}</code> should be a public IP accessible to all users who will access the Che instance. You may drop <code class="highlighter-rouge">CHE_HOST</code> env if you are running Che locally and will access it from within the same network. In this case, Che CLI will attempt to auto-detect your server IP. However, auto-detection may produce erroneous results, especially in case of a complex network setup. If you run Che as a cloud server, i.e. accessible for external users we recommend explicitly providing an external IP for <code class="highlighter-rouge">CHE_HOST</code>.</p>
-
-<p>You <strong>MUST</strong> access multi-user Che using hostname/IP specified in <code class="highlighter-rouge">CHE_HOST</code> or manually add redirect URIs and Web Origins to [Keycloak client][user-management.html#che-and-keycloak].</p>
-
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>docker run -it -e CHE_MULTIUSER=true -e CHE_HOST=${EXTERNAL_IP} -v /var/run/docker.sock:/var/run/docker.sock -v ~/.che-multiuser:/data eclipse/che start</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>~/.che-multiuser</code> is any local path. This is where Che data and configuration will be stored.</p>
+</div>
+<div class="paragraph">
+<p><code>${EXTERNAL_IP}</code> should be a public IP accessible to all users who will access the Che instance. You may drop <code>CHE_HOST</code> env if you are running Che locally and will access it from within the same network. In this case, Che CLI will attempt to auto-detect your server IP. However, auto-detection may produce erroneous results, especially in case of a complex network setup. If you run Che as a cloud server, i.e. accessible for external users we recommend explicitly providing an external IP for <code>CHE_HOST</code>.</p>
+</div>
+<div class="paragraph">
+<p>You <strong>MUST</strong> access multi-user Che using hostname/IP specified in <code>CHE_HOST</code> or manually add redirect URIs and Web Origins to <a href="user-management.html#che-and-keycloak">Keycloak client</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="whats-under-the-hood">What’s Under the Hood</h2>
-
-<p>With <code class="highlighter-rouge">CHE_MULTIUSER=true</code> Che CLI is instructed to generate a special Docker Composefile that will be executed to produce config and run:</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>With <code>CHE_MULTIUSER=true</code> Che CLI is instructed to generate a special Docker Composefile that will be executed to produce config and run:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Keycloak container with pre-configured realm and clients</li>
-  <li>PostgreSQL container that will store Keycloak and Che data</li>
-  <li>Che server container with a special build of multi-user Che assembly</li>
+<li>
+<p>Keycloak container with pre-configured realm and clients</p>
+</li>
+<li>
+<p>PostgreSQL container that will store Keycloak and Che data</p>
+</li>
+<li>
+<p>Che server container with a special build of multi-user Che assembly</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deployment-diagram">Deployment Diagram</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Multi-user Che on Docker does not differ much from a <a href="openshift-multi-user#deployment-diagram">multi-user deployment on OpenShift</a> in terms of architecture and communication between services. There are a few differences though:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>containers instead of pods</li>
-  <li>volume mounts instead of PVCs</li>
-  <li>to need to pre-build Keycloak and Postgres images - configuration is mounted into containers</li>
-  <li>port 5050 needs to be publicly available (OpenShift uses route and service)</li>
-  <li>Che CLI pre-configures and populates values for envs like CHE_HOST, that is then used in Keycloak configuration files</li>
+<li>
+<p>containers instead of pods</p>
+</li>
+<li>
+<p>volume mounts instead of PVCs</p>
+</li>
+<li>
+<p>to need to pre-build Keycloak and Postgres images - configuration is mounted into containers</p>
+</li>
+<li>
+<p>port 5050 needs to be publicly available (OpenShift uses route and service)</p>
+</li>
+<li>
+<p>Che CLI pre-configures and populates values for envs like CHE_HOST, that is then used in Keycloak configuration files</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="whats-next">What’s Next?</h2>
-
-<p>Now that you have a running Che Multi-User instance, let’s <a href="user-management.html">create a user, setup GitHub oAuth and login</a>.</p>
-
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that you have a running Che Multi-User instance, let’s <a href="user-management">create a user, setup GitHub oAuth and login</a>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -925,7 +981,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

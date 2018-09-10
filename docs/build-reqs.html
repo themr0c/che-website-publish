@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,63 +846,105 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="build-command">Build Command</h2>
-
-<p><code class="highlighter-rouge">mvn clean install</code></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>mvn clean install</code></p>
+</div>
+<div class="paragraph">
 <p>Execute this command in the root of your custom assembly or Che repo. To make your build faster, you may use the following arguments:</p>
-
-<p><code class="highlighter-rouge">-Dskip-enforce -DskipTests -Dskip-validate-sources -Dfindbugs.skip -DskipIntegrationTests=true -Dmdep.analyze.skip=true</code></p>
-
-<p>If you prepare a PR to upstream Che, make sure build is a success with just <code class="highlighter-rouge">mvn clean install</code> with all the tests and enforcers. If you have enough CPU, you may also add <code class="highlighter-rouge">-Dgwt.compiler.localWorkers=4</code> so that 4 CPU cores will be used during GWT compilation.</p>
-
+</div>
+<div class="paragraph">
+<p><code>-Dskip-enforce -DskipTests -Dskip-validate-sources -Dfindbugs.skip -DskipIntegrationTests=true -Dmdep.analyze.skip=true</code></p>
+</div>
+<div class="paragraph">
+<p>If you prepare a PR to upstream Che, make sure build is a success with just <code>mvn clean install</code> with all the tests and enforcers. If you have enough CPU, you may also add <code>-Dgwt.compiler.localWorkers=4</code> so that 4 CPU cores will be used during GWT compilation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="pre-reqs">Pre-Reqs</h2>
-
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>JDK 1.8.0_130+</li>
-  <li>Maven 3.3.5+</li>
-  <li>Go 1.8+</li>
+<li>
+<p>JDK 1.8.0_130+</p>
+</li>
+<li>
+<p>Maven 3.3.5+</p>
+</li>
+<li>
+<p>Go 1.8+</p>
+</li>
 </ul>
-
-<p>By default, Che is built with docker profile, which means Dashboard is built in a Docker container. You may use a different profile though - <code class="highlighter-rouge">mvn clean install -Pnative</code> - in that case the following Node.JS version needs to be available:</p>
-
+</div>
+<div class="paragraph">
+<p>By default, Che is built with docker profile, which means Dashboard is built in a Docker container. You may use a different profile though - <code>mvn clean install -Pnative</code> - in that case the following Node.JS version needs to be available:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Node.JS 5.4+</li>
+<li>
+<p>Node.JS 5.4+</p>
+</li>
 </ul>
-
-<p>If your <a href="assemblies.html">custom assembly</a> does not bring any changes to Dashboard, <a href="https://github.com/eclipse/che/tree/master/agents">Golang agents</a> and <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a>, you just need JDK 1.8.0_130+ installed.</p>
-
+</div>
+<div class="paragraph">
+<p>If your <a href="assemblies">custom assembly</a> does not bring any changes to Dashboard, <a href="https://github.com/eclipse/che/tree/master/agents">Golang agents</a> and <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a>, you just need JDK 1.8.0_130+ installed.</p>
+</div>
+<div class="paragraph">
 <p>At least 2 CPUs and 8GB RAM (recommended) is required.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="build-in-docker">Build in Docker</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>You can use a <a href="https://github.com/eclipse/che/blob/master/dockerfiles/dev/Dockerfile">dev Docker image</a>:</p>
-
-<p><code class="highlighter-rouge">docker run -ti -v ~/.m2:/home/user/.m2 -v /path/to/che/assembly:/che eclipse/che-dev:nightly sh -c "mvn clean install"</code></p>
-
-<p>We recommend mounting Maven repo (<code class="highlighter-rouge">-v ~/.m2:/home/user/.m2</code>) to persist dependencies and make subsequent builds faster.</p>
-
+</div>
+<div class="paragraph">
+<p><code>docker run -ti -v ~/.m2:/home/user/.m2 -v /path/to/che/assembly:/che eclipse/che-dev:nightly sh -c "mvn clean install"</code></p>
+</div>
+<div class="paragraph">
+<p>We recommend mounting Maven repo (<code>-v ~/.m2:/home/user/.m2</code>) to persist dependencies and make subsequent builds faster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="build-in-che">Build in Che</h2>
-
-<p>See: <a href="che-in-che-quickstart.html">Che in Che quickstart</a></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>See: <a href="che-in-che-quickstart">Che in Che quickstart</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="enforcers">Enforcers</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are a few Maven enforcers brought by a parent pom.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>License</strong></p>
-
-<p>All source file should have expected license. If your build fails because of a missing license, you may run <code class="highlighter-rouge">mvn license:format</code></p>
-
+</div>
+<div class="paragraph">
+<p>All source file should have expected license. If your build fails because of a missing license, you may run <code>mvn license:format</code></p>
+</div>
+<div class="paragraph">
 <p><strong>Dependency Convergence</strong></p>
-
-<p>Your custom dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code class="highlighter-rouge">maven-depmgt-pom</code> or in a root pom of an assembly).</p>
-
+</div>
+<div class="paragraph">
+<p>Your custom dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code>maven-depmgt-pom</code> or in a root pom of an assembly).</p>
+</div>
+<div class="paragraph">
 <p><strong>Formatting</strong></p>
-
+</div>
+<div class="paragraph">
 <p>See: <a href="https://github.com/eclipse/che/wiki/Development-Workflow#code-style">Code Style</a></p>
-
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -924,7 +969,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

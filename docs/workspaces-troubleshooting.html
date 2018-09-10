@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,60 +846,91 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="paragraph">
 <p>Failures to start a workspace may be caused by different factors:</p>
-
-<ol>
-  <li>Environment recipe</li>
-  <li>Network conditions</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Environment recipe</p>
+</li>
+<li>
+<p>Network conditions</p>
+</li>
 </ol>
-
+</div>
+<div class="sect1">
 <h2 id="bad-recipes">Bad Recipes</h2>
-
-<p>When a workspace is being started, environment <a href="recipes.html">recipe</a> is sent to Docker or OpenShift API. Che server then listens to events provided by a particular infrastructure. In simple words, Che server expects a running container (Docker) or pod (OpenShift). If the infrastructure was unable to create and start a container/pod from the provided recipe, Che server fails to start an environment, and consequently workspace start fails.</p>
-
-<p>A recipe can be <strong>“bad”</strong> due to the following reasons:</p>
-
-<ol>
-  <li>
-    <p>Docker build fails with the provided Dockerfile. Maybe it is just a broken Dockerfile or it can partially be Che fault. Docker build in Che <a href="recipes.html#dockerfile">does not support context</a>. If this is the case, consider playing with a Docker recipe locally to make sure it’s a valid Dockerfile. If you need to ADD or COPY resources into an image, do it on your local machine, push the image to a registry (say, DockerHub), and use the resulting images in the recipe.</p>
-  </li>
-  <li>
-    <p>Che does not support certain <a href="recipes.html#composefile">Docker Compose syntax</a>. Make sure your composefile is “Che friendly”.</p>
-  </li>
-  <li>
-    <p>Timeouts. If you install packages in your Dockerfile instructions it can take time. Moreover, in this case you depend on network conditions</p>
-  </li>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When a workspace is being started, environment <a href="recipes">recipe</a> is sent to Docker or OpenShift API. Che server then listens to events provided by a particular infrastructure. In simple words, Che server expects a running container (Docker) or pod (OpenShift). If the infrastructure was unable to create and start a container/pod from the provided recipe, Che server fails to start an environment, and consequently workspace start fails.</p>
+</div>
+<div class="paragraph">
+<p>A recipe can be <strong>"bad"</strong> due to the following reasons:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Docker build fails with the provided Dockerfile. Maybe it is just a broken Dockerfile or it can partially be Che fault. Docker build in Che <a href="recipes.html#dockerfile">does not support context</a>. If this is the case, consider playing with a Docker recipe locally to make sure it’s a valid Dockerfile. If you need to ADD or COPY resources into an image, do it on your local machine, push the image to a registry (say, DockerHub), and use the resulting images in the recipe.</p>
+</li>
+<li>
+<p>Che does not support certain <a href="recipes.html#composefile">Docker Compose syntax</a>. Make sure your composefile is "Che friendly".</p>
+</li>
+<li>
+<p>Timeouts. If you install packages in your Dockerfile instructions it can take time. Moreover, in this case you depend on network conditions</p>
+</li>
 </ol>
-
-<p>If a workspace start fails because the container/pod was never launched, you will not see logs from <a href="installers.html">installers</a>. Usually, you will find logs from infrastructure, image pull, build etc. Make sure you analyze those logs to find the problem. Che server in its turn will also produce logs that can be very helpful in debugging the problem.</p>
-
+</div>
+<div class="paragraph">
+<p>If a workspace start fails because the container/pod was never launched, you will not see logs from <a href="installers">installers</a>. Usually, you will find logs from infrastructure, image pull, build etc. Make sure you analyze those logs to find the problem. Che server in its turn will also produce logs that can be very helpful in debugging the problem.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="network-conditions">Network Conditions</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There’s a lot of communication between Che server, agents running in a workspace container/pod and user’s browser. Firewall, filtered ports and other network restrictions may cause troubles when starting a workspace.</p>
-
-<p>A workspace is considered to be in a <code class="highlighter-rouge">RUNNING</code> state after Che server was able to verify that the workspace agent is up. Workspace agent, in its turn, also tries to reach Che server. It all happens in separate containers/pods, and user’s browser is not yet involved (you may start a workspace using REST API for example). So, if Che server logs say that <code class="highlighter-rouge">workspace started by user $userName</code> it means that the workspace container/pod is up, the workspace agent has successfully started and Che server is able to reach it.</p>
-
+</div>
+<div class="paragraph">
+<p>A workspace is considered to be in a <code>RUNNING</code> state after Che server was able to verify that the workspace agent is up. Workspace agent, in its turn, also tries to reach Che server. It all happens in separate containers/pods, and user’s browser is not yet involved (you may start a workspace using REST API for example). So, if Che server logs say that <code>workspace started by user $userName</code> it means that the workspace container/pod is up, the workspace agent has successfully started and Che server is able to reach it.</p>
+</div>
+<div class="paragraph">
 <p>However, it may happen that your browser (the client) cannot connect to a workspace agent. Che server may use an internal IP to reach workspace agent, while you may access a workspace from a machine that is located in a different network. If you see a message saying that IDE cannot be initialized, open browser dev console and take a look at failed requests (there should be a few to /project and project-type API). Odds are that the ephemeral port range is filtered in your network.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="bootstrapping-failures">Bootstrapping Failures</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>When a workspace starts, Che server creates and starts a container/pod or a set of containers/pods as per environment recipe. Once the container/pod is running, a bootstrapping process begins - bootstrapper binary is downloaded and launched. If you see something about bootstrapping failures in server logs, and/or don’t see any output in machine tab in a workspace view, odds are that bootstrapper has been never downloaded. There can be several reasons for that:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>network conditions (for example, running firewalld).</li>
-  <li>bad bootstrapper binary URL that Che server uses (often reproduced when deploying to OpenShift and missing must have envs)</li>
+<li>
+<p>network conditions (for example, running firewalld).</p>
+</li>
+<li>
+<p>bad bootstrapper binary URL that Che server uses (often reproduced when deploying to OpenShift and missing must have envs)</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>You may try to manually download bootstrapper binary. When on OpenShift, get a shell into the pod (rsh or terminal in web console) and run:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /tmp/bootstrapper
-<span class="nb">ls</span> <span class="nt">-la</span>  <span class="c"># to check if there's a bootstrapper binary</span>
-curl <span class="k">${</span><span class="nv">CHE_URL</span><span class="k">}</span>/agent-binaries/linux_amd64/bootstrapper/bootstrapper
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cd /tmp/bootstrapper
+ls -la  # to check if there's a bootstrapper binary
+curl ${CHE_URL}/agent-binaries/linux_amd64/bootstrapper/bootstrapper</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>If this curl fails, something in your network blocks port 80, or 443 (if you use https routes on OpenShift).</p>
-
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -937,7 +971,7 @@ curl <span class="k">${</span><span class="nv">CHE_URL</span><span class="k">}</
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

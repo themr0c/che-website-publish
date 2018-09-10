@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,83 +846,140 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="what-are-stacks">What Are Stacks</h2>
-
-<p>A stack is a template of <a href="workspace-data-model.html">workspace configuration</a> and some meta-information like scope, tags, components, description, name and ID. Stacks are used by User Dashboard to make it easy to create workspaces and well as filter sample projects compatible with a chosen stack.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>A stack is a template of <a href="workspace-data-model">workspace configuration</a> and some meta-information like scope, tags, components, description, name and ID. Stacks are used by User Dashboard to make it easy to create workspaces and well as filter sample projects compatible with a chosen stack.</p>
+</div>
+<div class="paragraph">
 <p>Stacks are displayed in User Dashboard on Create a workspace page. You can filter them by type (single vs multi machine), scope (the ones displayed by default vs others), as well as search for a stack by keyword.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="how-stacks-are-used">How Stacks Are Used?</h2>
-
-<p>As stacks are workspace templates, they are used to create workspace when in User Dashboard. See: <a href="creating-starting-workspaces.html">User Guide: Creating and Starting Workspaces</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>As stacks are workspace templates, they are used to create workspace when in User Dashboard. See: <a href="creating-starting-workspaces">User Guide: Creating and Starting Workspaces</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="community-supported-stacks">Community Supported Stacks</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>The list of stacks Che offers out of the box references tested stacks and sample applications with commands on how to build, run and debug them. There are also stacks contributed by the community which work fine with Che but do not go through daily tests. It is possible however that sample applications may be incompatible with certain stacks.</p>
-
+</div>
+<div class="paragraph">
 <p>Community supported stacks and sample apps (if any) are located in <a href="https://github.com/che-samples/community-stacks">Community stacks GitHub repo</a>.</p>
-
-<p>Each directory has <code class="highlighter-rouge">${technology}-stack.json</code> and <code class="highlighter-rouge">${technology}-samples.json</code>. If you want to import a chosen stack, follow the below instructions:</p>
-
-<ol>
-  <li>Copy content of a chosen json</li>
-  <li>Go to <code class="highlighter-rouge">${CHE_HOST}/swagger/#!/stack/createStack</code>, paste JSON content to request body field</li>
-  <li>Hit <strong>Try it out</strong> button.</li>
+</div>
+<div class="paragraph">
+<p>Each directory has <code>${technology}-stack.json</code> and <code>${technology}-samples.json</code>. If you want to import a chosen stack, follow the below instructions:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Copy content of a chosen json</p>
+</li>
+<li>
+<p>Go to <code>${CHE_HOST}/swagger/#!/stack/createStack</code>, paste JSON content to request body field</p>
+</li>
+<li>
+<p>Hit <strong>Try it out</strong> button.</p>
+</li>
 </ol>
-
+</div>
+<div class="paragraph">
 <p>If there’s a conflict with stack ID or name, use a different name or ID (make sure it is unique).</p>
-
+</div>
+<div class="paragraph">
 <p>For a multi-user setup, you may want to make your stack available for a particular user or all users in the system. If this is the case, see <a href="#stack-sharing-and-system-stacks">stack sharing</a>.</p>
-
-<p>To import <strong>sample applications</strong>, move chosen <code class="highlighter-rouge">*-stacks.json</code> files to:</p>
-
+</div>
+<div class="paragraph">
+<p>To import <strong>sample applications</strong>, move chosen <code>*-stacks.json</code> files to:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code class="highlighter-rouge">${LOCAL_STORAGE}/instance/data/templates</code> for Docker infra</li>
-  <li><code class="highlighter-rouge">${mount-path-of-che-data-volume}/templates</code> for OpenShift/K8S infra. You will need admin privileges to get PV details (host path) and access to host directory.
-Also, make sure the new jsons have the same permissions as the original <code class="highlighter-rouge">samples.json</code> that you will find there.</li>
+<li>
+<p><code>${LOCAL_STORAGE}/instance/data/templates</code> for Docker infra</p>
+</li>
+<li>
+<p><code>${mount-path-of-che-data-volume}/templates</code> for OpenShift/K8S infra. You will need admin privileges to get PV details (host path) and access to host directory. Also, make sure the new jsons have the same permissions as the original <code>samples.json</code> that you will find there.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>You can find Dockerfiles for all stacks in <a href="https://github.com/eclipse/che-dockerfiles">Che Dockerfiles repository</a>.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="stack-sharing-and-system-stacks">Stack Sharing and System Stacks</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Stacks that a user creates are available only for this user. Che users with system privileges can share created stacks with selected users or all users in the system. Currently, there are no UI controls for that, so a couple of REST calls need to be made:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>Log in as admin</li>
-  <li>Find your stack ID: go to <code class="highlighter-rouge">/swagger/#!/stack/searchStacks</code> to get a list of all stacks (you may filter search by tags). Find your stack my name and get its ID.</li>
-  <li>The next API to use is: <code class="highlighter-rouge">/swagger/#!/permissions</code></li>
-  <li>Find the below POST method:</li>
+<li>
+<p>Log in as admin</p>
+</li>
+<li>
+<p>Find your stack ID: go to <code>/swagger/#!/stack/searchStacks</code> to get a list of all stacks (you may filter search by tags). Find your stack my name and get its ID.</p>
+</li>
+<li>
+<p>The next API to use is: <code>/swagger/#!/permissions</code></p>
+</li>
+<li>
+<p>Find the below POST method:</p>
+</li>
 </ul>
-
-<figure><img class="docimage" src="images/workspaces/stack_permissions.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/stack_permissions.png" alt="stack permissions">
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>use the following JSON (replace <code class="highlighter-rouge">${STACK_ID}</code> with an actual ID)</li>
+<li>
+<p>use the following JSON (replace <code>${STACK_ID}</code> with an actual ID)</p>
+</li>
 </ul>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-</span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"domainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stack"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"instanceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${STACK_ID}"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"read"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"search"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<p>If you get 204, all users in the system will be able to see this stack. If you want to share a stack with a particular user, get its ID and use it instead of <code class="highlighter-rouge">*</code> in JSON.</p>
-
-<p>Similarly, an admin can remove permissions from stacks or remove out of the box stacks to replace them with custom ones. Stacks can be created wither in User Dashboard or using any REST client, for instance Swagger (<code class="highlighter-rouge">$CHE_HOST:$CHE_PORT/swagger</code>) bundled with Che.</p>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+<span class="key"><span class="delimiter">&quot;</span><span class="content">userId</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">*</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">domainId</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">stack</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">instanceId</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${STACK_ID}</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">actions</span><span class="delimiter">&quot;</span></span>: [
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">read</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">search</span><span class="delimiter">&quot;</span></span>
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you get 204, all users in the system will be able to see this stack. If you want to share a stack with a particular user, get its ID and use it instead of <code>*</code> in JSON.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, an admin can remove permissions from stacks or remove out of the box stacks to replace them with custom ones. Stacks can be created wither in User Dashboard or using any REST client, for instance Swagger (<code>$CHE_HOST:$CHE_PORT/swagger</code>) bundled with Che.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="stacks-loading">Stacks Loading</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Stacks are loaded from a JSON file that is packaged into resources of a special component deployed with a workspace master. This JSON isn’t exposed to users and stack management is performed in User Dashboard (that uses REST API).</p>
-
-<p>Stacks are loaded from a JSON file only when the database is initialized, i.e. when a user first stats Che. This is the default policy that can be changed. To keep getting updates with new Che stacks, set <code class="highlighter-rouge">CHE_PREDEFINED_STACKS_RELOAD__ON__START=true</code> in <code class="highlighter-rouge">che.env</code>. When set to true, <code class="highlighter-rouge">stacks.json</code> will be used to update Che database, each time Che server starts. This means Che will get all stacks in stacks.json and upload them to a DB. This way, you may make sure that you keep existing custom stacks (user-created) and get stack updates from new Che releases. New and edited stacks (for example those with fixes in stack definition) will be merged in. Conflicts are possible though, since for example, if a new Che version provides a new stack with the name “My Cool Stack” and a stack with this name somehow exists in a database, such a stack won’t be saved to a DB.</p>
-
+</div>
+<div class="paragraph">
+<p>Stacks are loaded from a JSON file only when the database is initialized, i.e. when a user first stats Che. This is the default policy that can be changed. To keep getting updates with new Che stacks, set <code>CHE_PREDEFINED_STACKS_RELOAD<em>ON</em>START=true</code> in <code>che.env</code>. When set to true, <code>stacks.json</code> will be used to update Che database, each time Che server starts. This means Che will get all stacks in stacks.json and upload them to a DB. This way, you may make sure that you keep existing custom stacks (user-created) and get stack updates from new Che releases. New and edited stacks (for example those with fixes in stack definition) will be merged in. Conflicts are possible though, since for example, if a new Che version provides a new stack with the name "My Cool Stack" and a stack with this name somehow exists in a database, such a stack won’t be saved to a DB.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -956,7 +1016,7 @@ Also, make sure the new jsons have the same permissions as the original <code cl
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

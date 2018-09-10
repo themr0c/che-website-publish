@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,12 +846,15 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="ide-extension-structure">IDE Extension Structure</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Let’s take a closer look at how an IDE extension should be structured:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ide
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ide
 ├─ src                                              // sources folder
 │  └─ main
 │     ├─ java
@@ -868,172 +874,265 @@ $('#toc').on('click', 'a', function() {
 │     └─ org.eclipse.che.plugin.menu
 │        ├─ ...
 │        └─ SampleMenuExtension.gwt.xml             // generated GWT module [3]
-└─ pom.xml
-</code></pre></div></div>
+└─ pom.xml</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Links: <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">1</a> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-metadata-mojo.html">2</a> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">3</a></p>
-
-<h2 id="pomxml">pom.xml</h2>
-
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="pom.xml">pom.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are several important parts in the pom.xml of the Che IDE plugin:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>Packaging of the Maven project is <code class="highlighter-rouge">gwt-lib</code> which triggers <a href="https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib"><code class="highlighter-rouge">gwt-lib</code></a> Maven lifecycle that will build a <a href="https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib">GWT library</a>:
-    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;packaging&gt;</span>gwt-lib<span class="nt">&lt;/packaging&gt;</span>
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Dependency on the Che IDE API library that provides a <a href="https://docs.google.com/spreadsheets/d/1ijapDnl1G7svy7sIKgTntyTuVsnd9nFcH0-357C0MxE/edit#gid=0">set of APIs</a> for extending Che IDE:</p>
-
-    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che.core<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>che-core-ide-api<span class="nt">&lt;/artifactId&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Name of the GWT module is defined in the configuration of <code class="highlighter-rouge">gwt-maven-plugin</code>:</p>
-
-    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>net.ltgt.gwt.maven<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>gwt-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;extensions&gt;</span>true<span class="nt">&lt;/extensions&gt;</span>
-    <span class="nt">&lt;configuration&gt;</span>
-        <span class="nt">&lt;moduleName&gt;</span>org.eclipse.che.plugin.menu.SampleMenuExtension<span class="nt">&lt;/moduleName&gt;</span>
-    <span class="nt">&lt;/configuration&gt;</span>
-<span class="nt">&lt;/plugin&gt;</span>
-</code></pre></div>    </div>
-    <p>For details on the generating GWT module, read the <code class="highlighter-rouge">gwt:generate-module</code> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">mojo description</a>. GWT library is a JAR that contains compiled classes, project’s (re-)sources, GWT module descriptor (<code class="highlighter-rouge">*.gwt.xml</code>) and possibly other GWT-specific files.</p>
-  </li>
+<li>
+<p>Packaging of the Maven project is <code>gwt-lib</code> which triggers <a href="https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib"><code>gwt-lib</code></a> Maven lifecycle that will build a <a href="https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib">GWT library</a>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;packaging&gt;</span>gwt-lib<span class="tag">&lt;/packaging&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Dependency on the Che IDE API library that provides a <a href="https://docs.google.com/spreadsheets/d/1ijapDnl1G7svy7sIKgTntyTuVsnd9nFcH0-357C0MxE/edit#gid=0">set of APIs</a> for extending Che IDE:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.che.core<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>che-core-ide-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Name of the GWT module is defined in the configuration of <code>gwt-maven-plugin</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>net.ltgt.gwt.maven<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>gwt-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;extensions&gt;</span>true<span class="tag">&lt;/extensions&gt;</span>
+    <span class="tag">&lt;configuration&gt;</span>
+        <span class="tag">&lt;moduleName&gt;</span>org.eclipse.che.plugin.menu.SampleMenuExtension<span class="tag">&lt;/moduleName&gt;</span>
+    <span class="tag">&lt;/configuration&gt;</span>
+<span class="tag">&lt;/plugin&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details on the generating GWT module, read the <code>gwt:generate-module</code> <a href="https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html">mojo description</a>. GWT library is a JAR that contains compiled classes, project’s (re-)sources, GWT module descriptor (<code>*.gwt.xml</code>) and possibly other GWT-specific files.</p>
+</div>
+</li>
 </ul>
-
-<h2 id="gwtxml">gwt.xml</h2>
-
-<p>Project’s <code class="highlighter-rouge">*.gwt.xml</code> file is generated within the <code class="highlighter-rouge">gwt-lib</code> Maven lifecycle and contains:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gwt.xml">gwt.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Project’s <code>*.gwt.xml</code> file is generated within the <code>gwt-lib</code> Maven lifecycle and contains:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>the declarations for the default source folders:
-    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;source</span> <span class="na">path=</span><span class="s">"client"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;source</span> <span class="na">path=</span><span class="s">"shared"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;super-source</span> <span class="na">path=</span><span class="s">"super"</span><span class="nt">/&gt;</span>
-</code></pre></div>    </div>
-  </li>
-  <li><code class="highlighter-rouge">&lt;inherits/&gt;</code> directives for the project’s <em>direct</em> dependencies which were packaged as a <code class="highlighter-rouge">gwt-lib</code>.</li>
+<li>
+<p>the declarations for the default source folders:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;source</span> <span class="attribute-name">path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">client</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;source</span> <span class="attribute-name">path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">shared</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;super-source</span> <span class="attribute-name">path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">super</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>&lt;inherits/&gt;</code> directives for the project’s <em>direct</em> dependencies which were packaged as a <code>gwt-lib</code>.</p>
+</li>
 </ul>
-
-<p><em>Optional</em> template may be provided in <code class="highlighter-rouge">src/main/module.gwt.xml</code> for generating project’s <code class="highlighter-rouge">*.gwt.xml</code> file.</p>
-
+</div>
+<div class="paragraph">
+<p><em>Optional</em> template may be provided in <code>src/main/module.gwt.xml</code> for generating project’s <code>*.gwt.xml</code> file.</p>
+</div>
+<div class="paragraph">
 <p>The most common cases when you may require a template:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>need to override the default source folders, like <a href="https://github.com/eclipse/che/blob/f15fbf1cb1248d18acc3ee6fdc41766946ea4a3b/plugins/plugin-java/che-plugin-java-ext-lang-client/src/main/module.gwt.xml#L18">here</a>;</li>
-  <li>need to add <code class="highlighter-rouge">&lt;inherits/&gt;</code> directive for a GWT lib that isn’t packaged as a <code class="highlighter-rouge">gwt-lib</code> artifact (doesn’t contain GWT-specific meta information).</li>
+<li>
+<p>need to override the default source folders, like <a href="https://github.com/eclipse/che/blob/f15fbf1cb1248d18acc3ee6fdc41766946ea4a3b/plugins/plugin-java/che-plugin-java-ext-lang-client/src/main/module.gwt.xml#L18">here</a>;</p>
+</li>
+<li>
+<p>need to add <code>&lt;inherits/&gt;</code> directive for a GWT lib that isn’t packaged as a <code>gwt-lib</code> artifact (doesn’t contain GWT-specific meta information).</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="consuming-shared-libs">Consuming Shared Libs</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>The shared libraries don’t require any GWT-specific files or configuration in pom.xml to be consumed by a GWT library.</p>
-
+</div>
+<div class="paragraph">
 <p>To use shared code in a GWT library:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>declare a dependency on the “normal” artifact (JAR with compiled classes);</li>
-  <li>declare a dependency on the “sources” artifact (with <code class="highlighter-rouge">&lt;classifier&gt;sources&lt;/classifier&gt;</code>).</li>
+<li>
+<p>declare a dependency on the "normal" artifact (JAR with compiled classes);</p>
+</li>
+<li>
+<p>declare a dependency on the "sources" artifact (with <code>&lt;classifier&gt;sources&lt;/classifier&gt;</code>).</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>See an example <a href="https://github.com/eclipse/che/blob/19f5fd1f5ae8f165b7306e71cb0d58c2082fafab/plugins/plugin-python/che-plugin-python-lang-ide/pom.xml#L49-L57">here</a>.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ide-extension-class">IDE extension class</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che IDE plugin has an entry point - Java class annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java"><code>@org.eclipse.che.ide.api.extension.Extension</code></a> annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.</p>
+</div>
+<div class="paragraph">
+<p>Here’s an entry point of the plugin that will add a new top level menu group using <a href="actions">IDE actions</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">org.eclipse.che.plugin.menu.ide</span>;
 
-<p>Che IDE plugin has an entry point - Java class annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java"><code class="highlighter-rouge">@org.eclipse.che.ide.api.extension.Extension</code></a> annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.</p>
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.eclipse.che.ide.api.action.IdeActions.GROUP_HELP</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.eclipse.che.ide.api.action.IdeActions.GROUP_MAIN_MENU</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.eclipse.che.ide.api.constraints.Anchor.AFTER</span>;
 
-<p>Here’s an entry point of the plugin that will add a new top level menu group using <a href="actions.html">IDE actions</a>:</p>
+<span class="keyword">import</span> <span class="include">com.google.inject.Inject</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.action.ActionManager</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.action.DefaultActionGroup</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.constraints.Constraints</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.extension.Extension</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.plugin.menu.ide.action.SampleAction</span>;
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">ide</span><span class="o">;</span>
+<span class="annotation">@Extension</span>(title = <span class="string"><span class="delimiter">&quot;</span><span class="content">Sample Menu</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleMenuExtension</span> {
 
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">IdeActions</span><span class="o">.</span><span class="na">GROUP_HELP</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">IdeActions</span><span class="o">.</span><span class="na">GROUP_MAIN_MENU</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">constraints</span><span class="o">.</span><span class="na">Anchor</span><span class="o">.</span><span class="na">AFTER</span><span class="o">;</span>
+  <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SAMPLE_GROUP_MAIN_MENU = <span class="string"><span class="delimiter">&quot;</span><span class="content">Sample</span><span class="delimiter">&quot;</span></span>;
 
-<span class="kn">import</span> <span class="nn">com.google.inject.Inject</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.action.ActionManager</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.action.DefaultActionGroup</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.constraints.Constraints</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.Extension</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.plugin.menu.ide.action.SampleAction</span><span class="o">;</span>
+  <span class="annotation">@Inject</span>
+  <span class="directive">private</span> <span class="type">void</span> prepareActions(SampleAction sampleAction, ActionManager actionManager) {
 
-<span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"Sample Menu"</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleMenuExtension</span> <span class="o">{</span>
+    DefaultActionGroup mainMenu = (DefaultActionGroup) actionManager.getAction(GROUP_MAIN_MENU);
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SAMPLE_GROUP_MAIN_MENU</span> <span class="o">=</span> <span class="s">"Sample"</span><span class="o">;</span>
+    DefaultActionGroup sampleGroup =
+        <span class="keyword">new</span> DefaultActionGroup(SAMPLE_GROUP_MAIN_MENU, <span class="predefined-constant">true</span>, actionManager);
+    actionManager.registerAction(<span class="string"><span class="delimiter">&quot;</span><span class="content">sampleGroup</span><span class="delimiter">&quot;</span></span>, sampleGroup);
+    mainMenu.add(sampleGroup, <span class="keyword">new</span> Constraints(AFTER, GROUP_HELP));
 
-  <span class="nd">@Inject</span>
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">prepareActions</span><span class="o">(</span><span class="n">SampleAction</span> <span class="n">sampleAction</span><span class="o">,</span> <span class="n">ActionManager</span> <span class="n">actionManager</span><span class="o">)</span> <span class="o">{</span>
-
-    <span class="n">DefaultActionGroup</span> <span class="n">mainMenu</span> <span class="o">=</span> <span class="o">(</span><span class="n">DefaultActionGroup</span><span class="o">)</span> <span class="n">actionManager</span><span class="o">.</span><span class="na">getAction</span><span class="o">(</span><span class="n">GROUP_MAIN_MENU</span><span class="o">);</span>
-
-    <span class="n">DefaultActionGroup</span> <span class="n">sampleGroup</span> <span class="o">=</span>
-        <span class="k">new</span> <span class="nf">DefaultActionGroup</span><span class="o">(</span><span class="n">SAMPLE_GROUP_MAIN_MENU</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">actionManager</span><span class="o">);</span>
-    <span class="n">actionManager</span><span class="o">.</span><span class="na">registerAction</span><span class="o">(</span><span class="s">"sampleGroup"</span><span class="o">,</span> <span class="n">sampleGroup</span><span class="o">);</span>
-    <span class="n">mainMenu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">sampleGroup</span><span class="o">,</span> <span class="k">new</span> <span class="n">Constraints</span><span class="o">(</span><span class="n">AFTER</span><span class="o">,</span> <span class="n">GROUP_HELP</span><span class="o">));</span>
-
-    <span class="n">actionManager</span><span class="o">.</span><span class="na">registerAction</span><span class="o">(</span><span class="s">"sayHello"</span><span class="o">,</span> <span class="n">sampleAction</span><span class="o">);</span>
-    <span class="n">sampleGroup</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">sampleAction</span><span class="o">,</span> <span class="n">Constraints</span><span class="o">.</span><span class="na">FIRST</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+    actionManager.registerAction(<span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>, sampleAction);
+    sampleGroup.add(sampleAction, Constraints.FIRST);
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="dependency-injection">Dependency Injection</h2>
-
-<p>Che IDE use <a href="https://code.google.com/archive/p/google-gin/">Google GIN</a> for dependency injection. Che IDE plugin can provide a GIN module. In order to be picked-up by IDE, plugin’s GIN module should be annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/ExtensionGinModule.java"><code class="highlighter-rouge">@org.eclipse.che.ide.api.extension.ExtensionGinModule</code></a> annotation.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che IDE use <a href="https://code.google.com/archive/p/google-gin/">Google GIN</a> for dependency injection. Che IDE plugin can provide a GIN module. In order to be picked-up by IDE, plugin’s GIN module should be annotated with an <a href="https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/ExtensionGinModule.java"><code>@org.eclipse.che.ide.api.extension.ExtensionGinModule</code></a> annotation.</p>
+</div>
+<div class="paragraph">
 <p>Here’s a GIN module of the plugin:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">org.eclipse.che.plugin.menu.ide.inject</span>;
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">eclipse</span><span class="o">.</span><span class="na">che</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">ide</span><span class="o">.</span><span class="na">inject</span><span class="o">;</span>
+<span class="keyword">import</span> <span class="include">com.google.gwt.inject.client.AbstractGinModule</span>;
+<span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.extension.ExtensionGinModule</span>;
 
-<span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.AbstractGinModule</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.ExtensionGinModule</span><span class="o">;</span>
+<span class="annotation">@ExtensionGinModule</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleMenuGinModule</span> <span class="directive">extends</span> AbstractGinModule {
 
-<span class="nd">@ExtensionGinModule</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleMenuGinModule</span> <span class="kd">extends</span> <span class="n">AbstractGinModule</span> <span class="o">{</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>In this example an extension GIN module isn’t really necessary since the plugin does not really need to put anything in a container. Read more about <a href="guice.html">dependency injection</a> and take a look at <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-ide/src/main/java/org/eclipse/che/plugin/csharp/ide/inject/CSharpGinModule.java">example Gin modules</a>.</p>
-
+  <span class="annotation">@Override</span>
+  <span class="directive">protected</span> <span class="type">void</span> configure() {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example an extension GIN module isn’t really necessary since the plugin does not really need to put anything in a container. Read more about <a href="guice">dependency injection</a> and take a look at <a href="https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-ide/src/main/java/org/eclipse/che/plugin/csharp/ide/inject/CSharpGinModule.java">example Gin modules</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="extension-points">Extension Points</h2>
-
-<p>You can provide or customize existing <a href="actions.html">actions</a>, <a href="parts.html">parts</a>, [themes][themes] and [editor][editor]. This example has registered a new action.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can provide or customize existing <a href="actions">actions</a>, <a href="parts">parts</a>, <a href="themes">themes</a> and <a href="editor">editor</a>. This example has registered a new action.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="debugging-with-super-devmode">Debugging With Super DevMode</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are two options available to launch GWT Super DevMode, depending on the state of the Che sources: whether it’s built or not since a lot of sources are generated during the Maven build.</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>Case 1: Che sources have been already built. Use the following command:</li>
+<li>
+<p>Case 1: Che sources have been already built. Use the following command:</p>
+</li>
 </ul>
-
-<p><code class="highlighter-rouge">mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dmaven.main.skip -Dmaven.resources.skip -Dche.dto.skip -Dskip-enforce -Dskip-validate-sources</code></p>
-
+</div>
+<div class="paragraph">
+<p><code>mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dmaven.main.skip -Dmaven.resources.skip -Dche.dto.skip -Dskip-enforce -Dskip-validate-sources</code></p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Case 2: Che sources haven’t been built, e.g. freshly cloned or after executing <code class="highlighter-rouge">mvn clean</code> or you just don’t need to build the whole project. Use the following command:</li>
+<li>
+<p>Case 2: Che sources haven’t been built, e.g. freshly cloned or after executing <code>mvn clean</code> or you just don’t need to build the whole project. Use the following command:</p>
+</li>
 </ul>
-
-<p><code class="highlighter-rouge">mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources</code></p>
-
-<p>The second one requires <em>more time</em> to launch GWT CodeServer since it executes <code class="highlighter-rouge">process-classes</code> build phase for each maven module. Thus, using the first command is preferable.</p>
-
+</div>
+<div class="paragraph">
+<p><code>mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources</code></p>
+</div>
+<div class="paragraph">
+<p>The second one requires <em>more time</em> to launch GWT CodeServer since it executes <code>process-classes</code> build phase for each maven module. Thus, using the first command is preferable.</p>
+</div>
+<div class="paragraph">
 <p><strong>Note</strong>, both commands have to be performed in the root folder of the Che project.</p>
-
-<p>Once codeserver is started, open the prompted URL, drag bookmarks on your bookmarks bar. Note that you may face the error saying there are no GWT modules on the page. It happens because the IDE is opened in an iframe. Just, cut <code class="highlighter-rouge">dashboard/#/ide/</code> from the URL. To debug client side code, follow instructions from <a href="che-in-che-quickstart.html#develop-and-debug-client-side">quickstart</a>.</p>
-
+</div>
+<div class="paragraph">
+<p>Once codeserver is started, open the prompted URL, drag bookmarks on your bookmarks bar. Note that you may face the error saying there are no GWT modules on the page. It happens because the IDE is opened in an iframe. Just, cut <code>dashboard/#/ide/</code> from the URL. To debug client side code, follow instructions from <a href="che-in-che-quickstart.html#develop-and-debug-client-side">quickstart</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="run-in-che">Run in Che</h2>
-
-<p>Once your extension is ready, you can build, run and debug it in <a href="che-in-che-quickstart.html">Che itself</a>. Just use an existing sample and add a custom plugin with its dependencies.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once your extension is ready, you can build, run and debug it in <a href="che-in-che-quickstart">Che itself</a>. Just use an existing sample and add a custom plugin with its dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="add-to-a-custom-assembly">Add to a Custom Assembly</h2>
-
-<p>You can build your custom <a href="assemblies.html">Che assembly</a> outside Che and/or use any IDE to develop extensions. Once done, run <code class="highlighter-rouge">mvn clean install</code> in the root of the assembly to get a Tomcat bundle that is ready to be run either in <a href="docker-config.html#development-mode">Docker</a> or deployed to <a href="openshift-config#development-mode">OpenShift</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can build your custom <a href="assemblies">Che assembly</a> outside Che and/or use any IDE to develop extensions. Once done, run <code>mvn clean install</code> in the root of the assembly to get a Tomcat bundle that is ready to be run either in <a href="docker-config.html#development-mode">Docker</a> or deployed to <a href="openshift-config#development-mode">OpenShift</a>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1066,7 +1165,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

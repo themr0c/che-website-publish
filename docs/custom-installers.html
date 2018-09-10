@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,189 +846,232 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>Now that you have made yourself familiar with <a href="installers.html">Installer</a> concept and usage, let’s take a closer look at implementing custom ones.</p>
-
-<p>Let’s take a closer look of a custom installer named <code class="highlighter-rouge">Curl</code>:</p>
-
+  <div class="paragraph">
+<p>Now that you have made yourself familiar with <a href="installers">Installer</a> concept and usage, let’s take a closer look at implementing custom ones.</p>
+</div>
+<div class="paragraph">
+<p>Let’s take a closer look of a custom installer named <code>Curl</code>:</p>
+</div>
+<div class="paragraph">
 <p>The installer can be split into description in json format and shell script.</p>
-
+</div>
+<div class="paragraph">
 <p>The description has the following format:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.curl"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Curl"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Embedded Curl"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">org.eclipse.che.curl</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">version</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1.0.0</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Curl</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">description</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Embedded Curl</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">dependencies</span><span class="delimiter">&quot;</span></span>: [],
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>: {},
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">servers</span><span class="delimiter">&quot;</span></span>: {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>As you can see it has the following fields:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>id - unique value that identifier an installer;</li>
-  <li>version - version of the installer;</li>
-  <li>name - readable name of the installer;</li>
-  <li>description - description of the installer;</li>
-  <li>dependencies - declare dependencies to other installers;</li>
-  <li>properties - key:value map, where installer is able to store custom specific fields;</li>
-  <li>servers - list of servers which will be started by the installer.</li>
+<li>
+<p>id - unique value that identifier an installer;</p>
+</li>
+<li>
+<p>version - version of the installer;</p>
+</li>
+<li>
+<p>name - readable name of the installer;</p>
+</li>
+<li>
+<p>description - description of the installer;</p>
+</li>
+<li>
+<p>dependencies - declare dependencies to other installers;</p>
+</li>
+<li>
+<p>properties - key:value map, where installer is able to store custom specific fields;</p>
+</li>
+<li>
+<p>servers - list of servers which will be started by the installer.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>The second item in resources is an installer script. It’s a shell script that will do all required system changes:</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of script that installs <code>Curl</code> inside a machine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">is_current_user_root() {
+    test &quot;$(id -u)&quot; = 0
+}
 
-<p>Here is an example of script that installs <code class="highlighter-rouge">Curl</code> inside a machine:</p>
+is_current_user_sudoer() {
+    sudo -n true &gt; /dev/null 2&gt;&amp;1
+}
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>is_current_user_root<span class="o">()</span> <span class="o">{</span>
-    <span class="nb">test</span> <span class="s2">"</span><span class="k">$(</span>id <span class="nt">-u</span><span class="k">)</span><span class="s2">"</span> <span class="o">=</span> 0
-<span class="o">}</span>
-
-is_current_user_sudoer<span class="o">()</span> <span class="o">{</span>
-    <span class="nb">sudo</span> <span class="nt">-n</span> <span class="nb">true</span> <span class="o">&gt;</span> /dev/null 2&gt;&amp;1
-<span class="o">}</span>
-
-set_sudo_command<span class="o">()</span> <span class="o">{</span>
-    <span class="k">if </span>is_current_user_sudoer <span class="o">&amp;&amp;</span> <span class="o">!</span> is_current_user_root<span class="p">;</span> <span class="k">then </span><span class="nv">SUDO</span><span class="o">=</span><span class="s2">"sudo -E"</span><span class="p">;</span> <span class="k">else </span><span class="nb">unset </span>SUDO<span class="p">;</span> <span class="k">fi</span>
-<span class="o">}</span>
+set_sudo_command() {
+    if is_current_user_sudoer &amp;&amp; ! is_current_user_root; then SUDO=&quot;sudo -E&quot;; else unset SUDO; fi
+}
 
 set_sudo_command
-<span class="nb">unset </span>PACKAGES
+unset PACKAGES
 
-<span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">false
-command</span> <span class="nt">-v</span> curl <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">true</span>
+CURL_INSTALLED=false
+command -v curl &gt;/dev/null 2&gt;&amp;1 &amp;&amp; CURL_INSTALLED=true
 
-<span class="c"># no curl, install it</span>
-<span class="k">if</span> <span class="o">[</span> <span class="k">${</span><span class="nv">CURL_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
-  </span><span class="nv">PACKAGES</span><span class="o">=</span><span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="s2">" curl"</span><span class="p">;</span>
-  <span class="nv">CURL_INSTALLED</span><span class="o">=</span><span class="nb">true
-</span><span class="k">else
-  </span><span class="nb">echo</span> <span class="s2">"Curl is already installed"</span>
-  <span class="nb">exit </span>0
-<span class="k">fi
+# no curl, install it
+if [ ${CURL_INSTALLED} = false ]; then
+  PACKAGES=${PACKAGES}&quot; curl&quot;;
+  CURL_INSTALLED=true
+else
+  echo &quot;Curl is already installed&quot;
+  exit 0
+fi
 
-</span><span class="nb">command</span> <span class="nt">-v</span> yum <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">YUM_INSTALLED</span><span class="o">=</span><span class="nb">true
-command</span> <span class="nt">-v</span> apt-get <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">APT_GET_INSTALLED</span><span class="o">=</span><span class="nb">true
-command</span> <span class="nt">-v</span> dnf <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">DNF_INSTALLED</span><span class="o">=</span><span class="nb">true
-command</span> <span class="nt">-v</span> zypper <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 <span class="o">&amp;&amp;</span> <span class="nv">ZYPPER_INSTALLED</span><span class="o">=</span><span class="nb">true
+command -v yum &gt;/dev/null 2&gt;&amp;1 &amp;&amp; YUM_INSTALLED=true
+command -v apt-get &gt;/dev/null 2&gt;&amp;1 &amp;&amp; APT_GET_INSTALLED=true
+command -v dnf &gt;/dev/null 2&gt;&amp;1 &amp;&amp; DNF_INSTALLED=true
+command -v zypper &gt;/dev/null 2&gt;&amp;1 &amp;&amp; ZYPPER_INSTALLED=true
 
 
-</span><span class="k">if</span> <span class="o">[</span> <span class="k">${</span><span class="nv">YUM_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> yum install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
+if [ ${YUM_INSTALLED} = false ]; then
+  ${SUDO} yum install ${PACKAGES};
 
-<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">APT_GET_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> apt-get update<span class="p">;</span>
-  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> apt-get <span class="nt">-y</span> install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
+elif [ ${APT_GET_INSTALLED} = false ]; then
+  ${SUDO} apt-get update;
+  ${SUDO} apt-get -y install ${PACKAGES};
 
-<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">DNF_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> dnf <span class="nt">-y</span> install <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
+elif [ ${DNF_INSTALLED} = false ]; then
+  ${SUDO} dnf -y install ${PACKAGES};
 
-<span class="k">elif</span> <span class="o">[</span> <span class="k">${</span><span class="nv">ZYPPER_INSTALLED</span><span class="k">}</span> <span class="o">=</span> <span class="nb">false</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-  <span class="k">${</span><span class="nv">SUDO</span><span class="k">}</span> zypper install <span class="nt">-y</span> <span class="k">${</span><span class="nv">PACKAGES</span><span class="k">}</span><span class="p">;</span>
+elif [ ${ZYPPER_INSTALLED} = false ]; then
+  ${SUDO} zypper install -y ${PACKAGES};
 
-<span class="k">else</span>
-    <span class="o">&gt;</span>&amp;2 <span class="nb">echo</span> <span class="s2">"Any of Yum, Apt-get, Dnf, Zypper package manager is not available"</span>
-    <span class="nb">exit </span>1
-<span class="k">fi
+else
+    &gt;&amp;2 echo &quot;Any of Yum, Apt-get, Dnf, Zypper package manager is not available&quot;
+    exit 1
+fi
 
-</span><span class="nb">echo</span> <span class="s2">"Curl is installed successfully"</span>
-</code></pre></div></div>
-
-<p>And here is another installer which launches a web server and depends on another installer.
-Here is content of description json file:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.che.tomcat"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.5.24"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tomcat"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Embedded tomcat server"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.che.curl"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"tomcat"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8090/tcp"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<p>This installer needs curl to download tomcat binaries, so it is declared in <code class="highlighter-rouge">dependencies</code> field.
-If an installer depends on other installers, then all required installers will be launched automatically even if a user has not configured it.
-All installers which are defined as <code class="highlighter-rouge">dependencies</code> will be launched before launching the dependent one.</p>
-
+echo &quot;Curl is installed successfully&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And here is another installer which launches a web server and depends on another installer. Here is content of description json file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">org.eclipse.che.tomcat</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">version</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">8.5.24</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tomcat</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">description</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Embedded tomcat server</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">dependencies</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">org.eclipse.che.curl</span><span class="delimiter">&quot;</span></span>],
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>: {},
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">servers</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">tomcat</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">port</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">8090/tcp</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">protocol</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">path</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This installer needs curl to download tomcat binaries, so it is declared in <code>dependencies</code> field. If an installer depends on other installers, then all required installers will be launched automatically even if a user has not configured it. All installers which are defined as <code>dependencies</code> will be launched before launching the dependent one.</p>
+</div>
+<div class="paragraph">
 <p>Bootstrapper that launches installers tries to connect to all declared servers. No user input is required. Start of a workspace fails if any of servers are not accessible on defined ports during configured timeout.</p>
+</div>
+<div class="paragraph">
+<p>Installers servers may conflict, for example, two installers start servers on the same port. Then, infrastructure may want to be able reconfigure servers in its own way. So installer must expect environment variable with port for server launching or launch server on a default port if it is absent.</p>
+</div>
+<div class="paragraph">
+<p>The environment variable name has the following format <code>CHE_SERVER_{NORMALISED_SERVER_NAME}_PORT</code>. Where <code>NORMALISED_SERVER_NAME</code> is a server name in the upper case where all characters which are not Latin letters or digits replaced with <code>_</code> symbol.</p>
+</div>
+<div class="paragraph">
+<p>Here is an installer script that downloads Tomcat binaries with <code>Curl</code>, configures to use free port and launches it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">TOMCAT_VERSION=8.5.24
+TOMCAT_BINARIES_URL=http://apache.volia.net/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
-<p>Installers servers may conflict, for example, two installers start servers on the same port.
-Then, infrastructure may want to be able reconfigure servers in its own way.
-So installer must expect environment variable with port for server launching or launch server on a default port if it is absent.</p>
+TARGET_FOLDER=~/tomcat
+mkdir -p $TARGET_FOLDER
 
-<p>The environment variable name has the following format <code class="highlighter-rouge">CHE_SERVER_{NORMALISED_SERVER_NAME}_PORT</code>.
-Where <code class="highlighter-rouge">NORMALISED_SERVER_NAME</code> is a server name in the upper case where all characters which are not Latin letters or digits replaced with <code class="highlighter-rouge">_</code> symbol.</p>
+echo &quot;Downloading Tomcat $TOMCAT_VERSION into $TARGET_FOLDER&quot;
+curl $TOMCAT_BINARIES_URL | tar  xzf - -C ${TARGET_FOLDER}
+TOMCAT_FOLDER=$TARGET_FOLDER/apache-tomcat-$TOMCAT_VERSION
 
-<p>Here is an installer script that downloads Tomcat binaries with <code class="highlighter-rouge">Curl</code>, configures to use free port and launches it.</p>
+echo &quot;Tomcat $TOMCAT_VERSION is downloaded and unpacked into $TOMCAT_FOLDER&quot;
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">TOMCAT_VERSION</span><span class="o">=</span>8.5.24
-<span class="nv">TOMCAT_BINARIES_URL</span><span class="o">=</span>http://apache.volia.net/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-<span class="nv">$TOMCAT_VERSION</span>.tar.gz
-
-<span class="nv">TARGET_FOLDER</span><span class="o">=</span>~/tomcat
-mkdir <span class="nt">-p</span> <span class="nv">$TARGET_FOLDER</span>
-
-<span class="nb">echo</span> <span class="s2">"Downloading Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> into </span><span class="nv">$TARGET_FOLDER</span><span class="s2">"</span>
-curl <span class="nv">$TOMCAT_BINARIES_URL</span> | <span class="nb">tar  </span>xzf - <span class="nt">-C</span> <span class="k">${</span><span class="nv">TARGET_FOLDER</span><span class="k">}</span>
-<span class="nv">TOMCAT_FOLDER</span><span class="o">=</span><span class="nv">$TARGET_FOLDER</span>/apache-tomcat-<span class="nv">$TOMCAT_VERSION</span>
-
-<span class="nb">echo</span> <span class="s2">"Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> is downloaded and unpacked into </span><span class="nv">$TOMCAT_FOLDER</span><span class="s2">"</span>
-
-<span class="nv">DEFAULT_TOMCAT_SERVER_PORT</span><span class="o">=</span>8090
-<span class="nv">TOMCAT_SERVER_PORT</span><span class="o">=</span><span class="k">${</span><span class="nv">CHE_SERVER_TOMCAT_PORT</span><span class="k">:-${</span><span class="nv">DEFAULT_TOMCAT_SERVER_PORT</span><span class="k">}}</span>
+DEFAULT_TOMCAT_SERVER_PORT=8090
+TOMCAT_SERVER_PORT=${CHE_SERVER_TOMCAT_PORT:-${DEFAULT_TOMCAT_SERVER_PORT}}
 
 // configure Tomcat
-sed <span class="nt">-i</span> <span class="s2">"s/port=</span><span class="se">\"</span><span class="s2">8080</span><span class="se">\"</span><span class="s2">/port=</span><span class="se">\"</span><span class="k">${</span><span class="nv">TOMCAT_SERVER_PORT</span><span class="k">}</span><span class="se">\"</span><span class="s2">/g"</span> <span class="nv">$TOMCAT_FOLDER</span>/conf/server.xml
+sed -i &quot;s/port=\&quot;8080\&quot;/port=\&quot;${TOMCAT_SERVER_PORT}\&quot;/g&quot; $TOMCAT_FOLDER/conf/server.xml
 
-<span class="nb">echo</span> <span class="s2">"Tomcat </span><span class="nv">$TOMCAT_VERSION</span><span class="s2"> is configured to use </span><span class="nv">$TOMCAT_SERVER_PORT</span><span class="s2"> port"</span>
+echo &quot;Tomcat $TOMCAT_VERSION is configured to use $TOMCAT_SERVER_PORT port&quot;
 
-<span class="nv">$TOMCAT_FOLDER</span>/bin/catalina.sh run
-</code></pre></div></div>
-
+$TOMCAT_FOLDER/bin/catalina.sh run</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>An installer can be included into Che assembly or added to particular Che Server via REST API.</p>
-
-<p>To include an installer into Che assembly, two files are required in Che Server resources: installer description in json format and its script.
-The files must be named in the following way: <code class="highlighter-rouge">{INSTALLER_ID}.json</code> for description file and <code class="highlighter-rouge">{INSTALLER_ID}.script.sh</code> for script file.
-These files should be placed into <code class="highlighter-rouge">/installers/{INSTALLER_VERSION}</code> folder.</p>
-
+</div>
+<div class="paragraph">
+<p>To include an installer into Che assembly, two files are required in Che Server resources: installer description in json format and its script. The files must be named in the following way: <code>{INSTALLER_ID}.json</code> for description file and <code>{INSTALLER_ID}.script.sh</code> for script file. These files should be placed into <code>/installers/{INSTALLER_VERSION}</code> folder.</p>
+</div>
+<div class="paragraph">
 <p>Here is an example of maven module structure:</p>
-
-<figure><img class="docimage" src="images/extensibility/installers/curl-installer-module.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/extensibility/installers/curl-installer-module.png" alt="curl installer module">
+</div>
+</div>
+<div class="paragraph">
 <p>The it is needed to add the corresponding maven module to Workspace Master War archive</p>
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;project</span> <span class="err">...</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;parent&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>che-assembly-parent<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>6.0.X<span class="nt">&lt;/version&gt;</span>
-  <span class="nt">&lt;/parent&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>assembly-wsmaster-war<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
-  <span class="nt">&lt;name&gt;</span>Che IDE :: Compiling WS Master WAR
-  <span class="nt">&lt;dependencies&gt;</span>
-    <span class="nt">&lt;dependency&gt;</span>
-      <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
-      <span class="nt">&lt;artifactId&gt;</span>installer-tomcat<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;/dependency&gt;</span>
-    <span class="nt">&lt;dependency&gt;</span>
-      <span class="nt">&lt;groupId&gt;</span>org.eclipse.che<span class="nt">&lt;/groupId&gt;</span>
-      <span class="nt">&lt;artifactId&gt;</span>installer-tomcat<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;/dependency&gt;</span>
-  <span class="nt">&lt;/dependencies&gt;</span>
-<span class="nt">&lt;/project&gt;</span>
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project</span> <span class="attribute-name">...</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;parent&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>che-assembly-parent<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.che<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>6.0.X<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;/parent&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>assembly-wsmaster-war<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+  <span class="tag">&lt;name&gt;</span>Che IDE :: Compiling WS Master WAR
+  <span class="tag">&lt;dependencies&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>org.eclipse.che<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>installer-tomcat<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>org.eclipse.che<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>installer-tomcat<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+  <span class="tag">&lt;/dependencies&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Also as it was mentioned an installer can be added via REST API or using Swagger:</p>
-
-<figure><img class="docimage" src="images/extensibility/installers/add-installer-swagger.png" alt="" /></figure>
-
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/extensibility/installers/add-installer-swagger.png" alt="add installer swagger">
+</div>
+</div>
 
     <div class="tags">
         
@@ -1058,7 +1104,7 @@ These files should be placed into <code class="highlighter-rouge">/installers/{I
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

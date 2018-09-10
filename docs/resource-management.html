@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,209 +846,293 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="overview">Overview</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Resource API is designed to help control resources that Che users consume. Che admins can set caps for free resources to each resource type, as well as for each particular account.</p>
-
+</div>
+<div class="paragraph">
 <p>There are two kinds of accounts which may be used in Che:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>
-    <p><em>personal</em> - an account that belongs to a user. Only one user can be related to this type of account and consume resources provided to this account.</p>
-  </li>
-  <li>
-    <p><em>organizational</em> - account that belongs to an <a href="organizations.html">organization</a>. This type of account allows consuming related resources for each organization member. The organization can have sub-organizations and distribute resources between them.</p>
-  </li>
+<li>
+<p><em>personal</em> - an account that belongs to a user. Only one user can be related to this type of account and consume resources provided to this account.</p>
+</li>
+<li>
+<p><em>organizational</em> - account that belongs to an <a href="organizations">organization</a>. This type of account allows consuming related resources for each organization member. The organization can have sub-organizations and distribute resources between them.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>Since workspaces are the critical for users in the development flow, resources are mostly related to workspaces and runtimes.</p>
-
+</div>
+<div class="paragraph">
 <p>Multi-user Che supports four types of resources:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li><strong>RAM</strong>       - defines the amount of RAM which can be used by running workspaces at the same time;</li>
-  <li><strong>Timeout</strong>   - defines the period of time that is used to control idling of user workspaces;</li>
-  <li><strong>Runtime</strong>   - defines the amount of workspaces which user can run at the same time;</li>
-  <li><strong>Workspace</strong> - defines the amount of workspaces which user can have at the same time.</li>
+<li>
+<p><strong>RAM</strong> - defines the amount of RAM which can be used by running workspaces at the same time;</p>
+</li>
+<li>
+<p><strong>Timeout</strong> - defines the period of time that is used to control idling of user workspaces;</p>
+</li>
+<li>
+<p><strong>Runtime</strong> - defines the amount of workspaces which user can run at the same time;</p>
+</li>
+<li>
+<p><strong>Workspace</strong> - defines the amount of workspaces which user can have at the same time.</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="resource-api">Resource API</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p><strong>Total resources</strong></p>
-
-<p><code class="highlighter-rouge">GET resource/${accountId}:</code> allows getting information on total resources list that is allowed to use by a specified account;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET resource/${accountId}:</code> allows getting information on total resources list that is allowed to use by a specified account;</p>
+</div>
+<div class="paragraph">
 <p><strong>Used resources</strong></p>
-
-<p><code class="highlighter-rouge">GET resource/{accountId}/used:</code> allows getting information on used resources list that is consumed by the specified account;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET resource/{accountId}/used:</code> allows getting information on used resources list that is consumed by the specified account;</p>
+</div>
+<div class="paragraph">
 <p><strong>Available resources</strong></p>
-
-<p><code class="highlighter-rouge">GET resource/${accountId}/available:</code> allows getting information on available resources list that is not used, so if there are no used resources at the moment of the request, the result must equal total resources, otherwise, the result must contain deduction of used resources from total resources list;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET resource/${accountId}/available:</code> allows getting information on available resources list that is not used, so if there are no used resources at the moment of the request, the result must equal total resources, otherwise, the result must contain deduction of used resources from total resources list;</p>
+</div>
+<div class="paragraph">
 <p><strong>Resource details</strong></p>
-
-<p><code class="highlighter-rouge">GET resource/{accountId}/details:</code> allows getting detailed information about resource list that is provided to the specified account. The result of the request contains information about resource providers and the beginning/end of period of use.</p>
-
-<p>The more detailed specification of the response objects and required parameters are available at Swagger page: <code class="highlighter-rouge">${che-host}/swagger/#/resource</code>.</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET resource/{accountId}/details:</code> allows getting detailed information about resource list that is provided to the specified account. The result of the request contains information about resource providers and the beginning/end of period of use.</p>
+</div>
+<div class="paragraph">
+<p>The more detailed specification of the response objects and required parameters are available at Swagger page: <code>${che-host}/swagger/#/resource</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="resource-distribution">Resource distribution</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>There are three ways to distribute resources to account:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>Che admin specifies default free resources limit for account by configuration;</li>
-  <li>Che admin overrides default free resources limit for account by resource-free API.</li>
+<li>
+<p>Che admin specifies default free resources limit for account by configuration;</p>
+</li>
+<li>
+<p>Che admin overrides default free resources limit for account by resource-free API.</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuration">Configuration</h2>
-
-<p>Che admin can limit how workspaces are created and the resources that these workspaces consume. Detailed information about each property can be found in  <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env#L538">che.env</a> file.</p>
-
-<p>See: <a href="docker-config.html">Docker</a> and <a href="openshift-config.html">OpenShift</a> configuration docs.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Property name</th>
-      <th>Default Value</th>
-      <th>Unit</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_USER_WORKSPACES_COUNT</code></td>
-      <td>-1</td>
-      <td>item</td>
-      <td>count of workspaces Che user is allowed to create</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code></td>
-      <td>-1</td>
-      <td>item</td>
-      <td>count of simultaneously running workspaces for Che user</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_USER_WORKSPACES_RAM</code></td>
-      <td>-1</td>
-      <td>memory</td>
-      <td>amount of RAM all user’s workspaces can simultaneously consume</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_ORGANIZATION_WORKSPACES_COUNT</code></td>
-      <td>-1</td>
-      <td>item</td>
-      <td>count of workspaces Organization members are allowed to create</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_ORGANIZATION_WORKSPACES_RUN_COUNT</code></td>
-      <td>-1</td>
-      <td>item</td>
-      <td>count of simultaneously running workspaces by Organization members</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_ORGANIZATION_WORKSPACES_RAM</code></td>
-      <td>-1</td>
-      <td>memory</td>
-      <td>amount of RAM all organizations’s workspaces can simultaneously consume</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT</code></td>
-      <td>-1</td>
-      <td>minutes</td>
-      <td>timeout to idle inactive workspaces</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">CHE_LIMITS_WORKSPACE_ENV_RAM</code></td>
-      <td>16gb</td>
-      <td>memory</td>
-      <td>maximum amount of RAM that workspace environment can use at one</td>
-    </tr>
-  </tbody>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che admin can limit how workspaces are created and the resources that these workspaces consume. Detailed information about each property can be found in <a href="https://github.com/eclipse/che/blob/master/dockerfiles/init/manifests/che.env#L538">che.env</a> file.</p>
+</div>
+<div class="paragraph">
+<p>See: <a href="docker-config">Docker</a> and <a href="openshift-config">OpenShift</a> configuration docs.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 8%;">
+<col style="width: 6%;">
+<col style="width: 53%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Unit</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_USER_WORKSPACES_COUNT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">item</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count of workspaces Che user is allowed to create</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">item</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count of simultaneously running workspaces for Che user</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_USER_WORKSPACES_RAM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">amount of RAM all user’s workspaces can simultaneously consume</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_ORGANIZATION_WORKSPACES_COUNT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">item</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count of workspaces Organization members are allowed to create</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_ORGANIZATION_WORKSPACES_RUN_COUNT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">item</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count of simultaneously running workspaces by Organization members</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_ORGANIZATION_WORKSPACES_RAM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">amount of RAM all organizations’s workspaces can simultaneously consume</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minutes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">timeout to idle inactive workspaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_WORKSPACE_ENV_RAM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16gb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maximum amount of RAM that workspace environment can use at one</p></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+<div class="sect1">
 <h2 id="unit-formats">Unit formats:</h2>
-
-<p>The value <code class="highlighter-rouge">-1</code> mean that it is unlimited and any operation aggregation and deduction of resources will return <code class="highlighter-rouge">-1</code>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>The value <code>-1</code> mean that it is unlimited and any operation aggregation and deduction of resources will return <code>-1</code>.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code class="highlighter-rouge">memory</code> - measured in bytes. This value can be defined as a plain integer or as a fixed-point integer using one of following suffixes:</li>
+<li>
+<p><code>memory</code> - measured in bytes. This value can be defined as a plain integer or as a fixed-point integer using one of following suffixes:</p>
+</li>
 </ul>
-
-<table>
-  <thead>
-    <tr>
-      <th>Suffix name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">k</code> / <code class="highlighter-rouge">kb</code> / <code class="highlighter-rouge">kib</code></td>
-      <td>kilo bytes   <code class="highlighter-rouge">1k</code> = <code class="highlighter-rouge">1024b</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">m</code> / <code class="highlighter-rouge">mb</code> / <code class="highlighter-rouge">mib</code></td>
-      <td>mega bytes   <code class="highlighter-rouge">1m</code> = <code class="highlighter-rouge">1024k</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">g</code> / <code class="highlighter-rouge">gb</code> / <code class="highlighter-rouge">gib</code></td>
-      <td>giga bytes   <code class="highlighter-rouge">1g</code> = <code class="highlighter-rouge">1024m</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">t</code> / <code class="highlighter-rouge">tb</code> / <code class="highlighter-rouge">tib</code></td>
-      <td>terra bytes  <code class="highlighter-rouge">1t</code> = <code class="highlighter-rouge">1024g</code></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">p</code> / <code class="highlighter-rouge">pb</code> / <code class="highlighter-rouge">pib</code></td>
-      <td>peta bytes   <code class="highlighter-rouge">1p</code> = <code class="highlighter-rouge">1024t</code></td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Suffix name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>k</code> / <code>kb</code> / <code>kib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kilo bytes <code>1k</code> = <code>1024b</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m</code> / <code>mb</code> / <code>mib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mega bytes <code>1m</code> = <code>1024k</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>g</code> / <code>gb</code> / <code>gib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">giga bytes <code>1g</code> = <code>1024m</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>t</code> / <code>tb</code> / <code>tib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">terra bytes <code>1t</code> = <code>1024g</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>p</code> / <code>pb</code> / <code>pib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">peta bytes <code>1p</code> = <code>1024t</code></p></td>
+</tr>
+</tbody>
 </table>
-
+<div class="ulist">
 <ul>
-  <li><code class="highlighter-rouge">item</code> - the integer describing the number of objects;</li>
-  <li><code class="highlighter-rouge">minutes</code> - the time frame, which is specified in integer value of minutes.</li>
+<li>
+<p><code>item</code> - the integer describing the number of objects;</p>
+</li>
+<li>
+<p><code>minutes</code> - the time frame, which is specified in integer value of minutes.</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="resource-free-api">Resource-free API</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Allows managing free resources that are provided by configuration and can be overridden for the particular account.</p>
-
+</div>
+<div class="paragraph">
 <p><strong>Free Resources</strong></p>
-
-<p><code class="highlighter-rouge">GET resource/free:</code> allows getting information on free resources list that is provided to this account;</p>
-
-<p><code class="highlighter-rouge">GET resource/free/{accountId}:</code> allows getting information on free resources list that is provided to specified account;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET resource/free:</code> allows getting information on free resources list that is provided to this account;</p>
+</div>
+<div class="paragraph">
+<p><code>GET resource/free/{accountId}:</code> allows getting information on free resources list that is provided to specified account;</p>
+</div>
+<div class="paragraph">
 <p><strong>Set Free Resources</strong></p>
-
-<p><code class="highlighter-rouge">POST resource/free:</code> allows setting resource caps for the specified user/organization account. This limits will override Сhe configuration and be used in all further operations with resources;</p>
-
+</div>
+<div class="paragraph">
+<p><code>POST resource/free:</code> allows setting resource caps for the specified user/organization account. This limits will override Сhe configuration and be used in all further operations with resources;</p>
+</div>
+<div class="paragraph">
 <p><strong>Remove Free Resources</strong></p>
-
-<p><code class="highlighter-rouge">DELETE resource/free/{accountId}:</code> allows resetting free resources limit for the specified user/organization account. The default limit that is specified in configuration is used.</p>
-
-<p>The more detailed specification of the response objects and required parameters are available at Swagger page: <code class="highlighter-rouge">{che-host}/swagger/#/resource-free</code>.</p>
-
+</div>
+<div class="paragraph">
+<p><code>DELETE resource/free/{accountId}:</code> allows resetting free resources limit for the specified user/organization account. The default limit that is specified in configuration is used.</p>
+</div>
+<div class="paragraph">
+<p>The more detailed specification of the response objects and required parameters are available at Swagger page: <code>{che-host}/swagger/#/resource-free</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="organization-resource-api">Organization Resource API</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p><strong>Distributed Organization Resources</strong></p>
-
-<p><code class="highlighter-rouge">GET organization/resource/{organizationId}:</code> allows getting information on total resources list that is provided to sub-organization by its parent organization;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET organization/resource/{organizationId}:</code> allows getting information on total resources list that is provided to sub-organization by its parent organization;</p>
+</div>
+<div class="paragraph">
 <p><strong>Sub-Organization Resources Cap</strong></p>
-
-<p><code class="highlighter-rouge">GET organization/resource/{suborganizationId}/cap:</code> allows getting information on resources caps that are set for a sub-organization; By default, sub-organization is able to use all parent organization resources;</p>
-
+</div>
+<div class="paragraph">
+<p><code>GET organization/resource/{suborganizationId}/cap:</code> allows getting information on resources caps that are set for a sub-organization; By default, sub-organization is able to use all parent organization resources;</p>
+</div>
+<div class="paragraph">
 <p><strong>Set Sub-Organization Resources Cap</strong></p>
-
-<p><code class="highlighter-rouge">POST organization/resource/{suborganizationId}/cap:</code> allows set up resources caps for a sub-organization; Caps allow limiting usage of shared resources by sub-organization.</p>
-
-<p>More detailed specification of response objects and required parameters are available at Swagger page: <code class="highlighter-rouge">{che-host}/swagger/#/organization-resource</code>.</p>
-
+</div>
+<div class="paragraph">
+<p><code>POST organization/resource/{suborganizationId}/cap:</code> allows set up resources caps for a sub-organization; Caps allow limiting usage of shared resources by sub-organization.</p>
+</div>
+<div class="paragraph">
+<p>More detailed specification of response objects and required parameters are available at Swagger page: <code>{che-host}/swagger/#/organization-resource</code>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1074,7 +1161,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,255 +846,362 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="examples">Examples</h2>
-
-<p>All examples use <code class="highlighter-rouge">kubectl</code> command. OpenShift admins should use <code class="highlighter-rouge">oc</code></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>All examples use <code>kubectl</code> command. OpenShift admins should use <code>oc</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ram">RAM</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p><strong>Single User</strong></p>
-
-<p>Che server pod consumes up to 1GB RAM. The initial request is 256MB, and server pod rarely consumes more than 800MB. A typical workspace will require 2GB. So, <strong><span style="color:red;">3GB</span></strong> is a minimum to try single user Che on OpenShift/Kubernetes.</p>
-
+</div>
+<div class="paragraph">
+<p>Che server pod consumes up to 1GB RAM. The initial request is 256MB, and server pod rarely consumes more than 800MB. A typical workspace will require 2GB. So, <strong>3GB</strong> is a minimum to try single user Che on OpenShift/Kubernetes.</p>
+</div>
+<div class="paragraph">
 <p><strong>Multi-User</strong></p>
-
+</div>
+<div class="paragraph">
 <p>Depending on whether or not you deploy Che bundled with Keycloak auth server and Postgres database, RAM requirements for a multi-user Che installation can vary.</p>
-
-<p>When deployed with Keycloak and Postgres, your Kubernetes cluster should have <strong>at least <span style="color:red;">5GB RAM</span></strong> available - 3GB go to Che deployments:</p>
-
+</div>
+<div class="paragraph">
+<p>When deployed with Keycloak and Postgres, your Kubernetes cluster should have <strong>at least 5GB RAM</strong> available - 3GB go to Che deployments:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>~750MB for Che server</li>
-  <li>~1GB for Keycloak</li>
-  <li>~515MB for Postgres)</li>
-  <li>min 2GB should be reserved to run at least one workspace. The total RAM required for running workspaces will grow depending on the size of your workspace runtime(s) and the number of concurrent workspace pods you run.</li>
+<li>
+<p>~750MB for Che server</p>
+</li>
+<li>
+<p>~1GB for Keycloak</p>
+</li>
+<li>
+<p>~515MB for Postgres)</p>
+</li>
+<li>
+<p>min 2GB should be reserved to run at least one workspace. The total RAM required for running workspaces will grow depending on the size of your workspace runtime(s) and the number of concurrent workspace pods you run.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
+<p>The default workspace RAM limit and the RAM allocation request can be configured by passing the <code>CHE_WORKSPACE_DEFAULT<em>MEMORY</em>LIMIT<em>MB</code> and <code>CHE_WORKSPACE_DEFAULT</em>MEMORY<em>REQUEST</em>MB</code> parameters to a Che deployment.</p>
+</div>
+<div class="paragraph">
+<p>For example, use the following configuration to limit the amount of RAM used by workspaces to 2048MB and to request the allocation of 1024MB of RAM:
+* <code>kubectl set env dc/che CHE_WORKSPACE_DEFAULT<em>MEMORY</em>LIMIT<em>MB=2048 CHE_WORKSPACE_DEFAULT</em>MEMORY<em>REQUEST</em>MB=1024</code>
+Notes:
+* The user can override the default values when creating a workspace.
+* A RAM request greater than the RAM limit is ignored.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="resource-allocation-and-quotas">Resource Allocation and Quotas</h2>
-
-<p>All workspace pods are created either in the same namespace with Che itself, a dedicated namespace, or a new namespace is created for every workspace. In both cases, pods are are created in the account of a user who deployed Che (if che service account is used to create ws objects) or account of a user whose token/credentials are used in Che deployment env.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>All workspace pods are created either in the same namespace with Che itself, a dedicated namespace, or a new namespace is created for every workspace.</p>
+</div>
+<div class="paragraph">
 <p>Therefore, an account where Che pods are created (including workspace pods) should have reasonable quotas for RAM, CPU and storage, otherwise, workspace pods won’t be created.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="who-creates-workspace-objects">Who Creates Workspace Objects?</h2>
-
-<p>All workspace objects for all Eclipse Che users are <strong>created on behalf of one OpenShift user</strong>, typically the one who deployed Che or whose credentials or token is used in Che deployment environment. Eclipse Che uses fabric8 client to talk to Kubernetes/OpenShift API, and the client uses token, username/password or service account, if available.</p>
-
-<ul>
-  <li>
-    <p>If you passed <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_USERNAME</code> and <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PASSWORD</code> to Che deployment, those credentials will be used to create workspace objects.</p>
-  </li>
-  <li>
-    <p>If there’s <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_OAUTH__TOKEN</code> fabric8 client will use it. If both are available, token has a priority over username/pass.</p>
-  </li>
-  <li>
-    <p>If none are available <strong>che service account</strong> is used to create workspace objects. This is default behavior. Since che service account cannot create objects outside a namespace it’s bound to, all workspace objects are created in Che namespace. Admins can grant <code class="highlighter-rouge">che</code> <a href="https://kubernetes.io/docs/admin/authorization/rbac/#service-account-permissions">service account super user permissions</a>, and this way it will be possible to use this SA to create objects outside Che namespace. OpenShift cluster admins can do it this way using oc CLI:</p>
-  </li>
-</ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
-
-<span class="c"># eclipse-che is Che namespace</span>
-</code></pre></div></div>
-
-<p>Advantages and disadvantages of using token, username/pass, and service account:</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>Auth type</td>
-      <td>Pros</td>
-      <td>Cons</td>
-    </tr>
-    <tr>
-      <td><strong>Token</strong></td>
-      <td>Objects can be created outside Che namespace</td>
-      <td>Tokens tend to expire</td>
-    </tr>
-    <tr>
-      <td><strong>Username/Password</strong></td>
-      <td>Objects can be created outside Che namespace</td>
-      <td>If username/pass are changed, they need to be updated in Che deployment as well. Many authentication types like oAuth make it impossible to login with username/pass</td>
-    </tr>
-    <tr>
-      <td><strong>Service account</strong></td>
-      <td>No expiration risks</td>
-      <td>Cannot create objects outside its namespace unless given admin privileges</td>
-    </tr>
-  </tbody>
-</table>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>All workspace objects for all Eclipse Che users are <strong>created on behalf of Che service account</strong>. Eclipse Che uses fabric8 client to talk to Kubernetes/OpenShift API, and the client uses this service account. Since che service account cannot create objects outside a namespace it’s bound to, all workspace objects are created in Che namespace. Admins can grant <code>che</code> <a href="https://kubernetes.io/docs/admin/authorization/rbac/#service-account-permissions">service account super user permissions</a>, and this way it will be possible to use this SA to create objects outside Che namespace (it is automatically done when [deploying with Helm](<a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/helm/che/templates/cluster-role-binding.yaml)" class="bare">https://github.com/eclipse/che/blob/master/deploy/kubernetes/helm/che/templates/cluster-role-binding.yaml)</a>)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="storage-overview">Storage Overview</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Che server, Keycloak and Postgres pods, as well as workspace pods use PVCs that are then bound to PVs with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. Che PVCs are defined in deployment yamls, while <a href="#che-workspaces-storage">workspace PVC</a> access mode and claim size is configurable through Che deployment environment variables.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="che-infrastructure-storage">Che Infrastructure: Storage</h2>
-
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>Che server claims 1GB to store logs and initial workspace stacks. PVC mode is RWO</li>
-  <li>Keycloak needs 2 PVCs, 1Gb each to store logs and Keycloak data</li>
-  <li>Postgres needs one 1GB PVC to store db</li>
+<li>
+<p>Che server claims 1GB to store logs and initial workspace stacks. PVC mode is RWO</p>
+</li>
+<li>
+<p>Keycloak needs 2 PVCs, 1Gb each to store logs and Keycloak data</p>
+</li>
+<li>
+<p>Postgres needs one 1GB PVC to store db</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="che-workspaces-storage">Che Workspaces: Storage</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>As said above, che workspace PVC access type and claim size is configurable, and so is a workspace PVC strategy:</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>strategy</td>
-      <td>details</td>
-      <td>pros</td>
-      <td>cons</td>
-    </tr>
-    <tr>
-      <td><strong>common</strong></td>
-      <td>One PVC for all workspaces, sub-paths pre-created</td>
-      <td>easy to manage and control storage. no need to recycle PVs when pod with pvc is deleted</td>
-      <td>ws pods should all be in one namespace</td>
-    </tr>
-    <tr>
-      <td><strong>unique</strong></td>
-      <td>PVC per workspace</td>
-      <td>Storage isolation</td>
-      <td>An  undefined number of PVs is required</td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">strategy</th>
+<th class="tableblock halign-left valign-top">details</th>
+<th class="tableblock halign-left valign-top">pros</th>
+<th class="tableblock halign-left valign-top">cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces, sub-paths pre-created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">easy to manage and control storage. no need to recycle PVs when pod with pvc is deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ws pods should all be in one namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PVC per workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
+</tr>
+</tbody>
 </table>
-
+</div>
+</div>
+<div class="sect1">
 <h2 id="common-pvc-strategy">Common PVC Strategy</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p><strong>How it Works</strong></p>
-
-<p>When a common PVC strategy is used, <strong>all workspaces use the same PVC</strong> to store data declared in their volumes (projects and workspace-logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
-
-<p>In case of a common strategy, an PV that is bound to PVC <code class="highlighter-rouge">che-claim-workspace</code> will have the following structure:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pv0001
+</div>
+<div class="paragraph">
+<p>When a common PVC strategy is used, <strong>all workspaces use the same PVC</strong> to store data declared in their volumes (projects and workspace-logs by default and whatever additional <a href="volumes">volumes</a> that a user can define.)</p>
+</div>
+<div class="paragraph">
+<p>In case of a common strategy, an PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>pv0001
   workspaceid1
   workspaceid2
   workspaceidn
-    che-logs projects &lt;volume1&gt; &lt;volume2&gt;
-</code></pre></div></div>
-<p>Directory names are self explaining. Other volumes can be anything that a user defines as volumes for workspace machines (volume name == directory name in <code class="highlighter-rouge">${PV}/${ws-id}</code>)</p>
-
-<p>When a workspace is deleted, a corresponding subdirectory (<code class="highlighter-rouge">${ws-id}</code>) is deleted in the PV directory.</p>
-
+    che-logs projects &lt;volume1&gt; &lt;volume2&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Directory names are self explaining. Other volumes can be anything that a user defines as volumes for workspace machines (volume name == directory name in <code>${PV}/${ws-id}</code>)</p>
+</div>
+<div class="paragraph">
+<p>When a workspace is deleted, a corresponding subdirectory (<code>${ws-id}</code>) is deleted in the PV directory.</p>
+</div>
+<div class="paragraph">
 <p><strong>How to enable common strategy</strong></p>
-
-<p>Set <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code class="highlighter-rouge">common</code> in dc/che if you have already deployed Che with unique strategy, or pass <code class="highlighter-rouge">-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to oc new-app command when applying <code class="highlighter-rouge">che-server-template.yaml</code>. See: <a href="openshift-multi-user.html">Deploy to OpenShift</a>.</p>
-
+</div>
+<div class="paragraph">
+<p>Set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>common</code> in dc/che if you have already deployed Che with unique strategy, or pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to oc new-app command when applying <code>che-server-template.yaml</code>. See: <a href="openshift-multi-user">Deploy to OpenShift</a>.</p>
+</div>
+<div class="paragraph">
 <p><strong>What’s CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS?</strong></p>
-
-<p>Pre 1.6 Kubernetes created subpaths within a PV with invalid permissions, sot hat a user in a running container was unable to write to mounted directories. When <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS</code> is <code class="highlighter-rouge">true</code>, and a common strategy is used, a special pod is started before workspace pod is schedules, to pre-create subpaths in PV with the right permissions. You don’t need to set it to true if you have Kubernetes 1.6+.</p>
-
+</div>
+<div class="paragraph">
+<p>Pre 1.6 Kubernetes created subpaths within a PV with invalid permissions, sot hat a user in a running container was unable to write to mounted directories. When <code>CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS</code> is <code>true</code>, and a common strategy is used, a special pod is started before workspace pod is schedules, to pre-create subpaths in PV with the right permissions. You don’t need to set it to true if you have Kubernetes 1.6+.</p>
+</div>
+<div class="paragraph">
 <p><strong>Restrictions</strong></p>
-
-<p>When a common strategy is used, and a workspace PVC access mode is RWO, only one Kubernetes node can simultaneously use PVC. You’re fine if your Kubernetes/OpenShift cluster has just one node. If there are several nodes, a common strategy can still be used, but in this case, workspace PVC access mode should be RWM, ie multiple nodes should be able to use this PVC simultaneously (in fact, you may sometimes have some luck and all workspaces will be scheduled on the same node). You can change access mode for workspace PVCs by passing environment variable <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_ACCESS_MODE=ReadWriteMany</code> to che deployment either when initially deploying Che or through che deployment update.</p>
-
-<p>Another restriction is that only pods in the same namespace can use the same PVC, thus, <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PROJECT</code> env variable should not be empty - it should be either Che server namespace (in this case objects can be created with che SA) or a dedicated namespace (token or username/password need to be used).</p>
-
+</div>
+<div class="paragraph">
+<p>When a common strategy is used, and a workspace PVC access mode is RWO, only one Kubernetes node can simultaneously use PVC. You’re fine if your Kubernetes/OpenShift cluster has just one node. If there are several nodes, a common strategy can still be used, but in this case, workspace PVC access mode should be RWM, ie multiple nodes should be able to use this PVC simultaneously (in fact, you may sometimes have some luck and all workspaces will be scheduled on the same node). You can change access mode for workspace PVCs by passing environment variable <code>CHE_INFRA_KUBERNETES_PVC_ACCESS_MODE=ReadWriteMany</code> to che deployment either when initially deploying Che or through che deployment update.</p>
+</div>
+<div class="paragraph">
+<p>Another restriction is that only pods in the same namespace can use the same PVC, thus, <code>CHE_INFRA_KUBERNETES_PROJECT</code> env variable should not be empty - it should be either Che server namespace (in this case objects can be created with che SA) or a dedicated namespace (token or username/password need to be used).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="unique-pvc-strategy">Unique PVC strategy</h2>
-
-<p>It is a default PVC strategy, i.e. <code class="highlighter-rouge">CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> is set to <code class="highlighter-rouge">unique</code>. Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. Workspace PVC is deleted when a corresponding workspace is deleted.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is a default PVC strategy, i.e. <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> is set to <code>unique</code>. Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. Workspace PVC is deleted when a corresponding workspace is deleted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="update">Update</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>An update implies updating Che deployment with new image tags. There are multiple ways to update a deployment:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li><code class="highlighter-rouge">kubeclt edit dc/che</code> - and just manually change image tag used in the deployment</li>
-  <li>manually in OpenShift web console &gt; deployments &gt; edit yaml &gt; image:tag</li>
-  <li><code class="highlighter-rouge">kubectl set image dc/che che=eclipse/che-server:${VERSION} --source=docker</code></li>
+<li>
+<p><code>kubeclt edit dc/che</code> - and just manually change image tag used in the deployment</p>
+</li>
+<li>
+<p>manually in OpenShift web console &gt; deployments &gt; edit yaml &gt; image:tag</p>
+</li>
+<li>
+<p><code>kubectl set image dc/che che=eclipse/che-server:${VERSION} --source=docker</code></p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>Config change will trigger a new deployment. In most cases, using older Keycloak and Postgres images is OK, since changes to those are very rare. However, you may update Keycloak and Postgres deployments:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>eclipse/che-keycloak</li>
-  <li>eclipse/che-postgres</li>
+<li>
+<p>eclipse/che-keycloak</p>
+</li>
+<li>
+<p>eclipse/che-postgres</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>You can get the list of available versions at <a href="https://github.com/eclipse/che/tags">Che GitHub page</a>.</p>
-
-<p>Since <code class="highlighter-rouge">nightly</code> is the default tag used in Che deployment, and image pull policy is set to Always, triggering a new deployment, will pull a newer image, if available.</p>
-
-<p>You can use <strong>IfNotPresent</strong> pull policy (default is Always). Manually edit Che deployment after deployment or add <code class="highlighter-rouge">--set cheImagePullPolicy=IfNotPresent</code>.</p>
-
-<p>OpenShift admins can pass <code class="highlighter-rouge">-p PULL_POLICY=IfNotPresent</code> to <a href="openshift-multi-user.html">Che deployment</a> or manually edit <code class="highlighter-rouge">dc/che</code> after deployment.</p>
-
+</div>
+<div class="paragraph">
+<p>Since <code>nightly</code> is the default tag used in Che deployment, and image pull policy is set to Always, triggering a new deployment, will pull a newer image, if available.</p>
+</div>
+<div class="paragraph">
+<p>You can use <strong>IfNotPresent</strong> pull policy (default is Always). Manually edit Che deployment after deployment or add <code>--set cheImagePullPolicy=IfNotPresent</code>.</p>
+</div>
+<div class="paragraph">
+<p>OpenShift admins can pass <code>-p PULL_POLICY=IfNotPresent</code> to <a href="openshift-multi-user">Che deployment</a> or manually edit <code>dc/che</code> after deployment.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="scalability">Scalability</h2>
-
-<p>To be able to run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from Kubernetes (usually it’s <code class="highlighter-rouge">no available nodes</code> kind of error).</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>To be able to run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from Kubernetes (usually it’s <code>no available nodes</code> kind of error).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="debug-mode">Debug Mode</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>If you want Che server to run in a debug mode set the following env in Che deployment to true (false by default):</p>
-
-<p><code class="highlighter-rouge">CHE_DEBUG_SERVER=true</code></p>
-
+</div>
+<div class="paragraph">
+<p><code>CHE_DEBUG_SERVER=true</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="private-docker-registries">Private Docker Registries</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Refer to <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">Kubernetes documentation</a></p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="che-server-logs">Che Server Logs</h2>
-
-<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code class="highlighter-rouge">che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code>che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code class="highlighter-rouge">kubectl get log dc/che</code></li>
-  <li><code class="highlighter-rouge">kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code class="highlighter-rouge">oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</li>
-  <li>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</li>
+<li>
+<p><code>kubectl get log dc/che</code></p>
+</li>
+<li>
+<p><code>kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code>oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</p>
+</li>
+<li>
+<p>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</p>
+</li>
 </ul>
-
-<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash.
-To configure JSON logging instead of plain text environment variable <code class="highlighter-rouge">CHE_LOGS_APPENDERS_IMPL</code> should have value <code class="highlighter-rouge">json</code>.
-See more at <a href="logging.html">logging docs</a>.</p>
-
+</div>
+<div class="paragraph">
+<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash. To configure JSON logging instead of plain text environment variable <code>CHE_LOGS_APPENDERS_IMPL</code> should have value <code>json</code>. See more at <a href="logging">logging docs</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="workspace-logs">Workspace Logs</h2>
-
-<p>Workspace logs are stored in an PV bound to <code class="highlighter-rouge">che-claim-workspace</code> PVC. Workspace logs include logs from workspace agent, <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a> and other agents if applicable.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Workspace logs are stored in an PV bound to <code>che-claim-workspace</code> PVC. Workspace logs include logs from workspace agent, <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a> and other agents if applicable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
-
-<p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults ‘0’, which allows to terminate
-pods almost instantly and significantly decrease the time required for stopping a workspace. For increasing grace termination period the following environment variable should be used:</p>
-
-<p><code class="highlighter-rouge">CHE_INFRA_KUBERNETES_POD_TERMINATION__GRACE__PERIOD__SEC</code></p>
-
-<p><span style="color:red;"><strong>IMPORTANT!</strong></span></p>
-
-<p>If <code class="highlighter-rouge">terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults '0', which allows to terminate pods almost instantly and significantly decrease the time required for stopping a workspace. For increasing grace termination period the following environment variable should be used:</p>
+</div>
+<div class="paragraph">
+<p><code>CHE_INFRA_KUBERNETES_POD_TERMINATION<em>GRACE</em>PERIOD__SEC</code></p>
+</div>
+<div class="paragraph">
+<p><strong>IMPORTANT!</strong></p>
+</div>
+<div class="paragraph">
+<p>If <code>terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="delete-deployments">Delete deployments</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>If you want to completely delete Che and its infrastructure components, deleting a project/namespace is the fastest way - all objects associated with this namespace will be deleted:</p>
+</div>
+<div class="paragraph">
+<p><code>oc delete namespace che</code></p>
+</div>
+<div class="paragraph">
+<p>If you need to delete particular deployments and associated objects, you can use selectors (use <code>oc</code> instead of <code>kubctl</code> for OpenShift):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># remove all Che server related objects
+kubectl delete all -l=app=che
+# remove all Keycloak related objects
+kubectl delete all -l=app=keycloak
+# remove all Postgres related objects
+kubectl delete all -l=app=postgres</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PVCs, service accounts and role bindings should be deleted separately as <code>oc delete all</code> does not delete them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Delete Che server PVC, ServiceAccount and RoleBinding
+kubectl delete sa -l=app=che
+kubectl delete rolebinding -l=app=che
 
-<p><code class="highlighter-rouge">oc delete namespace che</code></p>
+# Delete Keycloak and Postgres PVCs
 
-<p>If you need to delete particular deployments and associated objects, you can use selectors (use <code class="highlighter-rouge">oc</code> instead of <code class="highlighter-rouge">kubctl</code> for OpenShift):</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># remove all Che server related objects</span>
-kubectl delete all <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>che
-<span class="c"># remove all Keycloak related objects</span>
-kubectl delete all <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>keycloak
-<span class="c"># remove all Postgres related objects</span>
-kubectl delete all <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>postgres
-
-</code></pre></div></div>
-<p>PVCs, service accounts and role bindings should be deleted separately as <code class="highlighter-rouge">oc delete all</code> does not delete them:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Delete Che server PVC, ServiceAccount and RoleBinding</span>
-kubectl delete sa <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>che
-kubectl delete rolebinding <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>che
-
-<span class="c"># Delete Keycloak and Postgres PVCs</span>
-
-kubectl delete pvc <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>keycloak
-kubectl delete pvc <span class="nt">-l</span><span class="o">=</span><span class="nv">app</span><span class="o">=</span>postgres
-</code></pre></div></div>
-
+kubectl delete pvc -l=app=keycloak
+kubectl delete pvc -l=app=postgres</pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1120,7 +1230,7 @@ kubectl delete pvc <span class="nt">-l</span><span class="o">=</span><span class
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

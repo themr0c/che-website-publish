@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,76 +846,137 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environments: Map&lt;String, getEnvironments&gt;  // Workspace envs. A workspace can have multiple envs
+  <div class="listingblock">
+<div class="content">
+<pre>environments: Map&lt;String, getEnvironments&gt;  // Workspace envs. A workspace can have multiple envs
 defaultEnv: STRING                          // A workspace should have a default environment
 projects: []                                // Projects associated with a workspace
 commands: []                                // Commands associated with a workspace
 name: STRING                                // Workspace name that has to be unique in a namespace
-links: []                                   //
-</code></pre></div></div>
-
+links: []                                   //</pre>
+</div>
+</div>
+<div class="sect1">
 <h2 id="environment">Environment</h2>
-
-<figure><img class="docimage" src="images/workspaces/ws_data_model.png" alt="" /></figure>
-
-<p>Environment recipe can also have content instead of location, if <a href="recipes.html">recipe</a> type is <code class="highlighter-rouge">dockerfile</code>, <code class="highlighter-rouge">compose</code> or <code class="highlighter-rouge">openshift</code>:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"recipe"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"compose"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"services:</span><span class="se">\n</span><span class="s2"> db:</span><span class="se">\n</span><span class="s2">  image: eclipse/mysql</span><span class="se">\n</span><span class="s2">  environment:</span><span class="se">\n</span><span class="s2">   MYSQL_ROOT_PASSWORD: password</span><span class="se">\n</span><span class="s2">   MYSQL_DATABASE: petclinic</span><span class="se">\n</span><span class="s2">   MYSQL_USER: petclinic</span><span class="se">\n</span><span class="s2">   MYSQL_PASSWORD: password</span><span class="se">\n</span><span class="s2">  mem_limit: 1073741824</span><span class="se">\n</span><span class="s2"> dev-machine:</span><span class="se">\n</span><span class="s2">  image: eclipse/ubuntu_jdk8</span><span class="se">\n</span><span class="s2">  mem_limit: 2147483648</span><span class="se">\n</span><span class="s2">  depends_on:</span><span class="se">\n</span><span class="s2">    - db"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"contentType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/x-yaml"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/ws_data_model.png" alt="ws data model">
+</div>
+</div>
+<div class="paragraph">
+<p>Environment recipe can also have content instead of location, if <a href="recipes">recipe</a> type is <code>dockerfile</code>, <code>compose</code> or <code>openshift</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">recipe</span><span class="delimiter">&quot;</span></span>: {
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">compose</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">content</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">services:</span><span class="char">\n</span><span class="content"> db:</span><span class="char">\n</span><span class="content">  image: eclipse/mysql</span><span class="char">\n</span><span class="content">  environment:</span><span class="char">\n</span><span class="content">   MYSQL_ROOT_PASSWORD: password</span><span class="char">\n</span><span class="content">   MYSQL_DATABASE: petclinic</span><span class="char">\n</span><span class="content">   MYSQL_USER: petclinic</span><span class="char">\n</span><span class="content">   MYSQL_PASSWORD: password</span><span class="char">\n</span><span class="content">  mem_limit: 1073741824</span><span class="char">\n</span><span class="content"> dev-machine:</span><span class="char">\n</span><span class="content">  image: eclipse/ubuntu_jdk8</span><span class="char">\n</span><span class="content">  mem_limit: 2147483648</span><span class="char">\n</span><span class="content">  depends_on:</span><span class="char">\n</span><span class="content">    - db</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">contentType</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">application/x-yaml</span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="projects">Projects</h2>
-
-<figure><img class="docimage" src="images/workspaces/ws_projects.png" alt="" /></figure>
-
-<p>Project object structure is quite simple, <code class="highlighter-rouge">source.location</code> and <code class="highlighter-rouge">source.type</code> being the most important parameters. There are 2 importer types: <code class="highlighter-rouge">git</code> and <code class="highlighter-rouge">zip</code>. New location types can be provided by custom plugins, such as <code class="highlighter-rouge">svn</code>.</p>
-
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/ws_projects.png" alt="ws projects">
+</div>
+</div>
+<div class="paragraph">
+<p>Project object structure is quite simple, <code>source.location</code> and <code>source.type</code> being the most important parameters. There are 2 importer types: <code>git</code> and <code>zip</code>. New location types can be provided by custom plugins, such as <code>svn</code>.</p>
+</div>
+<div class="paragraph">
 <p>In the example above, a project does not have problems and mixins. If a project is misconfigured or missing sources, it will be marked with a problem (error code and a message explaining the problem).</p>
-
+</div>
+<div class="paragraph">
 <p>A mixin adds additional behaviors the project, IDE panels and menus etc. Mixins are reusable across any project type. You define the mixins to add to a project by specifying an array of strings, with each string containing the identifier for the mixin.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Mixin ID</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">git</code></td>
-      <td>Initiates the project with a git repository. Adds git menu functionality to the IDE. If a user in the IDE creates a new project and then initializes a git repository, then this mixin is added to that project.</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">pullrequest</code></td>
-      <td>Enables pull request workflow where server handles local &amp; remote branching, forking, and pull request issuance. Pull requests generated from within server have another Factory placed into the comments of pull requests that a PR reviewer can consume. Adds contribution panel to the IDE. If this mixin is set, then it uses attribute values for <code class="highlighter-rouge">project.attributes.local_branch</code> and <code class="highlighter-rouge">project.attributes.contribute_to_branch</code>.</td>
-    </tr>
-  </tbody>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mixin ID</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>git</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initiates the project with a git repository. Adds git menu functionality to the IDE. If a user in the IDE creates a new project and then initializes a git repository, then this mixin is added to that project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pullrequest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables pull request workflow where server handles local &amp; remote branching, forking, and pull request issuance. Pull requests generated from within server have another Factory placed into the comments of pull requests that a PR reviewer can consume. Adds contribution panel to the IDE. If this mixin is set, then it uses attribute values for <code>project.attributes.local_branch</code> and <code>project.attributes.contribute_to_branch</code>.</p></td>
+</tr>
+</tbody>
 </table>
-
-<p>The <code class="highlighter-rouge">pullrequest</code> mixin requires additional configuration from the <code class="highlighter-rouge">attributes</code> object of the project.</p>
-
+<div class="paragraph">
+<p>The <code>pullrequest</code> mixin requires additional configuration from the <code>attributes</code> object of the project.</p>
+</div>
+<div class="paragraph">
+<p>The <code>project</code> object can also include <code>source.parameters</code>, which is a map that can contain additional parameters e.g. related to project importer</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>skipFirstLevel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used for projects with type <code>zip</code>. When value is 'true', the first directory inside ZIP will be omitted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="commands">Commands</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Commands can be both tied to a workspace and an individual project. In the example below, a command is saved to workspace configuration:</p>
-
-<figure><img class="docimage" src="images/workspaces/ws_commands.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/ws_commands.png" alt="ws commands">
+</div>
+</div>
+<div class="paragraph">
 <p>Here’s how commands can be saved in project configuration:</p>
-
-<figure><img class="docimage" src="images/workspaces/project_commands.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/project_commands.png" alt="project commands">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="runtime">Runtime</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Runtime object is created when a workspace is in a running state. Runtime returns servers URLs (internal or external, depending on server config). Interested clients, like User Dashboard and IDE use these URLs.</p>
-
-<figure><img class="docimage" src="images/workspaces/runtime.png" alt="" /></figure>
-
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/runtime.png" alt="runtime">
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -953,7 +1017,7 @@ links: []                                   //
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

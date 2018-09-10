@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,121 +846,216 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <h2 id="prerequisites">Prerequisites</h2>
-
+  <div class="sect1">
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>
-    <p>A Kubernetes cluster with at least 4GB RAM and RBAC:</p>
-  </li>
-  <li>for MiniKube 0.26.0 and above <code class="highlighter-rouge">minikube start --cpus 2 --memory 4096 --extra-config=apiserver.authorization-mode=RBAC</code></li>
-  <li>for MiniKube 0.25.2 and lower <code class="highlighter-rouge">minikube start --cpus 2 --memory 4096 --extra-config=apiserver.Authorization.Mode=RBAC</code></li>
-</ul>
-
-<p><code class="highlighter-rouge">kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default</code></p>
+<li>
+<p>A Kubernetes cluster with at least 4GB RAM and RBAC:</p>
+</li>
+<li>
+<p>for MiniKube 0.26.0 and above <code>minikube start --cpus 2 --memory 4096 --extra-config=apiserver.authorization-mode=RBAC</code></p>
+</li>
+<li>
+<p>for MiniKube 0.25.2 and lower <code>minikube start --cpus 2 --memory 4096 --extra-config=apiserver.Authorization.Mode=RBAC</code></p>
+</li>
+<li>
+<p><code>kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default</code></p>
+</li>
+<li>
+<p>Install the <a href="https://github.com/kubernetes/helm/blob/master/docs/install.md">Helm</a> CLI</p>
+</li>
+<li>
+<p>Set your default Kubernetes context (this is required to use helm):</p>
+<div class="ulist">
 <ul>
-  <li>
-    <p>Install the <a href="https://github.com/kubernetes/helm/blob/master/docs/install.md">Helm</a> CLI</p>
-  </li>
-  <li>Set your default Kubernetes context (this is required to use helm):
-    <ul>
-      <li>In MiniKube this is set for you automatically</li>
-      <li>Otherwise, you may have to modify the KUBECONFIG environment variable and then type <code class="highlighter-rouge">kubectl config use-context &lt;my-context&gt;</code></li>
-    </ul>
-  </li>
-  <li>Install tiller on your cluster:
-    <ul>
-      <li>Create a <a href="https://github.com/kubernetes/helm/blob/master/docs/rbac.md">tiller serviceAccount</a>: <code class="highlighter-rouge">kubectl create serviceaccount tiller --namespace kube-system</code></li>
-      <li>Bind it to the almighty cluster-admin role: <code class="highlighter-rouge">kubectl apply -f ./tiller-rbac.yaml</code></li>
-      <li>Install tiller itself: <code class="highlighter-rouge">helm init --service-account tiller</code></li>
-    </ul>
-  </li>
-  <li>Ensure that you have an NGINX-based ingress controller. Note: This is the default ingress controller on MiniKube. You can start it with <code class="highlighter-rouge">minikube addons enable ingress</code></li>
-  <li>DNS discovery should be enabled. Note: It is enabled by default in minikube.</li>
+<li>
+<p>In MiniKube this is set for you automatically</p>
+</li>
+<li>
+<p>Otherwise, you may have to modify the KUBECONFIG environment variable and then type <code>kubectl config use-context &lt;my-context&gt;</code></p>
+</li>
 </ul>
-
+</div>
+</li>
+<li>
+<p>Install tiller on your cluster:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a <a href="https://github.com/kubernetes/helm/blob/master/docs/rbac.md">tiller serviceAccount</a>: <code>kubectl create serviceaccount tiller --namespace kube-system</code></p>
+</li>
+<li>
+<p>Bind it to the almighty cluster-admin role: <code>kubectl apply -f ./tiller-rbac.yaml</code></p>
+</li>
+<li>
+<p>Install tiller itself: <code>helm init --service-account tiller</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ensure that you have an NGINX-based ingress controller. Note: This is the default ingress controller on MiniKube. You can start it with <code>minikube addons enable ingress</code></p>
+</li>
+<li>
+<p>DNS discovery should be enabled. Note: It is enabled by default in minikube.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="cluster-ip">Cluster IP</h2>
-
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>If your cluster is running on MiniKube, simply type <code class="highlighter-rouge">minikube ip</code> at your terminal</li>
-  <li>If your cluster is in the cloud, obtain the hostname or ip address from your cloud provider</li>
+<li>
+<p>If your cluster is running on MiniKube, simply type <code>minikube ip</code> at your terminal</p>
+</li>
+<li>
+<p>If your cluster is in the cloud, obtain the hostname or ip address from your cloud provider</p>
+</li>
 </ul>
-
-<p>In production, you should specify a hostname (see <a href="https://github.com/eclipse/che/issues/8694">here</a> why). In case you don’t have a hostname (e.g. during development), and would still want to use a host-based configuration, you can use services such as nip.io or xip.io.</p>
-
-<p>In case you’re specifying a hostname, simply pass it as the value of the <code class="highlighter-rouge">ingressDomain</code> parameter below.</p>
-
-<p>If you must use IP address (e.g. your corporate policy prevents you from using nip.io), you would also have to set <code class="highlighter-rouge">isHostBased</code> to <code class="highlighter-rouge">false</code>.</p>
-
+</div>
+<div class="paragraph">
+<p>In production, you should specify a hostname (see <a href="https://github.com/eclipse/che/issues/8694">here</a> why). In case you don’t have a hostname (e.g. during development), and would still want to use a host-based configuration, you can use services such as nip.io or xip.io.</p>
+</div>
+<div class="paragraph">
+<p>In case you’re specifying a hostname, simply pass it as the value of the <code>ingressDomain</code> parameter below.</p>
+</div>
+<div class="paragraph">
+<p>If you must use IP address (e.g. your corporate policy prevents you from using nip.io), you would also have to set <code>isHostBased</code> to <code>false</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deploy-syntax">Deploy Syntax</h2>
-
-<p>The context of the commands below is <code class="highlighter-rouge">che/deploy/kubernetes/helm/che</code></p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>The context of the commands below is <code>che/deploy/kubernetes/helm/che</code></p>
+</div>
+<div class="sect2">
 <h3 id="to-deploy-with-dedicated-keycloak-as-authentication-server">To deploy with dedicated keycloak as authentication server:</h3>
-
+<div class="ulist">
 <ul>
-  <li>
-    <p>Override default values by changing the values.yaml file and then typing:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml ./
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Or, you can override default values during installation, using the <code class="highlighter-rouge">--set</code> flag:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;my-hostname&gt; <span class="nt">--set</span> <span class="nv">cheImage</span><span class="o">=</span>&lt;my-image&gt; ./
-</code></pre></div>    </div>
-  </li>
-  <li>Master: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain</code></li>
-  <li>Keycloak:  <code class="highlighter-rouge">https://keycloak-&lt;che-namespace&gt;.domain</code></li>
-  <li>Workspaces servers: <code class="highlighter-rouge">https://server-host.domain</code></li>
+<li>
+<p>Override default values by changing the values.yaml file and then typing:</p>
+<div class="listingblock">
+<div class="content">
+<pre>helm upgrade --install &lt;my-che-installation&gt; --namespace &lt;my-che-namespace&gt; -f ./values/multi-user.yaml ./</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Or, you can override default values during installation, using the <code>--set</code> flag:</p>
+<div class="listingblock">
+<div class="content">
+<pre>helm upgrade --install &lt;my-che-installation&gt; --namespace &lt;my-che-namespace&gt; -f ./values/multi-user.yaml --set global.ingressDomain=&lt;my-hostname&gt; --set cheImage=&lt;my-image&gt; ./</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Master: <code><a href="https://che-&lt;che-namespace&gt;.domain" class="bare">https://che-&lt;che-namespace&gt;.domain</a></code></p>
+</li>
+<li>
+<p>Keycloak: <code><a href="https://keycloak-&lt;che-namespace&gt;.domain" class="bare">https://keycloak-&lt;che-namespace&gt;.domain</a></code></p>
+</li>
+<li>
+<p>Workspaces servers: <code><a href="https://server-host.domain" class="bare">https://server-host.domain</a></code></p>
+</li>
 </ul>
-
+</div>
+</div>
+<div class="sect2">
 <h3 id="to-deploy-without-keycloak-in-multi-user-mode">To deploy without keycloak in multi-user mode</h3>
+<div class="paragraph">
 <p>In this case you have to supply custom OpenIdConnect provider (see <a href="https://github.com/eclipse/che-docs/blob/b2310017b1a75901cbec3b9c665d7ffa1cb23177/src/main/pages/setup-openshift/openshift-config.md">here</a> for more details), using the following flags:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm upgrade <span class="nt">--install</span> &lt;my-che-installation&gt; <span class="nt">--namespace</span> &lt;my-che-namespace&gt; <span class="nt">-f</span> ./values/multi-user.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;my-hostname&gt;,cheImage<span class="o">=</span>&lt;my-image&gt;,global.cheDedicatedKeycloak<span class="o">=</span><span class="nb">false</span>,customOidcProvider<span class="o">=</span>&lt;oidc-url&gt;,cheKeycloakClientId<span class="o">=</span>&lt;oidc_clientId&gt;,customOidcUsernameClaim<span class="o">=</span>&lt;user_name_claim&gt; ./
-</code></pre></div></div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>helm upgrade --install &lt;my-che-installation&gt; --namespace &lt;my-che-namespace&gt; -f ./values/multi-user.yaml --set global.ingressDomain=&lt;my-hostname&gt;,cheImage=&lt;my-image&gt;,global.cheDedicatedKeycloak=false,customOidcProvider=&lt;oidc-url&gt;,cheKeycloakClientId=&lt;oidc_clientId&gt;,customOidcUsernameClaim=&lt;user_name_claim&gt; ./</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>cheKeycloakClientId - is your authentication server client ID</li>
-  <li>customOidcUsernameClaim - is optional, and should be used if your authentication server does not support ‘preferred_username’ 
-  claim in the JWT token (This can be checked by accessing oidc-url/.well-known/openid-configuration response). This parameter defines,
-  which claim should be used to determine user name instead.</li>
+<li>
+<p>cheKeycloakClientId - is your authentication server client ID</p>
+</li>
+<li>
+<p>customOidcUsernameClaim - is optional, and should be used if your authentication server does not support 'preferred_username' claim in the JWT token (This can be checked by accessing oidc-url/.well-known/openid-configuration response). This parameter defines, which claim should be used to determine user name instead.</p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="default-host">Default Host</h2>
-<p>All Ingress specs are created without a host attribute (defaults to <code class="highlighter-rouge">*</code>).
-Path based routing to all components.
-Multi User configuration is enabled.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm upgrade <span class="nt">--install</span> &lt;che-release-name&gt; <span class="nt">--namespace</span> &lt;che-namespace&gt; <span class="nt">-f</span> ./values/default-host.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;domain&gt; ./
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>All Ingress specs are created without a host attribute (defaults to <code>*</code>). Path based routing to all components. Multi User configuration is enabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>helm upgrade --install &lt;che-release-name&gt; --namespace &lt;che-namespace&gt; -f ./values/default-host.yaml --set global.ingressDomain=&lt;domain&gt; ./</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Master: <code class="highlighter-rouge">http://&lt;domain&gt;/</code></li>
-  <li>Keycloak:  <code class="highlighter-rouge">http://&lt;domain&gt;/auth/</code></li>
-  <li>Workspaces servers: <code class="highlighter-rouge">http://&lt;domain&gt;/&lt;path-to-server&gt;</code></li>
+<li>
+<p>Master: <code><a href="http://&lt;domain&gt;/" class="bare">http://&lt;domain&gt;/</a></code></p>
+</li>
+<li>
+<p>Keycloak: <code><a href="http://&lt;domain&gt;/auth/" class="bare">http://&lt;domain&gt;/auth/</a></code></p>
+</li>
+<li>
+<p>Workspaces servers: <code><a href="http://&lt;domain&gt;/&lt;path-to-server&gt" class="bare">http://&lt;domain&gt;/&lt;path-to-server&gt</a>;</code></p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="tls">TLS</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Cert-Manager is used to issue LetsEncrypt certificates. To avoid rate-limit issues, we use a single hostname for all ingresses. Path based routing to all components. Multi User configuration is enabled.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  helm install <span class="nt">--name</span> &lt;cert-manager-release-name&gt; stable/cert-manager
-  helm upgrade <span class="nt">--install</span> &lt;che-release-name&gt; <span class="nt">--namespace</span> &lt;che-namespace&gt; <span class="nt">-f</span> ./values/tls.yaml <span class="nt">--set</span> global.ingressDomain<span class="o">=</span>&lt;domain&gt; ./
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>helm install --name &lt;cert-manager-release-name&gt; stable/cert-manager
+helm upgrade --install &lt;che-release-name&gt; --namespace &lt;che-namespace&gt; -f ./values/tls.yaml --set global.ingressDomain=&lt;domain&gt; ./</pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Master: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/</code></li>
-  <li>Keycloak:  <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/auth/</code></li>
-  <li>Workspaces servers: <code class="highlighter-rouge">https://che-&lt;che-namespace&gt;.domain/&lt;path-to-server&gt;</code></li>
+<li>
+<p>Master: <code><a href="https://&lt;domain&gt;/" class="bare">https://&lt;domain&gt;/</a></code></p>
+</li>
+<li>
+<p>Keycloak: <code><a href="https://&lt;domain&gt;/auth/" class="bare">https://&lt;domain&gt;/auth/</a></code></p>
+</li>
+<li>
+<p>Workspaces servers: <code><a href="https://&lt;domain&gt;/&lt;path-to-server&gt" class="bare">https://&lt;domain&gt;/&lt;path-to-server&gt</a>;</code></p>
+</li>
 </ul>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="delete-che-deployment">Delete Che Deployment</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>You can delete a deployment using the following command:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm delete &lt;che-release-name&gt;
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>helm delete &lt;che-release-name&gt;</pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -986,7 +1084,7 @@ Multi User configuration is enabled.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

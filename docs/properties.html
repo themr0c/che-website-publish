@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,94 +846,125 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="referencing-properties-in-extensions">Referencing Properties in Extensions</h2>
-
-<p>You can reference properties in Che extensions that you author. Configuration parameters may be injected with a constructor or directly in the fields. The parameter of the field must be annotated with <code class="highlighter-rouge">@javax.inject.Named</code>. The value of the annotation is the name of the property. For example, if the configuration property is: <code class="highlighter-rouge">data_file:/home/user/storage</code> then in your extension code:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
-  <span class="o">...</span>
-  <span class="nd">@Inject</span>
-  <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span> <span class="n">File</span> <span class="n">storage</span><span class="o">)</span> <span class="o">{</span>
-      <span class="o">...</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can reference properties in Che extensions that you author. Configuration parameters may be injected with a constructor or directly in the fields. The parameter of the field must be annotated with <code>@javax.inject.Named</code>. The value of the annotation is the name of the property. For example, if the configuration property is: <code>data_file:/home/user/storage</code> then in your extension code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyClass</span> {
+  ...
+  <span class="annotation">@Inject</span>
+  <span class="directive">public</span> MyClass(<span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">data_file</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">File</span> storage) {
+      ...
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>or</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
-  <span class="nd">@Inject</span>
-  <span class="nd">@Named</span><span class="o">(</span><span class="s">"data_file"</span><span class="o">)</span>
-  <span class="kd">private</span> <span class="n">File</span> <span class="n">storage</span><span class="o">;</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<p>All system properties and environment variables may be injected into your extensions with prefixes <code class="highlighter-rouge">sys.</code> and <code class="highlighter-rouge">env.</code>, respectively. So, for example, environment variable <code class="highlighter-rouge">HOME</code> name must be <code class="highlighter-rouge">env.HOME</code>. Here is an example of how to inject the value of system property <code class="highlighter-rouge">java.io.tmpdir</code> and value of environment variable <code class="highlighter-rouge">HOME</code>.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
-  <span class="nd">@Inject</span>
-  <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"sys.java.io.tmpdir"</span><span class="o">)</span> <span class="n">File</span> <span class="n">tmp</span><span class="o">,</span> <span class="nd">@Named</span><span class="o">(</span><span class="s">"env.HOME"</span><span class="o">)</span> <span class="n">File</span> <span class="n">home</span><span class="o">)</span> <span class="o">{</span>
-      <span class="o">...</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>Any value can be converted into a <code class="highlighter-rouge">java.lang.String</code> Java type. You can also directly convert properties to the following Java types:</p>
-<ul>
-  <li><code class="highlighter-rouge">boolean</code></li>
-  <li><code class="highlighter-rouge">byte</code></li>
-  <li><code class="highlighter-rouge">short</code></li>
-  <li><code class="highlighter-rouge">int</code></li>
-  <li><code class="highlighter-rouge">long</code></li>
-  <li><code class="highlighter-rouge">float</code></li>
-  <li><code class="highlighter-rouge">double</code></li>
-  <li><code class="highlighter-rouge">java.net.URI</code></li>
-  <li><code class="highlighter-rouge">java.net.URL</code></li>
-  <li><code class="highlighter-rouge">java.io.File</code></li>
-  <li><code class="highlighter-rouge">String[]</code> (value is a comma separated string)</li>
-</ul>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyClass</span> {
+  <span class="annotation">@Inject</span>
+  <span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">data_file</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">private</span> <span class="predefined-type">File</span> storage;
+  ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All system properties and environment variables may be injected into your extensions with prefixes <code>sys.</code> and <code>env.</code>, respectively. So, for example, environment variable <code>HOME</code> name must be <code>env.HOME</code>. Here is an example of how to inject the value of system property <code>java.io.tmpdir</code> and value of environment variable <code>HOME</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyClass</span> {
+  <span class="annotation">@Inject</span>
+  <span class="directive">public</span> MyClass(<span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sys.java.io.tmpdir</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">File</span> tmp, <span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">env.HOME</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">File</span> home) {
+      ...
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Any value can be converted into a <code>java.lang.String</code> Java type. You can also directly convert properties to the following Java types: * <code>boolean</code> * <code>byte</code> * <code>short</code> * <code>int</code> * <code>long</code> * <code>float</code> * <code>double</code> * <code>java.net.URI</code> * <code>java.net.URL</code> * <code>java.io.File</code> * <code>String[]</code> (value is a comma separated string)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="property-aliases">Property Aliases</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Sometimes a developer may need to change property name but support old names as well for the sake of backward compatibility. If this is the case, there is <a href="https://github.com/eclipse/che/blob/master/assembly/assembly-wsmaster-war/src/main/webapp/WEB-INF/classes/che_aliases.properties">aliases file</a> where you can map new property name to old ones:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>current_name=old_name, very_old_name
-</code></pre></div></div>
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>current_name=old_name, very_old_name</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>A few gotchas:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>current_name = current_value</li>
-  <li>if <code class="highlighter-rouge">old_name</code> property exists it will be bound to the old_value, so <code class="highlighter-rouge">current_name = old_value</code> and <code class="highlighter-rouge">very_old_name = old_value</code></li>
-  <li>if <code class="highlighter-rouge">very_old_name</code> property exists it will be bound to <code class="highlighter-rouge">very_old_value</code>, so <code class="highlighter-rouge">current_name = very_old_value</code> and <code class="highlighter-rouge">old_name = very_old_value</code></li>
+<li>
+<p>current_name = current_value</p>
+</li>
+<li>
+<p>if <code>old_name</code> property exists it will be bound to the old_value, so <code>current_name = old_value</code> and <code>very_old_name = old_value</code></p>
+</li>
+<li>
+<p>if <code>very_old_name</code> property exists it will be bound to <code>very_old_value</code>, so <code>current_name = very_old_value</code> and <code>old_name = very_old_value</code></p>
+</li>
 </ul>
-
-<p><strong>IMPORTANT</strong>: it is prohibited to use a different name for the same property on the same level. From the example above, you can use environment property <code class="highlighter-rouge">CHE_CURRENT_NAME</code> and <code class="highlighter-rouge">CHE_OLD_NAME</code>. However, you can use it on a different level, for instance, environment property and system property.</p>
-
+</div>
+<div class="paragraph">
+<p><strong>IMPORTANT</strong>: it is prohibited to use a different name for the same property on the same level. From the example above, you can use environment property <code>CHE_CURRENT_NAME</code> and <code>CHE_OLD_NAME</code>. However, you can use it on a different level, for instance, environment property and system property.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="properties-and-environment-variables">Properties and Environment Variables</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Naming conventions:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>dots in properties separate components (in case of env vars it is a <strong>single</strong> underscore)</li>
-  <li>underscores in properties separate words in a single component item (in case of env vars it is a <strong>double underscore</strong>)</li>
+<li>
+<p>dots in properties separate components (in case of env vars it is a <strong>single</strong> underscore)</p>
+</li>
+<li>
+<p>underscores in properties separate words in a single component item (in case of env vars it is a <strong>double underscore</strong>)</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>che.component1.sub_component_2_mb -&gt; CHE_COMPONENT1_SUB__COMPONENT__2__MB
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>che.component1.sub_component_2_mb -&gt; CHE_COMPONENT1_SUB__COMPONENT__2__MB
-
-where MB is unit of measurement in case when property is a number
-</code></pre></div></div>
-
-<p>Environment variables have a <strong>higher priority</strong> over properties, so if both are set, value of an environment variable will be used. 
-Property can only be overridden, if it starts with <code class="highlighter-rouge">che.</code></p>
-
+where MB is unit of measurement in case when property is a number</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Environment variables have a <strong>higher priority</strong> over properties, so if both are set, value of an environment variable will be used. Property can only be overridden, if it starts with <code>che.</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="workspace-extension-properties">Workspace Extension Properties</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Each workspace is a separate runtime, and has at least one development agent that runs as a miniaturized Che server within the workspace. That agent has its own properties that can be configured as well. If you are authoring custom workspace extensions that are deployed within Che’s agent in the workspace, you can customize.</p>
-
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -963,7 +997,7 @@ Property can only be overridden, if it starts with <code class="highlighter-roug
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

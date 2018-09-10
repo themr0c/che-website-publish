@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,139 +846,184 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="paragraph">
 <p>In this section, we briefly introduce the usage of dependency injection in Che, on the client and on the server side. If you are already familiar with Guice and Gin, you might want to skip this part.</p>
-
-<p>Che uses dependency injection to wire the different components, in order to create objects as well as register and retrieve extensions. Therefore, dependency injection is technically the core mechanism of communicating with the framework and connecting custom extensions. This includes accessing framework services and objects (e.g. a file type or a <a href="">file type registry</a>) and providing custom objects to the framework.</p>
-
+</div>
+<div class="paragraph">
+<p>Che uses dependency injection to wire the different components, in order to create objects as well as register and retrieve extensions. Therefore, dependency injection is technically the core mechanism of communicating with the framework and connecting custom extensions. This includes accessing framework services and objects (e.g. a file type or a <a href="%7B%7B%20base%20%7D%7D%7B%7Bsite.links%5B%22assemblies-sdk-code-editors%22%5D%7D%7D">file type registry</a>) and providing custom objects to the framework.</p>
+</div>
+<div class="paragraph">
 <p>Che uses the existing dependency injection framework <a href="https://github.com/google/guice">Guice</a> on the server-side and the GWT version of Guice, <a href="https://github.com/google-code-export/google-gin">Gin</a>, on the client-side.</p>
-
+</div>
+<div class="paragraph">
 <p>In general, there are two use cases for dependency injection: consuming objects and providing objects.</p>
-
-<figure><img class="docimage" src="images/devel/di.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/devel/di.png" alt="di">
+</div>
+</div>
+<div class="paragraph">
 <p>Please note that when extending Che, DI consumer and provider can be either in your custom extension or within the Che framework. As an example, if you want to provide a new wizard to be used in the IDE, you will create an object provider, which provides the wizard. Che implements an object consumer, which picks up the wizard class and uses it. In turn, if you want to access a service provided by Che, your extension will be the object consumer.</p>
-
-<p>The main goal of using dependency injection is to decouple object provider and object consumer. Both parties just need to know about the object they consume/provide. The object is identified by its type (typically a Java interface) and optionally an additional key.
-In the following, we first describe how to consume objects (in Guice and Gin) and subsequently, how to provide objects.</p>
-
+</div>
+<div class="paragraph">
+<p>The main goal of using dependency injection is to decouple object provider and object consumer. Both parties just need to know about the object they consume/provide. The object is identified by its type (typically a Java interface) and optionally an additional key. In the following, we first describe how to consume objects (in Guice and Gin) and subsequently, how to provide objects.</p>
+</div>
+<div class="sect1">
 <h2 id="consuming-objects">Consuming Objects</h2>
-
-<p>Required objects can be injected in any class that is instantiated by the framework. If a custom component requires objects, e.g. a service, it can be injected as a parameter. This can be done in the constructor or in methods of a class. If the parameter is required for a class to operate, we recommend using the constructor for injection. To get parameters injected in a method or constructor, it is marked with the annotation <code class="highlighter-rouge">@Inject</code> (see code example below). By adding the annotation, all parameters of a constructor/method will be resolved by the framework and passed in through the initialization of the class.</p>
-
-<p>The dependency injection framework needs to know how to identify the correct object to be used as a parameter. There are two essential ways of specifying the parameters as a consumer</p>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Required objects can be injected in any class that is instantiated by the framework. If a custom component requires objects, e.g. a service, it can be injected as a parameter. This can be done in the constructor or in methods of a class. If the parameter is required for a class to operate, we recommend using the constructor for injection. To get parameters injected in a method or constructor, it is marked with the annotation <code>@Inject</code> (see code example below). By adding the annotation, all parameters of a constructor/method will be resolved by the framework and passed in through the initialization of the class.</p>
+</div>
+<div class="paragraph">
+<p>The dependency injection framework needs to know how to identify the correct object to be used as a parameter. There are two essential ways of specifying the parameters as a consumer * First, if you just specify a parameter of a certain type (in the example <code>SomeService</code>), the framework will search for an object of that type. This will only work, if there is exactly one object of this type in the context, which is typically true for services.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-    <p>First, if you just specify a parameter of a certain type (in the example <code class="highlighter-rouge">SomeService</code>), the framework will search for an object of that type. This will only work, if there is exactly one object of this type in the context, which is typically true for services.</p>
-  </li>
-  <li>
-    <p>Second, if there can be several objects of the required type and you want a specific object out of those, you can additionally specify a key using the annotation <code class="highlighter-rouge">@Named</code>.</p>
-  </li>
+<li>
+<p>Second, if there can be several objects of the required type and you want a specific object out of those, you can additionally specify a key using the annotation <code>@Named</code>.</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
+<p>In the following example, for the second parameter, the framework will look for an object which is of type <code>MyClass</code> has been explicitly registered with the key <code>MyID</code>. Please <a href="#providing-objects">see the following</a> section how to provide objects to be consumed that way.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyClass</span> {
 
-<p>In the following example, for the second parameter, the framework will look for an object which is of type <code class="highlighter-rouge">MyClass</code> has been explicitly registered with the key <code class="highlighter-rouge">MyID</code>. Please <a href="#providing-objects">see the following</a> section how to provide objects to be consumed that way.</p>
+  <span class="directive">private</span> MyOtherClass myOtherClass;
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyClass</span> <span class="o">{</span>
+  <span class="annotation">@Inject</span>
+  <span class="directive">public</span> MyClass(<span class="directive">final</span> SomeService someService,
+                            <span class="directive">final</span> <span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">MyID</span><span class="delimiter">&quot;</span></span>) MyClass myClass) {
+                              someService.someMethod(myClass);
+                              <span class="local-variable">this</span>.other = <span class="keyword">new</span> MyOtherClass(myClass);
+  }
 
-  <span class="kd">private</span> <span class="n">MyOtherClass</span> <span class="n">myOtherClass</span><span class="o">;</span>
-
-  <span class="nd">@Inject</span>
-  <span class="kd">public</span> <span class="nf">MyClass</span><span class="o">(</span><span class="kd">final</span> <span class="n">SomeService</span> <span class="n">someService</span><span class="o">,</span>
-                            <span class="kd">final</span> <span class="nd">@Named</span><span class="o">(</span><span class="s">"MyID"</span><span class="o">)</span> <span class="n">MyClass</span> <span class="n">myClass</span><span class="o">)</span> <span class="o">{</span>
-                              <span class="n">someService</span><span class="o">.</span><span class="na">someMethod</span><span class="o">(</span><span class="n">myClass</span><span class="o">);</span>
-                              <span class="k">this</span><span class="o">.</span><span class="na">other</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyOtherClass</span><span class="o">(</span><span class="n">myClass</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="c1">// do somehting with myOtherClass;</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>Please note, that dependency injection is only available for objects which are instantiated by the dependency injection framework. In the example above, the class <code class="highlighter-rouge">MyOtherClass</code> is instantiated using plain Java, therefore it is not possible to use <code class="highlighter-rouge">@Inject</code> in its constructor.</p>
-
+  <span class="comment">// do somehting with myOtherClass;</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note, that dependency injection is only available for objects which are instantiated by the dependency injection framework. In the example above, the class <code>MyOtherClass</code> is instantiated using plain Java, therefore it is not possible to use <code>@Inject</code> in its constructor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="providing-objects">Providing Objects</h2>
-
-<p>Implementing an object provider serves two purposes when writing an extension:</p>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Implementing an object provider serves two purposes when writing an extension: * First, you can consume the objects that you provide from within other custom classes.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-    <p>First, you can consume the objects that you provide from within other custom classes.</p>
-  </li>
-  <li>
-    <p>Second, the provided classes can be consumed by the Che framework.</p>
-  </li>
+<li>
+<p>Second, the provided classes can be consumed by the Che framework.</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>As an example, if you provide a wizard class, it will be integrated by the Che IDE. Therefore, dependency injection is a core extension mechanism of Che.</p>
-
+</div>
+<div class="paragraph">
 <p>To provide custom objects, you implement a module class. It is responsible to create the objects to be injected as well as register them using the type and optionally a key. Depending on the general structure of your extension, you could add as many modules as you like, however, most extensions use only one module for the client (Gin) and one for the server part (Guice).</p>
+</div>
+<div class="paragraph">
+<p>The following code example shows a simple Guice module. All Guice modules inherit from AbstractModule and are marked with the annotation <code>@DynaModule</code>, which registers the module itself to be executed by Guice. The mandatory method <code>#configure</code> is responsible for the registration of objects. We will not go into detail about all the different options of Guice/Gin, but focus on relevant use cases in Che. In the following code example, we register a custom object (<code>CustomObject</code>), which implements an existing Che type (<code>ExistingCheType</code>). The Che type defines an extension point for Che, e.g. a wizard.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CustomObject</span> <span class="directive">implements</span> ExistingCheType {
+  <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we register our custom object using the type and therefore make it available for the Che framework. To register and to retrieve the object, the type <code>ExistingCheType</code> is used as an identifier. In the example, there can be an arbitrary number of objects implementing <code>ExistingCheType</code>, so Che will retrieve a set of objects. To register the object, we create a new <code>Set Binder</code> for the type <code>ExistingCheType</code>. Then, we add a binding and register the custom object. The <code>CustomObject</code> will be instantiated by the framework using dependency injection. Therefore, the <code>@Inject</code> annotation can be used in the constructor of <code>CustomObject</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.eclipse.che.inject.DynaModule</span>;
+<span class="keyword">import</span> <span class="include">com.google.inject.AbstractModule</span>;
+<span class="keyword">import</span> <span class="include">com.google.inject.multibindings.Multibinder</span>;
 
-<p>The following code example shows a simple Guice module. All Guice modules inherit from AbstractModule and are marked with the annotation <code class="highlighter-rouge">@DynaModule</code>, which registers the module itself to be executed by Guice. The mandatory method <code class="highlighter-rouge">#configure</code> is responsible for the registration of objects. We will not go into detail about all the different options of Guice/Gin, but focus on relevant use cases in Che. In the following code example, we register a custom object (<code class="highlighter-rouge">CustomObject</code>), which implements an existing Che type (<code class="highlighter-rouge">ExistingCheType</code>). The Che type defines an extension point for Che, e.g. a wizard.</p>
+<span class="annotation">@DynaModule</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyGuiceModule</span> <span class="directive">extends</span> AbstractModule {
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomObject</span> <span class="kd">implements</span> <span class="n">ExistingCheType</span> <span class="o">{</span>
-  <span class="c1">// ...</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>Now, we register our custom object using the type and therefore make it available for the Che framework. To register and to retrieve the object, the type <code class="highlighter-rouge">ExistingCheType</code> is used as an identifier. In the example, there can be an arbitrary number of objects implementing <code class="highlighter-rouge">ExistingCheType</code>, so Che will retrieve a set of objects. To register the object, we create a new <code class="highlighter-rouge">Set Binder</code> for the type <code class="highlighter-rouge">ExistingCheType</code>. Then, we add a binding and register the custom object. The <code class="highlighter-rouge">CustomObject</code> will be instantiated by the framework using dependency injection. Therefore, the <code class="highlighter-rouge">@Inject</code> annotation can be used in the constructor of <code class="highlighter-rouge">CustomObject</code>.</p>
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> configure() {
+        Multibinder.newSetBinder(binder(), ExistingCheType.class)
+                   .addBinding()
+                   .to(CustomObject.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Gin modules inherit from <code>AbstractGinModule</code> and use the <code>@ExtensionGinModule</code> annotation. Gin has a different <a href="https://code.google.com/p/google-gin/wiki/GinTutorial">binding mechanism than Guice</a>, however, for the typical use case, the code would look the same:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.eclipse.che.ide.api.extension.ExtensionGinModule</span>;
+<span class="keyword">import</span> <span class="include">com.google.gwt.inject.client.AbstractGinModule</span>;
+<span class="keyword">import</span> <span class="include">com.google.gwt.inject.client.multibindings.GinMultibinder</span>;
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.eclipse.che.inject.DynaModule</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.google.inject.AbstractModule</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.google.inject.multibindings.Multibinder</span><span class="o">;</span>
+<span class="annotation">@ExtensionGinModule</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyGinModule</span> <span class="directive">extends</span> AbstractGinModule {
 
-<span class="nd">@DynaModule</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyGuiceModule</span> <span class="kd">extends</span> <span class="n">AbstractModule</span> <span class="o">{</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">Multibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">ExistingCheType</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-                   <span class="o">.</span><span class="na">addBinding</span><span class="o">()</span>
-                   <span class="o">.</span><span class="na">to</span><span class="o">(</span><span class="n">CustomObject</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>Gin modules inherit from <code class="highlighter-rouge">AbstractGinModule</code> and use the <code class="highlighter-rouge">@ExtensionGinModule</code> annotation. Gin has a different <a href="https://code.google.com/p/google-gin/wiki/GinTutorial">binding mechanism than Guice</a>, however, for the typical use case, the code would look the same:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.eclipse.che.ide.api.extension.ExtensionGinModule</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.AbstractGinModule</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.google.gwt.inject.client.multibindings.GinMultibinder</span><span class="o">;</span>
-
-<span class="nd">@ExtensionGinModule</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyGinModule</span> <span class="kd">extends</span> <span class="n">AbstractGinModule</span> <span class="o">{</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">configure</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">GinMultibinder</span><span class="o">.</span><span class="na">newSetBinder</span><span class="o">(</span><span class="n">binder</span><span class="o">(),</span> <span class="n">ExistingCheType</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-                      <span class="o">.</span><span class="na">addBinding</span><span class="o">()</span>
-                      <span class="o">.</span><span class="na">to</span><span class="o">(</span><span class="n">CustomObject</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<p>As an alternative to the registration above, objects can also be registered using methods marked with the <code class="highlighter-rouge">@Provides</code> annotation. The following example provides a simple object, which only needs to be instantiated once (<code class="highlighter-rouge">@Singleton</code>). In this example, the registration additionally contains a key specified by the <code class="highlighter-rouge">@Named</code> annotation. Please note that in this case, the <code class="highlighter-rouge">CustomObject</code> is created manually, so no dependency injection can be used within it. The following method is placed in your custom Gin/Guice module.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Provides</span>
-<span class="nd">@Singleton</span>
-<span class="nd">@Named</span><span class="o">(</span><span class="s">"MyID"</span><span class="o">)</span>
-<span class="kd">protected</span> <span class="n">FileType</span> <span class="nf">provideMyClass</span><span class="o">()</span> <span class="o">{</span>
-    	<span class="k">return</span> <span class="k">new</span> <span class="nf">MyClass</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></div></div>
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> configure() {
+        GinMultibinder.newSetBinder(binder(), ExistingCheType.class)
+                      .addBinding()
+                      .to(CustomObject.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As an alternative to the registration above, objects can also be registered using methods marked with the <code>@Provides</code> annotation. The following example provides a simple object, which only needs to be instantiated once (<code>@Singleton</code>). In this example, the registration additionally contains a key specified by the <code>@Named</code> annotation. Please note that in this case, the <code>CustomObject</code> is created manually, so no dependency injection can be used within it. The following method is placed in your custom Gin/Guice module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Provides</span>
+<span class="annotation">@Singleton</span>
+<span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">MyID</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">protected</span> FileType provideMyClass() {
+        <span class="keyword">return</span> <span class="keyword">new</span> MyClass();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The examples of dependency injection cover all basic use cases to understand the following extension tutorial. If you want to learn more about the different types of Guice bindings, please refer <a href="https://github.com/google/guice/wiki/Bindings">to this page</a>.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="extension-classes">Extension Classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Besides the extensibility using dependency injections, many custom extensions need to call some Che services or registries on start-up. Therefore, most extensions contain a central class called <code>Extension</code>. To register those classes, Che provides the custom annotation <code>@Extension</code>, which also allows to define a title for the extension. A common example for a class which gets instantiated by Che and which requires parameters is the <code>Extension</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Extension classes will automatically be picked-up by Che on start-up and all methods will be executed using dependency injection. In the following example, the extension class connects <code>SomeParameter</code> to <code>SomeService</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Extension</span>(title = <span class="string"><span class="delimiter">&quot;</span><span class="content">My Extension</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyExtension</span> {
 
-<p>Besides the extensibility using dependency injections, many custom extensions need to call some Che services or registries on start-up. Therefore, most extensions contain a central class called <code class="highlighter-rouge">Extension</code>. To register those classes, Che provides the custom annotation <code class="highlighter-rouge">@Extension</code>, which also allows to define a title for the extension. A common example for a class which gets instantiated by Che and which requires parameters is the <code class="highlighter-rouge">Extension</code> class.</p>
-
-<p>Extension classes will automatically be picked-up by Che on start-up and all methods will be executed using dependency injection. In the following example, the extension class connects <code class="highlighter-rouge">SomeParameter</code> to <code class="highlighter-rouge">SomeService</code>.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Extension</span><span class="o">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">"My Extension"</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyExtension</span> <span class="o">{</span>
-
-	<span class="nd">@Inject</span>
-	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">myInitialization</span><span class="o">(</span>
-        	<span class="kd">final</span> <span class="n">SomeService</span> <span class="n">someService</span><span class="o">,</span>
-        	<span class="kd">final</span> <span class="n">SomeParameter</span> <span class="n">someParameter</span><span class="o">)</span> <span class="o">{</span>
-    		      <span class="n">someService</span><span class="o">.</span><span class="na">doSth</span><span class="o">(</span><span class="n">someParameter</span><span class="o">);</span>
-	           <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> <span class="type">void</span> myInitialization(
+            <span class="directive">final</span> SomeService someService,
+            <span class="directive">final</span> SomeParameter someParameter) {
+                  someService.doSth(someParameter);
+               }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1004,7 +1052,7 @@ In the following, we first describe how to consume objects (in Guice and Gin) an
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

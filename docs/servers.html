@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="workspaceruntimedockerkubernetes,  workspace, runtime, recipe, docker, stack, servers, server, port, preview, preview url, server">
+<meta name="keywords" content="workspaceruntimedockerkubernetes,  workspace, runtime, recipe, docker, stack, servers, server, port, preview, preview url">
 <title>Servers | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="css/syntax.css">
 
@@ -18,6 +18,9 @@
 <link rel="stylesheet" href="css/boxshadowproperties.css">
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
+
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
@@ -843,42 +846,138 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="what-are-servers">What Are Servers</h2>
-
-<p>A server defines protocol and port of a process that runs in a machine. It also has a name and optional attributes, if this is a <code class="highlighter-rouge">special purpose</code> server, for example a [Language Server][TODO: language-servers]. In simple words, if you need to access a process in your workspace machine, you need to add a server. You can do it in User Dashboard or by editing workspace machine config:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"node"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-    </span><span class="s2">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<figure><img class="docimage" src="images/workspaces/servers_dashboard.png" alt="" /></figure>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>A server defines protocol port of a process that runs in a machine. It also has a name, path, attributes. Path defines base path of service that is exposed via server. Attributes are optional and may be used to tune server or identify it if this is a special purpose server, for example a link:TODO: language-servers[Language Server]. In simple words, if you need to access a process in your workspace machine, you need to add a server. You can do it in User Dashboard or by editing workspace machine config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">node</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">port</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">3000</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">protocol</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">path</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributes</span><span class="delimiter">&quot;</span></span>: {}
+}</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/servers_dashboard.png" alt="servers dashboard">
+</div>
+</div>
+<div class="paragraph">
 <p>If your workspace is running, saving a new server will restart a workspace.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="preview-urls">Preview URLs</h2>
-
-<p>Just adding a server with port 3000 does not mean you can use this port to access a server. Each server is assigned with a URL in the runtime, i.e. when a workspace is running. In case of Docker, port 3000 will be published to a random port from the ephemeral port range (32768-65535). In case of OpenShift, a route bound to a service is created. Routes are <strong>persistent URLS</strong>, while server URLS provided in a Docker implementation of Che <strong>change</strong> every time your start a workspace.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>Just adding a server with port 3000 does not mean you can use this port to access a server. Each server is assigned with a URL in the runtime, i.e. when a workspace is running. In case of Docker, port 3000 will be published to a random port from the ephemeral port range (32768-65535). In case of OpenShift, a route bound to a service is created. Routes are <strong>persistent URLS</strong>, while server URLS provided in a Docker implementation of Che <strong>change</strong> every time your start a workspace.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="what-is-my-preview">What Is My Preview?</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Say, you have added a server with port 3000 and started a workspace. There are multiple ways to get its preview URL:</p>
-
+</div>
+<div class="ulist">
 <ul>
-  <li>Using a <a href="commands-ide-macro.html">macro</a> in a command</li>
-  <li>In the IDE, <code class="highlighter-rouge">+</code> icon in the bottom panel under the editor</li>
+<li>
+<p>Using a <a href="commands-ide-macro">macro</a> in a command</p>
+</li>
+<li>
+<p>In the IDE, <code>+</code> icon in the bottom panel under the editor</p>
+</li>
 </ul>
-<figure><img class="docimage" src="images/workspaces/servers.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/servers.png" alt="servers">
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>In User Dashboard, <strong>Workspaces &gt; YourWorkspace &gt; Servers</strong> tab</li>
+<li>
+<p>In User Dashboard, <strong>Workspaces &gt; YourWorkspace &gt; Servers</strong> tab</p>
+</li>
 </ul>
-
+</div>
+<div class="paragraph">
 <p>You will also see URLS of some of the internal servers - agents that server launches when the workspace container/pod is up.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="internal-servers">Internal Servers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sometimes it is needed to expose port for accessing to process internally withing workspace, but public access should be forbidden. An example of such server may be a database which should be exposed only for web application and because of security concerns it should not be accessible publicly. Then server may be exposed as internal.</p>
+</div>
+<div class="paragraph">
+<p>To expose server as internal it is needed to add the corresponding attribute into server config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">db</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">port</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">3200</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">protocol</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">tcp</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributes</span><span class="delimiter">&quot;</span></span>: {
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">internal</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, an application should be able to fetch db URL from workspace runtime and access to database using it while this URL won’t be accessible publicly from browser.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secure-servers">Secure Servers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Server may require to be exposed publicly but access should be restricted only for users which have permissions to workspace. For such cases Che has secure servers concept. Authentication proxy will be set up in from of exposed server and machine token will be required to request it. There are the corresponding attributes for exposing server as secure one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="key"><span class="delimiter">&quot;</span><span class="content">tooling</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">port</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">4921</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">protocol</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributes</span><span class="delimiter">&quot;</span></span>: {
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">secure</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>,
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">unsecuredPaths</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/liveness</span><span class="delimiter">&quot;</span></span>,
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">cookiesAuthEnabled</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>secure - is an attribute that indicates whether server should be exposed as secure one. False value is a default one;</p>
+</li>
+<li>
+<p>unsecuredPaths - is an attribute for configuring secure servers and it contains an comma-separated list of URI-s which are considered as non-secure on the given server and can be accessible without token. It may be needed when server provide any public APIs, like API endpoint for health checks;</p>
+</li>
+<li>
+<p>cookiesAuthEnabled - is an attribute that indicates whether token should be searched in cookies. By default it is disabled. And server developer may enable it if he is sure that his servers can’t be attacked by CSRF or has special protection from it.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that this functionality is in beta phase now and it is disabled by default. The instructions how it can be enabled by in the corresponding section of the <a href="secure-servers.html#how-to-make-secure-servers-working">Secure Servers</a> article.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -915,7 +1014,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

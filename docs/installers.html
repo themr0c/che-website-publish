@@ -19,6 +19,9 @@
 <!-- most color styles are extracted out to here -->
 <link rel="stylesheet" href="css/theme-che.css">
 
+
+    <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
@@ -843,43 +846,72 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div class="sect1">
 <h2 id="what-are-installers">What Are Installers?</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Installers are scripts that are injected into machines in a runtime and get executed there to:</p>
-
-<ol>
-  <li>Prepare environment and download dependencies for particular software or tool</li>
-  <li>Install chosen software and dependencies</li>
-  <li>Launch software and tools in a certain way (arguments, mode etc) that provide extra functionality for a workspace</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Prepare environment and download dependencies for particular software or tool</p>
+</li>
+<li>
+<p>Install chosen software and dependencies</p>
+</li>
+<li>
+<p>Launch software and tools in a certain way (arguments, mode etc) that provide extra functionality for a workspace</p>
+</li>
 </ol>
-
+</div>
+<div class="paragraph">
 <p>Installers are typically language servers and tools that provide features like ssh access to a workspace machine etc. You can find a complete list of available installers in workspace details, Installers tab.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"installers": [
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"installers": [
     "org.eclipse.che.exec",
     "org.eclipse.che.terminal",
     "org.eclipse.che.ws-agent",
     "org.eclipse.che.ssh"
-        ]
-</code></pre></div></div>
-
+        ]</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="how-installers-work">How Installers Work?</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Installers scripts are saved into a configuration file that a <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a> uses to execute its jobs. An installer script is a shell script that works exactly the same way it’d work in your local Linux environment. Che server then checks if the process that an installer has launched is alive.</p>
-
+</div>
+<div class="paragraph">
 <p>There are installers that activate special agents like workspace agent, terminal and exec agent. For example, if a workspace agent fails to start, the workspace will be considered as started but the IDE won’t be usable. Exec agent failure will result in unavailability of commands widget.</p>
-
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="enable-and-disable-installers">Enable and Disable Installers</h2>
-
+<div class="sectionbody">
+<div class="paragraph">
 <p>Installers are can be enabled/disabled in User Dashboard per machine, or directly in workspace machine configuration. When an installer is enabled, bootstrapper executes an installer script after the workspace has started.</p>
-
-<figure><img class="docimage" src="images/workspaces/installers.png" alt="" /></figure>
-
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/workspaces/installers.png" alt="installers">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="installers-failures">Installers Failures</h2>
-
-<p>As installer scripts may expect that a user in the container/pod is in <code class="highlighter-rouge">sudoers</code> .e. have privileges, some of them may fail due to <code class="highlighter-rouge">permission denied</code> issues. This is the case with OpenShift, where a pod is run by an arbitrary user with no permissions to use sudo, and/or access/modify resources on the file system. In most cases, though, this problem can be solved by rebuilding the base image so that it already has all of the dependencies for a particular agents that an installer activates. Another possible issue might be with permissions to files and folders. For example, an installer may need to write to <a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/stack-base/centos/Dockerfile#L45-L57">user home directory</a>.</p>
-
+<div class="sectionbody">
+<div class="paragraph">
+<p>As installer scripts may expect that a user in the container/pod is in <code>sudoers</code> .e. have privileges, some of them may fail due to <code>permission denied</code> issues. This is the case with OpenShift, where a pod is run by an arbitrary user with no permissions to use sudo, and/or access/modify resources on the file system. In most cases, though, this problem can be solved by rebuilding the base image so that it already has all of the dependencies for a particular agents that an installer activates. Another possible issue might be with permissions to files and folders. For example, an installer may need to write to <a href="https://github.com/eclipse/che-dockerfiles/blob/master/recipes/stack-base/centos/Dockerfile#L45-L57">user home directory</a>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -916,7 +948,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 11, 2018 <br/>
+                    Site last generated: Sep 10, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
