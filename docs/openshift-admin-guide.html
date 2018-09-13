@@ -35,7 +35,7 @@
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="images/favicon.ico">
+<link rel="shortcut icon" href="che/docs/images/favicon.ico">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -920,12 +920,12 @@ $('#toc').on('click', 'a', function() {
 </div>
 </li>
 <li>
-<p>In the multi project case, Eclipse Che will use individual user’s OpenShift tokens to create resources <strong>on behalf of the currently logged-in user</strong>. Refer to the <a href="openshift-admin-guide#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</p>
+<p>In the multi project case, Eclipse Che will use individual user’s OpenShift tokens to create resources <strong>on behalf of the currently logged-in user</strong>. Refer to the <a href="openshift-admin-guide.html#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The environment variable <code>CHE_INFRA_OPENSHIFT_PROJECT</code> controls the namespace in which workspace objects are created. In the multi-project case, it should be set to <code>NULL</code> to create workspace objects in different namespaces for each user. In the single project case, if the che service accout does not have cluster-admin rights, it should be set to the same project that hosts the Che server. Refer to the <a href="openshift-config">OpenShift Configuration Guide</a> for more details on how to configure Che.</p>
+<p>The environment variable <code>CHE_INFRA_OPENSHIFT_PROJECT</code> controls the namespace in which workspace objects are created. In the multi-project case, it should be set to <code>NULL</code> to create workspace objects in different namespaces for each user. In the single project case, if the che service accout does not have cluster-admin rights, it should be set to the same project that hosts the Che server. Refer to the <a href="openshift-config.html">OpenShift Configuration Guide</a> for more details on how to configure Che.</p>
 </div>
 </div>
 </div>
@@ -1000,7 +1000,7 @@ $('#toc').on('click', 'a', function() {
 <p><strong>How it Works</strong></p>
 </div>
 <div class="paragraph">
-<p>When a common PVC strategy is used, <strong>all workspaces use the same PVC</strong> to store data declared in their volumes (projects and workspace-logs by default and whatever additional <a href="volumes">volumes</a> that a user can define.)</p>
+<p>When a common PVC strategy is used, <strong>all workspaces use the same PVC</strong> to store data declared in their volumes (projects and workspace-logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
 </div>
 <div class="paragraph">
 <p>In case of a common strategy, an PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
@@ -1024,7 +1024,7 @@ $('#toc').on('click', 'a', function() {
 <p><strong>How to enable common strategy</strong></p>
 </div>
 <div class="paragraph">
-<p>Set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>common</code> in dc/che if you have already deployed Che with unique strategy, or pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to oc new-app command when applying <code>che-server-template.yaml</code>. See: <a href="openshift-multi-user">Deploy to OpenShift</a>.</p>
+<p>Set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>common</code> in dc/che if you have already deployed Che with unique strategy, or pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to oc new-app command when applying <code>che-server-template.yaml</code>. See: <a href="openshift-multi-user.html">Deploy to OpenShift</a>.</p>
 </div>
 <div class="paragraph">
 <p><strong>What’s CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS?</strong></p>
@@ -1093,7 +1093,7 @@ $('#toc').on('click', 'a', function() {
 <p>You can use <strong>IfNotPresent</strong> pull policy (default is Always). Manually edit Che deployment after deployment or add <code>--set cheImagePullPolicy=IfNotPresent</code>.</p>
 </div>
 <div class="paragraph">
-<p>OpenShift admins can pass <code>-p PULL_POLICY=IfNotPresent</code> to <a href="openshift-multi-user">Che deployment</a> or manually edit <code>dc/che</code> after deployment.</p>
+<p>OpenShift admins can pass <code>-p PULL_POLICY=IfNotPresent</code> to <a href="openshift-multi-user.html">Che deployment</a> or manually edit <code>dc/che</code> after deployment.</p>
 </div>
 </div>
 </div>
@@ -1160,7 +1160,7 @@ $('#toc').on('click', 'a', function() {
 </ul>
 </div>
 <div class="paragraph">
-<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash. To configure JSON logging instead of plain text environment variable <code>CHE_LOGS_APPENDERS_IMPL</code> should have value <code>json</code>. See more at <a href="logging">logging docs</a>.</p>
+<p>It is also possible to configure Che master not to store logs, but produce JSON encoded logs to output instead. It may be used to collect logs by systems such as Logstash. To configure JSON logging instead of plain text environment variable <code>CHE_LOGS_APPENDERS_IMPL</code> should have value <code>json</code>. See more at <a href="logging.html">logging docs</a>.</p>
 </div>
 </div>
 </div>
@@ -1340,10 +1340,10 @@ kubectl delete pvc -l=app=postgres</pre>
 <p>Once this is done, every interactive action done by a Che user on workspaces, such as start or stop, will create OpenShift resources under his personal OpenShift account. And the first time the user will try to do it, he will be asked to link his Keycloak account with his personal OpenShift account: which he can do by simply following the provided link in the notification message.</p>
 </div>
 <div class="paragraph">
-<p>But for non-interactive workspace actions, such as workspace stop on idling or Che server shutdown, the account used for operations on OpenShift resources will fall back to the dedicated OpenShift account configured for the Kubernetes infrastructure, as described in the <a href="admin-guide#who-creates-workspace-objects">AdminGuide</a>.</p>
+<p>But for non-interactive workspace actions, such as workspace stop on idling or Che server shutdown, the account used for operations on OpenShift resources will fall back to the dedicated OpenShift account configured for the Kubernetes infrastructure, as described in the <a href="admin-guide.html#who-creates-workspace-objects">AdminGuide</a>.</p>
 </div>
 <div class="paragraph">
-<p>To easily install Che on OpenShift with this feature enabled, see <a href="openshift-multi-user#creating-workspace-resources-in-personal-openshift-accounts-on-minishift">this section for Minishift</a> and <a href="openshift-multi-user#creating-workspace-resources-in-personal-openshift-accounts">this one for OCP</a></p>
+<p>To easily install Che on OpenShift with this feature enabled, see <a href="openshift-multi-user.html#creating-workspace-resources-in-personal-openshift-accounts-on-minishift">this section for Minishift</a> and <a href="openshift-multi-user.html#creating-workspace-resources-in-personal-openshift-accounts">this one for OCP</a></p>
 </div>
 <div class="sect3">
 <h4 id="openshift-identity-provider-registration">OpenShift identity provider registration</h4>
@@ -1353,13 +1353,13 @@ kubectl delete pvc -l=app=postgres</pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>In the <a href="user-management#auth-and-user-management">Keycloak administration console</a>, when adding the OpenShift identity provider, you should use the following settings:</p>
+<p>In the <a href="user-management.html#auth-and-user-management">Keycloak administration console</a>, when adding the OpenShift identity provider, you should use the following settings:</p>
 </li>
 </ol>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/images/keycloak/openshift_identity_provider.png" alt="openshift identity provider">
+<img src="/che/docs/images/keycloak/openshift_identity_provider.png" alt="openshift identity provider">
 </div>
 </div>
 <div class="paragraph">
@@ -1374,7 +1374,7 @@ kubectl delete pvc -l=app=postgres</pre>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/images/git/kc_roles.png" alt="kc roles">
+<img src="/che/docs/images/git/kc_roles.png" alt="kc roles">
 </div>
 </div>
 <div class="olist arabic">
@@ -1463,7 +1463,7 @@ grantMethod: prompt
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Sep 10, 2018 <br/>
+                    Site last generated: Sep 13, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
