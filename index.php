@@ -137,23 +137,22 @@
     <ul>
       <li><img src="images/logo-redhat@2x.png" alt="RedHat" class="img-responsive"></li>
       <li><img src="images/logo-restlet@2x.png" alt="Restlet" class="img-responsive"></li>
-      <li><img src="images/logo-sfdc@2x.png" alt="Salesforce.com" style="width: 190px" class="img-responsive"></li>
       <li><img src="images/logo-samsung@2x.png" alt="Samsung" class="img-responsive"></li>
       <li><img src="images/logo-sap@2x.png" alt="SAP" class="img-responsive"></li>
+      <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
     </ul>
   </div>
   <div class="row">
     <ul>
-      <li><img src="images/logo-serli@2x.png" alt="Serli" class="img-responsive"></li>
       <li><img src="images/logo-silexica@2x.png" alt="Silexica" class="img-responsive"></li>
       <li><img src="images/logo-smartbear@2x.png" alt="SmartBear" class="img-responsive"></li>
       <li><img src="images/logo-software-ag@2x.png" alt="Software AG" class="img-responsive"></li>
       <li><img src="images/logo-tomitribe@2x.png" alt="Tomibrite" class="img-responsive"></li>
+      <li><img src="images/logo-typefox@2x.png" alt="Type Fox" class="img-responsive"></li>
     </ul>
   </div>
   <div class="row">
     <ul>
-      <li><img src="images/logo-typefox@2x.png" alt="Type Fox" class="img-responsive"></li>
       <li><img src="images/logo-wso2@2x.png" alt="WSO2" class="img-responsive"></li>
       <li><img src="images/logo-yatta@2x.png" alt="Yatta" class="img-responsive"></li>
       <li><img src="images/logo-zend@2x.png" style="width: 190px" alt="Zend" class="img-responsive"/></li>
