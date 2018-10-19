@@ -13,7 +13,7 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Extend</h1>
+    <h1>Extend </h1>
     <h3>Get inspired, then extend Che with your own innovations.</h3>
     <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- /.container-fluid -->
@@ -22,31 +22,45 @@
 <div class="tech">
   <div class="container-fluid content">
     <h2>An Extensible, Customizable Platform</h2>
-    <p>Everything is alterable, from stacks to creating assemblies to distribute Che as your own product.</p>
+    <p><b></b></p>
+    <p><b>Plug-ins</b>, to add capabilities to the IDE. Rely on APIs compatible with Visual Studio Code. Plug-ins are isolated and provide their own dependencies packaged in containers.</p>
+    <p><b>Workbenches</b>, to create pre-configured Che workspaces with dedicated set of tools.</p> 
+    <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own, based on Eclipse Theia, or pick existing ones like Jupyter.</p>
+    <p><b>Marketplace</b> (soon), to easily distribute tools and custom IDEs to users and communities which can be tried online. </p>
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <div class="row">
+    
       <div class="col-md-4 col-sm-4">
-        <h4>Stacks</h4>
-        <p>Define workspace runtime templates displayed in the dsahboard.</p>
+        <h4>Programming Languages</h4>
+        <p>Expend the supported languages by relying on the Language Server Protocol.</p>
         <ul>
-          <li><a href="../docs/stacks.html" target="_blank">Add stacks to Che</a></li>
-          <li><a href="https://github.com/eclipse/che-dockerfiles/tree/master/recipes">Stacks included with Che</a></li>
+          <li>Languages</li>
+          <li>Completion Statements</li>
+          <li>Quick Info Tooltips</li>
         </ul>
       </div>
 
       <div class="col-md-4 col-sm-4">
-        <h4>Recipes</h4>
-        <p>Describe a runtime created by a stack with Docker or Compose files.</p>
+        <h4>Debuggers</h4>
+        <p>Extend debug capabilities with the Debug Adapter Protocol.</p>
         <ul>
-          <li><a href="../docs/recipes.html" target="blank">Custom Recipes</a></li>
+          <li>Debug Any Languages</li>
+          <li>Custom Debuggers</li>
+          <li>Custom Debug Configurations</li>
         </ul>
       </div>
 
       <div class="col-md-4 col-sm-4">
-        <h4>Samples</h4>
-        <p>Add project template code to bootstrap the contents of a new project.</p>
+        <h4>Tools Integration</h4>
+        <p>Integrate your favorite tools and build tailored developer experiences.</p>
+        <ul>
+          <li>Linters</li>
+          <li>Testing Tools</li>
+          <li>Performance Tools</li>
+        </ul>
       </div>
+      
 
       <div class="clearfix"></div>
 
@@ -54,26 +68,32 @@
 
     <div class="row">
       <div class="col-md-4 col-sm-4">
-        <h4>Commands</h4>
-        <p>Processes injected into workspaces. Commands can automate actions like compile and previews.</p>
+        <h4>Menus and Commands</h4>
+        <p>Add your own items to the IDE components.</p>
         <ul>
-         <li><a href="docs/commands-ide-macro.html" target="blank">Adding Commands</a></li>
+          <li>Menus</li>
+          <li>Command Palette</li>
+          <li>Views and Panels</li>
+        </ul>
+        </div>
+
+      <div class="col-md-4 col-sm-4">
+        <h4>Themes</h4>
+        <p>Build custom themes, extend the UI and make it your own.</p>
+        <ul>
+          <li>Themes</li>
+          <li>Layout and UI</li>
+          <li>Icon Themes</li>
         </ul>
       </div>
 
       <div class="col-md-4 col-sm-4">
-        <h4>WS Extensions</h4>
-        <p>Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
+        <h4>Editor</h4>
+        <p>Make the default Monaco based editor your home.</p>
         <ul>
-          <li><a href="../docs/framework-overview.html" target="blank">Developing Extensions</a></li>
-        </ul>
-      </div>
-
-      <div class="col-md-4 col-sm-4">
-        <h4>IDE Extensions</h4>
-        <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
-        <ul>
-          <li><a href="../docs/ide-extensions-gwt.html" target="blank">Developing Extensions</a></li>
+          <li>Syntax Colorization</li>
+          <li>Snippets</li>
+          <li>Formatters</li>
         </ul>
       </div>
 
@@ -82,10 +102,18 @@
 
     <div class="row">
       <div class="col-md-4 col-sm-4">
-        <h4>Agents</h4>
-        <p>Software dynamically installed and run within a user's workspace.</p><ul>
+        <h4>Keybindings</h4>
+        <p>Add new keymaps and popular keybindings to make the environment feels natural.</p>
         <ul>
-          <li><a href="../docs/installers.html" target="blank">Workspace Agents</a></li>
+          <li>Keybindings</li>
+        </ul> 
+      </div>
+      
+      <div class="col-md-4 col-sm-4">
+        <h4>Assemblies</h4>
+        <p>A re-packaging of Eclipse Che distributable as a set of containers for public and private Cloud.</p>
+        <ul>
+          <li>White Labelled Cloud IDE</li>
         </ul>
       </div>
 
@@ -97,13 +125,7 @@
         </ul>
       </div>
 
-      <div class="col-md-4 col-sm-4">
-        <h4>Assemblies</h4>
-        <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
-        <ul>
-          <li><a href="../docs/assemblies.html" target="blank">Assembly Lifecycle</a></li>
-        </ul>
-      </div>
+      
 
       <div class="clearfix"></div>
     </div> <!-- .row -->
@@ -118,9 +140,9 @@
 
     <div class="row">
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank" style="text-decoration: none"><img src="../images/logo-extend-codenvy.png" style="height: 111px" alt="Codenvy"></a>
-        <h3><a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank">Codenvy</a></h3>
-        <p>Cloud workspaces for development teams - think of it as "enterprise Che".</p>
+        <a href="<?php echo $rootPath; ?>/extend/more/" target="_blank" style="text-decoration: none"><img src="../images/img-start-plugin.png" style="height: 111px" class="img-responsive" alt="extend-eclipse-che"></a>
+        <h3><a href="<?php echo $rootPath; ?>/extend/more/" target="_blank">Interested to Contribute?</a></h3>
+        <p>Discover how to build Eclipse Che plug-ins and create your custom Cloud IDEs.</p>
       </div>
 
       <div class="col-md-4">
