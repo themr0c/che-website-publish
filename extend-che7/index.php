@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Extend</h1>
-    <h3>From plugins to complete custom cloud tools with Eclipse Che.</h3>
+    <h3>From plug-ins to complete custom cloud tools with Eclipse Che.</h3>
     <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
@@ -23,7 +23,7 @@
   <div class="container-fluid content">
     <h2>An Extensible, Customizable Platform</h2>
     <p><b></b></p>
-    <p><b>Plugins</b>, to quickly add new capabilities to the IDE by leveraging a rich set of extension points compatible with VS Code. Plugins are isolated and provide their own dependencies packaged in containers.</p>
+    <p><b>Plug-ins</b>, to quickly add new capabilities to the IDE by leveraging a rich set of extension points compatible with VS Code. Plug-ins are isolated and provide their own dependencies packaged in containers.</p>
     <p><b>Workbenches</b>, to create pre-configured Che workspaces with dedicated set of tools, available on-demand.</p> 
     <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own, based on Eclipse Theia, or pick popular ones like Jupyter.</p>
     <p><b>Marketplace</b>(soon), to easily distribute tools and custom IDEs to users and communities which can be tried online. </p>
