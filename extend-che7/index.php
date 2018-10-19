@@ -13,7 +13,7 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Extend</h1>
+    <h1>Eclipse Che 7: Extend </h1>
     <h3>From plug-ins to complete custom cloud tools with Eclipse Che.</h3>
     <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- /.container-fluid -->
@@ -23,10 +23,10 @@
   <div class="container-fluid content">
     <h2>An Extensible, Customizable Platform</h2>
     <p><b></b></p>
-    <p><b>Plug-ins</b>, to quickly add new capabilities to the IDE by leveraging a rich set of extension points compatible with VS Code. Plug-ins are isolated and provide their own dependencies packaged in containers.</p>
-    <p><b>Workbenches</b>, to create pre-configured Che workspaces with dedicated set of tools, available on-demand.</p> 
-    <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own, based on Eclipse Theia, or pick popular ones like Jupyter.</p>
-    <p><b>Marketplace</b>(soon), to easily distribute tools and custom IDEs to users and communities which can be tried online. </p>
+    <p><b>Plug-ins</b>, to add capabilities to the IDE. Rely on APIs compatible with Visual Studio Code. Plug-ins are isolated and provide their own dependencies packaged in containers.</p>
+    <p><b>Workbenches</b>, to create pre-configured Che workspaces with dedicated set of tools.</p> 
+    <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own, based on Eclipse Theia, or pick existing ones like Jupyter.</p>
+    <p><b>Marketplace</b> (soon), to easily distribute tools and custom IDEs to users and communities which can be tried online. </p>
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <div class="row">
@@ -45,7 +45,7 @@
         <h4>Debuggers</h4>
         <p>Extend debug capabilities with the Debug Adapter Protocol.</p>
         <ul>
-          <li>Languages</li>
+          <li>Debug Any Languages</li>
           <li>Custom Debuggers</li>
           <li>Custom Debug Configurations</li>
         </ul>
@@ -73,7 +73,7 @@
         <ul>
           <li>Menus</li>
           <li>Command Palette</li>
-          <li>Views And Panels</li>
+          <li>Views and Panels</li>
         </ul>
         </div>
 
@@ -89,7 +89,7 @@
 
       <div class="col-md-4 col-sm-4">
         <h4>Editor</h4>
-        <p>Make the default Monaco based editor your home sweet home.</p>
+        <p>Make the default Monaco based editor your home.</p>
         <ul>
           <li>Syntax Colorization</li>
           <li>Snippets</li>
