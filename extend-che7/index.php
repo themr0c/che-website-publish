@@ -25,8 +25,8 @@
     <p><b></b></p>
     <p><b>Plugins</b>, to quickly add new capabilities to the IDE by leveraging a rich set of extension points compatible with VS Code. Plugins are isolated and provided their own dependencies packaged in containers.</p>
     <p><b>Workbenches</b>, to create pre-configured Che workspaces with dedicated set of tools, available on-demand.</p> 
-    <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own based on Eclipse Theia, or pick popular ones like Jupyter.</p>
-    <p><b>Marketplace</b>(comming soon), to easily distribute tools and custom IDEs to users which can be tried online without </p>
+    <p><b>Alternate IDEs</b>, to provide specialized tooling within Eclipse Che. Build your own, based on Eclipse Theia, or pick popular ones like Jupyter.</p>
+    <p><b>Marketplace</b>(comming soon), to easily distribute tools and custom IDEs to users and communities which can be tried online. </p>
     <img alt="" class="img-responsive" src="../images/hero-home-technology.png" />
 
     <div class="row">
@@ -45,9 +45,9 @@
         <h4>Debuggers</h4>
         <p>Extend debug capabilities with the Debug Adapter Protocol.</p>
         <ul>
-          <li>Add New Debuggers</li>
-          <li>S</li>
-          <li></li>
+          <li>Support New Programming Language</li>
+          <li>Add Debuggers</li>
+          <li>Provide Custom Debug Configuration</li>
         </ul>
       </div>
 
@@ -69,19 +69,31 @@
     <div class="row">
       <div class="col-md-4 col-sm-4">
         <h4>Menus and Commands</h4>
-        <p>Extend the different menus and commands to provided deProcesses injected into workspaces. Commands can automate actions like compile and previews.</p>
-      </div>
+        <p>Add your own items to the IDE components.</p>
+        <ul>
+          <li>Extend Menus</li>
+          <li>Enrich Command Palette</li>
+          <li>Add New Views</li>
+        </ul>
+        </div>
 
       <div class="col-md-4 col-sm-4">
         <h4>Themes</h4>
-        <p>Build custom themes Modify the runtime behavior of the workspace with code that runs in agents with access to projects.</p>
+        <p>Build custom themes, extend the UI and make it your own.</p>
+        <ul>
+          <li>Add Themes</li>
+          <li>Customize Layout and Views</li>
+          <li>Build Icon Themes</li>
+        </ul>
       </div>
 
       <div class="col-md-4 col-sm-4">
         <h4>Editor</h4>
-        <p>Modify the behavior of the browser IDE with new views, actions, look, perspectives, and wizards.</p>
+        <p>Make the Monaco based editor your home sweet home.</p>
         <ul>
-          <li><a href="../docs/ide-extensions-gwt.html" target="blank">Developing Extensions</a></li>
+          <li>Extend Syntax Colorization with Textmate or Monarchr</li>
+          <li>Add Snippets</li>
+          <li>Extend Code Formatters</li>
         </ul>
       </div>
 
@@ -91,17 +103,17 @@
     <div class="row">
       <div class="col-md-4 col-sm-4">
         <h4>Keybindings</h4>
-        <p>Software dynamically installed and run within a user's workspace.</p><ul>
+        <p>Add new keymaps and popular keybindings to make the environment feels natural.</p>
         <ul>
-          <li><a href="../docs/installers.html" target="blank">Workspace Agents</a></li>
-        </ul>
+          <li>Custom Keybindings</li>
+        </ul> 
       </div>
       
       <div class="col-md-4 col-sm-4">
         <h4>Assemblies</h4>
-        <p>A re-packaging of Eclipse Che distributable as a new desktop IDE application or server.</p>
+        <p>A re-packaging of Eclipse Che distributable as a set of containers for public and private Cloud.</p>
         <ul>
-          <li><a href="../docs/assemblies.html" target="blank">Assembly Lifecycle</a></li>
+          <li>White Labelled Cloud IDE</li>
         </ul>
       </div>
 
