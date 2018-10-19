@@ -13,8 +13,8 @@
 
 <div class="jumbotron">
   <div class="container-fluid">
-    <h1>Eclipse Che 7: Extend </h1>
-    <h3>From plug-ins to complete custom cloud tools with Eclipse Che.</h3>
+    <h1>Extend </h1>
+    <h3>Get inspired, then extend Che with your own innovations.</h3>
     <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
