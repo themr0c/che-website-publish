@@ -15,7 +15,7 @@
   <div class="container-fluid">
     <h1>Extend </h1>
     <h3>Get inspired, then extend Che with your own innovations.</h3>
-    <img alt="" src="../images/hero-technology.png" />
+    <img alt="" class="img-responsive" src="../images/hero-technology@2x.png" />
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
