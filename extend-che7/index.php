@@ -140,9 +140,9 @@
 
     <div class="row">
       <div class="col-md-4">
-        <a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank" style="text-decoration: none"><img src="../images/logo-extend-codenvy.png" style="height: 111px" alt="Codenvy"></a>
-        <h3><a href="<?php echo $rootPath; ?>/extend/codenvy/" target="_blank">Codenvy</a></h3>
-        <p>Cloud workspaces for development teams - think of it as "enterprise Che".</p>
+        <a href="<?php echo $rootPath; ?>/extend/more/" target="_blank" style="text-decoration: none"><img src="../images/img-start-plugin.png" style="height: 111px" class="img-responsive" alt="extend-eclipse-che"></a>
+        <h3><a href="<?php echo $rootPath; ?>/extend/more/" target="_blank">Interested to Contribute?</a></h3>
+        <p>Discover how to build Eclipse Che plug-ins and create your custom Cloud IDEs.</p>
       </div>
 
       <div class="col-md-4">
