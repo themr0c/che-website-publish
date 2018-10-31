@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-md-6">
         <h3>SaaS</h3>
-        <p>Self-service Che workspaces hosted at Codenvy.io</p>
+        <p>Self-service Che workspaces hosted at che.openshift.io</p>
         <a href="<?php echo $rootPath; ?>/getting-started/cloud/" class="btn-yellow">Create Free Account</a></li>
 
       </div>
