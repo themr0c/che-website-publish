@@ -1,4 +1,5 @@
 <?php 
+
   include 'includes/variables.php';
 
   // Define page title
