@@ -7,35 +7,35 @@
 <meta name="description" content="">
 <meta name="keywords" content="installationkubernetes,  openshift, configuration, admin guide">
 <title>Che on OpenShift: Admin Guide | Eclipse Che Documentation</title>
-<link rel="stylesheet" href="/css/syntax.css">
+<link rel="stylesheet" href="css/syntax.css">
+
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
-<link rel="stylesheet" href="/css/modern-business.css">
+<link rel="stylesheet" href="css/modern-business.css">
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href="/css/customstyles.css">
-<link rel="stylesheet" href="/css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
 <!-- most color styles are extracted out to here -->
-<link rel="stylesheet" href="/css/theme-che.css">
+<link rel="stylesheet" href="css/theme-che.css">
 
 
     <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
-    <link rel="stylesheet" href="/css/asciidoc.css" type="text/css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
-<script src="/js/jquery.navgoco.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
 
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!-- Anchor.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
-<script src="/js/toc.js"></script>
-<script src="/js/customscripts.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="/images/favicon.ico">
+<link rel="shortcut icon" href="che/docs/images/favicon.ico">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -135,21 +135,6 @@
                 
                 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Che Version<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        
-                        
-                        <li><a href="/index6.html">Che 6</a></li>
-                        
-                        
-                        
-                        <li><a href="/che-7/index.html">Che 7 Beta</a></li>
-                        
-                        
-                    </ul>
-                </li>
-                
-                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Support<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         
@@ -186,12 +171,12 @@
                         <input type="text" id="search-input" placeholder="search...">
                         <ul id="results-container"></ul>
                     </div>
-                    <script src="/js/jekyll-search.js" type="text/javascript"></script>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
                     <script type="text/javascript">
                             SimpleJekyllSearch.init({
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
-                                dataSource: '/search.json',
+                                dataSource: 'search.json',
                                 searchResultTemplate: '<li><a href="{url}" title="Che on OpenShift: Admin Guide">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
@@ -230,7 +215,7 @@
           
           
           
-          <li><a href="index6.html">Introduction</a></li>
+          <li><a href="index.html">Introduction</a></li>
           
           
           
@@ -865,156 +850,116 @@ $('#toc').on('click', 'a', function() {
 <h2 id="examples">Examples</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All examples use the <code>kubectl</code> command. OpenShift administrators should use the <code>oc</code> command.</p>
+<p>All examples use <code>kubectl</code> command. OpenShift admins should use <code>oc</code></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="ram-prerequisites">RAM prerequisites</h2>
+<h2 id="ram">RAM</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="single-user-prerequisites">Single user prerequisites</h3>
 <div class="paragraph">
-<p>3 GB of RAM is required for single-user Che on OpenShift.</p>
+<p><strong>Single User</strong></p>
 </div>
 <div class="paragraph">
-<p>Single-user Che uses RAM in this distribution:</p>
+<p>Che server pod consumes up to 1GB RAM. The initial request is 256MB, and server pod rarely consumes more than 800MB. A typical workspace will require 2GB. So, <strong>3GB</strong> is a minimum to try single user Che on OpenShift/Kubernetes.</p>
+</div>
+<div class="paragraph">
+<p><strong>Multi-User</strong></p>
+</div>
+<div class="paragraph">
+<p>Depending on whether or not you deploy Che bundled with Keycloak auth server and Postgres database, RAM requirements for a multi-user Che installation can vary.</p>
+</div>
+<div class="paragraph">
+<p>When deployed with Keycloak and Postgres, your Kubernetes cluster should have <strong>at least 5GB RAM</strong> available - 3GB go to Che deployments:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Che server pod uses up to 1 GB of RAM. The initial request for RAM is 256 MB. The Che server pod rarely uses more than 800 MB RAM.</p>
+<p>~750MB for Che server</p>
 </li>
 <li>
-<p>Workspaces use 2 GB of RAM.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="multi-user-prerequisites">Multi-user prerequisites</h3>
-<div class="paragraph">
-<p>You must have at least 5 GB of RAM to run multi-user Che. The Keycloak authorization server and PostgreSQL database require the extra RAM. Multi-user Che uses RAM in this distribution:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Che server: approximately 750 MB</p>
+<p>~1GB for Keycloak</p>
 </li>
 <li>
-<p>Keycloak: approximately 1 GB</p>
+<p>~515MB for Postgres)</p>
 </li>
 <li>
-<p>PostgreSQL: approximately 515 MB</p>
-</li>
-<li>
-<p>Workspaces: 2 GB of RAM per workspace. The total workspace RAM depends on the size of the workspace runtime(s) and the number of concurrent workspace pods.</p>
+<p>min 2GB should be reserved to run at least one workspace. The total RAM required for running workspaces will grow depending on the size of your workspace runtime(s) and the number of concurrent workspace pods you run.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="requirements-for-resource-allocation-and-quotas">Requirements for resource allocation and quotas</h2>
+<h2 id="resource-allocation-and-quotas">Resource Allocation and Quotas</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Workspace pods are created in the account of the user who deploys Che.  The user needs enough quota for RAM, CPU, and storage to create that pod.</p>
+<p>All workspace pods are created either in the same namespace with Che itself, a dedicated namespace, or a new namespace is created for every workspace.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, an account where Che pods are created (including workspace pods) should have reasonable quotas for RAM, CPU and storage, otherwise, workspace pods won’t be created.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-the-project-workspace">Setting up the project workspace</h2>
+<h2 id="who-creates-workspace-objects">Who Creates Workspace Objects?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Workspace objects are created differently depending on the configuration. Eclipse Che currently supports two different configurations:</p>
+<p>Eclipse Che currently supports two different configurations: in the single OpenShift project case, workspace objects are created using a service account that can be configured for Che server, whereas in the multi OpenShift project case, workspace objects are created on behalf of each OpenShift user as they use Eclipse Che. As Eclipse Che communicates with the Kubernetes/OpenShift API through the fabric8 client, an authorization token is required.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Single OpenShift project</p>
-</li>
-<li>
-<p>Multi OpenShift project</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="setting-up-a-single-openshift-project">Setting up a single OpenShift project</h3>
-<div class="paragraph">
-<p>To setup a single OpenShift project:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Define the service account used to create workspace objects with the <code>CHE_OPENSHIFT_SERVICEACCOUNTNAME</code> variable.</p>
-</li>
-<li>
-<p>To ensure this service account is visible to the Che server, put the service and the Che server in the same namespace.</p>
-</li>
-<li>
-<p>Give the service account permissions to create and edit OpenShift resources.</p>
-</li>
-<li>
-<p>If the developer needs to create an object outside of the service accounts bound namespace, give the service account cluster-admin rights by running this command:</p>
+<p>In the single project case, the environment variable <code>CHE_OPENSHIFT_SERVICEACCOUNTNAME</code> governs which service account is used to create workspace objects. This service account must be visible to the Che server (i.e. in the same namespace) and have appropriate permissions to create and edit OpenShift resources. This means that if objects are to be created outside of the service accounts bound namespace the service account will require cluster-admin rights, which can be enabled by an admin via the <code>oc</code> CLI:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che</pre>
+<pre>oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:eclipse-che:che
+
+# eclipse-che is Che namespace</pre>
 </div>
 </div>
 </li>
-</ol>
+<li>
+<p>In the multi project case, Eclipse Che will use individual user’s OpenShift tokens to create resources <strong>on behalf of the currently logged-in user</strong>. Refer to the <a href="openshift-admin-guide.html#create-workspace-objects-in-personal-namespaces">OpenShift Admin Guide</a> for more details about how it works.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>In the command above, <code>eclipse-che</code> is the Che namespace.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="setting-up-a-multi-openshift-project">Setting up a multi OpenShift project</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>To create workspace objects in different namespaces for each user, set the <code>NULL_CHE_INFRA_OPENSHIFT_PROJECT</code> variable to NULL.</p>
-</li>
-<li>
-<p>To create resources on behalf of the currently logged-in user, use the user’s OpenShift tokens.</p>
-</li>
-</ol>
-</div>
+<p>The environment variable <code>CHE_INFRA_OPENSHIFT_PROJECT</code> controls the namespace in which workspace objects are created. In the multi-project case, it should be set to <code>NULL</code> to create workspace objects in different namespaces for each user. In the single project case, if the che service accout does not have cluster-admin rights, it should be set to the same project that hosts the Che server. Refer to the <a href="openshift-config.html">OpenShift Configuration Guide</a> for more details on how to configure Che.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="how-the-che-server-uses-PVCs-and-PVs-for-storage">How the Che server uses PVCs and PVs for storage</h2>
+<h2 id="storage-overview">Storage Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Che server, Keycloak, PostgreSQL, and workspace pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. When the deployment YAML files run, they define the Che PVCs. You can configure <a href="#che-workspaces-storage">workspace PVC</a> access mode and claim size with Che deployment environment variables.</p>
+<p>Che server, Keycloak and Postgres pods, as well as workspace pods use PVCs that are then bound to PVs with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. Che PVCs are defined in deployment yamls, while <a href="#che-workspaces-storage">workspace PVC</a> access mode and claim size is configurable through Che deployment environment variables.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="storage-requirements-for-che-infrastructure">Storage requirements for Che infrastructure</h2>
+<h2 id="che-infrastructure-storage">Che Infrastructure: Storage</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Che server: 1 GB to store logs and initial workspace stacks.</p>
+<p>Che server claims 1GB to store logs and initial workspace stacks. PVC mode is RWO</p>
 </li>
 <li>
-<p>Keycloak: 2 PVCs, 1 GB each to store logs and Keycloak data.</p>
+<p>Keycloak needs 2 PVCs, 1Gb each to store logs and Keycloak data</p>
 </li>
 <li>
-<p>PostgreSQL: 1 GB PVC to store database.</p>
+<p>Postgres needs one 1GB PVC to store db</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="storage-strategies-for-che-workspaces">Storage strategies for Che workspaces</h2>
+<h2 id="che-workspaces-storage">Che Workspaces: Storage</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The workspace PVC strategy is configurable:</p>
+<p>As said above, che workspace PVC access type and claim size is configurable, and so is a workspace PVC strategy:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1033,49 +978,32 @@ $('#toc').on('click', 'a', function() {
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique (default)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">one PVC per workspace</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces, sub-paths pre-created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">easy to manage and control storage. no need to recycle PVs when pod with pvc is deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ws pods should all be in one namespace</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces, Sub-paths pre-created</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No need to recyle PVs when pod with PVC is deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PVC per workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="unique-pvc-strategy">Unique PVC strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To define the unique strategy:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> is set to <code>unique</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. Workspace PVC is deleted when a corresponding workspace is deleted.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="common-pvc-strategy">Common PVC Strategy</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="how-the-common-pvc-strategy-works">How the common PVC strategy works</h3>
 <div class="paragraph">
-<p>All workspaces use the same PVC to store data declared in their volumes (projects and workspace logs by default and whatever additional <a href="volumes">volumes</a> that a user can define.)</p>
+<p><strong>How it Works</strong></p>
 </div>
 <div class="paragraph">
-<p>A PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
+<p>When a common PVC strategy is used, <strong>all workspaces use the same PVC</strong> to store data declared in their volumes (projects and workspace-logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
+</div>
+<div class="paragraph">
+<p>In case of a common strategy, an PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1087,133 +1015,85 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>Volumes can be anything that a user defines as volumes for workspace machines.  The volume name is equal to the directory name in <code>${PV}/${ws-id}</code>.</p>
+<p>Directory names are self explaining. Other volumes can be anything that a user defines as volumes for workspace machines (volume name == directory name in <code>${PV}/${ws-id}</code>)</p>
 </div>
 <div class="paragraph">
 <p>When a workspace is deleted, a corresponding subdirectory (<code>${ws-id}</code>) is deleted in the PV directory.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="enabling-a-common-strategy">Enabling a common strategy</h3>
 <div class="paragraph">
-<p>If you have already deployed Che with unique strategy:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>common</code> in dc/che.</p>
-</li>
-</ul>
+<p><strong>How to enable common strategy</strong></p>
 </div>
 <div class="paragraph">
-<p>If applying the <code>che-server-template.yaml</code>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to the <code>oc new-app</code> command.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>For pre 1.6 Kubernetes, you need to set the <code>CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS</code> variable to <code>true</code>.</p>
-</li>
-<li>
-<p>For Kubernetes older than 1.6, setting this variable to <code>true</code> is not a requirement.</p>
-</li>
-</ol>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="restrictions-on-using-common-pvc-strategy">Restrictions on using common PVC strategy</h3>
-<div class="paragraph">
-<p>When a common strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one Kubernetes node can simultaneously use PVC.  If there are several nodes, you can use a common strategy, but the workspace PVC access mode is ReadWriteMany (RWM). Multiple nodes can use this PVC simultaneously.</p>
+<p>Set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>common</code> in dc/che if you have already deployed Che with unique strategy, or pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to oc new-app command when applying <code>che-server-template.yaml</code>. See: <a href="openshift-multi-user.html">Deploy to OpenShift</a>.</p>
 </div>
 <div class="paragraph">
-<p>To change the access mode for workspace PVCs, pass the <code>CHE_INFRA_KUBERNETES_PVC_ACCESS_MODE=ReadWriteMany</code> environment variable to Che deployment either when initially deploying Che or through the Che deployment update.</p>
+<p><strong>What’s CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS?</strong></p>
 </div>
 <div class="paragraph">
-<p>Another restriction is that only pods in the same namespace can use the same PVC.  The <code>CHE_INFRA_KUBERNETES_PROJECT</code> environment variable should not be empty.  It should be either the Che server namespace where objects can be created with the Che service account (SA) or a dedicated namespace where a token or a username and password need to be used.</p>
+<p>Pre 1.6 Kubernetes created subpaths within a PV with invalid permissions, sot hat a user in a running container was unable to write to mounted directories. When <code>CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS</code> is <code>true</code>, and a common strategy is used, a special pod is started before workspace pod is schedules, to pre-create subpaths in PV with the right permissions. You don’t need to set it to true if you have Kubernetes 1.6+.</p>
 </div>
+<div class="paragraph">
+<p><strong>Restrictions</strong></p>
+</div>
+<div class="paragraph">
+<p>When a common strategy is used, and a workspace PVC access mode is RWO, only one Kubernetes node can simultaneously use PVC. You’re fine if your Kubernetes/OpenShift cluster has just one node. If there are several nodes, a common strategy can still be used, but in this case, workspace PVC access mode should be RWM, ie multiple nodes should be able to use this PVC simultaneously (in fact, you may sometimes have some luck and all workspaces will be scheduled on the same node). You can change access mode for workspace PVCs by passing environment variable <code>CHE_INFRA_KUBERNETES_PVC_ACCESS_MODE=ReadWriteMany</code> to che deployment either when initially deploying Che or through che deployment update.</p>
+</div>
+<div class="paragraph">
+<p>Another restriction is that only pods in the same namespace can use the same PVC, thus, <code>CHE_INFRA_KUBERNETES_PROJECT</code> env variable should not be empty - it should be either Che server namespace (in this case objects can be created with che SA) or a dedicated namespace (token or username/password need to be used).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="updating-your-che-deployment">Updating your Che deployment</h2>
+<h2 id="unique-pvc-strategy">Unique PVC Strategy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To update Che deployment:</p>
+<p>It is a default PVC strategy, i.e. <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> is set to <code>unique</code>. Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. Workspace PVC is deleted when a corresponding workspace is deleted.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Change the image tag:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="update">Update</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>You can change the image tag in one of the following ways:</p>
+<p>An update implies updating Che deployment with new image tags. There are multiple ways to update a deployment:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Run the <code>kubeclt edit dc/che</code> command.</p>
+<p><code>kubeclt edit dc/che</code> - and just manually change image tag used in the deployment</p>
 </li>
 <li>
-<p>In the OpenShift web console, select: <strong>deployments &gt; edit yaml &gt; image:tag</strong>.</p>
+<p>manually in OpenShift web console &gt; deployments &gt; edit yaml &gt; image:tag</p>
 </li>
 <li>
-<p>Using the Docker service, run this command: <code>kubectl set image dc/che che=eclipse/che-server:${VERSION} --source=docker</code>.</p>
+<p><code>kubectl set image dc/che che=eclipse/che-server:${VERSION} --source=docker</code></p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>Update Keycloak and PostgreSQL deployments (optional):</p>
+<div class="paragraph">
+<p>Config change will trigger a new deployment. In most cases, using older Keycloak and Postgres images is OK, since changes to those are very rare. However, you may update Keycloak and Postgres deployments:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Run the <code>eclipse/che-keycloak</code> command.</p>
+<p>eclipse/che-keycloak</p>
 </li>
 <li>
-<p>Run the <code>eclipse/che-postgres</code> command.</p>
+<p>eclipse/che-postgres</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>You can get the list of available versions at <a href="https://github.com/eclipse/che/tags">Che GitHub page</a>.</p>
 </div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Change the pull policy (optional):</p>
 <div class="paragraph">
-<p>To change the pull policy, do one of the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Add  <code>--set cheImagePullPolicy=IfNotPresent</code> to the <a href="openshift-multi-user">Che deployment</a>.</p>
-</li>
-<li>
-<p>Manually edit <code>dc/che</code> after deployment.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
+<p>Since <code>nightly</code> is the default tag used in Che deployment, and image pull policy is set to Always, triggering a new deployment, will pull a newer image, if available.</p>
 </div>
 <div class="paragraph">
-<p>The default pull policy is <code>Always</code>. The default tag is <code>nightly</code>. This tag sets the image pull policy to <code>Always</code> and triggers a new deployment with a newer image, if available.</p>
+<p>You can use <strong>IfNotPresent</strong> pull policy (default is Always). Manually edit Che deployment after deployment or add <code>--set cheImagePullPolicy=IfNotPresent</code>.</p>
+</div>
+<div class="paragraph">
+<p>OpenShift admins can pass <code>-p PULL_POLICY=IfNotPresent</code> to <a href="openshift-multi-user.html">Che deployment</a> or manually edit <code>dc/che</code> after deployment.</p>
 </div>
 </div>
 </div>
@@ -1221,7 +1101,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="scalability">Scalability</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>.  An error message is returned when the system is out of resources.</p>
+<p>To be able to run more workspaces, <a href="https://kubernetes.io/docs/concepts/architecture/nodes/#management">add more nodes to your Kubernetes cluster</a>. If the system is out of resources, workspace start will fail with an error message returned from Kubernetes (usually it’s <code>no available nodes</code> kind of error).</p>
 </div>
 </div>
 </div>
@@ -1229,20 +1109,23 @@ $('#toc').on('click', 'a', function() {
 <h2 id="gdpr">GDPR</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To delete data or request the administrator to delete data, run this command with the user or administrator token:</p>
+<p>In case the user wants to delete their data or requested the admininistrator to do that, there is an API method for that purpose:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X DELETE http://che-server/api/user/{id}</pre>
+<pre>curl -X DELETE http://che-server/api/user/{id}</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Use the above command with the user or administrator token.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="debug-mode">Debug mode</h2>
+<h2 id="debug-mode">Debug Mode</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run Che Server in debug mode, set the following environment variable in the Che deployment to <code>true</code> (default is <code>false</code>):</p>
+<p>If you want Che server to run in a debug mode set the following env in Che deployment to true (false by default):</p>
 </div>
 <div class="paragraph">
 <p><code>CHE_DEBUG_SERVER=true</code></p>
@@ -1250,32 +1133,29 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="private-docker-registries">Private Docker registries</h2>
+<h2 id="private-docker-registries">Private Docker Registries</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Refer to <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">Kubernetes documentation</a>.</p>
+<p>Refer to <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">Kubernetes documentation</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-server-logs">Che server logs</h2>
+<h2 id="che-server-logs">Che Server Logs</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The PVC <code>che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV after Eclipse Che deploys to Kubernetes. Logs are persisted in a PV.</p>
-</div>
-<div class="paragraph">
-<p>To retrieve logs, do one of the following:</p>
+<p>When Eclipse Che gets deployed to Kubernetes, a PVC <code>che-data-volume</code> is <a href="https://github.com/eclipse/che/blob/master/deploy/kubernetes/kubectl/che-kubernetes.yaml#L26">created</a> and bound to a PV. Logs are persisted in a PV and can be retrieved in the following ways:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Run the <code>kubectl get log dc/che</code> command.</p>
+<p><code>kubectl get log dc/che</code></p>
 </li>
 <li>
-<p>Run the <code>kubectl describe pvc che-data-claim</code> command to find the PV. Next, run the <code>oc describe pv $pvName</code> command with the PV to get a local path with the logs directory. Be careful with permissions for that directory, since once changed, Che server will not be able to write to a file.</p>
+<p><code>kubectl describe pvc che-data-claim</code>, find PV it is bound to, then <code>oc describe pv $pvName</code>, you will get a local path with logs directory. Be careful with permissions for that directory, since once changed, Che server wont be able to write to a file</p>
 </li>
 <li>
-<p>In the Kubernetes web console, select <strong>pods &gt; che-pod &gt; logs</strong>.</p>
+<p>in Kubernetes web console, eclipse-che namespace, <strong>pods &gt; che-pod &gt; logs</strong>.</p>
 </li>
 </ul>
 </div>
@@ -1285,7 +1165,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace-logs">Workspace logs</h2>
+<h2 id="workspace-logs">Workspace Logs</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Workspace logs are stored in an PV bound to <code>che-claim-workspace</code> PVC. Workspace logs include logs from workspace agent, <a href="what-are-workspaces.html#bootstrapper">bootstrapper</a> and other agents if applicable.</p>
@@ -1293,121 +1173,49 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-master-states">Che master states</h2>
+<h2 id="che-master-states">Che Master States</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Che master has three possible states:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>RUNNING</code></p>
-</li>
-<li>
-<p><code>PREPARING_TO_SHUTDOWN</code></p>
-</li>
-<li>
-<p><code>READY_TO_SHUTDOWN</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The <code>PREPARING_TO_SHUTDOWN</code> state means that no new workspace startups are allowed. This situation can cause two different results:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>If your infrastructure does not support workspace recovery, all running workspaces are forcibly stopped.</p>
-</li>
-<li>
-<p>If your infrastructure does support workspace recovery, any workspaces that are currently starting or stopping is allowed to finish that process. Running workspaces do not stop.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For those that did not stop, automatic fallback to the shutdown with full workspaces stopping will be performed.</p>
-</div>
-<div class="paragraph">
-<p>If you want a full shutdown with workspaces stopped, you can request this by using the <code>shutdown=true</code> parameter. When preparation process is finished, the <code>READY_TO_SHUTDOWN</code> state is set which allows to stop current Che master instance.</p>
+<p>There is three possible states of the master - <code>RUNNING</code>, <code>PREPARING_TO_SHUTDOWN</code> and <code>READY_TO_SHUTDOWN</code>. <code>PREPARING_TO_SHUTDOWN</code> state may imply two different behaviors: - When no new workspace startups allowed, and all running workspaces are forcibly stopped; - When no new workspace startups allowed, any workspaces that are currently starting or stopping is allowed to finish that process, and running workspaces doesn’t stopped. This option is possible only for the infrastructures that support workspaces recovery. For those are didn’t, automatic fallback to the shutdown with full workspaces stopping will be performed. Therefore, <code>/api/system/stop</code> API contract changed slightly - now it tries to do the second behavior by default. Full shutdown with workspaces stop can be requested with <code>shutdown=true</code> parameter. When preparation process in finished, <code>READY_TO_SHUTDOWN</code> state will be set which allows to stop current Che master instance.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-termination-grace-period">Che workspace termination grace period</h2>
+<h2 id="che-workspace-termination-grace-period">Che Workspace Termination Grace Period</h2>
 <div class="sectionbody">
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>If the <code>terminationGracePeriodSeconds</code> variable is explicitly set in the OpenShift recipe, this environment variable does not override the recipe.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Grace termination period of Kubernetes / OpenShift workspace’s pods defaults '0', which allows to terminate pods almost instantly and significantly decrease the time required for stopping a workspace. For increasing grace termination period the following environment variable should be used:</p>
 </div>
 <div class="paragraph">
-<p>The default grace termination period of Kubernetes/OpenShift workspace’s pods is '0'.  This setting terminates pods almost instantly and significantly decreases the time required for stopping a workspace.</p>
+<p><code>CHE_INFRA_KUBERNETES_POD_TERMINATION<em>GRACE</em>PERIOD__SEC</code></p>
 </div>
 <div class="paragraph">
-<p>To increase the grace termination period:</p>
+<p><strong>IMPORTANT!</strong></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Update <code>CHE_INFRA_KUBERNETES_POD_TERMINATION__GRACE__PERIOD__SEC</code>.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>If <code>terminationGracePeriodSeconds</code> have been explicitly set in Kubernetes / OpenShift recipe it will not be overridden by the environment variable.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="updating-che-without-stopping-active-workspaces">Updating Che without stopping active workspaces</h2>
+<h2 id="recreate-update">Recreate Update</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The differences between a Recreate update and a Rolling update:</p>
-</div>
-<table class="tableblock frame-all grid-all fit-content">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Recreate update</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rolling update</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Che downtime</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No Che downtime</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">New deployment starts in parallel and traffic is hot-switched</p></td>
-</tr>
-</tbody>
-</table>
-<div class="sect2">
-<h3 id="performing-a-recreate-update">Performing a recreate update</h3>
-<div class="paragraph">
-<p>To perform a recreate update:</p>
+<p>To perform Recreate type update without stopping active workspaces:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Ensure that the new master version is fully API compatible with the old workspace agent version.</p>
+<p>Make sure there is full compatibility between new master and old ws agent versions (API etc);</p>
 </li>
 <li>
-<p>Set the deployment update strategy to Recreate</p>
+<p>Make sure deployment update strategy set to Recreate;</p>
 </li>
 <li>
-<p>Make POST request to the <code>/api/system/stop</code> api to start WS master suspend. This means that all new attempts to start workspaces will be refused, and all current starts and stops will be finished. Note that this method requires system admin credentials.</p>
+<p>Make POST request to the /api/system/stop api to start WS master suspend (means that all new attempts to start workspaces will be refused, and all current starts/stops will be finished). Note that this method requires system admin credentials.</p>
 </li>
 <li>
-<p>Make periodical <code>GET</code> requests to the <code>/api/system/state</code> API, until it returns the <code>READY_TO_SHUTDOWN</code> state. Also, you can check for "System is ready to shutdown" in the server logs.</p>
+<p>Make periodical GET requests to /api/system/state api, until it returns READY_TO_SHUTDOWN state. Also, it may be visually controlled by line "System is ready to shutdown" in the server logs</p>
 </li>
 <li>
 <p>Perform new deploy.</p>
@@ -1415,43 +1223,50 @@ $('#toc').on('click', 'a', function() {
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="performing-a-rolling-update">Performing a rolling update</h3>
+</div>
+<div class="sect1">
+<h2 id="rolling-update">Rolling Update</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>To perform a rolling update:</p>
+<p>To perform Rolling type update without stopping active workspaces, the following preconditions required:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Ensure that the new master is fully API compatible with the old ws agent versions, as well as database compatibility.  It is impossible to use database migrations on this update mode.</p>
+<p>Make sure deployment update strategy set to Rolling;</p>
 </li>
 <li>
-<p>Set the deployment update strategy set to Rolling.</p>
+<p>Make sure there is full API compatibility between new master and old ws agent versions, as well as database compatibility (since it is impossible to use DB migrations on this update mode);</p>
 </li>
 <li>
-<p>Ensure <code>terminationGracePeriodSeconds</code> deployment parameter has enough value (see details below).</p>
-</li>
-<li>
-<p>Press <strong>Deploy</strong> button or execute <code>oc rollout latest che</code> from cli client.</p>
+<p>Make sure <code>terminationGracePeriodSeconds</code> deployment parameter has enough value (see details below).</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>After that preconditions is done, press Deploy button or execute <code>oc rollout latest che</code> from cli client will start the process.</p>
+</div>
+<div class="paragraph">
+<p>Unlike the Recreate update, the Rolling update type does not imply any Che server downtime, since new deployment is starting in parallel and traffic is hot-switched. (Typically there is 5-6 sec period of Che server API unavailability due to routes switching).</p>
 </div>
 <div class="sect3">
 <h4 id="known-issues">Known issues</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Workspaces may fallback to the stopped state when they are started five to thirty seconds before the network traffic are switched to the new pod. This happens when the bootstrappers use the Che server route URL for notifying the Che Server that bootstrapping is done. Since traffic is already switched to the new Che server, the old Che server cannot get the bootstrapper&#8217;s report and fails to start after the waiting timeout is reached. If the old Che server is killed before this timeout, the workspaces can be stuck in the <code>STARTING</code> state. The <code>terminationGracePeriodSeconds</code> parameter must define enough time to cover the workspace start timeout, which is eight minutes plus some additional time. Typically, setting <code>terminationGracePeriodSeconds</code> to 540 sec is enough to cover all timeouts.</p>
+<p>Workspaces that are started shortly (5-30sec) before the network traffic is switched to the new pod, may fallback to the stopped state. That happens because bootstrappers uses Che server route URL for notifying Che Server when bootstrapping is done. Since traffic is already switched to the new Che server, old one cannot get bootstrapper-s report, and fails the start after waiting timeout reached. If old Che server will be killed before this timeout, workspaces can stuck in the <code>STARTING</code> state. So the <code>terminationGracePeriodSeconds</code> parameter must define time enough to cover workspace start timeout timeout (which is 8 min by def.) plus some additional timings. Typically, setting <code>terminationGracePeriodSeconds</code> to 540 sec is enough to cover all timeouts.</p>
 </li>
 <li>
-<p>Users may experience problems with websocket reconnections or missed events published by WebSocket connection when a workspace is <code>STARTED</code> but dashboard displays that it is <code>STARTING</code>. In this case, you need to reload the page to restore connections and the actual workspace states.</p>
+<p>Some users may experience problems with websocket reconnections or missed events published by WebSocket connection(when a workspace is STARTED but dashboard displays that it is STARTING); Need to reload page to restore connections and actual workspaces states.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="update-with-db-migrations-or-api-incompatibility">Updating with database migrations or API incompatibility</h3>
+</div>
+<div class="sect1">
+<h2 id="update-with-db-migrations-or-api-incompatibility">Update with DB migrations or API incompatibility</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>If new version of Che server contains some DB migrations, but there is still API compatibility between old and new version, recreate update type may be used, without stopping running workspaces.</p>
 </div>
@@ -1460,142 +1275,112 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="deleting-deployments">Deleting deployments</h2>
+<h2 id="delete-deployments">Delete deployments</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The fastest way to completely delete Che and its infrastructure components is to delete the project and namespace.</p>
+<p>If you want to completely delete Che and its infrastructure components, deleting a project/namespace is the fastest way - all objects associated with this namespace will be deleted:</p>
 </div>
 <div class="paragraph">
-<p>To delete Che and components:</p>
+<p><code>oc delete namespace che</code></p>
 </div>
 <div class="paragraph">
-<p><code>$ oc delete namespace che</code></p>
-</div>
-<div class="paragraph">
-<p>You can use selectors to delete particular deployments and associated objects.</p>
-</div>
-<div class="paragraph">
-<p>To remove all Che server related objects:</p>
+<p>If you need to delete particular deployments and associated objects, you can use selectors (use <code>oc</code> instead of <code>kubctl</code> for OpenShift):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc delete all -l=app=che</pre>
+<pre># remove all Che server related objects
+kubectl delete all -l=app=che
+# remove all Keycloak related objects
+kubectl delete all -l=app=keycloak
+# remove all Postgres related objects
+kubectl delete all -l=app=postgres</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To remove all Keycloak related objects:</p>
+<p>PVCs, service accounts and role bindings should be deleted separately as <code>oc delete all</code> does not delete them:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc delete all -l=app=keycloak</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To remove all PostgreSQL-related objects:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc delete all -l=app=postgres</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>PVCs, service accounts and role bindings should be deleted separately because <code>oc delete all</code> does not delete them.</p>
-</div>
-<div class="paragraph">
-<p>To delete Che server PVC, ServiceAccount and RoleBinding:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc delete sa -l=app=che
-$ oc delete rolebinding -l=app=che</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To delete Keycloak and PostgreSQL PVCs</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc delete pvc -l=app=keycloak
-$ oc delete pvc -l=app=postgres</pre>
+<pre># Delete Che server PVC, ServiceAccount and RoleBinding
+kubectl delete sa -l=app=che
+kubectl delete rolebinding -l=app=che
+
+# Delete Keycloak and Postgres PVCs
+
+kubectl delete pvc -l=app=keycloak
+kubectl delete pvc -l=app=postgres</pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="create-workspace-objects-in-personal-namespaces">Creating workspace objects in personal namespaces</h2>
+<h2 id="create-workspace-objects-in-personal-namespaces">Create workspace objects in personal namespaces</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can register the OpenShift server as an identity provider when Che is installed in multi-user mode. This allows you to create workspace objects in the OpenShift namespace of the user that is logged in Che through Keycloak.</p>
+<p>When Che is installed on OpenShift in multi-user mode, it is possible to register the OpenShift server into the Keycloak server as an identity provider, in order to allow creating workspace objects in the personal OpenShift namespace of the user that is currenlty logged in Che through Keycloak.</p>
 </div>
 <div class="paragraph">
-<p>To create a workspace object in the namespace of the user that is logged into Che:</p>
+<p>This feature is available only when Che is configured to create a new OpenShift namespace for every Che workspace.</p>
+</div>
+<div class="paragraph">
+<p>As detailed below, to enable this feature, the administrator should:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#openshift-identity-provider-registration">Register</a>, inside Keycloak, an OpenShift identity provider that points to the OpenShift console of the cluster.</p>
+<p><a href="#openshift-identity-provider-registration">register</a>, inside Keycloak, an OpenShift identity provider that will point to the OpenShift console of the cluster in which the workspace resources should be created,</p>
 </li>
 <li>
-<p><a href="#che-configuration">Configure</a> Che to use the Keycloak identity provider to retrieve the OpenShift tokens of the Che users.</p>
+<p><a href="#che-configuration">configure</a> Che to use this Keycloak identity provider in order to retrieve the OpenShift tokens of Che users.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Every workspace action such as start or stop creates an OpenShift resource in the OpenShift user account.  A notification message displays which allows you to link the Keycloak account to your OpenShift user account.</p>
+<p>Once this is done, every interactive action done by a Che user on workspaces, such as start or stop, will create OpenShift resources under his personal OpenShift account. And the first time the user will try to do it, he will be asked to link his Keycloak account with his personal OpenShift account: which he can do by simply following the provided link in the notification message.</p>
 </div>
 <div class="paragraph">
-<p>But for non-interactive workspace actions, such as workspace stop on idling or Che server shutdown, the dedicated OpenShift account configured for the Kubernetes infrastructure is used. See <a href="#setting-up-the-project-workspace">Setting up the project workspace</a> for more information.</p>
+<p>But for non-interactive workspace actions, such as workspace stop on idling or Che server shutdown, the account used for operations on OpenShift resources will fall back to the dedicated OpenShift account configured for the Kubernetes infrastructure, as described in the <a href="admin-guide.html#who-creates-workspace-objects">AdminGuide</a>.</p>
 </div>
 <div class="paragraph">
 <p>To easily install Che on OpenShift with this feature enabled, see <a href="openshift-multi-user.html#creating-workspace-resources-in-personal-openshift-accounts-on-minishift">this section for Minishift</a> and <a href="openshift-multi-user.html#creating-workspace-resources-in-personal-openshift-accounts">this one for OCP</a></p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="openshift-identity-provider-registration">OpenShift identity provider registration</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+<div class="sect3">
+<h4 id="openshift-identity-provider-registration">OpenShift identity provider registration</h4>
 <div class="paragraph">
-<p>Cluster-wide administrator rights are required to add an OAuth client.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>To add the OpenShift identity provider:</p>
+<p>The Keycloak OpenShift identity provider is described in <a href="https://www.keycloak.org/docs/3.3/server_admin/topics/identity-broker/social/openshift.html">this documentation</a>.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Use the following settings in the <a href="user-management.html#auth-and-user-management">Keycloak administration console</a>:</p>
+<p>In the <a href="user-management.html#auth-and-user-management">Keycloak administration console</a>, when adding the OpenShift identity provider, you should use the following settings:</p>
+</li>
+</ol>
+</div>
 <div class="imageblock">
 <div class="content">
-<img src="images/keycloak/openshift_identity_provider.png" alt="openshift identity provider">
+<img src="/che/docs/images/keycloak/openshift_identity_provider.png" alt="openshift identity provider">
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>Base URL</code> is the URL of the OpenShift console.</p>
+<p><code>Base URL</code> is the URL of the OpenShift console</p>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Add a default read-token role.</p>
+<p>Next thing is to add a default read-token role:</p>
+</li>
+</ol>
+</div>
 <div class="imageblock">
 <div class="content">
-<img src="images/git/kc_roles.png" alt="kc roles">
+<img src="/che/docs/images/git/kc_roles.png" alt="kc roles">
 </div>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Declare the identity provider as an OAuth client inside OpenShift with the following commands:</p>
+<p>Then this identity provider has to be declared as an OAuth client inside OpenShift. This can be done with the corresponding command:</p>
 </li>
 </ol>
 </div>
@@ -1614,40 +1399,39 @@ grantMethod: prompt
 </div>
 </div>
 <div class="paragraph">
-<p>See <a href="https://www.keycloak.org/docs/3.3/server_admin/topics/identity-broker/social/openshift.html">Keycloak documentation</a> for more information on the Keycloak OpenShift identity provider.</p>
+<p><strong>Note</strong>: Adding a OAuth client requires cluster-wide admin rights.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="configuring-che">Configuring Che</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="che-configuration">Che configuration</h4>
 <div class="paragraph">
-<p>To configure Che deployment:</p>
+<p>On the Che deployment configuration:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Set the <code>CHE_INFRA_OPENSHIFT_PROJECT</code> variable to <code>NULL</code> to ensure a new distinct OpenShift namespace is created for every workspace that is started.</p>
+<p>the <code>CHE_INFRA_OPENSHIFT_PROJECT</code> environment variable should be set to <code>NULL</code> to ensure a new distinct OpenShift namespace is created for every started workspace.</p>
 </li>
 <li>
-<p>Set the <code>CHE_INFRA_OPENSHIFT_OAUTH<em>IDENTITY</em>PROVIDER</code> variable to the alias of the OpenShift identity provider specified in step 1 of its <a href="#openshift-identity-provider-registration">registration in Keycloak</a>. The default value is <code>openshift-v3</code>.</p>
+<p>the <code>CHE_INFRA_OPENSHIFT_OAUTH<em>IDENTITY</em>PROVIDER</code> environment variable should be set to the alias of the OpenShift identity provider specified in step 1 of its <a href="#openshift-identity-provider-registration">registration in Keycloak</a>. The default value is <code>openshift-v3</code>.</p>
 </li>
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="providing-the-openshift-certificate-to-keycloak">Providing the OpenShift certificate to Keycloak</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="providing-the-openshift-certificate-to-keycloak">Providing the OpenShift certificate to Keycloak</h4>
 <div class="paragraph">
 <p>If the certificate used by the OpenShift console is self-signed or is not trusted, then by default the Keycloak will not be able to contact the OpenShift console to retrieve linked tokens.</p>
 </div>
 <div class="paragraph">
-<p>Keycloak cannot contact the OpenShift console to retrieve linked tokens when the certificate used by the OpenShift console is self-signed or is not trusted.</p>
+<p>In this case the OpenShift console certificate should be passed to the Keycloak deployment as an additional environment property. This will enable the Keycloak server to add it to its list of trusted certificates, and will fix the problem.</p>
 </div>
 <div class="paragraph">
-<p>When the certificate is self-signed or is not trusted, use the <code>OPENSHIFT_IDENTITY_PROVIDER_CERTIFICATE</code> variable to pass the OpenShift console certificate to the Keycloak deployment. This will enable the Keycloak server to add the certificate to the list of trusted certificates.
-The environment variable refers to a secret that contains the certificate.</p>
+<p>The environment variable is named <code>OPENSHIFT_IDENTITY_PROVIDER_CERTIFICATE</code>.</p>
+</div>
+<div class="paragraph">
+<p>Since adding a multi-line certificate content in a deployment configuration environment variable is not that easy, the best way is to use a secret that contains the certificate, and refer to it in the environment variable.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1679,7 +1463,7 @@ The environment variable refers to a secret that contains the certificate.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 19, 2018 <br/>
+                    Site last generated: Sep 13, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
