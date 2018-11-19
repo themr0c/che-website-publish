@@ -52,11 +52,12 @@
   <h2>What's New</h2>
   <div class="row">
     <div class="col-md-4">
-      <img src="images/img-home-checonf2018.png" alt="CheConf 2018" class="img-responsive">
-      <h3>CheConf 2018</h3>
-      <p>Register for our virtual Che user conference to hear what's new - streaming February 21, 2018.</p>
-      <a href="<?php echo $rootPath; ?>/checonf18/index.html" class="btn-yellow">Learn More</a>
+      <img src="checonf18.2/images/checonf2018_socialpostimage.png" alt="CheConf18.2" class="img-responsive">
+      <h3>CheConf18.2</h3>
+      <p>Register for our virtual Che user conference to hear what's new - streaming December 5, 2018.</p>
+      <a href="<?php echo $rootPath; ?>/checonf18.2/index.html" class="btn-yellow">Learn More</a>
     </div>
+
     <div class="col-md-4">
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
       <h3>Eclipse Che 6.0</h3>
