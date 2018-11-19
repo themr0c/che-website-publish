@@ -7,35 +7,35 @@
 <meta name="description" content="">
 <meta name="keywords" content="ldapkeycloak,  organizations, user management, permissions">
 <title>User Management | Eclipse Che Documentation</title>
-<link rel="stylesheet" href="css/syntax.css">
-
+<link rel="stylesheet" href="/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
-<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="/css/modern-business.css">
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href="css/customstyles.css">
-<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="/css/customstyles.css">
+<link rel="stylesheet" href="/css/boxshadowproperties.css">
 <!-- most color styles are extracted out to here -->
-<link rel="stylesheet" href="css/theme-che.css">
+<link rel="stylesheet" href="/css/theme-che.css">
 
 
     <link rel="stylesheet" href="/css/coderay.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="/css/asciidoc.css" type="text/css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
-<script src="js/jquery.navgoco.min.js"></script>
+<script src="/js/jquery.navgoco.min.js"></script>
 
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!-- Anchor.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
-<script src="js/toc.js"></script>
-<script src="js/customscripts.js"></script>
+<script src="/js/toc.js"></script>
+<script src="/js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="che/docs/images/favicon.ico">
+<link rel="shortcut icon" href="/images/favicon.ico">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -135,6 +135,21 @@
                 
                 
                 <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Che Version<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="/index6.html">Che 6</a></li>
+                        
+                        
+                        
+                        <li><a href="/che-7/index.html">Che 7 Beta</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Support<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         
@@ -171,12 +186,12 @@
                         <input type="text" id="search-input" placeholder="search...">
                         <ul id="results-container"></ul>
                     </div>
-                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script src="/js/jekyll-search.js" type="text/javascript"></script>
                     <script type="text/javascript">
                             SimpleJekyllSearch.init({
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
-                                dataSource: 'search.json',
+                                dataSource: '/search.json',
                                 searchResultTemplate: '<li><a href="{url}" title="User Management">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
@@ -215,7 +230,7 @@
           
           
           
-          <li><a href="index.html">Introduction</a></li>
+          <li><a href="index6.html">Introduction</a></li>
           
           
           
@@ -847,115 +862,186 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="sect1">
-<h2 id="auth-and-user-management">Auth and User Management</h2>
+<h2 id="authorization-and-user-management">Authorization and user management</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Che relies on <a href="http://www.Keycloak.org">Keycloak</a> to create, import, manage, delete and authenticate users. Keycloak uses its own authentication mechanisms and user storage. Eclipse Che requires a Keycloak token when access to Che resources is requested.</p>
+<p>Eclipse Che uses <a href="http://www.Keycloak.org">Keycloak</a> to create, import, manage, delete, and authenticate users.  Keycloak uses built-in authentication mechanisms and user storage.  It can use third-party identity management systems to create and authenticate users. Eclipse Che requires a Keycloak token when you request access to Che resources.</p>
 </div>
 <div class="paragraph">
-<p>Keycloak can create and authenticate users by itself or rely on 3rd party identity management systems and providers.</p>
+<p>Local users and imported federation users must have an email address in their profile.</p>
 </div>
 <div class="paragraph">
-<p>Note that it is required for all types of users (local or imported from federation) to have the email address field set. Che cannot work with users that have no email in their profile.</p>
+<p>The default Keycloak credentials are <code>admin:admin</code>. You can use the <code>admin:admin</code> credentials when logging into Che for the first time. It has system privileges.</p>
 </div>
 <div class="paragraph">
-<p>Default Keycloak credentials are <code>admin:admin</code>. You can find your Keycloak URL either in OpenShift web console &gt; keycloak namespace (if you deployed to OpenShift) of go to <code>$CHE_HOST:5050/auth</code> if Che is running on Docker. Admin user is also a pre-defined Che user with privileges on the system scope. So, you may use <code>admin:admin</code> credentials when loggin in to Che for the first time.</p>
+<p>To find your Keycloak URL:</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-and-keycloak">Che and Keycloak</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>When Che is deployed on OpenShift or installed on Docker, either deployment script or CLI makes sure that Keycloak is properly configured. When a <code>che-public</code> client is created, there are two important fields to be populated:</p>
+<p>If Che is deployed on OpenShift:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Valid Redirect URIs</strong> need to be the URL you use to access Che. For example, if your original <code>CHE_HOST</code> is <code>1.1.1.1</code> but you access Che at <code>myhost</code> which is an alias, you will see an error from Keycloak, saying that it’s an invalid <code>redirectURI</code>. So, if this error occurs, go to Keycloak administration console and check valid Redirect URIs.</p>
+<p>Go to the OpenShift web console and navigate to the <strong>Keycloak</strong> namespace.</p>
 </li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If Che is running on Docker:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p><strong>Web Origins</strong> - the same concerns Web Origins. An invalid web origin causes CORS error.</p>
+<p>Go to <code>$CHE_HOST:5050/auth</code>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="keycloak-tokens">Keycloak Tokens</h2>
+<h2 id="configuring-che-to-work-with-keycloak">Configuring Che to work with Keycloak</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default, a user token gets expired after 30 mins. Keycloak admin can fine tune different realm settings related to Keycloak tokens:</p>
+<p>The deployment script ensures that Keycloak is properly configured when Che is deployed on OpenShift or installed on Docker. When the <code>che-public</code> client is created, the following fields are populated:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Valid Redirect URIs</strong>: Use this URL to access Che.</p>
+</li>
+<li>
+<p><strong>Web Origins</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following are common errors when configuring Che to work with Keycloak:</p>
+</div>
+<div class="paragraph">
+<p><strong>Invalid <code>redirectURI</code> error</strong>:  occurs when you access Che at <code>myhost</code>, which is an alias, and your original <code>CHE_HOST</code> is <code>1.1.1.1</code>.  If this error occurs, go to the Keycloak administration console and ensure that the valid redirect URIs are configured.</p>
+</div>
+<div class="paragraph">
+<p><strong>CORS error</strong>: occurs when you have an invalid web origin</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-keycloak-tokens">Configuring Keycloak tokens</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A user token expires after 30 minutes by default.</p>
+</div>
+<div class="paragraph">
+<p>You can change the following Keycloak token settings:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/che/docs/images/keycloak/keycloak_realm.png" alt="keycloak realm">
+<img src="images/keycloak/keycloak_realm.png" alt="keycloak realm">
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="user-federation">User Federation</h2>
+<h2 id="setting-up-user-federation">Setting up user federation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Keycloak provides a user friendly page to <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/user-federation.html">connect LDAP/Active Directory</a>. There are a number of <a href="http://www.keycloak.org/docs/3,2/server_admin/topics/user-federation/ldap.html">fields to be populated</a> on the config page, and those are specific to your particular LDAP instance, user filters, preferable mode etc. It is possible to test connection and authentication even before saving any particular storage provider.</p>
+<p>Keycloak federates external user databases and supports LDAP and Active Directory. You can test the connection and authenticate users before choosing a storage provider.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/user-federation.html">User storage federation</a> page in Keycloak documentation to learn how to add a provider.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/user-federation/ldap.html">LDAP and Active Directory</a> page in Keycloak documentation to specify multiple LDAP servers.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="social-login-and-brokering">Social Login and Brokering</h2>
+<h2 id="enabling-authentication-with-social-accounts-and-brokering">Enabling authentication with social accounts and brokering</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Keycloak offers social login buttons such as GitHub, Facebook, Twitter, OpenShift etc. See: Instructions to <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/identity-broker/social/github.html">enable Login with GitHub</a>.</p>
+<p>Keycloak provides built-in support for GitHub, OpenShift, and most common social networks such as Facebook and Twitter. See Instructions to <a href="http://www.keycloak.org/docs/3.2/server_admin/topics/identity-broker/social/github.html">enable Login with GitHub</a>.</p>
 </div>
 <div class="paragraph">
-<p>If you add GitHub login, you can also enable ssh key upload to Che users’ GitHub accounts. To enable this feature, make sure scopes are <code>repo,user,write:public_key</code>, and Store Tokens, Stored Tokens Readable are <strong>ON</strong> when you register a GitHub identity provider.</p>
+<p>You can also enable the SSH key and upload it to the Che users’ GitHub accounts.</p>
+</div>
+<div class="paragraph">
+<p>To enable this feature when you register a GitHub identity provider:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set scope to <code>repo,user,write:public_key</code>.</p>
+</li>
+<li>
+<p>Set store tokens and stored tokens readable to <strong>ON</strong>.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/che/docs/images/git/kc_provider.png" alt="kc provider">
+<img src="images/git/kc_provider.png" alt="kc provider">
 </div>
 </div>
-<div class="paragraph">
-<p>Next thing is to add a default read-token role:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a default read-token role.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/che/docs/images/git/kc_roles.png" alt="kc roles">
+<img src="images/git/kc_roles.png" alt="kc roles">
 </div>
 </div>
 <div class="paragraph">
-<p>This is default <code>delegated</code> OAuth service mode for Multi-User Che, which is configured with property <code>che.oauth.service_mode</code>.</p>
+<p>This is the default <code>delegated</code> OAuth service mode for multi-user Che.  You can configure the OAuth service mode with the property <code>che.oauth.service_mode</code>.</p>
 </div>
 <div class="paragraph">
-<p>Setting it to <code>embedded</code> will make it use Che’s OAuth Authenticator, for which <a href="version-control.html#github-oauth">Instructions for Single User mode</a> will apply.</p>
+<p>To use Che&#8217;s OAuth Authenticator, set <code>che.oauth.service_mode</code> to <code>embedded</code> and use <a href="version-control.html#github-oauth">Instructions for single-user mode</a>.</p>
 </div>
 <div class="paragraph">
-<p>Read more about <a href="ide_projects.html#project-import-and-ssh-connection">SHH key management</a>.</p>
+<p>See <a href="ide_projects.html#project-import-and-ssh-connection">SSH key management</a> for more information.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="protocol-based-providers">Protocol Based Providers</h2>
+<h2 id="using-protocol-based-providers">Using protocol-based providers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Keycloak provides support for <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/identity-broker/saml.html">SAML v2.0</a> and <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/identity-broker/oidc.html">OpenID Connect v1.0</a> protocols so you can connect your identity provider systems if they support these protocols.</p>
+<p>Keycloak supports <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/identity-broker/saml.html">SAML v2.0</a> and <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/identity-broker/oidc.html">OpenID Connect v1.0</a> protocols. You can connect your identity provider systems if they support these protocols.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="managing-users">Managing Users</h2>
+<h2 id="managing-users">Managing users</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There’s UI to add, delete and edit users. See: <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/users.html">Keycloak User Management</a>.</p>
+<p>You can add, delete, and edit users in the user interface. See: <a href="http://www.Keycloak.org/docs/3.2/server_admin/topics/users.html">Keycloak User Management</a> for more information.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="smtp-configurationemail-notifications">SMTP Configuration/Email Notifications</h2>
+<h2 id="smtp-configurationemail-notifications">Configuring SMTP and email notifications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Che does not provide any out-of-the-box SMTP servers. This functionality is enabled in Keycloak itself, <code>che realm settings &gt; Email</code>. You will need to provide host, port, username and password, if necessary. Eclipse Che is shipped with the default theme that is used for email templates (registration, email confirmation, password recovery, failed login etc).</p>
+<p>Eclipse Che does not provide any pre-configured MTP servers.</p>
+</div>
+<div class="paragraph">
+<p>To enable SMTP servers in Keycloak:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <code>che realm settings &gt; Email</code>.</p>
+</li>
+<li>
+<p>Specify the host, port, username, and password.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Eclipse Che uses the default theme for email templates for registration, email confirmation, password recovery, and failed login.</p>
 </div>
 </div>
 </div>
@@ -987,7 +1073,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Sep 13, 2018 <br/>
+                    Site last generated: Nov 19, 2018 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
