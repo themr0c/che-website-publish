@@ -23,7 +23,7 @@
 
 <div class="annoucement">
   <div class="container-fluid">
-    <center><h3><a style="color:white"; href="<?php echo $rootPath; ?>/getting-started/">Che 6 is out: try it with your team or enterprise</a></h3>
+    <center><h3><a style="color:white"; href="<?php echo $rootPath; ?>/checonf18.2/">Join us for the Che Virtual User Conference - Dec 5th.</a></h3>
   </div>
 </div>
 
