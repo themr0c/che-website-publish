@@ -62,14 +62,30 @@
 
     <!-- Tracking Snippets -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'UA-37306001-2');
-    </script>
+    </script> -->
+
+    <?php
+    require_once ($_SERVER['DOCUMENT_ROOT'] . "/eclipse.org-common/system/app.class.php");
+    $App = new App();
+    $Theme = $App->getThemeClass("quicksilver");
+    if ($Theme->hasCookieConsent()) {
+        //Insert widgets from a 3rd party
+        echo  '<!-- Google Tag Manager -->';
+        echo  "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':!";
+        echo  "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],";
+        echo  "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=";
+        echo  "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);";
+        echo  "})(window,document,'script','dataLayer','UA-37306001-2');</script>";
+        echo  "<!-- End Google Tag Manager -->";    
+    }
+    ?>
 
     <!-- GITHUB BUTTON -->
     <script async defer src="https://buttons.github.io/buttons.js" crossorigin="anonymous"></script>
