@@ -972,62 +972,16 @@ oc new-app -f deploy/openshift/templates/multi/openshift-certificate-secret.yaml
 </div>
 </div>
 <div class="paragraph">
-<p>Once created, <code>OPENSHIFT_IDENTITY_PROVIDER_CERTIFICATE</code> env takes cert file content as a value and is then used in entrypoints of Che server and Keycloak images.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../images/workspaces/ca_secret.png" alt="ca secret">
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Deploy Che in https mode: <a href="openshift-single-user.html#https-mode">single user</a>, <a href="openshift-multi-user.html#openshift-container-platform">multi-user</a></p>
-</li>
-<li>
-<p>Build an image with your certificate and push it to a registry. Example of a Dockerfile:</p>
-</li>
-</ul>
+<p>There is another way to create a secret with a certificate using the <code>oc</code> (or <code>kubectl</code>) client:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>FROM eclipse/ubuntu_jdk8
-ADD ca.crt /usr/local/share/ca-certificates/ca.crt
-RUN sudo update-ca-certificates
-RUN cd ${HOME} &amp;&amp; \
-    echo yes | keytool -keystore minishift.jks -importcert -alias HOSTDOMAIN -file /usr/local/share/ca-certificates/ca.crt -storepass minishift</pre>
+<pre>    oc create secret generic self-signed-certificate --from-file=<em>&lt;/path/to/certificate</em></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then run <code>docker build -t yourOrg/yourImage:yourTag .</code> You need to have OpenShift self signed cert (<code>ca.crt</code> in this example) in the same directory with a Dockerfile.</p>
-</div>
-<div class="paragraph">
-<p>If you inherit from Fedora, CentOS or RHEL image, the Dockerfile will look a bit different:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>ADD ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
-RUN sudo update-ca-trust</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Add self signed cert to your browser. In Chrome, go to <code>chrome://settings/certificates &gt; Authorities &gt; Import</code></p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../images/workspaces/chrome_certs.png" alt="chrome certs">
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Create a <a href="creating-starting-workspaces.html#creating%20workspaces">custom stack</a> (or update existing one) with the newly built image.</p>
-</li>
-</ul>
+<p>Once <code>self-signed-certificate</code> is created, the <code>CHE_SELF__SIGNED__CERT</code> environment variable takes the content of the certificate file as a value and is then used in entrypoints of the Che server and Keycloak images.
+The secret is also propagated to workspace pods and agents like <strong>exec</strong>. The <strong>terminal</strong> and <strong>workspace</strong> agents use it when connecting to a workspace master.</p>
 </div>
 </div>
 </div>
@@ -1310,7 +1264,7 @@ POSTGRES_PASSWORD=keycloak</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 28, 2018 <br/>
+                    Site last generated: Feb 22, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

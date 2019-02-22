@@ -862,7 +862,7 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="sect1">
-<h2 id="what-is-a-che-assembly">What Is a Che Assembly?</h2>
+<h2 id="understanding-che-assemblies">Understanding Che Assemblies?</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>An assembly is a Maven module that produces a build artifact. In case of <a href="https://github.com/eclipse/che/tree/master/assembly">Eclipse Che</a>, this is either a <code>.war</code> with <code>jars</code> in it, or a Tomcat assembly, which is a Tomcat web server with custom configuration and artifacts, copied to <code>webapps</code>. The following are Eclipse Che assemblies:</p>
@@ -907,7 +907,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="assembly-ide-war">assembly-ide-war</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Successful build of this module produces <code>ide.war</code> that is then deployed with Tomcat (produced by <code>assembly-main</code>) as <code>ROOT.war</code> that contains a handful or jars as dependencies and what’s more important - <code>_app</code> directory with JavaScript, CSS and other resources that are loaded into <code>IDE.html</code> when IDE is initialized.</p>
+<p>A successful build of this module produces an <code>ide.war</code> file, which is then deployed with Tomcat (produced by <code>assembly-main</code>) as a <code>ROOT.war</code> that contains dependencies packages as JAR files. It also contains the <code>_app</code> directory with JavaScript, CSS, and other resources that are loaded into the <code>IDE.html</code> file when the IDE is initialized.</p>
 </div>
 <div class="paragraph">
 <p>This module inherits <a href="https://github.com/eclipse/che/blob/da18cd1867210f87a6071ed65930fb47fb8bb775/ide/che-ide-gwt-app/pom.xml"><code>che-ide-gwt-app</code></a> that it its turn has <a href="https://github.com/eclipse/che/blob/5a6d3910b268feb3c4e67c2ff9aa5640410bf777/ide/che-ide-full/pom.xml"><code>che-ide-full</code></a> in dependencies. So, <code>che-ide-full</code> is where all of the client side plugin dependencies are declared.</p>
@@ -924,7 +924,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="assembly-wsagent-war">assembly-wsagent-war</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Build artifact of this module contains all server side plugins components packaged as jars. Root <code>pom.xml</code> contains dependencies to all plugins that get deployed with the workspace agent, and this is where dependencies to custom plugins should be added. Once built, <code>assembly-wsagent-war</code> is copied to <code>webapps</code> of ws-agent Tomcat as <code>ROOT.war</code>. This is the module that is most often extended with custom plugins.</p>
+<p>The build artifact of this module contains all server-side plugins components packaged as JAR files. Root <code>pom.xml</code> contains dependencies to all plugins that get deployed with the workspace agent, and this is where dependencies to custom plugins should be added. Once built, <code>assembly-wsagent-war</code> is copied to <code>webapps</code> of ws-agent Tomcat as <code>ROOT.war</code>. This is the module that is most often extended with custom plugins.</p>
 </div>
 </div>
 </div>
@@ -932,7 +932,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="assembly-wsagent-server">assembly-wsagent-server</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This module packages <code>ROOT.war</code> into Tomcat’s <code>webapps</code> and adds configuration files. This tomcat is packaged as tar.gz archive that is then placed into main Tomcat produced by <code>assembly-main</code> build.</p>
+<p>This module packages <code>ROOT.war</code> into Tomcat’s <code>webapps</code> and adds configuration files. This Tomcat is packaged as a <code>tar.gz</code> archive that is then placed into main Tomcat produced by the <code>assembly-main</code> build.</p>
 </div>
 </div>
 </div>
@@ -948,7 +948,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="assembly-main">assembly-main</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This module’s name speaks for itself - this is the main assembly that packages all Che components into a Tomcat server. These components include wsmaster as <code>api.war</code>, User Dashboard as <code>dashboard.war</code>, documentation - <code>docs.war</code> and Swagger UI - <code>swagger.war</code>, agents like terminal and ws-agent (those are packaged into <code>lib</code> directory in the root of the resulting archive where Che master picks them up and serves, thus making them downloadable for <a href="installers.html">installers</a>).</p>
+<p>This is the main assembly that packages all Che components into a Tomcat server. These components include wsmaster as <code>api.war</code>, User Dashboard as <code>dashboard.war</code>, documentation - <code>docs.war</code> and Swagger UI - <code>swagger.war</code>, agents like terminal and ws-agent (those are packaged into <code>lib</code> directory in the root of the resulting archive where Che master picks them up and serves, thus making them downloadable for <a href="installers.html">installers</a>).</p>
 </div>
 </div>
 </div>
@@ -956,10 +956,10 @@ $('#toc').on('click', 'a', function() {
 <h2 id="custom-assemblies">Custom Assemblies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may build own custom assembly of Che. To do so, there’s no need to clone/copy the entire Che source code. All artifacts can be used as dependencies. Moreover, unlike assemblies in Che source code, custom assemblies can use minimal artifacts for server and client side.</p>
+<p>You may build your own custom assembly of Che. To do so, there is no need to clone or copy the entire Che source code. All artifacts can be used as dependencies. Also, unlike assemblies in Che source code, custom assemblies can use minimal artifacts for server and client side.</p>
 </div>
 <div class="paragraph">
-<p>Here’s an <a href="https://github.com/che-samples/che-ide-server-extension">example</a> of a custom Che assembly that brings in two plugins - server- and client-side. You may clone this repository and use it as a basis for your custom Che assembly.</p>
+<p>See an <a href="https://github.com/che-samples/che-ide-server-extension">example</a> of a custom Che assembly that brings in two plug-ins - server- and client-side. You may clone this repository and use it as a basis for your custom Che assembly.</p>
 </div>
 <div class="paragraph">
 <p>Note that this example uses core artifacts as dependencies both for <a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L31-L35">client</a>:</p>
@@ -974,7 +974,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>and <a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L22-L26">server side</a></p>
+<p>and <a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L22-L26">server side</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1051,15 +1051,12 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>These two <code>pom.xml</code> files are entrypoints to adding custom plugins. This assembly includes two plugins that are declared in:</p>
+<p>These two <code>pom.xml</code> files are entrypoints to adding custom plugins. This assembly includes two plugins, which are declared in:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/pom.xml#L54-L64">root pom.xml</a> - artifact version defaults to project version. These dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code>maven-depmgt-pom</code> or in a root pom of an assembly). What <code>maven-depmgt-pom</code> parent brings is a set of enforcer plugins, like formatting, dependency management, source validation etc.</p>
-</li>
-</ul>
-</div>
+<p><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/pom.xml#L54-L64">root <code>pom.xml</code></a> - artifact version defaults to project version. These dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che <code>maven-depmgt-pom</code> or in a root pom of an assembly). <code>maven-depmgt-pom</code> parent brings a set of enforcer plug-ins, such as formatting, dependency management, source validation, and others.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
@@ -1069,13 +1066,9 @@ $('#toc').on('click', 'a', function() {
 <span style="color:#070;font-weight:bold">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L36-L40">assembly-ide-war pom</a>:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
@@ -1086,15 +1079,11 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>This way, your client side plugin is included into <code>ide.war</code>. We use <a href="https://maven.apache.org/plugins/maven-war-plugin/overlays.html">Maven’s overlays feature</a> to package custom plugins into the resulting artifact.</p>
+<p>This way, your client-side plug-in is included in <code>ide.war</code>. We use <a href="https://maven.apache.org/plugins/maven-war-plugin/overlays.html">Maven’s overlays feature</a> to package custom plug-ins into the resulting artifact.</p>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p><a href="https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L27-L30">assembly-wsmaster-war pom</a>:</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
@@ -1103,16 +1092,19 @@ $('#toc').on('click', 'a', function() {
 <span style="color:#070;font-weight:bold">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>Your custom plugin packaged as jar is automatically added to inherited <code>wsagent</code> artifact if both are declared as dependencies in <code>pom.xml</code>. As a result, the final <code>.war</code> artifact will contain a custom jar.</p>
+<p>Your custom plug-in packaged as a JAR file is automatically added to the inherited <code>wsagent</code> artifact if both are declared as dependencies in <code>pom.xml</code>. As a result, the final <code>.war</code> artifact will contain a custom JAR file.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="update-assembly">Update Assembly</h2>
+<h2 id="updating-assemblies">Updating assemblies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In a <code>pom.xml</code> update both:</p>
+<p>In the <code>pom.xml</code> file, update both:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1134,15 +1126,15 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>It is important to keep those versions consistent to avoid build failures and incompatibilities. It is also recommended to keep versions of own artifacts aligned with a parent version.</p>
+<p>Keep the versions consistent to avoid build failures and incompatibilities. It is also recommended to keep versions of own artifacts aligned with a parent version.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="next-steps">Next steps</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Now that you have got some knowledge about Che assemblies and own cloned a sample assembly, let’s take a closer look at Eclipse Che <a href="ide-extensions-gwt.html">client</a> and <a href="server-side-extensions.html">server-side</a> plugins.</p>
+<p>Now that you have got some knowledge about Che assemblies and own cloned a sample assembly, take a closer look at Eclipse Che <a href="ide-extensions-gwt.html">client</a> and <a href="server-side-extensions.html">server-side</a> plug-ins.</p>
 </div>
 </div>
 </div>
@@ -1174,7 +1166,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 28, 2018 <br/>
+                    Site last generated: Feb 22, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

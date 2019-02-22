@@ -513,6 +513,14 @@ $('#toc').on('click', 'a', function() {
 
 
 
+
+
+
+
+
+
+
+
         <tr><td><a href="/che/docs/che-6/docker-cli.html">CLI Reference</a></td>
             <!-- <td><span class="label label-default">Page</span></td> -->
           <td>  CLI syntax and commands   The CLI is a Docker-formatted container image that comes with a collection of commands to configure, interact with, and start Che. The CLI also contains commands, such as sync and ssh, for end users to interact with workspaces. ... </td>
@@ -758,6 +766,7 @@ $('#toc').on('click', 'a', function() {
           <td> :page-layout: _auto
 :admin-context: Kubernetes
 :ctl-command: kubectl
+:k8s-namespace: Kubernetes Namespace
 :docs-registry-link: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 :che-data-volume-link: https://github.com/eclipse/che/blob/master/deploy/kubernetes/helm/che/templates/deployment.yaml#L57
 :cluster-nodes-link: https://kubernetes.io/docs/concepts/architecture/nodes/#management
@@ -772,10 +781,12 @@ $('#toc').on('click', 'a', function() {
 
 //  ifeval::[{admin-context} == "OpenShift"]
 //  :ctl-command: oc
+//  :k8s-namespace: OpenShift Project
 //  endif::[]
 //
 //  ifeval::[{admin-context} == "Kubernetes"]
 //  :ctl-command: kubectl
+//  :k8s-namespace: Kubernetes Namespace
 //  endif::[]
 
 
@@ -878,8 +889,13 @@ The workspace PVC strategy is configurable:
 [width="100%",cols="25%,25%,25%,25%",options="header",]
 |===
 |strategy |details |pros |cons
-|*unique (default)* |one PVC per workspace |Storage isolation |An undefined number of PVs is required
-|*common* | One PVC for all workspaces, Sub-paths pre-created |Easy to manage and control storage |No need to recyle PVs when pod with PVC is deleted |Workspace pods should all be in one namespace
+|*unique (default)* | One PVC per workspace volume |Storage isolation |An undefined number of PVs is required
+|*common* | One PVC for all workspaces in one {k8s-namespace}
+
+Sub-paths pre-created |Easy to manage and control storage |Workspaces must be in a separate {k8s-namespace} if PV does not support ReadWriteMany (RWX) access mode
+|*per-workspace* | One PVC for one workspace
+
+Sub-paths pre-created |Easy to manage and control storage |Workspace containers must all be in one pod if PV does not support ReadWriteMany (RWX) access mode
 |===
 
 [id="unique-pvc-strategy"]
@@ -929,6 +945,17 @@ To change the access mode for workspace PVCs, pass the `CHE_INFRA_KUBERNETES_PVC
 
 Another restriction is that only pods in the same namespace can use the same PVC.  The `CHE_INFRA_KUBERNETES_PROJECT` environment variable should not be empty.  It should be either the Che server namespace where objects can be created with the Che service account (SA) or a dedicated namespace where a token or a username and password need to be used.
 
+[id="per-workspace-pvc-strategy"]
+=== Per workspace PVC strategy
+
+To define the unique strategy, set `CHE_INFRA_KUBERNETES_PVC_STRATEGY` to `per-workspace`.
+
+[id="how-the-per-workspace-pvc-strategy-works"]
+==== How the per workspace PVC strategy works
+
+It works similarly to the common PVC strategy.
+The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional link:volumes.html[volumes] that a user can define).
+
 [id="updating-your-che-deployment"]
 == Updating your Che deployment
 
@@ -964,7 +991,7 @@ You can get the list of available versions at https://github.com/eclipse/che/tag
 +
 To change the pull policy, do one of the following:
 
-* Add  `--set cheImagePullPolicy=IfNotPresent` to the link:openshift-multi-user[Che deployment].
+* Add  `--set cheImagePullPolicy=IfNotPresent` to the link:openshift-multi-user.html[Che deployment].
 * Manually edit `dc/che` after deployment.
 
 The default pull policy is `Always`. The default tag is `nightly`. This tag sets the image pull policy to `Always` and triggers a new deployment with a newer image, if available.
@@ -991,7 +1018,7 @@ To run Che Server in debug mode, set the following environment variable in the C
 
 `CHE_DEBUG_SERVER=true`
 
-[id="private-docker-registries"]
+[id="kubernetes-or-openshift-admin-guide-private-docker-registries"]
 == Private Docker registries
 
 See {docs-registry-link}[{admin-context} documentation].
@@ -1033,7 +1060,7 @@ For those that did not stop, automatic fallback to the shutdown with full worksp
 
 If you want a full shutdown with workspaces stopped, you can request this by using the `shutdown=true` parameter. When preparation process is finished, the `READY_TO_SHUTDOWN` state is set which allows to stop current Che master instance.
 
-[id="che-workspace-termination-grace-period"]
+[id="kubernetes-or-openshift-admin-guide-che-workspace-termination-grace-period"]
 == Che workspace termination grace period
 
 The default grace termination period of {admin-context} workspace pods is `0`.  This setting terminates pods almost instantly and significantly decreases the time required for stopping a workspace.
@@ -1143,6 +1170,23 @@ To delete Keycloak and PostgreSQL PVCs:
 $ {ctl-command} delete pvc -l=app=keycloak
 $ {ctl-command} delete pvc -l=app=postgres
 ----
+
+== Monitoring Che Master Server
+
+Master server emits metrics in Prometheus format by default on port `8087` of the Che server host
+(this can be customized by the `che.metrics.port`
+link:properties.html#properties-and-environment-variables[configuration property]).
+
+You can configure your own Prometheus deployment to scrape the metrics (as per convention, the
+metrics are published on the `<CHE_HOST>:8087/metrics` endpoint).
+
+The Che's Helm chart can optionally install Prometheus and Grafana servers preconfigured to collect
+the metrics of the Che server. When you set the `global.metricsEnabled` value to `true` when
+installing Che's Helm chart, Prometheus and Grafana servers are automatically deployed.
+The servers are accessible on `prometheus-<CHE_NAMESPACE>.domain` or `grafana-<CHE_NAMESPACE>.domain`
+domains respectively. The Grafana server is preconfigured with a sample dashboard showing the memory
+usage of the Che server. You can log in to the Grafana server using the predefined username `admin`
+with the default password `admin`.
  </td>
         </tr>
 
@@ -1225,7 +1269,7 @@ $ {ctl-command} delete pvc -l=app=postgres
 
         <tr><td><a href="/che/docs/che-6/openshift-admin-guide.html">Che on OpenShift: Admin Guide</a></td>
             <!-- <td><span class="label label-default">Page</span></td> -->
-          <td> :page-layout: _auto :admin-context: OpenShift :ctl-command: oc :docs-registry-link: https://docs.okd.io/latest/architecture/infrastructure_components/image_registry.html :che-data-volume-link: https://github.com/eclipse/che/blob/master/deploy/openshift/templates/pvc/che-server-pvc.yaml#L14 :cluster-nodes-link: https://docs.okd.io/latest/admin_guide/manage_nodes.html include::pages/che-6/setup-kubernetes/kubernetes-or-openshift-admin-guide.adoc[] [id="create-workspace-objects-in-personal-namespaces"] == Creating workspace objects in personal namespaces You can register the OpenShift server as an identity provider when Che is installed in multi-user mode. This allows you to create workspace objects in the OpenShift namespace of... </td>
+          <td> :page-layout: _auto :admin-context: OpenShift :ctl-command: oc :k8s-namespace: OpenShift Project :docs-registry-link: https://docs.okd.io/latest/architecture/infrastructure_components/image_registry.html :che-data-volume-link: https://github.com/eclipse/che/blob/master/deploy/openshift/templates/pvc/che-server-pvc.yaml#L14 :cluster-nodes-link: https://docs.okd.io/latest/admin_guide/manage_nodes.html include::pages/che-6/setup-kubernetes/kubernetes-or-openshift-admin-guide.adoc[] [id="create-workspace-objects-in-personal-namespaces"] == Creating workspace objects in personal namespaces You can register the OpenShift server as an identity provider when Che is installed in multi-user mode. This allows you to create workspace objects in the... </td>
         </tr>
 
 
@@ -1247,9 +1291,9 @@ $ {ctl-command} delete pvc -l=app=postgres
 
 
 
-        <tr><td><a href="/che/docs/che-6/openshift-multi-user.html">Multi-User&#58 Deploy to OpenShift</a></td>
+        <tr><td><a href="/che/docs/che-6/openshift-multi-user.html">Multi-User&#58 Deploying to OpenShift</a></td>
             <!-- <td><span class="label label-default">Page</span></td> -->
-          <td> :page-layout: _auto [id="deploying-che-on-supported-openshift-flavors-and-versions"] == Deploying Che on supported OpenShift flavors and versions Multi-user Eclipse Che can be deployed to OpenShift Container Platform 3.6 and later, OpenShift Dedicated, and OpenShift Online Pro. The deployment script creates three DeploymentConfigs for Che, Postgres, and Keycloak. PVCs, services, and routes (Che and Keycloak only)... </td>
+          <td> :page-layout: _auto [id="deploying-che-on-supported-openshift-flavors-and-versions"] == Deploying Che on supported OpenShift flavors and versions Multi-user Eclipse Che can be deployed to OpenShift Container Platform 3.6 and later, OpenShift Dedicated, and OpenShift Online Pro. The deployment script creates three DeploymentConfigs for Che, PostgreSQL, and Keycloak. PVCs, services, and routes (Che and Keycloak only)... </td>
         </tr>
 
 
@@ -1263,6 +1307,16 @@ $ {ctl-command} delete pvc -l=app=postgres
             <!-- <td><span class="label label-default">Page</span></td> -->
           <td> :page-layout: _auto [id="supported-openshift-flavors-and-versions"] == Supported OpenShift Flavors and Versions Single User Eclipse Che can be deployed to Minishift, OCP, OSD and OSO v3.6+. [id="pre-requisites"] == Pre-Requisites OpenShift oc client installed locally [id="admin-guide"] == Admin Guide See: link:kubernetes-admin-guide.html[Kubernetes Admin Guide] [id="deployment-diagram"] == Deployment Diagram There are a few essential Kubernetes and... </td>
         </tr>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1726,6 +1780,10 @@ $ {ctl-command} delete pvc -l=app=postgres
 
 
 
+
+
+
+
    </tbody>
 </table>
 
@@ -1744,7 +1802,7 @@ $ {ctl-command} delete pvc -l=app=postgres
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 28, 2018 <br/>
+                    Site last generated: Feb 22, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

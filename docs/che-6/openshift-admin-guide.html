@@ -1057,15 +1057,23 @@ $('#toc').on('click', 'a', function() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique (default)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">one PVC per workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC per workspace volume</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces, Sub-paths pre-created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces in one OpenShift Project</p>
+<p class="tableblock">Sub-paths pre-created</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No need to recyle PVs when pod with PVC is deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspaces must be in a separate OpenShift Project if PV does not support ReadWriteMany (RWX) access mode</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>per-workspace</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for one workspace</p>
+<p class="tableblock">Sub-paths pre-created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace containers must all be in one pod if PV does not support ReadWriteMany (RWX) access mode</p></td>
 </tr>
 </tbody>
 </table>
@@ -1124,6 +1132,19 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="paragraph">
 <p>Another restriction is that only pods in the same namespace can use the same PVC.  The <code>CHE_INFRA_KUBERNETES_PROJECT</code> environment variable should not be empty.  It should be either the Che server namespace where objects can be created with the Che service account (SA) or a dedicated namespace where a token or a username and password need to be used.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="per-workspace-pvc-strategy">Per workspace PVC strategy</h3>
+<div class="paragraph">
+<p>To define the unique strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>per-workspace</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="how-the-per-workspace-pvc-strategy-works">How the per workspace PVC strategy works</h4>
+<div class="paragraph">
+<p>It works similarly to the common PVC strategy.
+The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional <a href="volumes.html">volumes</a> that a user can define).</p>
 </div>
 </div>
 </div>
@@ -1190,7 +1211,7 @@ $('#toc').on('click', 'a', function() {
 <div class="ulist">
 <ul>
 <li>
-<p>Add  <code>--set cheImagePullPolicy=IfNotPresent</code> to the <a href="openshift-multi-user">Che deployment</a>.</p>
+<p>Add  <code>--set cheImagePullPolicy=IfNotPresent</code> to the <a href="openshift-multi-user.html">Che deployment</a>.</p>
 </li>
 <li>
 <p>Manually edit <code>dc/che</code> after deployment.</p>
@@ -1238,7 +1259,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="private-docker-registries">Private Docker registries</h2>
+<h2 id="kubernetes-or-openshift-admin-guide-private-docker-registries">Private Docker registries</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>See <a href="https://docs.okd.io/latest/architecture/infrastructure_components/image_registry.html">OpenShift documentation</a>.</p>
@@ -1321,7 +1342,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-termination-grace-period">Che workspace termination grace period</h2>
+<h2 id="kubernetes-or-openshift-admin-guide-che-workspace-termination-grace-period">Che workspace termination grace period</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The default grace termination period of OpenShift workspace pods is <code>0</code>.  This setting terminates pods almost instantly and significantly decreases the time required for stopping a workspace.</p>
@@ -1509,6 +1530,29 @@ $ oc delete pvc -l=app=postgres</pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="monitoring-che-master-server">Monitoring Che Master Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Master server emits metrics in Prometheus format by default on port <code>8087</code> of the Che server host
+(this can be customized by the <code>che.metrics.port</code>
+<a href="properties.html#properties-and-environment-variables">configuration property</a>).</p>
+</div>
+<div class="paragraph">
+<p>You can configure your own Prometheus deployment to scrape the metrics (as per convention, the
+metrics are published on the <code>&lt;CHE_HOST&gt;:8087/metrics</code> endpoint).</p>
+</div>
+<div class="paragraph">
+<p>The Che&#8217;s Helm chart can optionally install Prometheus and Grafana servers preconfigured to collect
+the metrics of the Che server. When you set the <code>global.metricsEnabled</code> value to <code>true</code> when
+installing Che&#8217;s Helm chart, Prometheus and Grafana servers are automatically deployed.
+The servers are accessible on <code>prometheus-&lt;CHE_NAMESPACE&gt;.domain</code> or <code>grafana-&lt;CHE_NAMESPACE&gt;.domain</code>
+domains respectively. The Grafana server is preconfigured with a sample dashboard showing the memory
+usage of the Che server. You can log in to the Grafana server using the predefined username <code>admin</code>
+with the default password <code>admin</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="create-workspace-objects-in-personal-namespaces">Creating workspace objects in personal namespaces</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1615,7 +1659,7 @@ grantMethod: prompt
 <p>Set the <code>CHE_INFRA_OPENSHIFT_PROJECT</code> variable to <code>NULL</code> to ensure a new distinct OpenShift namespace is created for every workspace that is started.</p>
 </li>
 <li>
-<p>Set the <code>CHE_INFRA_OPENSHIFT_OAUTH<em>IDENTITY</em>PROVIDER</code> variable to the alias of the OpenShift identity provider specified in step 1 of its <a href="#openshift-identity-provider-registration.html">registration in Keycloak</a>. The default value is <code>openshift-v3</code>.</p>
+<p>Set the <code>CHE_INFRA_OPENSHIFT_OAUTH__IDENTITY__PROVIDER</code> variable to the alias of the OpenShift identity provider specified in step 1 of its <a href="#openshift-identity-provider-registration">registration in Keycloak</a>. The default value is <code>openshift-v3</code>.</p>
 </li>
 </ul>
 </div>
@@ -1663,7 +1707,7 @@ grantMethod: prompt
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 28, 2018 <br/>
+                    Site last generated: Feb 22, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

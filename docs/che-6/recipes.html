@@ -962,7 +962,7 @@ $('#toc').on('click', 'a', function() {
 <p>You can run into a failure when the Dockerfile or build context requires you to <code>ADD</code> or <code>COPY</code> other files into the image.  The local Che workspace generator cannot access these remote files.</p>
 </div>
 <div class="sect2">
-<h3 id="Accessing remote files">Accessing remote files</h3>
+<h3 id="accessing-remote-files">Accessing remote files</h3>
 <div class="paragraph">
 <p>To ensure the local Che workspace generator can access remote files, take these steps:</p>
 </div>
@@ -1020,7 +1020,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect2">
-<h3 id="Configuring privileged access">Configuring privileged access</h3>
+<h3 id="configuring-privileged-access">Configuring privileged access</h3>
 <div class="paragraph">
 <p>The <code>privileged</code> Compose option does not support securing the underlying host system.</p>
 </div>
@@ -1116,15 +1116,25 @@ $('#toc').on('click', 'a', function() {
 <h2 id="kubernetes-yaml-limitations-and-restrictions">Kubernetes YAML limitations and restrictions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When a workspace is starting, Che creates a <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod/">Kubernetes pod</a>. The following are limitatons and restrictions:</p>
+<p>When a workspace is starting, Che creates various Kubernetes resources to support the IDE and development tools. Workspaces primarily consist of a <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a> which runs a <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod/">Kubernetes pod</a>. The following are limitatons and restrictions:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Che allows users to create only pods and services.</p>
+<p>Che allows users specify Pods, Deployments, ConfigMaps, and Services in recipes</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If a Pod is specified, it will be wrapped in a simple Deployment when running the workspace</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Other object kinds will be ignored (PVC and route) or a workspace fails to start with an exception from Kubernetes.</p>
+</li>
+<li>
+<p>Che performs some minimal validation of Kubernetes YAML, but invalid yaml in a recipe can cause workspaces to fail to run (e.g. referring to a non-existent configmap)</p>
 </li>
 <li>
 <p>You cannot use volumes in the container and pod definition. See <a href="volumes.html">Volumes</a> for information about persisting and sharing data between pods.</p>
@@ -1132,45 +1142,72 @@ $('#toc').on('click', 'a', function() {
 </ol>
 </div>
 <div class="paragraph">
-<p>The following is an example of a custom recipe with two containers and one pod, and a service that is bound to port 8081:</p>
+<p>The following is an example of a custom recipe with two containers, a simple config map, one deployment, and a service that is bound to port 8081:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">List</span></span>
 <span style="color:#606">items</span>:
--
- <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Service</span></span>
- <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
- <span style="color:#606">metadata</span>:
-  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-service</span></span>
- <span style="color:#606">spec</span>:
-  <span style="color:#606">selector</span>:
-    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">app</span></span>
-  <span style="color:#606">ports</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">protocol: TCP</span></span>
-    <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span>
-    <span style="color:#606">targetPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span>
--
-  <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
-  <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Pod</span></span>
-  <span style="color:#606">metadata</span>:
-    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">app</span></span>
-  <span style="color:#606">spec</span>:
-    <span style="color:#606">containers</span>:
-      -
-        <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/ubuntu_jdk8:latest</span></span>
-        <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">main</span></span>
-        <span style="color:#606">ports</span>:
-         -
-          <span style="color:#606">containerPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span>
-          <span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">TCP</span></span>
-      -
-        <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/ubuntu_jdk8:latest</span></span>
-        <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">main1</span></span></code></pre>
+  -
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apps/v1</span></span>
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Deployment</span></span>
+    <span style="color:#606">metadata</span>:
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-deployment</span></span>
+    <span style="color:#606">spec</span>:
+      <span style="color:#606">replicas</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1</span></span>
+      <span style="color:#606">selector</span>:
+        <span style="color:#606">matchLabels</span>:
+          <span style="color:#606">my-workspace-pod</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dev</span></span>
+      <span style="color:#606">template</span>:
+        <span style="color:#606">metadata</span>:
+          <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dev-pod</span></span>
+          <span style="color:#606">labels</span>:
+            <span style="color:#606">my-workspace-pod</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dev</span></span>
+        <span style="color:#606">spec</span>:
+          <span style="color:#606">containers</span>:
+            -
+              <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/ubuntu_jdk8:latest</span></span>
+              <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">main</span></span>
+              <span style="color:#606">ports</span>:
+              -
+                <span style="color:#606">containerPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span>
+                <span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">TCP</span></span>
+              <span style="color:#606">env</span>:
+              -
+                <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MY_ENV_VAR</span></span>
+                <span style="color:#606">valueFrom</span>:
+                  <span style="color:#606">configMapKeyRef</span>:
+                    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-configmap</span></span>
+                    <span style="color:#606">key</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-key</span></span>
+            -
+              <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/ubuntu_jdk8:latest</span></span>
+              <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">main1</span></span>
+  -
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ConfigMap</span></span>
+    <span style="color:#606">metadata</span>:
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-configmap</span></span>
+    <span style="color:#606">data</span>:
+      <span style="color:#606">my-key</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-value</span></span>
+  -
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Service</span></span>
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+    <span style="color:#606">metadata</span>:
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-service</span></span>
+    <span style="color:#606">spec</span>:
+      <span style="color:#606">selector</span>:
+        <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">app</span></span>
+      <span style="color:#606">ports</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">protocol: TCP</span></span>
+        <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span>
+        <span style="color:#606">targetPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8081</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also have one pod and several containers in it. Che treats those containers as workspace machines. You can also define machine names in annotations. <code>PodName/Container Name</code> is the default naming pattern for a machine.</p>
+<p>As a bare minimum, a Kubernetes YAML recipe must contain at least one Pod or Deployment, in which the main dev machine is run.</p>
+</div>
+<div class="paragraph">
+<p>You can also specify multiple containers within the workspace pod. Che treats those containers as workspace machines. These containers can have machine names defined in annotations. <code>PodName/Container Name</code> is the default naming pattern for a machine.</p>
 </div>
 <div class="paragraph">
 <p>The following is an example of using annotations:</p>
@@ -1246,7 +1283,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 28, 2018 <br/>
+                    Site last generated: Feb 22, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
