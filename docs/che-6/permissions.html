@@ -1019,6 +1019,10 @@ $('#toc').on('click', 'a', function() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">manageUsers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allows creating and managing users.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">monitorSystem</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows for accessing endpoints used for monitoring the state of the server.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1122,16 +1126,10 @@ This happens at Che Server start. If the user is not present in the Che user dat
 </div>
 </div>
 <div class="sect1">
-<h2 id="super-privileged-mode">Super-privileged mode</h2>
+<h2 id="monitor-system-permissions">monitorSystem permission</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>manageSystem</code> permission can be extended to provide a super-privileged mode. This allows the user to perform advanced actions on any resources managed by the system. You can read and stop any workspaces with the <code>manageSystem</code> permission and assign permissions to users as needed.</p>
-</div>
-<div class="paragraph">
-<p>The super-privileged mode is disabled by default. You can change to super-privileged mode by configuring the `CHE_SYSTEM_SUPER__PRIVILEGED__MODE` variable to <code>true</code> in the <code>che.env</code> file.</p>
-</div>
-<div class="paragraph">
-<p>List of services that are enabled for users with <code>manageSystems</code> permissions and with super-privileged mode on:</p>
+<p>Users with the <code>monitorSystem</code> permission have access to the following services:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1148,321 +1146,186 @@ This happens at Che Server start. If the user is not present in the Che user dat
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/workspace/namespace/{namespace:.*}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/activity</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get all workspaces for given namespace.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/workspace/{id}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Stop workspace</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/workspace/{key:.*}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get workspace by key</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/organization/resource/{suborganizationId}/cap</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get resource cap for given organization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/organization/resource/{suborganizationId}/cap</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set resource cap for given organization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/organization/{parent}/organizations</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get child organizations</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/organization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get user&#8217;s organizations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get workspaces in certain state for a certain amount of time</p>
+<p class="tableblock">[id="super-privileged-mode"]
+== Super-privileged mode</p>
+<p class="tableblock">The <code>manageSystem</code> permission can be extended to provide a super-privileged mode. This allows the user to perform advanced actions on any resources managed by the system. You can read and stop any workspaces with the <code>manageSystem</code> permission and assign permissions to users as needed.</p>
+<p class="tableblock">The super-privileged mode is disabled by default. You can change to super-privileged mode by configuring the `CHE_SYSTEM_SUPER__PRIVILEGED__MODE` variable to <code>true</code> in the <code>che.env</code> file.</p>
+<p class="tableblock">List of services that are enabled for users with <code>manageSystems</code> permissions and with super-privileged mode on:</p>
+<p class="tableblock">[cols=",,",options="header",]</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="stack-permissions">Stack permissions</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>A stack is a runtime configuration for a workspace.  See <a href="stacks.html">stack definition</a> for more information on stacks.</p>
-</div>
-<div class="paragraph">
-<p>The following permissions are applicable to stacks:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Permission</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">search</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows searching of the stacks.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">read</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows reading of the stack configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows updating of the stack configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows deleting of the stack.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">setPermissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows managing permissions for the stack.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="permissions-api">Permissions API</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>All permissions can be managed using the provided REST API. The APIs are documented using Swagger at <code>[{host}/swagger/#!/permissions]</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="list-permissions">Listing permissions</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To list the permissions that apply to a specific resources, run this command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ GET /permissions</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>domain</code> values are:</p>
+<p>|Path | HTTP Method | Description
+|<code>/workspace/namespace/{namespace:.<strong>}</code> |GET |Get all workspaces for given namespace.
+|<code>/workspace/{id}</code> |DELETE |Stop workspace
+|<code>/workspace/{key:.</strong>}</code> |GET | Get workspace by key
+|<code>/organization/resource/{suborganizationId}/cap</code> |GET |Get resource cap for given organization
+|<code>/organization/resource/{suborganizationId}/cap</code> |POST |Set resource cap for given organization
+|<code>/organization/{parent}/organizations</code> |GET | Get child organizations
+|<code>/organization</code> |GET | Get user&#8217;s organizations</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Domain</th>
-</tr>
-</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>organization</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspace</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stack</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[id="stack-permissions"]
+== Stack permissions</p>
+<p class="tableblock">A stack is a runtime configuration for a workspace.  See <a href="stacks.html">stack definition</a> for more information on stacks.</p>
+<p class="tableblock">The following permissions are applicable to stacks:</p>
+<p class="tableblock">[cols=",",options="header",]</p></td>
 </tr>
 </tbody>
 </table>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p><code>domain</code> is optional.  In this case, the API returns all possible permissions for all domains.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="list-permissions-for-specific-user">Listing permissions for a user</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To list the permissions that apply to a user, run this command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ GET /permissions/{domain}</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>domain</code> values are:</p>
+<p>|Permission |Description
+|search |Allows searching of the stacks.
+|read |Allows reading of the stack configuration.
+|update |Allows updating of the stack configuration.
+|delete |Allows deleting of the stack.
+|setPermissions |Allows managing permissions for the stack.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Domain</th>
-</tr>
-</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>organization</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspace</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stack</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[id="permissions-api"]
+== Permissions API</p>
+<p class="tableblock">All permissions can be managed using the provided REST API. The APIs are documented using Swagger at <code>[{host}/swagger/#!/permissions]</code>.</p>
+<p class="tableblock">[id="list-permissions"]
+== Listing permissions</p>
+<p class="tableblock">To list the permissions that apply to a specific resources, run this command:
+----
+$ GET /permissions
+----</p>
+<p class="tableblock">The <code>domain</code> values are:</p>
+<p class="tableblock">[cols="",options="header",]</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="list-permissions-for-all-users">Listing permissions for all users</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>You must have sufficient permissions to see this information.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>To list the permissions that apply to all users, run this command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>GET /permissions/{domain}/all</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>domain</code> values are:</p>
+<p>|Domain
+|<code>system</code>
+|<code>organization</code>
+|<code>workspace</code>
+|<code>stack</code></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Domain</th>
-</tr>
-</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>organization</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspace</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stack</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[NOTE]
+====
+<code>domain</code> is optional.  In this case, the API returns all possible permissions for all domains.
+====</p>
+<p class="tableblock">[id="list-permissions-for-specific-user"]
+== Listing permissions for a user</p>
+<p class="tableblock">To list the permissions that apply to a user, run this command:</p>
+<p class="tableblock">----
+$ GET /permissions/{domain}
+----</p>
+<p class="tableblock">The <code>domain</code> values are:</p>
+<p class="tableblock">[cols="",options="header",]</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="assign-permissions">Assigning permissions</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>To assign permissions to a resource, run this command:</p>
-</div>
-<div class="paragraph">
-<p><code>POST /permissions</code></p>
-</div>
-<div class="paragraph">
-<p>The <code>domain</code> values are:</p>
+<p>|Domain
+|<code>system</code>
+|<code>organization</code>
+|<code>workspace</code>
+|<code>stack</code></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Domain</th>
-</tr>
-</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>organization</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspace</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stack</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[id="list-permissions-for-all-users"]
+== Listing permissions for all users</p>
+<p class="tableblock">[NOTE]
+====
+You must have sufficient permissions to see this information.
+====</p>
+<p class="tableblock">To list the permissions that apply to all users, run this command:</p>
+<p class="tableblock">----
+GET /permissions/{domain}/all
+----</p>
+<p class="tableblock">The <code>domain</code> values are:</p>
+<p class="tableblock">[cols="", options="header",]</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The following is a message <code>body</code> that requests permissions for a user with a <code>userID</code> to a workspace with a <code>workspaceID</code>:</p>
+<p>|Domain
+|<code>system</code>
+|<code>organization</code>
+|<code>workspace</code>
+|<code>stack</code></p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>actions</span><span style="color:#404">&quot;</span></span>: [
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">read</span><span style="color:#710">&quot;</span></span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">use</span><span style="color:#710">&quot;</span></span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">run</span><span style="color:#710">&quot;</span></span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">configure</span><span style="color:#710">&quot;</span></span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">setPermissions</span><span style="color:#710">&quot;</span></span>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[id="assign-permissions"]
+== Assigning permissions</p>
+<p class="tableblock">To assign permissions to a resource, run this command:</p>
+<p class="tableblock"><code>POST /permissions</code></p>
+<p class="tableblock">The <code>domain</code> values are:</p>
+<p class="tableblock">[cols="",options="header",]</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>|Domain
+|<code>system</code>
+|<code>organization</code>
+|<code>workspace</code>
+|<code>stack</code></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The following is a message <code>body</code> that requests permissions for a user with a <code>userID</code> to a workspace with a <code>workspaceID</code>:</p>
+<p class="tableblock">[source,json]
+----
+{
+  "actions": [
+    "read",
+    "use",
+    "run",
+    "configure",
+    "setPermissions"
   ],
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>userId</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">userID</span><span style="color:#710">&quot;</span></span>,
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>domainId</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">workspace</span><span style="color:#710">&quot;</span></span>,
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>instanceId</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">workspaceID</span><span style="color:#710">&quot;</span></span>
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>instanceId</code> parameter corresponds to the ID of the resource that retrieves the permission for all users. The <code>userId</code> parameter corresponds to the ID of the user that has been granted certain permissions.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sharing-permissions">Sharing permissions</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A user with <code>setPermissions</code> privileges can share a workspace and grant <code>read</code>, <code>use</code>, <code>run</code>, <code>configure</code>, or <code>setPermissions</code> privileges to other users.</p>
-</div>
-<div class="paragraph">
-<p>To share workspace permissions:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Select a workspace in the user dashboard, navigate to the <strong>Share</strong> tab and enter emails of users. Use commas or space as separators if there are multiple emails.</p>
-</li>
-</ul>
-</div>
+  "userId": "userID",
+  "domainId": "workspace",
+  "instanceId": "workspaceID"
+}
+----</p>
+<p class="tableblock">The <code>instanceId</code> parameter corresponds to the ID of the resource that retrieves the permission for all users. The <code>userId</code> parameter corresponds to the ID of the user that has been granted certain permissions.</p>
+<p class="tableblock">[id="sharing-permissions"]
+== Sharing permissions</p>
+<p class="tableblock">A user with <code>setPermissions</code> privileges can share a workspace and grant <code>read</code>, <code>use</code>, <code>run</code>, <code>configure</code>, or <code>setPermissions</code> privileges to other users.</p>
+<p class="tableblock">To share workspace permissions:</p>
+<p class="tableblock">* Select a workspace in the user dashboard, navigate to the <strong>Share</strong> tab and enter emails of users. Use commas or space as separators if there are multiple emails.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -1489,7 +1352,7 @@ This happens at Che Server start. If the user is not present in the Che user dat
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Feb 22, 2019 <br/>
+                    Site last generated: Feb 25, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
