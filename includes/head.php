@@ -52,12 +52,27 @@
     <!-- Eclipse Foundation cookie consent: -->
     <link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
     <script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    
 
-        <script>
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
-        </script>
+    <script>
+        window.hasCookieConsent = function() {
+            var match = document.cookie.match(new RegExp('eclipse_cookieconsent_status=([^;]+)'));
+            return match && (match[1] === 'allow');
+        }
+
+        if (window.hasCookieConsent) {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-37306001-2');
+        }
+    </script>
+
     </head>
 
     <!-- Tracking Snippets -->
@@ -70,22 +85,6 @@
 
     gtag('config', 'UA-37306001-2');
     </script> -->
-
-    <?php
-    require_once ($_SERVER['DOCUMENT_ROOT'] . "/eclipse.org-common/system/app.class.php");
-    $App = new App();
-    $Theme = $App->getThemeClass("quicksilver");
-    if ($Theme->hasCookieConsent()) {
-        //Insert widgets from a 3rd party
-        echo  '<!-- Google Tag Manager -->';
-        echo  "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':!";
-        echo  "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],";
-        echo  "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=";
-        echo  "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);";
-        echo  "})(window,document,'script','dataLayer','UA-37306001-2');</script>";
-        echo  "<!-- End Google Tag Manager -->";    
-    }
-    ?>
 
     <!-- GITHUB BUTTON -->
     <script async defer src="https://buttons.github.io/buttons.js" crossorigin="anonymous"></script>
