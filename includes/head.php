@@ -58,7 +58,7 @@
         })
     </script>
     
-
+    <!--
     <script>
         window.hasCookieConsent = function() {
             var match = document.cookie.match(new RegExp('eclipse_cookieconsent_status=([^;]+)'));
@@ -71,6 +71,16 @@
             gtag('js', new Date());
             gtag('config', 'UA-37306001-2');
         }
+    </script> -->
+
+    <script>
+    <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','UA-37306001-2');</script>
+    <!-- End Google Tag Manager -->  
     </script>
 
     </head>
