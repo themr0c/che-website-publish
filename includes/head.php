@@ -57,6 +57,16 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
+
+    <?php
+        if ($Theme->hasCookieConsent()) {
+            //Insert widgets from a 3rd party
+            echo  "window.dataLayer = window.dataLayer || [];";
+            echo  "function gtag(){dataLayer.push(arguments);}";
+            echo  "gtag('js', new Date());";
+            echo  "gtag('config', 'UA-37306001-2');";
+        }
+    ?>
     
     <!--
     <script>
