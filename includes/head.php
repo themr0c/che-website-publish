@@ -57,18 +57,9 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
-
-    <?php
-        if ($Theme->hasCookieConsent()) {
-            //Insert widgets from a 3rd party
-            echo  "window.dataLayer = window.dataLayer || [];";
-            echo  "function gtag(){dataLayer.push(arguments);}";
-            echo  "gtag('js', new Date());";
-            echo  "gtag('config', 'UA-37306001-2');";
-        }
-    ?>
     
-    <!--
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>
         window.hasCookieConsent = function() {
             var match = document.cookie.match(new RegExp('eclipse_cookieconsent_status=([^;]+)'));
@@ -81,30 +72,7 @@
             gtag('js', new Date());
             gtag('config', 'UA-37306001-2');
         }
-    </script> -->
-
-    <script>
-    <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','UA-37306001-2');</script>
-    <!-- End Google Tag Manager -->  
     </script>
-
-    </head>
-
-    <!-- Tracking Snippets -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-37306001-2');
-    </script> -->
 
     <!-- GITHUB BUTTON -->
     <script async defer src="https://buttons.github.io/buttons.js" crossorigin="anonymous"></script>
