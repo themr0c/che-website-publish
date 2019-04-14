@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" workspace, runtime, project, projects, git, subversion, version control, clone, pull, push, ssh key, ssh keys, github, oauth, gitlab, bitbucket">
-<title>Version Control | Eclipse Che Documentation</title>
+<title>Using version control | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -174,7 +174,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Version Control page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Using version control page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -192,7 +192,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Version Control">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Using version control">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -824,7 +824,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Version Control</h1>
+   <h1 class="post-title-main">Using version control</h1>
 </div>
 
 
@@ -862,31 +862,61 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>Eclipse Che natively supports Git which is provided by <a href="https://www.eclipse.org/jgit/">JGit library</a>. Versioning functionality is available in the IDE and in the terminal. Note: an <a href="#svn">SVN plugin</a> also exists, but it’s not part of the default Che assembly.</p>
+<p>Eclipse Che natively supports the Git version control system (VCS), which is provided by the <a href="https://www.eclipse.org/jgit/">JGit library</a>. Versioning functionality is available in the IDE and in the terminal.</p>
 </div>
 <div class="paragraph">
-<p>The following sections describe how to connect and authenticate users to a remote git repository. Any operations that involve authentication on the remote repository will need to be done via the IDE interface unless authentication is setup separately for the workspace machine(terminal/commands).</p>
+<p>The following sections describe how to connect and authenticate users to a remote Git repository. Any operations that involve authentication on the remote repository need to be done via the IDE interface unless authentication is configured separately for the workspace machine (terminal, commands).</p>
 </div>
 <div class="paragraph">
-<p>Private repositories will require a secure SSH connection and most developers who plan to push to a repo will clone it via SSH, so an SSH key pair needs to be generated. SSH keys are saved in user preferences, so you need to generate the SSH key only once and it will be used in all workspaces.</p>
+<p>Private repositories require a secure SSH connection. In order to connect to Git repositories over SSH, an SSH key pair needs to be generated. SSH keys are saved in user preferences, so the same key can be used in all workspaces.</p>
 </div>
-<div class="paragraph">
-<p><strong>Note: HTTPS git URL can only be used to push changes if you enable oAuth authentication as described in <a href="user-management.html#social-login-and-brokering">GitHub oAuth</a></strong>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+HTTPS Git URLs can only be used to push changes when OAuth authentication is enabled. See <a href="user-management.html#enabling-authentication-with-social-accounts-and-brokering">Enabling authentication with social accounts and brokering</a>.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect1">
-<h2 id="generateupload-ssh-keys">Generate/Upload SSH Keys</h2>
+<h2 id="generating-and-uploading-ssh-keys">Generating and uploading SSH keys</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>SSH keys can be generated at <code>Profile &gt; Preferences &gt; SSH &gt; VCS</code>. Use the <code>Generate Key</code> button and manually save the resulting key to your Git hosting provider account. When prompted to provide the hostname for your repo, make sure it is a bare hostname (no www or http/https) as in the example below. After the key has been generated, you can view and copy it, and save to your repository hosting account.</p>
+<p>SSH keys can be generated in the Che user interface.</p>
 </div>
-<div class="paragraph">
-<p><strong>IMPORTANT!</strong>. Hostname is an actual hostname of a VCS provider. Examples: <code>github.com</code>, <code>bitbucket.org</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <strong>Profile &gt; Preferences &gt; SSH &gt; VCS</strong>, and click the <b class="button">Generate Key</b> button.</p>
+</li>
+<li>
+<p>When prompted to provide the host name for your repository, use the bare host name (do not include <code>www</code> or <code>https</code>) as in the example below.</p>
+</li>
+<li>
+<p>Save the resulting key to your Git-hosting provider account.</p>
+</li>
+</ol>
 </div>
-<div class="paragraph">
-<p><strong>Use Existing SSH Keys</strong></p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The host name is an actual host name of a VCS provider. Examples: <code>github.com</code>, <code>bitbucket.org</code>.
+</td>
+</tr>
+</table>
 </div>
+<div class="sect2">
+<h3 id="using-existing-ssh-keys">Using existing SSH keys</h3>
 <div class="paragraph">
-<p>You can upload an existing public key instead of creating a new SSH key. When uploading a key add the hostname (using no <strong>www or http/https</strong> - as in the example below). Note that the <code>public key &gt; view</code> button will not be available with this option as the public file should be generated already.</p>
+<p>You can upload an existing public key instead of creating a new SSH key. When uploading a key, add the host name (using no <code>www</code> or <code>https</code> - as in the example below). Note that the <strong>Public key &gt; View</strong> button is not be available when using this option because the public file should be generated already.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -894,82 +924,147 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="paragraph">
-<p>The following example is specific to GitHub and GitLab but can be used with all git or SVN repository providers that use SSH authentication. Please refer to documentation provided by other providers for additional assistance.</p>
+<p>The following examples are specific to GitHub and GitLab, but a similar procedure can be used with all Git or SVN repository providers that use SSH authentication. See documentation provided by other providers for additional assistance.</p>
 </div>
+<div class="exampleblock">
+<div class="title">Example 1. GitHub example</div>
+<div class="content">
 <div class="paragraph">
-<p><strong>GitHub Example</strong></p>
+<p>When not using GitHub OAuth, you can manually upload a key. To add the associated public key to a repository or account on <strong>github.com</strong>:</p>
 </div>
-<div class="paragraph">
-<p>If you don’t want to setup GitHub oAuth, you can manually upload a key. Add the associated public key to a repository/account using <strong>github.com</strong>, click your user icon(top right) then <code>settings &gt; ssh and gpg keys &gt; new ssh key</code>. Give a title to your liking and paste the public key copied from Che into form.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click your user icon (top right).</p>
+</li>
+<li>
+<p>Go to <strong>Settings &gt; SSH and GPG keys</strong> and click the <strong>New SSH key</strong> button.</p>
+</li>
+<li>
+<p>Enter a title and paste the public key copied from Che to the <strong>Key</strong> text field.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/git/ssh_github.png" alt="ssh github">
 </div>
 </div>
-<div class="paragraph">
-<p><strong>GitLab Example</strong></p>
 </div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. GitLab example</div>
+<div class="content">
 <div class="paragraph">
-<p>To add the associated public key to a git repository/account using <strong>gitlab.com</strong> click your user icon(top right) then <code>Profile Settings &gt; SSH Keys</code>. Give a title to your liking and paste the public key copied from Che.</p>
+<p>To add the associated public key to a Git repository or account on <strong>gitlab.com</strong>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click your user icon (top right).</p>
+</li>
+<li>
+<p>Go to <strong>Settings &gt; SSH Keys</strong>.</p>
+</li>
+<li>
+<p>Enter a title and paste the public key copied from Che to the <strong>Key</strong> text field.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/git/ssh_gitlab.png" alt="ssh gitlab">
 </div>
 </div>
-<div class="paragraph">
-<p><strong>BitBucket Example</strong></p>
 </div>
-<div class="paragraph">
-<p>You can setup ssh to a dedicated BitBucket Server. Each user will still need to setup their own SSH key for authentication to the BitBucket Server which will be similar to GitHub/GitLab SSH examples.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="github-oauth">GitHub oAuth</h2>
+<h2 id="configuring-github-oauth">Configuring GitHub OAuth</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>oAuth for Github allows users via the IDE git menu to import projects using SSH "git@", push to repository, and use pull request panel. To enable automatic SSH key upload to GitHub for users, register an application in your GitHub account <strong>Settings &gt; Developer Settings &gt; oAuth Apps</strong> with the callback <code><a href="http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback" class="bare">http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback</a></code>:</p>
+<p>OAuth for Github allows users to import projects using SSH addresses (<code>git@</code>), push to repositories, and use the pull request panel. To enable automatic SSH key upload to GitHub for users:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>On <strong>github.com</strong>, click your user icon (top right).</p>
+</li>
+<li>
+<p>Go to <strong>Settings &gt; Developer settings &gt; OAuth Apps</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Register a new application</b> button.</p>
+</li>
+<li>
+<p>In the <strong>Application name</strong> field, enter, for example, <code>Eclipse Che</code>.</p>
+</li>
+<li>
+<p>In the <strong>Homepage URL</strong> field, enter <code>http://<em>${CHE_HOST}</em>:<em>${CHE_PORT}</em></code>.</p>
+</li>
+<li>
+<p>In the <strong>Authorization callback URL</strong> field, enter <code>http://<em>${CHE_HOST}</em>:<em>${CHE_PORT}</em>/api/oauth/callback</code>.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../images/git/github_oauth.png" alt="github oauth">
 </div>
 </div>
-<div class="paragraph">
-<p><strong>SINGLE-USER ONLY!</strong>. See: <a href="user-management.html#social-login-and-brokering">Setup GitHub oAuth for Multi-User Che</a></p>
-</div>
-<div class="paragraph">
-<p>Set the following to environment variables in the <code>che.env</code> (See: <a href="docker-config.html">Docker Config</a>) or update your Che OpenShift deployment (See: <a href="openshift-config.html">OpenShift Config</a>).</p>
-</div>
+</li>
+<li>
+<p>On OpenShift, update the deployment configuration (see <a href="openshift-config.html">OpenShift configuration</a>).</p>
 <div class="listingblock">
 <div class="content">
-<pre>CHE_OAUTH_GITHUB_CLIENTID=your_github_client_id
-CHE_OAUTH_GITHUB_CLIENTSECRET=your_github_secret
+<pre>CHE_OAUTH_GITHUB_CLIENTID=<em>&lt;your-github-client-id&gt;</em>
+CHE_OAUTH_GITHUB_CLIENTSECRET=<em>&lt;your-github-secret&gt;</em>
 CHE_OAUTH_GITHUB_AUTHURI=https://github.com/login/oauth/authorize
 CHE_OAUTH_GITHUB_TOKENURI=https://github.com/login/oauth/access_token
-CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback</pre>
+CHE_OAUTH_GITHUB_REDIRECTURIS=http://<em>${CHE_HOST}</em>:<em>${CHE_PORT}</em>/api/oauth/callback</pre>
 </div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Substitute all occurrences of <code><em>${CHE_HOST}</em></code> and <code><em>${CHE_PORT}</em></code> with the URL and port of your Che installation.</p>
+</li>
+<li>
+<p>Substitute <code><em>&lt;your-github-client-id&gt;</em></code> and <code><em>&lt;your-github-secret&gt;</em></code> with your GitHub client ID and secret.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Once the oAuth is setup, SSH keys are generated and uploaded automatically to GitHub by a user in workspace IDE <code>Profile &gt; Preferences &gt; SSH &gt; VCS</code> by clicking the 'Octocat' icon. You can connect to your GitHub account and choose repos to clone, rather than manually type (or paste) GitHub project URL.</p>
+<p>Once OAuth is configured, SSH keys are generated and uploaded automatically to GitHub by a user in the IDE in <strong>Profile &gt; Preferences &gt; SSH &gt; VCS</strong> by clicking the <em>Octocat</em> icon. You can connect to your GitHub account and choose repositories to clone, rather than having to manually type (or paste) GitHub project URLs.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="gitlab-oauth">GitLab oAuth</h2>
+<h2 id="gitlab-oauth">Configuring GitLab OAuth</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Currently it is not possible for Che to use oAuth integration with GitLab. Although GitLab supports oAuth for clone operations, pushes are not supported. You can track <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/18106">this GitLab issue</a> in their issue management system.</p>
+<p>OAuth integration with GitLab is not supported. Although GitLab supports OAuth for clone operations, pushes are not supported. A feature request to add support exists in the GitLab issue management system: <a href="https://gitlab.com/gitlab-org/gitlab-ce/issues/18106">Allow runners to push via their CI token</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="built-in-pull-request-panel">Built-In Pull Request Panel</h2>
+<h2 id="built-in-pull-request-panel">Submitting pull requests using the built-in Pull Request panel</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Within Eclipse Che there is a pull request panel to simplify the creation of pull requests for GitHub, BitBucket or Microsoft VSTS (with git) repositories.</p>
+<p>Eclipse Che provides a <strong>Pull Request</strong> panel to simplify the creation of pull requests for GitHub, BitBucket, and Microsoft VSTS (with Git) repositories.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -979,18 +1074,30 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="sect1">
-<h2 id="committer-name-and-email">Committer Name and Email</h2>
+<h2 id="saving-committer-name-and-email">Saving committer name and email</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Committer name and email are set in <code>Profile &gt; Preferences &gt; Git &gt; Committer</code>. Once set each commit will include this information.</p>
+<p>Committer name and email are set in <strong>Profile &gt; Preferences &gt; Git &gt; Committer</strong>. Once set, every commit will include this information.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="git-workspace-clients">Git Workspace Clients</h2>
+<h2 id="git-workspace-clients">Interacting with Git from a workspace</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After importing repository, you can perform the most common Git operations using interactive menus or as terminal commands. Terminal git commands require its own authentication setup, which means that keys generated in the IDE will work only when Git is used in the IDE menus. Git installed in a terminal is a different git system. You may generate keys in <code>~/.ssh</code> there as well.</p>
+<p>After importing a repository, you can perform the most common Git operations using interactive menus or as terminal commands.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Terminal Git commands require their own authentication setup. This means that keys generated in the IDE work only when Git is used through the IDE menus. Git installed in a terminal is a different Git system. You can generate keys in <code>~/.ssh</code> there as well.
+</td>
+</tr>
+</table>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -998,34 +1105,43 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="paragraph">
-<p>To faster access to the most frequently used git functionality one can use keyboard shortcuts:</p>
+<p>Use keyboard shortcuts to access the most frequently used Git functionality faster:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Commit: <code>Alt + C</code></p>
-</li>
-<li>
-<p>Push to remote: <code>Alt + Shift + C</code></p>
-</li>
-<li>
-<p>Pull from remote: <code>Alt + P</code></p>
-</li>
-<li>
-<p>Work with branches: <code>Ctrl + B</code></p>
-</li>
-<li>
-<p>Compare current changes with the latest repository version: <code>Ctrl + Alt + D</code></p>
-</li>
-</ul>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="keyseq"><kbd>Alt</kbd>+<kbd>C</kbd></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Push to remote</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="keyseq"><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pull from remote</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="keyseq"><kbd>Alt</kbd>+<kbd>P</kbd></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Work with branches</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>B</kbd></span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compare current changes with the latest repository version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>D</kbd></span></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="git-in-project-tree-and-editor">Git in Project Tree and Editor</h2>
+<h2 id="git-in-project-tree-and-editor">Git status highlighting in the project tree and editor</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Files in project explorer and editor tabs can be colored according to their Git Status:</p>
+<p>Files in project explorer and editor tabs can be colored according to their Git status:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1035,18 +1151,18 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 <div class="ulist">
 <ul>
 <li>
-<p>Green: new files that are staged in index.</p>
+<p>Green: new files that are staged in index</p>
 </li>
 <li>
-<p>Blue: files that contain changes.</p>
+<p>Blue: files that contain changes</p>
 </li>
 <li>
-<p>Yellow: files that are not staged in index.</p>
+<p>Yellow: files that are not staged in index</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Editor displays change markers according to file edits:</p>
+<p>The editor displays change markers according to file edits:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1056,57 +1172,76 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 <div class="ulist">
 <ul>
 <li>
-<p>Yellow marker: modified line(s).</p>
+<p>Yellow marker: modified line(s)</p>
 </li>
 <li>
-<p>Green marker: new line(s).</p>
+<p>Green marker: new line(s)</p>
 </li>
 <li>
-<p>White triangle: removed line(s).</p>
+<p>White triangle: removed line(s)</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="git-operations">Git Operations</h2>
+<h2 id="git-operations">Performing Git operations</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="commiting">Commiting</h3>
 <div class="paragraph">
-<p><strong>Commit</strong></p>
-</div>
-<div class="paragraph">
-<p>Commit your changes at <code>Git</code> &#8594; <code>Commit&#8230;&#8203;</code> main menu or call it with <code>Alt + C</code> shortcut.</p>
+<p>Commit your changes by navigating to <strong>Git &gt; Commit&#8230;&#8203;</strong> in the main menu, or use the <span class="keyseq"><kbd>Alt</kbd>+<kbd>C</kbd></span> shortcut.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/git/git-commit-tree-view.png" alt="git commit tree view">
 </div>
 </div>
-<div class="paragraph">
-<p>You can select files which will be added to index and committed. All files in the selected package / folder in the project explorer will be checked by default. After selecting files, type commit message. Optionally you could select <code>Amend previous commit</code> to replace previous commit (for more details <a href="https://git-scm.com/docs/git-commit#git-commit---amend">see git docs</a>).</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select files that will be added to index and committed. All files in the selected package or folder in the project explorer are checked by default.</p>
+</li>
+<li>
+<p>Type your commit message. Optionally, you can select <strong>Amend previous commit</strong> to modify the previous commit (for more details, see <a href="https://git-scm.com/docs/git-commit#git-commit---amend">Git commit documentation</a>).</p>
+</li>
+<li>
+<p>To push your commit to a remote repository by checking the <strong>Push committed changes to</strong> check-box and select a remote branch.</p>
+</li>
+<li>
+<p>Click <b class="button">Commit</b> to proceed (the <b class="button">Commit</b> button is active when at least one file is selected and a commit message is present, or <strong>Amend previous commit</strong> is checked).</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Push your commit to a remote repository by checking <code>Push committed changes to</code> check-box and selecting a remote branch.</p>
+<p>Behavior for files in the list view is the same as in the <strong>Compare</strong> window (see <a href="#reviewing-changed-files">Reviewing changed files</a> section). Double-clicking a file opens diff window with it.</p>
 </div>
-<div class="paragraph">
-<p>Click <code>Commit</code> to proceed (the <code>Commit</code> button is active as long as at least 1 file is selected and a commit message is present or <code>Amend previous commit</code> is checked).</p>
 </div>
+<div class="sect2">
+<h3 id="pushing-and-pulling">Pushing and pulling</h3>
 <div class="paragraph">
-<p>Behavior for files in the list view is the same as in compare window (see <a href="#compare">Reviewing changed files</a> section). Double clicking a file will open diff window with it.</p>
-</div>
-<div class="paragraph">
-<p><strong>Push/Pull</strong></p>
-</div>
-<div class="paragraph">
-<p>Push your commits at <code>Git</code> &#8594; <code>Remotes&#8230;&#8203;</code> &#8594; <code>Push</code> from main menu or <code>Alt + Shift + c</code> shortcut.</p>
+<p>Push your commits by navigating to <strong>Git &gt; Remotes&#8230;&#8203; &gt; Push</strong> in the main menu, or use the <span class="keyseq"><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd></span> shortcut.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/git/git-push.png" alt="git push">
 </div>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Choose the remote repository.</p>
+</li>
+<li>
+<p>Choose the local and remote branch.</p>
+</li>
+<li>
+<p>Optionally, you can force select <strong>Force push</strong>.</p>
+</li>
+</ol>
+</div>
 <div class="paragraph">
-<p>Choose a remote repository, local and remote branch. Optionally, you can force <code>Force push</code>. Get changes from a remote repo at <code>Git</code> &#8594; <code>Remotes&#8230;&#8203;</code> &#8594; <code>Pull</code> (<code>Alt + P</code> shortcut).</p>
+<p>Get changes from a remote repository by navigating to <strong>Git &gt; Remotes&#8230;&#8203; &gt; Pull</strong> in the main menu, or use the <span class="keyseq"><kbd>Alt</kbd>+<kbd>P</kbd></span> shortcut.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1114,13 +1249,13 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="paragraph">
-<p>You can use <code>Rebase instead of merge</code> to keep your local commits on top (for more information <a href="https://git-scm.com/docs/git-pull#git-pull&#8212;&#8203;r">see git docs</a>).</p>
+<p>You can use <strong>Rebase instead of merge</strong> to keep your local commits on top (for more information, see <a href="https://git-scm.com/docs/git-pull#git-pull&#8212;&#8203;r">Git pull documentation</a>).</p>
 </div>
-<div class="paragraph">
-<p><strong>Branches</strong></p>
 </div>
+<div class="sect2">
+<h3 id="managing-branches">Managing branches</h3>
 <div class="paragraph">
-<p>Manage your git branches at <code>Git</code> &#8594; <code>Branches&#8230;&#8203;</code> from main menu or <code>Ctrl + b</code> shortcut.</p>
+<p>Manage your git branches by navigating to <strong>Git &gt; Branches&#8230;&#8203;</strong> in the main menu, or use the <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>B</kbd></span> shortcut.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1128,15 +1263,23 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="paragraph">
-<p>You can filter branches view by choosing to see only local or remote branches.</p>
+<p>You can filter the branches view by choosing to see only local or remote branches.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="compare">Compare</h2>
+<h2 id="reviewing-changed-files">Reviewing changed files</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Git compare window is used to show files which was changed. This widget could be invoked from different places for different states, but the most frequently used way is to use <code>Git</code> &#8594; <code>Compare</code> &#8594; <code>&lt;Select-to-what&gt;</code> from main menu or use <code>Ctrl + Alt + D</code> shortcut to compare current state of code to the latest local commit. Another way is to select an object in project tree and click <code>Git</code> &#8594; <code>Select-to-what</code> from item’s context menu. Note, this widget shows changed files in the selected object in project explorer. To see all changes select project folder. Note, if only one file was changed, diff window will be shown instead of compare window.</p>
+<p>The <strong>Git Compare</strong> window is used to show files that have changed.</p>
+</div>
+<div class="paragraph">
+<p>To compare the current state of code to the latest local commit, navigate to <strong>Git &gt; Compare &gt; Select-to-what</strong> in the main menu, or use the <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>D</kbd></span> shortcut. Another way is to select an object in the project tree and choose <strong>Git &gt; Select-to-what</strong> from the context menu of an item.</p>
+</div>
+<div class="paragraph">
+<div class="title">Listing changed files</div>
+<p>The <strong>Git Compare</strong> window shows changed files in the selected object in the project explorer. To see all changes, select a project folder. If only one file has changed, a diff window is shown instead of the compare window.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1147,7 +1290,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 <p>By default, affected files are listed as a tree.</p>
 </div>
 <div class="paragraph">
-<p><code>Expand all directories</code> and <code>Collapse all directories</code> will help you get a better view. <code>View as list</code> button switches the view of changed files to a list, where each file is shown with its full path. To return to the tree view just click <code>Group by directories</code>.</p>
+<p>The <strong>Expand all directories</strong> and <strong>Collapse all directories</strong> options help to get a better view. The <b class="button">View as list</b> button switches the view of changed files to a list, where each file is shown with its full path. To return to the tree view, click <b class="button">Group by directories</b>.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1155,10 +1298,11 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="paragraph">
-<p>To view diff for a file, select it and click <code>Compare</code> or just double click on a file name.</p>
+<div class="title">Viewing diffs</div>
+<p>To view a diff for a file, select the file and click <strong>Compare</strong>, or double-click the file name.</p>
 </div>
 <div class="paragraph">
-<p>You can review changes between two states of code. To view the diff, use <code>Git</code>&#8594;`Compare`&#8594;`&lt;Select-to-what&gt;` from main menu. If more than one file has changed the list of changed files will be opened first. To select a file to compare double-click on it or select a file, then click the <code>Compare</code>. Another way to open diff is to select a file in project explorer and click <code>Git</code> &#8594; <code>Select-to-what</code> from context menu or directly from editor’s context menu.</p>
+<p>You can review changes between two states of code. To view the diff, go to <strong>Git &gt; Compare &gt; Select-to-what</strong> in main menu. If more than one file has changed, a list of the changed files is opened first. To select a file to compare, double-click it, or select a file, and then click <strong>Compare</strong>. Another way to open a diff is to select a file in the <strong>Projects Explorer</strong> and choose <strong>Git &gt; Select-to-what</strong> from its context menu or directly from the context menu in the editor.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1166,24 +1310,13 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
 </div>
 </div>
 <div class="paragraph">
-<p>Your changes are displayed in the left editor and the file being compared to is on the right. The left editor can be used for editing and fixing your changes.</p>
+<p>Your changes are shown on the left, and the file being compared to is on the right. The left pane can be used for editing and fixing your changes.</p>
 </div>
 <div class="paragraph">
-<p>When you have multiple files to review you have the ability to navigate under all the files that are changed. The number of files that are reviewable is displayed in the title of the wizard. Navigate to the next or previous file with <code>Next</code> and <code>Previous</code> buttons.</p>
+<p>To review multiple files, you can navigate between them using the <b class="button">Previous</b> (or <span class="keyseq"><kbd>Alt</kbd>+<kbd>.</kbd></span>) and <b class="button">Next</b> (or <span class="keyseq"><kbd>Alt</kbd>+<kbd>,</kbd></span>) buttons. The number of files for review is displayed in the title of the diff window.</p>
 </div>
 <div class="paragraph">
-<p>For a keyboard navigation between the files you can use: <code>Alt + .</code> for <code>Next</code> and <code>Alt + ,</code> for <code>Previous</code>.</p>
-</div>
-<div class="paragraph">
-<p>The <code>Refresh</code> button updates difference links between editors.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="svn">SVN</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>SVN plugin isn’t included in the default Che build. You can, however, build your <a href="https://github.com/eclipse/che-plugin-svn">own Che assembly with this plugin</a>.</p>
+<p>The <b class="button">Refresh</b> button updates the difference links between the two panes.</p>
 </div>
 </div>
 </div>
@@ -1203,7 +1336,7 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://${CHE_HOST}:${CHE_PORT}/api/oauth/callback<
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 10, 2019 <br/>
+                    Site last generated: Apr 14, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
