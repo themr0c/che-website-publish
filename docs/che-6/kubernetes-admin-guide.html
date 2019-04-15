@@ -1016,7 +1016,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="how-the-che-server-uses-PVCs-and-PVs-for-storage">How the Che server uses PVCs and PVs for storage</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Che server, Keycloak and PostgreSQL pods, and workspace pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. When the deployment YAML files run, they define the Che PVCs. You can configure <a href="#che-workspaces-storage">workspace PVC</a> access mode and claim size with Che deployment environment variables.</p>
+<p>Che server, Keycloak and PostgreSQL pods, and workspace pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. When the deployment YAML files run, they define the Che PVCs. You can configure <a href="#storage-strategies-for-che-workspaces">workspace PVC</a> access mode and claim size with Che deployment environment variables.</p>
 </div>
 <div class="sect2">
 <h3 id="storage-requirements-for-che-infrastructure">Storage requirements for Che infrastructure</h3>
@@ -1081,10 +1081,10 @@ $('#toc').on('click', 'a', function() {
 <div class="sect2">
 <h3 id="unique-pvc-strategy">Unique PVC strategy</h3>
 <div class="paragraph">
-<p>To define the unique strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>unique</code>.</p>
+<p>To define the <code>unique</code> strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>unique</code>.</p>
 </div>
 <div class="paragraph">
-<p>Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. Workspace PVC is deleted when a corresponding workspace is deleted.</p>
+<p>Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. A workspace PVC is deleted when a corresponding workspace is deleted.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1092,10 +1092,10 @@ $('#toc').on('click', 'a', function() {
 <div class="sect3">
 <h4 id="how-the-common-pvc-strategy-works">How the common PVC strategy works</h4>
 <div class="paragraph">
-<p>All workspaces use the same PVC to store data declared in their volumes (projects and workspace logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
+<p>All workspaces (within one Kubernetes Namespace) use the same PVC to store data declared in their volumes (projects and workspace logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
 </div>
 <div class="paragraph">
-<p>A PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
+<p>A PV that is bound to PVC <code>che-claim-workspace</code> has the following structure:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1114,24 +1114,24 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect3">
-<h4 id="enabling-a-common-strategy">Enabling a common strategy</h4>
+<h4 id="enabling-the-common-strategy">Enabling the common strategy</h4>
 <div class="paragraph">
-<p>If you have already deployed Che with unique strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>common</code> in <code>dc/che</code>.</p>
+<p>If you have already deployed Che with the <code>unique</code> strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>common</code> in <code>dc/che</code>.</p>
 </div>
 <div class="paragraph">
 <p>If applying the <code>che-server-template.yaml</code> configuration, pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to the <code>kubectl new-app</code> command.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="restrictions-on-using-common-pvc-strategy">Restrictions on using common PVC strategy</h4>
+<h4 id="restrictions-on-using-common-pvc-strategy">Restrictions on using the common PVC strategy</h4>
 <div class="paragraph">
-<p>When a common strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one Kubernetes node can simultaneously use PVC.  If there are several nodes, you can use a common strategy, but the workspace PVC access mode is ReadWriteMany (RWM). Multiple nodes can use this PVC simultaneously.</p>
+<p>When the <code>common</code> strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one Kubernetes node can simultaneously use the PVC.  If there are several nodes, you can use the <code>common</code> strategy, but the workspace PVC access mode is ReadWriteMany (RWM). Multiple nodes can use this PVC simultaneously.</p>
 </div>
 <div class="paragraph">
 <p>To change the access mode for workspace PVCs, pass the <code>CHE_INFRA_KUBERNETES_PVC_ACCESS_MODE=ReadWriteMany</code> environment variable to Che deployment either when initially deploying Che or through the Che deployment update.</p>
 </div>
 <div class="paragraph">
-<p>Another restriction is that only pods in the same namespace can use the same PVC.  The <code>CHE_INFRA_KUBERNETES_PROJECT</code> environment variable should not be empty.  It should be either the Che server namespace where objects can be created with the Che service account (SA) or a dedicated namespace where a token or a username and password need to be used.</p>
+<p>Another restriction is that only pods in the same namespace can use the same PVC.  The <code>CHE_INFRA_KUBERNETES_PROJECT</code> environment variable should not be empty.  It should be either the Che server namespace where objects can be created with the Che service account (SA) or a dedicated namespace where a token or a user name and password need to be used.</p>
 </div>
 </div>
 </div>
@@ -1141,10 +1141,9 @@ $('#toc').on('click', 'a', function() {
 <p>To define the unique strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>per-workspace</code>.</p>
 </div>
 <div class="sect3">
-<h4 id="how-the-per-workspace-pvc-strategy-works">How the per workspace PVC strategy works</h4>
+<h4 id="how-the-per-workspace-pvc-strategy-works">How the per-workspace PVC strategy works</h4>
 <div class="paragraph">
-<p>It works similarly to the common PVC strategy.
-The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional <a href="volumes.html">volumes</a> that a user can define).</p>
+<p>The <code>per-workspace</code> strategy works similarly to the <code>common</code> PVC strategy. The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional <a href="volumes.html">volumes</a> that a user can define).</p>
 </div>
 </div>
 </div>
@@ -1154,7 +1153,7 @@ The only difference is that all workspace volumes (but not all workspaces) use t
 <h2 id="updating-your-che-deployment">Updating your Che deployment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To update Che deployment:</p>
+<p>To update a Che deployment:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
