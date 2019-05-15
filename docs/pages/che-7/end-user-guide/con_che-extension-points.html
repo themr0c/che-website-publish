@@ -861,38 +861,536 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the concept module introduction and is only optional. Include it to provide a short overview of the module.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition to using API methods and events, each plug-in can bring new components into Che-Theia. These components include visual, such as panels, menus, and others. Other types of components are language servers, debuggers, and others.</p>
 </div>
 <div class="paragraph">
-<p>The contents of a concept module give the user descriptions and explanations needed to understand and use a product.</p>
+<p>The mechanism for adding additional components into Che-Theia is called extension points. An extension point is a section in a Che-Theia plug-in configuration into which meta-information about a new component is added. This chapter contains the full list of available extension points in Che-Theia.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="syntax-highlighting-grammars_{context}">Syntax-highlighting grammars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section provides syntax highlight rules for specified file types. To add syntax highlighting into Che-Theia using a plug-in, add a record that describes the new grammar into the <code>contributes.grammars</code> array of the plug-in&#8217;s <code>package.json</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a grammar record</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>grammars</span><span style="color:#404">&quot;</span></span>: [
+  {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>language</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">lang</span><span style="color:#710">&quot;</span></span>,                      <i class="conum" data-value="1"></i><b>(1)</b>
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>scopeName</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">text.ext</span><span style="color:#710">&quot;</span></span>,                 <i class="conum" data-value="2"></i><b>(2)</b>
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>path</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">./path/to/lang.tmLanguage.json</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="3"></i><b>(3)</b>
+  }
+]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specifies the language to which this syntax highlighting should be applied.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>TextMate scope name and grammar.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Syntax-highlighting rules.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>See <a href="https://macromates.com/manual/en/language_grammars">TextMate documentation</a> for more details about syntax-highlighting rules. A full example: <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/xml-language-server-plugin">xml-language-server-plugin</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preferences-configuration_{context}">Preferences (configuration)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A plug-in can introduce new <strong>preferences</strong>. These are defined in the <code>"configuration"</code> sub-object of the <code>"contribution"</code> object in the <code>package.json</code> file. A preference is contributed as a JSON schema that describes what is actually contributed and allows users to get support when editing settings in the <strong>Preferences Editor</strong>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of configuration contribution for a plug-in preference that defines a logging level</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+   <span style="color:#606"><span style="color:#404">&quot;</span><span>contributes</span><span style="color:#404">&quot;</span></span>: {
+       <span style="color:#606"><span style="color:#404">&quot;</span><span>configuration</span><span style="color:#404">&quot;</span></span>: {
+           <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">object</span><span style="color:#710">&quot;</span></span>,
+           <span style="color:#606"><span style="color:#404">&quot;</span><span>title</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">A plug-in configuration</span><span style="color:#710">&quot;</span></span>,
+           <span style="color:#606"><span style="color:#404">&quot;</span><span>properties</span><span style="color:#404">&quot;</span></span>: {
+               <span style="color:#606"><span style="color:#404">&quot;</span><span>myPlugin.logLevel</span><span style="color:#404">&quot;</span></span>: {
+                   <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">string</span><span style="color:#710">&quot;</span></span>,
+                   <span style="color:#606"><span style="color:#404">&quot;</span><span>default</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error</span><span style="color:#710">&quot;</span></span>,
+                   <span style="color:#606"><span style="color:#404">&quot;</span><span>description</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Plug-in logging level</span><span style="color:#710">&quot;</span></span>
+               }
+           }
+       }
+   }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are three scopes of preferences defined in Che-Theia:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Look at nouns and noun phrases in related procedure modules and assemblies to find the concepts to explain to users.</p>
+<p>The <strong>default</strong> scope consists of values defined in the <code>"configuration"</code> sub-section in <code>package.json</code>. These are default values of the preferences contributed by the plug-in.</p>
 </li>
 <li>
-<p>Explain only things that are visible to users. Even if a concept is interesting, it probably does not require explanation if it is not visible to users.</p>
+<p>The <strong>global</strong> or <strong>application-wide</strong> scope values can be set in <strong>User Preferences</strong>. They override the default ones.</p>
 </li>
 <li>
-<p>Do not include any instructions to perform an action, such as executing a command. Action items belong in procedure modules.</p>
+<p>The <strong>workspace</strong> scope values, which are applied only when a Che-Theia workspace is opened, override default and global values. They can be set in <strong>Workspace Preferences</strong>.</p>
 </li>
 </ul>
 </div>
-<h2 id="additional-resources" class="discrete">Additional resources</h2>
+<div class="paragraph">
+<p>A user can obtain preferences using <code>theia.workspace.getConfiguration(section)</code>. If a <code>section</code> is defined, only that subset of preferences is returned.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of preferences definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span style="color:#777">// all preferences contributed by a plug-in</span>
+theia.workspace.getConfiguration(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">myPlugin</span><span style="color:#710">'</span></span>); <span style="color:#777">// { &quot;logLevel&quot;: &quot;error&quot; }</span>
+
+<span style="color:#777">// or</span>
+theia.workspace.getConfiguration().get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">myPlugin</span><span style="color:#710">'</span></span>); <span style="color:#777">// { &quot;logLevel&quot;: &quot;error&quot; }</span>
+
+<span style="color:#777">// or, `logLevel` value:</span>
+theia.workspace.getConfiguration().get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">myPlugin</span><span style="color:#710">'</span></span>).get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logLevel</span><span style="color:#710">'</span></span>); <span style="color:#777">// &quot;error&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plug-in API allows to update preferences as well:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const pluginPrefs = theia.workspace.getConfiguration(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">myPlugin</span><span style="color:#710">'</span></span>);
+pluginPrefs.update(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logLevel</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">debug</span><span style="color:#710">'</span></span>, theia.ConfigurationTarget.User);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get all information about a configuration setting, use the <code>inspect</code> method. The <code>inspect</code> method returns an object that consists of <code>default</code>, <code>global</code>, and <code>workspace</code> (if one exists) values of a preference key:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">pluginPrefs.inspect(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logLevel</span><span style="color:#710">'</span></span>);
+<span style="color:#777">// {</span>
+<span style="color:#777">//     &quot;key&quot;: &quot;myPlugin.logLevel&quot;,</span>
+<span style="color:#777">//     &quot;defaultValue&quot;: &quot;error&quot;,</span>
+<span style="color:#777">//     &quot;globalValue&quot;: &quot;debug&quot;</span>
+<span style="color:#777">// }</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="view-containers_{context}">View containers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <strong>view container</strong> is a container that holds <a href="#views_che-extensibility-reference">views</a>. In Che-Theia, views are usually in the form of panels. All view containers are divided in three sections: <strong>left</strong>, <strong>bottom</strong>, and <strong>right</strong>. The position of a view container depends on the section to which it belongs. This defines the default position of a view container, which can be changed at runtime by dragging and dropping.</p>
+</div>
+<div class="paragraph">
+<p>To add a view container into Che-Theia, add the appropriate record into the <code>viewsContainers</code> object located under the <code>contributes</code> object in the plug-in <code>package.json</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a view-container definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>contributes</span><span style="color:#404">&quot;</span></span>: {
+   <span style="color:#606"><span style="color:#404">&quot;</span><span>viewsContainers</span><span style="color:#404">&quot;</span></span>: {
+     <span style="color:#606"><span style="color:#404">&quot;</span><span>bottom</span><span style="color:#404">&quot;</span></span>: [
+       {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">view-container-id</span><span style="color:#710">&quot;</span></span>,                   <i class="conum" data-value="1"></i><b>(1)</b>
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>title</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">The title</span><span style="color:#710">&quot;</span></span>                         <i class="conum" data-value="2"></i><b>(2)</b>
+       },
+       {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">another-view-container-id</span><span style="color:#710">&quot;</span></span>,
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>title</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Some title</span><span style="color:#710">&quot;</span></span>
+       }
+     ],
+     <span style="color:#606"><span style="color:#404">&quot;</span><span>right</span><span style="color:#404">&quot;</span></span>: [
+       {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">view-container-on-the-right-side-id</span><span style="color:#710">&quot;</span></span>,
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>title</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Panel on the right</span><span style="color:#710">&quot;</span></span>
+       }
+     ]
+   }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The identifier of the view container. Used to attach to this view container.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Text displayed on the panel tab.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that a view container is only useful with views in it. See a full example at <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/tree-view-sample-plugin">tree-view-sample-plugin</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="views_{context}">Views</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <strong>view</strong> is a visual component that should be placed into a <a href="#view-containers_che-extensibility-reference">view container</a>.</p>
+</div>
+<div class="paragraph">
+<p>To add a view into Che-Theia, add an appropriate record into the <code>contributes.views</code> object of a plug-in <code>package.json</code> file. Each view is defined by an object with two name:value pairs. Each view description should be included in an array within the <code>views</code> object, and the array name should be the same as the <code>view-container-id</code> value:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a view definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>viewsContainers</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>left</span><span style="color:#404">&quot;</span></span>: [
+        {
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">view-container-id</span><span style="color:#710">&quot;</span></span>,    <i class="conum" data-value="1"></i><b>(1)</b>
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>title</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">The title</span><span style="color:#710">&quot;</span></span>          <i class="conum" data-value="2"></i><b>(2)</b>
+        }
+    ],
+},
+<span style="color:#606"><span style="color:#404">&quot;</span><span>views</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>view-container-id</span><span style="color:#404">&quot;</span></span>: [
+        {
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">tree-at-left-side</span><span style="color:#710">&quot;</span></span>,
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>name</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">A list</span><span style="color:#710">&quot;</span></span>
+        },
+        {
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">widget-at-left-side</span><span style="color:#710">&quot;</span></span>,
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>name</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">A widget</span><span style="color:#710">&quot;</span></span>
+        }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>view identifier</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>name of the view, which will be displayed as the widget title inside the view container</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Currently, only tree view is supported as a view widget.</p>
+</div>
+<div class="paragraph">
+<p>For more details, see a full example at <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/tree-view-sample-plugin">tree-view-sample-plugin</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="menus_{context}">Menus</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Plug-ins can add new <strong>menu items</strong> into Che-Theia through the <code>contributes.menus</code> object in a plug-in <code>package.json</code> file. The <code>menus</code> object consists of menu names and menu items:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a menu definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>menus</span><span style="color:#404">&quot;</span></span>: {
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>editor/context</span><span style="color:#404">&quot;</span></span>: [
+        {
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">my.command.id</span><span style="color:#710">&quot;</span></span>,                                        <i class="conum" data-value="1"></i><b>(1)</b>
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>group</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">custom.group</span><span style="color:#710">&quot;</span></span>,                                           <i class="conum" data-value="2"></i><b>(2)</b>
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>when</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">view == widget-at-left-side &amp;&amp; config.namespace.property</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="3"></i><b>(3)</b>
+        },
+        {
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">core.about</span><span style="color:#710">&quot;</span></span>
+        }
+    ],
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>explorer/context</span><span style="color:#404">&quot;</span></span>: [
+        {
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">other.command.id</span><span style="color:#710">&quot;</span></span>,
+            <span style="color:#606"><span style="color:#404">&quot;</span><span>group</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">some.group</span><span style="color:#710">&quot;</span></span>
+        }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The identifier of the Che-Theia command that is executed when the menu item is used. The handler receives the selected resource as the first argument.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>(optional) The name of the group in the menu to which the command is added. When omitted, the menu item is added to the common group in the specified menu.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>(optional) The condition that defines when this menu item is visible. When omitted, the menu item is always visible. The conditions are the same as in the <a href="https://code.visualstudio.com/docs/getstarted/keybindings#_when-clause-contexts">VS Code when clause</a>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Menus that support extending:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the concept module.</p>
+<p><code>explorer/context</code></p>
 </li>
 <li>
-<p>For more details on writing concept modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><code>editor/context</code></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><code>editor/title</code></p>
+</li>
+<li>
+<p><code>debug/callstack/context</code></p>
+</li>
+<li>
+<p><code>view/item/context</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>A plug-in example that adds menu items: <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/menus-contribution-plugin">menus-contribution-plugin</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="key-bindings_{context}">Key bindings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Plug-ins can add new <strong>keyboard shortcuts</strong> or redefine existing ones. To describe a new shortcut, add a definition in the <code>contributes.keybindings</code> object of a plug-in <code>package.json</code> file. Each key bonding is described by three values:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a keyboard-shortcut definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>keybindings</span><span style="color:#404">&quot;</span></span>: [
+     {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>key</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ctrl+b</span><span style="color:#710">&quot;</span></span>,                 <i class="conum" data-value="1"></i><b>(1)</b>
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ts.compile</span><span style="color:#710">&quot;</span></span>,         <i class="conum" data-value="2"></i><b>(2)</b>
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>when</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">resourceExtname == .ts</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="3"></i><b>(3)</b>
+     },
+     {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>key</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ctrl+f alt+b</span><span style="color:#710">&quot;</span></span>,
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">some.command</span><span style="color:#710">&quot;</span></span>
+     }
+]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Defines the key combination for this shortcut. <a href="https://code.visualstudio.com/docs/getstarted/keybindings#_keyboard-rules">Rules for defining key combinations</a> are the same as for VS Code.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The identifier of the command, which should be invoked when the shortcut is pressed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>(optional) The condition that defines when this shortcut is available. When omitted, the shortcut is always available. The condition format is the same as in the <a href="https://code.visualstudio.com/docs/getstarted/keybindings#_when-clause-contexts">VS Code when clause</a>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note that <code>ctrl+f alt+b</code> defines a <em>chord</em>: the command is invoked after pressing both combinations one after the other.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="debuggers_{context}">Debuggers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Plug-ins can add new <strong>debuggers</strong>. To do so, you need to implement the <a href="https://microsoft.github.io/debug-adapter-protocol/">Debagger Adapter Protocol</a> (DAP) for a specific debugger. The debugger then can registered in the <code>contributes.debuggers</code> debuggers of a plug-in <code>package.json</code> file.</p>
+</div>
+<div class="paragraph">
+<p>For instruction on how to add a debugger, see <a href="link">TODO LINK</a>.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/">list of debuggers</a> from the official DAP site for reference and examples.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="languages-language-servers_{context}">Languages (language servers)</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This is an experimental approach, which may change in the future.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To add a language server into Che-Theia using a plug-in:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Describe the server in the <code>contributes.languages</code> array in the plug-in&#8217;s <code>package.json</code> file:</p>
+<div class="listingblock">
+<div class="title">Example of a language-server definition</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>languages</span><span style="color:#404">&quot;</span></span>: [
+    {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>id</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">lang</span><span style="color:#710">&quot;</span></span>,                                    <i class="conum" data-value="1"></i><b>(1)</b>
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>aliases</span><span style="color:#404">&quot;</span></span>: [                                     <i class="conum" data-value="2"></i><b>(2)</b>
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Lang</span><span style="color:#710">&quot;</span></span>,
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">LANG</span><span style="color:#710">&quot;</span></span>
+      ],
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>extensions</span><span style="color:#404">&quot;</span></span>: [                                  <i class="conum" data-value="3"></i><b>(3)</b>
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">.ext</span><span style="color:#710">&quot;</span></span>
+      ],
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>firstLine</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">^#!/.*interpreter</span><span style="color:#710">&quot;</span></span>,                <i class="conum" data-value="4"></i><b>(4)</b>
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>configuration</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">./language-configuration.json</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="5"></i><b>(5)</b>
+    }
+]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The ID of the language for which the language server is created.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Other names for the language.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>File-name extensions for which this language server is added.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Hashbang (first line) for which this language server is added.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Path to a JSON file with the language configuration (TODO: our section or just link to <a href="https://code.visualstudio.com/api/language-extensions/language-configuration-guide">VS Code docs</a>?).</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Register the language server using the following API call:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="typescript">theia.languageServer.registerLanguageServerProvider(xLanguageServerInfo);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where <code>xLanguageServerInfo</code> is an object of <code>theia.LanguageServerInfo</code> and has to contain the following fields:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">language ID; should be the same as <code>id</code> in the configuration JSON file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">human-readable name of the language server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globPatterns</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file pattern that specifies files for which this language server is added</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>command</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the language server start executable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>args</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">arguments for the language server start executable</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>After the command above is invoked, the language server should start.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See a full example at <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/xml-language-server-plugin">xml-language-server-plugin</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="web-view-api_{context}">Web view API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <strong>web view API</strong> is not a contribution point by definition, but it behaves like one and allows to bring a many new features to Che-Theia. Web view API plug-ins can add custom UI, graphical data, or anything what can be displayed in a web page. A web view API provides an HTML <code>iframe</code> to which a plug-in has access.</p>
+</div>
+<div class="paragraph">
+<p>To create an instance of web view:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>use the <code>createWebviewPanel</code> function:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="typescript">const webViewPanel = theia.window.createWebviewPanel('webViewId', 'Title',  theia.ViewColumn.One);</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="typescript">webViewPanel.webview.html ='&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello from web view&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;';</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Web view content is destroyed when hidden. To restore state, register a serializer, or set the <code>retainContextWhenHidden</code> option for the web view. Even with this option set, hiding a web view pauses all scripts, and the web view will not be process messages from the plug-in.</p>
+</div>
+<div class="paragraph">
+<p>The current state of a web view can be read from the web view panel object.</p>
+</div>
+<div class="paragraph">
+<p>It is possible to load resources and scripts into a web view and communicate with a plug-in by posting messages. See a full sample plug-in at <a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/webview-sample-plugin">webview-sample-plugin</a> for more details.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 
     <div class="tags">
@@ -910,7 +1408,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: May 7, 2019 <br/>
+                    Site last generated: May 15, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
