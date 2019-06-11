@@ -20,13 +20,6 @@
   </div> <!-- .container-fluid -->
 </div> <!-- .jumbotron -->
 
-
-<div class="annoucement">
-  <div class="container-fluid">
-    <center><h3><a style="color:white"; href="<?php echo $rootPath; ?>/checonf18.2/">Join us for the Che Virtual User Conference - Dec 5th.</a></h3>
-  </div>
-</div>
-
 <div class="bg-dark-space get-started">
   <div class="container-fluid content">
     <div class="row">
