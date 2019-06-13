@@ -44,6 +44,15 @@
 <div class="container-fluid content whats-new">
   <h2>What's New</h2>
   <div class="row">
+
+
+    <div class="col-md-4">
+      <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
+      <h3>Eclipse Che 7.0</h3>
+      <p>Che 7 takes the best of Kubernetes to code your Kubernetes applications.</p>
+      <a href="https://che.eclipse.org/eclipse-che-7-is-coming-and-its-really-hot-1-4-64d79b75ca02" target="_blank" class="btn-yellow">Learn about Che 7.0</a>
+    </div>
+
     <div class="col-md-4">
       <img src="checonf18.2/images/checonf2018_socialpostimage.png" alt="CheConf18.2" class="img-responsive">
       <h3>CheConf18.2</h3>
@@ -52,16 +61,9 @@
     </div>
 
     <div class="col-md-4">
-      <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
-      <h3>Eclipse Che 6.0</h3>
-      <p>Multi-tenancy, authentication with LDAP/AD, security and scalable OpenShift install.</p>
-      <a href="https://che.eclipse.org/release-notes-eclipse-che-6-0-43feff5797e5" target="_blank" class="btn-yellow">Read Release Notes</a>
-    </div>
-
-    <div class="col-md-4">
-      <img src="images/img-home-che5@2x.png" alt="Che 5.0" class="img-responsive">
+      <img src="images/img-home-che5@2x.png" alt="Che 7.0" class="img-responsive">
       <h3>Eclipse Che</h3>
-      <p>Run multiple machines in your workspace. Mount your desktop IDE to a portable Che workspace.</p>
+      <p>Fully containerized developer workspaces. Devfile: Developer Workspaces as Code. Kubernetes-native tool for Kubernetes developer teams</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
 
