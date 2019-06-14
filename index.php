@@ -3,7 +3,7 @@
   include 'includes/variables.php';
 
   // Define page title
-  $pageTitle = 'Eclipse Che | Eclipse Next-Generation IDE, Cloud IDE, and Workspace Server';
+  $pageTitle = 'Eclipse Che | Eclipse Next-Generation IDE for developer teams';
   // Define body class
   $bodyClass = 'index';
 
@@ -14,7 +14,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Eclipse Next-Generation IDE</h1>
-    <h3>Eclipse Che is a developer workspace server and cloud IDE built for teams and organizations. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
+    <h3>Eclipse Che is Kubernetes-native IDE and developer collaboration platform built for teams and organizations. <a href="<?php echo $rootPath; ?>/getting-started/">Get Started</a></h3>
 
     <img alt="" class="img-responsive" src="<?php echo $rootPath; ?>/images/hero-home@2x.jpg" />
   </div> <!-- .container-fluid -->
@@ -49,7 +49,7 @@
     <div class="col-md-4">
       <img src="images/img-home-che6@2x.png" alt="image by doug walters" class="img-responsive">
       <h3>Eclipse Che 7.0</h3>
-      <p>Che 7 takes the best of Kubernetes to code your Kubernetes applications.</p>
+      <p>Che 7 takes the best of Kubernetes to code your Kubernetes applications the easy way.</p>
       <a href="https://che.eclipse.org/eclipse-che-7-is-coming-and-its-really-hot-1-4-64d79b75ca02" target="_blank" class="btn-yellow">Learn about Che 7.0</a>
     </div>
 
@@ -63,7 +63,7 @@
     <div class="col-md-4">
       <img src="images/img-home-che5@2x.png" alt="Che 7.0" class="img-responsive">
       <h3>Eclipse Che</h3>
-      <p>Fully containerized developer workspaces. Devfile: Developer Workspaces as Code. Kubernetes-native tool for Kubernetes developer teams</p>
+      <p>Centralized developer environments running on Kubernetes. Devfile: Developer Workspaces as Code. Kubernetes-native tools for Kubernetes developer teams</p>
       <a href="<?php echo $rootPath; ?>/technology" class="btn-yellow">Learn More</a>
     </div>
 
@@ -74,19 +74,9 @@
   <div class="container-fluid content">
     <h2>Core Capabilities</h2>
     <div class="row">
-      <div class="col-md-4">
-        <h4>One-Click Workspaces</h4>
-        <p>Create workspaces with production runtimes containing your projects and tools. Define single machine or multi-machine workspaces – even mirror production.</p>
-        <ul>
-          <li>Automate workspace creation</li>
-          <li>Mimic production environments</li>
-          <li>Code in kubernetes pods</li>
-          <li>Integrate your version control</li>
-        </ul>
-      </div>
-      <div class="col-md-4">
-        <h4>Instant Project Onboarding</h4>
-        <p>Onboard teams with powerful collaboration, workspace automation, and permissions. Developers in a team can use their local IDE or the Che browser IDE.</p>
+    <div class="col-md-4">
+        <h4>Developer Environments for Teams</h4>
+        <p>Host on your kubernetes cluster and centralize developer environments. Onboard teams with powerful collaboration, workspace automation, and permissions. Developers in a team can use their local IDE or the Che browser IDE.</p>
         <ul>
           <li>Share workspaces with anyone</li>
           <li>Control workspace permissions</li>
@@ -95,13 +85,23 @@
         </ul>
       </div>
       <div class="col-md-4">
-        <h4>DevOps Workspace Platform</h4>
-        <p>Manage workspaces at scale with programmable and customizable infrastructure that lets you control system performance, availability, and functionality.</p>
+        <h4>One-Click Workspaces</h4>
+        <p>Create workspaces from production runtimes containing your projects and tools. Get developer environments that are highly consistent, repeatable and reproducible.</p>
         <ul>
-          <li>Use in the cloud or install locally</li>
-          <li>Scale horizontally or vertically</li>
-          <li>Keep source code off devices</li>
-          <li>Connect to your LDAP/AD</li>
+          <li>"Dev mode" production environments</li>
+          <li>Code in kubernetes pods</li>
+          <li>Enjoy built-in browser IDE</li>
+          <li>Codify developer workspaces config</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h4>Enterprise readiness and built-in security</h4>
+        <p>Manage workspaces for your developer teams with programmable and customizable infrastructure that lets you control system performance, availability, and functionality.</p>
+        <ul>
+          <li>Authenticate with Keycloack</li>
+          <li>Connect to LDAP or AD</li>
+          <li>In-House plug-ins and stacks registries</li>
+          <li>Built-in system monitoring</li>
         </ul>
       </div>
     </div>
@@ -169,9 +169,9 @@
       <tr>
         <td><img src="<?php echo $rootPath; ?>/images/img-chefile@2x.png" alt=""></td>
         <td>
-          <h4>Chefiles - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h4>
-          <p>Chefiles provide an easy to configure, reproducible and portable developer workspaces controlled by a repeatable workflow to maximize the productivity of your team. Chefiles launch synchronized workspaces within Eclipse Che tied to your repo.</p>
-          <a href="<?php echo $rootPath; ?>/docs/chedir-getting-started.html" class="btn-yellow" target="_blank">Learn More</a>
+          <h4>Devfile - Clonable, Reproducible, Lightweight Workspaces in Eclipse Che</h4>
+          <p>Devfile provide an easy to configure, reproducible and portable developer workspaces needed to work on a project and integrates into any workflows to maximize the productivity of your team. "Dev mode" your production environment by replicating it in your developer workspaces.</p>
+          <a href="https://redhat-developer.github.io/devfile/" class="btn-yellow" target="_blank">Learn More</a>
         </td>
       </tr>
     </table>
