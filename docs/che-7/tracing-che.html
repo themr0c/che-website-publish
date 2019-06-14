@@ -365,137 +365,149 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Tracing helps gather timing data to troubleshoot latency problems in microservice architectures and helps to understand a complete transaction or workflow as it propagates through a distributed system.
-Every transaction might reflect performance anomalies in an early phase when new services are being introduced by independent teams.</p>
+<p>Tracing helps gather timing data to troubleshoot latency problems in microservice architectures and helps to understand a complete transaction or workflow as it propagates through a distributed system. Every transaction may reflect performance anomalies in an early phase when new services are being introduced by independent teams.</p>
 </div>
 <div class="paragraph">
-<p>Tracers live in the applications. It records timing and metadata about operations that took place. They often instrument libraries, so that their use is transparent to users. For example, an instrumented web server records when it received a request and when it sent a response. The trace data collected is called a Span. Span has a context that contains information such as trace and span identifiers and other kinds of data that can be propagated down the line.</p>
+<p>Tracing the Che application may help analyse the execution of various operations, such as workspace creations, workspace startup, breaking down the duration of sub-operations executions, helping finding bottlenecks and improve the overall state of the platform.</p>
 </div>
 <div class="paragraph">
-<p>Che utilizes Opentracing API - a vendor-neutral framework for instrumentation. This means that if a developer wants to try out a different tracing backend, then instead of repeating the whole instrumentation process for the new distributed tracing system, the developer can simply change the configuration of the Tracer backend.</p>
-</div>
-<div class="paragraph">
-<p>Currently, Jaeger was chosen as a tracing backend, Inspired by Dapper and OpenZipkin, is a distributed tracing system released as open source by Uber Technologies. Jaeger extends more complex architecture for a larger scale of requests and performance.</p>
-</div>
-<div class="paragraph">
-<p>Tracing Che application may help analyse the execution of various operations, such as workspace creations, workspace startup, breaking down the duration of sub-operations executions, helping finding bottlenecks and improve the overall state of the platform.</p>
+<p>Tracers live in applications. They record timing and metadata about operations that take place. They often instrument libraries, so that their use is transparent to users. For example, an instrumented web server records when it received a request and when it sent a response. The trace data collected is called a <strong>span</strong>. A span has a context that contains information such as trace and span identifiers and other kinds of data that can be propagated down the line.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enabling-che-metrics-collections">Enabling Che metrics collections</h2>
+<h2 id="tracing-api">Tracing API</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Che utilizes Opentracing API - a vendor-neutral framework for instrumentation. This means that if a developer wants to try a different tracing backend, then instead of repeating the whole instrumentation process for the new distributed tracing system, the developer can simply change the configuration of the tracer backend.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="prerequisites-tracing-che">Prerequisites</h2>
+<h2 id="tracing-backend">Tracing backend</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>By default, Che uses Jaeger as the tracing backend. Jaeger was inspired by Dapper and OpenZipkin, and it is a distributed tracing system released as open source by Uber Technologies. Jaeger extends a more complex architecture for a larger scale of requests and performance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-che-metrics-collections_tracing-che">Enabling Che metrics collections</h2>
+<div class="sectionbody">
+<h3 id="prerequisites" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Installed Jaeger v1.12.0 or above. See more <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">https://www.jaegertracing.io/docs/1.12/getting-started/</a>.</p>
+<p>Installed Jaeger v1.12.0 or above. See instructions at <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Get up and running with Jaeger in your local environment</a>.</p>
 </li>
 </ul>
 </div>
-<h2 id="procedure" class="discrete">Procedure</h2>
+<h3 id="procedure" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Enable following environment variables for Che deployment</p>
+<p>Enable the following environment variables for Che deployment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># Activating Che tracing modules
+CHE_TRACING_ENABLED=true
+
+# Following variables are the basic Jaeger client library configuration.
+JAEGER_ENDPOINT=&quot;http://jaeger-collector:14268/api/traces&quot;
+
+# Service name
+JAEGER_SERVICE_NAME=&quot;che-server&quot;
+
+# URL to remote sampler
+JAEGER_SAMPLER_MANAGER_HOST_PORT=&quot;jaeger:5778&quot;
+
+# Type and param of sampler (constant sampler for all traces)
+JAEGER_SAMPLER_TYPE=&quot;const&quot;
+JAEGER_SAMPLER_PARAM=&quot;1&quot;
+
+# Maximum queue size of reporter
+JAEGER_REPORTER_MAX_QUEUE_SIZE=&quot;10000&quot;</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre># Activating Che tracing modules
-CHE_TRACING_ENABLED=true
-# Following variables are the basic Jaeger client library configuration.
-#
-JAEGER_ENDPOINT="http://jaeger-collector:14268/api/traces"
-# Service name
-JAEGER_SERVICE_NAME="che-server"
-# URL to remote sampler
-JAEGER_SAMPLER_MANAGER_HOST_PORT="jaeger:5778"
-# Type and param of sampler ( constant sampler for all traces )
-JAEGER_SAMPLER_TYPE="const"
-JAEGER_SAMPLER_PARAM="1"
-#Maximum queue size of reporter
-JAEGER_REPORTER_MAX_QUEUE_SIZE="10000"</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>More about Jaeger client environment variables at <a href="https://github.com/jaegertracing/jaeger-client-go#environment-variables" class="bare">https://github.com/jaegertracing/jaeger-client-go#environment-variables</a></p>
+<h3 id="additional-resources" class="discrete">Additional resources</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>List of all <a href="https://github.com/jaegertracing/jaeger-client-go#environment-variables">Jaeger client environment variables</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="viewing-che-traces-on-jaeger-uitracing-che">Viewing Che traces on Jaeger UI</h2>
+<h2 id="viewing-che-traces-in-jaeger-ui_tracing-che">Viewing Che traces in Jaeger UI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section demonstrates how to utilize Jaeger UI to overview traces of Che operations</p>
+<p>This section demonstrates how to utilize the Jaeger UI to overview traces of Che operations.</p>
 </div>
 <h3 id="procedure-2" class="discrete">Procedure</h3>
 <div class="paragraph">
-<p>In this example, Che Instance has been running for some time and 1 workspace startup has occured. Now onto inspecting the certain trace of startup:</p>
+<p>In this example, the Che instance has been running for some time and one workspace start has occured.</p>
 </div>
 <div class="paragraph">
-<p>Search window on the left provides tools to filter out spans by the operation name (span name), tags, as well as limit spans by time and duration.</p>
+<p>To inspect the trace of the workspace start:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <strong>Search</strong> panel on the left, filter spans by the operation name (span name), tags, or time and duration.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../images/tracing/trace-search.png"><img src="../images/tracing/trace-search.png" alt="trace search"></a>
 </div>
+<div class="title">Figure 1. Using Jaeger UI to trace Che</div>
 </div>
-<div class="paragraph">
-<p>Selecting the trace would expand it, showing the tree of nested spans, as well as additional info about highlighted span such as tags, durations</p>
-</div>
+</li>
+<li>
+<p>Select the trace to expand it and show the tree of nested spans, as well as additional information about the highlighted span, such as tags or durations.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../images/tracing/trace-tree-expanded.png"><img src="../images/tracing/trace-tree-expanded.png" alt="trace tree expanded"></a>
 </div>
+<div class="title">Figure 2. Expanded tracing tree</div>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-tracing-codebase-overview-and-extension-guidetracing-che">Che Tracing codebase overview and extension guide</h2>
+<h2 id="che-tracing-codebase-overview-and-extension-guide_tracing-che">Che tracing codebase overview and extension guide</h2>
 <div class="sectionbody">
-<h3 id="procedure-3" class="discrete">Procedure</h3>
 <div class="paragraph">
-<p>The core of tracing implementation for Che is placed at <code>che-core-tracing-core</code> and <code>che-core-tracing-web</code> modules.</p>
+<p>The core of the tracing implementation for Che is in the <code>che-core-tracing-core</code> and <code>che-core-tracing-web</code> modules.</p>
 </div>
 <div class="paragraph">
-<p>The Che API has the following ways to provide tracing spans:
-Currently, all HTTP requests to API will have its own trace. This is done by TracingFilter from <a href="https://github.com/opentracing-contrib/java-web-servlet-filter" class="bare">https://github.com/opentracing-contrib/java-web-servlet-filter</a>, bound for the whole server application.
-Adding @Traced annotation to methods will cause the TracingInterceptor to add tracing spans for them.</p>
+<p>All HTTP requests to the tracing API have their own trace. This is done by <code>TracingFilter</code> from the <a href="https://github.com/opentracing-contrib/java-web-servlet-filter">OpenTracing library</a>, which is bound for the whole server application. Adding a <code>@Traced</code> annotation to methods causes the <code>TracingInterceptor</code> to add tracing spans for them.</p>
+</div>
+<div class="sect2">
+<h3 id="tagging">Tagging</h3>
+<div class="paragraph">
+<p>Spans may contain standard tags, such as operation name, span origin, error, as well as others that may help users with querying and filtering spans. Workspace-related operations (such as starting or stopping workspaces) have additional tags, including <code>userId</code>, <code>workspaceId</code>, and <code>stackId</code>. Spans created by <code>TracingFilter</code> also have an HTTP status code tag.</p>
 </div>
 <div class="paragraph">
-<p>Tags</p>
+<p>Declaring tags in a traced method is done statically by setting fields from the <code>TracingTags</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">TracingTags.WORKSPACE_ID.set(workspace.getId());</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Spans may contain some standard tags, such as operation name, span origin, error as well as there may be others, that may help users with querying and filtering them.
-Like workspace related operations (like start or stop workspace) have additional tags such as userId, workspaceId, stackId.
-Spans created by TracingFilter would also have an HTTP status code tag.</p>
+<p><code>TracingTags</code> is a class where all commonly used tags are declared, as respective <code>AnnotationAware</code> tag implementations.</p>
 </div>
+<h3 id="additional-resources-2" class="discrete">Additional resources</h3>
 <div class="paragraph">
-<p>Declaring tags in a traced method is done statically, by setting fields from <code>TracingTags</code> class:</p>
+<p>For more information about how to use Jaeger UI, visit Jaeger documentation: <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Jaeger Getting Started Guide</a>.</p>
 </div>
-<div class="paragraph">
-<p><code>TracingTags.WORKSPACE_ID.set(workspace.getId());</code></p>
-</div>
-<div class="paragraph">
-<p>TracingTags is a class where all commonly used tags are declared, as respective AnnotationAware Tag implementations.</p>
-</div>
-<h3 id="additional-resources" class="discrete">Additional resources</h3>
-<div class="paragraph">
-<p>For more information about how to use Jaeger UI, visit Jaeger documentation</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Jaeger Getting Started Guide</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -519,7 +531,7 @@ Spans created by TracingFilter would also have an HTTP status code tag.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 12, 2019 <br/>
+                    Site last generated: Jun 14, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

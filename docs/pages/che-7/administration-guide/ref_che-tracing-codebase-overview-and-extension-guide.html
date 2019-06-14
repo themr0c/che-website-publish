@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="dev-docs,  framework, overview, master, server, registry">
-<title>Registry | Eclipse Che Documentation</title>
+<meta name="keywords" content=" ">
+<title>Che tracing codebase overview and extension guide | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -174,7 +174,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Registry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che tracing codebase overview and extension guide page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -192,7 +192,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Registry">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Che tracing codebase overview and extension guide">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -824,7 +824,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Registry</h1>
+   <h1 class="post-title-main">Che tracing codebase overview and extension guide</h1>
 </div>
 
 
@@ -861,17 +861,41 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The core of the tracing implementation for Che is in the <code>che-core-tracing-core</code> and <code>che-core-tracing-web</code> modules.</p>
+</div>
+<div class="paragraph">
+<p>All HTTP requests to the tracing API have their own trace. This is done by <code>TracingFilter</code> from the <a href="https://github.com/opentracing-contrib/java-web-servlet-filter">OpenTracing library</a>, which is bound for the whole server application. Adding a <code>@Traced</code> annotation to methods causes the <code>TracingInterceptor</code> to add tracing spans for them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tagging">Tagging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spans may contain standard tags, such as operation name, span origin, error, as well as others that may help users with querying and filtering spans. Workspace-related operations (such as starting or stopping workspaces) have additional tags, including <code>userId</code>, <code>workspaceId</code>, and <code>stackId</code>. Spans created by <code>TracingFilter</code> also have an HTTP status code tag.</p>
+</div>
+<div class="paragraph">
+<p>Declaring tags in a traced method is done statically by setting fields from the <code>TracingTags</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">TracingTags.WORKSPACE_ID.set(workspace.getId());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TracingTags</code> is a class where all commonly used tags are declared, as respective <code>AnnotationAware</code> tag implementations.</p>
+</div>
+<h2 id="additional-resources" class="discrete">Additional resources</h2>
+<div class="paragraph">
+<p>For more information about how to use Jaeger UI, visit Jaeger documentation: <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Jaeger Getting Started Guide</a>.</p>
+</div>
+</div>
+</div>
 
     <div class="tags">
-        
-        <b>Tags: </b>
-        
-        
-        
-        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
-        
-        
         
     </div>
 

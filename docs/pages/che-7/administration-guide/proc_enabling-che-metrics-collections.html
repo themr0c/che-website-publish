@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="dev-docs,  framework, overview, master, server, registry">
-<title>Registry | Eclipse Che Documentation</title>
+<meta name="keywords" content=" ">
+<title>Enabling Che metrics collections | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -174,7 +174,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Registry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Enabling Che metrics collections page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -192,7 +192,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Registry">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Enabling Che metrics collections">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -824,7 +824,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Registry</h1>
+   <h1 class="post-title-main">Enabling Che metrics collections</h1>
 </div>
 
 
@@ -861,17 +861,54 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  
+  <h2 id="prerequisites" class="discrete">Prerequisites</h2>
+<div class="ulist">
+<ul>
+<li>
+<p>Installed Jaeger v1.12.0 or above. See instructions at <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Get up and running with Jaeger in your local environment</a>.</p>
+</li>
+</ul>
+</div>
+<h2 id="procedure" class="discrete">Procedure</h2>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Enable the following environment variables for Che deployment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># Activating Che tracing modules
+CHE_TRACING_ENABLED=true
+
+# Following variables are the basic Jaeger client library configuration.
+JAEGER_ENDPOINT=&quot;http://jaeger-collector:14268/api/traces&quot;
+
+# Service name
+JAEGER_SERVICE_NAME=&quot;che-server&quot;
+
+# URL to remote sampler
+JAEGER_SAMPLER_MANAGER_HOST_PORT=&quot;jaeger:5778&quot;
+
+# Type and param of sampler (constant sampler for all traces)
+JAEGER_SAMPLER_TYPE=&quot;const&quot;
+JAEGER_SAMPLER_PARAM=&quot;1&quot;
+
+# Maximum queue size of reporter
+JAEGER_REPORTER_MAX_QUEUE_SIZE=&quot;10000&quot;</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<h2 id="additional-resources" class="discrete">Additional resources</h2>
+<div class="ulist">
+<ul>
+<li>
+<p>List of all <a href="https://github.com/jaegertracing/jaeger-client-go#environment-variables">Jaeger client environment variables</a></p>
+</li>
+</ul>
+</div>
 
     <div class="tags">
-        
-        <b>Tags: </b>
-        
-        
-        
-        <a href="tag_dev-docs.html" class="btn btn-default navbar-btn cursorNorm" role="button">dev-docs</a>
-        
-        
         
     </div>
 
