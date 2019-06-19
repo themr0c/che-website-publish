@@ -861,50 +861,116 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to create a minimal devfile for your project and how to include more than one projects in a devfile.</p>
 </div>
-<div class="ulist discrete">
-<div class="title">Prerequisites</div>
-<ul class="discrete">
+</div>
+</div>
+<div class="sect1">
+<h2 id="preparing-a-minimal-devfile_{context}">Preparing a minimal devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A minimal devfile sufficient to run a workspace consists of the following parts:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p>Specification version</p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>Name</p>
 </li>
 </ul>
 </div>
-<div class="olist discrete">
-<div class="title">Procedure</div>
-<ol class="discrete">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="title">Example of a minimal devfile with no project</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span></code></pre>
 </div>
-<div class="ulist discrete">
+</div>
+<div class="paragraph">
+<p>Without any further configuration, a workspace with the default editor will be launched along with its default plug-ins, which are configured on Che Server. Che-Theia is configured as the default editor along with the <strong>Che Machine Exec</strong> plug-in.</p>
+</div>
+<div class="paragraph">
+<p>To get a more functional workspace, the following parts can be added:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>List of components: development components and user runtimes</p>
+</li>
+<li>
+<p>List of projects: source code repositories</p>
+</li>
+<li>
+<p>List of commands: actions to manage the workspace components, such as running the development tools, starting the runtime environments, and others</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Example of a minimal devfile with a project</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic-dev-environment</span></span>
+<span style="color:#606">projects</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: petclinic</span></span>
+    <span style="color:#606">source</span>:
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://github.com/spring-projects/spring-petclinic.git'</span></span>
+<span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">redhat/java/latest</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specifying-multiple-projects-in-a-devfile_{context}">Specifying multiple projects in a devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A single devfile can specify multiple projects. For each project, specify the type of the source repository, its location, and optionally also the directory to which the project should be cloned to.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a devfile with two projects</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">example-devfile</span></span>
+<span style="color:#606">projects</span>:
+- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: frontend</span></span>
+  <span style="color:#606">source</span>:
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+    <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acmecorp/frontend.git</span></span>
+- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: backend</span></span>
+  <span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">src/github.com/acmecorp/backend</span></span>
+  <span style="color:#606">source</span>:
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+    <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acmecorp/backend.git</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, there are two projects defined, <code>frontend</code> and <code>backend</code>. Each project is located in its own repository. The <code>backend</code> project has a specific requirement to be cloned into the <code>src/github.com/acmecorp/backend/</code> directory under the source root (implicitly defined by the Che runtime) while the <code>frontend</code> project will be cloned into the <code>frontend/</code> directory under the source root.</p>
+</div>
+<div class="paragraph">
 <div class="title">Additional resources</div>
-<ul class="discrete">
+<p>For a detailed explanation of all devfile component assignments and possible values, see:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="https://github.com/redhat-developer/devfile">Specification repository</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://redhat-developer.github.io/devfile/devfile">detailed json-schema documentation</a></p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 
     <div class="tags">

@@ -861,63 +861,320 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the reference module introduction and is only optional. Include it to provide a short overview of the module.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section contains devfile reference and instructions on how to use the various elements that devfiles consist of.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-components-to-a-devfile">Adding components to a devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each component in a single devfile must have a unique name.</p>
+</div>
+<div class="sect2">
+<h3 id="component-type-cheeditor">Component type: cheEditor</h3>
+<div class="paragraph">
+<p>Describes the editor used in the workspace by defining its <code>id</code>. A devfile can only contain one component of the <code>cheEditor</code> type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: theia-editor</span></span>
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">cheEditor</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-theia/next</span></span></code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>A reference module provide data that users might want to look up, but do not need to remember. It has a very strict structure, often in the form of a list or a table. A well-organized reference module enables users to scan it quickly to find the details they want. AsciiDoc markup to consider for reference data:</p>
+<p>When <code>cheEditor</code> is missing, a default editor is provided along with its default plug-ins. The default plug-ins are also provided for an explicitly defined editor with the same <code>id</code> as the default one (even if it is a different version). Che-Theia is configured as default editor along with the <strong>Che Machine Exec</strong> plug-in.</p>
 </div>
-<div class="ulist">
-<div class="title">Unordered lists</div>
-<ul>
-<li>
-<p>For more details on writing reference modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>To specify that a workspace requires no editor, use the <a href="#attribute-editorfree_{context}"><code>editorFree:true</code> attribute</a> in the devfile attributes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="component-type-cheplugin">Component type: chePlugin</h3>
+<div class="paragraph">
+<p>Describes plug-ins in a workspace by defining their <code>id</code>. It is allowed to have several <code>chePlugin</code> components.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both types above using id, which is slash-separated publisher, name and version of plugin from Che Plugin registry.<br>
+List of available Che plugins and more information about registry can be found on <a href="https://github.com/eclipse/che-plugin-registry" class="bare">https://github.com/eclipse/che-plugin-registry</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-an-alternative-component-registry">Specifying an alternative component registry</h3>
+<div class="paragraph">
+<p>To specify an alternative registry for the <code>cheEditor</code> and <code>chePlugin</code> component types, use the <code>registryUrl</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">registryUrl</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://my-customregistry.com</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-a-component-by-linking-to-its-descriptor">Specifying a component by linking to its descriptor</h3>
+<div class="paragraph">
+<p>An alternative way of specifying <code>cheEditor</code> or <code>chePlugin</code>, instead of using the editor or plug-in <code>id</code> (and optionally an alternative registry), is to provide a direct link to the component descriptor (typically named <code>meta.yaml</code>) by using the <code>reference</code> field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com.../plugin/1.0.1/meta.yaml</span></span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is not possible to mix the <code>id</code> and <code>reference</code> fields in a single component definition; they are mutually exclusive.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-container-memory-limit-for-components">Specifying container memory limit for components</h3>
+<div class="paragraph">
+<p>To specify a container(s) memory limit for <code>cheEditor</code> or <code>chePlugin</code>, use the <code>memoryLimit</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">256M</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This limit will be applied to every container of the given component.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tuning-component-configuration">Tuning component configuration</h3>
+<div class="paragraph">
+<p>A component may need to be precisely tuned, and in such case, component preferences can be used. The example shows how to configure JVM using plug-in preferences.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">redhat/java/0.38.0</span></span>
+  <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+  <span style="color:#606">preferences</span>:
+     <span style="color:#606">java.jdt.ls.vmargs</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'-noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication'</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="component-type-kubernetes">Component type: kubernetes</h3>
+<div class="paragraph">
+<p>A complex component type that allows to apply configuration from a Kubernetes or OpenShift lists. The content of the component can be provided either via the <code>reference</code> attribute, which points to the file with the component content.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: mysql</span></span>
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+      <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic.yaml</span></span>
+      <span style="color:#606">selector</span>:
+        <span style="color:#606">app.kubernetes.io/name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mysql</span></span>
+        <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">database</span></span>
+        <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, to post a devfile with such components to REST API, the contents of the Kubernetes or OpenShift list can be embedded into the devfile using the <code>referenceContent</code> field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: mysql</span></span>
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+      <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic.yaml</span></span>
+      <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
+           kind: List
+           items:
+            -
+             apiVersion: v1
+             kind: Pod
+             metadata:
+              name: ws
+             spec:
+              containers:
+              ... etc</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As with the <a href="#component-type-dockerimage_{context}"><code>dockerimage</code> component</a>, it is possible to override the entrypoint of the containers contained in the Kubernetes or OpenShift list using the <code>command</code> and <code>args</code> properties (as <a href="https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#notes">understood</a> by Kubernetes).</p>
+</div>
+<div class="paragraph">
+<p>There can be more containers in the list (contained in pods or pod templates of deployments). To select which containers to apply the entrypoint changes to.</p>
+</div>
+<div class="paragraph">
+<p>The entrypoints can be defined as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: appDeployment</span></span>
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+      <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">app-deployment.yaml</span></span>
+      <span style="color:#606">entrypoints</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">parentName: mysqlServer</span></span>
+        <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['sleep']</span></span>
+        <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span>
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">parentSelector:</span><span style="color:#D20">
+          app: prometheus</span></span>
+        <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['-f', '/opt/app/prometheus-config.yaml']</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>entrypoints</code> list contains constraints for picking the containers along with the <code>command</code> and <code>args</code> parameters to apply to them. In the example above, the constraint is <code>parentName: mysqlServer</code>, which will cause the command to be applied to all containers defined in any parent object called <code>mysqlServer</code>. The parent object is assumed to be a top level object in the list defined in the referenced file, which is <code>app-deployment.yaml</code> in the example above.</p>
+</div>
+<div class="paragraph">
+<p>Other types of constraints (and their combinations) are possible:</p>
 </div>
 <div class="dlist">
-<div class="title">Labeled lists</div>
 <dl>
-<dt class="hdlist1">Term 1</dt>
+<dt class="hdlist1"><code>containerName</code></dt>
 <dd>
-<p>Definition</p>
+<p>the name of the container</p>
 </dd>
-<dt class="hdlist1">Term 2</dt>
+<dt class="hdlist1"><code>parentName</code></dt>
 <dd>
-<p>Definition</p>
+<p>the name of the parent object that (indirectly) contains the containers to override</p>
+</dd>
+<dt class="hdlist1"><code>parentSelector</code></dt>
+<dd>
+<p>the set of labels the parent object needs to have</p>
 </dd>
 </dl>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Tables</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Column 1</th>
-<th class="tableblock halign-left valign-top">Column 2</th>
-<th class="tableblock halign-left valign-top">Column 3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 3</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>A combination of these constraints can be used to precisely locate the containers inside the referenced Kubernetes list.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="component-type-dockerimage_{context}">Component type: dockerimage</h3>
+<div class="paragraph">
+<p>A component type that allows to define a container image-based configuration of a container in a workspace. A devfile can only contain one component of the <code>dockerimage</code> type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"> <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: maven</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipe/maven-jdk8:latest</span></span>
+     <span style="color:#606">volumes</span>:
+       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: mavenrepo</span></span>
+         <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/root/.m2</span></span>
+     <span style="color:#606">env</span>:
+       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: ENV_VAR</span></span>
+         <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">value</span></span>
+     <span style="color:#606">endpoints</span>:
+       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: maven-server</span></span>
+         <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">3101</span></span>
+         <span style="color:#606">attributes</span>:
+           <span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">http</span></span>
+           <span style="color:#606">secure</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+           <span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+           <span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'false'</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1536M</span></span>
+     <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['tail']</span></span>
+     <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['-f', '/dev/null']</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-commands-to-a-devfile">Adding commands to a devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A devfile allows to specify commands to be available for execution in a workspace. Every command can contain a subset of actions, which are related to a specific component in whose container it will be executed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"> <span style="color:#606">commands</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: build</span></span>
+     <span style="color:#606">actions</span>:
+       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
+         <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mysql</span></span>
+         <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn clean</span></span>
+         <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/projects/spring-petclinic</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="devfile-attributes">Devfile attributes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Devfile attributes can be used to configure various features.</p>
+</div>
+<div class="sect2">
+<h3 id="attribute-editorfree_{context}">Attribute: editorFree</h3>
+<div class="paragraph">
+<p>When an editor is not specified in a devfile, a default is provided. When no editor is needed, the <code>editorFree</code> attribute should be used. The default value is <code>false</code>, and it means that the devfile needs the default editor to be provisioned.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a devfile without an editor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic-dev-environment</span></span>
+<span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: myApp</span></span>
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+    <span style="color:#606">local</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-app.yaml</span></span>
+<span style="color:#606">attributes</span>:
+  <span style="color:#606">editorFree</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="attribute-persistvolumes-ephemeral-mode">Attribute: persistVolumes (ephemeral mode)</h3>
+<div class="paragraph">
+<p>By default, volumes and PVCs specified in a devfile are bound to a host folder to persist data even after a container restart. Sometimes, it may be necessary to disable data persistence, such as when volume backend is slow, and it is needed to make workspace faster. To achieve it, the <code>persistVolumes</code> devfile attribute should be used. The default value is <code>true</code>, and in case of <code>false</code>, <code>emptyDir</code> volumes will be used for configured volumes and PVC.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a devfile with ephemeral mode enabled</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">petclinic-dev-environment</span></span>
+<span style="color:#606">projects</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: petclinic</span></span>
+    <span style="color:#606">source</span>:
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://github.com/che-samples/web-java-spring-petclinic.git'</span></span>
+<span style="color:#606">attributes</span>:
+  <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
