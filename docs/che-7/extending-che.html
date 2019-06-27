@@ -568,7 +568,7 @@ $('#toc').on('click', 'a', function() {
 <dl>
 <dt class="hdlist1">A Visual Studio Code extension</dt>
 <dd>
-<p>If you have already built your plug-in as a Visual Studio Code extension, you can build the corresponding Che-Theia plug-in by repackaging the extension. If the extension is relying on its own set of dependencies, it needs to package those into a container. Eclipse Che users get the plug-in and do not have to worry about the tool dependencies. See <a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">Converting a Visual Studio Code extension to a Che-Theia plug-in</a>.</p>
+<p>If you have already built your plug-in as a Visual Studio Code extension, you can build the corresponding Che-Theia plug-in by repackaging the extension. If the extension is relying on its own set of dependencies, it needs to package those into a container. Eclipse Che users get the plug-in and do not have to worry about the tool dependencies. See <a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">[converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins]</a>.</p>
 </dd>
 <dt class="hdlist1">An Eclipse Theia plug-in</dt>
 <dd>
@@ -583,7 +583,7 @@ $('#toc').on('click', 'a', function() {
 <p><a href="#embedded-and-remote-che-theia-plug-ins_what-is-a-che-theia-plug-in">Embedded and remote Che-Theia plug-ins</a></p>
 </li>
 <li>
-<p><a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">Converting a Visual Studio Code extension to a Che-Theia plug-in</a></p>
+<p><a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">[converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins]</a></p>
 </li>
 </ul>
 </div>
@@ -834,7 +834,7 @@ There are different types of plug-ins (<a href="link">TODO LINK</a>). A broker e
 </ul>
 </div>
 <div class="paragraph">
-<p>To include a Che-Theia plugin as embedded, you need to define a URL to the plug-in binary (the <code>.theia</code> archive) in the <code>meta.yaml</code> file. In the case of a VS Code extension, provide the extension&#8217;s ID from the Visual Studio Code  marketplace (see <a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">Converting a Visual Studio Code extension to a Che-Theia plug-in</a>).</p>
+<p>To include a Che-Theia plugin as embedded, you need to define a URL to the plug-in binary (the <code>.theia</code> archive) in the <code>meta.yaml</code> file. In the case of a VS Code extension, provide the extension&#8217;s ID from the Visual Studio Code  marketplace (see <a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">[converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins]</a>).</p>
 </div>
 <div class="paragraph">
 <p>When starting a workspace, Che downloads and unpacks the plug-in binaries and includes them in the Che-Theia editor container. The Che-Theia editor initialize the plug-ins when it starts.</p>
@@ -1354,104 +1354,6 @@ When developing a frontend plug-in, debug it using your browser’s Developer To
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">Converting a Visual Studio Code extension to a Che-Theia plug-in</h3>
-<div class="paragraph">
-<p>This section describes how to install a <a href="https://marketplace.visualstudio.com/vscode">VS Code extension</a> to an Eclipse Che workspace. The procedure uses the <a href="https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode">SonarLint extension</a> as an example.</p>
-</div>
-<div class="paragraph">
-<p>A VS Code extension can be bundled inside a Che-Theia plug-in. Che-Theia would not only contain the VS Code extension but also the container that would host the extension. The container would be predefined with all the needed dependencies to run the VS Code extension. For instance, the container for the Java VS Code extension would contain the right version of the JDK and also Maven or Gradle.</p>
-</div>
-<div class="paragraph">
-<p>Learn how to create the container that will host our VS Code extension. It should be based on the <code>wsskeleton/theia-endpoint-runtime</code> image. This base image contains the runtime to launch VS Code extensions in sidecars. The container image will be built with all the necessary tools, software, and plug-in dependencies, including Java, Go, etc. The container image for our SonarLint plug-in looks like the following: <a href="https://github.com/eclipse/che-theia/blob/master/dockerfiles/remote-plugin-runner-java8/Dockerfile">remote-plugin-runner-java8/Dockerfile</a>. It is available from DockerHub: <code>garagatyi/remotetheia:java</code>.</p>
-</div>
-<div class="paragraph">
-<p>A Che-Theia plug-in is defined by its <code>meta.yaml</code> configuration file. The file describes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>IDE plug-in location (in our case, a VS Code extension identifier from the VS Code marketplace)</p>
-</li>
-<li>
-<p>container image that hosts the plug-in</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Create the <code>meta.yaml</code> file for yout plug-in. The following is the <code>meta.yaml</code> file of the SonarLint Che-Theia plug-in (GitHub link: <a href="https://github.com/eclipse/che-plugin-registry/blob/master/plugins/org.eclipse.che.vscode-sonarlint/0.0.1/meta.yaml">org.eclipse.che.vscode-sonarlint/0.0.1/meta.yaml</a>):</p>
-<div class="listingblock">
-<div class="title">SonarLint Che-Theia plug-in <code>meta.yaml</code> file</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">org.eclipse.che.vscode-sonarlint</span></span>
-<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">0.0.1</span></span>
-<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">VS Code extension</span></span>
-<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-sonarlint</span></span>
-<span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Sonarlint code intelligence</span></span>
-<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">VS Code extension that provides sonarlint features</span></span>
-<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://www.eclipse.org/che/images/logo-eclipseche.svg</span></span>
-<span style="color:#606">attributes</span>:
-  <span style="color:#606">extension</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">vscode:extension/SonarSource.sonarlint-vscode</span><span style="color:#710">&quot;</span></span>     <i class="conum" data-value="1"></i><b>(1)</b>
-  <span style="color:#606">containerImage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">garagatyi/remotetheia:java</span><span style="color:#710">&quot;</span></span>                   <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <code>extension</code> attribute consists of the <code>vscode:extension/</code> prefix and the VS Code extension ID, which can be retrieved from the extension details page at <a href="https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode">SonarLint extension</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The <code>containerImage</code> attribute contains the container-image name in the form <code>&lt;registry&gt;/&lt;org&gt;/&lt;repo&gt;:&lt;tag&gt;</code>. This attribute is optional. Without it, the extension runs on the Che-Theia IDE container.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Activate the Che-Theia plug-in in your Che workspace by adding its location to the workspace configuration:</p>
-<div class="listingblock">
-<div class="title">Che configuration with Che-Theia plug-in information</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="json"><span style="color:#606"><span style="color:#404">&quot;</span><span>attributes</span><span style="color:#404">&quot;</span></span>: {
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>editor</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">org.eclipse.che.editor.theia:1.0.0</span><span style="color:#710">&quot;</span></span>,
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>plugins</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">che-machine-exec-plugin:0.0.1,https://raw.githubusercontent.com/eclipse/che-plugin-registry/master/plugins/org.eclipse.che.vscode-sonarlint:0.0.1</span><span style="color:#710">&quot;</span></span>
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In this example, we activate two Che-Theia plug-ins: <code>che-machine-exec-plugin</code> and <code>SonarLint</code>. The plug-ins are referenced in different ways:</p>
-</div>
-<div class="openblock">
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>The SonarLint plug-in is referenced by its location in a custom registry: <code>https://custom.registry.location.url:version</code>. In this case, the registry location is: <a href="https://raw.githubusercontent.com/eclipse/che-plugin-registry/master/plugins/org.eclipse.che.vscode-sonarlint">org.eclipse.che.vscode-sonarlint</a>, and the version is <code>0.0.1</code>.</p>
-</li>
-<li>
-<p>The Che-machine-exec plug-in is referenced by its ID defined in the default Che plug-in registry, which is located at <a href="https://che-plugin-registry.openshift.io/plugins/">https://che-plugin-registry.openshift.io/plugins/</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Restart the workspace. You should see the logs listing the plug-ins being installed. We can see our Sonarlint Che-VSCode plugin.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../images/extensibility/plug-in-installation-log.png"><img src="../images/extensibility/plug-in-installation-log.png" alt="plug in installation log"></a>
-</div>
-<div class="title">Figure 14. Plug-in installation logs</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1690,7 +1592,7 @@ When developing a frontend plug-in, debug it using your browser’s Developer To
 <p><a href="https://github.com/eclipse/che-plugin-registry/">che-plugin-registry GitHub repository</a></p>
 </li>
 <li>
-<p><a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">Converting a Visual Studio Code extension to a Che-Theia plug-in</a></p>
+<p><a href="#converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins">[converting-a-visual-studio-code-extension-to-a-che-theia-plug-in_developing-che-theia-plug-ins]</a></p>
 </li>
 </ul>
 </div>
@@ -1729,7 +1631,7 @@ When developing a frontend plug-in, debug it using your browser’s Developer To
 <div class="content">
 <a class="image" href="../images/extensibility/adding-plug-ins-in-dashboard.png"><img src="../images/extensibility/adding-plug-ins-in-dashboard.png" alt="adding plug ins in dashboard"></a>
 </div>
-<div class="title">Figure 15. Adding plug-ins through the dashboard</div>
+<div class="title">Figure 14. Adding plug-ins through the dashboard</div>
 </div>
 </li>
 </ol>
@@ -1754,7 +1656,7 @@ When developing a frontend plug-in, debug it using your browser’s Developer To
 <div class="content">
 <a class="image" href="../images/extensibility/adding-plug-ins-in-workspace-configuration.png"><img src="../images/extensibility/adding-plug-ins-in-workspace-configuration.png" alt="adding plug ins in workspace configuration"></a>
 </div>
-<div class="title">Figure 16. Adding plug-ins by configuring a workspace</div>
+<div class="title">Figure 15. Adding plug-ins by configuring a workspace</div>
 </div>
 <div class="paragraph">
 <p>Plug-ins are separated by commas (<code>,</code>).</p>
@@ -2707,7 +2609,7 @@ It is possible to add new a API namespace for plug-ins using a separate extensio
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 19, 2019 <br/>
+                    Site last generated: Jun 27, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
