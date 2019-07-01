@@ -1018,7 +1018,7 @@ The host name is an actual host name of a VCS provider. Examples: <code>github.c
 <h2 id="configuring-github-oauth">Configuring GitHub OAuth</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>OAuth for Github allows users to import projects using SSH addresses (<code>git@</code>), push to repositories, and use the pull request panel. To enable automatic SSH key upload to GitHub for users:</p>
+<p>OAuth for Github allows users to import projects using SSH addresses (<code>git@</code>), push to repositories, and use the <strong>Pull Request</strong> panel. To enable automatic SSH key upload to GitHub for users:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1026,7 +1026,7 @@ The host name is an actual host name of a VCS provider. Examples: <code>github.c
 <p>On <strong>github.com</strong>, click your user icon (top right).</p>
 </li>
 <li>
-<p>Go to <strong>Settings &gt; Developer settings &gt; OAuth Apps</strong>.</p>
+<p>Go to <strong>Settings</strong> &gt; <strong>Developer settings</strong> &gt; <strong>OAuth Apps</strong>.</p>
 </li>
 <li>
 <p>Click the <b class="button">Register a new application</b> button.</p>
@@ -1087,7 +1087,103 @@ CHE_OAUTH_GITHUB_REDIRECTURIS=http://<em>${CHE_HOST}</em>:<em>${CHE_PORT}</em>/a
 </table>
 </div>
 <div class="paragraph">
-<p>Once OAuth is configured, SSH keys are generated and uploaded automatically to GitHub by a user in the IDE in <strong>Profile &gt; Preferences &gt; SSH &gt; VCS</strong> by clicking the <em>Octocat</em> icon. You can connect to your GitHub account and choose repositories to clone, rather than having to manually type (or paste) GitHub project URLs.</p>
+<p>Once OAuth is configured, SSH keys are generated and uploaded automatically to GitHub by a user in the IDE in <strong>Profile</strong> &gt; <strong>Preferences</strong> &gt; <strong>SSH</strong> &gt; <strong>VCS</strong> by clicking the <em>Octocat</em> icon. You can connect to your GitHub account and choose repositories to clone, rather than having to manually type (or paste) GitHub project URLs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-github-oauth-for-openshift-infrastructure">Configuring GitHub OAuth for OpenShift infrastructure</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A deployed instance of Eclipse Che</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>OAuth for GitHub allows users to import projects using the SSH addresses (<code>git@</code>), push to repositories, and use the <strong>Pull Request</strong> panel. The steps listed in this section are performed by an administrative user.</p>
+</div>
+<div class="paragraph">
+<p>Note that these steps are applicable when a user has Che 6 deployed in the multi-user mode.</p>
+</div>
+<div class="paragraph">
+<p>To enable automatic SSH key upload to GitHub for users, take the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <strong>Overview</strong> tab, click the <em>&lt;application-name&gt;</em> to open it.</p>
+</li>
+<li>
+<p>Click the Keycloak link to open the <strong>Red Hat Single Sign-On</strong> window.</p>
+</li>
+<li>
+<p>Expand the <strong>Configure</strong> tab and then click <strong>Identity Providers</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Add provider</strong> drop-down list, click <strong>GitHub</strong>. The <strong>Add identity provider</strong> window is displayed.</p>
+</li>
+<li>
+<p>In the <strong>Add identity provider</strong> window:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The <strong>Redirect URI</strong> field, depending on your Eclipse Che installation, type the Authorization callback URL.</p>
+</li>
+<li>
+<p>Copy the client ID and the client secret from GitHub and paste them in the <strong>Client ID</strong> and the <strong>Client Secret</strong> fields, respectively.</p>
+</li>
+<li>
+<p>In the <strong>Homepage URL</strong> and the <strong>Authorization callback URL</strong> field, depending on your Eclipse Che installation, type the two URLS.</p>
+</li>
+<li>
+<p>In the <strong>Default Scopes</strong> field, type <code>repo, user, write:publick_key</code>.</p>
+</li>
+<li>
+<p>Set <strong>Store Tokens</strong> and <strong>Stored Tokens Readable</strong> to <strong>ON</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+<div class="paragraph">
+<p>The <strong>Success! The github provider has been created.</strong> message indicates success. And, the GitHub provider is added to the <strong>Identity Providers</strong> window.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/git/github-provider-added.png" alt="github provider added">
+</div>
+</div>
+<div class="paragraph">
+<p>Perform the following steps to set role mapping for non-administrative users.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Expand the <strong>Manage</strong> tab and then click <strong>Users</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>Role Mappings</strong> tab.</p>
+</li>
+<li>
+<p>Click the <strong>Client Roles</strong> drop-down menu and click <strong>broker</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Available Roles</strong> list, click <strong>read-token</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Add selected</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Effective Roles</strong> list, click <strong>read-token</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The GitHub OAuth is now set for the user.</p>
 </div>
 </div>
 </div>
@@ -1383,7 +1479,7 @@ Terminal Git commands require their own authentication setup. This means that ke
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 27, 2019 <br/>
+                    Site last generated: Jul 1, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
