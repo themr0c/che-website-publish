@@ -1317,7 +1317,7 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 <div class="sect3">
 <h4 id="component-type-dockerimage_making-a-workspace-portable-using-a-devfile">Component type: dockerimage</h4>
 <div class="paragraph">
-<p>A component type that allows to define a container image-based configuration of a container in a workspace. A devfile can only contain one component of the <code>dockerimage</code> type.</p>
+<p>A component type that allows to define a container image-based configuration of a container in a workspace. A devfile can only contain one component of the <code>dockerimage</code> type. The <code>dockerimage</code> type of component brings in custom tooling into the workspace. The component is identified by its image.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1344,6 +1344,383 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
      <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['-f', '/dev/null']</span></span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Example of a minimal <code>dockerimage</code> component</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It specifies the type of the component, <code>dockerimage</code> and the <code>image</code> attribute names the image to be used for the component using the usual docker naming conventions, that is, the above <code>type</code> attribute is equal to <code>docker.io/library/golang:latest</code>.</p>
+</div>
+<div class="paragraph">
+<p>A <code>dockerimage</code> component has many features that enable augmenting the image with additional resources and information needed for meaningful integration of the <strong>tool</strong> provided by the image with Eclipse Che.</p>
+</div>
+<div class="sect4">
+<h5 id="mounting-project-sources">Mounting project sources</h5>
+<div class="paragraph">
+<p>For the <code>dockerimage</code> component to have access to the project sources, you must set the <code>mountSources</code> attribute to <code>true</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The sources is mounted on a location stored in the <code>CHE_PROJECTS_ROOT</code> environment variable that is made available in the running container of the image. This location defaults to <code>/projects</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="container-entrypoint">Container Entrypoint</h5>
+<div class="paragraph">
+<p>The <code>command</code> attribute of the <code>dockerimage</code> along with other arguments, is used to modify the <code>entrypoint</code> command of the container created from the image. In Eclipse Che the container is needed to run indefinitely so that you can connect to it and execute arbitrary commands in it at any time. Because the availability of the <code>sleep</code> command and the support for the <code>infinity</code> argument for it is different and depends on the base image used in the particular images, Che cannot insert this behavior automatically on its own. However, you can take advantage of this feature to, for example, start up necessary servers with modified configurations, etc.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="persistent-storage">Persistent Storage</h5>
+<div class="paragraph">
+<p>Docker image tools can specify the custom volumes to be mounted on specific locations within the image. Note that the volume names are shared across all components and therefore this mechanism can also be used to share file systems between components.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span>
+<span style="color:#606">volumes</span>:
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: cache</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>  <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/.cache</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="environment">Environment</h5>
+<div class="paragraph">
+<p>Eclipse Che allows you to configure Docker containers by modifying the environment variables available in the container of an image.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span>
+<span style="color:#606">env</span>:
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOPATH</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>  <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)/go</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOCACHE</span><span style="color:#D20">
+       value: /tmp/go-cache</span></span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>The variable expansion works between the environment variables and it uses the Kubernetes convention for the variable references.</p>
+</li>
+<li>
+<p>You can use the predefined variables in your own definitions.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following environment variables are pre-set by the Che server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CHE_PROJECTS_ROOT</code>: The location of the projects directory (note that if the component does not mount the sources, the projects will not be accessible).</p>
+</li>
+<li>
+<p><code>CHE_WORKSPACE_LOGS_ROOT__DIR</code>: The location of the logs common to all the components. If the component chooses to put logs into this directory, the log files are accessible from all other components.</p>
+</li>
+<li>
+<p><code>CHE_API_INTERNAL</code>: The URL to the Che server API endpoint used for communication with the Che server.</p>
+</li>
+<li>
+<p><code>CHE_WORKSPACE_ID</code>: The ID of the current workspace.</p>
+</li>
+<li>
+<p><code>CHE_WORKSPACE_NAME</code>: The name of the current workspace.</p>
+</li>
+<li>
+<p><code>CHE_WORKSPACE_NAMESPACE</code>: The namespace of the current workspace.</p>
+</li>
+<li>
+<p><code>CHE_MACHINE_TOKEN</code>: The token used to authenticate the request against the Che server.</p>
+</li>
+<li>
+<p><code>CHE_MACHINE_AUTH_SIGNATURE<em>PUBLIC</em>KEY</code>: The public key used to secure the communication with the Che server.</p>
+</li>
+<li>
+<p><code>CHE_MACHINE_AUTH_SIGNATURE__ALGORITHM</code>: The encryption algorithm used in the secured communication with the Che server.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A devfiles may only need the <code>CHE_PROJECTS_ROOT</code> environment variable to locate the cloned projects in the component’s container. More advanced devfiles might use the <code>CHE_WORKSPACE_LOGS_ROOT__DIR</code> environment variable to read the logs (for example as part of a devfile command). The environment variables used to securely access the Che server are mostly out of scope for devfiles and are present only for advanced use cases that are usually handled by the Che plug-ins.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="endpoints">Endpoints</h5>
+<div class="paragraph">
+<p>You can specify the endpoints that the docker image exposes. These endpoints can be made accessible to the users if the Che cluster is running using a Kubernetes ingress or an OpenShift route and to the other components within the workspace. You can create an endpoint for your application or database, if your application or database server is listening on a port and you want to be able to directly interact with it yourself or you want other components to interact with it.</p>
+</div>
+<div class="paragraph">
+<p>Endpoints have a number of properties as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span>
+<span style="color:#606">env</span>:
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOPATH</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>  <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)/go</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOCACHE</span><span style="color:#D20">
+       value: /tmp/go-cache</span></span>
+<span style="color:#606">endpoints</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">web</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">attributes</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">http</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">env</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">POSTGRES_USER</span></span>
+<span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">user</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">POSTGRES_PASSWORD</span></span>
+<span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">password</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">POSTGRES_DB</span><span style="color:#D20">
+           value: database</span></span>
+<span style="color:#606">endpoints</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">5432</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">attributes</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, there are two dockerimages, each defining a single endpoint. Endpoint is an accessible port that can be made accessible inside the workspace or also publicly (example, from the UI). Each endpoint has a name and port, which is the port on which certain server running inside the container is listening. The following are a few attributes that you can set on the endpoint:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>discoverable</code>: If an endpoint is discoverable, it means that it can be accessed using its name as the hostname within the workspace containers (in the Kubernetes parlance, a service is created for it with the provided name).</p>
+</li>
+<li>
+<p><code>public</code>: The endpoint will be accessible outside of the workspace, too (such endpoint can be accessed from the Che user interface). Such endpoints are publicized always on port <code>80</code> or <code>443</code> (depending on whether <code>tls</code> is enabled in Che).</p>
+</li>
+<li>
+<p><code>protocol</code>: For public endpoints the protocol is a hint to the UI on how to construct the URL for the endpoint access. Typical values are <code>http</code>, <code>https</code>, <code>ws</code>, <code>wss</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you start a new server within your component, Che will autodetect this and the UI will offer you to automatically expose this port as a <code>public</code> port. This is useful for debugging a web application, for example. But, it is not possible to do this for servers that autostart with the container (for example, a database server). For such components, you must specify the endpoints explicitly.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="kubernetes-and-openshift-resources">Kubernetes and OpenShift resources</h5>
+<div class="paragraph">
+<p>Complex deployments can be described using Kubernetes or OpenShift resource lists that can be referenced in the devfile. This will make them part of the workspace.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Because a Che workspace is internally represented as a single deployment, all resources from the Kubernetes or OpenShift list are merged into that single deployment.</p>
+</li>
+<li>
+<p>You must be careful when designing such lists because this can result in name conflicts and other problems.</p>
+</li>
+<li>
+<p>Only the following subset of the Kubernetes objects are supported: <code>deployments</code>, <code>pods</code>, <code>services</code>, <code>persistent volume claims</code>, <code>secrets</code>, and <code>config maps</code>. Kubernetes ingresses are ignored but OpenShift routes are supported. A workspace created from a devfile using any other object types will fail to start.</p>
+</li>
+<li>
+<p>If you run Che on a Kubernetes cluster, only Kubernetes lists are supported. However, if you run Che on an OpenShift cluster, both Kubernetes and OpenShift lists are supported (because OpenShift is a superset of Kubernetes).</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+<span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../relative/path/postgres.yaml</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The preceding component references a file that is relative to the location of the devfile itself. Meaning, this devfile is only loadable by a Che factory to which you supply the location of the devfile and therefore it is able to figure out the location of the referenced Kubernetes resource list.</p>
+</div>
+<div class="paragraph">
+<p>The following is an example of the <code>postgres.yaml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">List</span></span>
+<span style="color:#606">items</span>:
+-
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Deployment</span></span>
+    <span style="color:#606">metadata</span>:
+            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+            <span style="color:#606">labels</span>:
+                    <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+    <span style="color:#606">spec</span>:
+            <span style="color:#606">template</span>:
+            <span style="color:#606">metadata</span>:
+                    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+                    <span style="color:#606">app</span>:
+                            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+            <span style="color:#606">spec</span>:
+                    <span style="color:#606">containers</span>:
+                    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: postgres</span></span>
+                            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+                            <span style="color:#606">ports</span>:
+                            - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: postgres</span></span>
+                                    <span style="color:#606">containerPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">5432</span></span>
+                            <span style="color:#606">volumeMounts</span>:
+                            - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: pg-storage</span></span>
+                                    <span style="color:#606">mountPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/var/lib/postgresql/data</span></span>
+                    <span style="color:#606">volumes</span>:
+                    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: pg-storage</span></span>
+                            <span style="color:#606">persistentVolumeClaim</span>:
+                                    <span style="color:#606">claimName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">pg-storage</span></span>
+-
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Service</span></span>
+    <span style="color:#606">metadata</span>:
+            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+            <span style="color:#606">labels</span>:
+                    <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+    <span style="color:#606">spec</span>:
+            <span style="color:#606">ports</span>:
+                    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">port: 5432</span></span>
+                            <span style="color:#606">targetPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">5432</span></span>
+            <span style="color:#606">selector</span>:
+                    <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+-
+    <span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">PersistentVolumeClaim</span></span>
+    <span style="color:#606">metadata</span>:
+            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">pg-storage</span><span style="color:#D20">
+      labels:
+        app: postgres</span></span>
+    <span style="color:#606">spec</span>:
+            <span style="color:#606">accessModes</span>:
+             - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ReadWriteOnce</span></span>
+            <span style="color:#606">resources</span>:
+                    <span style="color:#606">requests</span>:
+                            <span style="color:#606">storage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a basic example of a devfile with an associated Kubernetes or OpenShift list, see <a href="https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample" class="bare">https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you use generic or large resource lists from which you will only need a subset of resources, you can select particular resources from the list using a selector (which, as the usual Kubernetes selectors, works on the labels of the resources in the list).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+<span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../relative/path/postgres.yaml</span></span>
+<span style="color:#606">selector</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Additionally, it is also possible to modify the entrypoints (command and arguments) of the containers present in the resource list. For details of the advanced use case, see the reference (TODO: link).</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1360,6 +1737,124 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
          <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mysql</span></span>
          <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn clean</span></span>
          <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/projects/spring-petclinic</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use commands to automate the workspace. You can define commands for building and testing your code, or cleaning the database.</p>
+</div>
+<div class="paragraph">
+<p>The following are two kinds of commands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Che specific commands: You have full control over what component executes the command.</p>
+</li>
+<li>
+<p>Editor specific commands: You can use the editor-specific command definitions (example: <code>tasks.json</code> and <code>launch.json</code> in Theia, which is equivalent to how these files work in VS Code).</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="che-specific-commands">Che-specific commands</h4>
+<div class="paragraph">
+<p>Each che-specific command has an <strong>action</strong> attribute that is a command to execute and a <strong>component</strong> attribute that specifies the container in which the command should be executed. The commands are run using the default shell in the container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">components</span>:
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+<span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
+<span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go-cli</span></span>
+<span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+<span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[‘sleep’, ‘infinity’]</span></span>
+<span style="color:#606">env</span>:
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOPATH</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>  <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)/go</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOCACHE</span><span style="color:#D20">
+       value: /tmp/go-cache</span></span>
+<span style="color:#606">commands</span>:
+- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: compile and run</span></span>
+  <span style="color:#606">actions</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
+    <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go-cli</span></span>
+    <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">“go get -d &amp;&amp; go run main.go”</span></span>
+    <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">“${CHE_PROJECTS_ROOT}/src/github.com/acme/my-go-project”</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>If a component to be used in a command must have an alias. This alias is used to reference the component in the command definition. Example: <code>alias: go-cli</code> in the component definition and <code>component: go-cli</code> in the command definition. This ensures that Eclipse Che can find the correct container to run the command in.</p>
+</li>
+<li>
+<p>A command can have only one action.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="editor-specific-commands">Editor-specific commands</h4>
+<div class="paragraph">
+<p>If the editor in the workspace supports it, the devfile can specify additional configuration in the editor-specific format. This is dependent on the integration code present in the workspace editor itself and so is not a generic mechanism. However, the default Theia editor within Eclipse Che is equipped to understand the <code>tasks.json</code> and <code>launch.json</code> files provided in the devfile.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">projects</span>:
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-go-project</span></span>
+<span style="color:#606">source</span>:
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span>   <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
+<span style="color:#F00;background-color:#FAA">        </span><span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
+<span style="color:#606">commands</span>:
+            - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: tasks</span></span>
+       <span style="color:#606">actions</span>:
+         - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-task</span></span>
+           <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&gt;</span></span>
+                            {
+                                    <span style="color:#606"><span style="color:#404">&quot;</span><span>version</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2.0.0</span><span style="color:#710">&quot;</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">,</span></span>
+                                    <span style="color:#606"><span style="color:#404">&quot;</span><span>tasks</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[</span></span>
+                                            {
+                                                    <span style="color:#606"><span style="color:#404">&quot;</span><span>label</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">create test file</span><span style="color:#710">&quot;</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">,</span></span>
+                                                    <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">shell</span><span style="color:#710">&quot;</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">,</span></span>
+                                                    <span style="color:#606"><span style="color:#404">&quot;</span><span>command</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">touch ${workspaceFolder}/test.file</span><span style="color:#710">&quot;</span></span>
+                                            }
+                                    ]
+                            }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example shows association of a <code>tasks.json</code> file with a devfile. Notice the <code>vscode-task</code> type that instructs the Che-Theia editor to interpret this command as a tasks definition and <code>referenceContent</code> attribute that contains the contents of the file itself. You can also save this file separately from the devfile and use <code>reference</code> attribute to specify a relative or absolute URL to it.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the <code>vscode-task</code> commands, the Che-Theia editor understands <code>vscode-launch</code> type using which you can specify the launch configurations.</p>
 </div>
 </div>
 </div>
@@ -1428,7 +1923,7 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 11, 2019 <br/>
+                    Site last generated: Jul 17, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

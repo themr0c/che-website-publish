@@ -304,6 +304,13 @@
           
           
           
+          <li><a href="end-user-tasks.html">End-user tasks</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="contributor-tasks.html">Contributor tasks</a></li>
           
           
@@ -398,99 +405,523 @@ $('#toc').on('click', 'a', function() {
 <h2 id="creating-a-workspace-from-code-sample_end-user-tasks">Creating a workspace from code sample</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+<p>This section describes how to select a workspace, then load a stack and its accompanying sample project.</p>
+</div>
+<div class="paragraph">
+<p>It will also explain how to customize a workspace using the <strong>Dashboard</strong>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Every stack includes a sample codebase, which is defined by the stack&#8217;s devfile. For more information on devfiles, see <a href="#configuring-a-che-workspace-using-a-devfile_end-user-tasks">Configuring a Che workspace using a devfile</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <h3 id="prerequisites" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p>You need an OKD (<a href="https://www.okd.io/minishift/">Minishift</a>), OCP, or OSD cluster, if using Che on Openshift.</p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
+<p>Or, you need a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a> to use Che on Kubernetes.</p>
 </li>
 <li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>To install on Minishift or Minikube, see <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
 </li>
 </ul>
 </div>
 <h3 id="procedure" class="discrete">Procedure</h3>
+<div class="sect3">
+<h4 id="accessing-the-dashboard">Accessing the Dashboard</h4>
+<div class="paragraph">
+<p>The <strong>Dashboard</strong> is accessible on your cluster from a URL like http://<code>che-instance</code>.<code>your.IP.address.here</code>.nip.io/dashboard/.</p>
+</div>
+<div class="sect4">
+<h5 id="minishift">Minishift</h5>
+<div class="paragraph">
+<p>See <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For versions of <a href="https://github.com/minishift/minishift/releases">Minishift up to 1.34</a>, you need to apply a small change:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc set env dc/che CHE_WORKSPACE_PLUGIN__REGISTRY__URL=https://che-plugin-registry.openshift.io/v3</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start each step with an active verb.</p>
+<p>Next, log into your console at https://<code>your.IP.address.here</code>:8443/console/.</p>
 </li>
 <li>
-<p>Include one command or action per step.</p>
+<p>From there, select the mini-che project:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>https://<code>your.IP.address.here</code>:8443/console/project/mini-che/overview</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
+<p>Then click through to the mini-che route link, which will load the <strong>Dashboard</strong> by default and prompt you to create a workspace.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://che-che" class="bare">http://che-che</a>.<code>your.IP.address.here</code>.nip.io/</p>
+</li>
+</ul>
+</div>
 </li>
 </ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ocp-and-osd">OCP and OSD</h5>
+<div class="paragraph">
+<p>If using OCP or OSD, talk to your administrator to obtain the URL for the che instance.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="selecting-a-stack">Selecting a stack</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When the <strong>Dashboard</strong> opens, click the link in the left navigation panel for <strong>Workspaces</strong>, if it&#8217;s not already open.</p>
+</li>
+<li>
+<p>Choose a stack from the list.</p>
+</li>
+<li>
+<p>Name your workspace, if you don&#8217;t like the default-generated name.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/select-workpace.png" alt="Select a stack from the list">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="viewing-the-compute-resource-limits">Viewing the compute resource limits</h4>
+<div class="paragraph">
+<p>The memory needed by the stack is pre-calculated and displayed on the stack description line. Changing the memory requirements is only possible <a href="#configure-devfile">from the devfile</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="start-the-workspace">Start the workspace</h4>
+<div class="paragraph">
+<p>There are two ways to start the workspace:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Simple start: just push the <strong>Create &amp; Open</strong> button at the top or bottom of the form:</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/create-and-open.png" alt="Create and Open">
+</div>
+</div>
+</li>
+<li>
+<p>Advanced start: from the top of the page, click the down arrow next to the <strong>Create &amp; Open</strong> button, then select the menu item below to edit your workspace&#8217;s configuration.</p>
+<div class="paragraph">
+<p>This will allow you to make further configuration before starting the workspace.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/create-and-edit.png" alt="Create and Edit">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="change-the-workspace-configuration">Change the workspace configuration</h4>
+<div class="paragraph">
+<p>If you chose the second option, you&#8217;ll be able to configure the workspace&#8217;s YAML, among other tasks:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>Overview</strong> tab, quickly rename a workspace, if you forgot to do that when creating it. Or, also toggle ephemeral mode, or export your workspace config to a file or private cloud. This is also one of serveral places from which you can delete a workspace.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-overview.png" alt="Worksapce configuration overview">
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>Projects</strong> tab, you can add more projects to an existing workspace:</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-projects.png" alt="Add projects to workspace">
+</div>
+</div>
+</li>
+<li>
+<p>From the <strong>Plugins</strong> tab, enable or disable workspace plugins. For example, start with a generic Java-based stack, then later add support for Node or Python.</p>
+</li>
+<li>
+<p>From the <strong>Editors</strong> tab, enable or disable workspace editors. For example, to switch to the Che 6 editor, select the GWT IDE. The Che 7 editor is based on Theia.</p>
+</li>
+</ol>
+</div>
+<div id="configure-devfile" class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>From the <strong>Devfile</strong> tab, edit the workspace&#8217;s YAML configuration. This is also where you can load a custom container, if you previously built one and pushed it to some container registry.  You can also add commands and sample projects, if you prefer to enter code than to click buttons.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-yaml.png" alt="YAML configuration">
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, to add a project into the workspace, add or edit the following section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>projects:
+  - name: che
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che.git'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-a-workspace">Running a workspace</h4>
+<div class="paragraph">
+<p>There are multiple ways to run a workspace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>From the <strong>Run</strong>  button in the top right corner of the Workspace configuration page, which will start the workspace but will NOT switch to it</p>
+</li>
+<li>
+<p>From the <strong>Open</strong> button in the top right corner of the Workspace configuration page, which will both start the workspace and launch it in your browser</p>
+</li>
+<li>
+<p>From the list of <strong>Recent Workspaces</strong> on the left navigation panel, right-click a non-running workspace to start it, or right-click a running workspace to stop it.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/run-from-recent-workspaces.png" alt="Run from Recent Workspaces">
+</div>
+</div>
+</li>
+</ul>
 </div>
 <h3 id="additional-resources" class="discrete">Additional resources</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="creating-a-workspace-by-importing-source-code-of-your-project_end-user-tasks">Creating a workspace by importing source code of your project</h2>
+<h2 id="creating-a-workspace-by-importing-source-code-of-your-project_end-user-tasks">Creating a workspace by importing the source code of your project</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+<p>This section is about how to create a new workspace to edit an existing codebase.</p>
 </div>
-<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
+<div class="paragraph">
+<p>There are 2 ways to do that <strong>before</strong> starting a workspace:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p><a href="#configure-devfile">Select a stack from the <strong>Dashboard</strong>, then change the devfile to include your project</a></p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p><a href="#configuring-a-che-workspace-using-a-devfile_end-user-tasks">Add a devfile to a git repository and start the workspace using chectl or a factory</a></p>
 </li>
 </ul>
 </div>
-<h3 id="procedure-2" class="discrete">Procedure</h3>
+<div class="paragraph">
+<p>To create a new workspace to edit an existing codebase, use one of the following three methods <strong>after</strong> you have started the workspace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#importing-from-the-user-dashboard-into-an-existing-workspace">Import from the <strong>Dashboard</strong> into an existing workspace</a></p>
+</li>
+<li>
+<p><a href="#importing-to-a-running-workspace-with-git-clone-command">Import to a running workspace with git clone command</a></p>
+</li>
+<li>
+<p><a href="#importing-to-a-running-workspace-with-git-clone-in-a-terminal">Import to a running workspace with git clone in a terminal</a></p>
+</li>
+<li>
+<p>Import a workspace from the <strong>Dashboard</strong> into an existing workspace. For details, see xref:#importing-from-the-user-dashboard-into-an-existing-workspace.</p>
+</li>
+<li>
+<p>Import to a running workspace using the <code>git clone</code> command. For details, see xref:#importing-to-a-running-workspace-with-git-clone-in-a-terminal.</p>
+</li>
+<li>
+<p>Import to a running workspace using the <code>git clone</code> command in a terminal. For details, see xref:#importing-to-a-running-workspace-with-git-clone-in-a-terminal.</p>
+<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
+</li>
+<li>
+<p>You need an OKD, OCP, or OSD cluster, if using Che on Openshift. See below for use of <a href="https://www.okd.io/minishift/">Minishift</a> (OKD).</p>
+</li>
+<li>
+<p>Or, you can use a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a>.</p>
+</li>
+<li>
+<p>To install on Minishift or Minikube, see <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
+</li>
+<li>
+<p>You need to have created a workspace with plugins related to your development environment.</p>
+</li>
+</ul>
+</div>
+<h3 id="importing-from-the-dashboard-into-an-existing-workspace" class="discrete">Importing from the Dashboard into an existing workspace</h3>
+<div class="paragraph">
+<p>There are at least two ways to import a project via the <strong>Dashboard</strong>.</p>
+</div>
+<div class="paragraph">
+<p>From the <strong>Dashboard</strong>, select Workspaces, then select your workspace by clicking on its name, or use the gear icon. The former will link you to the workspace&#8217;s <strong>Overview</strong> tab, while the latter will link to the <strong>Devfile</strong> tab where you can enter your own YAML configuration.
+You can import a project using the <strong>Dashboard</strong> in one of the following two ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On the <strong>Dashboard</strong>, click <strong>Workspaces</strong>. Then, click the required workspace. The <strong>Overview</strong> tab displays showing the overview of the workspace.</p>
+</li>
+<li>
+<p>On the <strong>Dashboard</strong>, click <strong>Workspaces</strong>. Then, click the gear icon next to the required workspace. The <strong>Devfile</strong> tab displays allowing you to enter the YAML configuration.
+In either case, click the <strong>Projects</strong> tab next.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start each step with an active verb.</p>
+<p>Click the <strong>Projects</strong> tab.</p>
 </li>
 <li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
+<p>Click <strong>Add Project</strong>. You can then import a sample project, create a blank project, import from a Git project, or import from a zip file.</p>
 </li>
 </ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-projects.png" alt="Add projects to workspace">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can add a project to a non-running workspace, but you must start the workspace to delete it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="creating-a-new-repository">Creating a new repository</h4>
+<div class="paragraph">
+<p>To add a blank project, take the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Type a name and a description in the <strong>Name</strong> and <strong>Description</strong> fields.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/add-blank-project.png" alt="Add blank project">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click <strong>Open</strong> to open your workspace.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/open-blank-project.png" alt="Your empty project">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="edit-an-existing-repository">Edit an existing repository</h4>
+<div class="paragraph">
+<p>To edit an existing repository, choose the git project or zip file, and Che will load it into your workspace.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/add-git-project.png" alt="Add existing git project">
+</div>
+</div>
+<div class="paragraph">
+<p>Next, open your workspace by clicking the green <strong>Open</strong> button.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/open-git-project.png" alt="Your git project">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="editing-the-commands-after-importing-a-project">Editing the commands after importing a project</h4>
+<div class="paragraph">
+<p>After you have a project in your workspace, you can add commands to it. Adding commands to your projects allows you to run, debug, or launch your application in a browser.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To add commands to the project, open the workspace configuration in the <strong>Dashboard</strong>, then select the <strong>Devfile</strong> tab:</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-yaml.png" alt="Add commands to workspace">
+</div>
+</div>
+</li>
+<li>
+<p>Open the workspace.</p>
+</li>
+<li>
+<p>To run a command, select <strong>Terminal</strong> &gt; <strong>Run Task&#8230;&#8203;</strong> from the main menu.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/run-command.png" alt="Run task">
+</div>
+</div>
+</li>
+<li>
+<p>To configure commands, select <strong>Terminal</strong> &gt; <strong>Configure Tasks&#8230;&#8203;</strong> from the main menu.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/configure-command.png" alt="Configure tasks">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="importing-to-a-running-workspace-using-the-git-clone-command">Importing to a running workspace using the <strong>Git: Clone&#8230;&#8203;</strong> command</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start a workspace, then use the <strong>Git: Clone&#8230;&#8203;</strong> command from the command palette or the Welcome screen to import a project to a running workspace.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/welcome.png" alt="Welcome screen">
+</div>
+</div>
+</li>
+<li>
+<p>Open the command palette with <code>F1</code> or <code>CTRL-SHIFT-P</code>, or from the link in the Welcome screen.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/git-clone-command.png" alt="Invoke git clone command">
+</div>
+</div>
+</li>
+<li>
+<p>Enter the path to the project you want to clone.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/git-clone-command-2.png" alt="Configure git clone command">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="importing-to-a-running-workspace-with-git-clone-in-a-terminal">Importing to a running workspace with <code>git clone</code> in a terminal</h3>
+<div class="paragraph">
+<p>In addition to the approaches above, you can also start a workspace, open a <strong>Terminal</strong>, and type <code>git clone</code> to pull code.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/git-clone-terminal.png" alt="Run git clone in a terminal">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Importing or deleting workspace projects in the terminal does not update workspace configuration, and the change is not reflected in the <strong>Project</strong> and <strong>Devfile</strong> tabs in the dashboard.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, if you add a project via the <strong>Dashboard</strong>, then delete it with <code>rm -fr myproject</code>, it may still appear in the <strong>Projects</strong> or <strong>Devfile</strong> tab.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <h3 id="additional-resources-2" class="discrete">Additional resources</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -498,33 +929,143 @@ $('#toc').on('click', 'a', function() {
 <h2 id="configuring-a-che-workspace-using-a-devfile_end-user-tasks">Configuring a Che workspace using a Devfile</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+<p>This section will show how to select a workspace, loading in the required stack and a sample project, all in one step.</p>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="https://redhat-developer.github.io/devfile/devfile">Devfile specifications</a> for detailed information how to add or remove components, or how to set memory and environment variables.</p>
 </div>
 <h3 id="prerequisites-3" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p>You need an OKD, OCP, or OSD cluster, if using Che on Openshift. See below for use of <a href="https://www.okd.io/minishift/">Minishift</a> (OKD).</p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
+<p>Or, you can use a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a>.</p>
 </li>
 <li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>To install on Minishift or Minikube, see <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
 </li>
 </ul>
 </div>
-<h3 id="procedure-3" class="discrete">Procedure</h3>
+<h3 id="procedure-2" class="discrete">Procedure</h3>
+<div class="sect3">
+<h4 id="importing-a-project-using-a-devfile">Importing a project using a devfile</h4>
+<div class="paragraph">
+<p>Stacks are defined as <a href="using-developer-environments-workspaces.html#making-a-workspace-portable-using-a-devfile_using-developer-environments-workspaces">devfiles</a>. This gives the user more flexibility when defining the project(s), IDE, commands, tools, and application runtimes needed in their workspace.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In Che 6, a stack is defined with a <code>Dockerfile</code>. In Che 7, <code>devfile.yaml</code> is used instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="the-minimal-devfile">The minimal devfile</h5>
+<div class="paragraph">
+<p>The following is the minimum content required in a <code>devfile.yaml</code> file:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#apiversion">apiVersion</a></p>
+</li>
+<li>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#metadata">metadata name</a></p>
+</li>
+<li>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#projects">projects name and source</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>apiVersion: 1.0.0
+metadata:
+  name: che-in-che-out
+projects:
+  - name: che
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che.git'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a complete <code>devfile</code> example file, see <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">Eclipse Che in Che devfile.yaml</a>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="creating-a-workspace-from-a-devfile">Creating a workspace from a devfile</h5>
+<div class="paragraph">
+<p>To create a workspace from a devfile:</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start each step with an active verb.</p>
+<p>Commit a <code>devfile.yaml</code> file into the root of your git repo.</p>
 </li>
 <li>
-<p>Include one command or action per step.</p>
+<p>When your repository contains a <code>devfile.yaml</code> file, point a running Che 7 instance at that <a href="https://github.com/eclipse/che">project</a> and it will use the discovered <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">devfile.yaml</a> file to build a workspace using the <a href="api-reference.html#factory-api_api-reference">Factory API</a>, <code>/f?url=</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, if you&#8217;re using <a href="che-quick-starts.html#deploying-che-using-chectl">Che inside Minishift</a>:</p>
 </li>
 <li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
+<p><a href="http://che-che" class="bare">http://che-che</a>.<code>your.IP.address.here</code>.nip.io/f?url=<a href="https://github.com/eclipse/che">https://github.com/eclipse/che</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="../images/workspaces/che-in-che-devfile.png" alt="Che in Che"></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You can also point at a plain text file:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://che-che" class="bare">http://che-che</a>.<code>your.IP.address.here</code>.nip.io/f?url=<a href="https://gist.githubusercontent.com/nickboldt/9551284c2c779a93ccf16bc801416205/raw/7ad1e949880d7f8ed30360e74bb9f8426450db05/devfile.yaml">https://path.to/my/devfile.yaml</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If you are familiar with <a href="https://github.com/che-incubator/chectl/">chectl</a>, you can also reference a local devfile.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, if you&#8217;re using <a href="che-quick-starts.html#deploying-che-using-chectl">Che inside Minishift</a>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>wget https://raw.githubusercontent.com/eclipse/che/master/devfile.yaml -o /tmp/devfile.yaml
+./chectl workspace:start --devfile=/tmp/devfile.yaml --chenamespace=mini-che</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$➔ ./chectl workspace:start --devfile=/tmp/devfile.yaml -n mini-che
+  ✔ Retrieving Che Server URL...http://che-che.`your.IP.address.here`.nip.io
+  ✔ Verify if Che server is running
+  ✔ Create workspace from Devfile /tmp/devfile.yaml
+
+Workspace IDE URL:
+http://che-che.`your.IP.address.here`.nip.io/dashboard/#/ide/che/che-in-che</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
 </li>
 </ol>
 </div>
@@ -532,265 +1073,23 @@ $('#toc').on('click', 'a', function() {
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="using-developer-environments-workspaces.html#making-a-workspace-portable-using-a-devfile_using-developer-environments-workspaces">Making a workspace portable using a Devfile</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://redhat-developer.github.io/devfile/devfile">Devfile specifications</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a></p>
+</li>
+<li>
+<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
 </li>
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="importing-a-kubernetes-application-into-a-che-worskspace_end-user-tasks">Importing a Kubernetes application into a Che worskspace</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
-</div>
-<h3 id="prerequisites-4" class="discrete">Prerequisites</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
-</div>
-<h3 id="procedure-4" class="discrete">Procedure</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
-</div>
-<h3 id="additional-resources-4" class="discrete">Additional resources</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-a-visual-studio-code-extension-in-che_end-user-tasks">Using a Visual Studio Code extension in Che</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
-</div>
-<h3 id="prerequisites-5" class="discrete">Prerequisites</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
-</div>
-<h3 id="procedure-5" class="discrete">Procedure</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
-</div>
-<h3 id="additional-resources-5" class="discrete">Additional resources</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-plug-ins_end-user-tasks">Configuring plug-ins</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
-</div>
-<h3 id="prerequisites-6" class="discrete">Prerequisites</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
-</div>
-<h3 id="procedure-6" class="discrete">Procedure</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
-</div>
-<h3 id="additional-resources-6" class="discrete">Additional resources</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="remotely-accessing-your-workspace_end-user-tasks">Remotely accessing your workspace</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
-</div>
-<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
-</div>
-<h3 id="procedure-7" class="discrete">Procedure</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
-</div>
-<h3 id="additional-resources-7" class="discrete">Additional resources</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-your-vcs-credentials-for-your-workspaces_end-user-tasks">Configuring your VCS credentials for your workspaces</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
-</div>
-<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
-</div>
-<h3 id="procedure-8" class="discrete">Procedure</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
-</div>
-<h3 id="additional-resources-8" class="discrete">Additional resources</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -832,7 +1131,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 11, 2019 <br/>
+                    Site last generated: Jul 17, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

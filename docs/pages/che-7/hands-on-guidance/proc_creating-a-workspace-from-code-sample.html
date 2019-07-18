@@ -861,50 +861,262 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to select a workspace, then load a stack and its accompanying sample project.</p>
+</div>
+<div class="paragraph">
+<p>It will also explain how to customize a workspace using the <strong>Dashboard</strong>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Every stack includes a sample codebase, which is defined by the stack&#8217;s devfile. For more information on devfiles, see <a href="#configuring-a-che-workspace-using-a-devfile_{context}">Configuring a Che workspace using a devfile</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <h2 id="prerequisites" class="discrete">Prerequisites</h2>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p>You need an OKD (<a href="https://www.okd.io/minishift/">Minishift</a>), OCP, or OSD cluster, if using Che on Openshift.</p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
+<p>Or, you need a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a> to use Che on Kubernetes.</p>
 </li>
 <li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>To install on Minishift or Minikube, see <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
 </li>
 </ul>
 </div>
 <h2 id="procedure" class="discrete">Procedure</h2>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-the-dashboard">Accessing the Dashboard</h3>
+<div class="paragraph">
+<p>The <strong>Dashboard</strong> is accessible on your cluster from a URL like http://<code>che-instance</code>.<code>your.IP.address.here</code>.nip.io/dashboard/.</p>
+</div>
+<div class="sect3">
+<h4 id="minishift">Minishift</h4>
+<div class="paragraph">
+<p>See <a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For versions of <a href="https://github.com/minishift/minishift/releases">Minishift up to 1.34</a>, you need to apply a small change:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc set env dc/che CHE_WORKSPACE_PLUGIN__REGISTRY__URL=https://che-plugin-registry.openshift.io/v3</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start each step with an active verb.</p>
+<p>Next, log into your console at https://<code>your.IP.address.here</code>:8443/console/.</p>
 </li>
 <li>
-<p>Include one command or action per step.</p>
+<p>From there, select the mini-che project:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>https://<code>your.IP.address.here</code>:8443/console/project/mini-che/overview</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
+<p>Then click through to the mini-che route link, which will load the <strong>Dashboard</strong> by default and prompt you to create a workspace.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://che-che" class="bare">http://che-che</a>.<code>your.IP.address.here</code>.nip.io/</p>
+</li>
+</ul>
+</div>
 </li>
 </ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ocp-and-osd">OCP and OSD</h4>
+<div class="paragraph">
+<p>If using OCP or OSD, talk to your administrator to obtain the URL for the che instance.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="selecting-a-stack">Selecting a stack</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When the <strong>Dashboard</strong> opens, click the link in the left navigation panel for <strong>Workspaces</strong>, if it&#8217;s not already open.</p>
+</li>
+<li>
+<p>Choose a stack from the list.</p>
+</li>
+<li>
+<p>Name your workspace, if you don&#8217;t like the default-generated name.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/select-workpace.png" alt="Select a stack from the list">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="viewing-the-compute-resource-limits">Viewing the compute resource limits</h3>
+<div class="paragraph">
+<p>The memory needed by the stack is pre-calculated and displayed on the stack description line. Changing the memory requirements is only possible <a href="#configure-devfile">from the devfile</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="start-the-workspace">Start the workspace</h3>
+<div class="paragraph">
+<p>There are two ways to start the workspace:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Simple start: just push the <strong>Create &amp; Open</strong> button at the top or bottom of the form:</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/create-and-open.png" alt="Create and Open">
+</div>
+</div>
+</li>
+<li>
+<p>Advanced start: from the top of the page, click the down arrow next to the <strong>Create &amp; Open</strong> button, then select the menu item below to edit your workspace&#8217;s configuration.</p>
+<div class="paragraph">
+<p>This will allow you to make further configuration before starting the workspace.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/create-and-edit.png" alt="Create and Edit">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="change-the-workspace-configuration">Change the workspace configuration</h3>
+<div class="paragraph">
+<p>If you chose the second option, you&#8217;ll be able to configure the workspace&#8217;s YAML, among other tasks:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>Overview</strong> tab, quickly rename a workspace, if you forgot to do that when creating it. Or, also toggle ephemeral mode, or export your workspace config to a file or private cloud. This is also one of serveral places from which you can delete a workspace.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-overview.png" alt="Worksapce configuration overview">
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the <strong>Projects</strong> tab, you can add more projects to an existing workspace:</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-projects.png" alt="Add projects to workspace">
+</div>
+</div>
+</li>
+<li>
+<p>From the <strong>Plugins</strong> tab, enable or disable workspace plugins. For example, start with a generic Java-based stack, then later add support for Node or Python.</p>
+</li>
+<li>
+<p>From the <strong>Editors</strong> tab, enable or disable workspace editors. For example, to switch to the Che 6 editor, select the GWT IDE. The Che 7 editor is based on Theia.</p>
+</li>
+</ol>
+</div>
+<div id="configure-devfile" class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>From the <strong>Devfile</strong> tab, edit the workspace&#8217;s YAML configuration. This is also where you can load a custom container, if you previously built one and pushed it to some container registry.  You can also add commands and sample projects, if you prefer to enter code than to click buttons.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/workspace-config-yaml.png" alt="YAML configuration">
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, to add a project into the workspace, add or edit the following section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>projects:
+  - name: che
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che.git'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-a-workspace">Running a workspace</h3>
+<div class="paragraph">
+<p>There are multiple ways to run a workspace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>From the <strong>Run</strong>  button in the top right corner of the Workspace configuration page, which will start the workspace but will NOT switch to it</p>
+</li>
+<li>
+<p>From the <strong>Open</strong> button in the top right corner of the Workspace configuration page, which will both start the workspace and launch it in your browser</p>
+</li>
+<li>
+<p>From the list of <strong>Recent Workspaces</strong> on the left navigation panel, right-click a non-running workspace to start it, or right-click a running workspace to stop it.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/workspaces/run-from-recent-workspaces.png" alt="Run from Recent Workspaces">
+</div>
+</div>
+</li>
+</ul>
 </div>
 <h2 id="additional-resources" class="discrete">Additional resources</h2>
 <div class="ulist">
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="che-quick-starts.html#deploying-che-using-chectl">Deploying Che using chectl</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
 </li>
 </ul>
+</div>
 </div>
 
     <div class="tags">
@@ -922,7 +1134,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 11, 2019 <br/>
+                    Site last generated: Jul 17, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
