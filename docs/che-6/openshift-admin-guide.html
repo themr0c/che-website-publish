@@ -861,7 +861,10 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="sect1">
+  <div class="paragraph">
+<p>hen the deployment YAML files run,</p>
+</div>
+<div class="sect1">
 <h2 id="ram-prerequisites">RAM prerequisites</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -1057,7 +1060,7 @@ $('#toc').on('click', 'a', function() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique (default)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC per workspace volume</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC per workspace volume or user-defined PVC</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
 </tr>
@@ -1080,11 +1083,35 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="sect2">
 <h3 id="unique-pvc-strategy">Unique PVC strategy</h3>
+<div class="sect3">
+<h4 id="how-the-unique-pvc-strategy-works">How the unique PVC strategy works</h4>
 <div class="paragraph">
-<p>To define the <code>unique</code> strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>unique</code>.</p>
+<p>Every Che Volume of workspace gets its own PVC, which means workspace PVCs are created when a workspace starts for the first time. Workspace PVCs are deleted when a corresponding workspace is deleted.</p>
 </div>
 <div class="paragraph">
-<p>Every workspace gets its own PVC, which means a workspace PVC is created when a workspace starts for the first time. A workspace PVC is deleted when a corresponding workspace is deleted.</p>
+<p>User-defined PVCs are created with few modifications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>they are provisioned with genarated names to garantee that it is not conflicting with other PVCs in namespace;</p>
+</li>
+<li>
+<p>subpaths of mount volumes that reference user-defined PVCs are prefixed with <code>{workspace id}/{PVC name}</code>.
+It is done to have the same data structure on PV on different PVC strategies;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="enabling-a-unique-strategy">Enabling a unique strategy</h4>
+<div class="paragraph">
+<p>If you have already deployed Che with another strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>unique</code> in <code>dc/che</code>.
+Note that existing workspaces data won&#8217;t be migrated and they will use new unique PVC per Che Volume without cleaning up existing PVCs.</p>
+</div>
+<div class="paragraph">
+<p>If applying the <code>che-server-template.yaml</code> configuration, pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=unique</code> to the <code>oc new-app</code> command.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1095,7 +1122,15 @@ $('#toc').on('click', 'a', function() {
 <p>All workspaces (within one OpenShift Project) use the same PVC to store data declared in their volumes (projects and workspace logs by default and whatever additional <a href="volumes.html">volumes</a> that a user can define.)</p>
 </div>
 <div class="paragraph">
-<p>A PV that is bound to PVC <code>che-claim-workspace</code> has the following structure:</p>
+<p>User-defined PVCs are ignored and volumes that reference PVCs are replaced with volume that references common PVC.
+The corresponding containers volume mounts are relinked to common volume and subpaths are prefixed with <code>'{workspaceId}/{originalPVCName}'</code>.</p>
+</div>
+<div class="paragraph">
+<p>User-defined PVC name is used as Che Volume name. It means that if Machine is configured to use Che Volume with the same name as user-defined
+PVC has then they will use the same shared folder in common PVC.</p>
+</div>
+<div class="paragraph">
+<p>A PV that is bound to PVC <code>che-claim-workspace</code> will have the following structure:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1103,7 +1138,7 @@ $('#toc').on('click', 'a', function() {
   workspaceid1
   workspaceid2
   workspaceidn
-    che-logs projects &lt;volume1&gt; &lt;volume2&gt;</pre>
+    che-logs projects &lt;volume1&gt; &lt;volume2&gt; &lt;User-defined PVC name 1 | volume 3&gt; ...</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1116,7 +1151,8 @@ $('#toc').on('click', 'a', function() {
 <div class="sect3">
 <h4 id="enabling-the-common-strategy">Enabling the common strategy</h4>
 <div class="paragraph">
-<p>If you have already deployed Che with the <code>unique</code> strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>common</code> in <code>dc/che</code>.</p>
+<p>If you have already deployed Che with another strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>common</code> in <code>dc/che</code>.
+Note that existing workspaces data won&#8217;t be migrated and they will use common PVC without cleaning up existing PVCs.</p>
 </div>
 <div class="paragraph">
 <p>If applying the <code>che-server-template.yaml</code> configuration, pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=common</code> to the <code>oc new-app</code> command.</p>
@@ -1137,13 +1173,20 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="sect2">
 <h3 id="per-workspace-pvc-strategy">Per workspace PVC strategy</h3>
-<div class="paragraph">
-<p>To define the unique strategy, set <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> to <code>per-workspace</code>.</p>
-</div>
 <div class="sect3">
 <h4 id="how-the-per-workspace-pvc-strategy-works">How the per-workspace PVC strategy works</h4>
 <div class="paragraph">
 <p>The <code>per-workspace</code> strategy works similarly to the <code>common</code> PVC strategy. The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional <a href="volumes.html">volumes</a> that a user can define).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="enabling-a-per-workspace-strategy">Enabling a per-workspace strategy</h4>
+<div class="paragraph">
+<p>If you have already deployed Che with another strategy, set the <code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code> variable to <code>per-workspace</code> in <code>dc/che</code>.
+Note that existing workspaces data won&#8217;t be migrated and they will use common PVC per workspace without cleaning up existing PVCs.</p>
+</div>
+<div class="paragraph">
+<p>If applying the <code>che-server-template.yaml</code> configuration, pass <code>-p CHE_INFRA_KUBERNETES_PVC_STRATEGY=per-workspace</code> to the <code>oc new-app</code> command.</p>
 </div>
 </div>
 </div>
