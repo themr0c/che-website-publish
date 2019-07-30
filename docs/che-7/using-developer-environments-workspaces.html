@@ -1607,6 +1607,252 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="importing-a-kubernetes-application-into-a-che-workspace_using-developer-environments-workspaces">Importing a Kubernetes application into a Che workspace</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to import a Kubernetes application in a Che workspace.</p>
+</div>
+<div class="paragraph">
+<p>For demonstration purposes, the section uses a sample Kubernetes application having the following two pods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A NodeJS application specified by this <a href="https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/nodejs-app.yaml">nodejs-app.yaml</a></p>
+</li>
+<li>
+<p>A MongoDB pod specified by this <a href="https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/mongo-db.yaml">mongo-db.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To run the application on a Kubernetes cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node=https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/nodejs-app.yaml &amp;&amp; \
+mongo=https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/mongo-db.yaml &amp;&amp; \
+kubectl apply -f ${mongo} &amp;&amp; \
+kubectl apply -f ${node}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy a new instance of this application in a Che workspace, use one of the following three scenarios:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Starting from scratch: <a href="#including-a-kubernetes-application-in-a-workspace-devfile-definition_importing-a-kubernetes-application-into-a-che-workspace">Writing a new devfile</a></p>
+</li>
+<li>
+<p>Modifying an existing workspace: <a href="#adding-a-kubernetes-application-to-an-existing-workspace-using-the-dashboard_importing-a-kubernetes-application-into-a-che-workspace">Using the dashboard UI</a></p>
+</li>
+<li>
+<p>From a running application: <a href="#generating-a-devfile-from-an-existing-kubernetes-application_importing-a-kubernetes-application-into-a-che-workspace">Generating a devfile with <code>chectl</code></a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="including-a-kubernetes-application-in-a-workspace-devfile-definition_importing-a-kubernetes-application-into-a-che-workspace">Including a Kubernetes application in a workspace devfile definition</h3>
+<div class="paragraph">
+<p>The devfile format is used to define a Che workspace, and its format is described in the <a href="#making-a-workspace-portable-using-a-devfile_using-developer-environments-workspaces">Making a workspace portable using a devfile</a> section. The following is an example of the simplest devfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+ <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only the name (minimal-workspace) is specified. After the Che server processes this devfile, the devfile is converted to a minimal Che workspace that only has the default editor (Che-Theia) and the default editor plug-ins (example: the terminal).</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>Kubernetes</code> type of components in the devfile to add Kubernetes applications to a workspace.</p>
+</div>
+<div class="paragraph">
+<p>For example, the user can embed the <code>NodeJS-Mongo</code> application in the minimal-workspace defined in this paragraph by adding a <code>components</code> section.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+ <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span>
+<span style="color:#606">components</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
+   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../mongo-db.yaml</span></span>
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: nodejs-app</span></span>
+   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../nodejs-app.yaml</span></span>
+   <span style="color:#606">entrypoints</span>:
+     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">command: ['sleep']</span></span>
+       <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the <code>sleep infinity</code> command is added as the entry point of the NodeJS application. This prevents the application from starting at the workspace start phase, allowing the user to start it when needed for testing or debugging purposes.</p>
+</div>
+<div class="paragraph">
+<p>To make it easier for a developer to test the application, add the commands in the devfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+ <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span>
+<span style="color:#606">components</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
+   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../mongo-db.yaml</span></span>
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: nodejs-app</span></span>
+   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../nodejs-app.yaml</span></span>
+   <span style="color:#606">entrypoints</span>:
+     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">command: ['sleep']</span></span>
+       <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span>
+<span style="color:#606">commands</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: run</span></span>
+   <span style="color:#606">actions</span>:
+     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
+       <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">nodejs-app</span></span>
+       <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">cd ${CHE_PROJECTS_ROOT}/nodejs-mongo-app/EmployeeDB/ &amp;&amp; npm install &amp;&amp; sed -i -- ''s/localhost/mongo/g'' app.js &amp;&amp; node app.js</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use this devfile to create and start a workspace with the <code>chectl</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl worspace:start --devfile <em>&lt;devfile-path&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>run</code> command added to the devfile is available as a task in Che-Theia from the command palette. When executed, the command starts the NodeJS application.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-a-kubernetes-application-to-an-existing-workspace-using-the-dashboard_importing-a-kubernetes-application-into-a-che-workspace">Adding a Kubernetes application to an existing workspace using the dashboard</h3>
+<div class="paragraph">
+<p>This procedure demonstrates how to modify an existing workspace and import the Kubernetes application using the newly created devfile.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>After the creation of a workspace, use the <strong>Workspace</strong> menu and then the <strong>Configure workspace</strong> icon to manage the workspace.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/workspaces/configure-workspace.png"><img src="../images/workspaces/configure-workspace.png" alt="configure workspace"></a>
+</div>
+</div>
+</li>
+<li>
+<p>To modify the workspace details, use the <strong>Devfile</strong> tab. The workspace details are displayed in this tab in the devfile format.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/workspaces/configure-workspace-devfile.png"><img src="../images/workspaces/configure-workspace-devfile.png" alt="configure workspace devfile"></a>
+</div>
+</div>
+</li>
+<li>
+<p>To add a Kubernetes component, use the <strong>Devfile</strong> editor on the dashboard.</p>
+</li>
+<li>
+<p>For the changes to take effect, save the devfile and restart the Che workspace.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="generating-a-devfile-from-an-existing-kubernetes-application_importing-a-kubernetes-application-into-a-che-workspace">Generating a devfile from an existing Kubernetes application</h3>
+<div class="paragraph">
+<p>This procedure demonstrates how to generate a devfile from an existing Kubernetes application using the <code>chectl</code> tool.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p><code>chectl</code> is installed and running</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Use the <code>chectl devfile:generate</code> command to generate a devfile:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl devfile:generate</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The user can also use the <code>chectl devfile:generate</code> command to generate a devfile from, for example, the <code>NodeJS-MongoDB</code> application.</p>
+<div class="paragraph">
+<p>The following example generates a devfile that includes the <code>NodeJS</code> component:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl devfile:generate --selector="app=nodejs"
+apiVersion: 1.0.0
+metadata:
+  name: chectl-generated
+components:
+  - type: kubernetes
+    alias: app=nodejs
+    referenceContent: |
+      kind: List
+      apiVersion: v1
+      metadata:
+        name: app=nodejs
+      items:
+        - apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            labels:
+              app: nodejs
+            name: web
+(...)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The NodeJS application YAML definition is included in the devfile, inline, using the <code>referenceContent</code> attribute.</p>
+</div>
+</li>
+<li>
+<p>To include support for a language, use the <code>--language</code> parameter:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl devfile:generate --selector="app=nodejs" --language="typescript"
+apiVersion: 1.0.0
+metadata:
+  name: chectl-generated
+components:
+  - type: kubernetes
+    alias: app=nodejs
+    referenceContent: |
+      kind: List
+      apiVersion: v1
+(...)
+  - type: chePlugin
+    alias: typescript-ls
+    id: che-incubator/typescript/latest</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Use the generated devfile to start a Che workspace with <code>chectl</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1627,7 +1873,7 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 29, 2019 <br/>
+                    Site last generated: Jul 30, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
