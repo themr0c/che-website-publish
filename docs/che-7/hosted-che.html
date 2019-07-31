@@ -295,6 +295,13 @@
           
           
           
+          <li><a href="retrieving-che-logs.html">Retrieving Che logs</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="monitoring-che.html">Monitoring Che</a></li>
           
           
@@ -731,6 +738,72 @@ In ephemeral mode, workspaces have no persistent storage attached. All content c
 </li>
 <li>
 <p>Upload the public key to the GitHub account following the <a href="https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account">Adding a new SSH key to your GitHub account</a> procedure.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-the-cluster-where-the-hosted-che-workspace-is-running_{context}">Finding the cluster where the Hosted Che workspace is running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to find the cluster where the Hosted Che workspace is running with a query to the OpenShift API on Hosted Che.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>These packages are installed: <em>curl</em>, <em>jq</em>.</p>
+</li>
+<li>
+<p>Take note of the <strong>username</strong> or <strong>email</strong> credential that the user used to log into Hosted Che.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Find the cluster name using the <strong>username</strong>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -sgSL "https://api.openshift.io/api/users?filter[username]=&lt;username&gt;" | jq -r ".data[0].attributes.cluster"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Find the cluster name using the <strong>email</strong>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -sgSL "https://api.openshift.io/api/users?filter[email]=&lt;email&gt;" | jq -r ".data[0].attributes.cluster"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The output of the query is the OpenShift Online cluster URL</p>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre>https://api.starter-us-east-2.openshift.com/</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Browse to the previously retrieved URL.</p>
+</li>
+<li>
+<p>Log in using the OpenShift Online credentials.</p>
+</li>
+<li>
+<p>The Openshift Console is displayed.</p>
+</li>
+<li>
+<p>The <strong><em>&lt;username&gt;</em>-che</strong> namespace where all the workspace related pods are created are accessible in read-only mode.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/hosted-che/finding-the-cluster-where-the-hosted-che-workspace-is-running.png" alt="finding the cluster where the hosted che workspace is running">
+</div>
+</div>
 </li>
 </ol>
 </div>
