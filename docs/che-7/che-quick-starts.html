@@ -445,8 +445,8 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This article offers instructions for deploying and running Eclipse Che locally, on a personal workstation.</p>
 </div>
-<h3 id="prerequisites" class="discrete">Prerequisites</h3>
 <div class="paragraph">
+<div class="title">Prerequisites</div>
 <p>To run and manage Che you need:</p>
 </div>
 <div class="ulist">
@@ -624,7 +624,10 @@ OPTIONS
   -t, --templates=templates            [default: /snapshot/chectl/templates] Path to the templates folder</pre>
 </div>
 </div>
-<h3 id="next-steps-after-deploying-and-starting-che" class="discrete">Next steps after deploying and starting Che</h3>
+</div>
+</div>
+<div class="sect2">
+<h3 id="next-steps-after-deploying-and-starting-che">Next steps after deploying and starting Che</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -635,6 +638,1239 @@ OPTIONS
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-che-on-kubernetes-on-aws_che-quick-starts">Deploying Che on Kubernetes on AWS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="preparing-the-aws-system-for-installing-che_deploying-che-on-kubernetes-on-aws">Preparing the AWS system for installing Che</h3>
+<div class="paragraph">
+<p>The following sections describe how to set up Kubernetes for Eclipse Che
+on Amazon Elastic Compute Cloud (Amazon EC2).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Kubernetes and Ingress</p>
+</li>
+<li>
+<p>The <code>kubectl</code> tool installed</p>
+</li>
+<li>
+<p>The <code>chectl</code> tool installed</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="installing-kubernetes-on-amazon-ec2">Installing Kubernetes on Amazon EC2</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up the AWS Command Line Interface (AWS CLI). For detailed installation instructions, see <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">Installing the AWS CLI</a>.</p>
+</li>
+<li>
+<p>Check the <code>PATH</code> environment variable if the <code>aws</code> tool is not available.</p>
+</li>
+<li>
+<p>Install Kubernetes on EC2. There are several ways to have a running Kubernetes instance on EC2. Here, the <strong>kops</strong> tool is used to install Kubernetes. For details, see <a href="https://kubernetes.io/docs/setup/production-environment/tools/kops/">Installing Kubernetes with kops</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This document assumes that Eclipse Che must be configured to run at <a href="http://che.aws.my-ide.cloud">Che AWS Cloud</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="setting-up-dns">Setting up DNS</h4>
+<div class="paragraph">
+<p>One way to set up Domain Name System (DNS) is to create the Amazon Route53 to manage the <code>aws.my-ide.cloud</code> domain.</p>
+</div>
+<div class="paragraph">
+<p>To set up DNS:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the zone on AWS:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aws route53 create-hosted-zone --name aws.my-ide.cloud --caller-reference 1
+
+\{
+ "Location": "https://route53.amazonaws.com/2013-04-01/hostedzone/<em>&lt;ZONE-ID&gt;</em>",
+ "HostedZone": \{
+ "Id": "/hostedzone/<em>&lt;ZONE-ID&gt;</em>",
+ "Name": "aws.my-ide.cloud.",
+ "CallerReference": "1",
+ "Config": \{
+ "PrivateZone": false
+ },
+ "ResourceRecordSetCount": 2
+ },
+ "ChangeInfo": \{
+ "Id": "/change/C1ZNLBU45DJUJL",
+ "Status": "PENDING",
+ "SubmittedAt": "2019-07-08T08:14:39.772Z"
+ },
+ "DelegationSet": \{
+ "NameServers": [
+ "ns-1693.awsdns-19.co.uk",
+ "ns-1133.awsdns-13.org",
+ "ns-150.awsdns-18.com",
+ "ns-965.awsdns-56.net"
+ ]
+ }
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the four DNS nameservers on the <code>my-ide.cloud</code> DNS.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../images/installation/dns-nameservers.png" alt="dns nameservers">
+</div>
+</div>
+</li>
+<li>
+<p>Create the Simple Storage Service (s3) storage to store the kops configuration.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ aws s3 mb s3://clusters.aws.my-ide.cloud
+make_bucket: clusters.aws.my-ide.cloud</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Inform kops of this new service:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ export KOPS_STATE_STORE=s3://clusters.aws.my-ide.cloud</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the kops cluster by providing the cluster zone. For example, for Europe, the zone is <code>eu-west-1c</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kops create cluster --zones=eu-west-1c eu.aws.my-ide.cloud</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kops update cluster eu.aws.my-ide.cloud --yes</pre>
+</div>
+</div>
+</li>
+<li>
+<p>After the cluster is ready, validate it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kops validate cluster
+
+Using cluster from kubectl context: eu.aws.my-ide.cloud
+
+Validating cluster eu.aws.my-ide.cloud
+
+INSTANCE GROUPS
+NAME			ROLE	MACHINETYPE	MIN	MAX	SUBNETS
+master-eu-west-1c	Master	m3.medium	1	1	eu-west-1c
+nodes			Node	t2.medium	2	2	eu-west-1c
+
+NODE STATUS
+NAME						ROLE	READY
+ip-172-20-38-26.eu-west-1.compute.internal	node	True
+ip-172-20-43-198.eu-west-1.compute.internal	node	True
+ip-172-20-60-129.eu-west-1.compute.internal	master	True
+
+Your cluster eu.aws.my-ide.cloud is ready</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check the cluster using the <code>kubectl</code> command. The <code>kubectl</code> context is also configured automatically by the kops tool:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl config current-context
+eu.aws.my-ide.cloud
+
+$ kubectl get pods --all-namespaces
+
+All the pods in the running state are displayed.</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="installing-ingress-nginx">Installing Ingress-nginx</h4>
+<div class="paragraph">
+<p>To install Ingress-nginx:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the default configuration.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the configuration for AWS.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/service-l4.yaml
+$ kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/patch-configmap-l4.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following output confirms that the Ingress controller is running.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl get pods --namespace ingress-nginx
+NAME                                        READY   STATUS    RESTARTS   AGE
+nginx-ingress-controller-76c86d76c4-gswmg   1/1     Running   0          9m3s</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Find the external IP of ingress-nginx.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
+Ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Troubleshooting</strong>: If the output is empty, it implies that the cluster has configuration issues. Use the following command to find the cause of the issue:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl describe service -n ingress-nginx ingress-nginx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Output similar to the following means a needed role must be created manually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">arn:aws:sts::269287474311:assumed-role...4bff is not authorized to perform: iam:CreateServiceLinkedRole on resource: arn:aws:iam::269287474311:role/aws-service-role/elasticloadbalancing.amazonaws.com/AWSServiceRoleForElasticLoadBalancing</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to create the role:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add hosts on route 53 with this given hostname <a href="https://console.aws.amazon.com/route53/home?region=eu-west-1#hosted-zones" class="bare">https://console.aws.amazon.com/route53/home?region=eu-west-1#hosted-zones</a>:</p>
+</li>
+<li>
+<p>Create the wildcard DNS <code><strong></code> (for <code></strong>.aws-my-ide.cloud</code>) with the previous hostname and ensure to add the dot (<code>.</code>) at the end of the hostname. In the <strong>Type</strong> drop-down list, select <strong>CNAME</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-record-set.png"><img src="../images/installation/create-record-set.png" alt="create record set"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The following is an example of the resulting window after adding all the values.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-record-set-all-values.png"><img src="../images/installation/create-record-set-all-values.png" alt="create record set all values"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>che.aws.my-ide.cloud</code> address must resolve to an IP address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ host che.aws.my-ide.cloud
+che.aws.my-ide.cloud is an alias for ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com.
+ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com has address 54.77.155.195</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is now possible to install Eclipse Che on this existing Kubernetes instance.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="enabling-the-tls-and-dns-challenge">Enabling the TLS and DNS challenge</h4>
+<div class="paragraph">
+<p>To use the Cloud DNS and TLS, some service accounts must be enabled to have cert-manager managing the DNS challenge for the <em>Let&#8217;s Encrypt</em> service.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a new <code>permission</code> file.</p>
+</li>
+<li>
+<p>Use the following command to obtain the zone ID:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aws route53 list-hosted-zones
+{
+    "HostedZones": [
+        {
+            "Id": "/hostedzone/ABCDEFGH",
+            "Name": "aws.my-ide.cloud.",
+            "CallerReference": "1",
+            "Config": {
+                "PrivateZone": false
+            },
+            "ResourceRecordSetCount": 5
+        }
+    ]
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the following content and replace <code>INSERT_ZONE_ID</code> with the route53 zone ID:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:GetChange",
+                "route53:ListHostedZonesByName"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets"
+            ],
+            "Resource": [
+                "arn:aws:route53:::hostedzone/&lt;INSERT_ZONE_ID&gt;"
+            ]
+        }
+    ]
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>EC2 Dashboard</strong>, identify the <strong>IAM role</strong> used by the master node.</p>
+<div class="paragraph">
+<p>It is located under the <strong>Description</strong> tab, in the <strong>IAM role</strong> field.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/describtion-tab-iam-role.png"><img src="../images/installation/describtion-tab-iam-role.png" alt="describtion tab iam role"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click on the <strong>IAM role</strong> link (<code>masters.eu.aws.my-ide.cloud</code>, in this case).</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/aws-summary-iam-role.png"><img src="../images/installation/aws-summary-iam-role.png" alt="aws summary iam role"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>Add inline policy</strong> link at the bottom of the window.</p>
+</li>
+<li>
+<p>In the <strong>Create policy</strong> window, on the <strong>JSON</strong> tab, paste the content of the JSON file created earlier and click the <strong>Review policy</strong> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/aws-create-policy.png"><img src="../images/installation/aws-create-policy.png" alt="aws create policy"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, type <code>eclipse-che-route53</code> and click <strong>Create Policy</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-policy-review-policy.png"><img src="../images/installation/create-policy-review-policy.png" alt="create policy review policy"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="installing-cert-manager">Installing cert-manager</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To install cert-manager, run the following commands (for details, see <a href="https://docs.cert-manager.io/en/latest/getting-started/install/kubernetes.html">Installing Cert on Kubernetes</a>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl create namespace cert-manager namespace/cert-manager created
+$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set <code>validate=false</code>. If set to <code>true</code>, it will only work with the latest Kubernetes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl apply \
+  -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml \
+  --validate=false</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the Che namespace if it does not already exist:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl create namespace che
+namespace/che created</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the <strong>cert-manager</strong> user:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aws iam create-user --user-name cert-manager
+{
+    "User": {
+        "Path": "/",
+        "UserName": "cert-manager",
+        "UserId": "ABCDEF",
+        "Arn": "arn:aws:iam::1234:user/cert-manager",
+        "CreateDate": "2019-07-30T13:50:48Z"
+    }
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the access key:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">{
+    "AccessKey": {
+        "UserName": "cert-manager",
+        "AccessKeyId": "ABCDEF",
+        "Status": "Active",
+        "SecretAccessKey": "mySecret",
+        "CreateDate": "2019-07-30T13:52:59Z"
+    }
+}</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Remember the access key for later use.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a secret from the <code>SecretAccessKey</code> content.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl create secret generic aws-cert-manager-access-key \
+  --from-literal=CLIENT_SECRET=&lt;REPLACE WITH SecretAccessKey content&gt; -n cert-manager</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <strong>Add inline policy</strong> link to add the inline policy to <a href="https://console.aws.amazon.com/iam/home#/users/cert-manager">AWS Cert-Manager</a>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/aws-summary-iam-role.png"><img src="../images/installation/aws-summary-iam-role.png" alt="aws summary iam role"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Paste the following inline policy in the <strong>JSON</strong> tab:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "route53:GetChange",
+            "Resource": "arn:aws:route53:::change/<strong>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "route53:ChangeResourceRecordSets",
+            "Resource": "arn:aws:route53:::hostedzone/</strong>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "route53:ListHostedZonesByName",
+            "Resource": "*"
+        }
+    ]
+}</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/json-review-policy.png"><img src="../images/installation/json-review-policy.png" alt="json review policy"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Review policy</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-policy-review.png"><img src="../images/installation/create-policy-review.png" alt="create policy review"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, type <code>route53</code>, and click <strong>Create policy</strong>.</p>
+</li>
+<li>
+<p>To create the certificate issuer, change the email address and specify the <code>accessKeyID</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ cat &lt;&lt;EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: che-certificate-issuer
+spec:
+  acme:
+    dns01:
+      providers:
+      - route53:
+          region: eu-west-1
+          accessKeyID: &lt;USE ACCESS_KEY_ID_CREATED_BEFORE&gt;
+          secretAccessKeySecretRef:
+            name: aws-cert-manager-access-key
+            key: CLIENT_SECRET
+        name: route53
+    email: florent@example.com
+    privateKeySecretRef:
+      name: letsencrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the certificate by editing the domain name value (<code>aws.my-ide.cloud</code>, in this case) and the <code>dnsName</code> value:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ cat &lt;&lt;EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+ name: che-tls
+ namespace: che
+spec:
+ secretName: che-tls
+ issuerRef:
+   name: che-certificate-issuer
+   kind: ClusterIssuer
+ dnsNames:
+   - '<strong>.aws.my-ide.cloud'
+ acme:
+   config:
+     - dns01:
+         provider: route53
+       domains:
+         - '</strong>.aws.my-ide.cloud'
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check if the <code>issuerRef</code> name is the same as the <code>ClusterIssuer</code>. A new DNS challenge is being added to the DNS zone for <em>Let’s encrypt</em>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/aws-hosted-zones-dns.png"><img src="../images/installation/aws-hosted-zones-dns.png" alt="aws hosted zones dns"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The cert-manager logs should contain information about the DNS challenge.</p>
+</div>
+</li>
+<li>
+<p>Obtain the logs using the following command (here, <code>cert-manager-8d478bb45-sdfmz</code> is the name of the cert-manager pod):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl logs -f cert-manager-8d478bb45-sdfmz -n cert-manager
+I0730 14:46:25.382385       1 sync.go:274] Need to create 0 challenges
+I0730 14:46:25.382401       1 sync.go:319] Waiting for all challenges for order "che-tls-3365293372" to enter 'valid' state
+I0730 14:46:25.382431       1 controller.go:204] cert-manager/controller/orders "level"=0 "msg"="finished processing work item" "key"="che/che-tls-3365293372"
+I0730 14:46:25.382813       1 controller.go:219] cert-manager/controller/challenges "level"=0 "msg"="finished processing work item" "key"="che/che-tls-3365293372-0"
+I0730 14:46:25.382843       1 controller.go:213] cert-manager/controller/challenges "level"=0 "msg"="syncing resource" "key"="che/che-tls-3365293372-0"
+I0730 14:46:25.383037       1 dns.go:101] Presenting DNS01 challenge for domain "aws.my-ide.cloud"
+I0730 14:47:03.061546       1 dns.go:112] Checking DNS propagation for "aws.my-ide.cloud" using name servers: [100.64.0.10:53]
+I0730 14:47:03.220952       1 dns.go:124] Waiting DNS record TTL (60s) to allow propagation of DNS record for domain "_acme-challenge.aws.my-ide.cloud.”</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Ensure that the certificate is ready:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl describe certificate/che-tls -n che
+Status:
+  Conditions:
+    Last Transition Time:  2019-07-30T14:46:23Z
+    Message:               Certificate issuance in progress. Temporary certificate issued.
+    Reason:                TemporaryCertificate
+    Status:                False
+    Type:                  Ready
+Events:
+  Type    Reason        Age   From          Message
+  ----    ------        ----  ----          -------
+  Normal  OrderCreated  50s   cert-manager  Created Order resource "che-tls-3365293372"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Wait for the status to become <code>OK</code> and ensure that the log contains the following entry:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">I0729 13:56:26.140886       1 conditions.go:143] Found status change for Certificate "che-tls" condition "Ready": "False" -&gt; "True"; setting lastTransitionTime to 2019-07-29 13:56:26.140866531 +0000 UTC m=+4557.134131468</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Ensure that the status is up-to-date using the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl describe certificate/che-tls -n che
+
+Status:
+  Conditions:
+    Last Transition Time:  2019-07-30T14:48:07Z
+    Message:               Certificate is up to date and has not expired
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2019-10-28T13:48:05Z
+Events:
+  Type    Reason         Age    From          Message
+  ----    ------         ----   ----          -------
+  Normal  OrderCreated   5m29s  cert-manager  Created Order resource "che-tls-3365293372"
+  Normal  OrderComplete  3m46s  cert-manager  Order "che-tls-3365293372" completed successfully
+  Normal  CertIssued     3m45s  cert-manager  Certificate issued successfully</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-che-on-kubernetes-using-the-chectl-command_deploying-che-on-kubernetes-on-aws">Installing Che on Kubernetes using the chectl command</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ chectl server:start --platform=k8s --installer=helm --domain=aws.my-ide.cloud --multiuser --tls
+  ✔ ✈️  Kubernetes preflight checklist
+    ✔ Verify if kubectl is installed
+    ✔ Verify remote kubernetes status...done.
+    ✔ Verify domain is set...set to aws.my-ide.cloud.
+  ✔ 🏃‍  Running Helm to install Che
+    ✔ Verify if helm is installed
+    ✔ Check for TLS secret prerequisites...che-tls secret found.
+    ✔ Create Tiller Role Binding...it already exist.
+    ✔ Create Tiller Service Account...it already exist.
+    ✔ Create Tiller RBAC
+    ✔ Create Tiller Service...it already exist.
+    ✔ Preparing Che Helm Chart...done.
+    ✔ Updating Helm Chart dependencies...done.
+    ✔ Deploying Che Helm Chart...done.
+  ✔ ✅  Post installation checklist
+    ✔ PostgreSQL pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Keycloak pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Che Server URL...https://che-che.aws.my-ide.cloud
+    ✔ Che status check
+Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The certificate generated by Let’s Encrypt is a valid certificate.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/certificate-generate-lets-encrypt.png"><img src="../images/installation/certificate-generate-lets-encrypt.png" alt="certificate generate lets encrypt"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-welcome-to-your-workspace.png"><img src="../images/installation/eclipse-che-welcome-to-your-workspace.png" alt="eclipse che welcome to your workspace"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-on-openshift-3-using-the-operator_che-quick-starts">Installing Che on OpenShift 3 using the operator</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of OpenShift 3.11</p>
+</li>
+<li>
+<p>The <code>oc</code> tool installed</p>
+</li>
+<li>
+<p>The <code>chectl</code> tool installed</p>
+</li>
+<li>
+<p>Administrator rights to the OpenShift installation (needed by <code>che-role</code>)</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="preparing-openshift-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift for installing Che</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che on OpenShift 3 using the operator:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to OpenShift (copy the login command from the OpenShift console):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc login https://master.rhpds311.openshift.opentlc.com:443 --token=&lt;token&gt;</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/log-into-openshift.gif"><img src="../images/installation/log-into-openshift.gif" alt="log into openshift"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Check if the latest <code>oc</code> binary tool is installed on the system:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc version
+oc v3.11.0+0cbc58b
+kubernetes v1.11.0+d4cacc0
+features: Basic-Auth
+
+Server https://master.rhpds311.openshift.opentlc.com:443
+openshift v3.11.43
+kubernetes v1.11.0+d4cacc0</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Give a domain to <code>chectl</code>. This is the remote hostname that will be accessible. If it is unknown, obtain it with a new project using the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc new-project hello-world
+$ oc new-app centos/httpd-24-centos7~https://github.com/openshift/httpd-ex
+$ oc expose svc/httpd-ex
+$ oc get route httpd-ex
+NAME     HOST/PORT                                                PATH     SERVICES PORT     TERMINATION WILDCARD
+httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex          8080-tcp             None</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract the domain from <code>httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com</code>. It is the part after the first name: <code>apps.rhpds311.openshift.opentlc.com</code>.</p>
+</li>
+<li>
+<p>Remove the project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc delete project hello-world</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-che-on-openshift-using-the-operator_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift using the Operator</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che on OpenShift using the Operator:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a new project called <strong>che</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc new-project che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Invoke <code>chectl</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator --domain=apps.rhpds311.openshift.opentlc.com
+  ✔ ✈️  Openshift preflight checklist
+    ✔ Verify if oc is installed...done.
+    ✔ Verify if openshift is running...done.
+    ✔ Verify domain is set...set to apps.rhpds311.openshift.opentlc.com.
+  ✔ 🏃‍  Running the Che Operator
+    ✔ Copying operator resources...done.
+    ✔ Create Namespace (che)...It already exist.
+    ✔ Create ServiceAccount che-operator in namespace che...done.
+    ✔ Create Role che-operator in namespace che...done.
+    ✔ Create RoleBinding che-operator in namespace che...done.
+    ✔ Create CRD checlusters.org.eclipse.che...done.
+    ✔ Waiting 5 seconds for the new Kubernetes resources to get flushed...done.
+    ✔ Create deployment che-operator in namespace che...done.
+    ✔ Create Che Cluster eclipse-che in namespace che...done.
+  ✔ ✅  Post installation checklist
+    ✔ PostgreSQL pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Keycloak pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Che Server URL...http://che-che.apps.rhpds311.openshift.opentlc.com
+    ✔ Che status check
+Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-che-on-openshift-using-the-operator-and-ssl_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift using the Operator and SSL</h3>
+<div class="paragraph">
+<div class="title">Prerequisites</div>
+<p>The installation of Che on OpenShift using the Operator and SSL requires the <code>--tls</code> option.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che on OpenShift using the Operator and SSL:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run this command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap"> $ ./bin/run server:start --platform=openshift --installer=operator --domain=apps.rhpds311.openshift.opentlc.com --tls
+  ✔ ✈️  Openshift preflight checklist
+    ✔ Verify if oc is installed...done.
+    ✔ Verify if openshift is running...done.
+    ✔ Verify domain is set...set to apps.rhpds311.openshift.opentlc.com.
+  ✔ 🏃‍  Running the Che Operator
+    ✔ Copying operator resources...done.
+    ✔ Create Namespace (che)...done.
+    ✔ Create ServiceAccount che-operator in namespace che...done.
+    ✔ Create Role che-operator in namespace che...done.
+    ✔ Create RoleBinding che-operator in namespace che...done.
+    ✔ Create CRD checlusters.org.eclipse.che...It already exist.
+    ✔ Waiting 5 seconds for the new Kubernetes resources to get flushed...done.
+    ✔ Create deployment che-operator in namespace che...done.
+    ✔ Create Che Cluster eclipse-che in namespace che...done.
+  ✔ ✅  Post installation checklist
+    ✔ PostgreSQL pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Keycloak pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Che Server URL...https://che-che.apps.rhpds311.openshift.opentlc.com
+    ✔ Che status check
+Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here, the link <a href="https://che-che.apps.rhpds311.openshift.opentlc.com" class="bare">https://che-che.apps.rhpds311.openshift.opentlc.com</a> is now prefixed with HTTPS and <em>Let’s Encrypt</em> has created the certificates.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-on-openshift-4-from-operatorhub_che-quick-starts">Installing Che on OpenShift 4 from OperatorHub</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Eclipse Che can be installed from OpenShift OperatorHub.</p>
+</div>
+<div class="sect2">
+<h3 id="installing-che-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Installing Che on OpenShift 4</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che on OpenShift 4:</p>
+</div>
+<div class="sect3">
+<h4 id="creating-the-che-project">Creating the che project</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a project named <strong>che</strong> using the <strong>Projects tab</strong>.</p>
+</li>
+<li>
+<p>Click the <strong>Create Project</strong> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/open-shift-create-project.png"><img src="../images/installation/open-shift-create-project.png" alt="open shift create project"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Name</strong> field, type <code>che</code> and click the <b class="button">Create</b> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-project-button.png"><img src="../images/installation/create-project-button.png" alt="create project button"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="installing-the-operator">Installing the operator</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>After the Che project is created, install the operator. In the left panel, expand <strong>Catalog</strong> and click <strong>OperatorHub</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/catalog-operatorhub.png"><img src="../images/installation/catalog-operatorhub.png" alt="catalog operatorhub"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Search by keyword</strong> field, type <code>eclipse che</code>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-in-openshift-creation.png"><img src="../images/installation/eclipse-che-in-openshift-creation.png" alt="eclipse che in openshift creation"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/select-eclipse-che-in-openshift.png"><img src="../images/installation/select-eclipse-che-in-openshift.png" alt="select eclipse che in openshift"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <b class="button">Install</b> button in the <strong>Eclipse Che</strong> pop-up window.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/install-eclipse-che-in-openshift.png"><img src="../images/installation/install-eclipse-che-in-openshift.png" alt="install eclipse che in openshift"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>A specific namespace</strong> field in the cluster drop-down list, select <strong>che</strong>. Click the <b class="button">Subscribe</b> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-create-operator-subscription.png"><img src="../images/installation/eclipse-che-create-operator-subscription.png" alt="eclipse che create operator subscription"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The operator is successfully installed and is available in the <strong>Installed Operators</strong> section.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-overview.png"><img src="../images/installation/eclipse-che-overview.png" alt="eclipse che overview"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deploying-che">Deploying Che</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Catalog &#8594; Installed Operators</strong> section.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-installed-operators.png"><img src="../images/installation/eclipse-che-installed-operators.png" alt="eclipse che installed operators"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Eclipse Che is displayed as an installed operator having the <strong>InstallSucceeded</strong> status.</p>
+</div>
+</li>
+<li>
+<p>To deploy Che, click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-overview-provided-apis.png"><img src="../images/installation/eclipse-che-overview-provided-apis.png" alt="eclipse che overview provided apis"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>Create New</strong> link in <strong>Provided APIs</strong> section.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/cc-eclipse-che-cluster.png"><img src="../images/installation/cc-eclipse-che-cluster.png" alt="cc eclipse che cluster"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Leave the default values as they are and click the <b class="button">Create</b> button in the bottom-left corner of the window.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/create-che-cluster-intalled-operators.png"><img src="../images/installation/create-che-cluster-intalled-operators.png" alt="create che cluster intalled operators"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>As a result, the Eclipse Che cluster is created.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-cluster-create-che-cluster.png"><img src="../images/installation/eclipse-che-cluster-create-che-cluster.png" alt="eclipse che cluster create che cluster"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="tracking-the-che-deployment">Tracking the Che deployment</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To track the deployment, click the <strong>eclipse-che</strong> cluster.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-cluster-overview.png"><img src="../images/installation/eclipse-che-cluster-overview.png" alt="eclipse che cluster overview"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>Resources</strong> tab.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-resources-tab.png"><img src="../images/installation/eclipse-che-resources-tab.png" alt="eclipse che resources tab"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>It is also possible to track the deployment using the command line and the following two commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc project che
+$ oc get pods
+NAME                            READY     STATUS    RESTARTS   AGE
+che-8495f4946b-jrzdc            0/1       Running   0          86s
+che-operator-578765d954-99szg   1/1       Running   0          42m
+keycloak-74fbfb9654-g9vp5       1/1       Running   0          4m32s
+postgres-5d579c6847-w6wx5       1/1       Running   0          5m14s</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="viewing-che-operator-logs">Viewing che-operator logs</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To view the che-operator logs, run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc logs --tail=10 -f che-operator-578765d954-99szg
+time="2019-07-12T09:48:29Z" level=info msg="Exec successfully completed"
+time="2019-07-12T09:48:29Z" level=info msg="Updating eclipse-che CR with status: provisioned with OpenShift identity provider: true"
+time="2019-07-12T09:48:29Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: ConfigMap, name: che"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: ConfigMap, name: custom"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: Deployment, name: che"
+time="2019-07-12T09:48:30Z" level=info msg="Updating eclipse-che CR with status: Che API: Unavailable"
+time="2019-07-12T09:48:30Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:48:30Z" level=info msg="Waiting for deployment che. Default timeout: 420 seconds"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To obtain the Eclipse Che URL, wait for the logs to show the following information:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with Eclipse Che server URL: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
+time="2019-07-12T09:50:13Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:50:13Z" level=info msg="Eclipse Che is now available at: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
+time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version: 7.0.0-RC-2.0"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URL is also displayed in the Eclipse Che cluster on the <strong>Installed Operators</strong> window in the <strong>ECLIPSE CHE URL</strong> field.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-url-filef-overview.png"><img src="../images/installation/eclipse-che-url-filef-overview.png" alt="eclipse che url filef overview"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che URL</strong> link to display the Eclipse Che login page.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-login-page.png"><img src="../images/installation/eclipse-che-login-page.png" alt="eclipse che login page"></a>
+</div>
+</div>
+</li>
+<li>
+<p>To log in, use OpenShift OAuth or register as a new user. To use OAuth, the user must grant permissions to log in to Eclipse Che.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/authorize-access-for-eclipse-che-openshift.png"><img src="../images/installation/authorize-access-for-eclipse-che-openshift.png" alt="authorize access for eclipse che openshift"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Update account information.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/update-account-information-eclipse-che.png"><img src="../images/installation/update-account-information-eclipse-che.png" alt="update account information eclipse che"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>When the user is logged in, the Eclipse Che <strong>Dashboard</strong> displays where the user can create a workspace.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-loading.png"><img src="../images/installation/eclipse-che-loading.png" alt="eclipse che loading"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-loading.png"><img src="../images/installation/eclipse-che-loading.png" alt="eclipse che loading"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-ssl-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Enabling SSL on OpenShift 4</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To enable SSL on Openshift 4:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Toggle the <strong>TLS MODE</strong> switch to <strong>True</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/set-that-value-to-true-enabeling-tls-mode.png"><img src="../images/installation/set-that-value-to-true-enabeling-tls-mode.png" alt="set that value to true enabeling tls mode"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/tls-mode-true.png"><img src="../images/installation/tls-mode-true.png" alt="tls mode true"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Confirm change</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Resources</strong> section, the pods are restarted.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/resource-section-pods-are-restarted.png"><img src="../images/installation/resource-section-pods-are-restarted.png" alt="resource section pods are restarted"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>ECLIPSE CHE URL</strong> link.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/eclipse-che-url-link.png"><img src="../images/installation/eclipse-che-url-link.png" alt="eclipse che url link"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that the link is redirected to HTTPS.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/link-is-redirected-to-https.png"><img src="../images/installation/link-is-redirected-to-https.png" alt="link is redirected to https"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A valid <em>Let’s Encrypt</em> certificate is available, and Che is available on HTTPS.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/che-running-on-openshift-v4.png"><img src="../images/installation/che-running-on-openshift-v4.png" alt="che running on openshift v4"></a>
+</div>
+<div class="title">Figure 1. An example of Eclipse Che running on OpenShift v4.1 with SSL</div>
 </div>
 </div>
 </div>
