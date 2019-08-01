@@ -1872,6 +1872,590 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 </div>
 <div class="title">Figure 1. An example of Eclipse Che running on OpenShift v4.1 with SSL</div>
 </div>
+<hr>
+<div class="paragraph">
+<p>title: Installing Che on Microsoft Azure
+keywords:
+tags: []
+sidebar: che_7_docs
+permalink: che-7/installing-eclipse-che-on-microsoft-azure.html
+folder: che-7/installation-guide
+summary:
+---</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-on-microsoft-azure_che-quick-starts">Installing Che on Microsoft Azure</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="preparing-the-azure-environment-for-installing-che_installing-che-on-microsoft-azure">Preparing the Azure environment for installing Che</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To set up the Azure environment for Che:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the Azure command-line tool. For details, see <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Install the Azure CLI</a>.</p>
+<div class="paragraph">
+<p>For example, on macOS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ brew update &amp;&amp; brew install azure-cli</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log in to Azure:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az login</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an Azure group (to list the locations, use the <code>az account list-locations</code> command):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az group create --name eclipseCheResourceGroup --location francecentral
+{
+  "id": "/subscriptions/ab0f7986-a280-481c-a47d-98fa45ff94ca/resourceGroups/eclipseCheResourceGroup",
+  "location": "francecentral",
+  "managedBy": null,
+  "name": "eclipseCheResourceGroup",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": null
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az aks create --resource-group eclipseCheResourceGroup \
+  --name eclipse-che --node-count 1 --enable-addons monitoring --generate-ssh-keys</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure <code>kubectl</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az aks get-credentials --name eclipse-che --resource-group eclipseCheResourceGroup
+Merged "eclipse-che" as current context in /Users/benoitf/.kube/config</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check the Kubernetes context:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl config current-context
+eclipse-che
+
+$ kubectl get pods --all-namespaces</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the pods in the running state are displayed.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="'installing-ingress-on-azure_installing-che-on-microsoft-azure"">Installing Ingress on Azure</h4>
+<div class="paragraph">
+<p>Eclipse Che uses Ingress.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Ingress-nginx:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the default configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the configuration for Azure:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply \
+  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following output confirms that the Ingress controller is running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get pods --namespace ingress-nginx
+NAME                                        READY   STATUS    RESTARTS   AGE
+nginx-ingress-controller-76c86d76c4-gswmg   1/1     Running   0          9m3s</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for the container to run.</p>
+</div>
+</li>
+<li>
+<p>Wait for the external IP. Note that a <code>&lt;pending&gt;</code> status for the external IP is shown before the exact external IP address is displayed.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get services  --namespace ingress-nginx
+NAME           TYPE          CLUSTER-IP   EXTERNAL-IP    PORT(S)                     AGE
+ingress-nginx  LoadBalancer  10.0.97.244  40.89.129.194  80:31107/TCP,443:30629/TCP  8m59s</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the external IP of Ingress-nginx.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get services --namespace ingress-nginx \
+  -o jsonpath='{.items[].status.loadBalancer.ingress[0].ip}'
+40.89.129.194</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-DNS-on-azure_installing-che-on-microsoft-azure">Configuring DNS on Azure</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To configure DNS on Azure:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the Azure web console, navigate to <strong>Home</strong> &#8594; <strong>DNS</strong> zones.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/dns-zone-in-microsoft-azure.png"><img src="../images/installation/dns-zone-in-microsoft-azure.png" alt="dns zone in microsoft azure"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new zone.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the <strong>Resource group</strong> drop-down list, click <strong>eclipseCheResourceGroup</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/selecting-the-resource-group.png"><img src="../images/installation/selecting-the-resource-group.png" alt="selecting the resource group"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Instance details</strong> section, in the <strong>Name</strong> field, type the name of the domain (<strong>azr.my-ide.cloud</strong>, in this case).</p>
+</li>
+<li>
+<p>Click the <b class="button">Review + create</b> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/entering-the-name-fo-the-domain.png"><img src="../images/installation/entering-the-name-fo-the-domain.png" alt="entering the name fo the domain"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Click the <b class="button">Create</b> button.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/completing-the-creation-of-the-zone.png"><img src="../images/installation/completing-the-creation-of-the-zone.png" alt="completing the creation of the zone"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The created zone and the list of name servers (NS) are displayed in the <strong>DNS Zones</strong> section.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/list-of-created-zones-and-NS.png"><img src="../images/installation/list-of-created-zones-and-NS.png" alt="list of created zones and NS"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>These servers must be configured with the registrar of the domain.</p>
+</div>
+</li>
+<li>
+<p>Navigate to the Azure DNS zone, and click the <b class="button">+ Record set</b> button (<span class="image"><img src="../images/record-set-button.png" alt="record set button" width="25px"></span>).</p>
+</li>
+<li>
+<p>To add a record set:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the <strong>Name</strong> field, type <code>*</code>.</p>
+</li>
+<li>
+<p>In the <strong>IP Address</strong> field, select the external IP of Ingress-nginx controller that the user had obtained in the <a href="#installing-ingress-on-azure">[installing-ingress-on-azure]</a> section (<strong>40.89.129.194</strong>, in this case).</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/adding-a-record-set.png"><img src="../images/installation/adding-a-record-set.png" alt="adding a record set"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The following is an example of an added DNS zone:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/example-of-an-added-dns-zone.png"><img src="../images/installation/example-of-an-added-dns-zone.png" alt="example of an added dns zone"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="enabling-the-TLS-DNS-challenge_installing-che-on-microsoft-azure">Enabling the TLS and DNS challenge</h4>
+<div class="paragraph">
+<p>To use Azure DNS and TLS, permissions must be granted to have cert-manager managing the DNS challenge for the <em>Let’s Encrypt</em> service.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the variable for the domain:</p>
+<div class="listingblock">
+<div class="content">
+<pre>AZURE_CERT_MANAGER_DNS_NAME=azr.my-ide.cloud</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the secrets:</p>
+<div class="listingblock">
+<div class="content">
+<pre>AZURE_CERT_MANAGER_SP_APP_ID=$(az ad sp create-for-rbac --name cert-manager-eclipse-che --query "appId" --output tsv)
+AZURE_CERT_MANAGER_SP_PASSWORD=$(az ad sp create-for-rbac --name cert-manager-eclipse-che --query "password" --output tsv)</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Lower the permissions of the service principal (SP):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az role assignment delete --assignee $AZURE_CERT_MANAGER_SP_APP_ID --role Contributor</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Give access to the DNS zone:</p>
+<div class="listingblock">
+<div class="content">
+<pre>DNS_ID=$(az network dns zone show --name $AZURE_CERT_MANAGER_DNS_NAME --resource-group eclipseCheResourceGroup --query "id" --output tsv)
+
+$ az role assignment create --assignee $AZURE_CERT_MANAGER_SP_APP_ID \
+  --role "DNS Zone Contributor" --scope $DNS_ID</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check the permissions:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ az role assignment list --assignee $AZURE_CERT_MANAGER_SP_APP_ID</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the Service Principal App ID and password for the configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo ID=$AZURE_CERT_MANAGER_SP_APP_ID
+$ echo PASSWORD=$AZURE_CERT_MANAGER_SP_PASSWORD</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-the-secret_installing-che-on-microsoft-azure">Creating the secret</h4>
+<div class="paragraph">
+<p>The secret must be in the <strong>cert-manager</strong> namespace. Otherwise the secret cannot be found, and cert-manager reports errors.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To create the secret, run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret generic azuredns-config \
+  --from-literal=CLIENT_SECRET=$AZURE_CERT_MANAGER_SP_PASSWORD -n cert-manager</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-cert-manager-on-azure_installing-che-on-microsoft-azure">Installing cert-manager on Azure</h3>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>To install the cert-manager on Azure, start by creating the <strong>cert-manager</strong> namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create namespace cert-manager
+namespace/cert-manager created
+
+$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set <code>validate=false</code>. Without it, cert-manager only works with the latest Kubernetes version:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml --validate=false</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the <strong>che</strong> namespace if it does not already exist:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create namespace che
+namespace/che created</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the certificate issuer. Enter your email address in the <strong>email</strong> field:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt;EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: che-certificate-issuer
+spec:
+  acme:
+    dns01:
+      providers:
+      - azuredns:
+          # Service principal clientId (It's the value printed in the previous lines: echo ID=$AZURE_CERT_MANAGER_SP_APP_ID )
+          clientID: &lt;AZURE_CERT_MANAGER_SP_APP_ID&gt;
+          # A secretKeyRef to a service principal ClientSecret (password)
+          # ref: https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
+          clientSecretSecretRef:
+            name: azuredns-config
+            key: CLIENT_SECRET
+          # Azure subscription Id that can be obtained with command:
+          # $ az account show  | jq -r '.id'
+          subscriptionID: &lt;SUBSCRIPTION_ID&gt;
+          # Azure AD tenant Id that can be obtained with command:
+          # $ az account show  | jq -r '.tenantId'
+          tenantID: &lt;TENANT_ID&gt;
+          resourceGroupName: eclipseCheResourceGroup
+          # The DNS Zone to use
+          hostedZoneName: azr.my-ide.cloud
+        name: azuredns
+    email: florent@example.com
+    privateKeySecretRef:
+      name: letsencrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the certificate. Edit the domain name:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt;EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+ name: che-tls
+ namespace: che
+spec:
+ secretName: che-tls
+ issuerRef:
+   name: che-certificate-issuer
+   kind: ClusterIssuer
+ dnsNames:
+   - '*.azr.my-ide.cloud'
+ acme:
+   config:
+     - dns01:
+         provider: azuredns
+       domains:
+         - '*.azr.my-ide.cloud'
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the <code>issuerRef</code> name is the same as the <code>ClusterIssuer</code>. A new DNS challenge is added to the DNS zone for <em>Let’s Encrypt</em>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/new-dns-challenge-added.png"><img src="../images/installation/new-dns-challenge-added.png" alt="new dns challenge added"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The cert-manager logs should contain information about the DNS challenge.</p>
+</div>
+</li>
+<li>
+<p>Obtain the logs using the following command (here, <code>cert-manager-8d478bb45-2924h</code> is the name of the cert-manager pod):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$  kubectl logs -f -n cert-manager cert-manager-8d478bb45-2924h</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Ensure that the certificate is ready:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl describe certificate/che-tls -n che
+
+Status:
+  Conditions:
+    Last Transition Time:  2019-07-29T13:50:35Z
+    Message:               Certificate issuance in progress. Temporary certificate issued.
+    Reason:                TemporaryCertificate
+    Status:                False
+    Type:                  Ready
+
+Events:
+  Type    Reason              Age   From          Message
+  ----    ------              ----  ----          -------
+  Normal  Generated           47s   cert-manager  Generated new private key
+  Normal  GenerateSelfSigned  47s   cert-manager  Generated temporary self signed certificate
+  Normal  OrderCreated        47s   cert-manager  Created Order resource "che-tls-3529929423”</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Wait for the status to show <strong>OK</strong> and ensure that the log contains the following:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl describe certificate/che-tls -n che
+Name:         che-tls
+Namespace:    che
+Labels:       &lt;none&gt;
+Annotations:  kubectl.kubernetes.io/last-applied-configuration:
+                {"apiVersion":"certmanager.k8s.io/v1alpha1","kind":"Certificate","metadata":{"annotations":{},"name":"che-tls","namespace":"che"},"spec":{...
+API Version:  certmanager.k8s.io/v1alpha1
+Kind:         Certificate
+Metadata:
+  Creation Timestamp:  2019-07-30T08:22:13Z
+  Generation:          1
+  Resource Version:    76822
+  Self Link:           /apis/certmanager.k8s.io/v1alpha1/namespaces/che/certificates/che-tls
+  UID:                 225a1cfb-b2a3-11e9-9e1c-76b96a78248b
+Spec:
+  Acme:
+    Config:
+      dns01:
+        Provider:  azuredns
+      Domains:
+        *.azr.my-ide.cloud
+  Dns Names:
+    *.azr.my-ide.cloud
+  Issuer Ref:
+    Kind:       ClusterIssuer
+    Name:       che-certificate-issuer
+  Secret Name:  che-tls
+Status:
+  Conditions:
+    Last Transition Time:  2019-07-30T08:23:21Z
+    Message:               Certificate is up to date and has not expired
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2019-10-28T07:23:19Z
+Events:
+  Type    Reason         Age   From          Message
+  ----    ------         ----  ----          -------
+  Normal  OrderCreated   102s  cert-manager  Created Order resource "che-tls-3633081213"
+  Normal  OrderComplete  34s   cert-manager  Order "che-tls-3633081213" completed successfully
+  Normal  CertIssued     34s   cert-manager  Certificate issued successfully</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-che-on-azure-using-the-chectl-command_installing-che-on-microsoft-azure">Installing Che on Azure using the chectl command</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To install Che, run the following <code>chectl</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --installer=helm --platform=k8s --tls \
+  --domain=azr.my-ide.cloud --multiuser
+  ✔ ✈️  Kubernetes preflight checklist
+    ✔ Verify if kubectl is installed
+    ✔ Verify remote kubernetes status...done.
+    ✔ Verify domain is set...set to azr.my-ide.cloud.
+  ✔ 🏃‍  Running Helm to install Che
+    ✔ Verify if helm is installed
+    ✔ Check for TLS secret prerequisites...che-tls secret found.
+    ✔ Create Tiller Role Binding...done.
+    ✔ Create Tiller Service Account...done.
+    ✔ Create Tiller RBAC
+    ✔ Create Tiller Service...done.
+    ✔ Preparing Che Helm Chart...done.
+    ✔ Updating Helm Chart dependencies...done.
+    ✔ Deploying Che Helm Chart...done.
+  ✔ ✅  Post installation checklist
+    ✔ PostgreSQL pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Keycloak pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Che Server URL...https://che-che.azr.my-ide.cloud
+    ✔ Che status check
+Command server:start has completed successfully.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Keycloak and Che now have valid wildcard certificates.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/wildcard-certificates-for-keycloak-che.png"><img src="../images/installation/wildcard-certificates-for-keycloak-che.png" alt="wildcard certificates for keycloak che"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../images/installation/che-user-dashboard.png"><img src="../images/installation/che-user-dashboard.png" alt="che user dashboard"></a>
+</div>
+<div class="title">Figure 2. Che user dashboard</div>
+</div>
 </div>
 </div>
 </div>
@@ -1895,7 +2479,7 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 31, 2019 <br/>
+                    Site last generated: Aug 1, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
