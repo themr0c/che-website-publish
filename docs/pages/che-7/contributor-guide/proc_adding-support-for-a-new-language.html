@@ -885,47 +885,59 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+<p>This section describes how to add support for a new language into Eclipse Che.</p>
 </div>
-<h2 id="prerequisites" class="discrete">Prerequisites</h2>
+<div class="paragraph">
+<p>The described method is to write a Che-Theia plug-in that uses the <em>languageserver-node</em> library to connect a language server to the VS Code extension API. Note that it is also possible to directly connect a Che-Theia plug-in or a VS Code extension to the plug-in API.</p>
+</div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>Install the latest Che-Theia plug-in Yeoman generator. Follow the documentation about <a href="developing-che-theia-plug-ins.html#bootstrapping-che-theia-plug-in-development-with-yeoman_developing-che-theia-plug-ins">how to develop Che-Theia plug-in with Yeoman.</a></p>
 </li>
 </ul>
 </div>
-<h2 id="procedure" class="discrete">Procedure</h2>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Start each step with an active verb.</p>
+<p>Generate a sample by running the <code>yo @theia/plugin</code> command. When prompted, confirm the choices for <strong>Backend plug-in</strong>, <strong>Samples</strong>, and then <strong>Language sample</strong>. This creates a project and a ready-to-use plug-in, which provides support for XML Language Server and can be deployed.</p>
 </li>
 <li>
-<p>Include one command or action per step.</p>
+<p>Replace the download URL of the implementation of the language server protocol in the <code>src/download-xml-ls.js</code> file. This file will be downloaded during the build process of the plug-in. If the name of <code>src/download-xml-ls.js</code> changed, replace it in the <code>package.json</code> file in the <code>scripts</code> block.</p>
 </li>
 <li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
+<p>Replace the configuration of the language in the <code>src/language-configuration.json</code> file. This file contains configuration options for the current language. If the name of <code>src/language-configuration.json</code> changed, replace it in the <code>package.json</code> file in the <code>contribution</code> block.</p>
+</li>
+<li>
+<p>Replace the configuration of the language in the <code>src/xml.tmLanguage.json</code> file. This file describes syntax highlighting. If the name of <code>src/xml.tmLanguage.json</code> changed, replace it in the <code>package.json</code> file in the <code>contribution.grammars</code> block.</p>
+</li>
+<li>
+<p>Replace the information about the provided language in the <code>src/plug-in_name.ts</code> file. This file contains information about the location of the Language Server Protocol (LSP) implementation and the command with arguments to run it.</p>
+</li>
+<li>
+<p>Build the plug-in by running <code>yarn</code> in the root of the project.</p>
 </li>
 </ol>
 </div>
-<h2 id="additional-resources" class="discrete">Additional resources</h2>
 <div class="ulist">
+<div class="title">Additional resources</div>
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
+<p><a href="https://github.com/eclipse/che-theia-samples/tree/master/samples/xml-language-server-plugin">Theia plug-in with XML Language Server</a></p>
 </li>
 <li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://code.visualstudio.com/api/language-extensions/overview">VS Code Language Extensions Documentation</a></p>
+</li>
+<li>
+<p><a href="https://code.visualstudio.com/api/language-extensions/language-server-extension-guide">A simple Language Server for plain text files</a></p>
+</li>
+<li>
+<p><a href="publishing-che-theia-plug-ins.html#adding-a-che-theia-plug-in-to-the-che-plug-in-registry_publishing-che-theia-plug-ins">Add the plug-in to the Che plug-in registry.</a></p>
 </li>
 </ul>
 </div>
