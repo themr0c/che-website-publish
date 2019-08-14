@@ -1188,7 +1188,7 @@ Keep the key file safe, and do not share it with anyone because it can be used t
 <p>Create a Secret from this file.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json</pre>
+<pre>$ kubectl create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json --namespace=cert-manager</pre>
 </div>
 </div>
 </li>
@@ -1233,21 +1233,21 @@ namespace/che created</pre>
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: ClusterIssuer
 metadata:
- name: che-certificate-issuer
+  name: che-certificate-issuer
 spec:
- acme:
- dns01:
- providers:
- - clouddns:
- project: eclipse-che-1
- serviceAccountSecretRef:
- key: key.json
- name: clouddns-dns01-solver-svc-acct
- name: clouddns
- email: joe@example.com
- privateKeySecretRef:
- name: letsencrypt
- server: https://acme-v02.api.letsencrypt.org/directory[_https://acme-v02.api.letsencrypt.org/directory_]
+  acme:
+    dns01:
+      providers:
+      - clouddns:
+          project: eclipse-che-1
+          serviceAccountSecretRef:
+            key: key.json
+            name: clouddns-dns01-solver-svc-acct
+        name: clouddns
+    email: joe@example.com
+    privateKeySecretRef:
+      name: letsencrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
 EOF</pre>
 </div>
 </div>
@@ -1265,16 +1265,16 @@ metadata:
 spec:
  secretName: che-tls
  issuerRef:
- name: che-certificate-issuer
- kind: ClusterIssuer
+   name: che-certificate-issuer
+   kind: ClusterIssuer
  dnsNames:
- - '*.gcp.my-ide.cloud'
+   - '*.gcp.my-ide.cloud'
  acme:
- config:
- - dns01:
- provider: clouddns
- domains:
- - '*.gcp.my-ide.cloud'
+   config:
+     - dns01:
+         provider: clouddns
+       domains:
+         - '*.gcp.my-ide.cloud'
 EOF</pre>
 </div>
 </div>
