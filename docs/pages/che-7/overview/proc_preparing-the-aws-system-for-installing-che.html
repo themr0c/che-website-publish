@@ -920,6 +920,9 @@ on Amazon Elastic Compute Cloud (Amazon EC2).</p>
 <li>
 <p>Install Kubernetes on EC2. There are several ways to have a running Kubernetes instance on EC2. Here, the <strong>kops</strong> tool is used to install Kubernetes. For details, see <a href="https://kubernetes.io/docs/setup/production-environment/tools/kops/">Installing Kubernetes with kops</a>.</p>
 </li>
+<li>
+<p>Set up <code>IAM</code> user for <strong>kops</strong>. For detailed instructions, see <a href="https://github.com/kubernetes/kops/blob/master/docs/aws.md#setup-iam-user">Set up IAM user</a>.</p>
+</li>
 </ol>
 </div>
 <div class="paragraph">
@@ -973,7 +976,7 @@ on Amazon Elastic Compute Cloud (Amazon EC2).</p>
 </div>
 </li>
 <li>
-<p>Configure the four DNS nameservers on the <code>my-ide.cloud</code> DNS.</p>
+<p>Configure the four DNS nameservers on the <code>my-ide.cloud</code> DNS. Note that when a custom DNS provider, updating the record takes a few hours.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/installation/dns-nameservers.png" alt="dns nameservers">
@@ -1127,7 +1130,7 @@ Ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com</pre>
 </div>
 </li>
 <li>
-<p>Add hosts on route 53 with this given hostname <a href="https://console.aws.amazon.com/route53/home?region=eu-west-1#hosted-zones" class="bare">https://console.aws.amazon.com/route53/home?region=eu-west-1#hosted-zones</a>:</p>
+<p>Add hosts on route 53 with this given hostname https://console.aws.amazon.com/route53/home?region=eu-west-1#hosted-zones:. Ensure that you include the colon (<code>:</code>) at the end of this URL.</p>
 </li>
 <li>
 <p>Create the wildcard DNS <code><strong></code> (for <code></strong>.aws-my-ide.cloud</code>) with the previous hostname and ensure to add the dot (<code>.</code>) at the end of the hostname. In the <strong>Type</strong> drop-down list, select <strong>CNAME</strong>.</p>
@@ -1227,6 +1230,11 @@ ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com has addr
 </li>
 <li>
 <p>In the <strong>EC2 Dashboard</strong>, identify the <strong>IAM role</strong> used by the master node.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/installation/aws-lauch-instance.png"><img src="/che/docs/images/installation/aws-lauch-instance.png" alt="aws lauch instance"></a>
+</div>
+</div>
 <div class="paragraph">
 <p>It is located under the <strong>Description</strong> tab, in the <strong>IAM role</strong> field.</p>
 </div>
@@ -1237,15 +1245,15 @@ ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com has addr
 </div>
 </li>
 <li>
-<p>Click on the <strong>IAM role</strong> link (<code>masters.eu.aws.my-ide.cloud</code>, in this case).</p>
+<p>Click the <strong>IAM role</strong> link (<code>masters.eu.aws.my-ide.cloud</code>, in this case).</p>
+</li>
+<li>
+<p>Click the <strong>Add inline policy</strong> link at the bottom of the window.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/installation/aws-summary-iam-role.png"><img src="/che/docs/images/installation/aws-summary-iam-role.png" alt="aws summary iam role"></a>
 </div>
 </div>
-</li>
-<li>
-<p>Click the <strong>Add inline policy</strong> link at the bottom of the window.</p>
 </li>
 <li>
 <p>In the <strong>Create policy</strong> window, on the <strong>JSON</strong> tab, paste the content of the JSON file created earlier and click the <strong>Review policy</strong> button.</p>
@@ -1276,8 +1284,10 @@ ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com has addr
 <p>To install cert-manager, run the following commands (for details, see <a href="https://docs.cert-manager.io/en/latest/getting-started/install/kubernetes.html">Installing Cert on Kubernetes</a>):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl create namespace cert-manager namespace/cert-manager created
-$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
+<pre class="nowrap">$ kubectl create namespace cert-manager
+namespace/cert-manager created
+$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+namespace/cert-manager labeled</pre>
 </div>
 </div>
 </li>
@@ -1321,7 +1331,8 @@ namespace/che created</pre>
 <p>Create the access key:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">{
+<pre class="nowrap">$ aws iam create-access-key --user-name cert-manager
+{
     "AccessKey": {
         "UserName": "cert-manager",
         "AccessKeyId": "ABCDEF",
@@ -1372,12 +1383,12 @@ Remember the access key for later use.
         {
             "Effect": "Allow",
             "Action": "route53:GetChange",
-            "Resource": "arn:aws:route53:::change/<strong>"
+            "Resource": "arn:aws:route53:::change/*"
         },
         {
             "Effect": "Allow",
             "Action": "route53:ChangeResourceRecordSets",
-            "Resource": "arn:aws:route53:::hostedzone/</strong>"
+            "Resource": "arn:aws:route53:::hostedzone/*"
         },
         {
             "Effect": "Allow",
@@ -1469,6 +1480,18 @@ EOF</pre>
 </div>
 <div class="paragraph">
 <p>The cert-manager logs should contain information about the DNS challenge.</p>
+</div>
+</li>
+<li>
+<p>Obtain the name of the pods:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ kubectl get pods --namespace cert-manager
+NAME                                       READY   STATUS    RESTARTS   AGE
+cert-manager-6587688cb8-wj68p              1/1     Running   0          6h
+cert-manager-cainjector-76d56f7f55-zsqjp   1/1     Running   0          6h
+cert-manager-webhook-7485dd47b6-88m6l      1/1     Running   0          6h</pre>
+</div>
 </div>
 </li>
 <li>
