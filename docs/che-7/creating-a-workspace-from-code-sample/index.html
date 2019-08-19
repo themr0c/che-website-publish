@@ -342,6 +342,17 @@
   
   <li>
       
+      <a href="/che/docs/che-7/navigating-che-using-the-dashboard">Navigating Che: dashboard</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
       <a href="#" class="expandable">Che-Theia IDE basics</a>
       
       <ul>
@@ -740,268 +751,408 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to select a workspace, then load a stack and its accompanying sample project.</p>
+<p>Every stack includes a sample codebase, which is defined by the devfile of the stack.
+This section explains how to create a workspace from this code sample in a sequence of three procedures.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#creating-a-workspace-from-user-dashboard_creating-a-workspace-from-code-sample">Creating a workspace from the user dashboard</a>.</p>
+</li>
+<li>
+<p><a href="#changing-the-configuration-of-an-existing-workspace-from-the-user-dashboard_creating-a-workspace-from-code-sample">Changing the configuration of the workspace</a> to add code sample.</p>
+</li>
+<li>
+<p><a href="#running-an-existing-workspace-from-the-user-dashboard_creating-a-workspace-from-code-sample">Running an existing workspace from the user dashboard</a>.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>It will also explain how to customize a workspace using the <strong>Dashboard</strong>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Every stack includes a sample codebase, which is defined by the stack&#8217;s devfile. For more information on devfiles, see <a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile">Configuring a Che workspace using a devfile</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You need an OKD (<a href="https://www.okd.io/minishift/">Minishift</a>), OCP, or OSD cluster, if using Che on Openshift.</p>
-</li>
-<li>
-<p>Or, you need a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a> to use Che on Kubernetes.</p>
-</li>
-<li>
-<p>To install on Minishift or Minikube, see <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
-</li>
-</ul>
+<p>For more information on devfiles, see <a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile/">Configuring a Che workspace using a devfile</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="accessing-the-dashboard">Accessing the dashboard</h2>
+<h2 id="creating-a-workspace-from-user-dashboard_creating-a-workspace-from-code-sample">Creating a workspace from User Dashboard</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<div class="title">Procedure</div>
-<p>The <strong>Dashboard</strong> is accessible on the cluster from a URL like <code>http:/&lt;che-instance&gt;.&lt;IP-address&gt;.nip.io/dashboard/</code>.</p>
+<p>This section describes how to create a workspace from the User Dashboard.</p>
 </div>
-<div class="sect2">
-<h3 id="minishift">Minishift</h3>
-<div class="paragraph">
-<p>See <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>For versions of <a href="https://github.com/minishift/minishift/releases">Minishift up to 1.34</a>, apply the following change:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc set env dc/che CHE_WORKSPACE_PLUGIN__REGISTRY__URL=https://che-plugin-registry.openshift.io/v3</pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Log into your console at <code>https://&lt;IP-address&gt;:8443/console/</code>.</p>
-</li>
-<li>
-<p>Select the <strong>mini-che</strong> project:</p>
+<h3 id="prerequisites" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><code>https://&lt;IP-address&gt;:8443/console/project/mini-che/overview</code></p>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a></p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>Click through to the mini-che route link, which loads the <strong>Dashboard</strong> by default and prompts you to create a workspace.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>http://che-che.&lt;IP-address&gt;.nip.io/</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
-<div class="sect3">
-<h4 id="ocp-and-osd">OCP and OSD</h4>
-<div class="paragraph">
-<p>For use on OCP or OSD, get the URL for the Che instance from the cluster administrator.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="selecting-a-stack">Selecting a stack</h3>
+<h3 id="procedure" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>When the <strong>Dashboard</strong> opens, click the link in the left navigation panel for <strong>Workspaces</strong>, if it is not already open.</p>
+<p>Navigate to the Che Dashboard. See <a href="/che/docs/che-7/navigating-che-using-the-dashboard/">Navigating Che using the Dashboard</a>.</p>
 </li>
 <li>
-<p>Choose a stack from the list.</p>
+<p>In the left navigation panel, navigate to <strong>Workspaces</strong>.</p>
 </li>
 <li>
-<p>Name your workspace, or choose the default name.</p>
+<p>Click on the <b class="button">Add Workspace</b> button.</p>
 </li>
-</ol>
-</div>
+<li>
+<p>Define a <strong>Name</strong> for the workspace. A generated name is proposed. It can be modified.</p>
+</li>
+<li>
+<p>In the <strong>Stack</strong> section, select the workspace runtime environment that will be used to build and run projects from the list.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/select-workpace.png" alt="Select a stack from the list">
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="viewing-the-compute-resource-limits">Viewing the compute resource limits</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Viewing the compute resource limits</div>
 <div class="paragraph">
 <p>The memory needed by the stack is pre-calculated and displayed on the stack description line. Changing the memory requirements is only possible <a href="#configure-devfile">from the devfile</a>.</p>
 </div>
+</td>
+</tr>
+</table>
 </div>
-<div class="sect2">
-<h3 id="starting-the-workspace">Starting the workspace</h3>
-<div class="paragraph">
-<p>There are two ways to start the workspace:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
-<p>Simple start: Click the <b class="button">Create &amp; Open</b> button at the top or bottom of the form.</p>
+<p>Start the workspace: click on the <b class="button">Create &amp; Open</b> button at the top or bottom of the form:</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/create-and-open.png" alt="Create and Open">
 </div>
 </div>
 </li>
-<li>
-<p>Advanced start: From the top of the page, click the down arrow next to the <b class="button">Create &amp; Open</b> button. Then, select the menu item below to edit the workspace configuration.</p>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Configuring the workspace before start</div>
 <div class="paragraph">
-<p>This allows the user to make further configuration before starting the workspace.</p>
+<p>Instead of configuring the workspace once it has started, it is possible to configure the workspace before start.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From the top of the page, click the down arrow next to the <b class="button">Create &amp; Open</b> button.</p>
+</li>
+<li>
+<p>Select the menu item below to edit the workspace configuration.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/create-and-edit.png" alt="Create and Edit">
 </div>
 </div>
-</li>
-</ol>
+</td>
+</tr>
+</table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="changing-the-workspace-configuration">Changing the workspace configuration</h3>
+</div>
+<div class="sect1">
+<h2 id="changing-the-configuration-of-an-existing-workspace-from-the-user-dashboard_creating-a-workspace-from-code-sample">Changing the configuration of an existing workspace from the User Dashboard</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>If you chose the second option, you can configure the workspace&#8217;s YAML configuration, among other tasks:</p>
+<p>This section describes how to change the configuration of an existing workspace from the User Dashboard.</p>
 </div>
+<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che see <a href="/che/docs/che-7/che-quick-starts/">Che quick starts</a>.</p>
+</li>
+<li>
+<p>An existing workspace defined on this instance of Eclipse Che <a href="#creating-a-workspace-from-user-dashboard_creating-a-workspace-from-code-sample">Creating a workspace from user dashboard</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-2" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>From the <strong>Overview</strong> tab, rename a workspace, if you forgot to do that when creating it. Or, toggle the ephemeral mode, or export your workspace configuration to a file or private cloud. The user can also delete a workspace from here.</p>
+<p>Navigate to the Che Dashboard. See <a href="/che/docs/che-7/navigating-che-using-the-dashboard/">Navigating Che using the dashboard</a>.</p>
+</li>
+<li>
+<p>In the left navigation panel, navigate to  <strong>Workspaces</strong>.</p>
+</li>
+<li>
+<p>Click on the name of a workspace to navigate to the configuration overview page.</p>
+</li>
+<li>
+<p>Click on the <strong>Overview</strong> tab, to execute following actions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Change the <strong>Workspace name</strong>.</p>
+</li>
+<li>
+<p>Toggle <strong>Ephemeral mode</strong>.</p>
+</li>
+<li>
+<p><strong>Export</strong> the workspace configuration to a file or private cloud.</p>
+</li>
+<li>
+<p><strong>Delete</strong> the workspace.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/workspace-config-overview.png" alt="Worksapce configuration overview">
 </div>
 </div>
 </li>
+</ul>
+</div>
+</li>
 </ol>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>From the <strong>Projects</strong> tab, add more projects to an existing workspace:</p>
+<p>In the <strong>Projects</strong> section, choose the projects to integrate in the workspace.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Click on the <b class="button">Add Project</b> button</p>
+</li>
+<li>
+<p>Select the projects to integrate in the workspace.</p>
+</li>
+<li>
+<p>Click on th <b class="button">Add</b> button.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/workspace-config-projects.png" alt="Add projects to workspace">
 </div>
 </div>
 </li>
-<li>
-<p>From the <strong>Plugins</strong> tab, enable or disable workspace plug-ins. For example, start with a generic Java-based stack, then later add support for Node or Python.</p>
+</ol>
+</div>
 </li>
 <li>
-<p>From the <strong>Editors</strong> tab, enable or disable workspace editors. For example, to switch to the Che 6 editor, select the GWT IDE. The Che 7 editor is based on Theia.</p>
+<p>In the <strong>Plugins</strong> section, choose the plugins to integrate in the workspace.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Example</div>
+<div class="paragraph">
+<p>Start with a generic Java-based stack, then later add support for Node or Python.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>In the <strong>Editors</strong> section, choose the editors to integrate in the workspace. The Che 7 editor is based on Theia.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Example: Switch to the Che 6 editor</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To Switch to the Che 6 editor, select the GWT IDE.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ol>
 </div>
 <div id="configure-devfile" class="olist arabic">
 <ol class="arabic" start="5">
 <li>
-<p>From the <strong>Devfile</strong> tab, edit the workspace YAML configuration. Additionally, use th <strong>Devfile</strong> tab to:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>load a custom container that has been previously built and pushed to a container registry</p>
-</li>
-<li>
-<p>add commands and sample projects using source code</p>
+<p>From the <strong>Devfile</strong> tab, edit the workspace&#8217;s YAML configuration. See <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/#devfile-reference_making-a-workspace-portable-using-a-devfile">Devfile reference</a>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Example: add commands</div>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/workspace-config-yaml.png" alt="YAML configuration">
 </div>
 </div>
-</li>
-</ul>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Example: add a project</div>
+<div class="paragraph">
+<p>To add a project into the workspace, add or edit the following section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>projects:
+  - name: che
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che.git'</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-an-existing-workspace-from-the-user-dashboard_creating-a-workspace-from-code-sample">Running an existing workspace from the User Dashboard</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>For example, to add a project into the workspace, add or edit the following section:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">projects</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: che</span></span>
-    <span style="color:#606">source</span>:
-      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
-      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://github.com/eclipse/che.git'</span></span></code></pre>
-</div>
-</div>
+<p>This section describes how to run an existing workspace from the User Dasboard</p>
 </div>
 <div class="sect2">
-<h3 id="running-a-workspace">Running a workspace</h3>
+<h3 id="running-an-existing-workspace-from-the-user-dashboard-with-the-run-button_running-an-existing-workspace-from-the-user-dashboard">Running an existing workspace from the User Dashboard with the Run button</h3>
 <div class="paragraph">
-<p>There are multiple ways to run a workspace:</p>
+<p>This section describes how to run an existing workspace from the User Dashboard using the <strong>Run</strong> button.</p>
 </div>
+<h4 id="prerequisites-3" class="discrete">Prerequisites</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>By clicking the <b class="button">Run</b> button in the top-right corner of the workspace configuration page, which starts the workspace but does not switch to it.</p>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
 </li>
 <li>
-<p>By clicking the <b class="button">Open</b> button in the top-right corner of the workspace configuration page, which starts the workspace and launches it in the browser.</p>
+<p>An existing workspace defined on this instance of Eclipse Che.</p>
+<h4 id="procedure-3" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the Che Dashboard. See <a href="/che/docs/che-7/navigating-che-using-the-dashboard/">Navigating Che using the dashboard</a>.</p>
 </li>
 <li>
-<p>From the list of <strong>Recent Workspaces</strong> on the left navigation panel, right-click a non-running workspace to start it, or right-click a running workspace to stop it.</p>
+<p>In the left navigation panel, navigate to  <strong>Workspaces</strong>.</p>
+</li>
+<li>
+<p>Click on the name of a non-running workspace to navigate to the overview page.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Run</b> button in the top right corner of the page.</p>
+</li>
+<li>
+<p>The workspace is started.</p>
+</li>
+<li>
+<p>The browser <strong>does not</strong> navigates to the workspace.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-an-existing-workspace-from-the-user-dashboard-with-the-open-button_running-an-existing-workspace-from-the-user-dashboard">Running an existing workspace from the User Dashboard using the Open button</h3>
+<div class="paragraph">
+<p>This section describes how to run an existing workspace from the User Dashboard using the <strong>Open</strong> button.</p>
+</div>
+<h4 id="prerequisites-4" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
+</li>
+<li>
+<p>An existing workspace defined on this instance of Eclipse Che.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-4" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the Che Dashboard. See <a href="/che/docs/che-7/navigating-che-using-the-dashboard/">Navigating Che using the dashboard</a>.</p>
+</li>
+<li>
+<p>In the left navigation panel, navigate to  <strong>Workspaces</strong>.</p>
+</li>
+<li>
+<p>Click on the name of a non-running workspace to navigate to the overview page.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Open</b> button in the top right corner of the page.</p>
+</li>
+<li>
+<p>The workspace is started.</p>
+</li>
+<li>
+<p>The browser navigates to the workspace.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-an-existing-workspace-from-the-user-dashboard-usinng-the-recent-workspaces_running-an-existing-workspace-from-the-user-dashboard">Running an existing workspace from the User Dashboard using the Recent Workspaces</h3>
+<div class="paragraph">
+<p>This section describes how to run an existing workspace from the User Dashboard using the Recent Workspaces.</p>
+</div>
+<h4 id="prerequisites-5" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
+</li>
+<li>
+<p>An existing workspace defined on this instance of Eclipse Che.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-5" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the Che Dashboard. See <a href="/che/docs/che-7/navigating-che-using-the-dashboard/">Navigating Che using the dashboard</a>.</p>
+</li>
+<li>
+<p>In the left navigation panel, in the <strong>Recent Workspaces</strong> section, right-click on the name of a non-running workspace and click on <strong>Start</strong> in the contextual menu to start it.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/run-from-recent-workspaces.png" alt="Run from Recent Workspaces">
 </div>
 </div>
 </li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploying Che using chectl</a></p>
-</li>
-<li>
-<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
-</li>
-<li>
-<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
-</li>
-</ul>
+</ol>
 </div>
 </div>
 </div>
