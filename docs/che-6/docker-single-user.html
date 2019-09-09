@@ -914,7 +914,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>docker run --rm --net host eclipse/che-ip:nightly</pre>
+<pre>docker run --rm --net host eclipse/che-ip:6.19.0</pre>
 </div>
 </div>
 </td>
@@ -1012,7 +1012,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che start</pre>
+<pre>docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v &lt;path&gt;:/data eclipse/che:6.19.0 start</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1020,10 +1020,8 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/Documents/che-data1:/data eclipse/che start
-WARN: Bound 'eclipse/che' to 'eclipse/che:5.20.1'
-INFO: (che cli): 5.20.1 - using docker 17.10.0-ce / native
-WARN: Newer version '5.21.0' available
+<pre>$ docker run -ti -v /var/run/docker.sock:/var/run/docker.sock -v ~/Documents/che-data1:/data eclipse/che:6.19.0 start
+INFO: (che cli): 6.19.0 - using docker 17.10.0-ce / native
 INFO: (che config): Generating che configuration...
 INFO: (che config): Customizing docker-compose for running in a container
 INFO: (che start): Preflight checks
@@ -1037,7 +1035,7 @@ INFO: (che start): Starting containers...
 INFO: (che start): Services booting...
 INFO: (che start): Server logs at "docker logs -f che"
 INFO: (che start): Booted and reachable
-INFO: (che start): Ver: 5.20.1
+INFO: (che start): Ver: 6.19.0
 INFO: (che start): Use: http://172.19.20.180:8080
 INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 </div>
@@ -1050,7 +1048,7 @@ INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>You can run the <code>docker run -it eclipse/che start</code> command, which will fail by default. But, it will print options on how to proceed.</p>
+<p>You can run the <code>docker run -it eclipse/che:6.19.0 start</code> command, which will fail by default. But, it will print options on how to proceed.</p>
 </div>
 </td>
 </tr>
@@ -1065,7 +1063,7 @@ INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 <h2 id="versions">Versions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code>eclipse/che:6.0.0</code>. For a list of the available versions, run the <code>docker run eclipse/che version</code> command or browse <a href="https://hub.docker.com/r/eclipse/che/tags/">Docker Hub</a>.</p>
+<p>Each version of Che is available as a Docker image tagged with a label that matches the version, such as <code>eclipse/che:6.0.0</code>. For a list of the available versions, browse <a href="https://hub.docker.com/r/eclipse/che/tags/">Docker Hub</a>.</p>
 </div>
 <div class="paragraph">
 <p>The following table lists the <em>redirection</em> labels that reference special versions of Che:</p>
@@ -1083,14 +1081,6 @@ INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The most recent stable release.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0.0-latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The most recent stable release on the 6.x branch.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>nightly</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The nightly build.</p></td>
 </tr>
@@ -1100,15 +1090,15 @@ INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 <p>The software referenced by these labels can change over time. Because Docker will cache images locally, the <code>eclipse/che:&lt;version&gt;</code> image that you are running locally may not be current with the one cached on Docker Hub. Additionally, the <code>eclipse/che:&lt;version&gt;</code> image that you are running references a manifest of Docker images that Che depends upon, which can also change if you are using these special redirection tags.</p>
 </div>
 <div class="paragraph">
-<p>In case of 'latest' images, when you initialize an installation using the CLI, the <code>/instance/che.ver</code> file is encoded with the numbered version that the latest image references. If you use a CLI version that mismatches with the one that was installed, you will encounter an error.</p>
+<p>If you use a CLI version that mismatches with the one that was installed, you will encounter an error.</p>
 </div>
 <div class="paragraph">
-<p>To avoid issues caused by using the <code>nightly</code> or <code>latest</code> redirections, ensure that you adhere to the following:</p>
+<p>To avoid issues caused by using the <code>nightly</code> redirections, ensure that you adhere to the following:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Use the <code>docker pull eclipse/che:&lt;version&gt;</code> command to ensure that you have the most recent Docker version.</p>
+<p>Use the <code>docker pull eclipse/che:6.19.0</code> command to ensure that you have the most recent Docker version.</p>
 </li>
 <li>
 <p>When using the CLI, commands that use other Docker images have an optional <code>--pull</code> and <code>--force</code> command line option <a href="https://hub.docker.com/r/eclipse/che/">that instructs the CLI to check Docker Hub</a> for a newer version and pull it. Using these flags slows down performance, but it ensures that your local cache is up-to-date.</p>
@@ -1186,7 +1176,7 @@ INFO: (che start): API: http://172.19.20.180:8080/swagger</pre>
 <p>To host Che on a cloud service like DigitalOcean, AWS, or Scaleways, the <code>CHE_HOST</code> variable must be set to the public IP address of the server or its DNS.</p>
 </div>
 <div class="paragraph">
-<p>You can automatically set the <code>CHE_HOST</code> variable by running the internal utility <code>docker run --net=host eclipse/che-ip:nightly</code> command. This utility is usually accurate on desktops, but it usually fails on hosted servers. You can explicitly set this value to the IP address of your server:</p>
+<p>You can automatically set the <code>CHE_HOST</code> variable by running the internal utility <code>docker run --net=host eclipse/che-ip:6.19.0</code> command. This utility is usually accurate on desktops, but it usually fails on hosted servers. You can explicitly set this value to the IP address of your server:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1374,7 +1364,7 @@ docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Run the latest released version of Che.</p>
+<p>Run the latest released version of Che 6.x: 6.19.0.</p>
 </li>
 <li>
 <p>Replace <code>&lt;LOCAL_PATH&gt;</code> with any host directory. Che places the backup files (configurable properties, workspaces, lib, storage) in this directory.</p>
@@ -1385,7 +1375,7 @@ docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt
            --rm \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:6.0.0</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 </li>
@@ -1397,10 +1387,10 @@ docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt
 <div class="ulist">
 <ul>
 <li>
-<p>To run the nightly version of Che, replace <code>eclipse/che-server:5.0.0-latest</code> with <code>eclipse/che-server:nightly</code>.</p>
+<p>To run the nightly version of Che, replace <code>eclipse/che-server:6.19.0</code> with <code>eclipse/che-server:nightly</code>.</p>
 </li>
 <li>
-<p>To run a specific tagged version of Che, replace <code>eclipse/che-server:5.0.0-latest</code> with <code>eclipse/che-server:&lt;_version_&gt;</code>.</p>
+<p>To run a specific tagged version of Che, replace <code>eclipse/che-server:6.19.0</code> with <code>eclipse/che-server:&lt;_version_&gt;</code>.</p>
 </li>
 <li>
 <p>To stop the container running Che, use the <code>docker stop che</code> command.</p>
@@ -1412,7 +1402,7 @@ docker run &lt;other-properties&gt; -v /tmp/offline:/data/backup eclipse/che:&lt
 <p>To upgrade to a newer version, use the following commands in order:</p>
 <div class="listingblock">
 <div class="content">
-<pre>docker pull eclipse/che-server:&lt;_latest-version_&gt;
+<pre>docker pull eclipse/che-server:6.19.0
 docker restart che</pre>
 </div>
 </div>
@@ -1436,7 +1426,7 @@ docker run -p 8080:8080 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data:Z \
            --security-opt label:disable \
-           eclipse/che-server:&lt;_latest-version_&gt;</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1452,7 +1442,7 @@ docker run -p 8080:8080 \
            -e CHE_PORT=9500 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:&lt;_latest-version_&gt;</code></pre>
+           eclipse/che-server:6.19.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1468,7 +1458,7 @@ docker run -p 8080:8080 \
            -e CHE_SERVER_ACTION=stop \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:6.0.0</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1548,7 +1538,7 @@ docker run -p 8080:8080 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
            --env-file /home/user/che.env \
-           eclipse/che-server:6.0.0</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1583,7 +1573,7 @@ docker run -p 8080:8080 \
            -e CHE_HOST=10.0.75.4 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:6.0.0</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1600,7 +1590,7 @@ docker run -p 8080:8080 \
            -e CHE_HOST=10.0.75.4 \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v &lt;LOCAL_PATH&gt;:/data \
-           eclipse/che-server:6.0.0</pre>
+           eclipse/che-server:6.19.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1609,7 +1599,7 @@ docker run -p 8080:8080 \
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">che</span>:
-   <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-server:6.0.0</span></span>
+   <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-server:6.19.0</span></span>
    <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080:8080</span></span>
    <span style="color:#606">restart</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">always</span></span>
    <span style="color:#606">volumes</span>:
