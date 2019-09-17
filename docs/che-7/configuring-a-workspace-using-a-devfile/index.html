@@ -844,10 +844,7 @@ $('#toc').on('click', 'a', function() {
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An OKD, OCP, or OSD cluster, if using Che on Openshift. See below for use of <a href="https://www.okd.io/minishift/">Minishift</a> (OKD).</p>
-</li>
-<li>
-<p>Or, you can use a Kubernetes cluster such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a>.</p>
+<p>An OKD, OCP, or OSD cluster for using Che on Openshift. See below for use of <a href="https://www.okd.io/minishift/">Minishift</a> (OKD). Or, use a Kubernetes cluster, such as <a href="https://github.com/kubernetes/minikube#installation">Minikube</a>.</p>
 </li>
 <li>
 <p>To install on Minishift or Minikube, see <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploying Che using chectl</a>.</p>
@@ -864,7 +861,7 @@ $('#toc').on('click', 'a', function() {
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>Stacks are defined as <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/">devfiles</a>. This gives the user more flexibility when defining the project(s), IDE, commands, tools, and application runtimes needed in their workspace.</p>
+<p>Stacks are defined as <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/">devfiles</a>. This gives the user more flexibility when defining the projects, IDE, commands, tools, and application runtimes needed in their workspace.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -878,11 +875,8 @@ In Che 6, a stack is defined with a Dockerfile. In Che 7, <code>devfile.yaml</co
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="the-minimal-devfile">The minimal devfile</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="the-minimal-devfile">The minimal devfile</h3>
 <div class="paragraph">
 <p>The following is the minimum content required in a <code>devfile.yaml</code> file:</p>
 </div>
@@ -916,6 +910,7 @@ In Che 6, a stack is defined with a Dockerfile. In Che 7, <code>devfile.yaml</co
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="creating-a-workspace-from-a-devfile">Creating a workspace from a devfile</h2>
 <div class="sectionbody">
@@ -928,36 +923,29 @@ In Che 6, a stack is defined with a Dockerfile. In Che 7, <code>devfile.yaml</co
 <p>Commit a <code>devfile.yaml</code> file into the root of your Git repository.</p>
 </li>
 <li>
-<p>When the repository contains a <code>devfile.yaml</code> file, point a running Che 7 instance at that <a href="https://github.com/eclipse/che">project</a>, and it will use the discovered <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">devfile.yaml</a> file to build a workspace using the <code>/f?url=</code> API.</p>
+<p>When the repository contains a <code>devfile.yaml</code> file, point a running Che 7 instance at that project. The Che 7 instance then uses the discovered <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">devfile.yaml</a> file to build a workspace using the <code>/f?url=</code> API.</p>
 <div class="ulist">
 <ul>
 <li>
 <p>For example, when using <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Che inside Minishift</a>: <code>http://che-che.&lt;IP-address&gt;.nip.io/f?url=https://github.com/eclipse/che</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/workspaces/che-in-che-devfile.png" alt="Che in Che">
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>You can also point at a plain text file: <code>http://che-che.&lt;IP-address&gt;.nip.io/f?url=https://gist.githubusercontent.com/nickboldt/9551284c2c779a93ccf16bc801416205/raw/7ad1e949880d7f8ed30360e74bb9f8426450db05/devfile.yaml</code>.</p>
 </li>
 <li>
-<p>If you are familiar with <a href="https://github.com/che-incubator/chectl/">chectl</a>, you can also reference a local devfile. For example, to create a workspace in which to build the Che project:</p>
+<p>Or, point at a plain text file: <code>http://che-che.&lt;IP-address&gt;.nip.io/f?url=https://gist.githubusercontent.com/nickboldt/9551284c2c779a93ccf16bc801416205/raw/7ad1e949880d7f8ed30360e74bb9f8426450db05/devfile.yaml</code>.</p>
+</li>
+<li>
+<p>Alternatively, use <a href="https://github.com/che-incubator/chectl/">chectl</a> to reference a local devfile. For example, to create a workspace in which to build the Che project:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>First <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">deploy Che onto Minishift</a> (or another cluster).</p>
+<p><a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploy Che onto Minishift</a> (or another cluster).</p>
 </li>
 <li>
-<p>Next, fetch the devfile and run the <code>chectl</code> command to start a workspace called <strong>che-in-che</strong> from the devfile in the Minishift <code>che-che</code> instance.</p>
+<p>Fetch the devfile and run the <code>chectl</code> command to start a workspace called <strong>che-in-che</strong> from the devfile in the Minishift <code>che-che</code> instance.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ wget https://raw.githubusercontent.com/eclipse/che/master/devfile.yaml -o /tmp/devfile.yaml
@@ -970,6 +958,9 @@ $ ./chectl workspace:start -f /tmp/devfile.yaml -n che-che
 Workspace IDE URL:
 http://che-che.`your.IP.address.here`.nip.io/dashboard/#/ide/che/che-in-che</pre>
 </div>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
