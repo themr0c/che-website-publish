@@ -887,150 +887,64 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the components of a Che workspace.</p>
+<p>The following section describes Che <code>configMaps</code> and how they behave.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="https://docs.openshift.com/container-platform/latest/builds/setting-up-trusted-ca.html"><code>configMap</code></a> is provided as an editable file that lists options to customize the Che environment. Based on the Che installation method, <code>configMaps</code> can be used to customize the working environment. The type of configMaps available in your Che environment varies based on the method used for installing Che.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-plug-ins_che-workspace-components">Che plug-ins</h2>
+<h2 id="che-installed-using-an-operator">Che installed using an Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Che plug-ins are special services that extend Che workspace capabilities. Che plug-ins are packaged as containers. Packaging plug-ins into a container has the following benefits:</p>
+<p><a href="https://docs.openshift.com/container-platform/latest/applications/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/applications/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
+</div>
+<div class="paragraph">
+<p>Che installed using the Operator provides the user with two automatically generated <code>configMaps</code>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>It isolates the plug-ins from the main IDE, thus limiting the resources that a plug-in has access to.</p>
+<p><code>che</code> (main)</p>
 </li>
 <li>
-<p>It uses the consolidated standard of container registries to publish and distribute plug-ins (as with any container image).</p>
+<p><code>custom</code> (additional)</p>
+</li>
+<li>
+<p>The <code>che</code> <code>configMap</code> contains the main properties for the installation and is in sync with the information stored in the CheCluster Custom Resource file. User modifications of the <code>che</code> <code>configMap</code> after installing Che using the Operator are automatically overwritten by values that the Operator obtains from the <code>CheCluster</code> Custom Resource.<br>
+To edit the <code>che</code> <code>configMap</code>, edit the Custom Resource manually.
+The <code>configMap</code> derives values from the <code>CheCluster</code> field. User modifications of the <code>CheCluster</code> Custom Resource field cause the Operator to change the attributes of the <code>che</code> <code>configMap</code> accordingly. The <code>configMap</code> changes automatically trigger a restart of the Che Pod.</p>
+</li>
+<li>
+<p>The secondary <code>custom</code> <code>configMap</code> is intended for additional manual customization of properties by users. These properties include environment variables that are not already specified in the main <code>che</code> <code>configMap</code>. To apply manual changes to the <code>custom</code> <code>configMap</code>, delete the Che Pod to manually restart it.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>The containers that plug-ins are packaged into run as sidecars of the Che workspace editor and augment its capabilities.</p>
-</div>
-<div class="paragraph">
-<p>Visual Studio Code extensions packaged in containers are Che plug-ins for the Che-Theia editor.</p>
-</div>
-<div class="paragraph">
-<p>Multiple Che plug-ins can run in the same container (for better resource use), or a Che plug-in can run in its dedicated container (for better isolation).</p>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-editor-plug-in_che-workspace-components">Che editor plug-in</h2>
+<h2 id="che-installed-using-a-helm-chart">Che installed using a Helm Chart</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Che editor is a Che workspace plug-in. It defines the web application that is used as an editor in a workspace. The default Che workspace editor is called Eclipse Che-Theia.</p>
-</div>
-<div class="paragraph">
-<p>The Eclipse Che-Theia source-code repository is at <a href="https://github.com/eclipse/che-theia">Che Theia Github</a>. It is based on the <a href="https://github.com/theia-ide/theia">Eclipse Theia open-source project</a>.</p>
-</div>
-<div class="paragraph">
-<p>Che-Theia is written in TypeScript and is built on the <a href="https://github.com/Microsoft/monaco-editor">Microsoft Monaco editor</a>. It is a web-based source-code editor similar to <a href="https://code.visualstudio.com/">Visual Studio Code</a> (VS Code). It has a plug-in system that supports VS Code extensions.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-theia">Che Theia</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-user-runtimes_che-workspace-components">Che user runtimes</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Use any non-terminating user container as a user runtime. An application that can be defined as a container image or as a set of Kubernetes or OpenShift resources can be included in a Che workspace. This makes it easy to test applications in the Che workspace.</p>
-</div>
-<div class="paragraph">
-<p>To test an application in the Che workspace, include the application YAML definition used in stage or production in the workspace specification. It is a 12-factor app dev/prod parity.</p>
-</div>
-<div class="paragraph">
-<p>Examples of user runtimes are Node.js, SpringBoot or MongoDB, and MySQL.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-workspace-jwt-proxy_che-workspace-components">Che workspace JWT proxy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The JWT proxy is responsible for securing the communication of the Che workspace services. The Che workspace JWT proxy is included in a Che workspace only if the Che server is configured in multi-user mode.</p>
-</div>
-<div class="paragraph">
-<p>An HTTP proxy is used to sign outgoing requests from a workspace service to the Che server and to authenticate incoming requests from the IDE client running on a browser.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-jwtproxy">JWT proxy</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-jwtproxy</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-plug-in-broker_che-workspace-components">Che plug-in broker</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Plug-in brokers are special services that, given a plug-in <code>meta.yaml</code> file:</p>
+<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Gather all the information to provide a Che plug-in definition that the Che server knows.</p>
-</li>
-<li>
-<p>Perform preparation actions in the workspace namespace (download, unpack files, process configuration).</p>
+<p>When Che is installed using a Helm Chart, the user configures Che manually by modifying the <code>configMap</code> object. The <code>configMap</code> object is called <code>che</code> and is generated as an editable template after the installation. To apply manual changes to the <code>custom</code> <code>configMap</code>, delete the Che pod to manually restart it.<br>
+Alternatively, use the following <code>kubectl</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl rollout restart deployment/che</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This avoids the downtime associated with deleting a Pod because it deploys and starts a new Pod, and only then deletes the old Pod.</p>
+</div>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>The main goal of the plug-in broker is to decouple the Che plug-in definition from the actual plug-ins that Che can support. With brokers, Che can support different plug-ins without updating the Che server.</p>
-</div>
-<div class="paragraph">
-<p>The Che server starts the plug-in broker. The plug-in broker runs in the same Kubernetes namespace as the workspace. It has access to the plug-ins and project persistent volumes.</p>
-</div>
-<div class="paragraph">
-<p>A plug-in broker is defined as a container image (for example, <code>eclipse/che-plugin-broker</code>). The plug-in type determines the type of the broker that is started. Two types of plug-ins are supported: Che plug-in and Che editor.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-plugin-broker">Che Plug-in broker</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-init-plugin-broker</code><br>
-<code>eclipse/che-unified-plugin-broker</code></p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 
