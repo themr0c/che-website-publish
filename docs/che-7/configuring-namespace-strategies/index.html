@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Che quick-starts | Eclipse Che Documentation</title>
+<title>Configuring namespace strategies | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -174,7 +174,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che quick-starts page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Configuring namespace strategies page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -192,7 +192,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Che quick-starts">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Configuring namespace strategies">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -795,7 +795,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Che quick-starts</h1>
+   <h1 class="post-title-main">Configuring namespace strategies</h1>
 </div>
 
 
@@ -832,33 +832,90 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This section contains instructions for getting quickly started with Eclipse Che.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The term <em>namespace</em> (Kubernetes) is used interchangeably with <em>project</em> (OpenShift).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="one-namespace-per-workspace-strategy">One Namespace per Workspace strategy</h3>
+<div class="paragraph">
+<p>The strategy creates new namespace for each new workspace. Name of new namespace is workspace&#8217;s id.</p>
 </div>
 <div class="paragraph">
-<p>Various installation methods are covered:</p>
+<p>To use the strategy, unset or leave empty <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> variable on Kubernetes or <code>CHE_INFRA_OPENSHIFT_PROJECT</code> variable on Openshift.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="/che/docs/che-7/running-che-locally/">Running Che locally</a> on a personal workstation.</p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/deploying-che-on-kubernetes-on-aws/">Deploying Che on Kubernetes on Amazon Elastic Compute Cloud </a>.</p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator/">Installing Che on OpenShift 3 using the operator</a>.</p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/installing-che-on-openshift-4-from-operatorhub/">Installing Che on OpenShift 4 from OperatorHub</a>.</p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/installing-che-on-google-cloud-platform/">Installing Che on Google Cloud Platform</a>.</p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/installing-eclipse-che-on-microsoft-azure/">Installing Che on Microsoft Azure</a>.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE=</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="one-namespace-for-all-workspaces-strategy">One Namespace for all Workspaces strategy</h3>
+<div class="paragraph">
+<p>The strategy uses one predefined namespace for all workspaces.</p>
+</div>
+<div class="paragraph">
+<p>To use the strategy, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> variable on Kubernetes or the <code>CHE_INFRA_OPENSHIFT_PROJECT</code> variable on Openshift. The value must be name of desired namespace that you want to use.</p>
+</div>
+<div class="paragraph">
+<div class="title">Example</div>
+<p>To have all workspaces created in <code>che-workspaces</code> namespace, set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE=che-workspaces</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="one-namespace-per-user-strategy">One Namespace per User strategy</h3>
+<div class="paragraph">
+<p>The strategy isolates each user in their own namespace.</p>
+</div>
+<div class="paragraph">
+<p>To use the strategy, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> variable on Kubernetes or the <code>CHE_INFRA_OPENSHIFT_PROJECT</code> variable on OpenShift. The value must contain one or more user identifiers. Currently supported identifiers are <code><em>&lt;username&gt;</em></code> and <code><em>&lt;userid&gt;</em></code>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Example</div>
+<p>To assign namespace names composed of a <code>che-ws</code> prefix and individual usernames (<code>che-ws-user1</code>, <code>che-ws-user2</code>), set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE=che-ws-<em>&lt;username&gt;</em></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Using the <em>One Namespace per User</em> strategy with the <code>common</code> PVC strategy only works correctly when the user runs not more than one workspace at a time. To enforce this limit, set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT=1</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 
     <div class="tags">
