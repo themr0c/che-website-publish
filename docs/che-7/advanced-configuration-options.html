@@ -854,25 +854,43 @@ $('#toc').on('click', 'a', function() {
 <p><a href="https://docs.openshift.com/container-platform/latest/applications/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/applications/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
 </div>
 <div class="paragraph">
-<p>Che installed using the Operator provides the user with two automatically generated <code>configMaps</code>:</p>
+<p>Che installed using the Operator provides the user with an automatically generated <code>configMap</code> called <code>che</code>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>che</code> (main)</p>
-</li>
-<li>
-<p><code>custom</code> (additional)</p>
-</li>
-<li>
-<p>The <code>che</code> <code>configMap</code> contains the main properties for the installation and is in sync with the information stored in the CheCluster Custom Resource file. User modifications of the <code>che</code> <code>configMap</code> after installing Che using the Operator are automatically overwritten by values that the Operator obtains from the <code>CheCluster</code> Custom Resource.<br>
-To edit the <code>che</code> <code>configMap</code>, edit the Custom Resource manually.
+<div class="paragraph">
+<p>The <code>che</code> <code>configMap</code> contains the main properties for the Che server, and is in sync with the information stored in the CheCluster Custom Resource file. User modifications of the <code>che</code> <code>configMap</code> after installing Che using the Operator are automatically overwritten by values that the Operator obtains from the <code>CheCluster</code> Custom Resource.</p>
+</div>
+<div class="paragraph">
+<p>To edit the <code>che</code> <code>configMap</code>, edit the Custom Resource manually.
 The <code>configMap</code> derives values from the <code>CheCluster</code> field. User modifications of the <code>CheCluster</code> Custom Resource field cause the Operator to change the attributes of the <code>che</code> <code>configMap</code> accordingly. The <code>configMap</code> changes automatically trigger a restart of the Che Pod.</p>
-</li>
-<li>
-<p>The secondary <code>custom</code> <code>configMap</code> is intended for additional manual customization of properties by users. These properties include environment variables that are not already specified in the main <code>che</code> <code>configMap</code>. To apply manual changes to the <code>custom</code> <code>configMap</code>, delete the Che Pod to manually restart it.</p>
-</li>
-</ul>
+</div>
+<div class="paragraph">
+<p>To add custom properties to the Che server, such as environment variables that are not automatically generated in the <code>che</code> <code>configMap</code> by the Operator, or to override automatically generated properties, the <code>CheCluster</code> Custom Resource has a <code>customCheProperties</code> field, which expects a map.</p>
+</div>
+<div class="paragraph">
+<p>For example, to overrride the default memory limit for workspaces, add the <code>CHE_WORKSPACE_DEFAULT__MEMORY__LIMIT__MB</code> property to <code>customCheProperties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">org.eclipse.che/v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">CheCluster</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse-che</span></span>
+  <span style="color:#606">namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">server</span>:
+    <span style="color:#606">cheImageTag</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">''</span></span>
+    <span style="color:#606">devfileRegistryImage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">''</span></span>
+    <span style="color:#606">pluginRegistryImage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">''</span></span>
+    <span style="color:#606">tlsSupport</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">selfSignedCert</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">customCheProperties</span>:
+      <span style="color:#606">CHE_WORKSPACE_DEFAULT__MEMORY__LIMIT__MB</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">2048</span></span>
+  <span style="color:#606">auth</span>:
+<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Previous versions of the Che Operator had a configMap named <code>custom</code> to fulfill this role.  If the Che Operator finds a <code>configMap</code> with the name <code>custom</code>, it adds the data it contains into the <code>customCheProperties</code> field, redeploys Che, and deletes the <code>custom</code> <code>configMap</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -919,7 +937,7 @@ Alternatively, use the following <code>kubectl</code> command:</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Oct 4, 2019 <br/>
+                    Site last generated: Oct 7, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
