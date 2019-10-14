@@ -835,150 +835,198 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to select a workspace, loading in the required stack and a sample project, all in one step.</p>
+<p>To quickly and easily configure a Che workspace, use a devfile. For an introduction to devfiles and instructions for their use, see below.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-is-a-devfile_configuring-a-workspace-using-a-devfile">What is a devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A devfile is a file that describes and define a development environment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the source code</p>
+</li>
+<li>
+<p>the development components (browser IDE tools and application runtimes)</p>
+</li>
+<li>
+<p>a list of pre-defined commands</p>
+</li>
+<li>
+<p>projects to clone</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>See the <a href="https://redhat-developer.github.io/devfile/devfile">Devfile specifications</a> for detailed information on how to add or remove components, or how to set memory and environment variables.</p>
+<p>Devfiles are YAML files that Che consumes and transforms into a cloud workspace composed of multiple containers. The devfile can be saved in the root folder of a Git repository, a feature branch of a Git repository, a publicly accessible destination, or as a separate, locally stored artifact.</p>
+</div>
+<div class="paragraph">
+<p>When creating a workspace, Che uses that definition to initiate everything and run all the containers for the required tools and application runtimes. Che also mounts file-system volumes to make source code available to the workspace.</p>
+</div>
+<div class="paragraph">
+<p>Devfiles can be versioned with the project source code. When there is a need for a workspace to fix an old maintenance branch, the project devfile provides a definition of the workspace with the tools and the exact dependencies to start working on the old branch. Use it to instantiate workspaces on demand.</p>
+</div>
+<div class="paragraph">
+<p>Che maintains the devfile up-to-date with the tools used in the workspace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Projects of the workspace (path, Git location, branch)</p>
+</li>
+<li>
+<p>Commands to perform daily tasks (build, run, test, debug)</p>
+</li>
+<li>
+<p>Runtime environment (container images to run the application)</p>
+</li>
+<li>
+<p>Che-Theia plug-ins with tools, IDE features, and helpers that a developer would use in the workspace (Git, Java support, Sonarlint, Pull Request)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-workspace-from-the-default-branch-of-a-git-repository_configuring-a-workspace-using-a-devfile">Creating a workspace from the default branch of a Git repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Che workspace can be created by pointing to a devfile that is stored in a Git source repository. The Che instance then uses the discovered <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">devfile.yaml</a> file to build a workspace using the <code>/f?url=</code> API.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
 </li>
 <li>
-<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a></p>
+<p>The <code>devfile.yaml</code> file in the root folder of a Git repository available over HTTPS. See <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/">Making a workspace portable using a devfile</a> for detailed information about creating and using devfiles.</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="importing-a-project-using-a-devfile">Importing a project using a devfile</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>Stacks are defined as <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/">devfiles</a>. This gives the user more flexibility when defining the projects, IDE, commands, tools, and application runtimes needed in their workspace.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-In Che 6, a stack is defined with a Dockerfile. In Che 7, <code>devfile.yaml</code> is used instead.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="the-minimal-devfile">The minimal devfile</h3>
-<div class="paragraph">
-<p>The following is the minimum content required in a <code>devfile.yaml</code> file:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://redhat-developer.github.io/devfile/devfile#apiversion">apiVersion</a></p>
-</li>
-<li>
-<p><a href="https://redhat-developer.github.io/devfile/devfile#metadata">metadata name</a></p>
-</li>
-<li>
-<p><a href="https://redhat-developer.github.io/devfile/devfile#projects">projects name and source</a></p>
-</li>
-</ul>
+<p>Run the workspace by opening the following URL: <code>https://<em>&lt;CheHost&gt;</em>/f?url=https://<em>&lt;GitRepository&gt;</em></code></p>
 </div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
-<span style="color:#606">metadata</span>:
-  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-in-che-out</span></span>
-<span style="color:#606">projects</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: che</span></span>
-    <span style="color:#606">source</span>:
-      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
-      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://github.com/eclipse/che.git'</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For a complete <code>devfile</code> example file, see <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">Eclipse Che in Che devfile.yaml</a>.</p>
+<pre>https://che.openshift.io/f?url=https://github.com/eclipse/che</pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="creating-a-workspace-from-a-devfile">Creating a workspace from a devfile</h2>
+<h2 id="creating-a-workspace-from-a-feature-branch-of-a-git-repository_configuring-a-workspace-using-a-devfile">Creating a workspace from a feature branch of a Git repository</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To create a workspace from a devfile:</p>
+<p>A Che workspace can be created by pointing to devfile that is stored in a Git source repository on a feature branch of the user’s choice. The Che instance then uses the discovered devfile to build a workspace.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Commit a <code>devfile.yaml</code> file into the root of your Git repository.</p>
-</li>
-<li>
-<p>When the repository contains a <code>devfile.yaml</code> file, point a running Che 7 instance at that project. The Che 7 instance then uses the discovered <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">devfile.yaml</a> file to build a workspace using the <code>/f?url=</code> API.</p>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>For example, when using <a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Che inside Minishift</a>: <code>http://che-che.&lt;IP-address&gt;.nip.io/f?url=https://github.com/eclipse/che</code>.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/workspaces/che-in-che-devfile.png" alt="Che in Che">
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
+</li>
+<li>
+<p>The <code>devfile.yaml</code> file in the root folder of a Git repository on a specific branch of the user&#8217;s choice available over HTTPS. See <a href="/che/docs/che-7//making-a-workspace-portable-using-a-devfile/">Making a workspace portable using a devfile</a> for detailed information about creating and using devfiles.</p>
+</li>
+</ul>
 </div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Execute the workspace by opening the following URL: <code>https://<em>&lt;CheHost&gt;</em>/f?url=<em>&lt;GitHubBranch&gt;</em></code></p>
 </div>
-</li>
-<li>
-<p>Or, point at a plain text file: <code>http://che-che.&lt;IP-address&gt;.nip.io/f?url=https://gist.githubusercontent.com/nickboldt/9551284c2c779a93ccf16bc801416205/raw/7ad1e949880d7f8ed30360e74bb9f8426450db05/devfile.yaml</code>.</p>
-</li>
-<li>
-<p>Alternatively, use <a href="https://github.com/che-incubator/chectl/">chectl</a> to reference a local devfile. For example, to create a workspace in which to build the Che project:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="/che/docs/che-7/running-che-locally/#deploying-che-using-chectl">Deploy Che onto Minishift</a> (or another cluster).</p>
-</li>
-<li>
-<p>Fetch the devfile and run the <code>chectl</code> command to start a workspace called <strong>che-in-che</strong> from the devfile in the Minishift <code>che-che</code> instance.</p>
+<div class="paragraph">
+<div class="title">Example</div>
+<p>Use following URL format to open an experimental <a href="https://github.com/quarkusio/quarkus-quickstarts">quarkus-quickstarts</a> branch hosted on <a href="https://che.openshift.io">che.openshift.io</a>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre>$ wget https://raw.githubusercontent.com/eclipse/che/master/devfile.yaml -o /tmp/devfile.yaml
-
-$ ./chectl workspace:start -f /tmp/devfile.yaml -n che-che
-  ✔ Retrieving Che Server URL...http://che-che.`your.IP.address.here`.nip.io
-  ✔ Verify if Che server is running
-  ✔ Create workspace from Devfile /tmp/devfile.yaml
-
-Workspace IDE URL:
-http://che-che.`your.IP.address.here`.nip.io/dashboard/#/ide/che/che-in-che</pre>
+<pre>https://che.openshift.io/f?url=https://github.com/maxandersen/quarkus-quickstarts/tree/che</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-workspace-from-a-publicly-accessible-standalone-devfile-using-http_configuring-a-workspace-using-a-devfile">Creating a workspace from a publicly accessible standalone devfile using HTTP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A workspace can be created using a devfile, the URL of which is pointing to the raw content of the devfile. The Che instance then uses the discovered devfile to build a workspace.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
+</li>
+<li>
+<p>The publicly-accessible standalone <code>devfile.yaml</code> file. See <a href="/che/docs/che-7//making-a-workspace-portable-using-a-devfile/">Making a workspace portable using a Devfile</a> for detailed information about creating and using devfiles.</p>
 </li>
 </ul>
 </div>
-</li>
-</ul>
-</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Execute the workspace by opening the following URL: <code>https://<em>&lt;your-che-host&gt;</em>/f?url=https://<em>&lt;yourhosturl&gt;</em>/devfile.yaml</code></p>
 </li>
 </ol>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre>https://che.openshift.io/f?url=https://gist.githubusercontent.com/themr0c/ef8e59a162748a8be07e900b6401e6a8/raw/8802c20743cde712bbc822521463359a60d1f7a9/devfile.yaml</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-workspace-using-chectl-and-a-local-devfile_configuring-a-workspace-using-a-devfile">Creating a workspace using chectl and a local devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Che workspace can be created by pointing the <code>chectl</code> tool to a locally stored devfile. The Che instance then uses the discovered devfile to build a workspace.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che quick-starts</a>.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/che-incubator/chectl"><code>chectl</code></a> command-line tool for managing a Che server and its development workspaces. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
+</li>
+<li>
+<p>The devfile is available on the local filesystem in the current working directory. See <a href="/che/docs/che-7//making-a-workspace-portable-using-a-devfile/">Making a workspace portable using a Devfile</a> for detailed information about creating and using devfiles.</p>
+<div class="paragraph">
+<div class="title">Example</div>
+<p>Download the <code>devfile.yaml</code> file from the <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">GitHub repository</a>  to the current working directory.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Run a workspace from a devfile using the <code>workspace:start</code> parameter with the <code>chectl</code> tool as follows:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl workspace:start --devfile=devfile.yaml</pre>
+</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
 <p><a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile">Making a workspace portable using a Devfile</a></p>
-</li>
-<li>
-<p><a href="https://redhat-developer.github.io/devfile/devfile">Devfile specifications</a></p>
-</li>
-<li>
-<p><a href="https://docs.okd.io/latest/minishift/getting-started/preparing-to-install.html">Minishift installation</a></p>
-</li>
-<li>
-<p><a href="https://github.com/kubernetes/minikube#installation">Minikube installation</a></p>
 </li>
 </ul>
 </div>
@@ -1004,7 +1052,7 @@ http://che-che.`your.IP.address.here`.nip.io/dashboard/#/ide/che/che-in-che</pre
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Oct 13, 2019 <br/>
+                    Site last generated: Oct 14, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

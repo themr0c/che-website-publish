@@ -835,38 +835,43 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Che workspaces are defined by a <strong>devfile</strong>. A devfile is the definition of everything that is used in developer workspaces.</p>
+<p>To transfer a configured Che  workspace, create and export the devfile of the workspace and load the devfile on a different host to initialize a new instance of the workspace. For detailed instructions on how to create such a devfile, see below.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-is-a-devfile_making-a-workspace-portable-using-a-devfile">What is a devfile</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Che uses devfiles to define:</p>
+<p>A devfile is a file that describes and define a development environment:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
+<p>the source code</p>
+</li>
+<li>
+<p>the development components (browser IDE tools and application runtimes)</p>
+</li>
+<li>
+<p>a list of pre-defined commands</p>
+</li>
+<li>
 <p>projects to clone</p>
-</li>
-<li>
-<p>browser IDE to use</p>
-</li>
-<li>
-<p>preconfigured commands</p>
-</li>
-<li>
-<p>tools that you need</p>
-</li>
-<li>
-<p>application runtime definition</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When you create a workspace, Che uses that definition to initiate everything for you and run all the containers for your tools and your application runtimes. Che also mounts filesystem volumes to make your source code available to the workspace.</p>
+<p>Devfiles are YAML files that Che consumes and transforms into a cloud workspace composed of multiple containers. The devfile can be saved in the root folder of a Git repository, a feature branch of a Git repository, a publicly accessible destination, or as a separate, locally stored artifact.</p>
 </div>
 <div class="paragraph">
-<p>Devfiles can be versioned with the project source code. When you have to get a workspace to fix an old maintenance branch, the project devfile provides you with a definition of the workspace with the tools and the exact dependencies to start working on the old branch. Use it to easily instantiate workspaces on demand.</p>
+<p>When creating a workspace, Che uses that definition to initiate everything and run all the containers for the required tools and application runtimes. Che also mounts file-system volumes to make source code available to the workspace.</p>
 </div>
 <div class="paragraph">
-<p>Che maintains the devfile up-to-date with the tools you use in the workspace:</p>
+<p>Devfiles can be versioned with the project source code. When there is a need for a workspace to fix an old maintenance branch, the project devfile provides a definition of the workspace with the tools and the exact dependencies to start working on the old branch. Use it to instantiate workspaces on demand.</p>
+</div>
+<div class="paragraph">
+<p>Che maintains the devfile up-to-date with the tools used in the workspace:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -877,7 +882,7 @@ $('#toc').on('click', 'a', function() {
 <p>Commands to perform daily tasks (build, run, test, debug)</p>
 </li>
 <li>
-<p>Runtime environment (container images to run your application)</p>
+<p>Runtime environment (container images to run the application)</p>
 </li>
 <li>
 <p>Che-Theia plug-ins with tools, IDE features, and helpers that a developer would use in the workspace (Git, Java support, Sonarlint, Pull Request)</p>
@@ -887,67 +892,38 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="starting-a-workspace-with-a-devfile_making-a-workspace-portable-using-a-devfile">Starting a workspace with a devfile</h2>
+<h2 id="a-minimal-devfile_making-a-workspace-portable-using-a-devfile">A minimal devfile</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to start a Che workspace using your own existing devfile.</p>
+<p>The following is the minimum content required in a <code>devfile.yaml</code> file:</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#apiversion">apiVersion</a></p>
 </li>
 <li>
-<p>An existing workspace defined on this instance of Eclipse Che <a href="/che/docs/che-7/creating-and-configuring-a-new-che-7-workspace/">Creating a workspace from user dashboard</a>.</p>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#metadata">metadata name</a></p>
+</li>
+<li>
+<p><a href="https://redhat-developer.github.io/devfile/devfile#projects">projects name and source</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>There are several ways to launch a Che workspace based on a prepared devfile:</p>
-</div>
-<div class="sect2">
-<h3 id="devfile-from-git">Devfile from Git</h3>
-<div class="paragraph">
-<p>Add the devfile to a Git source repository and then create a factory from this repository.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Put a <code>devfile.yaml</code> file in the root of your Git repository.</p>
-</li>
-<li>
-<p>Execute the factory by opening the following URL:</p>
 <div class="listingblock">
 <div class="content">
-<pre>https://<em>&lt;your-che-host&gt;</em>/f?url=https://github.com/<em>&lt;mygroup&gt;</em>/<em>&lt;myrepo&gt;</em></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-in-che-out</span></span>
+<span style="color:#606">projects</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: che</span></span>
+    <span style="color:#606">source</span>:
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://github.com/eclipse/che.git'</span></span></code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="devfile-from-url">Devfile from URL</h3>
 <div class="paragraph">
-<p>Execute a devfile by constructing the factory with the URL pointing to the raw content of the devfile, for example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>https://<em>&lt;your-che-host&gt;</em>/f?url=https://pastebin.com/raw/ux6iCGaW</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="devfile-using-the-chectl-tool">Devfile using the <code>chectl</code> tool</h3>
-<div class="paragraph">
-<p>Execute a workspace from a devfile using the <code>workspace:start</code> parameter with the <code>chectl</code> tool as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl workspace:start --devfile=devfile.yaml</pre>
-</div>
-</div>
+<p>For a complete devfile example, see <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">Eclipse Che in Che devfile.yaml</a>.</p>
 </div>
 </div>
 </div>
@@ -1052,7 +1028,7 @@ $('#toc').on('click', 'a', function() {
 <p><a href="https://github.com/redhat-developer/devfile">Specification repository</a></p>
 </li>
 <li>
-<p><a href="https://redhat-developer.github.io/devfile/devfile">detailed json-schema documentation</a></p>
+<p><a href="https://redhat-developer.github.io/devfile/devfile">Detailed json-schema documentation</a></p>
 </li>
 </ul>
 </div>
@@ -1118,7 +1094,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="paragraph">
 <p>Both types above using id, which is slash-separated publisher, name and version of plugin from Che Plugin registry.<br>
-List of available Che plugins and more information about registry can be found on <a href="https://github.com/eclipse/che-plugin-registry" class="bare">https://github.com/eclipse/che-plugin-registry</a>.</p>
+List of available Che plugins and more information about registry can be found in the <a href="https://github.com/eclipse/che-plugin-registry">Che plug-in registry</a> GitHub repository.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1706,7 +1682,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
 </div>
 </div>
 <div class="paragraph">
-<p>For a basic example of a devfile with an associated Kubernetes or OpenShift list, see <a href="https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample" class="bare">https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample</a>.</p>
+<p>For a basic example of a devfile with an associated Kubernetes or OpenShift list, see <a href="https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample">web-nodejs-with-db-sample</a> on redhat-developer GitHub.</p>
 </div>
 <div class="paragraph">
 <p>If you use generic or large resource lists from which you will only need a subset of resources, you can select particular resources from the list using a selector (which, as the usual Kubernetes selectors, works on the labels of the resources in the list).</p>
@@ -2008,6 +1984,14 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
 </tr>
 </tbody>
 </table>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://redhat-developer.github.io/devfile/devfile">Devfile specifications</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -2030,7 +2014,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Oct 13, 2019 <br/>
+                    Site last generated: Oct 14, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
