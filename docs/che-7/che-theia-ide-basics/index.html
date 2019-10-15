@@ -242,6 +242,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/che-quick-starts">Overview</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/installing-the-chectl-management-tool">Installing the chectl management tool</a></li>
           
           
@@ -313,6 +320,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/che-architecture">Overview</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/high-level-che-architecture">High-level Che architecture</a></li>
           
           
@@ -359,6 +373,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/che-theia-ide-basics">Overview</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</a></li>
           
           
@@ -384,7 +405,7 @@
           
           
           
-          <li><a href="/che/docs/che-7/workspaces-overview">Workspaces overview</a></li>
+          <li><a href="/che/docs/che-7/workspaces-overview">Overview</a></li>
           
           
           
@@ -628,6 +649,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/securing-che">Overview</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/authenticating-users">Authenticating users</a></li>
           
           
@@ -760,6 +788,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/eclipse-che4z">Overview</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/che4z-release-information">Release Information</a></li>
           
           
@@ -846,449 +881,18 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<hr>
-<div class="paragraph">
-<p>title: Defining custom commands for Che-Theia
-keywords:
-tags: []
-sidebar: che_7_docs
-permalink: che-7/defining-custom-commands-for-che-theia/
-folder: che-7/end-user-guide
-summary:
----</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Che-Theia IDE allows users to define custom commands in a devfile that are then available when working in a workspace.</p>
-</div>
-<div class="paragraph">
-<p>The following is an example of the <code>commands</code> section of a devfile.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">commands</span>:
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: theia:build</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
-    <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-dev</span></span>
-    <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&gt;</span><span style="color:#D20">
-              yarn</span></span>
-    <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/projects/theia</span></span>
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: run</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-task</span></span>
-    <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
-            {
-             &quot;version&quot;: &quot;2.0.0&quot;,
-             &quot;tasks&quot;:
-             [
-              {
-               &quot;label&quot;: &quot;theia:watch&quot;,
-                &quot;type&quot;: &quot;shell&quot;,
-                &quot;options&quot;: {&quot;cwd&quot;: &quot;/projects/theia&quot;},
-                &quot;command&quot;: &quot;yarn&quot;,
-                &quot;args&quot;: [&quot;watch&quot;]
-              }
-             ]
-            }</span></span>
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: debug</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-launch</span></span>
-    <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
-            {
-             &quot;version&quot;: &quot;0.2.0&quot;,
-             &quot;configurations&quot;: [
-              {
-               &quot;type&quot;: &quot;node&quot;,
-               &quot;request&quot;: &quot;attach&quot;,
-               &quot;name&quot;: &quot;Attach by Process ID&quot;,
-               &quot;processId&quot;: &quot;${command:PickProcess}&quot;
-              }
-             ]
-            }</span></span></code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Che commands</dt>
-<dd>
-<p><code>theia:build</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>exec</code> type implies that the Che runner is used for command execution. The user can specify the component in whose container the command is executed.</p>
-</li>
-<li>
-<p>The <code>command</code> field contains the command line for execution.</p>
-</li>
-<li>
-<p>The <code>workdir</code> is the working directory in which the command is executed.</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">Visual Studio Code (VS Code) tasks</dt>
-<dd>
-<p><code>run</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>The type is <code>vscode-task</code>.</p>
-</li>
-<li>
-<p>For this type of command, the <code>referenceContent</code> field must contain content with task configurations in the VS Code format.</p>
-</li>
-<li>
-<p>For more information about VS Code tasks, see the Task section on the <a href="https://code.visualstudio.com/docs/editor/tasks">Visual Studio User Guide page</a>.</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">VS Code launch configurations</dt>
-<dd>
-<p><code>debug</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>The type is <code>vscode-launch</code>.</p>
-</li>
-<li>
-<p>It contains the launch configurations in the VS Code format.</p>
-</li>
-<li>
-<p>For more information about VS Code launch configurations, see the Debugging section on the <a href="https://code.visualstudio.com/docs/editor/debugging#_launch-configurations">Visual Studio documentation page</a>.</p>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>For a list of available tasks and launch configurations, see the <code>tasks.json</code> and the <code>launch.json</code> configuration files in the <code>/workspace/.theia</code> directory where the configuration from the devfile is exported to.</p>
-</div>
-<div class="sect2">
-<h3 id="che-theia-task-types_defining-custom-commands-for-che-theia">Che-Theia task types</h3>
-<div class="paragraph">
-<p>There are two types of tasks in a devfile: tasks in the VS Code format and Che commands. Tasks from the devfile are copied to the configuration file when the workspace is started. Depending on the type of the task, the task is then available for running:</p>
+  <div class="paragraph">
+<p>This section describes basics workflows and commands for Che-Theia: the native integrated development environment for Eclipse Che.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Che commands: From the <strong>Terminal</strong> &#8594; <strong>Run Task</strong> menu in the <strong>configured tasks</strong> section, or from the <strong>My Workspace</strong> panel</p>
+<p><a href="/che/docs/che-7/defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</a></p>
 </li>
 <li>
-<p>Tasks in the VS Code format: From the <strong>Run Tasks</strong> menu</p>
+<p><a href="/che/docs/che-7/version-control">Version Control</a></p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>To run the task definitions provided by plug-ins, select the <strong>Terminal</strong> &#8594; <strong>Run Task</strong> menu option. The tasks are placed in the <strong>detected tasks</strong> section.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="running-and-debugging_defining-custom-commands-for-che-theia">Running and debugging</h3>
-<div class="paragraph">
-<p>Che-Theia supports the <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a>. This protocol defines a generic way for how a development tool can communicate with a debugger. It means Che-Theia works with all <a href="https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/">implementations</a>.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To debug an application:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Click <strong>Debug</strong> &#8594; <strong>Add Configuration</strong> to add debugging or launch configuration to the project.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-1.png" alt="che theia basics 1">
-</div>
-</div>
-</li>
-<li>
-<p>From the pop-up menu, select the appropriate configuration for the application that you want to debug.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-2.png" alt="che theia basics 2">
-</div>
-</div>
-</li>
-<li>
-<p>Update the configuration by modifying or adding attributes.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-3.png" alt="che theia basics 3">
-</div>
-</div>
-</li>
-<li>
-<p>Breakpoints can be toggled by clicking the editor margin.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-3-b.png" alt="che theia basics 3 b">
-</div>
-</div>
-</li>
-<li>
-<p>Open the context menu of the breakpoint to add conditions.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-3-c.png" alt="che theia basics 3 c">
-</div>
-</div>
-</li>
-<li>
-<p>To start debugging, click <strong>View</strong> &#8594; <strong>Debug</strong>.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-4.png" alt="che theia basics 4">
-</div>
-</div>
-</li>
-<li>
-<p>In the <strong>Debug</strong> view, select the configuration and press <strong>F5</strong> to debug the application. Or, start the application without debugging by pressing <strong>Ctrl+F5</strong>.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-5.png" alt="che theia basics 5">
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="editing-task-and-launch-configuration_defining-custom-commands-for-che-theia">Editing a task and launch configuration</h3>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To customize the configuration file:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Edit the <code>tasks.json</code> or <code>launch.json</code> configuration files.</p>
-</li>
-<li>
-<p>Add new definitions to the configuration file or modify the existing ones.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The changes are stored in the configuration file.
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>To customize the task configuration provided by plug-ins, select the <strong>Terminal</strong> &#8594; <strong>Configure TasksS</strong> menu option, and choose the task to configure. The configuration is then copied to the <code>tasks.json</code> file and is available for editing.</p>
-</li>
-</ol>
-</div>
-<hr>
-<div class="paragraph">
-<p>title: Version Control
-keywords:
-tags: []
-sidebar: che_7_docs
-permalink: che-7/version-control/
-folder: che-7/end-user-guide
-summary:
----</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="version-control">Version Control</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Eclipse Che natively supports the <a href="https://code.visualstudio.com/docs/editor/versioncontrol#_scm-providers">VS Code SCM model</a>. By default, Eclipse Che includes the native <a href="https://code.visualstudio.com/docs/editor/versioncontrol#_git-support">VS Code Git extension</a> as a Source Code Management (SCM) provider.</p>
-</div>
-<div class="sect2">
-<h3 id="accessing-a-git-repository-via-https_version-control">Accessing a Git repository via HTTPS</h3>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Git is installed. Install Git if needed by following <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Getting Started - Installing Git</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To clone a repository using HTTPS:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Use the <a href="https://code.visualstudio.com/docs/editor/versioncontrol#_cloning-a-repository">clone</a> command provided by the <code>vscode</code> Git extension.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Alternatively, use the native <strong>Git</strong> commands in the terminal to clone a project.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Navigate to destination folder using <code>cd</code> command</p>
-</li>
-<li>
-<p>Use <code>git clone</code> to clone a repository</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git clone <em>&lt;link&gt;</em></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="accessing-a-git-repository-via-ssh_version-control">Accessing a Git repository via SSH</h3>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Personal <a href="https://help.github.com/en/articles/types-of-github-accounts">GitHub account</a> created.</p>
-</li>
-<li>
-<p>SSH key pair generated.</p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="generating-an-ssh-key">Generating an SSH key</h4>
-<div class="paragraph">
-<p>To generate an SSH key pair:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Run the <strong>SSH: generate key pair</strong> command, or, to generate a key that will work only with a particular Git provider, run <strong>SSH: generate key pair for particular host</strong>.</p>
-</li>
-<li>
-<p>After the key is generated, click the <b class="button">View</b> button and copy the public key from the editor.</p>
-</li>
-<li>
-<p>Add the public key to the Git provider.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect3">
-<h4 id="adding-the-associated-public-key-to-a-repository-or-account-on-github">Adding the associated public key to a repository or account on GitHub</h4>
-<div class="paragraph">
-<p>To add the associated public key to a repository or account on GitHub:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Navigate to <a href="https://github.com">github.com</a>.</p>
-</li>
-<li>
-<p>Click the drop-down arrow next to the user icon in the top-right corner of the window.</p>
-</li>
-<li>
-<p>Click <strong>Settings</strong> &#8594; <strong>SSH and GPG keys</strong> and then click the <b class="button">New SSH key</b> button.</p>
-</li>
-<li>
-<p>In the <strong>Title</strong> field, type a title for the key, and in the <strong>Key</strong> field, paste the public key copied from Che.</p>
-</li>
-<li>
-<p>Click the <b class="button">Add SSH key</b> button.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/ide/che-theia-basics-ssh.png" alt="che theia basics ssh">
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect3">
-<h4 id="adding-the-associated-public-key-to-a-git-repository-or-account-on-gitlab">Adding the associated public key to a Git repository or account on GitLab</h4>
-<div class="paragraph">
-<p>To add the associated public key to a Git repository or account on GitLab:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Navigate to <a href="https://gitlab.com">gitlab.com</a>.</p>
-</li>
-<li>
-<p>Click the user icon in the top-right corner of the window.</p>
-</li>
-<li>
-<p>Click <strong>Settings</strong> &#8594; <strong>SSH Keys</strong>.</p>
-</li>
-<li>
-<p>In the <strong>Title</strong> field, type a title for the key and in the <strong>Key</strong> field, paste the public key copied from Che.</p>
-</li>
-<li>
-<p>Click the <b class="button">Add key</b> button.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/ide/che-theia-basics-ssh-keys.png"><img src="/che/docs/images/ide/che-theia-basics-ssh-keys.png" alt="che theia basics ssh keys"></a>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="managing-pull-requests-using-the-github-pr-plug-in_version-control">Managing pull requests using the GitHub PR plug-in</h3>
-<div class="paragraph">
-<p>To manage GitHub pull requests, the VS Code GitHub Pull Request plug-in is available in the list of plug-ins of the workspace.</p>
-</div>
-<div class="sect3">
-<h4 id="using-the-github-pull-requests-plug-in">Using the GitHub Pull Requests plug-in</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Authenticate by running the <strong>GitHub Pull Requests: Manually Provide Authentication Response</strong> command and paste the GitHub token.</p>
-</li>
-<li>
-<p>Select the repository permissions when generating the token.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect3">
-<h4 id="creating-a-new-pull-request">Creating a new pull request</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open the GitHub repository. To be able to execute remote operations, the repository must have a <em>remote</em> with an SSH URL.</p>
-</li>
-<li>
-<p>Checkout a new branch and make changes that you want to publish.</p>
-</li>
-<li>
-<p>Run the <strong>GitHub Pull Requests: Create Pull Request</strong> command.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
 </div>
 
     <div class="tags">
