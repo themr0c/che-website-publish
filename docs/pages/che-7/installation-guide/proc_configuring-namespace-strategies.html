@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Configuring namespace strategies | Eclipse Che Documentation</title>
+<title> | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -174,7 +174,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Configuring namespace strategies page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -192,7 +192,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Configuring namespace strategies">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -847,7 +847,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Configuring namespace strategies</h1>
+   <h1 class="post-title-main"></h1>
 </div>
 
 
@@ -884,50 +884,127 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the procedure module introduction: a short description of the procedure.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The term <em>namespace</em> (Kubernetes) is used interchangeably with <em>project</em> (OpenShift).
+</td>
+</tr>
+</table>
 </div>
-<h2 id="prerequisites" class="discrete">Prerequisites</h2>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
-</li>
-<li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>The namespace strategies are configured using the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> environment variable.</p>
 </div>
-<h2 id="procedure" class="discrete">Procedure</h2>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Start each step with an active verb.</p>
-</li>
-<li>
-<p>Include one command or action per step.</p>
-</li>
-<li>
-<p>Use an unnumbered bullet (*) if the procedure includes only one step.</p>
-</li>
-</ol>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+There are legacy variables <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> and <code>CHE_INFRA_OPENSHIFT_PROJECT</code>. These should be left unset for new instalations. Changing these variables during update can lead to data loss.
+</td>
+</tr>
+</table>
 </div>
-<h2 id="additional-resources" class="discrete">Additional resources</h2>
-<div class="ulist">
-<ul>
-<li>
-<p>A bulleted list of links to other material closely related to the contents of the procedure module.</p>
-</li>
-<li>
-<p>For more details on writing procedure modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="one-namespace-per-workspace-strategy">One namespace per workspace strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The strategy creates a new namespace for each new workspace.</p>
+</div>
+<div class="paragraph">
+<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must contain the <code><em>&lt;workspaceid&gt;</em></code> identifier. It can be used alone or combined with other identifiers or any string.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. One namespace per workspace</div>
+<div class="content">
+<div class="paragraph">
+<p>To assign namespace names composed of a <code>che-ws</code> prefix and workspace id, set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-ws-<em>&lt;workspaceid&gt;</em></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="one-namespace-for-all-workspaces-strategy">One namespace for all workspaces strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The strategy uses one predefined namespace for all workspaces.</p>
+</div>
+<div class="paragraph">
+<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must be the name of the desired namespace to use.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. One namespace for all workspaces</div>
+<div class="content">
+<div class="paragraph">
+<p>To have all workspaces created in <code>che-workspaces</code> namespace, set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-workspaces</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="one-namespace-per-user-strategy">One namespace per user strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The strategy isolates each user in their own namespace.</p>
+</div>
+<div class="paragraph">
+<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must contain one or more user identifiers. Currently supported identifiers are <code><em>&lt;username&gt;</em></code> and <code><em>&lt;userid&gt;</em></code>.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. One namespace per user</div>
+<div class="content">
+<div class="paragraph">
+<p>To assign namespace names composed of a <code>che-ws</code> prefix and individual usernames (<code>che-ws-user1</code>, <code>che-ws-user2</code>), set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-ws-<em>&lt;username&gt;</em></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Using the <em>One namespace per user</em> strategy with the <code>common</code> PVC strategy only works correctly when the user runs not more than one workspace at a time. To enforce this limit, set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT=1</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 
     <div class="tags">
@@ -945,7 +1022,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Sep 30, 2019 <br/>
+                    Site last generated: Oct 24, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
