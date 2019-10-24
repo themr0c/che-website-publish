@@ -909,138 +909,173 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Che can be installed from OpenShift OperatorHub.</p>
+<p>On OpenShift, Eclipse Che can be installed using the OperatorHub Catalog present in the OpenShift web console.
+Following steps are described:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Creating the Che project in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p><a href="#installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing the Che operator in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p><a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing Che using the Che operator in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p><a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a> or <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p><a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a> or <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p><a href="#enabling-ssl-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Enabling SSL on OpenShift 4</a>.</p>
+</li>
+<li>
+<p><a href="#logging-in-to-che-on-openshift-for-the-first-time-using-oauth_installing-che-on-openshift-4-from-operatorhub">Logging in to Che on OpenShift for the first time using OAuth</a> or <a href="#logging-in-to-che-on-openshift-for-the-first-time-registering-as-a-new-user_installing-che-on-openshift-4-from-operatorhub">Logging in to Che on OpenShift for the first time registering as a new user</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Installing Che on OpenShift 4</h2>
+<h2 id="creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Creating the Che project in OpenShift 4 web console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<div class="title">Procedure</div>
-<p>To install Che on OpenShift 4:</p>
+<p>This section describes how to create the <code>Che</code> project in OpenShift 4 web console.</p>
 </div>
+<h3 id="prerequisites" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create the che project:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>Open the OpenShift web console.</p>
+</li>
 <li>
-<p>Click the <strong>Projects</strong> tab and click the <b class="button">Create Project</b> button.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/open-shift-create-project.png"><img src="/che/docs/images/installation/open-shift-create-project.png" alt="open shift create project"></a>
-</div>
+<p>In the left panel, navigate to <strong>Projects</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Create Project</b> button.</p>
+</li>
+<li>
+<p>Enter the project details:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the <strong>Name</strong> field, type <code>che</code>.</p>
+</li>
+<li>
+<p>In the <strong>Display Name</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+</ul>
 </div>
 </li>
 <li>
-<p>In the <strong>Name</strong> field, type <code>che</code> and click the <b class="button">Create</b> button.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/create-project-button.png"><img src="/che/docs/images/installation/create-project-button.png" alt="create project button"></a>
-</div>
-</div>
+<p>Click the <b class="button">Create</b> button.</p>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing the Che operator in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install the Che operator in OpenShift 4 web console.</p>
+</div>
+<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>Install the operator:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>Administrative rights on an existing project named <code>che</code> on this instance of OpenShift 4. See <a href="#creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Creating the Che project in OpenShift 4 web console</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-2" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>In the left panel, expand <strong>Catalog</strong> and click <strong>OperatorHub</strong>.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/catalog-operatorhub.png"><img src="/che/docs/images/installation/catalog-operatorhub.png" alt="catalog operatorhub"></a>
-</div>
-</div>
+<p>Open the OpenShift web console.</p>
 </li>
 <li>
-<p>In the <strong>Search by keyword</strong> field, type <code>eclipse che</code>.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-in-openshift-creation.png"><img src="/che/docs/images/installation/eclipse-che-in-openshift-creation.png" alt="eclipse che in openshift creation"></a>
-</div>
-</div>
+<p>In the left panel, navigate to the <strong>Catalog</strong> &#8594; <strong>OperatorHub</strong> section.</p>
 </li>
 <li>
-<p>Click <strong>Eclipse Che</strong>.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/select-eclipse-che-in-openshift.png"><img src="/che/docs/images/installation/select-eclipse-che-in-openshift.png" alt="select eclipse che in openshift"></a>
-</div>
-</div>
+<p>In the <strong>Search by keyword</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> tile.</p>
 </li>
 <li>
 <p>Click the <b class="button">Install</b> button in the <strong>Eclipse Che</strong> pop-up window.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/install-eclipse-che-in-openshift.png"><img src="/che/docs/images/installation/install-eclipse-che-in-openshift.png" alt="install eclipse che in openshift"></a>
-</div>
-</div>
 </li>
 <li>
-<p>In the <strong>A specific namespace on the cluster</strong> field, in the cluster drop-down list, select <strong>che</strong>. Click the <b class="button">Subscribe</b> button.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-create-operator-subscription.png"><img src="/che/docs/images/installation/eclipse-che-create-operator-subscription.png" alt="eclipse che create operator subscription"></a>
-</div>
-</div>
-<div class="paragraph">
-<p>The operator is successfully installed and is available in the <strong>Installed Operators</strong> section.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-overview.png"><img src="/che/docs/images/installation/eclipse-che-overview.png" alt="eclipse che overview"></a>
-</div>
-</div>
+<p>In the <strong>A specific namespace on the cluster</strong> field, in the cluster drop-down list, select <strong>che</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Subscribe</b> button.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Catalog</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Eclipse Che is displayed as an installed operator having the <strong>InstallSucceeded</strong> status.</p>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing Che using the Che operator in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install Che using the Che operator in OpenShift 4 web console.</p>
+</div>
+<h3 id="prerequisites-3" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>Deploy Che:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>The Che operator is installed on this instance of OpenShift 4. See <a href="#installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing the Che operator in OpenShift 4 web console</a></p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-3" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
 <li>
 <p>Navigate to the <strong>Catalog</strong> &#8594; <strong>Installed Operators</strong> section.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-installed-operators.png"><img src="/che/docs/images/installation/eclipse-che-installed-operators.png" alt="eclipse che installed operators"></a>
-</div>
-</div>
-<div class="paragraph">
-<p>Eclipse Che is displayed as an installed operator having the <strong>InstallSucceeded</strong> status.</p>
-</div>
 </li>
 <li>
-<p>To deploy Che, click <strong>Eclipse Che</strong> in the list of installed operators.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-overview-provided-apis.png"><img src="/che/docs/images/installation/eclipse-che-overview-provided-apis.png" alt="eclipse che overview provided apis"></a>
-</div>
-</div>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
 </li>
 <li>
 <p>Click the <strong>Create New</strong> link in <strong>Provided APIs</strong> section.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/cc-eclipse-che-cluster.png"><img src="/che/docs/images/installation/cc-eclipse-che-cluster.png" alt="cc eclipse che cluster"></a>
-</div>
-</div>
+</li>
+<li>
+<p>The <strong>Create Che Cluster</strong> page is displayed.</p>
 </li>
 <li>
 <p>Leave the default values as they are and click the <b class="button">Create</b> button in the bottom-left corner of the window.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/create-che-cluster-intalled-operators.png"><img src="/che/docs/images/installation/create-che-cluster-intalled-operators.png" alt="create che cluster intalled operators"></a>
-</div>
-</div>
-<div class="paragraph">
-<p>The Eclipse Che cluster is created.</p>
-</div>
+</li>
+<li>
+<p>The <code>eclipse-che</code> cluster is created.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/installation/eclipse-che-cluster-create-che-cluster.png"><img src="/che/docs/images/installation/eclipse-che-cluster-create-che-cluster.png" alt="eclipse che cluster create che cluster"></a>
@@ -1049,34 +1084,125 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Track the Che deployment:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Click the <strong>eclipse-che</strong> cluster.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-cluster-overview.png"><img src="/che/docs/images/installation/eclipse-che-cluster-overview.png" alt="eclipse che cluster overview"></a>
 </div>
 </div>
+<div class="sect1">
+<h2 id="viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to view the state of the Che cluster deployment in OpenShift 4 web console.</p>
+</div>
+<h3 id="prerequisites-4" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>Click the <strong>Resources</strong> tab.</p>
+<p>A Che cluster is deployed on this instance of OpenShift 4. See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing Che using the Che operator in OpenShift 4 web console</a></p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-4" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Catalog</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+</li>
+<li>
+<p>Click on the <strong>eclipse-che</strong> cluster.</p>
+</li>
+<li>
+<p>Click on the <strong>Resources</strong> tab.</p>
+</li>
+<li>
+<p>The screen displays the state of the resources assigned to the Che cluster deployment.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/installation/eclipse-che-resources-tab.png"><img src="/che/docs/images/installation/eclipse-che-resources-tab.png" alt="eclipse che resources tab"></a>
 </div>
 </div>
-<div class="paragraph">
-<p>The user can also track the deployment using the command line and the following two commands:</p>
+</li>
+</ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section descibes how to find the Che cluster URL in OpenShift 4 web console.</p>
+</div>
+<h3 id="prerequisites-5" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a> or <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-5" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Catalog</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> operator tile.</p>
+</li>
+<li>
+<p>Click on <strong>eclipse-che</strong> in the table.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>Read the content of the <strong>ECLIPSE CHE URL</strong> field.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to view the state of the Che cluster deployment using OpenShift 4 CLI tools.</p>
+</div>
+<h3 id="prerequisites-6" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An installation of an Eclipse Che cluster. See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing Che using the Che operator in OpenShift 4 web console</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-6" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the following two commands:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">$ oc project che
-$ oc get pods
-NAME                            READY     STATUS    RESTARTS   AGE
+$ oc get pods</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the status of the pods is <code>Running</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">NAME                            READY     STATUS    RESTARTS   AGE
 che-8495f4946b-jrzdc            0/1       Running   0          86s
 che-operator-578765d954-99szg   1/1       Running   0          42m
 keycloak-74fbfb9654-g9vp5       1/1       Running   0          4m32s
@@ -1086,19 +1212,38 @@ postgres-5d579c6847-w6wx5       1/1       Running   0          5m14s</pre>
 </li>
 </ol>
 </div>
-</li>
-</ol>
 </div>
-<div class="sect2">
-<h3 id="viewing-che-operator-logs">Viewing che-operator logs</h3>
+</div>
+<div class="sect1">
+<h2 id="viewing-che-operator-logs-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing Che operator logs using OpenShift 4 CLI tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to viewing Che operator logs using OpenShift 4 CLI tools.</p>
+</div>
+<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>An installation of an Eclipse Che cluster. See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Installing Che using the Che operator in OpenShift 4 web console</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-7" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>To view the che-operator logs, run the following command:</p>
+<p>Run the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc logs --tail=10 -f che-operator-578765d954-99szg
-time="2019-07-12T09:48:29Z" level=info msg="Exec successfully completed"
+<pre class="nowrap">$ oc logs --tail=10 -f che-operator-578765d954-99szg</pre>
+</div>
+</div>
+</li>
+<li>
+<p>This is an example output of the command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">time="2019-07-12T09:48:29Z" level=info msg="Exec successfully completed"
 time="2019-07-12T09:48:29Z" level=info msg="Updating eclipse-che CR with status: provisioned with OpenShift identity provider: true"
 time="2019-07-12T09:48:29Z" level=info msg="Custom resource eclipse-che updated"
 time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: ConfigMap, name: che"
@@ -1110,8 +1255,29 @@ time="2019-07-12T09:48:30Z" level=info msg="Waiting for deployment che. Default 
 </div>
 </div>
 </li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to Che cluster URL using OpenShift 4 CLI tool.</p>
+</div>
+<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
 <li>
-<p>To obtain the Eclipse Che URL, wait for the logs to show the following information:</p>
+<p>View the logs of the Che operator. See <a href="#viewing-che-operator-logs-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing Che operator logs using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-8" class="discrete">Procedure</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Wait for the logs to show the message <code>Eclipse Che is now available at:</code> followed by Che URL:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with Eclipse Che server URL: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
@@ -1120,73 +1286,45 @@ time="2019-07-12T09:50:13Z" level=info msg="Eclipse Che is now available at: htt
 time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version: 7.0.0-RC-2.0"</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The URL is also displayed in the Eclipse Che cluster on the <strong>Installed Operators</strong> window in the <strong>ECLIPSE CHE URL</strong> field.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-url-filef-overview.png"><img src="/che/docs/images/installation/eclipse-che-url-filef-overview.png" alt="eclipse che url filef overview"></a>
-</div>
-</div>
 </li>
-<li>
-<p>Click the <strong>Eclipse Che URL</strong> link to display the Eclipse Che login page.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-login-page.png"><img src="/che/docs/images/installation/eclipse-che-login-page.png" alt="eclipse che login page"></a>
-</div>
-</div>
-</li>
-<li>
-<p>To log in, use OpenShift OAuth or register as a new user. To use OAuth, the user must grant permissions to log in to Eclipse Che.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/authorize-access-for-eclipse-che-openshift.png"><img src="/che/docs/images/installation/authorize-access-for-eclipse-che-openshift.png" alt="authorize access for eclipse che openshift"></a>
-</div>
-</div>
-</li>
-<li>
-<p>Update the account information.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/update-account-information-eclipse-che.png"><img src="/che/docs/images/installation/update-account-information-eclipse-che.png" alt="update account information eclipse che"></a>
-</div>
-</div>
-<div class="paragraph">
-<p>Once logged in, the user can create a workspace using the Eclipse Che <strong>Dashboard</strong>.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-loading.png"><img src="/che/docs/images/installation/eclipse-che-loading.png" alt="eclipse che loading"></a>
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-loading.png"><img src="/che/docs/images/installation/eclipse-che-loading.png" alt="eclipse che loading"></a>
-</div>
-</div>
-</li>
-</ol>
-</div>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="enabling-ssl-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Enabling SSL on OpenShift 4</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To enable SSL on OpenShift 4:</p>
+<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a> or <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
 </div>
+<h3 id="procedure-9" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Catalog</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> operator tile.</p>
+</li>
+<li>
+<p>Click on <strong>eclipse-che</strong> in the table.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
 <p>Toggle the <strong>TLS MODE</strong> switch to <strong>True</strong>.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/set-that-value-to-true-enabeling-tls-mode.png"><img src="/che/docs/images/installation/set-that-value-to-true-enabeling-tls-mode.png" alt="set that value to true enabeling tls mode"></a>
-</div>
-</div>
+</li>
+<li>
+<p>Click <strong>Confirm change</strong>.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/installation/tls-mode-true.png"><img src="/che/docs/images/installation/tls-mode-true.png" alt="tls mode true"></a>
@@ -1194,42 +1332,102 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 </div>
 </li>
 <li>
-<p>Click <strong>Confirm change</strong>.</p>
+<p>Navigate to the <strong>Resources</strong> tab.</p>
 </li>
 <li>
-<p>In the <strong>Resources</strong> section, the pods are restarted.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/resource-section-pods-are-restarted.png"><img src="/che/docs/images/installation/resource-section-pods-are-restarted.png" alt="resource section pods are restarted"></a>
-</div>
-</div>
+<p>Wait that the pods are restarted.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
 </li>
 <li>
 <p>Click the <strong>ECLIPSE CHE URL</strong> link.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-url-link.png"><img src="/che/docs/images/installation/eclipse-che-url-link.png" alt="eclipse che url link"></a>
-</div>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>Notice that the link is redirected to HTTPS.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/link-is-redirected-to-https.png"><img src="/che/docs/images/installation/link-is-redirected-to-https.png" alt="link is redirected to https"></a>
-</div>
-</div>
-<div class="paragraph">
-<p>A valid <em>Let’s Encrypt</em> certificate is available, and Che is available on HTTPS.</p>
-</div>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong> using a valid <em>Let’s Encrypt</em> certificate.</p>
 </li>
 </ol>
 </div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/che-running-on-openshift-v4.png"><img src="/che/docs/images/installation/che-running-on-openshift-v4.png" alt="che running on openshift v4"></a>
 </div>
-<div class="title">Figure 1. An example of Eclipse Che running on OpenShift v4.1 with SSL</div>
+</div>
+<div class="sect1">
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-using-oauth_installing-che-on-openshift-4-from-operatorhub">Logging in to Che on OpenShift for the first time using OAuth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to log in to Che on OpenShift for the first time using OAuth.</p>
+</div>
+<h3 id="prerequisites-10" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a> or <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p>Know the Eclipse Che URL. See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a> or <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-10" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>OpenShift OAuth</strong> option.</p>
+</li>
+<li>
+<p>The <strong>Authorize Access</strong> page is displayed.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Allow selected permissions</b> button.</p>
+</li>
+<li>
+<p>Update the account information: fill in the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> field and click on the <b class="button">Submit</b> button.</p>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-registering-as-a-new-user_installing-che-on-openshift-4-from-operatorhub">Logging in to Che on OpenShift for the first time registering as a new user</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to log in to Che on OpenShift for the first time registering as a new user.</p>
+</div>
+<h3 id="prerequisites-11" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a> or <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p>Know the Eclipse Che URL. See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a> or <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-11" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>Register as a new user</strong> option.</p>
+</li>
+<li>
+<p>Update the account information: fill in the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> field and click on the <b class="button">Submit</b> button.</p>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
