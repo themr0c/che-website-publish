@@ -892,6 +892,287 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="sect1">
+<h2 id="upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator_updating-che">Upgrading from Che 6 to Che 7 on OpenShift 4 using the Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to upgrade from Che 6 to Che 7 on OpenShift 4 using the Operator.</p>
+</div>
+<div class="sect2">
+<h3 id="preparing-the-upgrade-from-che-6-to-che-7-on-openshift-using-the-operator_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Preparing the upgrade from Che 6 to Che 7 on OpenShift using the Operator</h3>
+<div class="paragraph">
+<p>This section describes how to prepare upgrade from Che 6 to Che 7 on OpenShift using the Operator.</p>
+</div>
+<div class="paragraph">
+<p>Uninstalling the Eclipse Che 6 operator means that the OpenShift cluster do not receive any updates of the Che 6 operator.
+As a consequence, the existing Che instances do not receive any update.
+The Che instances that are already present, including their database, remains present.</p>
+</div>
+<h4 id="prerequisites" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>And administrative account on an OpenShift 4 instance.</p>
+</li>
+<li>
+<p>Eclipse Che 6 operator is installed on this OpenShift 4 instance.</p>
+</li>
+<li>
+<p>A running instance of Che 6 on this OpenShift 4 instance.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In all running workspaces in the Che 6 instance, save and push changes back to the git repositories.</p>
+</li>
+<li>
+<p>Shut down all workspaces in the Che 6 instance.</p>
+</li>
+<li>
+<p>Open the OpenShift console.</p>
+</li>
+<li>
+<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
+</li>
+<li>
+<p>Click on <strong>Eclipse Che 6</strong>.</p>
+</li>
+<li>
+<p>Click on the btn[Actions] button on the top right.</p>
+</li>
+<li>
+<p>A drop-down menu appears.</p>
+</li>
+<li>
+<p>Click on <strong>Uninstall Operator</strong> to uninstall the Che 6 operator.</p>
+</li>
+<li>
+<p>Accept the selected option <code>Also completely remove the Operator from the selected namespace</code>.</p>
+</li>
+<li>
+<p>Click on the btn[Remove] button.</p>
+</li>
+<li>
+<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
+</li>
+<li>
+<p>The operator is removed from the list of installed operators.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-the-che-project-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Creating the Che project in OpenShift 4 web console</h3>
+<div class="paragraph">
+<p>This section describes how to create the <code>Che</code> project in OpenShift 4 web console.</p>
+</div>
+<h4 id="prerequisites-2" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-2" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to <strong>Projects</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Create Project</b> button.</p>
+</li>
+<li>
+<p>Enter the project details:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the <strong>Name</strong> field, type <code>che</code>.</p>
+</li>
+<li>
+<p>In the <strong>Display Name</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click the <b class="button">Create</b> button.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-the-che-operator-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Installing the Che operator in OpenShift 4 web console</h3>
+<div class="paragraph">
+<p>This section describes how to install the Che operator in OpenShift 4 web console.</p>
+</div>
+<h4 id="prerequisites-3" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
+</li>
+<li>
+<p>Administrative rights on an existing project named <code>che</code> on this instance of OpenShift 4.
+See <a href="#creating-the-che-project-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Creating the Che project in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>The Eclipse Che 6 operator is not installed.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-3" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>OperatorHub</strong> section.</p>
+</li>
+<li>
+<p>In the <strong>Search by keyword</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> tile.</p>
+</li>
+<li>
+<p>Click the <b class="button">Install</b> button in the <strong>Eclipse Che</strong> pop-up window.</p>
+</li>
+<li>
+<p>In the <strong>A specific namespace on the cluster</strong> field, in the cluster drop-down list, select <strong>che</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Subscribe</b> button.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Eclipse Che is displayed as an installed operator having the <strong>InstallSucceeded</strong> status.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> name in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>In the <strong>Conditions</strong> sections at the bottom of the page, wait for this message: <code>install strategy completed with no errors</code>.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Events</strong> tab.</p>
+</li>
+<li>
+<p>Wait for this message: <code>install strategy completed with no errors</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Viewing the state of the Che cluster deployment in OpenShift 4 web console</h3>
+<div class="paragraph">
+<p>This section describes how to view the state of the Che cluster deployment in OpenShift 4 web console.</p>
+</div>
+<h4 id="prerequisites-4" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.
+upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator</p>
+</li>
+<li>
+<p>A Che cluster is deployed on this instance of OpenShift 4.</p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-4" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Eclipse Che Cluster</strong> tab.</p>
+</li>
+<li>
+<p>Click on the <strong>eclipse-che</strong> cluster that is listed in the table.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>Watch the content of the <strong>Message</strong> field. The field contain error messages, if any. The expected content is <code>None</code>.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Resources</strong> tab.</p>
+</li>
+<li>
+<p>The screen displays the state of the resources assigned to the Che cluster deployment.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/installation/eclipse-che-resources-tab.png"><img src="/che/docs/images/installation/eclipse-che-resources-tab.png" alt="eclipse che resources tab"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="finishing-the-upgrade-from-che-6-to-che-7-on-openshift-using-the-operator_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Finishing the upgrade from Che 6 to Che 7 on OpenShift using the Operator</h3>
+<div class="paragraph">
+<p>This section describes how to finish the upgrade from Che 6 to Che 7 on OpenShift using the Operator.</p>
+</div>
+<h4 id="prerequisites-5" class="discrete">Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The Che 6 operator is removed. See <a href="#preparing-the-upgrade-from-che-6-to-che-7-on-openshift-using-the-operator_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Preparing the upgrade from Che 6 to Che 7 on OpenShift using the Operator</a></p>
+</li>
+<li>
+<p>The Che 7 operator is deployed. See <a href="#installing-the-che-operator-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Installing the Che operator in OpenShift 4 web console</a></p>
+</li>
+<li>
+<p>The Che 7 operator has finished upgrading the Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_upgrading-from-che-6-to-che-7-on-openshift-4-using-the-operator">Viewing the state of the Che cluster deployment in OpenShift 4 web console</a></p>
+</li>
+</ul>
+</div>
+<h4 id="procedure-5" class="discrete">Procedure</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log into the Eclipse Che instance.</p>
+</li>
+<li>
+<p>Select an old workspace an click on the <b class="button">Start</b> button.</p>
+</li>
+<li>
+<p>An error message appears, with a link to the documentation explaining how to migrate a workspace to a devfile.</p>
+</li>
+<li>
+<p>For each workspace, create a devfile that represent your workspace. See <a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6 workspace to a Che 7 devfile</a>.</p>
+</li>
+<li>
+<p>Use the devfile to start the new workspace. See <a href="/che/docs/che/configuring-a-workspace-using-a-devfile">Configuring a workspace using a devfile</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="known-issues">Known issues</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -984,7 +1265,7 @@ the cluster using <code>kubectl apply -f</code> or <code>oc apply -f</code> can 
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Oct 30, 2019 <br/>
+                    Site last generated: Oct 31, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
