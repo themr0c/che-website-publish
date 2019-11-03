@@ -959,19 +959,19 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to use Minikube to set up Kubernetes.</p>
 </div>
-<h3 id="prerequisites" class="discrete">Prerequisites</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
 <li>
 <p>An installation of <code>kubectl</code>. See <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Installing and Setting Up kubectl</a>.</p>
 </li>
 <li>
 <p>An installation of Minikube with Kubernetes version <code>1.9</code> or higher. See <a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">Installing Minikube</a>.</p>
 </li>
-</ol>
+</ul>
 </div>
-<h3 id="procedure" class="discrete">Procedure</h3>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
 <p>Start Minikube (it is important to <strong>allocate at least 4 GB of RAM</strong>):</p>
@@ -983,6 +983,135 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ol>
 </div>
+<div class="sect2">
+<h3 id="running-minikube-inside-an-lxc-container">Running Minikube inside an LXC container</h3>
+<div class="paragraph">
+<p>This section describes how to properly configure a LXC container to set up Minikube when the hypervisor uses ZFS, Btrfs, or LVM to provision the containers storage.</p>
+</div>
+<h4 id="background" class="discrete">Background</h4>
+<div class="paragraph">
+<p>The <code>chectl</code> command-line tool requires the Minikube Ingress plug-in to be enabled in Minikube. At the same time, the Minikube Ingress plug-in requires the Docker daemon to be running with the overlay filesystem driver.</p>
+</div>
+<h4 id="problem" class="discrete">Problem</h4>
+<div class="paragraph">
+<p>According to <a href="https://docs.docker.com/storage/storagedriver/select-storage-driver/">Docker storage drivers</a>, the Docker overlay2 driver is only supported with the Ext4 and XFS file systems (with <code>ftype=1</code>).</p>
+</div>
+<h4 id="solution" class="discrete">Solution</h4>
+<div class="paragraph">
+<p>The solution is to create a virtual block device inside a volume, which in the case of BTRFS is not possible and will require to use a file as the virtual block device.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>In the instructions below, change the <code>zfsPool</code> or LVM <code>volume_group</code> name and <code>dockerstorage</code> according to your use case and preferences.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a fixed size ZFS dataset or LVM volume on the hypervisor side:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ zfs create -V 50G zfsPool/dockerstorage           #USING ZFS
+$ lvcreate -L 50G -n dockerstorage volumegroup_name #USING LVM</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use a partition tool to create a partition inside the virtual block device:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ parted /dev/zvol/zfsPool/dockerstorage --script mklabel gpt                      #USING ZFS
+$ parted /dev/zvol/zfsPool/dockerstorage --script mkpart primary 1 100%            #USING ZFS
+$ parted /dev/mapper/volumegroup_name-dockerstorage --script mklabel gpt           #USING LVM
+$ parted /dev/mapper/volumegroup_name-dockerstorage --script mkpart primary 1 100% #USING LVM</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is now a reference called:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For ZFS: <code>dockerstorage-part1</code> inside the <code>/dev/zvol/zfsPool</code> directory</p>
+</li>
+<li>
+<p>For LVM: <code>volumegroup_name-dockerstorage1</code> inside the <code>/dev/mapper</code> directory</p>
+<div class="paragraph">
+<p>This is the partition of the virtual block device to be used to store <code>/var/lib/docker</code> from the LXC container.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Format the virtual partition to XFS with the <code>ftype</code> flag set to <code>1</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ mkfs.xfs -n ftype=1 /dev/zvol/zfsPool/dockerstorage-part1       #FOR ZFS
+$ mkfs.xfs -n ftype=1 /dev/mapper/volumegroup_name-dockerstorage1 #FOR LVM</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Attach the virtual partition to the container (<code>minikube</code> is the name of the LXC container, <code>dockerstorage</code> is the name for the storage instance in LXC configuration):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ lxc config device add minikube dockerstorage disk path=/var/lib/docker \
+  source=/dev/zvol/zfsPool/dockerstorage-part1       #FOR ZFS
+$ lxc config device add minikube dockerstorage disk path=/var/lib/docker \
+  source=/dev/mapper/volumegroup_name-dockerstorage1 #FOR LVM</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check the filesystem inside the container using the <code>df</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ df -T /var/lib/docker</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use the following LXC configuration profile in the LXC container to allow it running Minikube:</p>
+<div class="listingblock">
+<div class="content">
+<pre>config:
+  linux.kernel_modules: ip_vs,ip_vs_rr,ip_vs_wrr,ip_vs_sh,ip_tables,ip6_tables,netlink_diag,nf_nat,overlay,br_netfilter
+  raw.lxc: |
+    lxc.apparmor.profile=unconfined
+    lxc.mount.auto=proc:rw sys:rw
+    lxc.cgroup.devices.allow=a
+    lxc.cap.drop=
+  security.nesting: "true"
+  security.privileged: "true"
+description: Profile supporting minikube in containers
+devices:
+  aadisable:
+    path: /sys/module/apparmor/parameters/enabled
+    source: /dev/null
+    type: disk
+  aadisable2:
+    path: /sys/module/nf_conntrack/parameters/hashsize
+    source: /sys/module/nf_conntrack/parameters/hashsize
+    type: disk
+  aadisable3:
+    path: /dev/kmsg
+    source: /dev/kmsg
+    type: disk
+name: minikube</pre>
+</div>
+</div>
+</li>
+<li>
+<p>After starting and setting up networking and the Docker service inside the container, start Minikube:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ minikube start --vm-driver=none --extra-config kubeadm.ignore-preflight-errors=SystemVerification</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -991,7 +1120,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to use Minishift to set up OpenShift 3.</p>
 </div>
-<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1002,7 +1131,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-2" class="discrete">Procedure</h3>
+<h3 id="procedure" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1023,7 +1152,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to use CodeReady Containers to set up OpenShift 4.</p>
 </div>
-<h3 id="prerequisites-3" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-2" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1031,7 +1160,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-3" class="discrete">Procedure</h3>
+<h3 id="procedure-2" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1105,7 +1234,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to use Docker Desktop to set up Kubernetes.</p>
 </div>
-<h3 id="prerequisites-4" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-3" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1116,7 +1245,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-4" class="discrete">Procedure</h3>
+<h3 id="procedure-3" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1161,7 +1290,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Che on Minikube using chectl.</p>
 </div>
-<h3 id="prerequisites-5" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-4" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1172,7 +1301,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-5" class="discrete">Procedure</h3>
+<h3 id="procedure-4" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1193,7 +1322,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Che on Minishift using chectl.</p>
 </div>
-<h3 id="prerequisites-6" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-5" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1204,7 +1333,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-6" class="discrete">Procedure</h3>
+<h3 id="procedure-5" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1225,7 +1354,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Che on CodeReady Containers using chectl.</p>
 </div>
-<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-6" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1236,7 +1365,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-7" class="discrete">Procedure</h3>
+<h3 id="procedure-6" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1278,7 +1407,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on Minikube using chectl.</p>
 </div>
-<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1289,7 +1418,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-8" class="discrete">Procedure</h3>
+<h3 id="procedure-7" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1324,7 +1453,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on Minishift using chectl.</p>
 </div>
-<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1335,7 +1464,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-9" class="discrete">Procedure</h3>
+<h3 id="procedure-8" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1356,7 +1485,7 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on CodeReady Containers using chectl.</p>
 </div>
-<h3 id="prerequisites-10" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1367,7 +1496,7 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-<h3 id="procedure-10" class="discrete">Procedure</h3>
+<h3 id="procedure-9" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
