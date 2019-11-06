@@ -533,6 +533,17 @@
    </li>
      
       
+  
+  <li>
+      
+      <a href="/che/docs/che-7/installing-che-in-restricted-environment">Installing Che in restricted environment</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
       
   <div class="sidebarSubtitle">Administration Guide</div>
   
@@ -983,6 +994,66 @@ $('#toc').on('click', 'a', function() {
 </div>
 <div class="paragraph">
 <p>For a complete devfile example, see <a href="https://github.com/eclipse/che/blob/master/devfile.yaml">Eclipse Che in Che devfile.yaml</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title"><code>name</code> or <code>generateName</code> must be defined</div>
+<div class="paragraph">
+<p>Both <code>name</code> and <code>generateName</code> are optional parameters, but at least one of them must be defined. See <a href="#generating-workspace-names_making-a-workspace-portable-using-a-devfile">Generating workspace names</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generating-workspace-names_making-a-workspace-portable-using-a-devfile">Generating workspace names</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To specify a prefix for automatically generated workspace names, set the <code>generateName</code> parameter in the <code>devfile.yaml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">generateName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The workspace name will be in the <code>&lt;generateName&gt;YYYYY</code> format (for example, <code>che-2y7kp</code>). <code>Y</code> is random <code>[a-z0-9]</code> character.</p>
+</div>
+<div class="paragraph">
+<p>The following naming rules apply when creating workspaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When <code>name</code> is defined, it is used as the workspace name: <code>&lt;name&gt;</code></p>
+</li>
+<li>
+<p>When only <code>generateName</code> is defined, it is used as the base of the generated name: <code>&lt;generateName&gt;YYYYY</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For workspaces created using a factory, defining <code>name</code> or <code>generateName</code> has the same effect. The defined value is used as the name prefix: <code>&lt;name&gt;YYYYY</code> or <code>&lt;generateName&gt;YYYYY</code>. The <code>generateName</code> has precedence over <code>name</code> when both are defined.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

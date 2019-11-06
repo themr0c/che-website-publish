@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=",  ">
-<title>Che-Theia IDE basics | Eclipse Che Documentation</title>
+<meta name="keywords" content="installation,  air-gap, airgap, offline">
+<title>Installing Che in restricted environment | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che-Theia IDE basics page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che in restricted environment page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Che-Theia IDE basics">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installing Che in restricted environment">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -865,7 +865,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Che-Theia IDE basics</h1>
+   <h1 class="post-title-main">Installing Che in restricted environment</h1>
 </div>
 
 
@@ -902,26 +902,300 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This section describes basics workflows and commands for Che-Theia: the native integrated development environment for Eclipse Che.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following sections describe the steps necessary to deploy Che in a Kubernetes or OpenShift cluster in a restricted environment (also called <em>offline mode</em> or <em>air-gap scenario</em>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Eclipse Che workspaces reference various external resources, including container images available in public registries or sample projects hosted on GitHub.</p>
+</div>
+<div class="paragraph">
+<p>To deploy Che in an environment where these external resources are not available (for example, on a cluster that is not exposed to the public Internet):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="/che/docs/che-7/defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</a></p>
+<p>Build images containing external resources (workspace plug-ins, projects).</p>
 </li>
 <li>
-<p><a href="/che/docs/che-7/version-control">Version Control</a></p>
+<p>Pull all images needed for running Che to a registry that is accessible.</p>
 </li>
 <li>
-<p><a href="/che/docs/che-7/che-theia-troubleshooting">Troubleshooting</a></p>
+<p>Configure Che to use these images.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to build <em>offline</em> registry images. For additional information, see <a href="/che/docs/che-7/building-and-running-a-custom-registry-image/">Building and running a custom registry image</a>.</p>
+</div>
+<div class="paragraph">
+<p>The main purpose of building offline registry images is to ensure that workspaces can be started without relying on resources from the outside internet. For the plug-in registry, this means building a registry that serves all plug-in or extension artifacts in addition to plug-in metadata. Similarly, an offline devfile registry serves all sample projects referenced in devfiles as <code>zip</code> files.</p>
+</div>
+<div class="paragraph">
+<p>Plug-in registry repositories contain scripts to make it easier to build custom images.</p>
+</div>
+<div class="sect2">
+<h3 id="building-offline-plug-in-registry_installing-che-in-restricted-environment">Building offline plug-in registry</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the plug-in registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-plugin-registry.git
+$ cd che-plugin-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to be deployed:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.3.0</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the plug-in registry image:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This build of the registry builds a container image that contains all <code>.vsix</code> and <code>.theia</code> extensions that can be used in workspaces. This results in a large image. To build a version of the registry that contains only the <em>latest</em> version of each plug-in, use the <code>--latest-only</code> argument.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="building-offline-devfile-registry_installing-che-in-restricted-environment">Building offline devfile registry</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the devfile registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-devfile-registry.git
+$ cd che-devfile-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to be deployed:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.3.0</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the devfile registry image:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="pulling-images-used-by-che-to-a-private-registry_installing-che-in-restricted-environment">Pulling images used by Che to a private registry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che workspaces consist of pods running on a cluster, and therefore, many images are required to support all languages and plug-ins that can be used for a workspace. In an offline deployment, these images must be made available to the Che server running in the cluster.</p>
+</div>
+<div class="sect2">
+<h3 id="essential-images">Essential images</h3>
+<div class="paragraph">
+<p>The images <em>essential</em> to starting a workspace are infrastructure images that are included in every workspace launch:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Images essential to starting workspaces</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docker.io/eclipse/che-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The main Che server image</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docker.io/eclipse/che-postgres</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The database used by Che</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docker.io/eclipse/che-keycloak</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak pod for user authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-jwtproxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT proxy image for enabling authentication between services. See <a href="/che/docs/che-7/che-workspaces-architecture/#che-workspace-jwt-proxy_che-workspace-components">Che workspace JWT proxy</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docker.io/eclipse/che-unified-plugin-broker</code><br>
+  <code>docker.io/eclipse/che-init-plugin-broker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Images for adding plug-ins to workspaces. See <a href="/che/docs/che-7/che-workspaces-architecture/#che-plug-in-broker_che-workspace-components">Che plug-in broker</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code><br>
+  <code>quay.io/eclipse/che-devfile-registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in and devfile registries that store metadata for workspaces. See <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</a> for information on building appropriate images.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="workspace-specific-images">Workspace-specific images</h3>
+<div class="paragraph">
+<p>The images described in this section are required for running a workspace. Any one workspace uses a subset of the images below. It is only necessary to include the images that are used in workspaces created. For example, when using Che only for developing in Java, many images can be omitted.</p>
+</div>
+<div class="paragraph">
+<p>To avoid issues when only a subset of the images described below is needed, remove unnecessary plug-ins and devfiles when building custom registries (see <a href="/che/docs/che-7/customizing-the-devfile-and-plug-in-registries/">Customizing devfile and plug-in registries</a> for more information).</p>
+</div>
+<div class="sect3">
+<h4 id="plug-in-sidecar-images">Plug-in sidecar images</h4>
+<div class="paragraph">
+<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-offline-plug-in-registry_installing-che-in-restricted-environment">Building offline plug-in registry</a>) includes a file with the list of all images referenced in its plug-ins.</p>
+</div>
+<div class="paragraph">
+<p>To get a list of images required for plug-ins, display this file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -it --rm \
+  --entrypoint cat <em>&lt;my-offline-registry&gt;</em> /var/www/html/v3/external_images.txt</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom plug-in registry.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="devfile-base-images">Devfile base images</h4>
+<div class="paragraph">
+<p>Every Che workspace uses one or more <em>base</em> images, which contain the development dependencies for the projects being built. Because the sample devfiles included in the devfile registry refer to images suited for this purpose, it is necessary to pull these images to be able to use the samples.</p>
+</div>
+<div class="paragraph">
+<p>An offline devfile registry (see <a href="#building-offline-devfile-registry_installing-che-in-restricted-environment">Building offline devfile registry</a>) contains a file with the list of all images referenced in its devfiles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -it --rm \
+  --entrypoint cat <em>&lt;my-offline-registry&gt;</em> /var/www/html/devfiles/external_images.txt</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom devfile registry.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-che-to-run-in-restricted-environment">Configuring Che to run in restricted environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to configure Che and related containers to refer to images in a restricted environment instead of the default images in an online registry.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>All required images available in an image registry that is visible to the cluster where Che is to be deployed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>This procedure uses the following placeholders:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Placeholders used in examples</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-internal-registry&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostname of the container-image registry (which is accessible in the restricted environment, see <a href="#pulling-images-used-by-che-to-a-private-registry_installing-che-in-restricted-environment">Pulling images used by Che to a private registry</a>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-organization&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">organization of the container-image registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-offline-devfile-registry&gt;</code><br>
+  <code>&lt;my-offline-plug-in-registry&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">offline plug-in and devfile registries (see <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</a>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;ver&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release of Che that is being deployed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>CheCluster</code> Custom Resource, which is managed by the Che Operator, includes fields to facilitate deploying an instance of Che in a restricted environment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#777"># [...]</span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">server</span>:
+    <span style="color:#606">airGapContainerRegistryHostname</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'<em>&lt;my-internal-registry&gt;</em>'</span></span>
+    <span style="color:#606">airGapContainerRegistryOrganization</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'<em>&lt;my-organization&gt;</em>'</span></span>
+<span style="color:#777"># [...]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Setting these values uses <code>&lt;my-internal-registry&gt;</code> and <code>&lt;my-organization&gt;</code> for all images. This means that the operator expects the offline plug-in and devfile registries to be available at:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/che-plug-in-registry:<em>&lt;ver&gt;</em>
+<em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/che-devfile-registry:<em>&lt;ver&gt;</em></pre>
+</div>
+</div>
+</div>
 </div>
 
     <div class="tags">
         
         <b>Tags: </b>
+        
+        
+        
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
         
