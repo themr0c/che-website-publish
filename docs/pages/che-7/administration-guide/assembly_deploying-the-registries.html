@@ -264,7 +264,7 @@ $('#toc').on('click', 'a', function() {
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Prerequisites</div>
-<p>The <code>my-plugin-registry</code> and <code>my-devfile-registry</code> images used in this section are built using the <code>docker</code> command. This section assumes that these images are available on the Kubernetes and OpenShift cluster where Che is deployed.</p>
+<p>The <code>my-plug-in-registry</code> and <code>my-devfile-registry</code> images used in this section are built using the <code>docker</code> command. This section assumes that these images are available on the Kubernetes and OpenShift cluster where Che is deployed.</p>
 </div>
 <div class="paragraph">
 <p>This is true on Minishift or Minikube, for example, if before running the <code>docker build</code> commands, the user executed the <code>eval $\{minikube docker-env}</code> command (or, the <code>eval $\{minishift docker-env}</code> command for Minishift).</p>
@@ -289,7 +289,7 @@ $('#toc').on('click', 'a', function() {
 <div class="content">
 <pre>NAMESPACE=<em>&lt;namespace-name&gt;</em>     <i class="conum" data-value="1"></i><b>(1)</b>
 DOMAIN=<em>&lt;kubernetes-cluster-domain&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
-IMAGE="my-plugin-registry"
+IMAGE="my-plug-in-registry"
 helm upgrade --install che-plugin-registry \
  --debug \
  --namespace $\{NAMESPACE} \
@@ -361,28 +361,28 @@ Ingress   che-plugin-registry</pre>
 <pre>$ URL=$(kubectl get -o 'custom-columns=URL:.spec.rules[0].host' \
   -l app=che-plugin-registry ingress --no-headers)
 $ INDEX_JSON=$(curl -sSL http://$\{URL}/v3/plugins/index.json)
-$ echo $\{INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plugin\""
+$ echo $\{INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 ,\{
- "id": "my-org/my-plugin/1.0.0",
- "displayName":"This is my first Che plugin",
+ "id": "my-org/my-plug-in/1.0.0",
+ "displayName":"This is my first Che plug-in",
  "version":"1.0.0",
  "type":"VS Code extension",
- "name":"my-plugin",
+ "name":"my-plug-in",
  "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plugin/1.0.0" }
+ "links": \{"self":"/v3/plugins/my-org/my-plug-in/1.0.0" }
 }
 --
 --
 ,\{
- "id": "my-org/my-plugin/latest",
- "displayName":"This is my first Che plugin",
+ "id": "my-org/my-plug-in/latest",
+ "displayName":"This is my first Che plug-in",
  "version":"latest",
  "type":"VS Code extension",
- "name":"my-plugin",
+ "name":"my-plug-in",
  "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plugin/latest" }
+ "links": \{"self":"/v3/plugins/my-org/my-plug-in/latest" }
 }</pre>
 </div>
 </div>
@@ -454,7 +454,7 @@ $ kubectl scale --replicas=1 deployment/che</pre>
 <div class="listingblock">
 <div class="content">
 <pre>NAMESPACE=<em>&lt;namespace-name&gt;</em>  <i class="conum" data-value="1"></i><b>(1)</b>
-IMAGE_NAME="my-plugin-registry"
+IMAGE_NAME="my-plug-in-registry"
 IMAGE_TAG="latest"
 oc new-app -f openshift/che-plugin-registry.yml \
  -n "$\{NAMESPACE}" \
