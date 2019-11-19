@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Persistent volume configuration | Eclipse Che Documentation</title>
+<title>Storage strategies for Che workspaces | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Persistent volume configuration page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Storage strategies for Che workspaces page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Persistent volume configuration">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Storage strategies for Che workspaces">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Persistent volume configuration</h1>
+   <h1 class="post-title-main">Storage strategies for Che workspaces</h1>
 </div>
 
 
@@ -260,18 +260,206 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>A Kubernetes persistent volume is attached to the Che workspace to persist its data: source code, application logs, and tools configuration. A Che server can be configured to use different strategies:</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Workspace pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>.
+The way how Che server uses PVCs for workspaces is configurable and it&#8217;s called PVC strategy:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">strategy</th>
+<th class="tableblock halign-left valign-top">details</th>
+<th class="tableblock halign-left valign-top">pros</th>
+<th class="tableblock halign-left valign-top">cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC per workspace volume or user-defined PVC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>per-workspace</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for one workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easier to manage and control storage compared to unique stategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PV count still is not known and depends on workspaces number</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common (default)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces in one kubernetes namespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If PV does not support ReadWriteMany (RWX) access mode then workspaces must be in a separate kubernetes namespaces</p>
+<p class="tableblock">Or there must not be more than 1 running workspace per namespace at the same time</p>
+<p class="tableblock">See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="unique-pvc-strategy_{context}">Unique PVC strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">How the unique PVC strategy works</div>
+<p>Every Che Volume of workspace gets its own PVC, which means workspace PVCs are created when a workspace starts for the first time. Workspace PVCs are deleted when a corresponding workspace is deleted.</p>
+</div>
+<div class="paragraph">
+<p>User-defined PVCs are created with few modifications:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>common</strong>: A Che workspace that is provisioned in the same Kubernetes namespace and shares the same <code>PersistentVolume</code>. The data of different workspaces are separated using subpaths. The default strategy is <strong>common</strong>.</p>
+<p>they are provisioned with generated names to guarantee that it is not conflicting with other PVCs in namespace;</p>
 </li>
 <li>
-<p><strong>unique</strong>: Every Che workspace is attached to a distinct persistent volume. This strategy provides better data isolation but requires more resources.</p>
+<p>subpaths of mount volumes that reference user-defined PVCs are prefixed with <code>{workspace id}/{PVC name}</code>.
+It is done to have the same data structure on PV on different PVC strategies(<a href="#how-the-subpaths-are-used">more</a>);</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="common-pvc-strategy_{context}">Common PVC Strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">How the common PVC strategy works</div>
+<p>All workspaces (within one {k8s-namespace}) use the same PVC to store data in their declared volumes (projects and workspace logs by default and whatever additional volumes that a user can define.)</p>
+</div>
+<div class="paragraph">
+<p>User-defined PVCs are ignored and volumes that reference PVCs are replaced with volume that references common PVC.
+The corresponding containers volume mounts are relinked to common volume and subpaths are prefixed with <code>'{workspaceId}/{originalPVCName}'</code> (<a href="#how-the-subpaths-are-used">more</a>).</p>
+</div>
+<div class="paragraph">
+<p>User-defined PVC name is used as Che Volume name. It means that if Machine is configured to use Che Volume with the same name as user-defined
+PVC has then they will use the same shared folder in common PVC.</p>
+</div>
+<div class="paragraph">
+<p>When a workspace is deleted, a corresponding subdirectory (<code>${ws-id}</code>) is deleted in the PV directory.</p>
+</div>
+<div class="paragraph">
+<div class="title">Restrictions on using the common PVC strategy</div>
+<p>When the <code>common</code> strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one {admin-context} node can simultaneously use the PVC.
+If there are several nodes, you can use the <code>common</code> strategy, but:
+- the workspace PVC access mode must be reconfigured to ReadWriteMany (RWM), so multiple nodes can use this PVC simultaneously.
+- the only one workspace in the same namespace may be running. See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a> and <a href="#TODO">running workspace count</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="per-workspace-pvc-strategy_{context}">Per workspace PVC strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">How the per-workspace PVC strategy works</div>
+<p>The <code>per-workspace</code> strategy works similarly to the <code>common</code> PVC strategy. The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional volumes that a user can define).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-the-subpaths-are-used_{context}">How the subpaths are used in PVCs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>/pv0001
+  /workspaceid1
+  /workspaceid2
+  /workspaceidn
+    /che-logs
+    /projects
+    /&lt;volume1&gt;
+    /&lt;volume2&gt;
+    /&lt;User-defined PVC name 1 | volume 3&gt;
+    ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Volumes can be anything that a user defines as volumes for workspace machines.  The volume name is equal to the directory name in <code>${PV}/${ws-id}</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-a-needed-workspace-strategy-using-the-helm-chart_{context}">Configuring a per-workspace strategy using the Helm chart</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Helm chart.</p>
+</div>
+<div class="paragraph">
+<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
+</div>
+<div class="paragraph">
+<p>When deploying Che using the Helm chart, configure the workspace PVC strategy by setting values for <code>global.pvcStrategy</code>. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm install --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-a-needed-workspace-strategy-using-the-operator_{context}">Configuring a per-workspace strategy using the Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Operator.</p>
+</div>
+<div class="paragraph">
+<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.openshift.com/container-platform/latest/applications/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/applications/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
+</div>
+<div class="paragraph">
+<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster custom resource object YAML file.
+To activate changes done to CheCluster YAML file, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a new cluster by executing the <code>kubectl apply</code> command. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f <em>&lt;my-cluster.yaml&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update the YAML file properties of an already running cluster by executing the <code>kubectl patch</code> command. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster eclipse-che --type=json -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>common</em>"}]'</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
+</div>
+</div>
 </div>
 
     <div class="tags">
