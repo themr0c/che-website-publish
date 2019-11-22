@@ -1488,6 +1488,9 @@ It is not possible to mix the <code>id</code> and <code>reference</code> fields 
               ... etc</span></span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="overriding-container-entrypoints">Overriding container entrypoints</h4>
 <div class="paragraph">
 <p>As with the <a href="#component-type-dockerimage_making-a-workspace-portable-using-a-devfile"><code>dockerimage</code> component</a>, it is possible to override the entrypoint of the containers contained in the Kubernetes or OpenShift list using the <code>command</code> and <code>args</code> properties (as <a href="https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#notes">understood</a> by Kubernetes).</p>
 </div>
@@ -1539,7 +1542,27 @@ It is not possible to mix the <code>id</code> and <code>reference</code> fields 
 </div>
 </div>
 <div class="sect3">
-<h4 id="specifying-mount-sources-option">Specifying mount sources option</h4>
+<h4 id="overriding-container-environment-variables">Overriding container environment variables</h4>
+<div class="paragraph">
+<p>To provision or override entrypoints in a Kubernetes or OpensShift component, configure it in the following way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: appDeployment</span></span>
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
+      <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">app-deployment.yaml</span></span>
+      <span style="color:#606">env</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: ENV_VAR</span></span>
+          <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">value</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is useful for temporary content or without access to editing the referenced content. The specified environment variables are provisioned into each init container and containers inside all Pods and Deployments.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="specifying-mount-source-option">Specifying mount-source option</h4>
 <div class="paragraph">
 <p>To specify a project sources directory mount into container(s), use the <code>mountSources</code> parameter:</p>
 </div>
