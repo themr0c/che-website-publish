@@ -521,7 +521,18 @@
   
   <li>
       
-      <a href="/che/docs/che-7/updating-che">Updating Che</a>
+      <a href="/che/docs/che-7/installing-che-in-restricted-environment">Installing Che in restricted environment</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/upgrading-che">Upgrading Che</a>
       
       <ul>
           
@@ -533,17 +544,6 @@
   <li>
       
       <a href="/che/docs/che-7/advanced-configuration-options">Advanced configuration options</a>
-      
-      <ul>
-          
-      </ul>
-   </li>
-     
-      
-  
-  <li>
-      
-      <a href="/che/docs/che-7/installing-che-in-restricted-environment">Installing Che in restricted environment</a>
       
       <ul>
           
@@ -908,64 +908,53 @@ $('#toc').on('click', 'a', function() {
 
   <div id="preamble">
 <div class="sectionbody">
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running instance of OpenShift 3.11</p>
-</li>
-<li>
-<p>The <code>oc</code> tool installed</p>
-</li>
-<li>
-<p>The <code>chectl</code> tool installed</p>
-</li>
-<li>
-<p>Administrator rights to the OpenShift installation (needed by <code>che-role</code>)</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This chapter describes how to install Che on OpenShift 3, with the CLI management tool, using the Operator method.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="preparing-openshift-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift for installing Che</h2>
+<h2 id="preparing-openshift-3-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift 3 for installing Che</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To install Che on OpenShift 3 using the Operator:</p>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of OpenShift 3.11.</p>
+</li>
+<li>
+<p>Administrator rights on this OpenShift 3 instance.</p>
+</li>
+<li>
+<p>The <code>oc</code> OpenShift 3.11 CLI management tool is installed and configured. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#installing-the-cli">Installing the OpenShift 3.11 CLI</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> CLI management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> CLI management tool</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Log in to OpenShift (copy the login command from the OpenShift console):</p>
+<p>Log in to OpenShift. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#basic-setup-and-login">Basic Setup and Login</a>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc login https://master.rhpds311.openshift.opentlc.com:443 --token=&lt;token&gt;</pre>
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/log-into-openshift.gif"><img src="/che/docs/images/installation/log-into-openshift.gif" alt="log into openshift"></a>
+<pre class="nowrap">$ oc login</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check if the latest <code>oc</code> binary tool is installed on the system:</p>
+<p>Run the following command to verify that the version of the <code>oc</code> OpenShift CLI management tool is 3.11:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">$ oc version
-oc v3.11.0+0cbc58b
-kubernetes v1.11.0+d4cacc0
-features: Basic-Auth
-
-Server https://master.rhpds311.openshift.opentlc.com:443
-openshift v3.11.43
-kubernetes v1.11.0+d4cacc0</pre>
+oc v3.11.0+0cbc58b</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Give a domain to <code>chectl</code>. This is the remote hostname that will be accessible. If it is unknown, obtain it with a new project using the following command:</p>
+<p>Run the following commands to create a dummy project to find the URL that this OpenShift instance is using to deploy applications.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">$ oc new-project hello-world
@@ -978,10 +967,10 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 </div>
 </li>
 <li>
-<p>Extract the domain from <code>httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com</code>. It is the part after the first name: <code>apps.rhpds311.openshift.opentlc.com</code>.</p>
+<p>Extract the domain from <code>httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com</code>. It is the part after the first name: <code>apps.rhpds311.openshift.opentlc.com</code>. Remember this URL as <code><em>&lt;OPENSHIFT_APPS_URL&gt;</em></code>.</p>
 </li>
 <li>
-<p>Remove the project:</p>
+<p>Remove the dummy project:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">$ oc delete project hello-world</pre>
@@ -993,131 +982,133 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-openshift-using-the-operator_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift using the Operator</h2>
+<h2 id="installing-che-on-openshift-3-using-the-operator_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3 using the Operator</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install Che on OpenShift 3 with the CLI management tool, using the Operator method.</p>
+</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
+<p>A running instance of OpenShift 3.11.</p>
+</li>
+<li>
+<p>Administrator rights on this OpenShift 3 instance.</p>
+</li>
+<li>
+<p>The <code>oc</code> OpenShift 3.11 CLI management tool is installed and configured. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#installing-the-cli">Installing the OpenShift 3.11 CLI</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> CLI management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> CLI management tool</a>.</p>
+</li>
+<li>
+<p>The URL for applications on this OpenShift instance is known as <code>&lt;OPENSHIFT_APPS_URL&gt;</code>. See <a href="#preparing-openshift-3-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift 3 for installing Che</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To install Che on OpenShift using the Operator:</p>
-</div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
 <p>Create a new project called <strong>che</strong>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc new-project che</pre>
+<pre>$ oc new-project che</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Invoke <code>chectl</code>:</p>
+<p>Run the following command to create the Che instance:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator --domain=apps.rhpds311.openshift.opentlc.com
-  ✔ ✈️  Openshift preflight checklist
-    ✔ Verify if oc is installed...done.
-    ✔ Verify if openshift is running...done.
-    ✔ Verify domain is set...set to apps.rhpds311.openshift.opentlc.com.
-  ✔ 🏃‍  Running the Che Operator
-    ✔ Copying operator resources...done.
-    ✔ Create Namespace (che)...It already exist.
-    ✔ Create ServiceAccount che-operator in namespace che...done.
-    ✔ Create Role che-operator in namespace che...done.
-    ✔ Create RoleBinding che-operator in namespace che...done.
-    ✔ Create CRD checlusters.org.eclipse.che...done.
-    ✔ Waiting 5 seconds for the new Kubernetes resources to get flushed...done.
-    ✔ Create deployment che-operator in namespace che...done.
-    ✔ Create Che Cluster eclipse-che in namespace che...done.
-  ✔ ✅  Post installation checklist
-    ✔ PostgreSQL pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Keycloak pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Che pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Retrieving Che Server URL...http://che-che.apps.rhpds311.openshift.opentlc.com
-    ✔ Che status check
-Command server:start has completed successfully.</pre>
+<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator \
+  --domain=<em>&lt;OPENSHIFT_APPS_URL&gt;</em></pre>
 </div>
 </div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>The output of the previous command ends with:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the Che cluster instance: <code>http://che-che.<em>&lt;OPENSHIFT_APPS_URL&gt;</em></code>.</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-openshift-using-the-operator-and-ssl_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift using the Operator and SSL</h2>
+<h2 id="installing-che-on-openshift-3-using-the-operator-and-ssl_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3 using the Operator and SSL</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install Che on OpenShift 3 with the CLI management tool, using the Operator method and the SSL option.</p>
+</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The installation of Che on OpenShift using the Operator and SSL requires the <code>--tls</code> option.</p>
+<p>A running instance of OpenShift 3.11.</p>
+</li>
+<li>
+<p>Administrator rights on this OpenShift 3 instance.</p>
+</li>
+<li>
+<p>The <code>oc</code> OpenShift 3.11 CLI management tool is installed and configured. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#installing-the-cli">Installing the OpenShift 3.11 CLI</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> CLI management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> CLI management tool</a>.</p>
+</li>
+<li>
+<p>The URL for applications on this OpenShift instance is known as <code>&lt;OPENSHIFT_APPS_URL&gt;</code>. See <a href="#preparing-openshift-3-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift 3 for installing Che</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To install Che on OpenShift using the Operator and SSL:</p>
-</div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Run the following command:</p>
+<p>Create a new project called <strong>che</strong>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap"> $ ./bin/run server:start --platform=openshift --installer=operator --domain=apps.rhpds311.openshift.opentlc.com --tls
-  ✔ ✈️  Openshift preflight checklist
-    ✔ Verify if oc is installed...done.
-    ✔ Verify if openshift is running...done.
-    ✔ Verify domain is set...set to apps.rhpds311.openshift.opentlc.com.
-  ✔ 🏃‍  Running the Che Operator
-    ✔ Copying operator resources...done.
-    ✔ Create Namespace (che)...done.
-    ✔ Create ServiceAccount che-operator in namespace che...done.
-    ✔ Create Role che-operator in namespace che...done.
-    ✔ Create RoleBinding che-operator in namespace che...done.
-    ✔ Create CRD checlusters.org.eclipse.che...It already exist.
-    ✔ Waiting 5 seconds for the new Kubernetes resources to get flushed...done.
-    ✔ Create deployment che-operator in namespace che...done.
-    ✔ Create Che Cluster eclipse-che in namespace che...done.
-  ✔ ✅  Post installation checklist
-    ✔ PostgreSQL pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Keycloak pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Che pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Retrieving Che Server URL...https://che-che.apps.rhpds311.openshift.opentlc.com
-    ✔ Che status check
-Command server:start has completed successfully.</pre>
+<pre>$ oc new-project che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the following command to create the Che instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator --domain=&lt;OPENSHIFT_APPS_URL&gt; --tls</pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>Here, the link <a href="https://che-che.apps.rhpds311.openshift.opentlc.com" class="bare">https://che-che.apps.rhpds311.openshift.opentlc.com</a> is now prefixed with HTTPS and <em>Let’s Encrypt</em> has created the certificates.</p>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>The output of the previous command ends with:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the Che cluster instance. The domain is now prefixed with HTTPS and using <em>Let’s Encrypt</em> ACME certificates: <code>https://che-che.<em>&lt;OPENSHIFT_APPS_URL&gt;</em></code>.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>

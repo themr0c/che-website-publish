@@ -261,62 +261,63 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<div class="title">Procedure</div>
-<p>To install Che on OpenShift 3 using the Operator:</p>
+<p>This section describes how to install Che on OpenShift 3 with the CLI management tool, using the Operator method.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of OpenShift 3.11.</p>
+</li>
+<li>
+<p>Administrator rights on this OpenShift 3 instance.</p>
+</li>
+<li>
+<p>The <code>oc</code> OpenShift 3.11 CLI management tool is installed and configured. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#installing-the-cli">Installing the OpenShift 3.11 CLI</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> CLI management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> CLI management tool</a>.</p>
+</li>
+<li>
+<p>The URL for applications on this OpenShift instance is known as <code>&lt;OPENSHIFT_APPS_URL&gt;</code>. See <a href="#preparing-openshift-3-for-installing-che_{context}">[preparing-openshift-3-for-installing-che_{context}]</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Log in to OpenShift (copy the login command from the OpenShift console):</p>
+<p>Create a new project called <strong>che</strong>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc login https://master.rhpds311.openshift.opentlc.com:443 --token=&lt;token&gt;</pre>
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/log-into-openshift.gif"><img src="/che/docs/images/installation/log-into-openshift.gif" alt="log into openshift"></a>
+<pre>$ oc new-project che</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check if the latest <code>oc</code> binary tool is installed on the system:</p>
+<p>Run the following command to create the Che instance:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc version
-oc v3.11.0+0cbc58b
-kubernetes v1.11.0+d4cacc0
-features: Basic-Auth
-
-Server https://master.rhpds311.openshift.opentlc.com:443
-openshift v3.11.43
-kubernetes v1.11.0+d4cacc0</pre>
+<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator \
+  --domain=<em>&lt;OPENSHIFT_APPS_URL&gt;</em></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>The output of the previous command ends with:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Command server:start has completed successfully.</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Give a domain to <code>chectl</code>. This is the remote hostname that will be accessible. If it is unknown, obtain it with a new project using the following command:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">$ oc new-project hello-world
-$ oc new-app centos/httpd-24-centos7~https://github.com/openshift/httpd-ex
-$ oc expose svc/httpd-ex
-$ oc get route httpd-ex
-NAME     HOST/PORT                                                PATH     SERVICES PORT     TERMINATION WILDCARD
-httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex          8080-tcp             None</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Extract the domain from <code>httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com</code>. It is the part after the first name: <code>apps.rhpds311.openshift.opentlc.com</code>.</p>
-</li>
-<li>
-<p>Remove the project:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">$ oc delete project hello-world</pre>
-</div>
-</div>
+<p>Navigate to the Che cluster instance: <code>http://che-che.<em>&lt;OPENSHIFT_APPS_URL&gt;</em></code>.</p>
 </li>
 </ol>
 </div>

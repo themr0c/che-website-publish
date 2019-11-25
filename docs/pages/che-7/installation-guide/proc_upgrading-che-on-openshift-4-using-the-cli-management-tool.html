@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Preparing the upgrade from Che 6.x to Che 7.3 on OpenShift using the Operator | Eclipse Che Documentation</title>
+<title>Upgrading Che on OpenShift 4 using the CLI management tool | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Preparing the upgrade from Che 6.x to Che 7.3 on OpenShift using the Operator page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Upgrading Che on OpenShift 4 using the CLI management tool page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Preparing the upgrade from Che 6.x to Che 7.3 on OpenShift using the Operator">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Upgrading Che on OpenShift 4 using the CLI management tool">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Preparing the upgrade from Che 6.x to Che 7.3 on OpenShift using the Operator</h1>
+   <h1 class="post-title-main">Upgrading Che on OpenShift 4 using the CLI management tool</h1>
 </div>
 
 
@@ -261,65 +261,52 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>This section describes how to prepare upgrade from Che 6.x to Che 7.3 on OpenShift using the Operator.</p>
+<p>This section describes how to upgrade from Che 6.x to Che 7.3 on OpenShift 4 using the CLI management tool.</p>
 </div>
-<div class="paragraph">
-<p>Uninstalling the Eclipse Che 6.x Operator means that the OpenShift cluster do not receive any updates of the Che 6.x Operator.
-As a consequence, the existing Che instances do not receive any update.
-The Che instances that are already present, including their database, remains present.</p>
-</div>
-<h2 id="prerequisites" class="discrete">Prerequisites</h2>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p>And administrative account on an OpenShift 4 instance.</p>
 </li>
 <li>
-<p>Eclipse Che 6.x Operator is installed on this OpenShift 4 instance.</p>
+<p>A running instance of Eclipse Che running on OpenShift 4.</p>
 </li>
 <li>
-<p>A running instance of Che 6.x on this OpenShift 4 instance.</p>
+<p>This instance was installed using the CLI management tool, not using OperatorHub.</p>
+</li>
+<li>
+<p>The <code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
 </li>
 </ul>
 </div>
-<h2 id="procedure" class="discrete">Procedure</h2>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In all running workspaces in the Che 6.x instance, save and push changes back to the git repositories.</p>
+<p>In all running workspaces in the Che 6.x instance, save and push changes back to the Git repositories.</p>
 </li>
 <li>
 <p>Shut down all workspaces in the Che 6.x instance.</p>
 </li>
 <li>
-<p>Open the OpenShift console.</p>
+<p>Run following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:update</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Log in to the Che instance.</p>
 </li>
 <li>
-<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
-</li>
-<li>
-<p>Click on <strong>Eclipse Che 6.x</strong>.</p>
-</li>
-<li>
-<p>Click on the btn[Actions] button on the top right.</p>
-</li>
-<li>
-<p>A drop-down menu appears.</p>
-</li>
-<li>
-<p>Click on <strong>Uninstall Operator</strong> to uninstall the Che 6.x Operator.</p>
-</li>
-<li>
-<p>Accept the selected option <code>Also completely remove the Operator from the selected namespace</code>.</p>
-</li>
-<li>
-<p>Click on the btn[Remove] button.</p>
-</li>
-<li>
-<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
-</li>
-<li>
-<p>The Operator is removed from the list of installed operators.</p>
+<p>The 7.3 version number is displayed at the bottom of the page.</p>
 </li>
 </ol>
 </div>
