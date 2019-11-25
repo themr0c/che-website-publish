@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Che-Theia IDE basics | Eclipse Che Documentation</title>
+<title>Uninstalling Che | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che-Theia IDE basics page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Uninstalling Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Che-Theia IDE basics">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Uninstalling Che">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -891,7 +891,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Che-Theia IDE basics</h1>
+   <h1 class="post-title-main">Uninstalling Che</h1>
 </div>
 
 
@@ -928,21 +928,254 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This section describes basics workflows and commands for Che-Theia: the native integrated development environment for Eclipse Che.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes uninstallation procedures for Eclipse Che installed on OpenShift. The uninstallation process leads to a complete removal of Che-related user data. The appropriate uninstallation method depends on what method was used to install the Che instance.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="/che/docs/che-7/defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</a></p>
+<p>For Che installed using OperatorHub, see <a href="#uninstalling-che-after-operatorhub-installation_uninstalling-che">Uninstalling Che after OperatorHub installation</a>.</p>
 </li>
 <li>
-<p><a href="/che/docs/che-7/version-control">Version Control</a></p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/che-theia-troubleshooting">Troubleshooting</a></p>
+<p>For Che installed using chectl, see <a href="#uninstalling-che-after-chectl-installation_uninstalling-che">Uninstalling Che after chectl installation</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="uninstalling-che-after-operatorhub-installation_uninstalling-che">Uninstalling Che after OperatorHub installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Users have two options for uninstalling Che from an OpenShift cluster. The following sections describe both of these methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using the OpenShift Administrator Perspective web UI</p>
+</li>
+<li>
+<p>Using <code>oc</code> commands from the terminal</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="uninstalling-che-using-the-openshift-web-console">Uninstalling Che using the OpenShift web console</h3>
+<div class="paragraph">
+<p>This section describes how to uninstall Che from a cluster using the Openshift Administrator Perspective main menu.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequsities</div>
+<ul>
+<li>
+<p>Che was installed on an OpenShift cluster using OperatorHub.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure: deleting the Che deployment</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators &gt; Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Eclipse Che Cluster</strong> tab.</p>
+</li>
+<li>
+<p>In the row that displays information about the specific Che cluster, delete the Che Cluster deployment using the drop-down menu illustrated as three horizontal dots (<span class="icon"><i class="fa fa-fa-ellipsis-v"></i></span>) situated on the right side of the screen.</p>
+</li>
+<li>
+<p>Alternatively, delete the Che deployment by clicking the displayed Eclipse Che Cluster, <code>eclipse-che</code>, and select the <strong>Delete cluster</strong> option in the <strong>Actions</strong> drop-down menu on the top right.</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure: deleting the Che Operator</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators &gt; Installed Operators</strong> section in OpenShift Developer Perspective.</p>
+</li>
+<li>
+<p>In the row that displays information about the specific Eclipse Che Operator, uninstall the Che Operator using the drop-down menu illustrated as three horizontal dots (<span class="icon"><i class="fa fa-fa-ellipsis-v"></i></span>) situated on the right side of the screen.</p>
+</li>
+<li>
+<p>Accept the selected option, <strong>Also completely remove the Operator from the selected namespace</strong>.</p>
+</li>
+<li>
+<p>Alternatively, uninstall the Eclipse Che Operator by clicking the displayed Eclipse Che Operator, <code>Eclipse Che</code>, followed by selecting the <strong>Uninstall Operator</strong> option in the <strong>Actions</strong> drop-down menu on the top right.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="uninstalling-che-using-oc-commands">Uninstalling Che using <code>oc</code> commands</h3>
+<div class="paragraph">
+<p>This section provides instructions on how to uninstall a Che instance using <code>oc</code> commands.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Che was installed on an OpenShift cluster using OperatorHub.</p>
+</li>
+<li>
+<p>OpenShift command-line tools (<code>oc</code>) are installed on the local workstation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>The following procedure provides command-line outputs as examples. Note that output in the user terminal may differ.</p>
+</div>
+<div class="paragraph">
+<p>To uninstall a Che instance from a cluster:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Sign in to the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc login -u <em>&lt;username&gt;</em> -p <em>&lt;password&gt;</em> <em>&lt;cluster_URL&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Switch to the project where the Che instance is deployed:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc project <em>&lt;che_project&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain the Che cluster name. The following shows a cluster named <code>eclipse-che</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get checluster
+NAME          AGE
+eclipse-che   27m</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the Che cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc delete checluster eclipse-che
+checluster.org.eclipse.che "eclipse-che" deleted</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain the name of the Che cluster service version (CSV) module. The following detects a CSV module named <code>eclipse-che.v7.3.0</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get csv
+NAME                 DISPLAY       VERSION   REPLACES             PHASE
+eclipse-che.v7.3.0   Eclipse Che   7.3.0     eclipse-che.v6.x.0   Succeeded</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the Che CSV:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc delete csv eclipse-che.v7.3.0
+clusterserviceversion.operators.coreos.com "eclipse-che.v7.3.0" deleted</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="uninstalling-che-after-chectl-installation_uninstalling-che">Uninstalling Che after chectl installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to uninstall an instance of Eclipse Che that was installed using the <code>chectl</code> tool.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>For Che installed using the <code>chectl server:start</code> command and the <code>-n</code> argument (custom namespace specified), use the <code>-n</code> argument also to uninstall the Che instance.</p>
+</li>
+<li>
+<p>For installations that did not use the <code>-n</code> argument, the created namespace is named <code>che</code> by default.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Che was installed on an OpenShift cluster using <code>chectl</code>.</p>
+</li>
+<li>
+<p>OpenShift command-line tools (<code>oc</code>) and <code>chectl</code> are installed on the local workstation.</p>
+</li>
+<li>
+<p>The user is logged in a Che cluster using <code>oc</code>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Stop the Eclipse Che Server:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:stop</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain the name of the Che namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get checluster --all-namespaces -o=jsonpath="{.items[*].metadata.namespace}"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Remove Che from the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:delete -n <em>&lt;namespace&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This removes all Che installations from the cluster.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 
     <div class="tags">
