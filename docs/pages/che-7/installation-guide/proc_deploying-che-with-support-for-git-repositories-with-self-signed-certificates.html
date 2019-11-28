@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title> | Eclipse Che Documentation</title>
+<title>Deploying Che with support for Git repositories with self-signed certificates | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Deploying Che with support for Git repositories with self-signed certificates page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Deploying Che with support for Git repositories with self-signed certificates">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main"></h1>
+   <h1 class="post-title-main">Deploying Che with support for Git repositories with self-signed certificates</h1>
 </div>
 
 
@@ -260,8 +260,40 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
+  <div class="paragraph">
+<p>This procedure describes how to configure Che for deployment with support for Git operations on repositories that use self-signed certificates.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Git version 2 or later.</p>
+</li>
+</ul>
+</div>
+<h2 id="configuring-support-for-self-signed-git-repositories-on-kubernetes" class="discrete">Configuring support for self-signed Git repositories on Kubernetes</h2>
+<div class="olist arabic">
+<div class="title">Deploying Che using a <a href="https://helm.sh/">Helm Chart</a></div>
+<ol class="arabic">
+<li>
+<p>Configure the workspace exposure strategy using the <code>global.useGitSelfSignedCerts</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade che --set global.useGitSelfSignedCerts=true</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new <strong>configMap</strong> with details about the Git server:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create configmap che-git-self-signed-cert --from-file=<em>&lt;ca.crt&gt;</em> \
+  --from-literal=githost=<em>&lt;host:port&gt;</em> -n=che</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the command, substitute <code><em>&lt;ca.crt&gt;</em></code> for the self-signed certificate and <em>`&lt;host:port&gt;</em>` for the host and port of the HTTPS connection on the Git server (optional).</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -269,131 +301,21 @@ $('#toc').on('click', 'a', function() {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The term <em>namespace</em> (Kubernetes) is used interchangeably with <em>project</em> (OpenShift).
+When <code>githost</code> is not specified, the given certificate is used for all HTTPS repositories.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>The namespace strategies are configured using the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> environment variable.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-There are legacy variables <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> and <code>CHE_INFRA_OPENSHIFT_PROJECT</code>. These should be left unset for new instalations. Changing these variables during update can lead to data loss.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="one-namespace-per-workspace-strategy">One namespace per workspace strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The strategy creates a new namespace for each new workspace.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must contain the <code><em>&lt;workspaceid&gt;</em></code> identifier. It can be used alone or combined with other identifiers or any string.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 1. One namespace per workspace</div>
-<div class="content">
-<div class="paragraph">
-<p>To assign namespace names composed of a <code>che-ws</code> prefix and workspace id, set:</p>
+<p>Create and start new workspace. Every container used by the workspace mounts a special volume that contains a file with the self-signed certificate. The repository&#8217;s <code>.git/config</code> file contains information about the Git server host (its URL) and the path to the certificate in the <code>http</code> section (see Git documentation about <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpsslCAInfo">git-config</a>). For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-ws-<em>&lt;workspaceid&gt;</em></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="one-namespace-for-all-workspaces-strategy">One namespace for all workspaces strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The strategy uses one predefined namespace for all workspaces.</p>
-</div>
-<div class="paragraph">
-<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must be the name of the desired namespace to use.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. One namespace for all workspaces</div>
-<div class="content">
-<div class="paragraph">
-<p>To have all workspaces created in <code>che-workspaces</code> namespace, set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-workspaces</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="one-namespace-per-user-strategy">One namespace per user strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The strategy isolates each user in their own namespace.</p>
-</div>
-<div class="paragraph">
-<p>To use the strategy, the <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable value must contain one or more user identifiers. Currently supported identifiers are <code><em>&lt;username&gt;</em></code> and <code><em>&lt;userid&gt;</em></code>.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 3. One namespace per user</div>
-<div class="content">
-<div class="paragraph">
-<p>To assign namespace names composed of a <code>che-ws</code> prefix and individual usernames (<code>che-ws-user1</code>, <code>che-ws-user2</code>), set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT=che-ws-<em>&lt;username&gt;</em></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Using the <em>One namespace per user</em> strategy with the <code>common</code> PVC strategy only works correctly when the user runs not more than one workspace at a time. To enforce this limit, set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT=1</pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="allowing-user-defined-workspace-namespaces">Allowing user-defined workspace namespaces</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Che server can be configured to honor the user selection of a namespace when a workspace is created. This feature is
-disabled by default. To allow user-defined workspace namespaces, set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_INFRA_KUBERNETES_NAMESPACE_ALLOW<em>USER</em>DEFINED=true</pre>
-</div>
-</div>
+<pre>[http "https://10.33.177.118:3000"]
+        sslCAInfo = /etc/che/git/cert/ca.crt</pre>
 </div>
 </div>
 
