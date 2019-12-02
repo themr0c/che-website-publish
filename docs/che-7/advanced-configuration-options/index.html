@@ -1081,6 +1081,18 @@ There are legacy variables <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> and <code
 </div>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+To run more than one workspace at a time when using this strategy together with the <code>common</code> PVC strategy, configure persistent volumes to use <code>ReadWriteMany</code> access mode.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="one-namespace-per-user-strategy">One namespace per user strategy</h3>
@@ -1111,12 +1123,23 @@ There are legacy variables <code>CHE_INFRA_KUBERNETES_NAMESPACE</code> and <code
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Using the <em>One namespace per user</em> strategy with the <code>common</code> PVC strategy only works correctly when the user runs not more than one workspace at a time. To enforce this limit, set:</p>
+<p>To run more than one workspace at a time when using this strategy together with the <code>common</code> PVC strategy, configure persistent volumes to use <code>ReadWriteMany</code> access mode.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT=1</pre>
+<div class="paragraph">
+<p>To limit the number of concurrently running workspaces per user to one, set the <code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code> environment variable to <code>1</code>.</p>
 </div>
+<div class="paragraph">
+<p>To limit the number of concurrently running workspaces per user to one (1):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For Helm Chart deployments: set the <code>.global.workspace.number</code> parameter to <code>1</code>.</p>
+</li>
+<li>
+<p>For Operator deployments: set the <code>spec.server.cheCustomProperties.CHE_LIMITS_USER_WORKSPACE_RUN_COUNT</code> variable of the CheCluster Custom Resource (CR) to <code>1</code>.</p>
+</li>
+</ul>
 </div>
 </td>
 </tr>
@@ -1605,7 +1628,7 @@ This drives the <code>is kubernetes.io/ingress.class</code> annotation on Che-re
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Nov 29, 2019 <br/>
+                    Site last generated: Dec 2, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
