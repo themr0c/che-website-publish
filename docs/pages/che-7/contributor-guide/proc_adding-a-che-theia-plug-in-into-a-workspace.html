@@ -305,7 +305,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="adding-a-plug-in-by-configuring-a-workspace_{context}">Adding a plug-in by configuring a workspace</h2>
+<h2 id="adding-a-plug-in-by-configuring-a-workspace_{context}">Adding a plug-in by configuring a devfile</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This method is useful when you need to add plug-ins from a non-default registry.</p>
@@ -319,34 +319,36 @@ $('#toc').on('click', 'a', function() {
 <p>Select the workspace to which you want to add the plug-in.</p>
 </li>
 <li>
-<p>Switch to the <strong>Config</strong> tab, and find the <code>attributes.plugins</code> section.</p>
+<p>Switch to the <strong>Devfile</strong> tab, and find the <code>components</code> section.</p>
 <div class="imageblock">
 <div class="content">
-<a class="image" href="/che/docs/images/extensibility/adding-plug-ins-in-workspace-configuration.png"><img src="/che/docs/images/extensibility/adding-plug-ins-in-workspace-configuration.png" alt="adding plug ins in workspace configuration"></a>
+<a class="image" href="/che/docs/images/extensibility/adding-plug-ins-in-workspace-devfile.png"><img src="/che/docs/images/extensibility/adding-plug-ins-in-workspace-devfile.png" alt="adding plug ins in workspace devfile"></a>
 </div>
-<div class="title">Figure 2. Adding plug-ins by configuring a workspace</div>
+<div class="title">Figure 2. Adding plug-ins by configuring a component</div>
 </div>
 <div class="paragraph">
-<p>Plug-ins are separated by commas (<code>,</code>).</p>
+<p>Plug-ins are added in YAML format as array elements in the <code>components</code> section.</p>
 </div>
 </li>
 <li>
-<p>To add plug-ins, append new records after the separator. A record has the following format:</p>
+<p>To add plug-ins, append this lines to the <code>components</code> section. A record has the following format:</p>
 <div class="listingblock">
 <div class="content">
-<pre> &lt;registry-base-uri&gt;/plugins/&lt;plugin-name&gt;:&lt;version&gt;</pre>
+<pre>  - type: chePlugin
+    reference: &gt;-
+      &lt;registry-base-uri&gt;/v3/plugins/&lt;plugins-group&gt;/&lt;plugin-name&gt;/&lt;version&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
+<p>Reference URL examples:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>https://custom-registry/plugins/org.name.plugin.theia:1.0.0</p>
+<p>https://custom-registry/v3/plugins/custom-plugin-name/0.0.1/</p>
 </li>
 <li>
-<p>https://raw.githubusercontent.com/username/che-custom-plugins/master/plugins/org.name.plugin.theia:0.0.1</p>
+<p>https://raw.githubusercontent.com/username/che-custom-plugins/master/v3/plugins/custom-plugin-name/0.0.1/meta.yaml</p>
 </li>
 </ul>
 </div>
