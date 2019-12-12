@@ -1437,27 +1437,9 @@ It is not possible to mix the <code>id</code> and <code>reference</code> fields 
 </div>
 </div>
 <div class="sect3">
-<h4 id="specifying-container-memory-limit-for-components">Specifying container memory limit for components</h4>
+<h4 id="tuning-cheplugin-component-configuration">Tuning chePlugin component configuration</h4>
 <div class="paragraph">
-<p>To specify a container(s) memory limit for <code>cheEditor</code> or <code>chePlugin</code>, use the <code>memoryLimit</code> parameter:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
-   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
-     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
-     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
-     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">256M</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This limit will be applied to every container of the given component.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="tuning-component-configuration">Tuning component configuration</h4>
-<div class="paragraph">
-<p>A component may need to be precisely tuned, and in such case, component preferences can be used. The example shows how to configure JVM using plug-in preferences.</p>
+<p>A chePlugin component may need to be precisely tuned, and in such case, component preferences can be used. The example shows how to configure JVM using plug-in preferences.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1703,22 +1685,40 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 </div>
 </div>
 </div>
-<div class="sect4">
-<h5 id="environment">Environment</h5>
+</div>
+<div class="sect3">
+<h4 id="specifying-container-memory-limit-for-components">Specifying container memory limit for components</h4>
 <div class="paragraph">
-<p>Eclipse Che allows you to configure Docker containers by modifying the environment variables available in the container of an image.</p>
+<p>To specify a container(s) memory limit for <code>dockerimage</code>, <code>chePlugin</code>, <code>cheEditor</code>, <code>kubernetes</code>, <code>openshift</code>, use the <code>memoryLimit</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
+     <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../relative/path/postgres.yaml</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512M</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This limit will be applied to every container of the given component.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="environment-variables">Environment variables</h4>
+<div class="paragraph">
+<p>Eclipse Che allows you to configure Docker containers by modifying the environment variables available in component&#8217;s configuration.
+Environment variables are supported by the following component types: <code>dockerimage</code>, <code>chePlugin</code>, <code>cheEditor</code>, <code>kubernetes</code>, <code>openshift</code>.
+In case component has multiple containers, environment variables will be provisioned to each container.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
 <span style="color:#606">metadata</span>:
   <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
-<span style="color:#606">projects</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: my-go-project</span></span>
-    <span style="color:#606">clonePath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">go/src/github.com/acme/my-go-project</span></span>
-    <span style="color:#606">source</span>:
-      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
-      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/acme/my-go-project.git</span></span>
 <span style="color:#606">components</span>:
   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">golang</span></span>
@@ -1728,8 +1728,13 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
     <span style="color:#606">env</span>:
       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOPATH</span></span>
         <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)/go</span></span>
-      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: GOCACHE</span></span>
-        <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/tmp/go-cache</span></span></code></pre>
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: cheEditor</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">theia-editor</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-theia/next</span></span>
+    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">2Gi</span></span>
+    <span style="color:#606">env</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: HOME</span></span>
+      <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)</span></span></code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1789,7 +1794,6 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 </div>
 <div class="paragraph">
 <p>A devfiles may only need the <code>CHE_PROJECTS_ROOT</code> environment variable to locate the cloned projects in the component&#8217;s container. More advanced devfiles might use the <code>CHE_WORKSPACE_LOGS_ROOT__DIR</code> environment variable to read the logs (for example as part of a devfile command). The environment variables used to securely access the Che server are mostly out of scope for devfiles and are present only for advanced use cases that are usually handled by the Che plug-ins.</p>
-</div>
 </div>
 <div class="sect4">
 <h5 id="endpoints">Endpoints</h5>
