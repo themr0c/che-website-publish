@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Resources API | Eclipse Che Documentation</title>
+<title> | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Resources API page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Resources API">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Resources API</h1>
+   <h1 class="post-title-main"></h1>
 </div>
 
 
@@ -260,63 +260,225 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>This paragraph is the reference module introduction and is only optional. Include it to provide a short overview of the module.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following sections describe the installation methods for the Jaeger tracing tool. Jaeger can then be used for gathering metrics in Che.</p>
 </div>
 <div class="paragraph">
-<p>A reference module provide data that users might want to look up, but do not need to remember. It has a very strict structure, often in the form of a list or a table. A well-organized reference module enables users to scan it quickly to find the details they want. AsciiDoc markup to consider for reference data:</p>
+<p>Installation methods available:</p>
 </div>
 <div class="ulist">
-<div class="title">Unordered lists</div>
 <ul>
 <li>
-<p>For more details on writing reference modules, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="#installing-the-jaeger-tracing-tool-for-che-on-openshift-4_installing-the-jaeger-tracing-tool">Installing the Jaeger tracing tool for Che on OpenShift 4</a></p>
 </li>
 <li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="#installing-jaeger-using-operatorhub-on-openshift-4_installing-the-jaeger-tracing-tool">Installing Jaeger using OperatorHub on OpenShift 4</a></p>
+</li>
+<li>
+<p><a href="#installing-jaeger-locally-using-a-pre-built-container-image_installing-the-jaeger-tracing-tool">Installing Jaeger locally using a pre-built container image</a></p>
 </li>
 </ul>
 </div>
-<div class="dlist">
-<div class="title">Labeled lists</div>
-<dl>
-<dt class="hdlist1">Term 1</dt>
-<dd>
-<p>Definition</p>
-</dd>
-<dt class="hdlist1">Term 2</dt>
-<dd>
-<p>Definition</p>
-</dd>
-</dl>
+<div class="paragraph">
+<p>For tracing a Che instance using Jaeger, version 1.12.0 or above is required. For additional information about Jaeger, see the <a href="https://www.jaegertracing.io/docs/latest/">Jaeger website</a>.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Tables</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Column 1</th>
-<th class="tableblock halign-left valign-top">Column 2</th>
-<th class="tableblock halign-left valign-top">Column 3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 1, column 3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Row 2, column 3</p></td>
-</tr>
-</tbody>
-</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-jaeger-tracing-tool-for-che-on-openshift-4_installing-the-jaeger-tracing-tool">Installing the Jaeger tracing tool for Che on OpenShift 4</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To install the Jaeger tracing tool from a Che project in {ocp}, follow the instructions below.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The user is logged in to the {ocp} web console.</p>
+</li>
+<li>
+<p>Che is installed in a {ocp} cluster.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Che} installation namespace of the {ocp} cluster,  use the <code>oc</code> client to create a new application for the Jaeger deployment.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc new-app -f / ${CHE_LOCAL_GIT_REPO}/deploy/openshift/templates/jaeger-all-in-one-template.yml:
+
+--&gt; Deploying template "<em>&lt;project_name&gt;</em>/jaeger-template-all-in-one" for "/home/user/che-projects/che/deploy/openshift/templates/jaeger-all-in-one-template.yml" to project <em>&lt;project_name&gt;</em>
+
+     Jaeger (all-in-one)
+     ---------
+     Jaeger Distributed Tracing Server (all-in-one)
+
+     * With parameters:
+        * Jaeger Service Name=jaeger
+        * Image version=latest
+        * Jaeger Zipkin Service Name=zipkin
+
+--&gt; Creating resources ...
+    deployment.apps "jaeger" created
+    service "jaeger-query" created
+    service "jaeger-collector" created
+    service "jaeger-agent" created
+    service "zipkin" created
+    route.route.openshift.io "jaeger-query" created
+--&gt; Success
+    Access your application via route 'jaeger-query-<em>&lt;project_name&gt;</em>.apps.ci-ln-whx0352-d5d6b.origin-ci-int-aws.dev.rhcloud.com'
+    Run 'oc status' to view your app.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Using the <strong>Workloads &#8594; Deployments</strong> from the left menu of main {ocp} screen, monitor the Jaeger deployment until it finishes successfully.</p>
+</li>
+<li>
+<p>Select <strong>Networking &#8594; Routes</strong> from the left menu of the main {ocp} screen, and click the URL link to access the Jaeger dashboard.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-jaeger-using-operatorhub-on-openshift-4_installing-the-jaeger-tracing-tool">Installing Jaeger using OperatorHub on OpenShift 4</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To install the Jaeger tracing tool from the OperatorHub interface in {ocp}, follow the instructions below.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The user is logged in to the {ocp} Web Console.</p>
+</li>
+<li>
+<p>A Che instance is deployed in a namespace.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the {ocp} console.</p>
+</li>
+<li>
+<p>From the left menu of the main {ocp} screen, navigate to <strong>Operators → OperatorHub</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Search by keyword</strong> search bar, type <code>Jaeger Operator</code>.</p>
+</li>
+<li>
+<p>Click the <code>Jaeger Operator</code> tile.</p>
+</li>
+<li>
+<p>Click the <b class="button">Install</b> button in the <code>Jaeger Operator</code> pop-up window.</p>
+</li>
+<li>
+<p>Select the installation method: <code>A specific namespace on the cluster</code> where the Che is deployed and leave the rest in its default values.</p>
+</li>
+<li>
+<p>Click the <strong>Subscribe</strong> button.</p>
+</li>
+<li>
+<p>From the left menu of the main {ocp} screen, navigate to the <strong>Operators → Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Eclipse Che is displayed as an Installed Operator, as indicated by the <strong>InstallSucceeded</strong> status.</p>
+</li>
+<li>
+<p>Click the <strong>Jaeger Operator</strong> name in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>In the Conditions sections at the bottom of the page, wait for this message: <code>install strategy completed with no errors</code>.</p>
+</li>
+<li>
+<p><code>Jaeger Operator</code> and additional <code>Elasticsearch Operator</code> is installed.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators → Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Jaeger Operator</strong>  in the list of installed operators.</p>
+</li>
+<li>
+<p>The <strong>Jaeger Cluster</strong> page is displayed.</p>
+</li>
+<li>
+<p>In the bottom-left corner of the window, click <strong>Create Instance</strong> .</p>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+<li>
+<p>The Jaeger cluster <code>jaeger-all-in-one-inmemory</code> is created.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-jaeger-locally-using-a-pre-built-container-image_installing-the-jaeger-tracing-tool">Installing Jaeger locally using a pre-built container image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To install the Jaeger tracing tool locally using a pre-built container image, follow the instructions below.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You are logged into a system as a user with sudo privileges.</p>
+</li>
+<li>
+<p>Podman is installed. For additional, see the <a href="https://podman.io/getting-started/installation.html">Podman Installation Instructions</a></p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Start Podman:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo service podman start</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Jaeger using the pre-built container image.</p>
+<div class="listingblock">
+<div class="content">
+<pre> $ podman run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14268:14268 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:1.15</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to <code><a href="http://localhost:16686" class="bare">http://localhost:16686</a></code> to access the Jaeger UI.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -333,7 +495,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Dec 12, 2019 <br/>
+                    Site last generated: Dec 16, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

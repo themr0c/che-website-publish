@@ -264,15 +264,17 @@ $('#toc').on('click', 'a', function() {
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Installed Jaeger v1.12.0 or above. See instructions at <a href="https://www.jaegertracing.io/docs/1.12/getting-started/">Get up and running with Jaeger in your local environment</a>.</p>
+<p>Installed Jaeger v1.12.0 or above. See instructions at <a href="#installing-the-jaeger-tracing-tool_tracing-che">[installing-the-jaeger-tracing-tool_tracing-che]</a></p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="paragraph">
 <div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Enable the following environment variables for Che deployment:</p>
+<p>For Jaeger tracing to work, enable the following environment variables in your Che deployment:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash"># Activating {prod-short} tracing modules
@@ -295,6 +297,39 @@ JAEGER_SAMPLER_PARAM=&quot;1&quot;
 JAEGER_REPORTER_MAX_QUEUE_SIZE=&quot;10000&quot;</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>To enable the following environment variables:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the  <code>yaml</code> source code of the Che deployment, add the following configuration variables under <code>spec.server.customCheProperties</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">customCheProperties</span>:
+      <span style="color:#606">CHE_TRACING_ENABLED</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+      <span style="color:#606">JAEGER_SAMPLER_TYPE</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">const</span></span>
+      <span style="color:#606">DEFAULT_JAEGER_REPORTER_MAX_QUEUE_SIZE</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'10000'</span></span>
+      <span style="color:#606">JAEGER_SERVICE_NAME</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-server</span></span>
+      <span style="color:#606">JAEGER_ENDPOINT</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'http://jaeger-collector:14268/api/traces'</span></span>
+      <span style="color:#606">JAEGER_SAMPLER_MANAGER_HOST_PORT</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'jaeger:5778'</span></span>
+      <span style="color:#606">JAEGER_SAMPLER_PARAM</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'1'</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit the <code>JAEGER_ENDPOINT</code> value to match the name of the Jaeger collector service in your deployment.</p>
+<div class="paragraph">
+<p>From the left menu of the main {ocp} screen, obtain the value of JAEGER_ENDPOINT by navigation to <strong>Networking &#8594; Services</strong>. Alternatively, execute the following <code>oc</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get services</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The requested value is included in the service name that contains the <code>collector</code> string.</p>
+</div>
 </li>
 </ol>
 </div>
@@ -302,7 +337,10 @@ JAEGER_REPORTER_MAX_QUEUE_SIZE=&quot;10000&quot;</code></pre>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>List of all <a href="https://github.com/jaegertracing/jaeger-client-go#environment-variables">Jaeger client environment variables</a></p>
+<p>For additional information about custom environment properties and how to define them in CheCluster Customer Resource, see <a href="https://www.eclipse.org/che/docs/che-7/advanced-configuration-options/">Advanced configuration options</a>.</p>
+</li>
+<li>
+<p>For custom configuration of Jaeger, see the list of <a href="https://github.com/jaegertracing/jaeger-client-go#environment-variables">Jaeger client environment variables</a>.</p>
 </li>
 </ul>
 </div>
@@ -322,7 +360,7 @@ JAEGER_REPORTER_MAX_QUEUE_SIZE=&quot;10000&quot;</code></pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Dec 12, 2019 <br/>
+                    Site last generated: Dec 16, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
