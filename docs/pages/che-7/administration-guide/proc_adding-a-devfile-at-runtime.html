@@ -267,43 +267,54 @@ $('#toc').on('click', 'a', function() {
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Get the name of the Kubernetes pod that hosts the devfile registry container. To do this, filter the <code>app=che-devfile-registry</code> label:</p>
+<p>Check out the devfile sources and change to the devfiles folder.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-devfile-registry; \
+  cd che-devfile-registry/devfiles</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>devfile.yaml</code> and <code>meta.yaml</code> in some local folder. This can be done from scratch or by copying from an existing devfile.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ STACK="new-stack"; \
+$ mkdir -p ${STACK}; cp nodejs/* ${STACK}/</pre>
+</div>
+</div>
+</li>
+<li>
+<p>If copying from an existing devfile, make changes to the devfile to suit your needs. Make sure your new devfile has a unique <code>displayName</code> and <code>description</code>.</p>
+</li>
+<li>
+<p>Get the name of the pod that hosts the devfile registry container. To do this, filter the <code>component=devfile-registry</code> label:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ DEVFILE_REG_POD=$(kubectl get -o custom-columns=NAME:.metadata.name \
-  --no-headers -l app=che-devfile-registry pod)</pre>
+  --no-headers pod -l component=devfile-registry)</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Create the new devfile directory in the devfile registry container, if it does not exist.</p>
+<p>Regenerate the registry&#8217;s <code>index.json</code> file to include your new plugin.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ STACK="my-stack"
-$ kubectl exec $\{DEVFILE_REG_POD} -i -t -- \
-  mkdir -p /var/www/html/devfiles/$\{STACK}</pre>
+<pre>$ cd che-devfile-registry; \
+  "$(pwd)/build/scripts/check_mandatory_fields.sh devfiles; \
+  "$(pwd)/build/scripts/index.sh" &gt; index.json</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Copy the <code>devfile.yaml</code> file and the <code>meta.yaml</code> file to the container.</p>
+<p>Copy the new <code>index.json</code>, <code>devfile.yaml</code> and <code>meta.yaml</code> files from your new local devfile folder to the container.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ LOCAL_META="$(PWD)/meta.yaml"
-$ LOCAL_DEVFILE="$(PWD)/devfile.yaml"
-$ kubectl cp "$\{LOCAL_META}" \
-  $\{DEVFILE_REG_POD}:/var/www/html/devfiles/$\{STACK}
-$ kubectl cp "$\{LOCAL_DEVFILE}" \
-  $\{DEVFILE_REG_POD}:/var/www/html/devfiles/$\{STACK}</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Update the <code>index.json</code> file of the registry.</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl exec $\{DEVFILE_REG_POD} -i -t -- \
-  /var/www/html/index.sh &gt; /var/www/html/devfiles/index.json</pre>
+<pre>$ cd che-devfile-registry; \
+  LOCAL_FILES="$(pwd)/${STACK}/meta.yaml $(pwd)/${STACK}/devfile.yaml $(pwd)/index.json"; \
+  kubectl exec ${DEVFILE_REG_POD} -i -t -- mkdir -p /var/www/html/devfiles/${STACK}; \
+  for f in $LOCAL_FILES; do e=${f/$(pwd)\//}; echo "Upload ${f} -&gt; /var/www/html/devfiles/${e}"
+    kubectl cp "${f}" ${DEVFILE_REG_POD}:/var/www/html/devfiles/${e}; done</pre>
 </div>
 </div>
 </li>
@@ -325,7 +336,7 @@ $ kubectl cp "$\{LOCAL_DEVFILE}" \
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Dec 17, 2019 <br/>
+                    Site last generated: Dec 18, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
