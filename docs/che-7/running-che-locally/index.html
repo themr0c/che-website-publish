@@ -1317,6 +1317,9 @@ name: minikube</pre>
 <li>
 <p><a href="#installing-che-on-codeready-containers-using-chectl_running-che-locally">Installing che on CodeReady Containers using chectl</a></p>
 </li>
+<li>
+<p><a href="#installing-che-on-kind-using-chectl_running-che-locally">Installing che on kind using chectl</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1418,6 +1421,142 @@ name: minikube</pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="installing-che-on-kind-using-chectl_running-che-locally">Installing che on kind using chectl</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install Che on <a href="https://github.com/kubernetes-sigs/kind">kind</a> using chectl. Kind is a tool for running local Kubernetes clusters using Docker containers as nodes. It is useful for quickly creating ephemeral clusters, and is used as part of the test infrastructure of the Kubernetes project. Running Che in Kind is a great way to try it out, or for a contributor to test out their change quickly with a real cluster.</p>
+</div>
+<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
+</li>
+<li>
+<p>A running Kind cluster. See <a href="https://kind.sigs.k8s.io/#installation-and-usage">here</a> for Kind installation instructions.</p>
+</li>
+</ul>
+</div>
+<h3 id="procedure-7" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install <a href="https://github.com/kubernetes-csi/csi-driver-host-path">csi-driver-host-path</a> in the Kind cluster.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/kubernetes-csi/csi-driver-host-path &amp;&amp; cd csi-driver-host-path
+$ ./deploy/kubernetes-1.16/deploy-hostpath.sh
+$ kubectl apply -f examples/csi-storageclass.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set <code>csi-hostpath-sc</code> as the default <code>StorageClass</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch storageclass csi-hostpath-sc -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "true"}}}'
+$ kubectl patch storageclass standard -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the <a href="https://kubernetes.github.io/ingress-nginx/deploy/">NGINX Ingress Controller</a></p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install <a href="https://metallb.universe.tf/">MetalLB</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The above command may refer to an out-of-date version of MetalLB Kubernetes manifests. See <a href="https://metallb.universe.tf/installation/">the installation instructions</a> for the most up-to-date command.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Determine an IP range to allocate to MetalLB from the <code>docker</code> bridge network.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker inspect bridge | grep -C 5 Subnet
+"IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, we have a /16 subnet range to allocate, so we will choose a section in the <code>172.17.250.0</code> range.</p>
+</div>
+</li>
+<li>
+<p>Create a <code>ConfigMap</code> for MetalLB specifying the IP range to expose.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cat &lt;&lt; EOF &gt; metallb-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 172.17.250.1-172.17.250.250
+EOF
+$ kubectl apply -f metallb-config.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The <code>ingress-nginx</code> service should now have an external IP.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get svc -n ingress-nginx
+NAME            TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)                      AGE
+ingress-nginx   LoadBalancer   10.107.194.26   172.17.255.1   80:32033/TCP,443:30428/TCP   19h</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run <code>chectl</code>, using the external IP of the <code>ingress-nginx</code> Service, as an <a href="https://nip.io">nip.io</a> url.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --installer operator --platform k8s --domain 172.17.250.1.nip.io</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deploying-multi-user-che-in-multi-user-mode">Deploying multi-user Che in multi-user mode</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1444,7 +1583,7 @@ name: minikube</pre>
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on Minikube using chectl.</p>
 </div>
-<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1455,7 +1594,7 @@ name: minikube</pre>
 </li>
 </ul>
 </div>
-<h3 id="procedure-7" class="discrete">Procedure</h3>
+<h3 id="procedure-8" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1490,7 +1629,7 @@ name: minikube</pre>
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on Minishift using chectl.</p>
 </div>
-<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1501,7 +1640,7 @@ name: minikube</pre>
 </li>
 </ul>
 </div>
-<h3 id="procedure-8" class="discrete">Procedure</h3>
+<h3 id="procedure-9" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1522,7 +1661,7 @@ name: minikube</pre>
 <div class="paragraph">
 <p>This section describes how to install Eclipse Che in multi-user mode on CodeReady Containers using chectl.</p>
 </div>
-<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-10" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1533,7 +1672,7 @@ name: minikube</pre>
 </li>
 </ul>
 </div>
-<h3 id="procedure-9" class="discrete">Procedure</h3>
+<h3 id="procedure-10" class="discrete">Procedure</h3>
 <div class="ulist">
 <ul>
 <li>
