@@ -267,11 +267,11 @@ $('#toc').on('click', 'a', function() {
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check out the devfile sources and change to the devfiles folder.</p>
+<p>Check out the devfile registry sources.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ git clone https://github.com/eclipse/che-devfile-registry; \
-  cd che-devfile-registry/devfiles</pre>
+  cd che-devfile-registry</pre>
 </div>
 </div>
 </li>
@@ -280,7 +280,7 @@ $('#toc').on('click', 'a', function() {
 <div class="listingblock">
 <div class="content">
 <pre>$ STACK="new-stack"; \
-$ mkdir -p ${STACK}; cp nodejs/* ${STACK}/</pre>
+  mkdir -p devfiles/${STACK}; cp devfiles/nodejs/* devfiles/${STACK}/</pre>
 </div>
 </div>
 </li>
@@ -297,11 +297,11 @@ $ mkdir -p ${STACK}; cp nodejs/* ${STACK}/</pre>
 </div>
 </li>
 <li>
-<p>Regenerate the registry&#8217;s <code>index.json</code> file to include your new plugin.</p>
+<p>Regenerate the registry&#8217;s <code>index.json</code> file to include your new devfile.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ cd che-devfile-registry; \
-  "$(pwd)/build/scripts/check_mandatory_fields.sh devfiles; \
+  "$(pwd)/build/scripts/check_mandatory_fields.sh" devfiles; \
   "$(pwd)/build/scripts/index.sh" &gt; index.json</pre>
 </div>
 </div>
@@ -317,6 +317,9 @@ $ mkdir -p ${STACK}; cp nodejs/* ${STACK}/</pre>
     kubectl cp "${f}" ${DEVFILE_REG_POD}:/var/www/html/devfiles/${e}; done</pre>
 </div>
 </div>
+</li>
+<li>
+<p>The new devfile can now be used from the existing Che instance&#8217;s devfile registry. To discover it, go to the Che dashboard, then click the <code>Workspaces</code> link. From there, click <code>Add Workspace</code> to see the updated list of available devfiles.</p>
 </li>
 </ol>
 </div>
@@ -336,7 +339,7 @@ $ mkdir -p ${STACK}; cp nodejs/* ${STACK}/</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Dec 18, 2019 <br/>
+                    Site last generated: Dec 19, 2019 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
