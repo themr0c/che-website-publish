@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Cloning the plug-in registry | Eclipse Che Documentation</title>
+<title>Building a custom plug-in registry | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Cloning the plug-in registry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Building a custom plug-in registry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Cloning the plug-in registry">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Building a custom plug-in registry">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Cloning the plug-in registry</h1>
+   <h1 class="post-title-main">Building a custom plug-in registry</h1>
 </div>
 
 
@@ -261,66 +261,114 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>This section describes how to clone the <strong>che-plugin-registry</strong> Git repository.</p>
+<p>This section describes how to build a custom plug-in registry. Following operations are covered:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>getting a copy of the source code necessary to build a custom plug-in registry,</p>
+</li>
+<li>
+<p>adding a new plug-in,</p>
+</li>
+<li>
+<p>building the custom plug-in registry.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Run the following command:</p>
+<p>Clone the plug-in registry repository:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git</pre>
+<pre>#
+# Copyright (c) 2012-2018 Red Hat, Inc.
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#   Red Hat, Inc. - initial API and implementation
+#
+
+$ git clone git@github.com:eclipse/che-plugin-registry.git
+$ cd che-plugin-registry</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Verify the repository has been cloned.</p>
+<p>In the <code>./che-plugin-registry/v3/plugins/</code> directory, create new directories <code><em>&lt;publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em>/</code> and a <code>meta.yaml</code> file in the last directory.</p>
 <div class="listingblock">
+<div class="title">File organization for a plugin</div>
 <div class="content">
-<pre>$ tree -L 2 ./che-plugin-registry
-./che-plugin-registry
-(...)
-├── Dockerfile   <i class="conum" data-value="1"></i><b>(1)</b>
-├── README.md    <i class="conum" data-value="2"></i><b>(2)</b>
-├── kubernetes   <i class="conum" data-value="3"></i><b>(3)</b>
-├── openshift    <i class="conum" data-value="4"></i><b>(4)</b>
-├── plugins      <i class="conum" data-value="5"></i><b>(5)</b>
-├── v2           <i class="conum" data-value="6"></i><b>(6)</b>
-└── v3           <i class="conum" data-value="7"></i><b>(7)</b></pre>
+<pre>./che-plugin-registry/v3/plugins/
+├── <em>&lt;publisher&gt;</em>
+│   └── <em>&lt;plugin-name&gt;</em>
+│       ├── <em>&lt;plugin-version&gt;</em>
+│       │   └── meta.yaml
+│       └── latest.txt</pre>
 </div>
 </div>
-<div class="colist arabic">
+</li>
+<li>
+<p>Add valid content to the <code>meta.yaml</code> file. See the “Using a Visual Studio Code extension in Che” section or the README.md file in the <code>eclipse/che-plugin-registry</code> repository for a detailed description of the <code>meta.yaml</code> file format.</p>
+</li>
+<li>
+<p>Create a file named <code>latest.txt</code> with content the name of the latest <code><em>&lt;plugin-version&gt;</em></code> directory.</p>
+<div class="admonitionblock tip">
 <table>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Dockerfile to build the container image</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Updated instructions to build and run the registry</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Kubernetes deployment files</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>OpenShift deployment files</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Plug-in folder</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Deprecated plug-in folder that may be removed in the future</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Deprecated plug-in folder that may be removed in the future</td>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Example</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ tree che-plugin-registry/v3/plugins/redhat/java/
+che-plugin-registry/v3/plugins/redhat/java/
+├── 0.38.0
+│   └── meta.yaml
+├── 0.43.0
+│   └── meta.yaml
+├── 0.45.0
+│   └── meta.yaml
+├── 0.46.0
+│   └── meta.yaml
+├── 0.50.0
+│   └── meta.yaml
+└── latest.txt
+$ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
+0.50.0</pre>
+</div>
+</div>
+</td>
 </tr>
 </table>
+</div>
+</li>
+<li>
+<p>Build the containers for the custom plug-in registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre>#
+# Copyright (c) 2012-2018 Red Hat, Inc.
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#   Red Hat, Inc. - initial API and implementation
+#
+
+$ docker build -t my-devfile-registry .</pre>
+</div>
 </div>
 </li>
 </ol>

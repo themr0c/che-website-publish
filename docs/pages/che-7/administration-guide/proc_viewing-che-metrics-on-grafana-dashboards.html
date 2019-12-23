@@ -260,19 +260,25 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Grafana is used for informative representation of Prometheus metrics. Providing visibility for OpenShift, Grafana’s deployment configuration and ConfigMaps are located in the <code>che-monitoring.yaml</code> configuration file.</p>
+  <div class="paragraph">
+<p>This section describes how to view Che metrics on Grafana dashboards.</p>
 </div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Prometheus is collecting metrics on the Che cluster. See <a href="#collecting-che-metrics-with-prometheus_{context}">[collecting-che-metrics-with-prometheus_{context}]</a>.</p>
+</li>
+<li>
+<p>Grafana 6.0 or above is running on port <code>3000</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
+</li>
+</ul>
 </div>
-</div>
-<div class="sect1">
-<h2 id="configuring-and-deploying-grafana">Configuring and deploying Grafana</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Grafana is run on port <code>3000</code> with a corresponding <strong>service</strong> and <strong>route</strong>.</p>
-</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Deploy Che-specific dashboards on Grafana using the <code>che-monitoring.yaml</code> configuration file.</p>
 <div class="paragraph">
 <p>Three ConfigMaps are used to configure Grafana:</p>
 </div>
@@ -289,365 +295,24 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="grafana-dashboards-overview">Grafana dashboards overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Che provides several types of dashboards.</p>
-</div>
-<div class="sect2">
-<h3 id="che-server-dashboard">Che server dashboard</h3>
-<div class="paragraph">
-<p>Use case: Che server-specific metrics related to Che components, such as workspaces or users.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-general-panel.png" alt="monitoring che che server dashboard general panel">
-</div>
-<div class="title">Figure 1. The <strong>General</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>General</strong> panel contains basic information, such as the total number of users and workspaces in the Che database.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-workspace-panel.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-workspace-panel.png" alt="monitoring che che server dashboard workspace panel"></a>
-</div>
-<div class="title">Figure 2. The <strong>Workspaces</strong> panel</div>
+</li>
+</ol>
 </div>
 <div class="ulist">
+<div class="title">Verification steps</div>
 <ul>
 <li>
-<p><strong>Workspace start rate</strong>&#8201;&#8212;&#8201;the ratio between successful and failed started workspaces</p>
-</li>
-<li>
-<p><strong>Workspace stop rate</strong>&#8201;&#8212;&#8201;the ratio between successful and failed stopped workspaces</p>
-</li>
-<li>
-<p><strong>Workspace Failures</strong>&#8201;&#8212;&#8201;the number of workspace failures shown on the graph</p>
-</li>
-<li>
-<p><strong>Starting Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently starting workspaces</p>
-</li>
-<li>
-<p><strong>Average Workspace Start Time</strong>&#8201;&#8212;&#8201;1-hour average of workspace starts or fails</p>
-</li>
-<li>
-<p><strong>Average Workspace Stop Time</strong>&#8201;&#8212;&#8201;1-hour average of workspace stops</p>
-</li>
-<li>
-<p><strong>Running Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently running workspaces</p>
-</li>
-<li>
-<p><strong>Stopping Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently stopping workspaces</p>
-</li>
-<li>
-<p><strong>Workspaces started under 60 seconds</strong>&#8201;&#8212;&#8201;the percentage of workspaces started under 60 seconds</p>
-</li>
-<li>
-<p><strong>Number of Workspaces</strong>&#8201;&#8212;&#8201;the number of workspaces created over time</p>
+<p>Use the Grafana console to view Che metrics.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-users-panel.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-users-panel.png" alt="monitoring che che server dashboard users panel"></a>
-</div>
-<div class="title">Figure 3. The <strong>Users</strong> panel</div>
-</div>
 <div class="ulist">
+<div class="title">Additional resources</div>
 <ul>
 <li>
-<p><strong>Number of Users</strong>&#8201;&#8212;&#8201;the number of users known to Che over time</p>
+<p><a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
 </li>
 </ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-tomcat-panel.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-tomcat-panel.png" alt="monitoring che che server dashboard tomcat panel"></a>
-</div>
-<div class="title">Figure 4. The <strong>Tomcat</strong> panel</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Max number of active sessions</strong>&#8201;&#8212;&#8201;the max number of active sessions that have been active at the same time</p>
-</li>
-<li>
-<p><strong>Number of current active sessions</strong>&#8201;&#8212;&#8201;the number of currently active sessions</p>
-</li>
-<li>
-<p><strong>Total sessions</strong>&#8201;&#8212;&#8201;the total number of sessions</p>
-</li>
-<li>
-<p><strong>Expired sessions</strong>&#8201;&#8212;&#8201;the number of sessions that have expired</p>
-</li>
-<li>
-<p><strong>Rejected sessions</strong>&#8201;&#8212;&#8201;the number of sessions that were not created because the maximum number of active sessions was reached</p>
-</li>
-<li>
-<p><strong>Longest time of an expired session</strong>&#8201;&#8212;&#8201;the longest time (in seconds) that an expired session had been alive</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-requests-panel.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-requests-panel.png" alt="monitoring che che server dashboard requests panel"></a>
-</div>
-<div class="title">Figure 5. The <strong>Request</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>Requests</strong> panel displays HTTP requests in a graph that shows the average number of requests per minute.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-1.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-1.png" alt="monitoring che che server dashboard executors panel 1"></a>
-</div>
-<div class="title">Figure 6. The <strong>Executors</strong> panel, part 1</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Threads running</strong> - the number of threads that are not terminated aka alive. May include threads that are in a waiting or blocked state.</p>
-</li>
-<li>
-<p><strong>Threads terminated</strong> - the number of threads that was finished its execution.</p>
-</li>
-<li>
-<p><strong>Threads created</strong> - number of threads created by thread factory for given executor service.</p>
-</li>
-<li>
-<p><strong>Created thread/minute</strong> - Speed of thread creating for the given executor service.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-2.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-2.png" alt="monitoring che che server dashboard executors panel 2"></a>
-</div>
-<div class="title">Figure 7. The <strong>Executors</strong> panel, part 2</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Executor threads active</strong> - number of threads that actively execute tasks.</p>
-</li>
-<li>
-<p><strong>Executor pool size</strong> - number of threads that actively execute tasks.</p>
-</li>
-<li>
-<p><strong>Queued task</strong> - the approximate number of tasks that are queued for execution</p>
-</li>
-<li>
-<p><strong>Queued occupancy</strong> - the percent of the queue used by the tasks that is waining for execution.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-3.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-3.png" alt="monitoring che che server dashboard executors panel 3"></a>
-</div>
-<div class="title">Figure 8. The <strong>Executors</strong> panel, part 3</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Rejected task</strong> - the number of tasks that were rejected from execution.</p>
-</li>
-<li>
-<p><strong>Rejected task/minute</strong> - the speed of task rejections</p>
-</li>
-<li>
-<p><strong>Completed tasks</strong> - the number of completed tasks</p>
-</li>
-<li>
-<p><strong>Completed tasks/minute</strong> - the speed of task execution</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-4.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-executors-panel-4.png" alt="monitoring che che server dashboard executors panel 4"></a>
-</div>
-<div class="title">Figure 9. The <strong>Executors</strong> panel, part 4</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Task execution seconds max</strong> - 5min moving maximum of task execution</p>
-</li>
-<li>
-<p><strong>Tasks execution seconds avg</strong> - 1h moving average of task execution</p>
-</li>
-<li>
-<p><strong>Executor idle seconds max</strong> - 5min moving maximum of executor idle state.</p>
-</li>
-<li>
-<p><strong>Executor idle seconds avg</strong> - 1h moving average of executor idle state.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-1.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-1.png" alt="monitoring che che server dashboard trace panel 1"></a>
-</div>
-<div class="title">Figure 10. The <strong>Traces</strong> panel, part 1</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Workspace start Max</strong> - maximum workspace start time</p>
-</li>
-<li>
-<p><strong>Workspace start Avg</strong> - 1h moving average of the workspace start time components</p>
-</li>
-<li>
-<p><strong>Workspace stop Max</strong> - maximum of workspace stop time</p>
-</li>
-<li>
-<p><strong>Workspace stop Avg</strong> - 1h moving average of the workspace stop time components</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-2.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-2.png" alt="monitoring che che server dashboard trace panel 2"></a>
-</div>
-<div class="title">Figure 11. The <strong>Traces</strong> panel, part 2</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>OpenShiftInternalRuntime#start Max</strong> - maximum time of OpenShiftInternalRuntime#start operation</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#start Avg</strong> - 1h moving average time of OpenShiftInternalRuntime#start operation</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Max</strong> - maximum time of PluginBrokerManager#getTooling operation</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Avg</strong> - 1h moving average of PluginBrokerManager#getTooling operation</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-3.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-3.png" alt="monitoring che che server dashboard trace panel 3"></a>
-</div>
-<div class="title">Figure 12. The <strong>Traces</strong> panel, part 3</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>OpenShiftEnvironmentProvisioner#provision Max</strong> - maximum time of OpenShiftEnvironmentProvisioner#provision operation</p>
-</li>
-<li>
-<p><strong>OpenShiftEnvironmentProvisioner#provision Avg</strong> -1h moving average of OpenShiftEnvironmentProvisioner#provision operation</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Max</strong> - maximum time of PluginBrokerManager#getTooling components execution time</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Avg</strong> - 1h moving average of time of PluginBrokerManager#getTooling components execution time</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-4.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-trace-panel-4.png" alt="monitoring che che server dashboard trace panel 4"></a>
-</div>
-<div class="title">Figure 13. The <strong>Traces</strong> panel, part 4</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>WaitMachinesStart Max</strong> - maximim time of WaitMachinesStart operations</p>
-</li>
-<li>
-<p><strong>WaitMachinesStart Avg</strong> - 1h moving average time of WaitMachinesStart operations</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#startMachines Max</strong> - maximim time of OpenShiftInternalRuntime#startMachines operations</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#startMachines Avg</strong> - 1h moving average of the time of OpenShiftInternalRuntime#startMachines operations</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel.png" alt="monitoring che che server dashboard workspace detailed panel"></a>
-</div>
-<div class="title">Figure 14. The <strong>Workspace detailed</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>Workspace Detailed</strong> panel contains heat maps, which illustrate the average time of workspace starts or fails. The row shows some period of time.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="che-server-jvm-dashboard">Che server JVM dashboard</h3>
-<div class="paragraph">
-<p>Use case: JVM metrics of the Che server, such as JVM memory or classloading.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard.png" alt="monitoring che che server jvm dashboard"></a>
-</div>
-<div class="title">Figure 15. Che server JVM dashboard</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png" alt="monitoring che che server jvm dashboard quick facts"></a>
-</div>
-<div class="title">Figure 16. Quick Facts</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png" alt="monitoring che che server jvm dashboard jvm memory"></a>
-</div>
-<div class="title">Figure 17. JVM Memory</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png" alt="monitoring che che server jvm dashboard jvm misc"></a>
-</div>
-<div class="title">Figure 18. JVM Misc</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png" alt="monitoring che che server jvm dashboard jvm memory pools heap"></a>
-</div>
-<div class="title">Figure 19. JVM Memory Pools (heap)</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png" alt="monitoring che che server jvm dashboard jvm memory pools non heap"></a>
-</div>
-<div class="title">Figure 20. JVM Memory Pools (Non-Heap)</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png" alt="monitoring che che server jvm dashboard garbage collection"></a>
-</div>
-<div class="title">Figure 21. Garbage Collection</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png" alt="monitoring che che server jvm dashboard classloading"></a>
-</div>
-<div class="title">Figure 22. Classloading</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png"><img src="/che/docs/images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png" alt="monitoring che che server jvm dashboard buffer pools"></a>
-</div>
-<div class="title">Figure 23. Buffer Pools</div>
-</div>
-</div>
-</div>
 </div>
 
     <div class="tags">

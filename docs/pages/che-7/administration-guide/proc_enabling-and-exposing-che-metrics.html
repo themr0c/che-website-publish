@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title> | Eclipse Che Documentation</title>
+<title>Enabling and exposing Che metrics | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Enabling and exposing Che metrics page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Enabling and exposing Che metrics">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main"></h1>
+   <h1 class="post-title-main">Enabling and exposing Che metrics</h1>
 </div>
 
 
@@ -261,78 +261,16 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>The <code>devfiles/</code> directory contains the devfiles. Every devfile directory has the following structure:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./che-devfile-registry/devfiles
- ├── <em>&lt;stack-name&gt;</em>
- ├── devfile.yaml
- └── meta.yaml</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To add a new devfile:</p>
+<p>This section describes how to enable and expose Che metrics.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the <code>devfiles/</code> directory, create a new subdirectory <code><em>&lt;stack-name&gt;</em>/</code>.</p>
+<p>Set the <code>CHE_METRICS_ENABLED=true</code> environment variable</p>
 </li>
 <li>
-<p>In this new subdirectory, add a new plug-in <code>devfile.yaml</code> file and a <code>meta.yaml</code> file. The following is an example <code>my-stack/</code> directory, and it contains a <code>devfile.yaml</code> file and a <code>meta.yaml</code> file:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ mkdir -p che-devfile-registry/devfiles/my-devfile
-$ touch che-devfile-registry/devfiles/my-devfile/devfile.yaml
-$ touch che-devfile-registry/devfiles/my-devfile/meta.yaml
-$ tree ./che-devfile-registry/devfiles
-./che-devfile-registry/devfiles
- ├── my-devfile
- ├── devfile.yaml
- └── meta.yaml</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Add valid content in the <code>devfile.yaml</code> file. For a detailed description of the devfile format, see the <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile">Making a workspace portable using a Devfile</a> section.</p>
-</li>
-<li>
-<p>Ensure that the <code>meta.yaml</code> file conforms to the following structure:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">displayName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">My Stack                                        </span></span><i class="conum" data-value="1"></i><b>(1)</b>
-<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">This is a custom stack for {prod-short}                  </span></span><i class="conum" data-value="2"></i><b>(2)</b>
-<span style="color:#606">tags</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">[&quot;Java&quot;, &quot;maven&quot;, &quot;ubi&quot;]                               </span></span><i class="conum" data-value="3"></i><b>(3)</b>
-<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://www.eclipse.org/che/images/logo-eclipseche.svg </span></span><i class="conum" data-value="4"></i><b>(4)</b>
-<span style="color:#606">globalMemoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1686Mi                                    </span></span><i class="conum" data-value="5"></i><b>(5)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Name of the stack as it appears on the user dashboard.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Description of the stack as it appears on the user dashboard.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Tags of the stack. Tags usually include the tools included in the stack.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The link to an <code>.svg</code> file that is displayed on the user dashboard.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The sum of the memory limits of all the components of the stack. This number will be visible on the user dashboard. It is informative and is not taken into account by the Che server.</td>
-</tr>
-</table>
-</div>
+<p>Expose the <code>8087</code> port as a service on the che-master host</p>
 </li>
 </ol>
 </div>

@@ -260,50 +260,27 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Prometheus is a monitoring system that collects metrics in real time and stores them in a time series database.</p>
+  <div class="paragraph">
+<p>This section describes how to use the Prometheus monitoring system to collect, store and query metrics about Che.</p>
 </div>
-<div class="paragraph">
-<p>Prometheus comes with a console accessible at the <code>9090</code> port of the application pod. By default, a template provides an existing <strong>service</strong> and a <strong>route</strong> to access it. It can be used to query and view metrics.</p>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics_{context}">[enabling-and-exposing-che-metrics_{context}]</a>.</p>
+</li>
+<li>
+<p>Prometheus 2.9.1 or above is running. Prometheus console is running on port <code>9090</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+</li>
+</ul>
 </div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/monitoring/monitoring-che-prometheus-console.png"><img src="/che/docs/images/monitoring/monitoring-che-prometheus-console.png" alt="monitoring che prometheus console"></a>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="prometheus-terminology">Prometheus terminology</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Prometheus offers:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">counter</dt>
-<dd>
-<p>the simplest numerical type of metric whose value can be only increased. A typical example is counting the amount of HTTP requests that go through the system.</p>
-</dd>
-<dt class="hdlist1">gauge</dt>
-<dd>
-<p>numerical value that can be increased or decreased. Best suited for representing values of objects.</p>
-</dd>
-<dt class="hdlist1">histogram</dt>
-<dd>
-<p>a more complex metric that is suited for performing observations. Metrics are collected and grouped in configurable buckets, which allwos to present the results, for instance, in a form of a heatmap.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-prometheus">Configuring Prometheus</h2>
-<div class="sectionbody">
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Configure Prometheus to scrape metrics from the <code>8087</code> port</p>
 <div class="listingblock">
-<div class="title">Prometheus configuration</div>
+<div class="title">Prometheus configuration example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml">- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apiVersion: v1</span></span>
   <span style="color:#606">data</span>:
@@ -314,7 +291,7 @@ $('#toc').on('click', 'a', function() {
       scrape_configs:
         - job_name: 'che'
           static_configs:
-            - targets: ['che-host:8087']</span></span>
+            - targets: ['che-host:8087'] </span></span><i class="conum" data-value="3"></i><b>(3)</b>
   <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ConfigMap</span></span>
   <span style="color:#606">metadata</span>:
     <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">prometheus-config</span></span></code></pre>
@@ -330,9 +307,39 @@ $('#toc').on('click', 'a', function() {
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>rate, at which recording and alerting rules are re-checked (not used in our system at the moment)</td>
 </tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>scrape metrics from the <code>8087</code> port</td>
+</tr>
 </table>
 </div>
+</li>
+</ul>
 </div>
+<div class="ulist">
+<div class="title">Verification steps</div>
+<ul>
+<li>
+<p>Use the Prometheus console to query and view metrics.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+</li>
+<li>
+<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a>.</p>
+</li>
+<li>
+<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a>.</p>
+</li>
+<li>
+<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a>.</p>
+</li>
+</ul>
 </div>
 
     <div class="tags">
