@@ -260,14 +260,162 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>This section explains how to modify the existing content of the devfile and plug-in registries: the devfiles and plug-in metadata.</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in assembly_modifying-the-registries.adoc - include::proc_adding-a-new-plug-in.adoc[leveloffset=+1]</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="adding-a-plug-in-at-runtime_modifying-the-registries">Adding a plug-in at runtime</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Unresolved directive in assembly_modifying-the-registries.adoc - include::proc_adding-a-new-devfile.adoc[leveloffset=+1]</p>
+<div class="title">Procedure</div>
+<p>To add a plug-in:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check out the plugin registry sources.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-plugin-registry; \
+  cd che-plugin-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>meta.yaml</code> in some local folder. This can be done from scratch or by copying from an existing plug-in&#8217;s <code>meta.yaml</code> file.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ PLUGIN="v3/plugins/new-org/new-plugin/0.0.1"; \
+  mkdir -p ${PLUGIN}; cp v3/plugins/che-incubator/cpptools/0.1/* ${PLUGIN}/
+  echo "${PLUGIN##*/}" &gt; ${PLUGIN}/../latest.txt</pre>
+</div>
+</div>
+</li>
+<li>
+<p>If copying from an existing plug-in, make changes to the <code>meta.yaml</code> file to suit your needs. Make sure your new plug-in has a unique <code>title</code>, <code>displayName</code> and <code>description</code>. Update the <code>firstPublicationDate</code> to today&#8217;s date.</p>
+</li>
+<li>
+<p>These fields in <code>meta.yaml</code> must match the path defined in <code>PLUGIN</code> above.</p>
+<div class="listingblock">
+<div class="content">
+<pre>publisher: new-org
+name: new-plugin
+version: 0.0.1</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the name of the pod that hosts the plug-in registry container. To do this, filter the <code>component=plugin-registry</code> label:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ PLUGIN_REG_POD=$(kubectl get -o custom-columns=NAME:.metadata.name \
+  --no-headers pod -l component=plugin-registry)</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Regenerate the registry&#8217;s <code>index.json</code> file to include your new plug-in.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd che-plugin-registry; \
+    "$(pwd)/build/scripts/generate_latest_metas.sh" v3 &amp;&amp; \
+    "$(pwd)/build/scripts/check_plugins_location.sh" v3 &amp;&amp; \
+    "$(pwd)/build/scripts/set_plugin_dates.sh" v3 &amp;&amp; \
+    "$(pwd)/build/scripts/check_plugins_viewer_mandatory_fields.sh" v3 &amp;&amp; \
+    "$(pwd)/build/scripts/index.sh" v3 &gt; v3/plugins/index.json</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the new <code>index.json</code> and <code>meta.yaml</code> files from your new local plug-in folder to the container.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd che-plugin-registry; \
+  LOCAL_FILES="$(pwd)/${PLUGIN}/meta.yaml $(pwd)/v3/plugins/index.json"; \
+  kubectl exec ${PLUGIN_REG_POD} -i -t -- mkdir -p /var/www/html/${PLUGIN}; \
+  for f in $LOCAL_FILES; do e=${f/$(pwd)\//}; echo "Upload ${f} -&gt; /var/www/html/${e}"; \
+    kubectl cp "${f}" ${PLUGIN_REG_POD}:/var/www/html/${e}; done</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The new plug-in can now be used from the existing Che instance&#8217;s plug-in registry. To discover it, go to the Che dashboard, then click the <code>Workspaces</code> link. From there, click the gear icon to configure one of your workspaces. Select the <code>Plugins</code> tab to see the updated list of available plug-ins.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-a-devfile-at-runtime_modifying-the-registries">Adding a devfile at runtime</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To add a devfile:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check out the devfile registry sources.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-devfile-registry; \
+  cd che-devfile-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>devfile.yaml</code> and <code>meta.yaml</code> in some local folder. This can be done from scratch or by copying from an existing devfile.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ STACK="new-stack"; \
+  mkdir -p devfiles/${STACK}; cp devfiles/nodejs/* devfiles/${STACK}/</pre>
+</div>
+</div>
+</li>
+<li>
+<p>If copying from an existing devfile, make changes to the devfile to suit your needs. Make sure your new devfile has a unique <code>displayName</code> and <code>description</code>.</p>
+</li>
+<li>
+<p>Get the name of the pod that hosts the devfile registry container. To do this, filter the <code>component=devfile-registry</code> label:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ DEVFILE_REG_POD=$(kubectl get -o custom-columns=NAME:.metadata.name \
+  --no-headers pod -l component=devfile-registry)</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Regenerate the registry&#8217;s <code>index.json</code> file to include your new devfile.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd che-devfile-registry; \
+  "$(pwd)/build/scripts/check_mandatory_fields.sh" devfiles; \
+  "$(pwd)/build/scripts/index.sh" &gt; index.json</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the new <code>index.json</code>, <code>devfile.yaml</code> and <code>meta.yaml</code> files from your new local devfile folder to the container.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd che-devfile-registry; \
+  LOCAL_FILES="$(pwd)/${STACK}/meta.yaml $(pwd)/${STACK}/devfile.yaml $(pwd)/index.json"; \
+  kubectl exec ${DEVFILE_REG_POD} -i -t -- mkdir -p /var/www/html/devfiles/${STACK}; \
+  for f in $LOCAL_FILES; do e=${f/$(pwd)\//}; echo "Upload ${f} -&gt; /var/www/html/devfiles/${e}"
+    kubectl cp "${f}" ${DEVFILE_REG_POD}:/var/www/html/devfiles/${e}; done</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The new devfile can now be used from the existing Che instance&#8217;s devfile registry. To discover it, go to the Che dashboard, then click the <code>Workspaces</code> link. From there, click <code>Add Workspace</code> to see the updated list of available devfiles.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 
     <div class="tags">
@@ -285,7 +433,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jan 15, 2020 <br/>
+                    Site last generated: Jan 16, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
