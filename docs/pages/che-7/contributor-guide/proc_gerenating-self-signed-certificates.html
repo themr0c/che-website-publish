@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title> | Eclipse Che Documentation</title>
+<title>Generating self-signed TLS certificates | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Generating self-signed TLS certificates page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Generating self-signed TLS certificates">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main"></h1>
+   <h1 class="post-title-main">Generating self-signed TLS certificates</h1>
 </div>
 
 
@@ -260,60 +260,133 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>To manage GitHub pull requests, the VS Code GitHub Pull Request plug-in is available in the list of plug-ins of the workspace.</p>
+  <div class="paragraph">
+<p>This section describes how to prepare self-signed TLS certificates to use with Che on different platforms.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-the-github-pull-requests-plug-in">Using the GitHub Pull Requests plug-in</h2>
-<div class="sectionbody">
+<h2 id="prerequisites" class="discrete">Prerequisites</h2>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>GitHub OAuth should be configured (see <a href="https://www.eclipse.org/che/docs/che-7/version-control/#configuring-github-oauth_version-control">Configuring GitHub OAuth)</a>.</p>
+<p>Find out expected domain name where Che deployment is planned</p>
+<div class="listingblock">
+<div class="content">
+<pre># default for minishift
+$( minishift ip ).nip.io
+
+# default for minikube
+$( minikube ip ).nip.io
+
+# default for crc
+apps-crc.testing</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Find out <code>openssl.cnf</code> file location on target machine</p>
+<div class="listingblock">
+<div class="content">
+<pre># Fedora 31
+/etc/pki/tls/openssl.cnf</pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
+<h2 id="procedure" class="discrete">Procedure</h2>
 <div class="olist arabic">
-<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Authenticate by running the <strong>GitHub authenticate</strong> command.</p>
+<p>Set necessary environment variables</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ CA_CN=eclipse-che-signer
+$ DOMAIN=*.&lt;expected.domain.com&gt;
+$ OPENSSL_CNF=&lt;path_to_openssl.cnf&gt;</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Example with minikube on Fedora 31
+$ CA_CN=eclipse-che-signer
+$ DOMAIN=*.$( minikube ip ).nip.io
+$ OPENSSL_CNF=/etc/pki/tls/openssl.cnf
+
+# Example with crc on OSX
+$ export CA_CN=eclipse-che-signer
+$ export DOMAIN=*.apps-crc.testing
+$ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
+</div>
+</div>
 </li>
 <li>
-<p>You will be redirected to GitHub to authorize Che.</p>
+<p>Generate root CA key. Add <code>-des3</code> parameter if passphrase is needed</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out rootCA.key 4096</pre>
+</div>
+</div>
 </li>
 <li>
-<p>When Che is authorized, refresh the browser page where Che is running to update the plug-in with the GitHub token.</p>
+<p>Generate root certificate.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -x509 \
+  -new -nodes \
+  -key rootCA.key \
+  -sha256 \
+  -days 1024 \
+  -out rootCA.crt \
+  -subj /CN=${CA_CN} \
+  -reqexts SAN \
+  -extensions SAN \
+  -config &lt;(cat ${OPENSSL_CNF} \
+      &lt;(printf '[SAN]\nbasicConstraints=critical, CA:TRUE\nkeyUsage=keyCertSign, cRLSign, digitalSignature, keyEncipherment'))</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate domain key.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out domain.key 2048</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate domain csr.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -new -sha256 \
+    -key domain.key \
+    -subj "/O=EclipseChe/CN=${DOMAIN}" \
+    -reqexts SAN \
+    -config &lt;(cat ${OPENSSL_CNF} \
+        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=keyCertSign, digitalSignature, keyEncipherment\nextendedKeyUsage=serverAuth")) \
+    -out domain.csr</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate domain certificate.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl x509 \
+-req \
+-sha256 \
+-extfile &lt;(printf "subjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=keyCertSign,                       digitalSignature, keyEncipherment\nextendedKeyUsage=serverAuth") \
+-days 365 \
+-in domain.csr \
+-CA rootCA.crt \
+-CAkey rootCA.key \
+-CAcreateserial -out domain.crt</pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Alternatively, manually <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">fetch the GitHub token</a> and paste it to the plug-in by running the <strong>GitHub Pull Requests: Manually Provide Authentication Response</strong> command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="creating-a-new-pull-request">Creating a new pull request</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open the GitHub repository. To be able to execute remote operations, the repository must have a <em>remote</em> with an SSH URL.</p>
-</li>
-<li>
-<p>Checkout a new branch and make changes that you want to publish.</p>
-</li>
-<li>
-<p>Run the <strong>GitHub Pull Requests: Create Pull Request</strong> command.</p>
-</li>
-</ol>
-</div>
-</div>
+<p>After executing those steps, it will be possible to use domain.crt and domain.key for Route/Ingress TLS
+and <a href="/che/docs/che-7/setup-che-in-tls-mode-with-self-signed-certificate/#che-usage-with-tls_setup-che-in-tls-mode-with-self-signed-certificate">rootCA.crt for importing into browsers</a>.</p>
 </div>
 
     <div class="tags">

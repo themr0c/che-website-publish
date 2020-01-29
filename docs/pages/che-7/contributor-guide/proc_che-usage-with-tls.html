@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title> | Eclipse Che Documentation</title>
+<title>Che usage with TLS | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the  page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che usage with TLS page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Che usage with TLS">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main"></h1>
+   <h1 class="post-title-main">Che usage with TLS</h1>
 </div>
 
 
@@ -260,60 +260,91 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>To manage GitHub pull requests, the VS Code GitHub Pull Request plug-in is available in the list of plug-ins of the workspace.</p>
+  <div class="paragraph">
+<p>This section describes how to import root certificate authority into the browser to use Che with self signed TLS.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-the-github-pull-requests-plug-in">Using the GitHub Pull Requests plug-in</h2>
-<div class="sectionbody">
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>GitHub OAuth should be configured (see <a href="https://www.eclipse.org/che/docs/che-7/version-control/#configuring-github-oauth_version-control">Configuring GitHub OAuth)</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Authenticate by running the <strong>GitHub authenticate</strong> command.</p>
-</li>
-<li>
-<p>You will be redirected to GitHub to authorize Che.</p>
-</li>
-<li>
-<p>When Che is authorized, refresh the browser page where Che is running to update the plug-in with the GitHub token.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Alternatively, manually <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">fetch the GitHub token</a> and paste it to the plug-in by running the <strong>GitHub Pull Requests: Manually Provide Authentication Response</strong> command.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="creating-a-new-pull-request">Creating a new pull request</h2>
-<div class="sectionbody">
+<h2 id="google-chrome" class="discrete">Google Chrome</h2>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Open the GitHub repository. To be able to execute remote operations, the repository must have a <em>remote</em> with an SSH URL.</p>
+<p>Go to <code>chrome://settings/certificates</code>, <code>Authorities</code> tab, click <code>import</code> and find your generated <code>rootCA.crt</code> (or <code>ca.crt</code> for Openshift 4) file.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-chrome-import_1.png"><img src="/che/docs/images/contributor/che-tls-chrome-import_1.png" alt="che tls chrome import 1"></a>
+</div>
+</div>
 </li>
 <li>
-<p>Checkout a new branch and make changes that you want to publish.</p>
+<p>Select <code>Trust this certificate for identifying websites</code> and click OK.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-chrome-import_2.png"><img src="/che/docs/images/contributor/che-tls-chrome-import_2.png" alt="che tls chrome import 2"></a>
+</div>
+</div>
 </li>
 <li>
-<p>Run the <strong>GitHub Pull Requests: Create Pull Request</strong> command.</p>
+<p>Browser is satisfied with Che certificate and is reporting secure connection.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-chrome-import_3.png"><img src="/che/docs/images/contributor/che-tls-chrome-import_3.png" alt="che tls chrome import 3"></a>
+</div>
+</div>
 </li>
 </ol>
 </div>
+<h2 id="firefox" class="discrete">Firefox</h2>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <code>about:preferences</code> and search for <code>certificates</code> and click on <code>View Certificates</code></p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-firefox-import_1.png"><img src="/che/docs/images/contributor/che-tls-firefox-import_1.png" alt="che tls firefox import 1"></a>
 </div>
+</div>
+</li>
+<li>
+<p>Go to <code>Authorities</code> tab, click <code>Import</code> and find your generated <code>rootCA.crt</code> (or <code>ca.crt</code> for Openshift 4) file.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-firefox-import_2.png"><img src="/che/docs/images/contributor/che-tls-firefox-import_2.png" alt="che tls firefox import 2"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Select <code>Trust this CA to identify websites</code> and click OK.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-firefox-import_3.png"><img src="/che/docs/images/contributor/che-tls-firefox-import_3.png" alt="che tls firefox import 3"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Browser is satisfied with Che certificate and is reporting secure connection.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/contributor/che-tls-firefox-import_4.png"><img src="/che/docs/images/contributor/che-tls-firefox-import_4.png" alt="che tls firefox import 4"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<h2 id="osx" class="discrete">OSX</h2>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open <em>Keychain Access</em>.</p>
+</li>
+<li>
+<p>Make sure you&#8217;re on <em>System</em> keychain and drop your <code>rootCA.crt</code> (or <code>ca.crt</code> for Openshift 4) file there.</p>
+</li>
+<li>
+<p>Double-click your imported CA, go to <em>Trust</em> and select <em>When using this certificate</em>: <code>Always Trust</code>.</p>
+</li>
+<li>
+<p>If browser still report invalid certificate, try to restart it.</p>
+</li>
+</ol>
 </div>
 
     <div class="tags">
