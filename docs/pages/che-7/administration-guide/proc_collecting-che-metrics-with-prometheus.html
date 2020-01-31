@@ -282,36 +282,38 @@ $('#toc').on('click', 'a', function() {
 <div class="listingblock">
 <div class="title">Prometheus configuration example</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml">- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apiVersion: v1</span></span>
-  <span style="color:#606">data</span>:
-    <span style="color:#606">prometheus.yml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|-</span><span style="color:#D20">
-      global:
-        scrape_interval:     5s           <i class="conum" data-value="1"></i><b>(1)</b>
-        evaluation_interval: 5s           <i class="conum" data-value="2"></i><b>(2)</b>
-      scrape_configs:
-        - job_name: 'che'
-          static_configs:
-            - targets: ['che-host:8087'] </span></span><i class="conum" data-value="3"></i><b>(3)</b>
-  <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ConfigMap</span></span>
-  <span style="color:#606">metadata</span>:
-    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">prometheus-config</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ConfigMap</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">prometheus-config</span></span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">prometheus.yml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|-</span><span style="color:#D20">
+    global:
+      scrape_interval:     5s
+      evaluation_interval: 5s
+    scrape_configs:
+      - job_name: 'che'
+        static_configs:
+          - targets: ['che-host:8087']</span></span></code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>rate, at which a target is scraped</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>rate, at which recording and alerting rules are re-checked (not used in our system at the moment)</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>scrape metrics from the <code>8087</code> port</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Latest version: <a href="https://+github.com/eclipse/che/blob/master/deploy/openshift/templates/monitoring/prometheus-config.yaml">example <code>prometheus-config.yaml</code> on GitHub</a>.</p>
+</div>
+<div class="paragraph">
+<p>There are two blocks of configuration in the <code>prometheus-config.yml</code> block of the example configuration file: <code>global</code> and <code>scrape_configs</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>global</code> block controls the Prometheus server&#8217;s global configuration. There are two options present:</p>
+</div>
+</li>
+<li>
+<p><code>scrape_interval</code> controls how often Prometheus scrapes targets. You can override this for individual targets. In this case, the global setting is to scrape every 5 seconds.</p>
+</li>
+<li>
+<p><code>evaluation_interval</code> controls how often Prometheus evaluates rules. Prometheus uses rules to create new time series and to generate alerts. This option is not used in the example here.</p>
+<div class="paragraph">
+<p>The last block, <code>scrape_configs</code>, controls what resources Prometheus monitors. In the default configuration, there is a single job called <code>che-host</code>, which scrapes the time series data exposed by the Che server. The job contains a single, statically configured target, the <code>che-host</code> host on port <code>8087</code>.</p>
 </div>
 </li>
 </ul>
