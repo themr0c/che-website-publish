@@ -263,85 +263,111 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to view logs for the Go language server.</p>
+<p>Eclipse Che has two components which require Persistent Volumes to store data:
+ * a Postgres database.
+ * an Eclipse Che workspaces. Eclipse Che workspaces store source code using volumes, for example <code>/projects</code> volume.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Source code is stored in the Persistent Volume only if workspace is not ephemeral.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eclipse Che does not create Persisted Volumes in the infrastructure. Eclipse Che uses Persisted Volume Claims (PVC) to mount Persisted Volumes. Eclipse Che server creates  Persisted Volume Claims.
+You can define storage class name in the Eclipse Che configuration to use storage classes feature in the Eclipse Che PVC. With storage classes, you can configure infrastructure storage in a flexible way with a lot of storage parameters. You can also bind static provisioned Persisted Volumes to Eclipse Che PVC using class name.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="finding-the-gopath_viewing-logs-for-go">Finding the gopath</h2>
+<h2 id="defining-storage-class-names-with-the-serverstart-command">Defining storage class names with the <code>server:start command</code></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to find where the <code>GOPATH</code> variable points to.</p>
-</div>
 <div class="ulist">
 <div class="title">Procedure</div>
 <ul>
 <li>
-<p>Execute the <code>Go: Current GOPATH</code> command.</p>
-<div class="imageblock">
+<p>To provide storage class name for Postgres PVC, use the <code>chectl</code> <code>server:start</code> command with the <code>--postgres-pvc-storage-class-name</code> flag:</p>
+<div class="listingblock">
 <div class="content">
-<img src="/che/docs/images/logs/finding-the-gopath.png" alt="finding the gopath">
+<pre class="CodeRay highlight"><code data-lang="bash">$ chectl server:start -m -p minikube -a operator --postgres-pvc-storage-class-name=postgress-storage</code></pre>
 </div>
 </div>
-<div class="imageblock">
+</li>
+<li>
+<p>To provide storage class name for Che workspaces, use the <code>server:start</code> command with the <code>--workspace-pvc-storage-class-name</code> flag:</p>
+<div class="listingblock">
 <div class="content">
-<img src="/che/docs/images/logs/viewing-gopath.png" alt="viewing gopath">
+<pre class="CodeRay highlight"><code data-lang="bash">$ chectl server:start -m -p minikube -a operator --workspace-pvc-storage-class-name=workspace-storage</code></pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>For Eclipse Che workspaces, storage class name has different behavior depending on a workspace PVC strategy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>postgres-pvc-storage-class-name=postgress-storage</code> and <code>workspace-pvc-storage-class-name</code> work for the operator installer and the Helm installer.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="viewing-debug-console-log-for-go_viewing-logs-for-go">Viewing the Debug Console log for Go</h2>
+<h2 id="defining-storage-class-names-using-a-custom-resources-yaml-file">Defining storage class names using a custom resources YAML file</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to view the log output from the Go debugger.</p>
+<p>You can define storage classe names using Eclipse Che custom resources definition YAML.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Set the <code>showLog</code> attribute to <code>true</code> in the debug configuration.</p>
+<p>Create a YAML file with custom resources defined for the Eclipse Che installation.</p>
+</li>
+<li>
+<p>Define fields: spec#storage#postgresPVCStorageClassName and spec#storage#workspacePVCStorageClassName.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>version</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">0.2.0</span><span style="color:#710">&quot;</span></span>,
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>configurations</span><span style="color:#404">&quot;</span></span>: [
-     {
-        <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">go</span><span style="color:#710">&quot;</span></span>,
-        <span style="color:#606"><span style="color:#404">&quot;</span><span>showLog</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">true</span>
-       <span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span>
-     }
-  ]
-}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">org.eclipse.che/v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">CheCluster</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse-che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#777"># ...</span>
+  <span style="color:#606">storage</span>:
+    <span style="color:#777"># ...</span>
+    <span style="color:#777"># keep blank unless you need to use a non default storage class for Postgres PVC</span>
+    <span style="color:#606">postgresPVCStorageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'postgres-storage'</span></span>
+    <span style="color:#777"># ...</span>
+    <span style="color:#777"># keep blank unless you need to use a non default storage class for workspace PVC(s)</span>
+    <span style="color:#606">workspacePVCStorageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'workspace-storage'</span></span>
+    <span style="color:#777"># ...</span></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>To enable debugging output for a component, add the package to the comma-separated list value of the <code>logOutput</code> attribute:</p>
+<p>Start the che server with your custom resources:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>version</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">0.2.0</span><span style="color:#710">&quot;</span></span>,
-  <span style="color:#606"><span style="color:#404">&quot;</span><span>configurations</span><span style="color:#404">&quot;</span></span>: [
-     {
-        <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">go</span><span style="color:#710">&quot;</span></span>,
-        <span style="color:#606"><span style="color:#404">&quot;</span><span>showLog</span><span style="color:#404">&quot;</span></span>: <span style="color:#088">true</span>,
-        <span style="color:#606"><span style="color:#404">&quot;</span><span>logOutput</span><span style="color:#404">&quot;</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">debugger,rpc,gdbwire,lldbout,debuglineerr</span><span style="color:#710">&quot;</span></span>
-       <span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span><span style="color:#F00;background-color:#FAA">.</span>
-     }
-  ]
-}</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>The debug console prints the additional information in the debug console.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/logs/viewing-debug-console-log-for-go.png" alt="viewing debug console log for go">
+<pre class="CodeRay highlight"><code data-lang="bash">$ chectl server:start -m -p minikube -a operator --che-operator-cr-yaml=/path/to/custom/che/resource/org_v1_che_cr.yaml</code></pre>
 </div>
 </div>
 </li>
@@ -350,22 +376,141 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="viewing-go-logs-output-in-the-output-panel_viewing-logs-for-go">Viewing the Go logs output in the Output panel</h2>
+<h2 id="binding-static-provisined-volumes">Binding static provisined volumes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to view the Go logs output in the <strong>Output</strong> panel.</p>
+<p>Administrators can provision Persisted Volumes using class names.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Navigate to the <strong>Output</strong> view.</p>
+<p>Define Persistent Volume for a Postgres database:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#777"># che-postgres-pv.yaml</span>
+<span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">PersistentVolume</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres-pv-volume</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">local</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">storageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres-storage</span></span>
+  <span style="color:#606">capacity</span>:
+    <span style="color:#606">storage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
+  <span style="color:#606">accessModes</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ReadWriteOnce</span></span>
+  <span style="color:#606">hostPath</span>:
+    <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/data/che/postgres</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Select <strong>Go</strong> in the drop-down list.</p>
-<div class="imageblock">
+<p>Define Persistent Volume for a Che workspace:</p>
+<div class="listingblock">
 <div class="content">
-<img src="/che/docs/images/logs/viewing-go-logs-output-in-the-output-panel.png" alt="viewing go logs output in the output panel">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#777"># che-workspace-pv.yaml</span>
+<span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">PersistentVolume</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-pv-volume</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">local</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">storageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-storage</span></span>
+  <span style="color:#606">capacity</span>:
+    <span style="color:#606">storage</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">10Gi</span></span>
+  <span style="color:#606">accessModes</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ReadWriteOnce</span></span>
+  <span style="color:#606">hostPath</span>:
+    <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/data/che/workspace</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Bind the two Persisted Volumes:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f che-workspace-pv.yaml -f che-postgres-pv.yaml</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must provide valid file permissions for volumes. You can do it using storage class configuration or manually. To manually define permission, define <code>storageClass#mountOptions</code> <code>uid</code> and <code>gid</code>. Postgres volume requires <code>uid=26</code> and <code>gid=26</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-eclipse-che-to-store-workspaces-in-one-persisted-volume">Configuring Eclipse Che to store workspaces in one Persisted Volume</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>To configure Eclipse Che to store all workspaces in one Persisted Volume:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Modify your custom resources YAML file:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set <code>pvcStrategy</code> as <code>common</code>.</p>
+</li>
+<li>
+<p>Configure Che to start workspaces in the single namespace.</p>
+</li>
+<li>
+<p>Define storage class names for <code>postgresPVCStorageClassName</code> and <code>workspacePVCStorageClassName</code>.</p>
+</li>
+<li>
+<p>Example of the YAML file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">org.eclipse.che/v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">CheCluster</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse-che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">server</span>:
+    <span style="color:#777"># ...</span>
+    <span style="color:#606">workspaceNamespaceDefault</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'che'</span></span>
+    <span style="color:#777"># ...</span>
+  <span style="color:#606">storage</span>:
+    <span style="color:#777"># ...</span>
+    <span style="color:#777"># Defaults to common</span>
+    <span style="color:#606">pvcStrategy</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'common'</span></span>
+    <span style="color:#777"># ...</span>
+    <span style="color:#777"># keep blank unless you need to use a non default storage class for Postgres PVC</span>
+    <span style="color:#606">postgresPVCStorageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'postgres-storage'</span></span>
+    <span style="color:#777"># ...</span>
+    <span style="color:#777"># keep blank unless you need to use a non default storage class for workspace PVC(s)</span>
+    <span style="color:#606">workspacePVCStorageClassName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'workspace-storage'</span></span>
+    <span style="color:#777"># ...</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Start the che server with your custom resources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">$ chectl server:start -m -p minikube -a operator --che-operator-cr-yaml=/path/to/custom/che/resource/org_v1_che_cr.yaml</code></pre>
 </div>
 </div>
 </li>
