@@ -1666,6 +1666,258 @@ There are different types of plug-ins. A broker ensures all installation require
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="remote-plug-in-endpoint_what-is-a-che-theia-plug-in">Remote plug-in endpoint</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This document applies only to Eclipse Che 7.3.1 and later.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eclipse Che has a remote plug-in endpoint service to start VS Code Extensions and Che-Theia plug-ins in separate containers. Eclipse Che injects the remote plug-in endpoint binaries into each remote plug-in container. This service starts remote extensions and plug-ins defined in the plug-in <code>meta.yaml</code> file and connects them to the Che-Theia editor container.</p>
+</div>
+<div class="paragraph">
+<p>The remote plug-in endpoint creates a plug-in API proxy between the remote plug-in container and the Che-Theia editor container. The remote plug-in endpoint is also an interceptor for some plug-in API parts, which it launches inside a remote sidecar container instead of an editor container. Examples: terminal API, debug API.</p>
+</div>
+<div class="paragraph">
+<p>The remote plug-in endpoint executable command is stored in the environment variable of the remote plug-in container: <code>PLUGIN_REMOTE_ENDPOINT_EXECUTABLE</code>.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse Che provides two ways to start the remote plug-in endpoint with a sidecar image:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Defining a launch remote plug-in endpoint using a Dockerfile. To use this method, patch an original image and rebuild it.</p>
+</li>
+<li>
+<p>Defining a launch remote plug-in endpoint in the plug-in <code>meta.yaml</code> file. Use this method to avoid patching an original image.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="defining-a-launch-remote-plug-in-endpoint-using-dockerfile_remote-plug-in-endpoint">Defining a launch remote plug-in endpoint using Dockerfile</h3>
+<div class="paragraph">
+<p>To start a remote plug-in endpoint, use the <code>PLUGIN_REMOTE_ENDPOINT_EXECUTABLE</code> environment variable in the Dockerfile.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Start a remote plug-in endpoint using the <code>CMD</code> command in the Dockerfile:</p>
+<div class="listingblock">
+<div class="content">
+<pre>FROM fedora:30
+
+RUN dnf update -y &amp;&amp; dnf install -y nodejs htop &amp;&amp; node -v
+
+RUN mkdir /home/user
+
+ENV HOME=/home/user
+
+RUN mkdir /projects \
+    &amp;&amp; chmod -R g+rwX /projects \
+    &amp;&amp; chmod -R g+rwX "${HOME}"
+
+CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start a remote plug-in endpoint using the <code>ENTRYPOINT</code> command in the Dockerfile:</p>
+<div class="listingblock">
+<div class="content">
+<pre>FROM fedora:30
+
+RUN dnf update -y &amp;&amp; dnf install -y nodejs htop &amp;&amp; node -v
+
+RUN mkdir /home/user
+
+ENV HOME=/home/user
+
+RUN mkdir /projects \
+    &amp;&amp; chmod -R g+rwX /projects \
+    &amp;&amp; chmod -R g+rwX "${HOME}"
+
+ENTRYPOINT ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="using-a-wrapper-script">Using a wrapper script</h4>
+<div class="paragraph">
+<p>Some images use a wrapper script to configure permissions. The script is defined it in the <code>ENTRYPOINT</code> command of the Dockerfile to configure permissions inside the container, and it script executes a main process defined in the <code>CMD</code> command of the Dockerfile.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse Che uses such images with a wrapper script to provide permission configurations on different infrastructures with advanced security, for example on OpenShift.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Example of a wrapper script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">#!/bin/sh
+
+set -e
+
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
+
+if ! whoami &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;${USER_NAME:-user}:x:${USER_ID}:0:${USER_NAME:-user} user:${HOME}:/bin/sh&quot; &gt;&gt; /etc/passwd
+fi
+
+# Grant access to projects volume in case of non root user with sudo rights
+if [ &quot;${USER_ID}&quot; -ne 0 ] &amp;&amp; command -v sudo &gt;/dev/null 2&gt;&amp;1 &amp;&amp; sudo -n true &gt; /dev/null 2&gt;&amp;1; then
+    sudo chown &quot;${USER_ID}:${GROUP_ID}&quot; /projects
+fi
+
+exec &quot;$@&quot;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Example of a Dockerfile with a wrapper script:</p>
+<div class="listingblock">
+<div class="content">
+<pre>FROM alpine:3.10.2
+
+ENV HOME=/home/theia
+
+RUN mkdir /projects ${HOME} &amp;&amp; \
+    # Change permissions to let any arbitrary user
+    for f in "${HOME}" "/etc/passwd" "/projects"; do \
+      echo "Changing permissions on ${f}" &amp;&amp; chgrp -R 0 ${f} &amp;&amp; \
+      chmod -R g+rwX ${f}; \
+    done
+
+ADD entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, the container launches the <code>/entrypoint.sh</code> script defined in the <code>ENTRYPOINT</code> command of the Dockerfile. The script configures the permissions and executes the command using <code>exec $@</code>. <code>CMD</code> is the argument for <code>ENTRYPOINT</code>, and the <code>exec $@</code> command calls <code>${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</code>. A remote plug-in endpoint then starts in the container after permission configuration.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="defining-a-launch-remote-plug-in-endpoint-in-a-meta-yaml-file_remote-plug-in-endpoint">Defining a launch remote plug-in endpoint in a <code>meta.yaml</code> file</h3>
+<div class="paragraph">
+<p>Use this method to re-use images to start remote a plug-in endpoint without modifications.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Modify the plug-in <code>meta.yaml</code> file properites <code>command</code> and <code>args</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>command</code> - Eclipse Che uses to override <code>Dockerfile#ENTRYPOINT</code>.</p>
+</li>
+<li>
+<p><code>args</code>  - Eclipse Che uses to override <code>Dockerfile#CMD</code>.</p>
+</li>
+<li>
+<p>Example of a YAML file with the <code>command</code> and <code>args</code> properties modified:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v2</span></span>
+<span style="color:#606">category</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Language</span></span>
+<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Typescript language features</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">displayName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Typescript</span></span>
+<span style="color:#606">firstPublicationDate</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2019-10-28</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://www.eclipse.org/che/images/logo-eclipseche.svg</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">typescript</span></span>
+<span style="color:#606">publisher</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-incubator</span></span>
+<span style="color:#606">repository</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/Microsoft/vscode</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Typescript language features</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">VS Code extension</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">remote-bin-with-override-entrypoint</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">containers</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: &quot;example/fedora-for-ts-remote-plugin-without-endpoint:latest&quot;</span></span>
+      <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-typescript</span></span>
+      <span style="color:#606">command</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">sh</span></span>
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">-c</span></span>
+      <span style="color:#606">args</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</span></span>
+  <span style="color:#606">extensions</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/che-incubator/ms-code.typescript/releases/download/v1.35.1/che-typescript-language-1.35.1.vsix</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Modify <code>args</code> instead of <code>command</code> to use an image with a wrapper script pattern and to keep a call of the <code>entrypoint.sh</code> script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v2</span></span>
+<span style="color:#606">category</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Language</span></span>
+<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Typescript language features</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">displayName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Typescript</span></span>
+<span style="color:#606">firstPublicationDate</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2019-10-28</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://www.eclipse.org/che/images/logo-eclipseche.svg</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">typescript</span></span>
+<span style="color:#606">publisher</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-incubator</span></span>
+<span style="color:#606">repository</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/Microsoft/vscode</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Typescript language features</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">VS Code extension</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">remote-bin-with-override-entrypoint</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">containers</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: &quot;example/fedora-for-ts-remote-plugin-without-endpoint:latest&quot;</span></span>
+      <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-typescript</span></span>
+      <span style="color:#606">args</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">sh</span></span>
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">-c</span></span>
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</span></span>
+  <span style="color:#606">extensions</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/che-incubator/ms-code.typescript/releases/download/v1.35.1/che-typescript-language-1.35.1.vsix</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Eclipse Che calls the <code>entrypoint.sh</code> wrapper script defined in the <code>ENTRYPOINT</code> command of the Dockerfile. The script executes <code>[ ‘sh’, ‘-c”, ‘ ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}’ ]</code> using the <code>exec “$@”</code> command.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To execute a service when starting the container and also to start a remote plug-in endpoint, use <code>meta.yaml</code> with modified <code>command</code> and <code>args</code> properties. Start the service, detach the process, and start the remote plug-in endpoint, and they then work in parallel.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1686,7 +1938,7 @@ There are different types of plug-ins. A broker ensures all installation require
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Feb 10, 2020 <br/>
+                    Site last generated: Feb 11, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
