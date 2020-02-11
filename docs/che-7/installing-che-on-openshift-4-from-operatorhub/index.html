@@ -962,7 +962,7 @@ Following steps are described:</p>
 <p><a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p><a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+<p><a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
 </li>
 <li>
 <p><a href="#enabling-ssl-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Enabling SSL on OpenShift 4</a>.</p>
@@ -1276,7 +1276,7 @@ See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_i
 <p>Run the following commands to select the <code>che</code> project:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc project che</pre>
+<pre>$ oc project <em>&lt;project_name&gt;</em></pre>
 </div>
 </div>
 </li>
@@ -1284,33 +1284,33 @@ See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_i
 <p>Run the following commands to get the name and status of the pods running in the selected project:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc get pods</pre>
+<pre>$ oc get pods</pre>
 </div>
 </div>
 </li>
 <li>
 <p>Check that the status of all pods is <code>Running</code>.</p>
-<div class="listingblock">
+<div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">NAME                            READY     STATUS    RESTARTS   AGE
 che-8495f4946b-jrzdc            0/1       Running   0          86s
-che-operator-578765d954-99szg   1/1       Running   0          42m
+che-operator-578765d954-99szc   1/1       Running   0          42m
 keycloak-74fbfb9654-g9vp5       1/1       Running   0          4m32s
 postgres-5d579c6847-w6wx5       1/1       Running   0          5m14s</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Run the following command:</p>
-<div class="listingblock">
+<p>To see the state of the Che cluster deployment, run:</p>
+<div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ oc logs --tail=10 -f <code>oc get pods -o name | grep operator</code></pre>
+<pre class="nowrap">$ oc logs --tail=10 -f `oc get pods -o name | grep operator`</pre>
 </div>
 </div>
-</li>
-<li>
-<p>This is an example output of the command:</p>
-<div class="listingblock">
+<div class="paragraph">
+<p>Example output of the command:</p>
+</div>
+<div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">time="2019-07-12T09:48:29Z" level=info msg="Exec successfully completed"
 time="2019-07-12T09:48:29Z" level=info msg="Updating eclipse-che CR with status: provisioned with OpenShift identity provider: true"
@@ -1329,41 +1329,44 @@ time="2019-07-12T09:48:30Z" level=info msg="Waiting for deployment che. Default 
 </div>
 </div>
 <div class="sect1">
-<h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</h2>
+<h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to Che cluster URL using OpenShift 4 CLI tool.</p>
+<p>This section describes how to obtain the Che cluster URL using the OpenShift 4 CLI (command line interface). The URL can be retrieved from the OpenShift logs or from the <code>checluster</code> Customer Resource.</p>
 </div>
-<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>View the logs of the Che Operator. See <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+<p>Che is deployed in a OpenShift cluster. Verify the state of the deployment, see <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p>User is located in a Che installation namespace.</p>
 </li>
 </ul>
 </div>
-<h3 id="procedure-7" class="discrete">Procedure</h3>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
 <li>
-<p>Wait for the logs to show the message <code>Eclipse Che is now available at:</code> followed by Che URL:</p>
-<div class="listingblock">
+<p>To retrieve a Che cluster URL from the <code>checluster</code> CR, run:</p>
+<div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with Eclipse Che server URL: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
-time="2019-07-12T09:50:13Z" level=info msg="Custom resource eclipse-che updated"
-time="2019-07-12T09:50:13Z" level=info msg="Eclipse Che is now available at: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
-time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version: 7.0.0-RC-2.0"</pre>
+<pre class="nowrap">$ oc get checluster --output jsonpath='{.items[0].status.cheURL}'</pre>
 </div>
 </div>
 </li>
-</ul>
+<li>
+<p>The Che cluster URL is displayed.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="enabling-ssl-on-openshift-4_installing-che-on-openshift-4-from-operatorhub">Enabling SSL on OpenShift 4</h2>
 <div class="sectionbody">
-<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-7" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1381,7 +1384,7 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 </li>
 </ul>
 </div>
-<h3 id="procedure-8" class="discrete">Procedure</h3>
+<h3 id="procedure-7" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1438,7 +1441,7 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 <div class="paragraph">
 <p>This section describes how to log in to Che on OpenShift for the first time using OAuth.</p>
 </div>
-<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-8" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1462,14 +1465,14 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 <p>See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
-<h3 id="procedure-9" class="discrete">Procedure</h3>
+<h3 id="procedure-8" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1500,7 +1503,7 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 <div class="paragraph">
 <p>This section describes how to log in to Che on OpenShift for the first time registering as a new user.</p>
 </div>
-<h3 id="prerequisites-10" class="discrete">Prerequisites</h3>
+<h3 id="prerequisites-9" class="discrete">Prerequisites</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1524,14 +1527,14 @@ time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version
 <p>See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using OpenShift 4 CLI tools</a>.</p>
+<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
-<h3 id="procedure-10" class="discrete">Procedure</h3>
+<h3 id="procedure-9" class="discrete">Procedure</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
