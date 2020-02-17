@@ -1339,34 +1339,54 @@ time="2019-07-12T09:48:30Z" level=info msg="Waiting for deployment che. Default 
 <h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to obtain the Che cluster URL using the OpenShift 4 CLI (command line interface). The URL can be retrieved from the OpenShift logs or from the <code>checluster</code> Customer Resource.</p>
+<p>This section describes how to obtain the Che cluster URL using the OpenShift 4 CLI (command line interface). The URL can be retrieved from the OpenShift logs or from the <code>checluster</code> Custom Resource.
+.Prerequisites
+* Che is deployed in an OpenShift cluster. To verify the state of the deployment, see <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.
+* User is located in a Che installation namespace.
+.Procedure
+. To retrieve a Che cluster URL from the <code>checluster</code> CR (Custom Resource), run:</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Che is deployed in a OpenShift cluster. Verify the state of the deployment, see <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-from-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
-</li>
-<li>
-<p>User is located in a Che installation namespace.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>+</p>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>To retrieve a Che cluster URL from the <code>checluster</code> CR, run:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ oc get checluster --output jsonpath='{.items[0].status.cheURL}'</pre>
 </div>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>The Che cluster URL is displayed.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>Alternatively, wait for the deployment logs as mentioned in the Prerequisites section to display the message: <code>Eclipse Che is now available at:</code> followed by the Che cluster URL:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">time="2019-07-12T09:50:13Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:50:13Z" level=info msg="Eclipse Che is now available at: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
+time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version: 7.8.0-RC-2.0"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>+
+After the deployment is finished, in the log output, click the Che cluster URL to start the {prod-shor} instance, or use the following command to isolate it:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc logs --tail=10 `oc get pods -o name | grep operator` | \
+  grep "available at" | \
+  awk -F'available at: ' '{print $2}' | sed 's/"//'</pre>
+</div>
 </div>
 </div>
 </div>
