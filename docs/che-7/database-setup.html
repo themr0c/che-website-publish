@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=",  ">
-<title>Troubleshooting for Che end users | Eclipse Che Documentation</title>
+<meta name="keywords" content="database,  ">
+<title>Database Setup | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Troubleshooting for Che end users page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Database Setup page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Troubleshooting for Che end users">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Database Setup">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1022,7 +1022,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Troubleshooting for Che end users</h1>
+   <h1 class="post-title-main">Database Setup</h1>
 </div>
 
 
@@ -1059,52 +1059,60 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
+  <div class="paragraph">
+<p>PostgreSQL database is used for persisting data about the state of Che and contains vital information about the user accounts, workspaces, preferences, ssh keys etc.</p>
+</div>
 <div class="paragraph">
-<p>This paragraph is the assembly introduction. It explains what the user will accomplish by working through the modules in the assembly and sets the context for the user story the assembly is based on. Can include more than one paragraph. Consider using the information from the user story.</p>
+<p>By default, Che operator creates and manages a database deployment.</p>
+</div>
+<div class="paragraph">
+<p>However, Che operator does not support the full lifecycle capabilities like backups and recovery. For business-critical setup, it is recommended to configure an external database with the following disaster recovery options:</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A bulleted list of conditions that must be satisfied before the user starts following this assembly.</p>
+<p>High Availability (HA)</p>
 </li>
 <li>
-<p>You can also link to other modules or assemblies the user must follow before starting this assembly.</p>
-</li>
-<li>
-<p>Delete the section title and bullets if the assembly has no prerequisites.</p>
+<p>Point In Time Recovery (PITR)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Include modules here.</p>
+<p>External PostgreSQL instance can be set up on-premises or via cloud services like RDS, which allows deploying production databases in a Multi-Availability Zone configuration for a resilient disaster recovery strategy with both daily and on-demand snapshots.
+ The recommended configuration, in this case, is the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Instance class: db.t2.small
+vCPU: 1
+RAM: 2GB
+Multi-az: True, 2 replicas
+Engine version: 9.6.11
+TLS: Enabled
+Automated backups: Enabled (30 Days)</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>An external database is configured via the <code>externalDb: true</code> property in the Che Custom Resource (in this case the operator skips deploying a database, and passes connection details of existing DB to Che server using <code>chePostgresHostName</code>, <code>chePostgresPort</code>, <code>chePostgresUser</code>, <code>chePostgresPassword</code>, <code>chePostgresDb</code> parameters).</p>
 </div>
-<div class="sect1">
-<h2 id="related-information">Related information</h2>
-<div class="sectionbody">
 <div class="ulist">
+<div class="title">Additional resources</div>
 <ul>
 <li>
-<p>A bulleted list of links to other material closely related to the contents of the concept module.</p>
+<p><a href="https://www.postgresql.org/">PostgreSQL</a></p>
 </li>
 <li>
-<p>For more details on writing assemblies, see the <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
-</li>
-<li>
-<p>Use a consistent system for file names, IDs, and titles. For tips, see <em>Anchor Names and File Names</em> in <a href="https://github.com/redhat-documentation/modular-docs#modular-documentation-reference-guide">Modular Documentation Reference Guide</a>.</p>
+<p><a href="https://aws.amazon.com/rds/">RDS</a></p>
 </li>
 </ul>
-</div>
-</div>
 </div>
 
     <div class="tags">
         
         <b>Tags: </b>
+        
+        
         
         
         
