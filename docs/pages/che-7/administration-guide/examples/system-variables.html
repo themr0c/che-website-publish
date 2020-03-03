@@ -381,19 +381,44 @@ $('#toc').on('click', 'a', function() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">RAM limit default for each machine that has no RAM settings in environment.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_DEFAULT__MEMORY__REQUEST__MB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAM request default for each container that has no explicit RAM settings in environment.this amount will be allocated on workspace container creationthis property might not be supported by all infrastructure implementations:currently it is supported by k8s and openshiftif default memory request is more than the memory limit, request will be ignored,and only limit will be used</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_DEFAULT__CPU__LIMIT__CORES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU limit default for each container that has no CPU settings in environment.Can be specified either in floating point cores number, e.g. 0.125 or in K8S format integer millicores e.g. 125m</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_DEFAULT__CPU__REQUEST__CORES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.125</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU request default for each container that has no CPU settings in environment.if default CPU request is more than the CPU limit, request will be ignored,and only limit will be used</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SIDECAR_DEFAULT__MEMORY__LIMIT__MB</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">128</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RAM limit default for each sidecar that has no RAM settings in Che plugin configuration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAM limit and request default for each sidecar that has no RAM settings in Che plugin configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SIDECAR_DEFAULT__MEMORY__REQUEST__MB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAM limit and request default for each sidecar that has no RAM settings in Che plugin configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SIDECAR_DEFAULT__CPU__LIMIT__CORES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU limit and request default for each sidecar that has no CPU settings in Che plugin configuration.Can be specified either in floating point cores number, e.g. 0.125 or in K8S format integer millicores e.g. 125m</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SIDECAR_DEFAULT__CPU__REQUEST__CORES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.115</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU limit and request default for each sidecar that has no CPU settings in Che plugin configuration.Can be specified either in floating point cores number, e.g. 0.125 or in K8S format integer millicores e.g. 125m</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SIDECAR_IMAGE__PULL__POLICY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Always</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Define image pulling strategy for sidecars.Possible values are: Always, Never, IfNotPresent. Any other valuewill be interpreted as unspecified policy (Always if :latest tag is specified,or IfNotPresent otherwise.)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_DEFAULT__MEMORY__REQUEST__MB</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RAM request default for each machine that has no explicit RAM settings in environment.this amount will be allocated on workspace container creationthis property might not be supported by all infrastructure implementations:currently it is supported by k8s and openshiftif default memory request is more than  the memory limit request will be ignored,and only limit will be used</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_ACTIVITY__CHECK__SCHEDULER__PERIOD__S</p></td>
@@ -439,6 +464,11 @@ $('#toc').on('click', 'a', function() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_SERVER_LIVENESS__PROBES</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">wsagent/http,exec-agent/http,terminal,theia,jupyter,dirigible,cloud-shell</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of servers names which require liveness probes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CHE_WORKSPACE_STARTUP__DEBUG__LOG__LIMIT__BYTES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10485760</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limit size of the logs collected from single container that can be observed by che-server whendebugging workspace startup.default 10MB=10485760</p></td>
 </tr>
 </tbody>
 </table>
@@ -919,7 +949,7 @@ $('#toc').on('click', 'a', function() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHE_SERVER_SECURE__EXPOSER_JWTPROXY_IMAGE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-jwtproxy:dbd0578</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-jwtproxy:810d89c</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jwtproxy issuer string, token lifetime and optional auth page path to route unsigned requests to.</p></td>
 </tr>
 <tr>
@@ -1391,7 +1421,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Feb 26, 2020 <br/>
+                    Site last generated: Mar 3, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
