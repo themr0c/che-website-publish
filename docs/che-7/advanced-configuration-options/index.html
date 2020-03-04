@@ -1364,8 +1364,11 @@ The certificate file must be named <code>ca.crt</code>.
 <p>Update the <code>global.useGitSelfSignedCerts</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ helm upgrade che --set global.useGitSelfSignedCerts=true --set global.ingressDomain=$(minikube ip).nip.io .</pre>
+<pre>$ helm upgrade che -n che --set global.useGitSelfSignedCerts=true --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>&lt;kubernetes-cluster-domain&gt; On Minikube, use <code>$(minikube ip).nip.io</code></p>
 </div>
 </li>
 </ol>
@@ -1392,6 +1395,75 @@ The certificate file must be named <code>ca.crt</code>.
 <div class="content">
 <pre>[http "https://10.33.177.118:3000"]
         sslCAInfo = /etc/che/git/cert/ca.crt</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-custom-certificates-to-trust-store_advanced-configuration-options">Adding custom public SSL certificates to Che trust-store</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This procedure describes how to configure Che to be able to perform HTTP requests to unrecognized resources.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Save the public certificate(s) that you want to apply.</p>
+</li>
+<li>
+<p>Create a new <strong>configMap</strong> with the certificate(s):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create configmap &lt;config-map name&gt; --from-file=&lt;certificate file path&gt; -n=che</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To apply more then one certificate, add <code>--from-file=&lt;certificate file path&gt;</code> key to the command.</p>
+</div>
+</li>
+<li>
+<p>Define the certificates config-map name.</p>
+<div class="exampleblock">
+<div class="content">
+<div class="olist arabic">
+<div class="title">If Che is deployed using a <a href="https://helm.sh/">Helm Chart</a></div>
+<ol class="arabic">
+<li>
+<p>Clone the <a href="https://github.com/eclipse/che">che</a> project</p>
+</li>
+<li>
+<p>Go to <code>deploy/kubernetes/helm/che</code> directory</p>
+</li>
+<li>
+<p>Set the <code>global.tls.serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, add the following option to the <code>helm upgrade</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map name&gt; --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;kubernetes-cluster-domain&gt; On Minikube, use <code>$(minikube ip).nip.io</code></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">If Che is deployed using <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a></div>
+<p>Set the <code>serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, execute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map name&gt;"}]'</pre>
+</div>
+</div>
 </div>
 </div>
 </li>
@@ -2006,7 +2078,7 @@ The certificate file must be named <code>ca.crt</code>.
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Mar 3, 2020 <br/>
+                    Site last generated: Mar 4, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

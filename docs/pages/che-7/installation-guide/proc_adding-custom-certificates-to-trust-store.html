@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=" ">
-<title>Building a custom plug-in registry | Eclipse Che Documentation</title>
+<title>Adding custom public SSL certificates to Che trust-store | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Building a custom plug-in registry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Adding custom public SSL certificates to Che trust-store page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Building a custom plug-in registry">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Adding custom public SSL certificates to Che trust-store">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -223,7 +223,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Building a custom plug-in registry</h1>
+   <h1 class="post-title-main">Adding custom public SSL certificates to Che trust-store</h1>
 </div>
 
 
@@ -261,89 +261,64 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>This section describes how to build a custom plug-in registry. Following operations are covered:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>getting a copy of the source code necessary to build a custom plug-in registry,</p>
-</li>
-<li>
-<p>adding a new plug-in,</p>
-</li>
-<li>
-<p>building the custom plug-in registry.</p>
-</li>
-</ul>
+<p>This procedure describes how to configure Che to be able to perform HTTP requests to unrecognized resources.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Clone the plug-in registry repository:</p>
+<p>Save the public certificate(s) that you want to apply.</p>
+</li>
+<li>
+<p>Create a new <strong>configMap</strong> with the certificate(s):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
-$ cd che-plugin-registry</pre>
+<pre>$ kubectl create configmap &lt;config-map name&gt; --from-file=&lt;certificate file path&gt; -n=che</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>To apply more then one certificate, add <code>--from-file=&lt;certificate file path&gt;</code> key to the command.</p>
 </div>
 </li>
 <li>
-<p>In the <code>./che-plugin-registry/v3/plugins/</code> directory, create new directories <code><em>&lt;publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em>/</code> and a <code>meta.yaml</code> file in the last directory.</p>
-<div class="listingblock">
-<div class="title">File organization for a plugin</div>
+<p>Define the certificates config-map name.</p>
+<div class="exampleblock">
 <div class="content">
-<pre>./che-plugin-registry/v3/plugins/
-├── <em>&lt;publisher&gt;</em>
-│   └── <em>&lt;plugin-name&gt;</em>
-│       ├── <em>&lt;plugin-version&gt;</em>
-│       │   └── meta.yaml
-│       └── latest.txt</pre>
-</div>
-</div>
+<div class="olist arabic">
+<div class="title">If Che is deployed using a <a href="https://helm.sh/">Helm Chart</a></div>
+<ol class="arabic">
+<li>
+<p>Clone the <a href="https://github.com/eclipse/che">che</a> project</p>
 </li>
 <li>
-<p>Add valid content to the <code>meta.yaml</code> file. See the “Using a Visual Studio Code extension in Che” section or the README.md file in the <code>eclipse/che-plugin-registry</code> repository for a detailed description of the <code>meta.yaml</code> file format.</p>
+<p>Go to <code>deploy/kubernetes/helm/che</code> directory</p>
 </li>
 <li>
-<p>Create a file named <code>latest.txt</code> with content the name of the latest <code><em>&lt;plugin-version&gt;</em></code> directory.</p>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="title">Example</div>
+<p>Set the <code>global.tls.serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, add the following option to the <code>helm upgrade</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ tree che-plugin-registry/v3/plugins/redhat/java/
-che-plugin-registry/v3/plugins/redhat/java/
-├── 0.38.0
-│   └── meta.yaml
-├── 0.43.0
-│   └── meta.yaml
-├── 0.45.0
-│   └── meta.yaml
-├── 0.46.0
-│   └── meta.yaml
-├── 0.50.0
-│   └── meta.yaml
-└── latest.txt
-$ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
-0.50.0</pre>
+<pre>$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map name&gt; --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
 </div>
 </div>
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>&lt;kubernetes-cluster-domain&gt; On Minikube, use <code>$(minikube ip).nip.io</code></p>
 </div>
 </li>
-<li>
-<p>Build the containers for the custom plug-in registry:</p>
+</ol>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">If Che is deployed using <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a></div>
+<p>Set the <code>serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, execute:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre>$ docker build -t my-devfile-registry .</pre>
+<pre>$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map name&gt;"}]'</pre>
+</div>
+</div>
 </div>
 </div>
 </li>
