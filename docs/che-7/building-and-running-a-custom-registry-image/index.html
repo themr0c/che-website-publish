@@ -1309,9 +1309,9 @@ DOMAIN=<em>&lt;kubernetes-cluster-domain&gt;</em> <i class="conum" data-value="2
 IMAGE="my-plug-in-registry"
 helm upgrade --install che-plugin-registry \
  --debug \
- --namespace $\{NAMESPACE} \
- --set global.ingressDomain=$\{DOMAIN} \
- --set chePluginRegistryImage=$\{IMAGE} \
+ --namespace ${NAMESPACE} \
+ --set global.ingressDomain=${DOMAIN} \
+ --set chePluginRegistryImage=${IMAGE} \
  --set chePluginRegistryImagePullPolicy="IfNotPresent" \
  ./kubernetes/che-plugin-registry/</pre>
 </div>
@@ -1338,9 +1338,9 @@ DOMAIN=<em>&lt;kubernetes-cluster-domain&gt;</em> <i class="conum" data-value="2
 IMAGE="my-devfile-registry"
 helm upgrade --install che-devfile-registry \
  --debug \
- --namespace $\{NAMESPACE} \
- --set global.ingressDomain=$\{DOMAIN} \
- --set cheDevfileRegistryImage=$\{IMAGE} \
+ --namespace ${NAMESPACE} \
+ --set global.ingressDomain=${DOMAIN} \
+ --set cheDevfileRegistryImage=${IMAGE} \
  --set cheDevfileRegistryImagePullPolicy="IfNotPresent" \
  ./deploy/kubernetes/che-devfile-registry/</pre>
 </div>
@@ -1377,11 +1377,11 @@ Ingress   che-plugin-registry</pre>
 <div class="content">
 <pre>$ URL=$(kubectl get -o 'custom-columns=URL:.spec.rules[0].host' \
   -l app=che-plugin-registry ingress --no-headers)
-$ INDEX_JSON=$(curl -sSL http://$\{URL}/v3/plugins/index.json)
-$ echo $\{INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
+$ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
+$ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 ,\{
  "id": "my-org/my-plug-in/1.0.0",
- "displayName":"This is my first plug-in for {prod-short}",
+ "displayName":"This is my first plug-in for Che",
  "version":"1.0.0",
  "type":"VS Code extension",
  "name":"my-plug-in",
@@ -1393,7 +1393,7 @@ $ echo $\{INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 --
 ,\{
  "id": "my-org/my-plug-in/latest",
- "displayName":"This is my first plug-in for {prod-short}",
+ "displayName":"This is my first plug-in for Che",
  "version":"latest",
  "type":"VS Code extension",
  "name":"my-plug-in",
@@ -1409,7 +1409,7 @@ $ echo $\{INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl get \
-  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN__REGISTRY__URL']" \
+  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN<em>REGISTRY</em>URL']" \
   --no-headers cm/che
 URL
 http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
