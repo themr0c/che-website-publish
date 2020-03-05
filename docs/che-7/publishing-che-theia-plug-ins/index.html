@@ -1422,12 +1422,12 @@ Only accept factories from trusted sources. Malicious factories can potentially 
 </div>
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>Users can override the RAM limit for a particular plug-in in their workspace configuration.</p>
+<p>Users can override the RAM limit and request for a particular plug-in in their workspace configuration.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Set the <code>memoryLimit</code> for devfile component  to <code>1000M</code> or <code>10Gi</code>, or any other value formatted as a number and a unit (<code>b, k, ki, m, mi, g, gi</code>). When no unit is specified, the number is in bytes.</p>
+<p>Set the <code>memoryLimit</code> and/or <code>memoryRequest</code> for devfile component  to <code>1000M</code> or <code>10Gi</code>, or any other value formatted as a number and a unit (<code>b, k, ki, m, mi, g, gi</code>). When no unit is specified, the number is in bytes.</p>
 </li>
 </ul>
 </div>
@@ -1447,14 +1447,32 @@ Using this notation, units that contain the character <code>i</code>, denote a n
 <div class="title">Example 1. Limiting RAM use for a plug-in</div>
 <div class="content">
 <div class="paragraph">
-<p>Example of an attribute that sets the RAM limit for the <a href="https://github.com/eclipse/che-plugin-registry/blob/master/v3/plugins/redhat/vscode-yaml/0.3.0/meta.yaml">YAML language server plug-in</a> to 768 mebibytes (1073741824 bytes):</p>
+<p>Example of an attribute that sets the RAM limit for the <a href="https://github.com/eclipse/che-plugin-registry/blob/master/v3/plugins/redhat/vscode-yaml/0.3.0/meta.yaml">YAML language server plug-in</a> to 768 mebibytes (1073741824 bytes) and RAM request to 500 megabytes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">id: redhat/vscode-yaml/0.3.0</span></span>
     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
-    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">768mi</span></span></code></pre>
+    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">768mi</span></span>
+    <span style="color:#606">memoryRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">500M</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Limiting CPU use for a plug-in</div>
+<div class="content">
+<div class="paragraph">
+<p>Example of an attribute that sets the CPU limit for the <a href="https://github.com/eclipse/che-plugin-registry/blob/master/v3/plugins/redhat/vscode-yaml/0.3.0/meta.yaml">YAML language server plug-in</a> to 1.5 cores and CPU request to 500 millicores:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">id: redhat/vscode-yaml/0.3.0</span></span>
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+    <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.5</span></span>
+    <span style="color:#606">cpuRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">500m</span></span></code></pre>
 </div>
 </div>
 </div>

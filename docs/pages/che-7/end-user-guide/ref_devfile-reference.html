@@ -746,7 +746,7 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 <div class="sect2">
 <h3 id="specifying-container-memory-limit-for-components">Specifying container memory limit for components</h3>
 <div class="paragraph">
-<p>To specify a container(s) memory limit for <code>dockerimage</code>, <code>chePlugin</code>, <code>cheEditor</code>, <code>kubernetes</code>, <code>openshift</code>, use the <code>memoryLimit</code> parameter:</p>
+<p>To specify a container(s) memory limit for <code>dockerimage</code>, <code>chePlugin</code>, <code>cheEditor</code>, use the <code>memoryLimit</code> parameter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -755,13 +755,100 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
      <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
      <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
-   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
-     <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">../relative/path/postgres.yaml</span></span>
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
+     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipe/maven-jdk8:latest</span></span>
      <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512M</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This limit will be applied to every container of the given component.</p>
+</div>
+<div class="paragraph">
+<p>For <code>cheEditor</code> and <code>chePlugin</code> component types, RAM limits can be described in plugin descriptor file (typically, named <code>meta.yaml</code>).
+In this case, devfile values have precendence, i.e. value from descriptor will be overriden by devfile one.
+If none of them are specified, system-wide defaults will be applied (see description of CHE_WORKSPACE_SIDECAR_DEFAULT<em>MEMORY</em>LIMIT__MB system property).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-container-memory-request-for-components">Specifying container memory request for components</h3>
+<div class="paragraph">
+<p>To specify a container(s) memory request for <code>chePlugin</code> or  <code>cheEditor</code>, use the <code>memoryRequest</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
+     <span style="color:#606">memoryRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512M</span></span>
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
+     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipe/maven-jdk8:latest</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512M</span></span>
+     <span style="color:#606">memoryRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">256M</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This limit will be applied to every container of the given component.</p>
+</div>
+<div class="paragraph">
+<p>For <code>cheEditor</code> and <code>chePlugin</code> component types, RAM requests can be described in plugin descriptor file (typically, named <code>meta.yaml</code>).
+In this case, devfile values have precendence, i.e. value from descriptor will be overriden by devfile one.
+If none of them are specified, system-wide defaults will be applied (see description of CHE_WORKSPACE_SIDECAR_DEFAULT<em>MEMORY</em>REQUEST__MB system property).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-container-cpu-limit-for-components">Specifying container CPU limit for components</h3>
+<div class="paragraph">
+<p>To specify a container(s) CPU limit for <code>chePlugin</code> or <code>cheEditor</code>, use the <code>cpuLimit</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
+     <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.5</span></span>
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
+     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipe/maven-jdk8:latest</span></span>
+     <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">750m</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This limit will be applied to every container of the given component.</p>
+</div>
+<div class="paragraph">
+<p>For <code>cheEditor</code> and <code>chePlugin</code> component types, CPU limits can be described in plugin descriptor file (typically, named <code>meta.yaml</code>).
+In this case, devfile values have precendence, i.e. value from descriptor will be overriden by devfile one.
+If none of them are specified, system-wide defaults will be applied (see description of CHE_WORKSPACE_SIDECAR_DEFAULT<em>CPU</em>LIMIT__CORES system property).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="specifying-container-cpu-request-for-components">Specifying container CPU request for components</h3>
+<div class="paragraph">
+<p>To specify a container(s) CPU request for <code>chePlugin</code> or <code>cheEditor</code>, use the <code>cpuRequest</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  <span style="color:#606">components</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: exec-plugin</span></span>
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+     <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-machine-exec-plugin/0.0.1</span></span>
+     <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.5</span></span>
+     <span style="color:#606">cpuRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">0.225</span></span>
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
+     <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipe/maven-jdk8:latest</span></span>
+     <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">750m</span></span>
+     <span style="color:#606">cpuRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">450m</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This limit will be applied to every container of the given component.</p>
+</div>
+<div class="paragraph">
+<p>For <code>cheEditor</code> and <code>chePlugin</code> component types, CPU requests can be described in plugin descriptor file (typically, named <code>meta.yaml</code>).
+In this case, devfile values have precendence, i.e. value from descriptor will be overriden by devfile one.
+If none of them are specified, system-wide defaults will be applied (see description of CHE_WORKSPACE_SIDECAR_DEFAULT<em>CPU</em>REQUEST__CORES system property).</p>
 </div>
 </div>
 <div class="sect2">
