@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Che workspaces architecture | Eclipse Che Documentation</title>
+<title>Che Compute Resource Requirements | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che workspaces architecture page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Che Compute Resource Requirements page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Che workspaces architecture">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Che Compute Resource Requirements">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1062,7 +1062,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Che workspaces architecture</h1>
+   <h1 class="post-title-main">Che Compute Resource Requirements</h1>
 </div>
 
 
@@ -1102,430 +1102,411 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Che workspace is a web application. It is composed of microservices running in containers that provide all the services of a modern IDE (an editor, language auto-completion, debugging tooling). The IDE services are deployed with the development tooling, packaged in containers and user runtime applications, which are defined as Kubernetes resources.</p>
+<p>This section describes how to calculate the compute resources required to run Eclipse Che: RAM and CPU.</p>
 </div>
-<div class="paragraph">
-<p>The source code of the projects of a Che workspace is persisted in a Kubernetes <code>PersistentVolume</code>. Microservices run in containers that have read-write access to the source code (IDE services, development tools), and runtime applications have read-write access to this shared directory.</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="che-architectural-components_che-compute-resource-requirements">Che Architectural Components</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The following diagram shows the detailed components of a Che workspace.</p>
+<p>As illustrated in the <a href="/che/docs/che-7/high-level-che-architecture">High Level Che Architecture</a> article, Eclipse Che components are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A central workspace controller: an always up service that manages users workspaces</p>
+</li>
+<li>
+<p>Users workspaces: container based IDEs that the controller stops when the user stops coding</p>
+</li>
+</ul>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/che/docs/images/architecture/che-workspaces.png" alt="che workspaces">
+<img src="/che/docs/images/architecture/che-high-level.png" alt="che high level">
 </div>
-<div class="title">Figure 1. Che workspace components</div>
-</div>
-<div class="paragraph">
-<p>In the diagram, there are three running workspaces: two belonging to <strong>User A</strong> and one to <strong>User C</strong>. A fourth workspace is getting provisioned where the plug-in broker is verifying and completing the workspace configuration.</p>
 </div>
 <div class="paragraph">
-<p>Use the devfile format to specify the tools and runtime applications of a Che workspace.</p>
+<p>Both the Che central controller and user workspaces consists of a set of containers. Those containers contribute to the resources consumption in terms of CPU and RAM limit and request. For a detailed explanation of how Kubernetes is managing containers compute resources requests and limits refer to the <a href="https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/">Kubernetes Documentation</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-components_che-workspaces-architecture">Che workspace components</h2>
+<h2 id="controller-requirements_che-compute-resource-requirements">Controller Requirements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the components of a Che workspace.</p>
-</div>
-<div class="sect2">
-<h3 id="che-plug-ins_che-workspace-components"><code>Che Plugin</code> plug-ins</h3>
-<div class="paragraph">
-<p><code>Che Plugin</code> plug-ins are special services that extend Che workspace capabilities. <code>Che Plugin</code> plug-ins are packaged as containers. Packaging plug-ins into a container has the following benefits:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>It isolates the plug-ins from the main IDE, thus limiting the resources that a plug-in has access to.</p>
-</li>
-<li>
-<p>It uses the consolidated standard of container registries to publish and distribute plug-ins (as with any container image).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The containers that plug-ins are packaged into run as sidecars of the Che workspace editor and augment its capabilities.</p>
-</div>
-<div class="paragraph">
-<p>Visual Studio Code extensions packaged in containers are Che plug-ins for the Che-Theia editor.</p>
-</div>
-<div class="paragraph">
-<p>Multiple Che plug-ins can run in the same container (for better resource use), or a Che Plugin can run in its dedicated container (for better isolation).</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="che-editor-plug-in_che-workspace-components"><code>Che Editor</code> plug-in</h3>
-<div class="paragraph">
-<p>A <code>Che Editor</code> plug-in is a Che workspace plug-in.
-It defines the web application that is used as an editor in a workspace.
-The default Che workspace editor is called Che-Theia.</p>
-</div>
-<div class="paragraph">
-<p>The Che-Theia source-code repository is at <a href="https://github.com/eclipse/che-theia">Che-Theia Github</a>.
-It is based on the <a href="https://github.com/theia-ide/theia">Eclipse Theia open-source project</a>.</p>
-</div>
-<div class="paragraph">
-<p>Che-Theia is written in TypeScript and is built on the <a href="https://github.com/Microsoft/monaco-editor">Microsoft Monaco editor</a>.
-It is a web-based source-code editor similar to <a href="https://code.visualstudio.com/">Visual Studio Code</a> (VS Code).
-It has a plug-in system that supports VS Code extensions.</p>
+<p>The Workspace Controller consists of a set of 5 services running in 5 distinct containers. The following table presents the default compute resources requirements of each of these services.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. ControllerServices</caption>
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-theia">Che-Theia</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="che-user-runtimes_che-workspace-components">Che user runtimes</h3>
-<div class="paragraph">
-<p>Use any non-terminating user container as a user runtime. An application that can be defined as a container image or as a set of Kubernetes or OpenShift resources can be included in a Che workspace. This makes it easy to test applications in the Che workspace.</p>
-</div>
-<div class="paragraph">
-<p>To test an application in the Che workspace, include the application YAML definition used in stage or production in the workspace specification. It is a 12-factor app dev/prod parity.</p>
-</div>
-<div class="paragraph">
-<p>Examples of user runtimes are Node.js, SpringBoot or MongoDB, and MySQL.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="che-workspace-jwt-proxy_che-workspace-components">Che workspace JWT proxy</h3>
-<div class="paragraph">
-<p>The JWT proxy is responsible for securing the communication of the Che workspace services. The Che workspace JWT proxy is included in a Che workspace only if the Che server is configured in multi-user mode.</p>
-</div>
-<div class="paragraph">
-<p>An HTTP proxy is used to sign outgoing requests from a workspace service to the Che server and to authenticate incoming requests from the IDE client running on a browser.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-jwtproxy">JWT proxy</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-jwtproxy</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="che-plug-in-broker_che-workspace-components">Che plug-ins broker</h3>
-<div class="paragraph">
-<p>Plug-in brokers are special services that, given a plug-in <code>meta.yaml</code> file:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Gather all the information to provide a plug-in definition that the Che server knows.</p>
-</li>
-<li>
-<p>Perform preparation actions in the workspace namespace (download, unpack files, process configuration).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The main goal of the plug-in broker is to decouple the Che plug-ins definitions from the actual plug-ins that Che can support. With brokers, Che can support different plug-ins without updating the Che server.</p>
-</div>
-<div class="paragraph">
-<p>The Che server starts the plug-in broker. The plug-in broker runs in the same Kubernetes namespace as the workspace. It has access to the plug-ins and project persistent volumes.</p>
-</div>
-<div class="paragraph">
-<p>A plug-ins broker is defined as a container image (for example, <code>eclipse/che-plugin-broker</code>). The plug-in type determines the type of the broker that is started. Two types of plug-ins are supported: <code>Che Plugin</code> and <code>Che Editor</code>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse/che-plugin-broker">Che Plug-in broker</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-init-plugin-broker</code><br>
-<code>eclipse/che-unified-plugin-broker</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-workspace-configuration_che-workspaces-architecture">Che workspace configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes the properties of the Che server that affect the provisioning of a Che workspace.</p>
-</div>
-<div class="sect2">
-<h3 id="storage-strategies-for-che-workspaces_che-workspace-configuration">Storage strategies for Che workspaces</h3>
-<div class="paragraph">
-<p>Workspace pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>.
-The way how Che server uses PVCs for workspaces is configurable and it&#8217;s called PVC strategy:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">strategy</th>
-<th class="tableblock halign-left valign-top">details</th>
-<th class="tableblock halign-left valign-top">pros</th>
-<th class="tableblock halign-left valign-top">cons</th>
+<th class="tableblock halign-left valign-top">Pod</th>
+<th class="tableblock halign-left valign-top">Container Name</th>
+<th class="tableblock halign-left valign-top">Default Memory Limit</th>
+<th class="tableblock halign-left valign-top">Default Memory Request</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>unique</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC per workspace volume or user-defined PVC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage isolation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An undefined number of PVs is required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Che</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">che</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>per-workspace</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for one workspace</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Easier to manage and control storage compared to unique stategy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PV count still is not known and depends on workspaces number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Postgres</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common (default)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces in one kubernetes namespace</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If PV does not support ReadWriteMany (RWX) access mode then workspaces must be in a separate kubernetes namespaces</p>
-<p class="tableblock">Or there must not be more than 1 running workspace per namespace at the same time</p>
-<p class="tableblock">See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keycloak</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2Gi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile Registry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">che-devfile-registry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plugin Registry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">che-plugin-registry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16Mi</p></td>
 </tr>
 </tbody>
 </table>
-<div class="sect3">
-<h4 id="unique-pvc-strategy_che-workspace-configuration">Unique PVC strategy</h4>
 <div class="paragraph">
-<div class="title">How the unique PVC strategy works</div>
-<p>Every Che Volume of workspace gets its own PVC, which means workspace PVCs are created when a workspace starts for the first time. Workspace PVCs are deleted when a corresponding workspace is deleted.</p>
-</div>
-<div class="paragraph">
-<p>User-defined PVCs are created with few modifications:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>they are provisioned with generated names to guarantee that it is not conflicting with other PVCs in namespace;</p>
-</li>
-<li>
-<p>subpaths of mount volumes that reference user-defined PVCs are prefixed with <code>{workspace id}/{PVC name}</code>.
-It is done to have the same data structure on PV on different PVC strategies(<a href="#how-the-subpaths-are-used">more</a>);</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="common-pvc-strategy_che-workspace-configuration">Common PVC Strategy</h4>
-<div class="paragraph">
-<div class="title">How the common PVC strategy works</div>
-<p>All workspaces (within one {k8s-namespace}) use the same PVC to store data in their declared volumes (projects and workspace logs by default and whatever additional volumes that a user can define.)</p>
-</div>
-<div class="paragraph">
-<p>User-defined PVCs are ignored and volumes that reference PVCs are replaced with volume that references common PVC.
-The corresponding containers volume mounts are relinked to common volume and subpaths are prefixed with <code>'{workspaceId}/{originalPVCName}'</code> (<a href="#how-the-subpaths-are-used">more</a>).</p>
-</div>
-<div class="paragraph">
-<p>User-defined PVC name is used as Che Volume name. It means that if Machine is configured to use Che Volume with the same name as user-defined
-PVC has then they will use the same shared folder in common PVC.</p>
-</div>
-<div class="paragraph">
-<p>When a workspace is deleted, a corresponding subdirectory (<code>${ws-id}</code>) is deleted in the PV directory.</p>
-</div>
-<div class="paragraph">
-<div class="title">Restrictions on using the common PVC strategy</div>
-<p>When the <code>common</code> strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one {admin-context} node can simultaneously use the PVC.
-If there are several nodes, you can use the <code>common</code> strategy, but:
-- the workspace PVC access mode must be reconfigured to ReadWriteMany (RWM), so multiple nodes can use this PVC simultaneously.
-- the only one workspace in the same namespace may be running. See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a> and <a href="#TODO">running workspace count</a></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="per-workspace-pvc-strategy_che-workspace-configuration">Per workspace PVC strategy</h4>
-<div class="paragraph">
-<div class="title">How the per-workspace PVC strategy works</div>
-<p>The <code>per-workspace</code> strategy works similarly to the <code>common</code> PVC strategy. The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional volumes that a user can define).</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="how-the-subpaths-are-used_che-workspace-configuration">How the subpaths are used in PVCs</h4>
-<div class="listingblock">
-<div class="content">
-<pre>/pv0001
-  /workspaceid1
-  /workspaceid2
-  /workspaceidn
-    /che-logs
-    /projects
-    /&lt;volume1&gt;
-    /&lt;volume2&gt;
-    /&lt;User-defined PVC name 1 | volume 3&gt;
-    ...</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Volumes can be anything that a user defines as volumes for workspace machines.  The volume name is equal to the directory name in <code>${PV}/${ws-id}</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="configuring-a-needed-workspace-strategy-using-the-helm-chart_che-workspace-configuration">Configuring a per-workspace strategy using the Helm chart</h4>
-<div class="paragraph">
-<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Helm chart.</p>
-</div>
-<div class="paragraph">
-<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
-</div>
-<div class="paragraph">
-<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
-</div>
-<div class="paragraph">
-<p>When deploying Che using the Helm chart, configure the workspace PVC strategy by setting values for <code>global.pvcStrategy</code>. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="configuring-a-needed-workspace-strategy-using-the-operator_che-workspace-configuration">Configuring a per-workspace strategy using the Operator</h4>
-<div class="paragraph">
-<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Operator.</p>
-</div>
-<div class="paragraph">
-<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
-</div>
-<div class="paragraph">
-<p><a href="https://docs.openshift.com/container-platform/latest/applications/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/applications/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
-</div>
-<div class="paragraph">
-<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster custom resource object YAML file.
-To activate changes done to CheCluster YAML file, do one of the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Create a new cluster by executing the <code>kubectl apply</code> command. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl apply -f <em>&lt;my-cluster.yaml&gt;</em></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Update the YAML file properties of an already running cluster by executing the <code>kubectl patch</code> command. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster eclipse-che --type=json -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>common</em>"}]'</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="workspace-namespaces-configuration_che-workspace-configuration">Workspace namespaces configuration</h3>
-<div class="paragraph">
-<p>The Kubernetes namespace where a new workspace pod is deployed depends on the Che server configuration. By default, every workspace is deployed in a distinct namespace, but the user can configure the Che server to deploy all workspaces in one specific namespace. The name of a namespace must be provided as a Che server configuration property and cannot be changed at runtime.</p>
-</div>
+<p>These default values work fine when the Che Workspace Controller manages a small amount of Che workspaces. For bigger deployments, increase the Memory Limit. Refer to the <a href="/che/docs/che-7/advanced-configuration-options">Advanced Configurations Options</a> article to see how the default requests and limits can be overridden. As an example, for the hosted version of Che that runs <a href="https://che.openshift.io">che.openshift.io</a>, we use 4Gi.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-creation-flow_che-workspaces-architecture">Che workspace creation flow</h2>
+<h2 id="workspaces-requirements_che-compute-resource-requirements">Workspaces Requirements</h2>
 <div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/architecture/che-workspace-creation-flow.png" alt="che workspace creation flow">
-</div>
+<div class="paragraph">
+<p>This section describes how to calculate the resources required for a workspace. It is the sum of the resources required for each component of this workspace.</p>
 </div>
 <div class="paragraph">
-<p>The following is a Che workspace creation flow:</p>
+<p>These examples demonstrate the necessity of a proper calculation:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>A user starts a Che workspace defined by:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>An editor (the default is Che-Theia)</p>
+<p>A workspace with 10 active plugins require more resources then the same workspace with half of the plugins.</p>
 </li>
 <li>
-<p>A list of plug-ins (for example, Java and Kubernetes tooling)</p>
-</li>
-<li>
-<p>A list of runtime applications</p>
+<p>A standard Java workspace requires more resources than a standard NodeJS workspace because running the build, running the tests and debugging the application requires more resources.</p>
 </li>
 </ul>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Identify the workspace components explicitly specified in the <code>components</code> section of the <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile">devfile</a>.</p>
 </li>
 <li>
-<p><strong>wsmaster</strong> retrieves the editor and plug-in metadata from the plug-in registry.</p>
-</li>
-<li>
-<p>For every plug-in type, <strong>wsmaster</strong> starts a specific plug-in broker.</p>
-</li>
-<li>
-<p>The Che plug-ins broker transforms the plug-in metadata into a Che Plugin definition. It executes the following steps:</p>
+<p>Identify the implicit workspace components:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Downloads a plug-in and extracts its content.</p>
+<p>Che implicitly loads the default <code>cheEditor</code>: <code>che-theia</code>, and the <code>chePlugin</code> that allows commands execution: <code>che-machine-exec-plugin</code>. To change the default editor, add a  <code>cheEditor</code> component section in the devfile.</p>
 </li>
 <li>
-<p>Processes the plug-in <code>meta.yaml</code> file and sends it back to <strong>wsmaster</strong> in the format of a Che Plugin.</p>
+<p>When Che is running in multi-user mode, it loads the <code>JWT Proxy</code> component. The <a href="/che/docs/che-7/authenticating-users/#machine-token-validation_authenticating-in-a-che-workspace">JWT Proxy</a> is responsible for the authentication and authorization of the external communications of the workspace components.</p>
 </li>
 </ol>
 </div>
 </li>
 <li>
-<p><strong>wsmaster</strong> starts the editor and the plug-in sidecars.</p>
+<p>Calculate the requirements for each component:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Default values:</p>
+<div class="paragraph">
+<p>Following table presents the default requirements for each type of Workspace Components. It also presents the corresponding Che server property to modify the defaults cluster wide.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Default requirements by type of Workspace Components</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component Types</th>
+<th class="tableblock halign-left valign-top">Che server property</th>
+<th class="tableblock halign-left valign-top">Default Memory Limit</th>
+<th class="tableblock halign-left valign-top">Default Memory Request</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePlugin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.workspace.sidecar.default_memory_limit_mb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheEditor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.workspace.sidecar.default_memory_limit_mb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes</code>, <code>openshift</code>, <code>dockerimage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.workspace.default_memory_limit_mb</code>, <code>che.workspace.default_memory_request_mb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JWT Proxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.server.secure_exposer.jwtproxy.memory_limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li>
-<p>The editor loads the plug-ins from the plug-in persistent volume.</p>
+<p>Custom requirements for <code>chePlugins</code> and <code>cheEditors</code> components</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Custom memory limit and request:</p>
+<div class="paragraph">
+<p>If present, the <code>memoryLimit</code> attribute of the <code>containers</code> section of the <code>meta.yaml</code> file defines the memory limit of a <code>chePlugins</code> or <code>cheEditors</code> component.
+Che set automatically the memory request to match the memory limit. There is no attribute in a <code>meta.yaml</code> file to set the memory request.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. The <code>chePlugin</code> <code>che-incubator/typescript/latest</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="title"><code>meta.yaml</code> spec section:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+ <span style="color:#606">containers</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: docker.io/eclipse/che-remote-plugin-node:next</span></span>
+     <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-typescript</span></span>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It will result as a container with the following memory limit and request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Memory Limit: 512Mi
+Memory Request: 512Mi</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<div class="title">How to find the <code>meta.yaml</code> file of <code>chePlugin</code></div>
+<p>Community plugins are available on the <a href="https://github.com/eclipse/che-plugin-registry">che-plugin-registry GitHub repository</a> in folder <code>v3/plugins/${organization}/${name}/${version}/</code>.<br>
+For non-community or customized ones the <code>meta.yaml</code> files are available on the local Kubernetes cluster at URL <code>${pluginRegistryEndpoint}/v3/plugins/${organization}/${name}/${version}/meta.yaml</code>. On a local minikube cluster for example the URL for the <code>che-incubator/typescript/latest meta.yaml</code> looks like: <code><a href="http://plugin-registry-che.192.168.64.78.nip.io/v3/plugins/che-incubator/typescript/latest/meta.yaml" class="bare">http://plugin-registry-che.192.168.64.78.nip.io/v3/plugins/che-incubator/typescript/latest/meta.yaml</a></code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Custom CPU limit and request:</p>
+<div class="paragraph">
+<p>Che doesn&#8217;t set CPU limits and requests. The Kubernetes namespace <code>LimitRange</code> may specify some defaults for CPU limits and requests. Kubernetes apply them to the <code>chePlugin</code> container.</p>
+</div>
 </li>
 </ol>
+</div>
+</li>
+<li>
+<p>Custom requirements for <code>dockerimage</code> components</p>
+<div class="paragraph">
+<p>If present, the <code>memoryLimit</code> attribute of the devfile defines the memory limit of a <code>dockerimage</code> container.
+Che set automatically the memory request to match the memory limit. There is no attribute in a devfile to set the memory request.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: maven</span></span>
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+    <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/maven-jdk8:latest</span></span>
+    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1536M</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Custom requirements for <code>kubernetes</code> or <code>openshift</code> components</p>
+<div class="paragraph">
+<p>The referenced manifest may define the memory requirements and limits.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sum all requirements previously calculated.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a-workspace-example_che-compute-resource-requirements">A Workspace Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes a Che workspace example.</p>
+</div>
+<div class="paragraph">
+<p>The following devfile defines the Che workspace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+ <span style="color:#606">generateName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">guestbook-nodejs-sample-</span></span>
+<span style="color:#606">projects</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: guestbook-nodejs-sample</span></span>
+   <span style="color:#606">source</span>:
+     <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+     <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/l0rd/nodejs-sample</span><span style="color:#710">&quot;</span></span>
+<span style="color:#606">components</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
+   <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-incubator/typescript/latest</span></span>
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
+   <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">guestbook-frontend</span></span>
+   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/l0rd/nodejs-sample/master/kubernetes-manifests/guestbook-frontend.deployment.yaml</span></span>
+   <span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+   <span style="color:#606">entrypoints</span>:
+     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">command: ['sleep']</span></span>
+       <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This table provides the memory requirements for each workspace component:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Total Workspace Memory Requirement and Limit</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pod</th>
+<th class="tableblock halign-left valign-top">Container Name</th>
+<th class="tableblock halign-left valign-top">Default Memory Limit</th>
+<th class="tableblock halign-left valign-top">Default Memory Request</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">theia-ide (default <code>cheEditor</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">machine-exec (default <code>chePlugin</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vscode-typescript (<code>chePlugin</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">frontend (<code>kubernetes</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT Proxy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">verifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-right valign-top" colspan="2"><p class="tableblock"><strong>Total</strong></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>2.25Gi</strong></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.75Gi</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>theia-ide</code> and <code>machine-exec</code> components are implicitly added to the workspace, even if they don&#8217;t figure in the devfile. The resources required by <code>machine-exec</code> are the default for a <code>chePlugin</code> and the resources for <code>theia-ide</code> are specifically set in the <code>cheEditor</code> <code>meta.yaml</code> to <strong>512Mi</strong> as memoryLimit.</p>
+</div>
+<div class="paragraph">
+<p>The typescript VS Code extension has overridden the default memory limits as well. In its <code>meta.yaml</code> file the limits are explicitly specified to <strong>512Mi</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Che is applying the defaults for the <code>kubernetes</code> component type: a memory limit of <strong>1Gi</strong> and memory request of <strong>512Mi</strong>.
+It does that because the <code>kubernetes</code> component references a <code>Deployment</code> manifest that has a container specification with no resources limits or requests.</p>
+</div>
+<div class="paragraph">
+<p>At last we need to consider the JWT container as well that requires <strong>128Mi</strong> of memory.</p>
+</div>
+<div class="paragraph">
+<p>Summing all together we get <strong>1.75Gi</strong> of memory requests with a <strong>2.25Gi</strong> limit.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-resources">Additional resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="/che/docs/che-7/high-level-che-architecture">High Level Che Architecture</a></p>
+</li>
+<li>
+<p><a href="https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/">Kubernetes Compute Resources Management Documentation</a></p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/advanced-configuration-options">Che Advanced Configuration Options</a></p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile">The devfile documentation</a></p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/#a-minimal-devfile_making-a-workspace-portable-using-a-devfile">A devfile that has no components</a></p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/authenticating-users/#machine-token-validation_authenticating-in-a-che-workspace">The JWT Proxy</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che-plugin-registry">che-plugin-registry GitHub repository</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
