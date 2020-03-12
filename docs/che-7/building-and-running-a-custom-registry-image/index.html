@@ -1399,6 +1399,10 @@ Ingress   che-plugin-registry</pre>
 </div>
 </li>
 <li>
+<p>Check if the registries are deployed successfully on Kubernetes.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
 <p>To verify that the new plug-in is correctly published to the plug-in registry, make a request to the registry path <code>/v3/plugins/index.json</code> (or <code>/devfiles/index.json</code> for the devfile registry).</p>
 <div class="listingblock">
 <div class="content">
@@ -1482,6 +1486,9 @@ $ kubectl scale --replicas=1 deployment/che</pre>
 </li>
 </ol>
 </div>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect2">
 <h3 id="deploying-registries-in-openshift_deploying-the-registries">Deploying registries in OpenShift</h3>
@@ -1539,11 +1546,81 @@ oc new-app -f openshift/che-devfile-registry.yml \
 </li>
 <li>
 <p>Check if the registries are deployed successfully on OpenShift.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>To verify that the new plug-in is correctly published to the plug-in registry, make a request to the registry path <code>/v3/plugins/index.json</code> (or <code>/devfiles/index.json</code> for the devfile registry).</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ URL=$(oc get -o 'custom-columns=URL:.spec.rules[0].host' \
+  -l app=che-plugin-registry route --no-headers)
+$ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
+$ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
+,\{
+ "id": "my-org/my-plug-in/1.0.0",
+ "displayName":"This is my first plug-in for Che",
+ "version":"1.0.0",
+ "type":"VS Code extension",
+ "name":"my-plug-in",
+ "description":"This plugin shows that we are able to add plugins to the registry",
+ "publisher":"my-org",
+ "links": \{"self":"/v3/plugins/my-org/my-plug-in/1.0.0" }
+}
+--
+--
+,\{
+ "id": "my-org/my-plug-in/latest",
+ "displayName":"This is my first plug-in for Che",
+ "version":"latest",
+ "type":"VS Code extension",
+ "name":"my-plug-in",
+ "description":"This plugin shows that we are able to add plugins to the registry",
+ "publisher":"my-org",
+ "links": \{"self":"/v3/plugins/my-org/my-plug-in/latest" }
+}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the Che server points to the URL of the registry. To do this, compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap (or <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> for the devfile registry):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get \
+  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN<em>REGISTRY</em>URL']" \
+  --no-headers cm/che
+URL
+http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The steps to check are similar to the Kubernetes steps. For details, see the <a href="#deploying-registries-in-kubernetes_deploying-the-registries">Deploying registries in Kubernetes</a> section, where the only difference when deploying in OpenShift is that Ingresses are replaced with routes.</p>
+<p>with the URL of the route:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get -o 'custom-columns=URL:.spec.rules[0].host' \
+  -l app=che-plugin-registry route --no-headers
+che-plugin-registry-che.192.168.99.100.nip.io</pre>
+</div>
+</div>
+</li>
+<li>
+<p>If they do not match, update the ConfigMap and restart the Che server.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc edit cm/che
+(...)
+$ oc scale --replicas=0 deployment/che
+$ oc scale --replicas=1 deployment/che</pre>
+</div>
 </div>
 </li>
 </ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the new registries are deployed and the Che server is configured to use them, the new plug-ins are available in the <strong>Plugin</strong> view of a workspace and the new stacks are displayed in the <strong>New Workspace</strong> tab of the user dashboard.</p>
 </div>
 </div>
 </div>
@@ -1568,7 +1645,7 @@ oc new-app -f openshift/che-devfile-registry.yml \
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Mar 11, 2020 <br/>
+                    Site last generated: Mar 12, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
