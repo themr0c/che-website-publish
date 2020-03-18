@@ -1882,40 +1882,42 @@ There are different types of plug-ins. A broker ensures all installation require
 <li>
 <p>Start a remote plug-in endpoint using the <code>CMD</code> command in the Dockerfile:</p>
 <div class="listingblock">
+<div class="title">Dockerfile example</div>
 <div class="content">
-<pre>FROM fedora:30
+<pre class="CodeRay highlight"><code>FROM fedora:30
 
-RUN dnf update -y && dnf install -y nodejs htop && node -v
+RUN dnf update -y &amp;&amp; dnf install -y nodejs htop &amp;&amp; node -v
 
 RUN mkdir /home/user
 
 ENV HOME=/home/user
 
 RUN mkdir /projects \
-    && chmod -R g+rwX /projects \
-    && chmod -R g+rwX "${HOME}"
+    &amp;&amp; chmod -R g+rwX /projects \
+    &amp;&amp; chmod -R g+rwX &quot;${HOME}&quot;
 
-CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</code></pre>
 </div>
 </div>
 </li>
 <li>
 <p>Start a remote plug-in endpoint using the <code>ENTRYPOINT</code> command in the Dockerfile:</p>
 <div class="listingblock">
+<div class="title">Dockerfile example</div>
 <div class="content">
-<pre>FROM fedora:30
+<pre class="CodeRay highlight"><code>FROM fedora:30
 
-RUN dnf update -y && dnf install -y nodejs htop && node -v
+RUN dnf update -y &amp;&amp; dnf install -y nodejs htop &amp;&amp; node -v
 
 RUN mkdir /home/user
 
 ENV HOME=/home/user
 
 RUN mkdir /projects \
-    && chmod -R g+rwX /projects \
-    && chmod -R g+rwX "${HOME}"
+    &amp;&amp; chmod -R g+rwX /projects \
+    &amp;&amp; chmod -R g+rwX &quot;${HOME}&quot;
 
-ENTRYPOINT ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+ENTRYPOINT ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</code></pre>
 </div>
 </div>
 </li>
@@ -1958,22 +1960,23 @@ exec &quot;$@&quot;</code></pre>
 <li>
 <p>Example of a Dockerfile with a wrapper script:</p>
 <div class="listingblock">
+<div class="title">Dockefile example</div>
 <div class="content">
-<pre>FROM alpine:3.10.2
+<pre class="CodeRay highlight"><code>FROM alpine:3.10.2
 
 ENV HOME=/home/theia
 
 RUN mkdir /projects ${HOME} &amp;&amp; \
     # Change permissions to let any arbitrary user
-    for f in "${HOME}" "/etc/passwd" "/projects"; do \
-      echo "Changing permissions on ${f}" &amp;&amp; chgrp -R 0 ${f} &amp;&amp; \
+    for f in &quot;${HOME}&quot; &quot;/etc/passwd&quot; &quot;/projects&quot;; do \
+      echo &quot;Changing permissions on ${f}&quot; &amp;&amp; chgrp -R 0 ${f} &amp;&amp; \
       chmod -R g+rwX ${f}; \
     done
 
 ADD entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</pre>
+ENTRYPOINT [ &quot;/entrypoint.sh&quot; ]
+CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
