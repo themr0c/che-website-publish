@@ -720,10 +720,14 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 <p>The <code>command</code> attribute of the <code>dockerimage</code> along with other arguments, is used to modify the <code>entrypoint</code> command of the container created from the image. In Eclipse Che the container is needed to run indefinitely so that you can connect to it and execute arbitrary commands in it at any time. Because the availability of the <code>sleep</code> command and the support for the <code>infinity</code> argument for it is different and depends on the base image used in the particular images, Che cannot insert this behavior automatically on its own. However, you can take advantage of this feature to, for example, start up necessary servers with modified configurations, etc.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="persistent-storage">Persistent Storage</h4>
+</div>
+<div class="sect2">
+<h3 id="persistent-storage">Persistent Storage</h3>
 <div class="paragraph">
-<p>Docker image tools can specify the custom volumes to be mounted on specific locations within the image. Note that the volume names are shared across all components and therefore this mechanism can also be used to share file systems between components.</p>
+<p><code>Dockerimage</code>, <code>chePlugin</code> and <code>cheEditor</code> type components can specify the custom volumes to be mounted on specific locations within the image. Note that the volume names are shared across all components and therefore this mechanism can also be used to share file systems between components.</p>
+</div>
+<div class="paragraph">
+<p>Example specifying volumes for <code>dockerimage</code> type:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -740,6 +744,25 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
       - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: cache</span></span>
         <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/.cache</span></span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Example specifying volumes for <code>cheEditor</code>/<code>chePlugin</code> type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: cheEditor</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">theia-editor</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-theia/next</span></span>
+    <span style="color:#606">env</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: HOME</span></span>
+      <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_PROJECTS_ROOT)</span></span>
+    <span style="color:#606">volumes</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: cache</span></span>
+      <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/.cache</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -1471,7 +1494,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Mar 18, 2020 <br/>
+                    Site last generated: Mar 19, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
