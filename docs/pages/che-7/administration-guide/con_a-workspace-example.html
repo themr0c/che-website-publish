@@ -292,7 +292,7 @@ $('#toc').on('click', 'a', function() {
 <p>This table provides the memory requirements for each workspace component:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Total Workspace Memory Requirement and Limit</caption>
+<caption class="title">Table 1. Total workspace memory requirement and limit</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 50%;">
@@ -302,64 +302,73 @@ $('#toc').on('click', 'a', function() {
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Pod</th>
-<th class="tableblock halign-left valign-top">Container Name</th>
-<th class="tableblock halign-left valign-top">Default Memory Limit</th>
-<th class="tableblock halign-left valign-top">Default Memory Request</th>
+<th class="tableblock halign-left valign-top">Container name</th>
+<th class="tableblock halign-left valign-top">Default memory limit</th>
+<th class="tableblock halign-left valign-top">Default memory request</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">theia-ide (default <code>cheEditor</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">machine-exec (default <code>chePlugin</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">vscode-typescript (<code>chePlugin</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">frontend (<code>kubernetes</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1 GiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Proxy</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">verifier</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">128Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-right valign-top" colspan="2"><p class="tableblock"><strong>Total</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>2.25Gi</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.75Gi</strong></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>2.25 GiB</strong></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.75 GiB</strong></p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The <code>theia-ide</code> and <code>machine-exec</code> components are implicitly added to the workspace, even if they don&#8217;t figure in the devfile. The resources required by <code>machine-exec</code> are the default for a <code>chePlugin</code> and the resources for <code>theia-ide</code> are specifically set in the <code>cheEditor</code> <code>meta.yaml</code> to <strong>512Mi</strong> as memoryLimit.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>theia-ide</code> and <code>machine-exec</code> components are implicitly added to the workspace, even when not included in the devfile.</p>
+</li>
+<li>
+<p>The resources required by <code>machine-exec</code> are the default for <code>chePlugin</code>.</p>
+</li>
+<li>
+<p>The resources for <code>theia-ide</code> are specifically set in the <code>cheEditor</code> <code>meta.yaml</code> to <strong>512 MiB</strong> as <code>memoryLimit</code>.</p>
+</li>
+<li>
+<p>The Typescript VS Code extension has also overridden the default memory limits. In its <code>meta.yaml</code> file, the limits are explicitly specified to <strong>512 MiB</strong>.</p>
+</li>
+<li>
+<p>Che is applying the defaults for the <code>kubernetes</code> component type: a memory limit of <strong>1 GiB</strong> and a memory request of <strong>512&#160;MiB</strong>. This is because the <code>kubernetes</code> component references a <code>Deployment</code> manifest that has a container specification with no resource limits or requests.</p>
+</li>
+<li>
+<p>The JWT container requires <strong>128 MiB</strong> of memory.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The typescript VS Code extension has overridden the default memory limits as well. In its <code>meta.yaml</code> file the limits are explicitly specified to <strong>512Mi</strong>.</p>
-</div>
-<div class="paragraph">
-<p>Che is applying the defaults for the <code>kubernetes</code> component type: a memory limit of <strong>1Gi</strong> and memory request of <strong>512Mi</strong>.
-It does that because the <code>kubernetes</code> component references a <code>Deployment</code> manifest that has a container specification with no resources limits or requests.</p>
-</div>
-<div class="paragraph">
-<p>At last we need to consider the JWT container as well that requires <strong>128Mi</strong> of memory.</p>
-</div>
-<div class="paragraph">
-<p>Summing all together we get <strong>1.75Gi</strong> of memory requests with a <strong>2.25Gi</strong> limit.</p>
+<p>Adding all together results in <strong>1.75 GiB</strong> of memory requests with a <strong>2.25 GiB</strong> limit.</p>
 </div>
 
     <div class="tags">
