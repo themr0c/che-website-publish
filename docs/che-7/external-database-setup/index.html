@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="database,  ">
-<title>Database Setup | Eclipse Che Documentation</title>
+<title>External database setup | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Database Setup page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the External database setup page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Database Setup">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="External database setup">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -803,7 +803,7 @@
   
   <li>
       
-      <a href="#" class="expandable">Backup and Disaster Recovery</a>
+      <a href="#" class="expandable">Backup and disaster recovery</a>
       
       <ul>
           
@@ -816,7 +816,7 @@
           
           
           
-          <li><a href="/che/docs/che-7/database-setup">Database setup</a></li>
+          <li><a href="/che/docs/che-7/external-database-setup">External database setup</a></li>
           
           
           
@@ -1055,7 +1055,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Database Setup</h1>
+   <h1 class="post-title-main">External database setup</h1>
 </div>
 
 
@@ -1093,13 +1093,13 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>The PostgreSQL database is used by the Che server for persisting data about the state of Che. It contains information about user accounts, workspaces, preferences, and so on.</p>
+<p>The PostgreSQL database is used by the Che server for persisting data about the state of Che. It contains information about user accounts, workspaces, preferences, and other details.</p>
 </div>
 <div class="paragraph">
 <p>By default, the Che Operator creates and manages the database deployment.</p>
 </div>
 <div class="paragraph">
-<p>However, the Che Operator does not support full life-cycle capabilities, such as backups and recovery. For a business-critical setup, configure an external database with the following recommended disaster recovery options:</p>
+<p>However, the Che Operator does not support full life-cycle capabilities, such as backups and recovery. For a business-critical setup, configure an external database with the following recommended disaster-recovery options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1112,24 +1112,55 @@ $('#toc').on('click', 'a', function() {
 </ul>
 </div>
 <div class="paragraph">
-<p>Configure an external PostgreSQL instance on-premises or use a cloud service, such as Amazon Relational Database Service (Amazon RDS). With Amazon RDS, it is possible to deploy production databases in a Multi-Availability Zone configuration for a resilient disaster recovery strategy with daily and on demand snapshots.</p>
+<p>Configure an external PostgreSQL instance on-premises or use a cloud service, such as Amazon Relational Database Service (Amazon RDS). With Amazon RDS, it is possible to deploy production databases in a Multi-Availability Zone configuration for a resilient disaster recovery strategy with daily and on-demand snapshots.</p>
 </div>
 <div class="paragraph">
 <p>The recommended configuration of the example database is:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>Instance class: db.t2.small
-vCPU: 1
-RAM: 2GB
-Multi-az: True, 2 replicas
-Engine version: 9.6.11
-TLS: Enabled
-Automated backups: Enabled (30 Days)</pre>
-</div>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">db.t2.small</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vCPU</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-az</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true, 2 replicas</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Engine version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.6.11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automated backups</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled (30 days)</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>To make the Operator skip deploying a database and pass connection details of an existing DB to a Che server using <code>chePostgresHostName</code>, <code>chePostgresPort</code>, <code>chePostgresUser</code>, <code>chePostgresPassword</code>, <code>chePostgresDb</code> parameters, specify the <code>externalDb: true</code> property in the Che Custom Resource.</p>
+<p>To make the Operator skip deploying a database and pass connection details of an existing database to a Che server using <code>chePostgresHostName</code>, <code>chePostgresPort</code>, <code>chePostgresUser</code>, <code>chePostgresPassword</code>, <code>chePostgresDb</code> parameters, specify the <code>externalDb: true</code> property in the Che Custom Resource.</p>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
