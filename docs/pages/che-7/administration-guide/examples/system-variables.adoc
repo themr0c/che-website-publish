@@ -3,11 +3,11 @@
 ,=== 
  Environment Variable Name,Default value, Description 
  
- +CHE_DATABASE+,"$\{che.home}/storage","Folder where Che will store internal data objects" 
- +CHE_API+,"http://$\{CHE_HOST}:$\{CHE_PORT}/api","API service. Browsers initiate REST communications to Che server with this URL" 
- +CHE_WEBSOCKET_ENDPOINT+,"ws://$\{CHE_HOST}:$\{CHE_PORT}/api/websocket","Che websocket major endpoint. Provides basic communication endpointfor major websocket interaction/messaging." 
- +CHE_WEBSOCKET_ENDPOINT__MINOR+,"ws://$\{CHE_HOST}:$\{CHE_PORT}/api/websocket-minor","Che websocket minor endpoint. Provides basic communication endpointfor minor websocket interaction/messaging." 
- +CHE_WORKSPACE_STORAGE+,"$\{che.home}/workspaces","Your projects are synchronized from the Che server into the machine running eachworkspace. This is the directory in the ws runtime where your projects are mounted." 
+ +CHE_DATABASE+,"${che.home}/storage","Folder where Che will store internal data objects" 
+ +CHE_API+,"http://${CHE_HOST}:${CHE_PORT}/api","API service. Browsers initiate REST communications to Che server with this URL" 
+ +CHE_WEBSOCKET_ENDPOINT+,"ws://${CHE_HOST}:${CHE_PORT}/api/websocket","Che websocket major endpoint. Provides basic communication endpointfor major websocket interaction/messaging." 
+ +CHE_WEBSOCKET_ENDPOINT__MINOR+,"ws://${CHE_HOST}:${CHE_PORT}/api/websocket-minor","Che websocket minor endpoint. Provides basic communication endpointfor minor websocket interaction/messaging." 
+ +CHE_WORKSPACE_STORAGE+,"${che.home}/workspaces","Your projects are synchronized from the Che server into the machine running eachworkspace. This is the directory in the ws runtime where your projects are mounted." 
  +CHE_WORKSPACE_PROJECTS_STORAGE+,"/projects","Your projects are synchronized from the Che server into the machine running eachworkspace. This is the directory in the machine where your projects are placed." 
  +CHE_WORKSPACE_PROJECTS_STORAGE_DEFAULT_SIZE+,"1Gi","Used when devfile k8s/os type components requests project PVC creation(applied in case of unique and perWorkspace PVC strategy. In case of common PVC strategy,it will be rewritten with value of che.infra.kubernetes.pvc.quantity property)" 
  +CHE_WORKSPACE_LOGS_ROOT__DIR+,"/workspace_logs","Defines the directory inside the machine where all the workspace logs are placed.The value of this folder should be provided into machine e.g. like environment variableso agents developers can use this directory for backup agents logs." 
@@ -49,7 +49,7 @@
 ,=== 
  Environment Variable Name,Default value, Description 
  
- +CHE_TEMPLATE_STORAGE+,"$\{che.home}/templates","Folder that contains JSON files with code templates and samples" 
+ +CHE_TEMPLATE_STORAGE+,"${che.home}/templates","Folder that contains JSON files with code templates and samples" 
 ,=== 
 
 .Authentication parameters 
@@ -64,7 +64,7 @@
  +CHE_OAUTH_GITHUB_CLIENTSECRET+,"NULL","You can setup GitHub OAuth to automate authentication to remote repositories.You need to first register this application with GitHub OAuth." 
  +CHE_OAUTH_GITHUB_AUTHURI+," https://github.com/login/oauth/authorize","You can setup GitHub OAuth to automate authentication to remote repositories.You need to first register this application with GitHub OAuth." 
  +CHE_OAUTH_GITHUB_TOKENURI+," https://github.com/login/oauth/access_token","You can setup GitHub OAuth to automate authentication to remote repositories.You need to first register this application with GitHub OAuth." 
- +CHE_OAUTH_GITHUB_REDIRECTURIS+," http://localhost:$\{CHE_PORT}/api/oauth/callback","You can setup GitHub OAuth to automate authentication to remote repositories.You need to first register this application with GitHub OAuth." 
+ +CHE_OAUTH_GITHUB_REDIRECTURIS+," http://localhost:${CHE_PORT}/api/oauth/callback","You can setup GitHub OAuth to automate authentication to remote repositories.You need to first register this application with GitHub OAuth." 
  +CHE_OAUTH_OPENSHIFT_CLIENTID+,"NULL","Configuration of OpenShift OAuth client. Used to obtain OpenShift OAuth token." 
  +CHE_OAUTH_OPENSHIFT_CLIENTSECRET+,"NULL","Configuration of OpenShift OAuth client. Used to obtain OpenShift OAuth token." 
  +CHE_OAUTH_OPENSHIFT_OAUTH__ENDPOINT+," NULL","Configuration of OpenShift OAuth client. Used to obtain OpenShift OAuth token." 
@@ -109,7 +109,7 @@
  +CHE_INFRA_KUBERNETES_INGRESS__START__TIMEOUT__MIN+,"5","Defines the timeout in minutes that limits the period for which Kubernetes Ingress become ready" 
  +CHE_INFRA_KUBERNETES_WORKSPACE__UNRECOVERABLE__EVENTS+,"FailedMount,FailedScheduling,MountVolume.SetUp failed,Failed to pull image,FailedCreate","If during workspace startup an unrecoverable event defined in the property occurs,terminate workspace immediately instead of waiting until timeout" 
  +CHE_INFRA_KUBERNETES_PVC_ENABLED+,"true","Defines whether use the Persistent Volume Claim for che workspace needse.g backup projects, logs etc or disable it." 
- +CHE_INFRA_KUBERNETES_PVC_STRATEGY+,"common","Defined which strategy will be used while choosing PVC for workspaces.Supported strategies:- 'common'       All workspaces in the same Kubernetes Namespace will reuse the same PVC.       Name of PVC may be configured with 'che.infra.kubernetes.pvc.name'.       Existing PVC will be used or new one will be created if it doesn't exist.- 'unique'       Separate PVC for each workspace's volume will be used.       Name of PVC is evaluated as '{che.infra.kubernetes.pvc.name} + '-' + \{generated_8_chars}'.       Existing PVC will be used or a new one will be created if it doesn't exist.- 'per-workspace'       Separate PVC for each workspace will be used.       Name of PVC is evaluated as '{che.infra.kubernetes.pvc.name} + '-' + \{WORKSPACE_ID}'.       Existing PVC will be used or a new one will be created if it doesn't exist." 
+ +CHE_INFRA_KUBERNETES_PVC_STRATEGY+,"common","Defined which strategy will be used while choosing PVC for workspaces.Supported strategies:- 'common'       All workspaces in the same Kubernetes Namespace will reuse the same PVC.       Name of PVC may be configured with 'che.infra.kubernetes.pvc.name'.       Existing PVC will be used or new one will be created if it doesn't exist.- 'unique'       Separate PVC for each workspace's volume will be used.       Name of PVC is evaluated as '{che.infra.kubernetes.pvc.name} + '-' + {generated_8_chars}'.       Existing PVC will be used or a new one will be created if it doesn't exist.- 'per-workspace'       Separate PVC for each workspace will be used.       Name of PVC is evaluated as '{che.infra.kubernetes.pvc.name} + '-' + {WORKSPACE_ID}'.       Existing PVC will be used or a new one will be created if it doesn't exist." 
  +CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS+,"true","Defines whether to run a job that creates workspace's subpath directories in persistent volume for the 'common' strategy before launching a workspace.Necessary in some versions of OpenShift/Kubernetes as workspace subpath volume mounts are created with root permissions,and thus cannot be modified by workspaces running as a user (presents an error importing projects into a workspace in Che).The default is 'true', but should be set to false if the version of Openshift/Kubernetes creates subdirectories with user permissions.Relevant issue: https://github.com/kubernetes/kubernetes/issues/41638Note that this property has effect only if the 'common' PVC strategy used." 
  +CHE_INFRA_KUBERNETES_PVC_NAME+,"claim-che-workspace","Defines the settings of PVC name for che workspaces.Each PVC strategy suplies this value differently.See doc for che.infra.kubernetes.pvc.strategy property" 
  +CHE_INFRA_KUBERNETES_PVC_STORAGE__CLASS__NAME+,"","Defines the storage class of Persistent Volume Claim for the workspaces.Empty strings means 'use default'." 
@@ -283,7 +283,7 @@
 ,=== 
  Environment Variable Name,Default value, Description 
  
- +CHE_KEYCLOAK_AUTH__SERVER__URL+,"http://$\{CHE_HOST}:5050/auth","Url to keycloak identity provider serverCan be set to NULL only if `che.keycloak.oidcProvider`is used" 
+ +CHE_KEYCLOAK_AUTH__SERVER__URL+,"http://${CHE_HOST}:5050/auth","Url to keycloak identity provider serverCan be set to NULL only if `che.keycloak.oidcProvider`is used" 
  +CHE_KEYCLOAK_REALM+,"che","Keycloak realm is used to authenticate usersCan be set to NULL only if `che.keycloak.oidcProvider`is used" 
  +CHE_KEYCLOAK_CLIENT__ID+,"che-public","Keycloak client id in che.keycloak.realm that is used by dashboard, ide and cli to authenticate users" 
 ,=== 
@@ -297,7 +297,7 @@
  +CHE_KEYCLOAK_GITHUB_ENDPOINT+,"NULL","URL to access Github oauth tokens" 
  +CHE_KEYCLOAK_ALLOWED__CLOCK__SKEW__SEC+,"3","The number of seconds to tolerate for clock skew when verifying exp or nbf claims." 
  +CHE_KEYCLOAK_USE__NONCE+,"true","Use the OIDC optional `nonce` feature to increase security." 
- +CHE_KEYCLOAK_JS__ADAPTER__URL+,"NULL","URL to the Keycloak Javascript adapter we want to use.if set to NULL, then the default used value is`$\{che.keycloak.auth_server_url}/js/keycloak.js`,or `<che-server>/api/keycloak/OIDCKeycloak.js`if an alternate `oidc_provider` is used" 
+ +CHE_KEYCLOAK_JS__ADAPTER__URL+,"NULL","URL to the Keycloak Javascript adapter we want to use.if set to NULL, then the default used value is`${che.keycloak.auth_server_url}/js/keycloak.js`,or `<che-server>/api/keycloak/OIDCKeycloak.js`if an alternate `oidc_provider` is used" 
  +CHE_KEYCLOAK_OIDC__PROVIDER+,"NULL","Base URL of an alternate OIDC provider that providesa discovery endpoint as detailed in the following specificationhttps://openid.net/specs/openid-connect-discovery-1_0.htmlProviderConfig" 
  +CHE_KEYCLOAK_USE__FIXED__REDIRECT__URLS+,"false","Set to true when using an alternate OIDC provider thatonly supports fixed redirect UrlsThis property is ignored when `che.keycloak.oidc_provider` is NULL" 
  +CHE_KEYCLOAK_USERNAME__CLAIM+,"NULL","Username claim to be used as user display namewhen parsing JWT tokenif not defined the fallback value is 'preferred_username'" 
