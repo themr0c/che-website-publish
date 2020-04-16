@@ -1396,13 +1396,13 @@ root INFO [hosted-plugin: 88] PLUGIN_HOST(88) starting instance</pre>
 <dl>
 <dt class="hdlist1">The plug-in container runs out of memory</dt>
 <dd>
-<p>This can happen during plug-in initialization when the container does not have enough RAM to execute the entrypoint of the image. The user can detect this in the logs of the plug-in container. In this case, the logs should contain <code>OOMKilled</code>, which implies that the processes in the container requested more memory than is available in the container.</p>
+<p>This can happen during plug-in initialization when the container does not have enough RAM to execute the entrypoint of the image. The user can detect this in the logs of the plug-in container. In this case, the logs contain <code>OOMKilled</code>, which implies that the processes in the container requested more memory than is available in the container.</p>
 </dd>
 <dt class="hdlist1">A process inside the container runs out of memory without the container noticing this</dt>
 <dd>
 <p>For example, the Java language server (Eclipse JDT Language Server, started by the vscode-java extension) throws an <strong>OutOfMemoryException</strong>. This can happen any time after the container is initialized, for example, when a plug-in starts a language server or when a process runs out of memory because of the size of the project it has to handle.</p>
 <div class="paragraph">
-<p>To detect this problem, check the logs of the main process, which should run in the container. For example, to check the log file of Eclipse JDT Language Server for details, see the relevant plug-in-specific sections.</p>
+<p>To detect this problem, check the logs of the primary process running in the container. For example, to check the log file of Eclipse JDT Language Server for details, see the relevant plug-in-specific sections.</p>
 </div>
 </dd>
 </dl>
@@ -1664,7 +1664,7 @@ root INFO [hosted-plugin: 88] PLUGIN_HOST(88) starting instance</pre>
 <h4 id="verifying-the-state-of-the-eclipse-jdt-language-server_viewing-logs-for-java">Verifying the state of the Eclipse JDT Language Server</h4>
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>Check if the container running the Eclipse JDT Language Server plug-in is running the Eclipse JDT Language Server main process.</p>
+<p>Check if the container that is running the Eclipse JDT Language Server plug-in is running the Eclipse JDT Language Server main process.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1672,7 +1672,7 @@ root INFO [hosted-plugin: 88] PLUGIN_HOST(88) starting instance</pre>
 <p>Open a terminal in the container that is running the Eclipse JDT Language Server plug-in (an example name for the container: <code>vscode-javaxxx</code>).</p>
 </li>
 <li>
-<p>Inside the terminal, run the <code>ps aux | grep jdt</code> command to check if the Eclipse JDT Language Server process is running in the container. If the process is running, the output should be:</p>
+<p>Inside the terminal, run the <code>ps aux | grep jdt</code> command to check if the Eclipse JDT Language Server process is running in the container. If the process is running, the output is:</p>
 <div class="listingblock">
 <div class="content">
 <pre>usr/lib/jvm/default-jvm/bin/java --add-modules=ALL-SYSTEM --add-opens java.base/java.util</pre>
@@ -1816,14 +1816,14 @@ root INFO [hosted-plugin: 88] PLUGIN_HOST(88) starting instance</pre>
 <p>Open a terminal in the container named <code>vscode-xml-<em>&lt;xxx&gt;</em></code>.</p>
 </li>
 <li>
-<p>Run <code>ps aux | grep java</code> to verify that the XML language server has started. The output should be:</p>
+<p>Run <code>ps aux | grep java</code> to verify that the XML language server has started. If the process is running, the output is:</p>
 <div class="listingblock">
 <div class="content">
 <pre>java ***/org.eclipse.ls4xml-uber.jar`</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If not, see <a href="#checking-important-logs_viewing-logs-from-language-servers-and-debug-adapters">Checking important logs</a>.</p>
+<p>If is not, see the <a href="#checking-important-logs_viewing-logs-from-language-servers-and-debug-adapters">Checking important logs</a> chapter.</p>
 </div>
 </li>
 </ol>
@@ -2078,7 +2078,7 @@ root INFO [hosted-plugin: 88] PLUGIN_HOST(88) starting instance</pre>
 <h4 id="verifying-the-state-of-the-camel-language-server_viewing-logs-for-camel">Verifying the state of the Camel language server</h4>
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>The user can inspect the log output of the sidecar container running the Camel tooling; the Camel tooling container is named: <code>vscode-apache-camel<em>&lt;xxx&gt;</em></code>.</p>
+<p>The user can inspect the log output of the sidecar container using the Camel language tools that are stored in the <code>vscode-apache-camel<em>&lt;xxx&gt;</em></code> Camel container.</p>
 </div>
 <div class="paragraph">
 <p>To verify the state of the language server:</p>
@@ -2152,7 +2152,7 @@ The output channel is created only at the first created log entry on the client 
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 15, 2020 <br/>
+                    Site last generated: Apr 16, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

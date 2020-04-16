@@ -1272,7 +1272,7 @@ The only supported and tested OpenID provider is Keycloak.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Authentication: The token is extracted from the <strong>Authorization</strong> header or from the <code>token</code> query parameter and is parsed using the public key retrieved from the provider. In case of expired, invalid, or malformed tokens, a <code>403</code> error is sent to the user. The use of the query parameter should be minimised because its support may be limited or removed in future versions.</p>
+<p>Authentication: The token is extracted from the <strong>Authorization</strong> header or from the <code>token</code> query parameter and is parsed using the public key retrieved from the provider. In case of expired, invalid, or malformed tokens, a <code>403</code> error is sent to the user. The minimal use of the query parameter is recommended, due to its support limitations or complete removal in upcoming versions.</p>
 <div class="paragraph">
 <p>If the validation is successful, the parsed form of the token is passed to the environment initialization step:</p>
 </div>
@@ -1334,11 +1334,11 @@ The only supported and tested OpenID provider is Keycloak.
 <div class="sect3">
 <h4 id="obtaining-the-token-from-openshift-token-through-keycloak_authenticating-to-the-che-server">Obtaining the token from the OpenShift token through Keycloak</h4>
 <div class="paragraph">
-<p>When Che has been installed on OpenShift using the Operator, and the OpenShift OAuth integration has been enabled (it is by default),
-then the Che authentication token of a user can also be retrieved from the user OpenShift token.</p>
+<p>When Che is installed on OpenShift using the Operator, and the OpenShift OAuth integration is enabled, as it is by default,
+the user&#8217;s Che authentication token can be retrieved from the user&#8217;s OpenShift token.</p>
 </div>
 <div class="paragraph">
-<p>To do this, send a request to the token endpoint that can be schematically described as the following cURL request:</p>
+<p>To retrieve the authentication token from the OpenShift token, send a schematically described cURL request to the OpenShift token endpoint:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1378,7 +1378,7 @@ then the Che authentication token of a user can also be retrieved from the user 
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Before using this token exchange feature for an end user, the end user should have logged in at least once interactively to the Che Dashboard through the OpenShift login page. This is required to properly link OpenShift and Keycloak user accounts, and set the required user profile information (email, first and last names).
+Before using this token exchange feature, it is required for an end user to be interactively logged in at least once to the Che Dashboard using the OpenShift login page. This step is needed to link the OpenShift and Keycloak user accounts properly and set the required user profile information.
 </td>
 </tr>
 </table>
@@ -1388,7 +1388,7 @@ Before using this token exchange feature for an end user, the end user should ha
 <div class="sect2">
 <h3 id="authenticatinng-to-the-che-server-using-other-authentication-implementations_authenticating-to-the-che-server">Authenticating to the Che server using other authentication implementations</h3>
 <div class="paragraph">
-<p>This procedure describes how to use an OIDC authentication implementation other than Keycloak.</p>
+<p>This procedure describes how to use an OpenID Connect (OIDC) authentication implementation other than Keycloak.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -1414,36 +1414,54 @@ Before using this token exchange feature for an end user, the end user should ha
 <p>For easy user interaction with third-party services, the Che server supports OAuth authentication. OAuth tokens are also used for GitHub-related plug-ins.</p>
 </div>
 <div class="paragraph">
-<p>OAuth authentication has two main flows: internal and external, which is based on the Keycloak brokering mechanism. The following are the two main OAuth API implementations:</p>
+<p>OAuth authentication has two main flows based on the Keycloak brokering mechanism. The following are the two main OAuth API implementations:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">internal</dt>
+<dd>
+<p>org.eclipse.che.security.oauth.EmbeddedOAuthAPI</p>
+</dd>
+<dt class="hdlist1">external</dt>
+<dd>
+<p>org.eclipse.che.multiuser.keycloak.server.oauth2.DelegatedOAuthAPI</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>To switch between the two implementations, use the <code>che.oauth.service_mode=<em>&lt;embedded|delegated&gt;</em></code> configuration property.</p>
+</div>
+<div class="paragraph">
+<p>The main REST endpoint in the OAuth API is <code>org.eclipse.che.security.oauth.OAuthAuthenticationService</code>, which contains:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>org.eclipse.che.security.oauth.EmbeddedOAuthAPI</strong>, for the internal flow.</p>
+<p>An authentication method that the OAuth authentication flow can start with.</p>
 </li>
 <li>
-<p><strong>org.eclipse.che.multiuser.keycloak.server.oauth2.DelegatedOAuthAPI</strong>, for the external flow.</p>
+<p>A callback method to process callbacks from the provider.</p>
+</li>
+<li>
+<p>A token to retrieve the current user&#8217;s OAuth token.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Use the <code>che.oauth.service_mode=<em>&lt;embedded|delegated&gt;</em></code> configuration property to switch between the two implementations. The main REST endpoint in the OAuth API is <strong>org.eclipse.che.security.oauth.OAuthAuthenticationService, which contains</strong>:</p>
+<p>These methods apply to the currently activated, embedded or delegated, OAuthAPI. The OAuthAPI then provides the following underlying operations:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>An authenticate method to start the OAuth authentication flow</p>
+<p>Finding the appropriate authenticator.</p>
 </li>
 <li>
-<p>A callback method to process callbacks from the provider</p>
+<p>Initializing the login process.</p>
 </li>
 <li>
-<p>A token to retrieve the current user&#8217;s OAuth token</p>
+<p>Forwarding the user.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>These methods refer to the currently activated embedded or delegated OAuthAPI that does the underlying operations, including finding the appropriate authenticator, initializing the login process, and user forwarding.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1461,7 +1479,10 @@ Before using this token exchange feature for an end user, the end user should ha
 <h2 id="authenticating-in-a-che-workspace_authenticating-users">Authenticating in a Che workspace</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Workspace containers may contain services that must be protected with authentication. Such protected services are called <strong>secure</strong>. For this purpose, a machine authentication mechanism should be used. Machine tokens avoid the need to pass Keycloak tokens to workspace containers (which can be insecure). Also, Keycloak tokens may have a relatively shorter lifetime and require periodic renewals or refreshes, which is difficult to manage and keep in sync with the same user session tokens on clients.</p>
+<p>Workspace containers may contain services that must be protected with authentication. Such protected services are called <strong>secure</strong>. To secure these services, use a machine authentication mechanism.</p>
+</div>
+<div class="paragraph">
+<p>Machine tokens avoid the need to pass Keycloak tokens to workspace containers (which can be insecure). Also, Keycloak tokens may have a relatively shorter lifetime and require periodic renewals or refreshes, which is difficult to manage and keep in sync with the same user session tokens on clients.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1561,7 +1582,7 @@ Before using this token exchange feature for an end user, the end user should ha
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 15, 2020 <br/>
+                    Site last generated: Apr 16, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
