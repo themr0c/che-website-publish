@@ -1189,7 +1189,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="kubernetes-image-puller-overview_caching-images-for-faster-workspace-start">Kubernetes Image Puller overview</h2>
+<h2 id="image-puller-overview_caching-images-for-faster-workspace-start">Image Puller overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Slow starts of Eclipse Che workspaces may be caused by waiting for the underlying cluster to pull images used in workspaces from remote registries. As such, pre-pulling images can improve start times significantly. The <em>Kubernetes Image Puller</em> can be used to pre-pull images and shorten workspace start times.</p>
@@ -1203,8 +1203,8 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>The Kubernetes Image Puller pulls its configuration from a <code>ConfigMap</code> with the following available parameters:</p>
 </div>
-<table id="kubernetes-image-puller-configuration" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Kubernetes Image Puller parameters</caption>
+<table id="image-puller-configuration" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Image Puller parameters</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1267,7 +1267,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-the-kubernetes-image-puller-using-openshift-templates_caching-images-for-faster-workspace-start">Deploying the Kubernetes Image Puller using OpenShift templates</h2>
+<h2 id="deploying-image-puller-using-openshift-templates_caching-images-for-faster-workspace-start">Deploying Image Puller using OpenShift templates</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Kubernetes Image Puller repository contains OpenShift templates for deploying on OpenShift.</p>
@@ -1347,7 +1347,7 @@ $('#toc').on('click', 'a', function() {
 </tbody>
 </table>
 <div class="paragraph">
-<p>See <a href="#kubernetes-image-puller-configuration">Kubernetes Image Puller parameters</a> for more information about configuration values, such as <code>DAEMONSET_NAME</code>, <code>CACHING_INTERVAL_HOURS</code>, and <code>CACHING_MEMORY_REQUEST</code>.</p>
+<p>See <a href="#image-puller-configuration">Image Puller parameters</a> for more information about configuration values, such as <code>DAEMONSET_NAME</code>, <code>CACHING_INTERVAL_HOURS</code>, and <code>CACHING_MEMORY_REQUEST</code>.</p>
 </div>
 <div class="paragraph">
 <div class="title">Procedure</div>
@@ -1381,45 +1381,8 @@ $ oc process -f deploy/openshift/configmap.yaml | oc apply -f -
 $ oc process -f deploy/openshift/app.yaml | oc apply -f --</pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To set different values than the defaults, add to the <code>oc process</code> an option like: <code>-p <em>&lt;parameterName&gt;</em>=<em>&lt;value&gt;</em></code>:</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 </li>
 </ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc process -f deploy/openshift/serviceaccount.yaml \
-    | oc apply -f -
-$ oc process -f deploy/openshift/configmap.yaml \
-    -p IMAGES='stacks-java-rhel8=quay.io/crw/stacks-java-rhel8@sha256:db19cfebe33f0fbc1307d95a1700366fcb5fc869486fda6f0023bc059474c7c5;\
-    theia-rhel8=quay.io/crw/theia-rhel8@sha256:03a1d7c76b3883a6e28ce804ae88121b3adc5e04b886db53bbccad122e57ae88;\
-    stacks-golang-rhel8=quay.io/crw/stacks-golang-rhel8@sha256:f46f852c9cb50856b30161377b5fc7c5b2d388df5e68204304b654d244dc4f96;\
-    stacks-node-rhel8=quay.io/crw/stacks-node-rhel8@sha256:880beabedb2f749f83d8d5a78ac9eca8276f6425cd81b8a456532417e3661471;\
-    theia-endpoint-rhel8=quay.io/crw/theia-endpoint-rhel8:2.1;pluginbroker-metadata-rhel8=quay.io/crw/pluginbroker-metadata-rhel8:2.1;\
-    pluginbroker-artifacts-rhel8=quay.io/crw/pluginbroker-artifacts-rhel8:2.1;' \
-    | oc apply -f -
-$ oc process -f deploy/openshift/app.yaml \
-    -p IMAGE=quay.io/crw/imagepuller-rhel8 \
-    -p IMAGE_TAG='2.1' \
-    | oc apply -f --</pre>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-
-</div>
 </div>
 <div class="paragraph">
 <p><strong>Verifying the installation</strong></p>
@@ -1478,7 +1441,7 @@ eia=eclipse/che-theia:next; java-plugin-runner=eclipse/che-remote-plugin-runner-
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-the-kubernetes-image-puller-using-helm_caching-images-for-faster-workspace-start">Deploying the Kubernetes Image Puller using Helm</h2>
+<h2 id="deploying-image-puller-using-helm_caching-images-for-faster-workspace-start">Deploying Image Puller using Helm</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Kubernetes Image Puller can be installed using Helm.</p>
@@ -1530,12 +1493,12 @@ In the instructions later in this section, use the <code>oc</code> command when 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>appName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DAEMONSET_NAME</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/kubernetes-image-puller</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>image.repository</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The repository to pull the image from</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclpise/kubernetes-image-puller</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>image.tag</code></p></td>
@@ -1684,7 +1647,7 @@ metadata:
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 16, 2020 <br/>
+                    Site last generated: Apr 17, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
