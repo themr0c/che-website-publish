@@ -1430,15 +1430,21 @@ disabled by default. To allow user-defined workspace namespaces, set:</p>
 </li>
 </ul>
 </div>
-<h3 id="configuring-support-for-self-signed-git-repositories-on-kubernetes" class="discrete">Configuring support for self-signed Git repositories on Kubernetes</h3>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Configuring support for self-signed Git repositories.</p>
+</div>
+<div class="paragraph">
+<p>In the instructions below, substitute <code>kubectl</code> for <code>oc</code> when running Che on Kubernetes.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Create a new <strong>configMap</strong> with details about the Git server:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap che-git-self-signed-cert --from-file=ca.crt \
-  --from-literal=githost=<em>&lt;host:port&gt;</em> -n=che</pre>
+<pre>$ oc create configmap che-git-self-signed-cert --from-file=ca.crt \
+  --from-literal=githost=<em>&lt;host:port&gt;</em> -n {prod-namespace}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1451,30 +1457,27 @@ disabled by default. To allow user-defined workspace namespaces, set:</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When <code>githost</code> is not specified, the given certificate is used for all HTTPS repositories.
-</td>
-</tr>
-</table>
+<div class="ulist">
+<ul>
+<li>
+<p>When <code>githost</code> is not specified, the given certificate is used for all HTTPS repositories.</p>
+</li>
+<li>
+<p>The certificate file must be named <code>ca.crt</code>.</p>
+</li>
+</ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The certificate file must be named <code>ca.crt</code>.
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>Configure the workspace exposure strategy</p>
+<p>Configure the workspace exposure strategy:</p>
 <div class="exampleblock">
 <div class="content">
 <div class="olist arabic">
-<div class="title">If Che is deployed using a <a href="https://helm.sh/">Helm Chart</a></div>
+<div class="title">For Che deployed using a Helm Chart</div>
 <ol class="arabic">
 <li>
 <p>Clone the <a href="https://github.com/eclipse/che">che</a> project</p>
@@ -1486,33 +1489,35 @@ The certificate file must be named <code>ca.crt</code>.
 <p>Update the <code>global.useGitSelfSignedCerts</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ helm upgrade che -n che --set global.useGitSelfSignedCerts=true --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
+<pre>$ helm upgrade che -n che --set global.useGitSelfSignedCerts=true \
+  --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>&lt;kubernetes-cluster-domain&gt; On Minikube, use <code>$(minikube ip).nip.io</code></p>
 </div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>On Minikube, substitute <code><em>&lt;kubernetes-cluster-domain&gt;</em></code> with <code>$(minikube ip).nip.io</code>.</p>
 </div>
 </div>
 </div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">If Che is deployed using <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a></div>
+<div class="title">For Che deployed using Operators</div>
 <p>Update the <code>gitSelfSignedCert</code> property. To do that, execute:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/gitSelfSignedCert", "value": true}]'</pre>
+<pre>$ oc patch checluster eclipse-che -n default --type=json \
+  -p '[{"op": "replace", "path": "/spec/server/gitSelfSignedCert", "value": true}]'</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Create and start new workspace. Every container used by the workspace mounts a special volume that contains a file with the self-signed certificate. The repository&#8217;s <code>.git/config</code> file contains information about the Git server host (its URL) and the path to the certificate in the <code>http</code> section (see Git documentation about <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpsslCAInfo">git-config</a>). For example:</p>
+<p>Create and start a new workspace. Every container used by the workspace mounts a special volume that contains a file with the self-signed certificate. The repository&#8217;s <code>.git/config</code> file contains information about the Git server host (its URL) and the path to the certificate in the <code>http</code> section (see Git documentation about <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpsslCAInfo">git-config</a>). For example:</p>
 <div class="listingblock">
 <div class="content">
 <pre>[http "https://10.33.177.118:3000"]
