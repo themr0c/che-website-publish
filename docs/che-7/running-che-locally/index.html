@@ -1564,7 +1564,7 @@ name: minikube</pre>
 <p><a href="#installing-che-on-codeready-containers-using-chectl_running-che-locally">Installing che on CodeReady Containers using chectl</a></p>
 </li>
 <li>
-<p><a href="#installing-che-on-kind-using-chectl_running-che-locally">Installing che on kind using chectl</a></p>
+<p><a href="#installing-che-on-kind-using-chectl_running-che-locally">Installing Che on kind using chectl</a></p>
 </li>
 </ul>
 </div>
@@ -1667,10 +1667,10 @@ name: minikube</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-kind-using-chectl_running-che-locally">Installing che on kind using chectl</h2>
+<h2 id="installing-che-on-kind-using-chectl_running-che-locally">Installing Che on kind using chectl</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to install Che on <a href="https://github.com/kubernetes-sigs/kind">kind</a> using chectl. Kind is a tool for running local Kubernetes clusters using Docker containers as nodes. It is useful for quickly creating ephemeral clusters, and is used as part of the test infrastructure of the Kubernetes project. Running Che in Kind is a great way to try it out, or for a contributor to test out their change quickly with a real cluster.</p>
+<p>This section describes how to install Che on <a href="https://github.com/kubernetes-sigs/kind">kind</a> using chectl. kind is a tool for running local Kubernetes clusters using Docker-formatted containers as nodes. It is useful for quickly creating ephemeral clusters, and is used as part of the test infrastructure of the Kubernetes project. Running Che in kind is a way to try the application, or for a contributor to test their change quickly with a real cluster.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1679,7 +1679,7 @@ name: minikube</pre>
 <p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
 </li>
 <li>
-<p>A running Kind cluster. See <a href="https://kind.sigs.k8s.io/#installation-and-usage">here</a> for Kind installation instructions.</p>
+<p>A running kind cluster. See <a href="https://kind.sigs.k8s.io/#installation-and-usage">kind installation and usage</a> documentation.</p>
 </li>
 </ul>
 </div>
@@ -1687,17 +1687,17 @@ name: minikube</pre>
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Install <a href="https://github.com/kubernetes-csi/csi-driver-host-path">csi-driver-host-path</a> in the Kind cluster.</p>
+<p>Install <a href="https://github.com/kubernetes-csi/csi-driver-host-path">csi-driver-host-path</a> in the kind cluster:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ git clone https://github.com/kubernetes-csi/csi-driver-host-path &amp;&amp; cd csi-driver-host-path
-$ ./deploy/kubernetes-1.16/deploy-hostpath.sh
+$ ./deploy/kubernetes-<em>&lt;version&gt;</em>/deploy-hostpath.sh
 $ kubectl apply -f examples/csi-storageclass.yaml</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Set <code>csi-hostpath-sc</code> as the default <code>StorageClass</code>.</p>
+<p>Set <code>csi-hostpath-sc</code> as the default <code>StorageClass</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch storageclass csi-hostpath-sc -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "true"}}}'
@@ -1706,7 +1706,7 @@ $ kubectl patch storageclass standard -p '{"metadata": {"annotations": {"storage
 </div>
 </li>
 <li>
-<p>Install the <a href="https://kubernetes.github.io/ingress-nginx/deploy/">NGINX Ingress Controller</a></p>
+<p>Install the <a href="https://kubernetes.github.io/ingress-nginx/deploy/">NGINX Ingress Controller</a>:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
@@ -1715,10 +1715,10 @@ $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ma
 </div>
 </li>
 <li>
-<p>Install <a href="https://metallb.universe.tf/">MetalLB</a>.</p>
+<p>Install the <a href="https://metallb.universe.tf/">MetalLB</a> load balancer:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</pre>
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v<em>&lt;version&gt;</em>/manifests/metallb.yaml</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1737,7 +1737,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ma
 </div>
 </li>
 <li>
-<p>Determine an IP range to allocate to MetalLB from the <code>docker</code> bridge network.</p>
+<p>Determine an IP range to allocate to MetalLB from the <code>docker</code> bridge network:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ docker inspect bridge | grep -C 5 Subnet
@@ -1755,11 +1755,11 @@ $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ma
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, we have a /16 subnet range to allocate, so we will choose a section in the <code>172.17.250.0</code> range.</p>
+<p>In this case, there is a <code>/16</code> subnet range to allocate. Choose a section in the <code>172.17.250.0</code> range.</p>
 </div>
 </li>
 <li>
-<p>Create a <code>ConfigMap</code> for MetalLB specifying the IP range to expose.</p>
+<p>Create a <code>ConfigMap</code> for MetalLB specifying the IP range to expose:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ cat &lt;&lt; EOF &gt; metallb-config.yaml
@@ -1781,7 +1781,7 @@ $ kubectl apply -f metallb-config.yaml</pre>
 </div>
 </li>
 <li>
-<p>The <code>ingress-nginx</code> service now has an external IP.</p>
+<p>The <code>ingress-nginx</code> service now has an external IP:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl get svc -n ingress-nginx
@@ -1791,7 +1791,7 @@ ingress-nginx   LoadBalancer   10.107.194.26   172.17.255.1   80:32033/TCP,443:3
 </div>
 </li>
 <li>
-<p>Run <code>chectl</code>, using the external IP of the <code>ingress-nginx</code> Service, as an <a href="https://nip.io">nip.io</a> URL.</p>
+<p>Run <code>chectl</code>, using the external IP of the <code>ingress-nginx</code> Service as an <a href="https://nip.io">nip.io</a> URL:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ chectl server:start --installer operator --platform k8s --domain 172.17.250.1.nip.io</pre>
@@ -1999,7 +1999,7 @@ OPTIONS
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 19, 2020 <br/>
+                    Site last generated: Apr 20, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

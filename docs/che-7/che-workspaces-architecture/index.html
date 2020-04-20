@@ -1360,22 +1360,21 @@ It has a plug-in system that supports VS Code extensions.</p>
 <div class="sect2">
 <h3 id="storage-strategies-for-che-workspaces_che-workspace-configuration">Storage strategies for Che workspaces</h3>
 <div class="paragraph">
-<p>Workspace Pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>.
-The way how Che server uses PVCs for workspaces is configurable and it&#8217;s called PVC strategy:</p>
+<p>Workspace Pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. The way how Che server uses PVCs for workspaces is configurable, and it is called PVC strategy:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
+<col style="width: 10%;">
 <col style="width: 25%;">
 <col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 40%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">strategy</th>
-<th class="tableblock halign-left valign-top">details</th>
-<th class="tableblock halign-left valign-top">pros</th>
-<th class="tableblock halign-left valign-top">cons</th>
+<th class="tableblock halign-left valign-top">Strategy</th>
+<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Pros</th>
+<th class="tableblock halign-left valign-top">Cons</th>
 </tr>
 </thead>
 <tbody>
@@ -1395,9 +1394,7 @@ The way how Che server uses PVCs for workspaces is configurable and it&#8217;s c
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common (default)</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">One PVC for all workspaces in one Kubernetes namespace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If PV does not support ReadWriteMany (RWX) access mode then workspaces must be in a separate Kubernetes namespaces</p>
-<p class="tableblock">Or there must not be more than 1 running workspace per namespace at the same time</p>
-<p class="tableblock">See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If PV does not support <code>ReadWriteMany</code> (RWX) access mode, workspaces must be in separate Kubernetes namespaces. Or there must not be more than 1 running workspace per namespace at the same time. See <a href="/che/docs/che-7/advanced-configuration-options/#configuring-namespace-strategies_advanced-configuration-options">Configuring namespace strategies</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1413,11 +1410,11 @@ The way how Che server uses PVCs for workspaces is configurable and it&#8217;s c
 <div class="ulist">
 <ul>
 <li>
-<p>they are provisioned with generated names to guarantee that it is not conflicting with other PVCs in namespace;</p>
+<p>They are provisioned with generated names to guarantee that it is not conflicting with other PVCs in namespace.</p>
 </li>
 <li>
-<p>sub-paths of mount volumes that reference user-defined PVCs are prefixed with <code>{workspace id}/{PVC name}</code>.
-It is done to have the same data structure on PV on different PVC strategies(<a href="#how-the-sub-paths-are-used">more</a>);</p>
+<p>Subpaths of mount volumes that reference user-defined PVCs are prefixed with <code>{workspace id}/{PVC name}</code>.
+It is done to have the same data structure on PV on different PVC strategies (see <a href="#how-the-subpaths-are-used_che-workspace-configuration">How the subpaths are used in PVCs</a>).</p>
 </li>
 </ul>
 </div>
@@ -1429,8 +1426,10 @@ It is done to have the same data structure on PV on different PVC strategies(<a 
 <p>All workspaces (within one {k8s-namespace}) use the same PVC to store data in their declared volumes (projects and workspace logs by default and whatever additional volumes that a user can define.)</p>
 </div>
 <div class="paragraph">
-<p>User-defined PVCs are ignored and volumes that reference PVCs are replaced with volume that references common PVC.
-The corresponding containers volume mounts are relinked to common volume and sub-paths are prefixed with <code>'{workspaceID}/{originalPVCName}'</code> (<a href="#how-the-sub-paths-are-used">more</a>).</p>
+<p>User-defined PVCs are ignored and volumes that reference PVCs are replaced with volume that references common PVC.</p>
+</div>
+<div class="paragraph">
+<p>The corresponding containers volume mounts are relinked to common volume and sub-paths are prefixed with <code>'{workspaceID}/{originalPVCName}'</code> (see <a href="#how-the-subpaths-are-used_che-workspace-configuration">How the subpaths are used in PVCs</a>).</p>
 </div>
 <div class="paragraph">
 <p>User-defined PVC name is used as Che Volume name. It means that if Machine is configured to use Che Volume with the same name as user-defined
@@ -1441,21 +1440,31 @@ PVC has then they will use the same shared folder in common PVC.</p>
 </div>
 <div class="paragraph">
 <div class="title">Restrictions on using the common PVC strategy</div>
-<p>When the <code>common</code> strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one {admin-context} node can simultaneously use the PVC.
-If there are several nodes, you can use the <code>common</code> strategy, but:
-- the workspace PVC access mode must be reconfigured to ReadWriteMany (RWM), so multiple nodes can use this PVC simultaneously.
-- the only one workspace in the same namespace may be running. See how to configure <a href="#workspace-namespaces-configuration_che-workspace-configuration">namespace strategy</a> and <a href="#TODO">running workspace count</a></p>
+<p>When the <code>common</code> strategy is used and a workspace PVC access mode is ReadWriteOnce (RWO), only one {admin-context} node can simultaneously use the PVC.</p>
+</div>
+<div class="paragraph">
+<p>If there are several nodes, you can use the <code>common</code> strategy, but:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The workspace PVC access mode must be reconfigured to <code>ReadWriteMany</code> (RWM), so multiple nodes can use this PVC simultaneously.</p>
+</li>
+<li>
+<p>Only one workspace in the same namespace may be running. See <a href="/che/docs/che-7/advanced-configuration-options/#configuring-namespace-strategies_advanced-configuration-options">Configuring namespace strategies</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="per-workspace-pvc-strategy_che-workspace-configuration">Per workspace PVC strategy</h4>
+<h4 id="per-workspace-pvc-strategy_che-workspace-configuration">Per-workspace PVC strategy</h4>
 <div class="paragraph">
 <div class="title">How the per-workspace PVC strategy works</div>
 <p>The <code>per-workspace</code> strategy works similarly to the <code>common</code> PVC strategy. The only difference is that all workspace volumes (but not all workspaces) use the same PVC to store data (projects and workspace logs by default and any additional volumes that a user can define).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="how-the-sub-paths-are-used_che-workspace-configuration">How the sub-paths are used in PVCs</h4>
+<h4 id="how-the-subpaths-are-used_che-workspace-configuration">How the subpaths are used in PVCs</h4>
 <div class="listingblock">
 <div class="content">
 <pre>/pv0001
@@ -1510,14 +1519,23 @@ If there are several nodes, you can use the <code>common</code> strategy, but:
 <div class="paragraph">
 <p>The following section describes how to configure workspace PVCs strategies of a Che server using the Operator.</p>
 </div>
-<div class="paragraph">
-<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces lose their data.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p><a href="https://docs.openshift.com/container-platform/latest/applications/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/applications/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
+<p><a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/operators/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
 </div>
 <div class="paragraph">
-<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster custom resource object YAML file.
+<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster Custom Resource object YAML file.
 To activate changes done to CheCluster YAML file, do one of the following:</p>
 </div>
 <div class="ulist">
@@ -1534,7 +1552,8 @@ To activate changes done to CheCluster YAML file, do one of the following:</p>
 <p>Update the YAML file properties of an already running cluster by executing the <code>kubectl patch</code> command. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl patch checluster eclipse-che --type=json -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>common</em>"}]'</pre>
+<pre>$ kubectl patch checluster eclipse-che --type=json \
+  -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>&lt;common&gt;</em>"}]'</pre>
 </div>
 </div>
 </li>
@@ -1631,7 +1650,7 @@ To activate changes done to CheCluster YAML file, do one of the following:</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Apr 19, 2020 <br/>
+                    Site last generated: Apr 20, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
