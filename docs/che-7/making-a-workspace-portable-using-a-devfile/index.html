@@ -2175,7 +2175,7 @@ the Kubernetes namespace or OpenShift project to which the workspace is deployed
 <div class="sect3">
 <h4 id="endpoints">Endpoints</h4>
 <div class="paragraph">
-<p>For the <code>dockerimage</code>, <code>kubernetes</code> and <code>openshift</code> component types, you can specify the endpoints that the Docker image exposes. These endpoints can be made accessible to the users if the Che cluster is running using a Kubernetes ingress or an OpenShift route and to the other components within the workspace. You can create an endpoint for your application or database, if your application or database server is listening on a port and you want to be able to directly interact with it yourself or you want other components to interact with it.</p>
+<p>Components of any type can specify the endpoints that the Docker image exposes. These endpoints can be made accessible to the users if the Che cluster is running using a Kubernetes ingress or an OpenShift route and to the other components within the workspace. You can create an endpoint for your application or database, if your application or database server is listening on a port and you want to be able to directly interact with it yourself or you want other components to interact with it.</p>
 </div>
 <div class="paragraph">
 <p>Endpoints have a number of properties as shown in the following example:</p>
@@ -2284,7 +2284,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
 <p>When starting a new server within a component, Che autodetects this, and the UI offers to automatically expose this port as a <code>public</code> port. This is useful for debugging a web application, for example. It is not possible to do this for servers that autostart with the container (for example, a database server). For such components, specify the endpoints explicitly.</p>
 </div>
 <div class="paragraph">
-<p>Example specifying endpoints for <code>kubernetes</code>/<code>openshift</code> type:</p>
+<p>Example specifying endpoints for <code>kubernetes</code>/<code>openshift</code> and <code>chePlugin</code>/<code>cheEditor</code> types:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2292,6 +2292,33 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
 <span style="color:#606">metadata</span>:
   <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
 <span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: cheEditor</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">theia-editor</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-theia/next</span></span>
+    <span style="color:#606">endpoints</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: 'theia-extra-endpoint'</span></span>
+      <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8880</span></span>
+      <span style="color:#606">attributes</span>:
+        <span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+        <span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">redhat/php/latest</span></span>
+    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
+    <span style="color:#606">endpoints</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: 'php-endpoint'</span></span>
+      <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">7777</span></span>
+
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">theia-editor</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse/che-theia/next</span></span>
+    <span style="color:#606">endpoints</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: 'theia-extra-endpoint'</span></span>
+      <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8880</span></span>
+      <span style="color:#606">attributes</span>:
+        <span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+        <span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+
   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: openshift</span></span>
     <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">webapp</span></span>
     <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">webapp.yaml</span></span>
@@ -2302,6 +2329,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
         <span style="color:#606">discoverable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
         <span style="color:#606">public</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
         <span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">http</span></span>
+
   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: openshift</span></span>
     <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mongo</span></span>
     <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mongo-db.yaml</span></span>
