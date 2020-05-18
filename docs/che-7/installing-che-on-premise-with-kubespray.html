@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=" ">
-<title>Organizations pages | Eclipse Che Documentation</title>
+<meta name="keywords" content=",  ">
+<title>Installing Che on-premise with Kubespray | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Organizations pages page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che on-premise with Kubespray page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Organizations pages">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installing Che on-premise with Kubespray">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1144,7 +1144,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Organizations pages</h1>
+   <h1 class="post-title-main">Installing Che on-premise with Kubespray</h1>
 </div>
 
 
@@ -1181,299 +1181,924 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>The following pages and posts are tagged with <button type="button" style="cursor: default" class="btn btn-default navbar-btn">organizations</button></p>
-<table><thead><tr><th>Title</th><th>Excerpt</th></tr></thead>
-    <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <tr><td><a href="/che/docs/che-7/using-organizations/">Using organizations</a></td>
-            <!-- <td><span class="label label-default">Page</span></td> -->
-          <td>  Organizations in Eclipse Che   Organizations allow administrators to group Eclipse Che users and allocate resources. The system administrator controls and allocates resources and permissions within the administrator dashboard.     Roles in an organization   A... </td>
-        </tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   </tbody>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This article explains how to create a single or multi-node bare metal Kubernetes cluster to deploy Che.</p>
+</div>
+<div class="paragraph">
+<p>A bare metal cluster has multiple advantages (performance, density, etc.) but also drawbacks (longer to reset, etc.). An other type of installation is inside Virtual Machines for example.</p>
+</div>
+<div class="paragraph">
+<p>There are a lot of ways to deploy a bare metal cluster, we will use Kubespray in this article for its simplicity.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hardware:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CPU: 2 preferable (no check performed by Kubespray)</p>
+</li>
+<li>
+<p>RAM: 1024MB/1500MB minimum for worker/master nodes enforced in Kubespray (configurable)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Eclipse Che requires minimum CPU and RAM to run itself and to spawn user environments</p>
+</div>
+</td>
+</tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Software:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>O/S: <a href="https://github.com/kubernetes-sigs/kubespray#supported-linux-distributions">check the supported distributions</a></p>
+</li>
+<li>
+<p>Kubespray: 2.12.5</p>
+</li>
+<li>
+<p>Python: 3.7</p>
+</li>
+<li>
+<p>Helm: 3.1.2</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-kubespray-to-set-up-kubernetes_installing-che-on-premise-with-kubespray">Set up Kubernetes using Kubespray</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Commands are given for bash on Ubuntu.</p>
+</div>
+<div class="paragraph">
+<div class="title">System update</div>
+<p>Start with a system update before installing new packages.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo apt-get update
+$ sudo apt-get upgrade</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This step is only required on the machine used to run Kubespray. Kubespray will take care of system updates on the cluster nodes.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">SSH access</div>
+<ul>
+<li>
+<p>Install SSH server</p>
+<div class="paragraph">
+<p>If a node does not have SSH server installed by default, you have to install it to remotely control this machine.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo apt-get install openssh-server</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create SSH key pair</p>
+<div class="paragraph">
+<p>You have to generate one or multiple SSH key pair(s) to allow Kubespray/Ansible automatic login using SSH. You can use a different key pair for each node or use the same for all nodes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ssh-keygen -b 2048 -t rsa -f /home/&lt;local-user&gt;/.ssh/id_rsa -q -N ""</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy your public key(s) on nodes</p>
+<div class="paragraph">
+<p>Copy your public key(s) in the ~/.ssh/authorized_keys file of the user accounts you will use on each node for deployment.
+You will be prompted twice for the password corresponding to account, the first time for the public key upload using SSH and the second time for adding the public key in the authorized_keys file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   scp /home/&lt;local-user&gt;/.ssh/id_rsa.pub &lt;node-user&gt;@$ip:/home/&lt;node-user&gt;/.ssh
+   ssh &lt;node-user&gt;@$ip "cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will never be prompted again for password using SSH, the key will be used to authenticate you!</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">IPv4 forwarding</div>
+<p>Kubespray requires to turn on IPv4 forwarding. This should be done automatically by Kubepsray.</p>
+</div>
+<div class="paragraph">
+<p>To do it manually, run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   ssh &lt;node-user&gt;@$ip "echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Turn off swap</div>
+<p>Turning swap off is required by Kubernetes. See this issue for more information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   ssh &lt;node-user&gt;@$ip "sudo swapoff -a &amp;&amp; sudo sed -i '/ swap / s/^/#/' /etc/fstab"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Get Kubespray</div>
+<p>Start by installing curl.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install curl</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Get the lastest Kubespray source code from its repo.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The latest release when writing this tutorial, v2.12.5, throws error not encountered in the master version.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mkdir -p ~/projects/ &amp;&amp; \
+curl -LJO https://github.com/kubernetes-sigs/kubespray/archive/master.zip &amp;&amp; \
+unzip kubespray-master.zip -d kubespray &amp;&amp; \
+rm kubespray-master.zip &amp;&amp; \
+cd kubespray</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Install Kubespray requirements</div>
+<p>Kubespray uses Python 3 and several dependencies to be installed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Install Python 3</p>
+<div class="paragraph">
+<p>Install Python 3 but also pip (package installer for Python) and venv to create virtual environnements (see below).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install python3.7 python3-pip python3-venv</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a virtual env</p>
+<div class="paragraph">
+<p>This is a best isolation pratice using Python to use virtual env (or conda env for conda users).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>python3 -m venv ~/projects/kubespray-venv
+source ~/projects/kubespray-venv/bin/activate</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Kubespray dependencies</p>
+<div class="listingblock">
+<div class="content">
+<pre>pip install -r requirements.txt</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Create a new cluster configuration</div>
+<p>Start creating a copy of the default settings from sample cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cp -rfp inventory/sample inventory/mycluster</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Be sure you are still in the ~/projects/kubespray/ directory before executing this command!</p>
+</div>
+<div class="paragraph">
+<p>Then customize your new cluster</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update Ansible inventory file with inventory builder</p>
+<div class="listingblock">
+<div class="content">
+<pre>declare -a IPS=(&lt;node1-ip&gt; &lt;node2-ip&gt; ...)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python contrib/inventory_builder/inventory.py ${IPS[@]}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>(optional) Rename your nodes or deactivate hostname renaming</p>
+<div class="paragraph">
+<p>If you skip this step, your cluster hostnames will be renamed node1, node2, etc.</p>
+</div>
+<div class="paragraph">
+<p>You can either edit the file ~/projects/kubespray/inventory/mycluster/hosts.yaml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sed -e 's/node1/tower/g' -e 's/node2/laptop/g' ... -i inventory/mycluster/hosts.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OR</p>
+</div>
+<div class="paragraph">
+<p>keep the current hostnames</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>echo "override_system_hostname: false" &gt;&gt;  inventory/mycluster/group_vars/all/all.yml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check localhost vs nodes usernames</p>
+<div class="paragraph">
+<p>If your localhost username differ from a node username (the one that owns your SSH public key), you must specify it to Ansible by editing (manually) the hosts.yaml file.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 50%;">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-middle">localhost username</th>
+<th class="tableblock halign-center valign-middle">node1 username</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">foo</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">bar</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; cat inventory/mycluster/hosts.yaml
+all:
+  hosts:
+    node1:
+      ansible_ssh_user: bar</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Deploy your cluster!</div>
+<p>It&#8217;s time to deploy Kubernetes by running the Ansible playbook command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Access your cluster API</div>
+<p>The cluster is created but you currently have no access to its API for configuration purpose.
+<code>kubectl</code> has been installed by Kubespray on master nodes of your cluster and configuration files are saved in root home directories of master nodes.</p>
+</div>
+<div class="paragraph">
+<p>If you want to access the cluster API from another computer on your network, install kubectl first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then copy the configuration files from the root home directory of a master node:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On the master node, copy configurations files from root to your useraccount</p>
+<div class="listingblock">
+<div class="content">
+<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "sudo cp -R /root/.kube ~ &amp;&amp; sudo chown -R &lt;node-user&gt;:&lt;node-user&gt; ~/.kube"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Then download the configuration files to a remote computer</p>
+<div class="listingblock">
+<div class="content">
+<pre>scp -r &lt;node-user&gt;@&lt;master-node-ip&gt;:~/.kube ~
+sudo chown -R &lt;local-user&gt;:&lt;local-user&gt; ~/.kube</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Keep secrets protected on the master node</p>
+<div class="listingblock">
+<div class="content">
+<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "rm -r ~/.kube"</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For sanity, use autocompletion!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>echo 'source &lt;(kubectl completion bash)' &gt;&gt;~/.bashrc</pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p>title: Installing a load balancer on a bare metal cluster
+keywords:
+tags: []
+sidebar: che_7_docs
+permalink: che-7/installing-load-balancer-on-a-bare-metal-cluster/
+folder: che-7/overview
+summary:
+---</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-a-load-balancer-on-bare-metal-cluster_installing-che-on-premise-with-kubespray">Installing a load balancer on a bare metal cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>On a bare metal Kubernetes cluster, you don&#8217;t have a load balancer already running since it&#8217;s usually part of your cloud provider infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>For more details, refer to the official Kubernetes <a href="https://kubernetes.io/docs/concepts/services-networking/service/"><code>Service</code> documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Fortunately, MetalLB is a open-source implementation of a load balancer for bare metal deployments!</p>
+</div>
+<div class="paragraph">
+<div class="title">Install MetalLB</div>
+<p>Follow the official installation guide.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl edit configmap -n kube-system kube-proxy</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: "ipvs"
+ipvs:
+  strictARP: true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then apply the manifests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+# On first install only
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Set MetalLB configuration</div>
+<p>To allow the load balancer to distribute external IPs, you must specify in its configuration what is the IP chunk allocated for it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - &lt;your-ip-range&gt;
+EOF</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Don&#8217;t forget to set &lt;your-ip-range&gt; to the ip chunk you want to use!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it!</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>title: Installing a storage on a bare metal cluster
+keywords:
+tags: []
+sidebar: che_7_docs
+permalink: che-7/installing-storage-on-a-bare-metal-cluster/
+folder: che-7/overview
+summary:
+---</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-a-storage-on-bare-metal-cluster_installing-che-on-premise-with-kubespray">Installing a storage on a bare metal cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deployments usually require storage in order to persist data since pods are designed to be ephemerals.</p>
+</div>
+<div class="paragraph">
+<p>Kubernetes introduced several concepts around this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistant Volume <code>PV</code>: a declaration of an available volume</p>
+</li>
+<li>
+<p>Persistant Volume Claim <code>PVC</code>: a claim for Persistent Volume</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more details, please refer to the official Kubernetes documentation about storage that covers <code>volumes</code>, <code>PV</code>, <code>PVC</code>, provisioning and much more.</p>
+</div>
+<div class="paragraph">
+<p>In this article, you will use a <code>nfs</code> volume type for its simplicity, accessiblity between nodes and capability to be dynamically provisioned.</p>
+</div>
+<div class="paragraph">
+<div class="title">Set up the NFS server</div>
+<p>Based on the Vitux tutorial.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install NFS server</p>
+<div class="paragraph">
+<p>Just pick a machine on the same network as your cluster nodes (it can be one of them), and run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install -y nfs-kernel-server</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Choose export directory</p>
+<div class="paragraph">
+<p>Choose or create a directory and share it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo mkdir -p /mnt/my-nfs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we want all clients to have access, change its permissions</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo chown nobody:nogroup /mnt/my-nfs
+sudo chmod 777 /mnt/my-nfs</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Do the NFS export</p>
+<div class="listingblock">
+<div class="content">
+<pre>echo "&lt;mount-path&gt; &lt;subnet&gt;(rw,sync,no_subtree_check)" | sudo tee /etc/exports
+sudo exportfs -a
+sudo systemctl restart nfs-kernel-server</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You have to replace &lt;subnet&gt; and &lt;mount-path&gt; with your <code>nfs</code> settings</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Define the StorageClass and the provisioner</div>
+<p>Based on the Yolanda tutorial.
+We will use an <a href="https://github.com/kubernetes-incubator/external-storage">external-storage</a> template.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set authorizations</p>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs-client/deploy/rbac.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set StorageClass</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: managed-nfs-storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: nfs-provisioner
+parameters:
+  archiveOnDelete: "false"
+EOF</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We declare the <code>StorageClass</code> as default one to automatically be selected by `PVC`s.</p>
+</div>
+</li>
+<li>
+<p>Set provisioner</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: nfs-provisioner
+            - name: NFS_SERVER
+              value: &lt;nfs-server-ip&gt;
+            - name: NFS_PATH
+              value: &lt;mount-path&gt;
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: &lt;nfs-server-ip&gt;
+            path: &lt;mount-path&gt;
+EOF</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Don&#8217;t forget to replace &lt;nfs-server-ip&gt; and &lt;mount-path&gt; with your custom <code>nfs</code> settings</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Check everything is OK</div>
+<div class="content">
+<pre>kubectl get deployments.apps,pods,sc -n default</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see the <code>Deployment</code> of the provisioner, the corresponding <code>Pod</code> and also the <code>StorageClass</code> as default one.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>title: Installing chectl
+keywords:
+tags: []
+sidebar: che_7_docs
+permalink: che-7/installing-chectl/
+folder: che-7/overview
+summary:
+---</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-chectl_installing-che-on-premise-with-kubespray">Installing chectl</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>chectl</code> is the Eclipse Che command-line management tool. It is used for operations on the Che server (start, stop, update, delete) and on workspaces (list, start, stop, inject) and to generate devfiles.</p>
+</div>
+<div class="sect2">
+<h3 id="installing-the-chectl-management-tool-on-windows_installing-chectl">Installing the chectl management tool on Windows</h3>
+<div class="paragraph">
+<p>This section describes how to install the <code>chectl</code> management tool on Windows.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command in the PowerShell terminal:</p>
+<div class="listingblock">
+<div class="content">
+<pre>C:\Users&gt; Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://www.eclipse.org/che/chectl/win/'))</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The chectl binary file is installed at <code>C:\ProgramData\chectl</code>.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#upgrading-the-chectl-management-tool_installing-chectl">Upgrading the <code>chectl</code> management tool</a></p>
+</li>
+<li>
+<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-the-chectl-management-tool-on-linux-or-macos_installing-chectl">Installing the chectl management tool on Linux or macOS</h3>
+<div class="paragraph">
+<p>This section describes how to install the <code>chectl</code> management tool on Linux or macOS.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The directory <code>/usr/local/bin</code> is in the user <code>$PATH</code>.</p>
+</li>
+<li>
+<p>The <code>sudo</code> command is configured for the current user.</p>
+</li>
+<li>
+<p>Remove all old or undesired versions of <code>chectl</code>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Run the following command in the terminal (this downloads and executes the <code>install.sh</code> script):</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ bash &lt;(curl -sL  https://www.eclipse.org/che/chectl/)</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the following command to verify that the <code>chectl</code> binary file used is <code>/usr/local/bin/chectl</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ which chectl
+/usr/local/bin/chectl</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the following command to verify that the version of chectl that is the expected one.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl --version</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To identify the latest stable release, see the <a href="https://github.com/che-incubator/chectl/releases">list of chectl releases</a> and search for a release not containing "next" in the name.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Read the installation logs.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cat chectl-install.log</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<h4 id="additional-resources" class="discrete">Additional resources</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#upgrading-the-chectl-management-tool_installing-chectl">Upgrading the <code>chectl</code> management tool</a></p>
+</li>
+<li>
+<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Related information</div>
+<ul>
+<li>
+<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-on-kubespray-using-chectl_installing-che-on-premise-with-kubespray">Installing che on Kubespray using chectl</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running Kubernetes cluster set up with Kubespray on bare metal. See <a href="#using-kubespray-to-set-up-kubernetes_installing-che-on-premise-with-kubespray">Set up Kubernetes using Kubespray</a>.</p>
+</li>
+<li>
+<p>A load balancer is running on your cluster. See <a href="/che/docs/che-7/installing-load-balancer-on-a-bare-metal-cluster">this article</a>.</p>
+</li>
+<li>
+<p>A storage is defined with a provisioner. See <a href="/che/docs/che-7/installing-storage-on-a-bare-metal-cluster">this article</a>.</p>
+</li>
+<li>
+<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-chectl">this article</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Deploy an ingress controller</p>
+<div class="paragraph">
+<p>We will use nginx for that, get the <em>cloud</em> deployment since you have configured a load balancer!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the IP attributed by the load balancer</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get svc -n ingress-nginx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It corresponds to the <code>EXTERNAL-IP</code> of the <code>ingress-nginx-controller</code> service. We will refer it as &lt;ip-from-load-balancer&gt;.</p>
+</div>
+</li>
+<li>
+<p>Run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --platform k8s --domain &lt;ip-from-load-balancer&gt;.nip.io --self-signed-cert</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Unless you provide a certificate, don&#8217;t forget the <em>self-signed-cert</em> flag</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
 
     <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
         
     </div>
 

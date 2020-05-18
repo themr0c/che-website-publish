@@ -1232,6 +1232,9 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p><a href="#using-docker-desktop-to-set-up-kubernetes_running-che-locally">Using Docker Desktop to set up Kubernetes</a></p>
 </li>
+<li>
+<p><a href="#using-kubespray-to-set-up-kubernetes_running-che-locally">Set up Kubernetes using Kubespray</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1547,6 +1550,331 @@ name: minikube</pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="using-kubespray-to-set-up-kubernetes_running-che-locally">Set up Kubernetes using Kubespray</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Commands are given for bash on Ubuntu.</p>
+</div>
+<div class="paragraph">
+<div class="title">System update</div>
+<p>Start with a system update before installing new packages.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo apt-get update
+$ sudo apt-get upgrade</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This step is only required on the machine used to run Kubespray. Kubespray will take care of system updates on the cluster nodes.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">SSH access</div>
+<ul>
+<li>
+<p>Install SSH server</p>
+<div class="paragraph">
+<p>If a node does not have SSH server installed by default, you have to install it to remotely control this machine.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo apt-get install openssh-server</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create SSH key pair</p>
+<div class="paragraph">
+<p>You have to generate one or multiple SSH key pair(s) to allow Kubespray/Ansible automatic login using SSH. You can use a different key pair for each node or use the same for all nodes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ssh-keygen -b 2048 -t rsa -f /home/&lt;local-user&gt;/.ssh/id_rsa -q -N ""</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy your public key(s) on nodes</p>
+<div class="paragraph">
+<p>Copy your public key(s) in the ~/.ssh/authorized_keys file of the user accounts you will use on each node for deployment.
+You will be prompted twice for the password corresponding to account, the first time for the public key upload using SSH and the second time for adding the public key in the authorized_keys file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   scp /home/&lt;local-user&gt;/.ssh/id_rsa.pub &lt;node-user&gt;@$ip:/home/&lt;node-user&gt;/.ssh
+   ssh &lt;node-user&gt;@$ip "cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will never be prompted again for password using SSH, the key will be used to authenticate you!</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">IPv4 forwarding</div>
+<p>Kubespray requires to turn on IPv4 forwarding. This should be done automatically by Kubepsray.</p>
+</div>
+<div class="paragraph">
+<p>To do it manually, run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   ssh &lt;node-user&gt;@$ip "echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Turn off swap</div>
+<p>Turning swap off is required by Kubernetes. See this issue for more information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
+   ssh &lt;node-user&gt;@$ip "sudo swapoff -a &amp;&amp; sudo sed -i '/ swap / s/^/#/' /etc/fstab"
+done</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Get Kubespray</div>
+<p>Start by installing curl.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install curl</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Get the lastest Kubespray source code from its repo.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The latest release when writing this tutorial, v2.12.5, throws error not encountered in the master version.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mkdir -p ~/projects/ &amp;&amp; \
+curl -LJO https://github.com/kubernetes-sigs/kubespray/archive/master.zip &amp;&amp; \
+unzip kubespray-master.zip -d kubespray &amp;&amp; \
+rm kubespray-master.zip &amp;&amp; \
+cd kubespray</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Install Kubespray requirements</div>
+<p>Kubespray uses Python 3 and several dependencies to be installed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Install Python 3</p>
+<div class="paragraph">
+<p>Install Python 3 but also pip (package installer for Python) and venv to create virtual environnements (see below).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install python3.7 python3-pip python3-venv</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a virtual env</p>
+<div class="paragraph">
+<p>This is a best isolation pratice using Python to use virtual env (or conda env for conda users).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>python3 -m venv ~/projects/kubespray-venv
+source ~/projects/kubespray-venv/bin/activate</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Kubespray dependencies</p>
+<div class="listingblock">
+<div class="content">
+<pre>pip install -r requirements.txt</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Create a new cluster configuration</div>
+<p>Start creating a copy of the default settings from sample cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cp -rfp inventory/sample inventory/mycluster</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Be sure you are still in the ~/projects/kubespray/ directory before executing this command!</p>
+</div>
+<div class="paragraph">
+<p>Then customize your new cluster</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update Ansible inventory file with inventory builder</p>
+<div class="listingblock">
+<div class="content">
+<pre>declare -a IPS=(&lt;node1-ip&gt; &lt;node2-ip&gt; ...)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python contrib/inventory_builder/inventory.py ${IPS[@]}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>(optional) Rename your nodes or deactivate hostname renaming</p>
+<div class="paragraph">
+<p>If you skip this step, your cluster hostnames will be renamed node1, node2, etc.</p>
+</div>
+<div class="paragraph">
+<p>You can either edit the file ~/projects/kubespray/inventory/mycluster/hosts.yaml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sed -e 's/node1/tower/g' -e 's/node2/laptop/g' ... -i inventory/mycluster/hosts.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OR</p>
+</div>
+<div class="paragraph">
+<p>keep the current hostnames</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>echo "override_system_hostname: false" &gt;&gt;  inventory/mycluster/group_vars/all/all.yml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check localhost vs nodes usernames</p>
+<div class="paragraph">
+<p>If your localhost username differ from a node username (the one that owns your SSH public key), you must specify it to Ansible by editing (manually) the hosts.yaml file.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 50%;">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-middle">localhost username</th>
+<th class="tableblock halign-center valign-middle">node1 username</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">foo</p></td>
+<td class="tableblock halign-center valign-middle"><p class="tableblock">bar</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; cat inventory/mycluster/hosts.yaml
+all:
+  hosts:
+    node1:
+      ansible_ssh_user: bar</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Deploy your cluster!</div>
+<p>It&#8217;s time to deploy Kubernetes by running the Ansible playbook command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Access your cluster API</div>
+<p>The cluster is created but you currently have no access to its API for configuration purpose.
+<code>kubectl</code> has been installed by Kubespray on master nodes of your cluster and configuration files are saved in root home directories of master nodes.</p>
+</div>
+<div class="paragraph">
+<p>If you want to access the cluster API from another computer on your network, install kubectl first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then copy the configuration files from the root home directory of a master node:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On the master node, copy configurations files from root to your useraccount</p>
+<div class="listingblock">
+<div class="content">
+<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "sudo cp -R /root/.kube ~ &amp;&amp; sudo chown -R &lt;node-user&gt;:&lt;node-user&gt; ~/.kube"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Then download the configuration files to a remote computer</p>
+<div class="listingblock">
+<div class="content">
+<pre>scp -r &lt;node-user&gt;@&lt;master-node-ip&gt;:~/.kube ~
+sudo chown -R &lt;local-user&gt;:&lt;local-user&gt; ~/.kube</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Keep secrets protected on the master node</p>
+<div class="listingblock">
+<div class="content">
+<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "rm -r ~/.kube"</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For sanity, use autocompletion!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>echo 'source &lt;(kubectl completion bash)' &gt;&gt;~/.bashrc</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deploying-che-using-chectl">Deploying Che using chectl</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1565,6 +1893,9 @@ name: minikube</pre>
 </li>
 <li>
 <p><a href="#installing-che-on-kind-using-chectl_running-che-locally">Installing Che on kind using chectl</a></p>
+</li>
+<li>
+<p><a href="#installing-che-on-kubespray-using-chectl_running-che-locally">Installing che on Kubespray using chectl</a></p>
 </li>
 </ul>
 </div>
@@ -1799,6 +2130,77 @@ ingress-nginx   LoadBalancer   10.107.194.26   172.17.255.1   80:32033/TCP,443:3
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-on-kubespray-using-chectl_running-che-locally">Installing che on Kubespray using chectl</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running Kubernetes cluster set up with Kubespray on bare metal. See <a href="#using-kubespray-to-set-up-kubernetes_running-che-locally">Set up Kubernetes using Kubespray</a>.</p>
+</li>
+<li>
+<p>A load balancer is running on your cluster. See <a href="/che/docs/che-7/installing-load-balancer-on-a-bare-metal-cluster">this article</a>.</p>
+</li>
+<li>
+<p>A storage is defined with a provisioner. See <a href="/che/docs/che-7/installing-storage-on-a-bare-metal-cluster">this article</a>.</p>
+</li>
+<li>
+<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-chectl">this article</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Deploy an ingress controller</p>
+<div class="paragraph">
+<p>We will use nginx for that, get the <em>cloud</em> deployment since you have configured a load balancer!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the IP attributed by the load balancer</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get svc -n ingress-nginx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It corresponds to the <code>EXTERNAL-IP</code> of the <code>ingress-nginx-controller</code> service. We will refer it as &lt;ip-from-load-balancer&gt;.</p>
+</div>
+</li>
+<li>
+<p>Run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --platform k8s --domain &lt;ip-from-load-balancer&gt;.nip.io --self-signed-cert</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Unless you provide a certificate, don&#8217;t forget the <em>self-signed-cert</em> flag</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>

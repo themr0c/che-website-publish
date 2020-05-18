@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=" ">
-<title>Organizations pages | Eclipse Che Documentation</title>
+<meta name="keywords" content=",  ">
+<title>Installing a storage on a bare metal cluster | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Organizations pages page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing a storage on a bare metal cluster page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Organizations pages">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installing a storage on a bare metal cluster">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1144,7 +1144,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Organizations pages</h1>
+   <h1 class="post-title-main">Installing a storage on a bare metal cluster</h1>
 </div>
 
 
@@ -1181,299 +1181,209 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <p>The following pages and posts are tagged with <button type="button" style="cursor: default" class="btn btn-default navbar-btn">organizations</button></p>
-<table><thead><tr><th>Title</th><th>Excerpt</th></tr></thead>
-    <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <tr><td><a href="/che/docs/che-7/using-organizations/">Using organizations</a></td>
-            <!-- <td><span class="label label-default">Page</span></td> -->
-          <td>  Organizations in Eclipse Che   Organizations allow administrators to group Eclipse Che users and allocate resources. The system administrator controls and allocates resources and permissions within the administrator dashboard.     Roles in an organization   A... </td>
-        </tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   </tbody>
+  <div class="paragraph">
+<p>Deployments usually require storage in order to persist data since pods are designed to be ephemerals.</p>
+</div>
+<div class="paragraph">
+<p>Kubernetes introduced several concepts around this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistant Volume <code>PV</code>: a declaration of an available volume</p>
+</li>
+<li>
+<p>Persistant Volume Claim <code>PVC</code>: a claim for Persistent Volume</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more details, please refer to the official Kubernetes documentation about storage that covers <code>volumes</code>, <code>PV</code>, <code>PVC</code>, provisioning and much more.</p>
+</div>
+<div class="paragraph">
+<p>In this article, you will use a <code>nfs</code> volume type for its simplicity, accessiblity between nodes and capability to be dynamically provisioned.</p>
+</div>
+<div class="paragraph">
+<div class="title">Set up the NFS server</div>
+<p>Based on the Vitux tutorial.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install NFS server</p>
+<div class="paragraph">
+<p>Just pick a machine on the same network as your cluster nodes (it can be one of them), and run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo apt-get install -y nfs-kernel-server</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Choose export directory</p>
+<div class="paragraph">
+<p>Choose or create a directory and share it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo mkdir -p /mnt/my-nfs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we want all clients to have access, change its permissions</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo chown nobody:nogroup /mnt/my-nfs
+sudo chmod 777 /mnt/my-nfs</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Do the NFS export</p>
+<div class="listingblock">
+<div class="content">
+<pre>echo "&lt;mount-path&gt; &lt;subnet&gt;(rw,sync,no_subtree_check)" | sudo tee /etc/exports
+sudo exportfs -a
+sudo systemctl restart nfs-kernel-server</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You have to replace &lt;subnet&gt; and &lt;mount-path&gt; with your <code>nfs</code> settings</p>
+</div>
+</td>
+</tr>
 </table>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Define the StorageClass and the provisioner</div>
+<p>Based on the Yolanda tutorial.
+We will use an <a href="https://github.com/kubernetes-incubator/external-storage">external-storage</a> template.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set authorizations</p>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs-client/deploy/rbac.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set StorageClass</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: managed-nfs-storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: nfs-provisioner
+parameters:
+  archiveOnDelete: "false"
+EOF</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We declare the <code>StorageClass</code> as default one to automatically be selected by `PVC`s.</p>
+</div>
+</li>
+<li>
+<p>Set provisioner</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: nfs-provisioner
+            - name: NFS_SERVER
+              value: &lt;nfs-server-ip&gt;
+            - name: NFS_PATH
+              value: &lt;mount-path&gt;
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: &lt;nfs-server-ip&gt;
+            path: &lt;mount-path&gt;
+EOF</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Don&#8217;t forget to replace &lt;nfs-server-ip&gt; and &lt;mount-path&gt; with your custom <code>nfs</code> settings</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Check everything is OK</div>
+<div class="content">
+<pre>kubectl get deployments.apps,pods,sc -n default</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see the <code>Deployment</code> of the provisioner, the corresponding <code>Pod</code> and also the <code>StorageClass</code> as default one.</p>
+</div>
 
     <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
         
     </div>
 
