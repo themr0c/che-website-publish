@@ -1277,10 +1277,24 @@ $('#toc').on('click', 'a', function() {
 To do that, ensure, that <code>settings.xml</code> is present in all the containers that use Maven tools, in particular the Maven container and the Java plug-in container.</p>
 </div>
 <div class="paragraph">
-<p>By default, <code>settings.xml</code> is located at the <code><em>&lt;home dir&gt;</em>/.m2</code> directory. Because the user home directory is not on a persistent volume, you must re-create the file each time you restart the workspace. This is a known issue, see <a href="https://github.com/eclipse/che/issues/13318">the issue on GitHub</a>.</p>
+<p>By default, <code>settings.xml</code> is located at the <code><em>&lt;home dir&gt;</em>/.m2</code> directory which is already on persistent volume in Maven and Java plug-in containers and you don&#8217;t need to re-create the file each time you restart the workspace if it isn&#8217;t in ephemeral mode.</p>
 </div>
 <div class="paragraph">
-<p>A workaround is to make the file persist between the restarts of the workspace, create a directory <code>/projects/maven/.m2</code>, and move the <code>settings.xml</code> file in it. Then set the value of the <code>user.home</code> Java system property to <code>/projects/maven</code> in all your Maven containers.</p>
+<p>In case you have another container that uses Maven tools and you want to share <code>&lt;home dir&gt;/.m2</code> folder with this container, you have to specify the custom volume for this specific component in the devfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">MyDevfile</span></span>
+<span style="color:#606">components</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven-tool</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">plugin/id</span></span>
+    <span style="color:#606">volumes</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: m2</span></span>
+      <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;home dir&gt;/.m2</span></span></code></pre>
+</div>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -1344,42 +1358,6 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
   <span style="color:#070;font-weight:bold">&lt;/activeProfiles&gt;</span>
 <span style="color:#070;font-weight:bold">&lt;/settings&gt;</span></code></pre>
 </div>
-</div>
-</li>
-<li>
-<p>Configure the devfile to use the <code>/projects/maven</code> value for the <code>user.home</code> Java system property.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>For the Java plug-in container, configure the language server start arguments preference:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">id: redhat/java11/latest</span></span>
-    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
-    <span style="color:#606">preferences</span>:
-      <span style="color:#606">java.jdt.ls.vmargs</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&gt;-</span><span style="color:#D20">
-        -noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication
-        -Duser.home=/projects/maven</span></span></code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>For the Maven container, configure the <code>MAVEN_OPTS</code> environment variable:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span><span style="color:#D20">
-    alias: maven
-    type: dockerimage
-    ...
-    env:
-       -name: MAVEN_OPTS
-        value: &gt;-
-          -Duser.home=/projects/maven</span></span></code></pre>
-</div>
-</div>
-</li>
-</ol>
 </div>
 </li>
 </ol>
