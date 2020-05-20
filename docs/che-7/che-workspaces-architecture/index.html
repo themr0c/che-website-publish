@@ -1554,50 +1554,145 @@ PVC has then they will use the same shared folder in common PVC.</p>
 <p>Volumes can be anything that a user defines as volumes for workspace machines. The volume name is equal to the directory name in <code>${PV}/${ws-id}</code>.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="configuring-a-needed-workspace-strategy-using-the-helm-chart_che-workspace-configuration">Configuring a per-workspace strategy using the Helm chart</h4>
-<div class="paragraph">
-<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Helm chart.</p>
 </div>
+<div class="sect2">
+<h3 id="configuring-a-che-workspace-with-a-persistent-volume-strategy_che-workspace-configuration">Configuring a Che workspace with a persistent volume strategy</h3>
 <div class="paragraph">
-<p>Note: it&#8217;s not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces will lost their data.</p>
+<p>A persistent volume (PV) acts as a virtual storage instance that adds a volume to a cluster.</p>
 </div>
 <div class="paragraph">
-<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
+<p>A persistent volume claim (PVC) is a request to provision persistent storage of a specific type and configuration, available in the following Che storage configuration strategies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Common</p>
+</li>
+<li>
+<p>Per-workspace</p>
+</li>
+<li>
+<p>Unique</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>When deploying Che using the Helm chart, configure the workspace PVC strategy by setting values for <code>global.pvcStrategy</code>. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --set global.pvcStrategy=<em>&lt;common&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
-</div>
+<p>The mounted PVC is displayed as a folder in a container file system.</p>
 </div>
 <div class="sect3">
-<h4 id="configuring-a-needed-workspace-strategy-using-the-operator_che-workspace-configuration">Configuring a per-workspace strategy using the Operator</h4>
+<h4 id="configuring-a-pvc-strategy-using-the-helm-chart_che-workspace-configuration">Configuring a PVC strategy using the Helm chart</h4>
 <div class="paragraph">
-<p>The following section describes how to configure workspace PVCs strategies of a Che server using the Operator.</p>
+<p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Helm chart.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-It is not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. After that workspaces lose their data.
+It is not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. Doing so causes data loss.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Helm Chart is installed. A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>When deploying Che using Helm Chart, configure the workspace PVC strategy by setting values for the <code>global.pvcStrategy</code> option.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For a new installation, use the <code>helm install</code> command with the <code>global.pvcStrategy</code> option:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm install --set global.pvcStrategy=<em>&lt;per-workspace&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>For an already installed instance, use the <code>helm upgrade</code> command with the <code>global.pvcStrategy</code> option:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --set global.pvcStrategy=<em>&lt;per-workspace&gt;</em></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Depending on the strategy used, replace the <code><em>&lt;per-workspace&gt;</em></code> option in the above examples with <code>unique</code> or <code>common</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="configuring-a-pvc-strategy-by-editing-a-configmap_che-workspace-configuration">Configuring a PVC strategy strategy by editing a configMap</h4>
+<div class="paragraph">
+<p>Based on the Che installation method, configMaps can be used to customize the working environment. A configMap is provided as an editable file that lists options to customize the Che environment. This method of configuring a persistent volume claim (PVC) strategy for a Che workspace is available only for the Helm installation.</p>
+</div>
+<div class="paragraph">
+<p>Changes to a configMap created during Operator installation are not permanent because the Operator overwrites them back to default.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Che is installed using the Helm Chart.</p>
+</li>
+<li>
+<p>A Kubernetes orchestration tool, the OpenShift command-line tool, <code>oc</code>, or the Kubernetes clusters controlling command-line tool, <code>kubectl</code>, is installed.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the configMap variable to reflect the requested PVC strategy:</p>
+<div class="listingblock">
+<div class="content">
+<pre>CHE_INFRA_KUBERNETES_PVC_STRATEGY=<em>&lt;per-workspace&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Depending on the strategy used, replace the <code><em>&lt;per-workspace&gt;</em></code> option in the above example with <code>unique</code> or <code>common</code>.</p>
+</div>
+</li>
+<li>
+<p>Restart Che by scaling the deployment to zero and then back to one again:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc scale --replicas=0 deployment {prod-deployment}
+$ oc scale --replicas=1 deployment {prod-deployment}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the workspace for the changes to take effect.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="configuring-a-pvc-strategy-using-the-operator_che-workspace-configuration">Configuring a PVC strategy using the Operator</h4>
+<div class="paragraph">
+<p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Operator.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+It is not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. Doing so causes data loss.
 </td>
 </tr>
 </table>
@@ -1606,8 +1701,34 @@ It is not recommended to reconfigure PVC strategies on an existing Che cluster w
 <p><a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes that use <a href="https://docs.openshift.com/container-platform/latest/operators/crds/crd-managing-resources-from-crds.html">custom resources</a> to manage applications and their components.</p>
 </div>
 <div class="paragraph">
-<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster Custom Resource object YAML file.
-To activate changes done to CheCluster YAML file, do one of the following:</p>
+<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.storage.pvcStrategy</code> property of the CheCluster Custom Resource object YAML file.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A Kubernetes orchestration tool, the OpenShift command-line tool, <code>oc</code>,
+or the Kubernetes clusters controlling command-line tool, <code>kubectl</code>,
+is installed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>The following procedure steps are available for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>OpenShift command-line tool, <code>oc</code></p>
+</li>
+<li>
+<p>Kubernetes clusters controlling command-line tool, <code>kubectl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To do changes to the CheCluster YAML file, choose one of the following:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1624,14 +1745,14 @@ To activate changes done to CheCluster YAML file, do one of the following:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch checluster eclipse-che --type=json \
-  -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>&lt;common&gt;</em>"}]'</pre>
+  -p '[{"op": "replace", "path": "/spec/storage/pvcStrategy", "value": "<em>&lt;per-workspace&gt;</em>"}]'</pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;common&gt;</em></code> option in the above example with <code>unique</code> or <code>per-workspace</code>.</p>
+<p>Depending on the strategy used, replace the <code><em>&lt;per-workspace&gt;</em></code> option in the above example with <code>unique</code> or <code>common</code>.</p>
 </div>
 </div>
 </div>

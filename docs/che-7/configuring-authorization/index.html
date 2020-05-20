@@ -1405,6 +1405,77 @@ See Instructions to <a href="https://www.keycloak.org/docs/6.0/server_admin/#git
 </div>
 </div>
 <div class="sect1">
+<h2 id="configuring-prod-short-to-work-without-identity-provider_configuring-authorization">Configuring Che to work without Keycloak</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Che is deployed in multiuser mode where Keycloak and PostgreSQL are enabled by default. However, it is possible to deploy it in the single-user mode too, by changing the <code>CHE_MULTIUSER</code> value to <code>false</code>. In that case, neither Keycloak nor PostgreSQL is installed.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Eclipse Che command-line management tool, <code>chectl</code>, is installed. See the <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the chectl management tool</a> section. Alternatively, the OpenShift command line tool, <code>oc</code>, can be used.
+*</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Prepare the <code>cr-patch.yaml</code> file with the following content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">server</span>:
+      <span style="color:#606">customCheProperties</span>:
+        <span style="color:#606">CHE_MULTIUSER</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Che in the single-user mode:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --platform <em>&lt;platform&gt;</em> --installer operator  --che-operator-cr-patch-yaml cr-patch.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Depending on the strategy used, replace the <code><em>&lt;platform&gt;</em></code> option in the above example with <code>crc</code>, <code>minishift</code>, or <code>openshift</code>.
+Kubernetes-native platforms such as <code>minikube</code>, <code>microk8s</code>, <code>k8s</code>, and <code>docker-desktop</code> are also available.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification</div>
+<ol class="arabic">
+<li>
+<p>Wait for the console log output to display the <code>Command server:start has completed successfully.</code> message:</p>
+<div class="listingblock">
+<div class="content">
+<pre>✔ Retrieving Eclipse Che server URL...&lt;ECLIPSE_CHE_URL&gt;
+   ✔ Eclipse Che status check
+Command server:start has completed successfully.</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use the following command for correct boolean verification:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ {prod-cli} get checluster -o=jsonpath='{.items[0].spec.server.customCheProperties.CHE_MULTIUSER}'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the output of the command is <code>false</code>, Che has been successfully configured in single-user mode.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-smtp-and-email-notifications_configuring-authorization">Configuring SMTP and email notifications</h2>
 <div class="sectionbody">
 <div class="paragraph">
