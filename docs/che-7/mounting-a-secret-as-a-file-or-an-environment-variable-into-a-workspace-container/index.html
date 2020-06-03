@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Customizing developer environments | Eclipse Che Documentation</title>
+<title>Mounting a secret as a file or an environment variable into a workspace container | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Customizing developer environments page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Mounting a secret as a file or an environment variable into a workspace container page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Customizing developer environments">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Mounting a secret as a file or an environment variable into a workspace container">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1211,7 +1211,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Customizing developer environments</h1>
+   <h1 class="post-title-main">Mounting a secret as a file or an environment variable into a workspace container</h1>
 </div>
 
 
@@ -1248,46 +1248,295 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
-<p>Eclipse Che is an extensible and customizable developer-workspaces platform.</p>
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Secrets are Kubernetes objects that store sensitive data such as user names, passwords, authentication tokens, and configurations in an encrypted form.</p>
 </div>
 <div class="paragraph">
-<p>There are three different ways to extend Eclipse Che:</p>
+<p>Users can mount a secret that contains sensitive data in a workspace container. This reapplies the stored data from the secret automatically for every newly created workspace. As a result, the user does not have to provide these credentials and configuration settings manually.</p>
+</div>
+<div class="paragraph">
+<p>The following section describes how to automatically mount a Kubernetes secret in a workspace container and create permanent mount points for components such as:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Alternative IDEs</strong> provide specialized tools for Eclipse Che. For example, a Jupyter notebook for data analysis. Alternate IDEs can be based on Eclipse Theia or any other web IDE. The default IDE in Eclipse Che is Che-Theia.</p>
+<p>Maven configuration, the <code>settings.xml</code> file</p>
 </li>
 <li>
-<p><strong>Che-Theia plug-ins</strong> add capabilities to the Che-Theia IDE. They rely on plug-in APIs that are compatible with Visual Studio Code. The plug-ins are isolated from the IDE itself. They can be packaged as files or as containers to provide their own dependencies.</p>
+<p>SSH key pairs</p>
 </li>
 <li>
-<p><strong>Stacks</strong> are pre-configured Che workspaces with a dedicated set of tools, which cover different developer personas. For example, it is possible to pre-configure a workbench for a tester with only the tools needed for their purposes.</p>
+<p>AWS authorization tokens</p>
 </li>
 </ul>
 </div>
-<div class="imageblock">
+<div class="paragraph">
+<p>A Kubernetes secret can be mounted into a workspace container as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A file - This creates automatically mounted Maven settings that will be applied to every new workspace with Maven capabilities.</p>
+</li>
+<li>
+<p>An environment variable - This uses SSH key pairs and AWS authorization tokens for automatic authentication.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+SSH key pairs can also be mounted as a file, but this format is primarily aimed at the settings of the Maven configuration.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The mounting process uses the standard Kubernetes mounting mechanism, but it requires additional annotations and labeling for a proper bound of a secret with the required Che workspace container.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mounting-a-secret-as-a-file-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a secret as a file into a workspace container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to mount a secret from the user&#8217;s namespace as a file in single-workspace or multiple-workspace containers of Che.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a new Kubernetes secret in the k8s namespace where a Che workspace will be created.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. The default labels are:</p>
+</li>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+</li>
+<li>
+<p>` app.kubernetes.io/component: workspace-secret` :</p>
+<div class="listingblock">
+<div class="title">Example:</div>
 <div class="content">
-<a class="image" href="/che/docs/images/extensibility/extending-che.png"><img src="/che/docs/images/extensibility/extending-che.png" alt="extending che"></a>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
 </div>
-<div class="title">Figure 1. Che extensibility</div>
 </div>
 <div class="paragraph">
-<p>Extending Eclipse Che can be done entirely using Eclipse Che. Since version 7, Eclipse Che provides a self-hosting mode.</p>
+<p>Annotations must indicate the given secret is mounted as a file, provide the mount path, and, optionally, specify the name of the container in which the secret is mounted. If there is no target-container annotation, the secret will be mounted into all user containers of the Che workspace.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+  <span style="color:#606">labels</span>:
+<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Data of the Kubernetes secret must contain exactly one item, the name of which must match the desired file name mounted into the container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">settings.xml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20"><em>&lt;base64 encoded data content here&gt;</em></span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of the user container named <code>maven</code>.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mounting-a-secret-as-an-environment-variable-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a secret as an environment variable into a workspace container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following section describes how to mount a Kubernetes secret from the user’s namespace as an environment variable, or variables, into single-workspace or multiple-workspace containers of Che.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a new Kubernetes secret in the k8s namespace where a Che workspace will be created.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. By default, it is a set of two labels:</p>
+</li>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+</li>
+<li>
+<p><code>app.kubernetes.io/component: workspace-secret</code> :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotations must indicate that the given secret is mounted as an environment variable, provides variable names, and optionally, specifies the container name where this mount will be applied. If there is no target-container annotation defined, the secret will be mounted into all user containers of the Che workspace.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">che.eclipse.org/env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">FOO_ENV</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">env</span></span>
+  <span style="color:#606">labels</span>:
+   <span style="color:#F00;background-color:#FAA">...</span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in the environment variable named <code>FOO_ENV</code> and value <code>myvalue</code> being provisioned into a container named <code>maven</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the secret provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">env</span></span>
+    <span style="color:#606">che.eclipse.org/mykey_env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">FOO_ENV</span></span>
+    <span style="color:#606">che.eclipse.org/otherkey_env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">OTHER_ENV</span></span>
+  <span style="color:#606">labels</span>:
+   <span style="color:#F00;background-color:#FAA">...</span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span>
+  <span style="color:#606">otherkey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">othervalue</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into the container named <code>maven</code> in that specific order.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kubernetes annotations and labels are tools used by libraries, tools, and other clients, to attach arbitrary non-identifying metadata to Kubernetes native objects.</p>
+</div>
+<div class="paragraph">
+<p>Labels select objects and connect them to a collection that satisfies certain conditions, where annotations are used for non-identifying information that is not used by Kubernetes objects internally.</p>
+</div>
+<div class="paragraph">
+<p>This section describes Kubernetes annotation values used in the process of Kubernetes secret mounting in a Che workspace.</p>
+</div>
+<div class="paragraph">
+<p>Annotations must contain items that help identify the proper mounting configuration. These items are:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="/che/docs/che-7/what-is-a-che-theia-plug-in">What is a Che-Theia plug-in</a></p>
+<p><code>che.eclipse.org/target-container</code>: The name of the mounting container. If the name is not defined, the secret mounts into all user&#8217;s containers of the Che workspace.</p>
 </li>
 <li>
-<p><a href="/che/docs/che-7/using-alternative-ides-in-che">Using alternative IDEs in Che</a></p>
+<p><code>che.eclipse.org/env-name</code>: The name of the environment variable that is used to mount a secret.</p>
 </li>
 <li>
-<p><a href="/che/docs/che-7/using-a-visual-studio-code-extension-in-che">Using a Visual Studio Code extension in Che</a></p>
+<p><code>che.eclipse.org/mount-as</code>: This item describes if a secret will be mounted as an environmental variable or a file . Options: <code>env</code> or <code>file</code></p>
+</li>
+<li>
+<p><code>che.eclipse.org/<em>&lt;mykeyName&gt;</em>-env-name: FOO_ENV</code>: The name of the environment variable used when data contains multiple items. <code>mykeyName</code> is used as an example.</p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 
     <div class="tags">
