@@ -1439,7 +1439,7 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p>Custom memory limit and request:</p>
 <div class="paragraph">
-<p>If present, the <code>memoryLimit</code> attribute of the <code>containers</code> section of the <code>meta.yaml</code> file defines the memory limit of a <code>chePlugins</code> or <code>cheEditors</code> component. Che automatically sets the memory request to match the memory limit. There is no attribute in a <code>meta.yaml</code> file to set the memory request.</p>
+<p>If present, the <code>memoryLimit</code> and <code>memoryRequest</code> attributes of the <code>containers</code> section of the <code>meta.yaml</code> file define the memory limit of the <code>chePlugins</code> or <code>cheEditors</code> components. Che automatically sets the memory request to match the memory limit in case it is not specified explicitly.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 1. The <code>chePlugin</code> <code>che-incubator/typescript/latest</code></div>
@@ -1451,7 +1451,8 @@ $('#toc').on('click', 'a', function() {
  <span style="color:#606">containers</span>:
    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: docker.io/eclipse/che-remote-plugin-node:next</span></span>
      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-typescript</span></span>
-     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span></code></pre>
+     <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+     <span style="color:#606">memoryRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">256Mi</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1469,7 +1470,7 @@ $('#toc').on('click', 'a', function() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Memory request</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256 MiB</p></td>
 </tr>
 </tbody>
 </table>
@@ -1500,16 +1501,84 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p>Custom CPU limit and request:</p>
 <div class="paragraph">
-<p>Che does not set CPU limits and requests. The <code>LimitRange</code> Kubernetes namespace may specify some defaults for CPU limits and requests. Kubernetes apply them to the <code>chePlugin</code> container.</p>
+<p>Che does not set CPU limits and requests by default. However, it is possible to configure CPU limits
+for the <code>chePlugin</code> and <code>cheEditor</code> types in the <code>meta.yaml</code> file or in the devfile in the same way as it done for memory limits.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. The <code>chePlugin</code> <code>che-incubator/typescript/latest</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="title"><code>meta.yaml</code> spec section:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+ <span style="color:#606">containers</span>:
+   - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: docker.io/eclipse/che-remote-plugin-node:next</span></span>
+     <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-typescript</span></span>
+     <span style="color:#606">cpuLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">2000m</span></span>
+     <span style="color:#606">cpuRequest</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">500m</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It results in a container with the following CPU limit and request:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU limit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 cores</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.5 cores</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </li>
 </ol>
 </div>
 </li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To set CPU limits and requests globally, use the following dedicated environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CPU Limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_SIDECAR_DEFAULT__CPU__LIMIT__CORES</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CPU Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_SIDECAR_DEFAULT__CPU__REQUEST__CORES</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>See also <a href="https://www.eclipse.org/che/docs/che-7/advanced-configuration-options-for-the-che-server-component/">Advanced configuration options for the Che server component</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note that the <code>LimitRange</code> object of the Kubernetes namespace may specify defaults for CPU limits and requests set by cluster administrators. To prevent start errors due to resources overrun, limits on application or workspace levels must comply with those settings.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Custom requirements for <code>dockerimage</code> components</p>
 <div class="paragraph">
-<p>If present, the <code>memoryLimit</code> attribute of the devfile defines the memory limit of a <code>dockerimage</code> container. Che set automatically the memory request to match the memory limit. There is no attribute in a devfile to set the memory request.</p>
+<p>If present, the <code>memoryLimit</code> and <code>memoryRequest</code> attributes of the devfile define the memory limit of a <code>dockerimage</code> container. Che automatically sets the memory request to match the memory limit in case it is not specified explicitly.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1525,12 +1594,13 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>The referenced manifest may define the memory requirements and limits.</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add all requirements previously calculated.</p>
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Add all requirements previously calculated.</p>
 </li>
 </ol>
 </div>
