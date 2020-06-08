@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Adding custom public SSL certificates to Che trust-store | Eclipse Che Documentation</title>
+<title>Adding self-signed SSL certificates to Che | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Adding custom public SSL certificates to Che trust-store page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Adding self-signed SSL certificates to Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Adding custom public SSL certificates to Che trust-store">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Adding self-signed SSL certificates to Che">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -697,7 +697,7 @@
           
           
           
-          <li><a href="/che/docs/che-7/adding-custom-certificates-to-trust-store">Adding custom public SSL certificates to Che trust-store</a></li>
+          <li><a href="/che/docs/che-7/adding-self-signed-SSL-certificates-to-che">Adding self-signed SSL certificates to Che</a></li>
           
           
           
@@ -1211,7 +1211,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Adding custom public SSL certificates to Che trust-store</h1>
+   <h1 class="post-title-main">Adding self-signed SSL certificates to Che</h1>
 </div>
 
 
@@ -1249,68 +1249,127 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>This procedure describes how to configure Che to be able to perform HTTP requests to unrecognized resources.</p>
+<p>When a Che user attempts to authenticate with Keycloak that is using OpenShift OAuth, the authentication fails if the Keycloak does not know the certificates needed for authorization.</p>
+</div>
+<div class="paragraph">
+<p>To fix this problem, configure Che to authorize HTTPS communication with various components, such as identity and Git servers, by adding information about the self-signed SSL certificates to the Che configuration.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The OpenShift command-line tool, <code>oc</code>
+or the Kubernetes command-line tool, <code>kubectl</code>,
+is installed.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Save the public certificate(s) that you want to apply.</p>
+<p>Save the desired self-signed certificates to a local file system.</p>
 </li>
 <li>
-<p>Create a new <strong>configMap</strong> with the certificate(s):</p>
+<p>Create a new configMap with the required self-signed SSL certificates:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap &lt;config-map name&gt; --from-file=&lt;certificate file path&gt; -n=che</pre>
+<pre>$ kubectl create configmap <em>&lt;configMap-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To apply more then one certificate, add <code>--from-file=&lt;certificate file path&gt;</code> key to the command.</p>
+<p>To apply more than one certificate, add another <code>--from-file=<em>&lt;certificate-file-path&gt;</em></code> option to the above command.</p>
 </div>
 </li>
 <li>
-<p>Define the certificates config-map name.</p>
+<p>Define a name for the newly created configMap.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use these steps with existing instances of Che. To install a new instance of Che with self-signed SSL certificates, create a new Che Custom Resource or Helm Chart property, based on the installation method selected, instead of updating the existing configuration.
+</td>
+</tr>
+</table>
+</div>
 <div class="exampleblock">
 <div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>For a Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> deployment:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Define a name for the newly created configMap by editing the <code>spec.server.ServerTrustStoreConfigMapName</code> Che Custom Resource property to match the previously created configMap:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "<em>&lt;config-map-name&gt;</em>"}]'</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>For a Che <a href="https://helm.sh/">Helm Chart</a> deployment:</p>
 <div class="olist arabic">
-<div class="title">If Che is deployed using a <a href="https://helm.sh/">Helm Chart</a></div>
 <ol class="arabic">
 <li>
-<p>Clone the <a href="https://github.com/eclipse/che">che</a> project</p>
+<p>Clone the <a href="https://github.com/eclipse/che">che</a> project.</p>
 </li>
 <li>
-<p>Go to <code>deploy/kubernetes/helm/che</code> directory</p>
+<p>Go to the <code>deploy/kubernetes/helm/che</code> directory.</p>
 </li>
 <li>
-<p>Set the <code>global.tls.serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, add the following option to the <code>helm upgrade</code> command:</p>
-<div class="listingblock">
+<p>Define a name for the newly created configMap by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the previously created configMap:</p>
+<div class="listingblock white-space-pre">
 <div class="content">
-<pre>$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map name&gt; --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
+<pre class="nowrap">$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=<em>&lt;config-map name&gt;</em> \
+   --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>&lt;kubernetes-cluster-domain&gt; On Minikube, use <code>$(minikube ip).nip.io</code></p>
+<p>When using Minikube to run Che, substitute <em>&lt;kubernetes-cluster-domain&gt;</em> with <code>$(minikube ip).nip.io</code>.</p>
 </div>
 </li>
 </ol>
 </div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<div class="title">If Che is deployed using <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a></div>
-<p>Set the <code>serverTrustStoreConfigMapName</code> property to previously created config-map name. To do that, execute:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map name&gt;"}]'</pre>
-</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<div class="title">Verification</div>
+<p>If the certificates have been added correctly, the Che server starts and obtains Keycloak configuration over HTTPS with a self-signed SSL certificate, allowing user to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access the Che server.</p>
+</li>
+<li>
+<p>Log in using OpenShift OAuth.</p>
+</li>
+<li>
+<p>Clone from a Git repository that has a custom self-signed SSL certificate over HTTPS.</p>
+</li>
+</ul>
 </div>
 
     <div class="tags">
@@ -1332,7 +1391,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2020 <br/>
+                    Site last generated: Jun 8, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

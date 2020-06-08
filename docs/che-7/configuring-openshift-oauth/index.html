@@ -697,7 +697,7 @@
           
           
           
-          <li><a href="/che/docs/che-7/adding-custom-certificates-to-trust-store">Adding custom public SSL certificates to Che trust-store</a></li>
+          <li><a href="/che/docs/che-7/adding-self-signed-SSL-certificates-to-che">Adding self-signed SSL certificates to Che</a></li>
           
           
           
@@ -1249,23 +1249,41 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>OAuth for OpenShift allows to authenticate the <a href="/che/docs//che-7/openshift-connector-overview/">OpenShift connector plugin</a> in Che.</p>
+<p>For users to interact with OpenShift, they must first authenticate to the OpenShift cluster. OpenShift OAuth is a process in which users prove themselves to a cluster through an API with obtained OAuth access tokens.</p>
+</div>
+<div class="paragraph">
+<p>Authentication with the <a href="/che/docs/che-7/openshift-connector-overview/">OpenShift connector plugin</a> is a possible way for Che users to authenticate with an OpenShift cluster.</p>
+</div>
+<div class="paragraph">
+<p>The following section describes the OpenShift OAuth configuration options
+and its use with a Che.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The OpenShift command-line tool, <code>oc</code> is installed.</p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Procedure</div>
 <ul>
 <li>
-<p>For Che deployed in <a href="/che/docs//che-7/running-che-locally/#deploying-multi-user-che-in-multiuser-mode">multiuser mode</a>:</p>
+<p>For Che deployed in the multiuser mode, follow the <a href="/che/docs/che-7/running-che-locally/#deploying-multiuser-che-in-multiuser-mode">Deploying multiuser Che in the multiuser mode</a> chapter:</p>
 <div class="paragraph">
-<p>To enable OpenShift OAuth automatically, Che should be deployed with the <code>--os-oauth</code> option (see <a href="https://github.com/che-incubator/chectl#chectl-serverstart"><code>chectl server:start</code> specification</a>).</p>
+<p>To enable OpenShift OAuth automatically, deployed Che using the chectl with the <code>--os-oauth</code> option. See the
+<a href="https://github.com/che-incubator/chectl#chectl-serverstart"><code>chectl server:start</code> specification</a> chapter.</p>
 </div>
 </li>
 <li>
 <p>For Che deployed in single-user mode:</p>
+<div class="exampleblock">
+<div class="content">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Register Che OAuth client in OpenShift (see <a href="https://docs.openshift.com/container-platform/4.3/authentication/configuring-internal-oauth.html#oauth-register-additional-client_configuring-internal-oauth">Register an OAuth client in OpenShift</a>).</p>
+<p>Register Che OAuth client in OpenShift. See the <a href="https://docs.openshift.com/container-platform/4.3/authentication/configuring-internal-oauth.html#oauth-register-additional-client_configuring-internal-oauth">Register an OAuth client in OpenShift</a> chapter.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ oc create -f &lt;(echo '
@@ -1283,13 +1301,16 @@ grantMethod: prompt
 </li>
 <li>
 <p>Add the OpenShift SSL certificate to the Che Java trust store.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="/che/docs/che-7/adding-self-signed-ssl-certificates-to-che">Adding self-signed SSL certificates to Che</a>.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>Update the OpenShift deployment configuration
-(see <a href="/che/docs/che-7/advanced-configuration-options/#che-configmaps-and-their-behavior_advanced-configuration-options">Che configMaps and their behavior</a>,
-<a href="/che/docs/che-7/advanced-configuration-options/#che-installed-using-a-helm-chart">Che installed using a Helm Chart</a>).</p>
-<div class="exampleblock">
-<div class="content">
+<p>Update the OpenShift deployment configuration.</p>
 <div class="listingblock">
 <div class="content">
 <pre>CHE_OAUTH_OPENSHIFT_CLIENTID: <em>&lt;client-ID&gt;</em>
@@ -1298,12 +1319,8 @@ CHE_OAUTH_OPENSHIFT_OAUTH__ENDPOINT: <em>&lt;oauth-endpoint&gt;</em>
 CHE_OAUTH_OPENSHIFT_VERIFY__TOKEN__URL: <em>&lt;verify-token-url&gt;</em></pre>
 </div>
 </div>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code><em>&lt;client-ID&gt;</em></code> a name specified in the OpenShift OAuthClient.</p>
 </li>
@@ -1325,6 +1342,17 @@ CHE_OAUTH_OPENSHIFT_VERIFY__TOKEN__URL: <em>&lt;verify-token-url&gt;</em></pre>
 </li>
 <li>
 <p><code><em>&lt;verify-token-url&gt;</em></code> request URL that is used to verify the token. <code>&lt;OpenShift master url&gt;/api</code> can be used for OpenShift 3 and 4.</p>
+</li>
+<li>
+<p>See <a href="/che/docs/che-7/advanced-configuration-options-for-the-che-server-component/">Advanced configuration options for the Che server component</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -1348,7 +1376,7 @@ CHE_OAUTH_OPENSHIFT_VERIFY__TOKEN__URL: <em>&lt;verify-token-url&gt;</em></pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 5, 2020 <br/>
+                    Site last generated: Jun 8, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
