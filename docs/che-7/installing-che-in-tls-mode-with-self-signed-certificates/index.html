@@ -1666,10 +1666,85 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 <h2 id="using-che-with-tls_installing-che-in-tls-mode-with-self-signed-certificates">Using Che with TLS</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>Self-signed certificates are certificates that are not signed by a certificate authority (CA), and they do not provide all of the security properties that certificates signed by a CA aim to provide. For instance, when a website owner uses a self-signed certificate to provide HTTPS services, users who visit that website will see a warning in their browser.</p>
+</div>
+<div class="paragraph">
+<p>After installing Che on OpenShift Container Platform with TLS support and a self-signed certificate, a user has to add a self-signed TLS certificate to the browser for each route exposed in Che. If they do not, the login process will be blocked by the <strong>Authorization token is missed. Click here to reload page</strong> error message.</p>
+</div>
+<div class="paragraph">
 <p>This section describes how to import a root certificate authority into the browser to use Che with self-signed TLS certificates.</p>
 </div>
-<h3 id="google-chrome" class="discrete">Google Chrome</h3>
+<div class="sect2">
+<h3 id="adding-self-signed-certificates-to-chrome-browser-using-linux-and-windows-os">Adding Self-Signed Certificates to Chrome Browser using Linux and Windows OS</h3>
 <div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the left side of the Chrome browser URL address bar panel, click the icon of the <code>Lock</code>, which represents the SSL/TLS status.</p>
+</li>
+<li>
+<p>The information about your connection is displayed. Click <strong>Certificates</strong>.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Details</strong> tab.</p>
+</li>
+<li>
+<p>Select the certificate you want to use and export it out using the <b class="button">Export</b> button.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Depending on the user’s OS, the <strong>Export</strong> (Linux-based OS) or <strong>Save to File</strong> (Windows-based OS) should be used.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On the right side of the browser click the <strong>Customize and control Google Chrome</strong> drop-down menu and navigate to <strong>Settings</strong>.</p>
+</li>
+<li>
+<p>In the left panel, select <strong>Advanced</strong> and continue to <strong>Privacy and security</strong>.</p>
+</li>
+<li>
+<p>In the middle of the screen, click <strong>Manage certificates</strong> and navigate to <strong>Authorities</strong> tab.</p>
+</li>
+<li>
+<p>Add your certificate in the profile using the <b class="button">Import</b> button.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-self-signed-certificates-to-chrome-browser-using-mac-os">Adding Self-Signed Certificates to Chrome Browser using Mac OS</h3>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the left side of the Chrome browser URL address bar panel, click the icon of the <code>Lock</code>, which represents the SSL/TLS status.</p>
+</li>
+<li>
+<p>The information about your connection is displayed. Click <strong>Certificates</strong>.</p>
+</li>
+<li>
+<p>Select the certificate you want to use and then <code>drag and drop</code> its displayed bigger icon to the desktop.</p>
+<div class="imageblock">
+<div class="content">
+<img src="/che/docs/images/contributor/macOS-adding-certificate.png" alt="macOS adding certificate">
+</div>
+</div>
+</li>
+<li>
+<p>Double click on the exported certificate for importing into Chrome.</p>
+</li>
+</ol>
+</div>
+<h3 id="examples" class="discrete">Examples</h3>
+<div class="olist arabic">
+<div class="title">Google Chrome</div>
 <ol class="arabic">
 <li>
 <p>Go to <code>chrome://settings/certificates</code>, the <strong>Authorities</strong> tab, click <strong>Import</strong>, and find the generated <code>rootCA.crt</code> (or <code>ca.crt</code> for OpenShift 4) file.</p>
@@ -1688,7 +1763,7 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 </div>
 </li>
 <li>
-<p>Browser is satisfied with Che certificate and is reporting a secure connection.</p>
+<p>After adding the Che certificate to the browser, the icon of <code>lock</code> is display next to the domain URL and browser reports a secure connection.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/contributor/che-tls-chrome-import_3.png"><img src="/che/docs/images/contributor/che-tls-chrome-import_3.png" alt="che tls chrome import 3"></a>
@@ -1697,8 +1772,8 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 </li>
 </ol>
 </div>
-<h3 id="firefox" class="discrete">Firefox</h3>
 <div class="olist arabic">
+<div class="title">Firefox</div>
 <ol class="arabic">
 <li>
 <p>Go to <code>about:preferences</code>, search for <code>certificates</code>, and click <strong>View Certificates</strong>.</p>
@@ -1725,7 +1800,7 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 </div>
 </li>
 <li>
-<p>Browser is satisfied with Che certificate and is reporting a secure connection.</p>
+<p>After adding the Che certificate to the browser, the icon of <code>lock</code> is display next to the domain URL and browser reports a secure connection.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="/che/docs/images/contributor/che-tls-firefox-import_4.png"><img src="/che/docs/images/contributor/che-tls-firefox-import_4.png" alt="che tls firefox import 4"></a>
@@ -1734,8 +1809,8 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 </li>
 </ol>
 </div>
-<h3 id="macos" class="discrete">macOS</h3>
 <div class="olist arabic">
+<div class="title">macOS Keychain</div>
 <ol class="arabic">
 <li>
 <p>Open <strong>Keychain Access</strong>.</p>
@@ -1750,6 +1825,7 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
 <p>If the browser still reports an invalid certificate, restart the browser.</p>
 </li>
 </ol>
+</div>
 </div>
 </div>
 </div>
@@ -1773,7 +1849,7 @@ $ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 10, 2020 <br/>
+                    Site last generated: Jun 11, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
