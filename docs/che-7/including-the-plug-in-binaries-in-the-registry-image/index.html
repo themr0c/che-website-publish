@@ -1254,6 +1254,17 @@ $('#toc').on('click', 'a', function() {
 <div class="paragraph">
 <p>This section describes how to modify a plug-in <code>meta.yaml</code> file to point to a local file inside the container and rebuild a new registry that contains the modified plug-in <code>meta.yaml</code> file and the binary file. In the following example, the Java plug-in that refers to two remote VS Code extensions binaries is considered.</p>
 </div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The OpenShift command-line tool, <code>oc</code>, is installed.</p>
+</li>
+<li>
+<p>Che is installed.</p>
+</li>
+</ul>
+</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
@@ -1275,16 +1286,30 @@ $ curl -sSL -o ./che-plugin-registry/v3/plugins/$\{ORG}/$\{NAME}/$\{VERSION}/$\{
 </div>
 </div>
 </li>
-</ol>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
 <li>
 <p>Retrieve the plug-in-registry URL.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For an Operator installation:</p>
 <div class="listingblock">
 <div class="content">
-<pre>FIXME</pre>
+<pre>$ oc get checluster ${CHECLUSTER_NAME} -o jsonpath='{.status.pluginRegistryURL}' -n ${CHE_NAMESPACE}</pre>
 </div>
+</div>
+</li>
+<li>
+<p>For a Helm installation:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get route che-plugin-registry -n ${CHE_NAMESPACE} -o jsonpath='{.spec.host}'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the obtained URL is without the <code>http</code> or <code>https</code> prefix.</p>
+</div>
+</li>
+</ul>
 </div>
 </li>
 <li>
@@ -1325,7 +1350,7 @@ $ sed -i -e 's/$\{URL_PLUGIN2}/$\{NEW_URL_VS_CODE_EXT2}/g' \
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 18, 2020 <br/>
+                    Site last generated: Jun 22, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
