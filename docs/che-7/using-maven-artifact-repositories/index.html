@@ -1372,6 +1372,82 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
 </div>
 </div>
 <div class="sect1">
+<h2 id="proc_defining-maven-settings-xml-file-across-workspaces_using-maven-artifact-repositories">Defining Maven <code>settings.xml</code> file across workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use your own <code>settings.xml</code> file across all your workspaces, create a Secret object (with a name of your choice) in the same namespace as the workspace. Put the contents of the required <code>settings.xml</code> in the data section of the Secret (possibly along with other files that should reside in the same directory). Labelling and annotating this Secret according to <a href="/che/docs/che-7/mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container/#mounting-a-secret-as-a-file-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a secret as a file or an environment variable into a workspace container</a> ensures that the contents of the Secret is mounted into the workspace Pod. Note that you need to restart any previously running workspaces for them to use this Secret.</p>
+</div>
+<div class="paragraph">
+<div class="title">Prerequisites</div>
+<p>This is required to set your private credentials to a Maven repository (see Maven documentation <a href="https://maven.apache.org/settings.html#servers">Settings.xml#Servers</a>).</p>
+</div>
+<div class="paragraph">
+<p>To mount this <code>settings.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;settings</span> <span style="color:#b48">xmlns</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://maven.apache.org/SETTINGS/1.0.0</span><span style="color:#710">&quot;</span></span>
+          <span style="color:#b48">xmlns:xsi</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://www.w3.org/2001/XMLSchema-instance</span><span style="color:#710">&quot;</span></span>
+          <span style="color:#b48">xsi:schemaLocation</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://maven.apache.org/SETTINGS/1.0.0</span>
+                              <span style="color:#D20">https://maven.apache.org/xsd/settings-1.0.0.xsd</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;servers&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;server&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;id&gt;</span>repository-id<span style="color:#070;font-weight:bold">&lt;/id&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;username&gt;</span>username<span style="color:#070;font-weight:bold">&lt;/username&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;password&gt;</span>password123<span style="color:#070;font-weight:bold">&lt;/password&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;/server&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;/servers&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/settings&gt;</span></code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Convert <code>settings.xml</code> to base64:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cat settings.xml | base64</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the output to a new file, <code>secret.yaml</code>, which also defines needed annotations and labels:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven-settings-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Opaque</span></span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">settings.xml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">PHNldHRpbmdzIHhtbG5zPSJodHRwOi8vbWF2ZW4uYXBhY2hlLm9yZy9TRVRUSU5HUy8xLjAuMCIKICAgICAgICAgIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiCiAgICAgICAgICB4c2k6c2NoZW1hTG9jYXRpb249Imh0dHA6Ly9tYXZlbi5hcGFjaGUub3JnL1NFVFRJTkdTLzEuMC4wCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh0dHBzOi8vbWF2ZW4uYXBhY2hlLm9yZy94c2Qvc2V0dGluZ3MtMS4wLjAueHNkIj4KICA8c2VydmVycz4KICAgIDxzZXJ2ZXI+CiAgICAgIDxpZD5yZXBvc2l0b3J5LWlkPC9pZD4KICAgICAgPHVzZXJuYW1lPnVzZXJuYW1lPC91c2VybmFtZT4KICAgICAgPHBhc3N3b3JkPnBhc3N3b3JkMTIzPC9wYXNzd29yZD4KICAgIDwvc2VydmVyPgogIDwvc2VydmVycz4KPC9zZXR0aW5ncz4K</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create this secret in your cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f secret.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start a new workspace. You will see <code>/home/user/.m2/settings.xml</code> with your original content in the <code>maven</code> container.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="using-self-signed-certificates-in-java-projects_using-maven-artifact-repositories">Using self-signed certificates in Java projects</h2>
 <div class="sectionbody">
 <div class="paragraph">
