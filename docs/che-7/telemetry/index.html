@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="telemetry,  telemetry">
+<title>Telemetry | Eclipse Che Documentation</title>
+<link rel="stylesheet" href="/che/docs/css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="/che/docs/css/modern-business.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="/che/docs/css/customstyles.css">
+<link rel="stylesheet" href="/che/docs/css/boxshadowproperties.css">
+<!-- most color styles are extracted out to here -->
+<link rel="stylesheet" href="/che/docs/css/theme-che.css">
+
+
+    <link rel="stylesheet" href="/che/docs/css/coderay.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="/che/docs/css/asciidoc.css" type="text/css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" crossorigin="anonymous"></script>
+<script src="/che/docs/js/jquery.navgoco.min.js"></script>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Anchor.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="/che/docs/js/toc.js"></script>
+<script src="/che/docs/js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="/che/docs/images/favicon.ico">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="che" href="/feed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: false,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="/che/docs/">&nbsp;<span class="projectTitle"> Eclipse Che Documentation</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="https://medium.com/eclipse-che-blog/" target="_blank">Blog</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/che" target="_blank">Source Code</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Support<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://github.com/eclipse/che/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Akind%2Fbug" target="_blank">Known Bugs</a></li>
+                        
+                        
+                        
+                        <li><a href="https://github.com/eclipse/che/issues/new" target="_blank">File an Issue</a></li>
+                        
+                        
+                        
+                        <li><a href="https://stackoverflow.com/questions/tagged/eclipse-che" target="_blank">Che on StackOverflow</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                <!-- 
+			<li>
+
+
+
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Telemetry page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+
+</li>
+ -->
+		
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="/che/docs/js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: "/che/docs/search.json",
+                                searchResultTemplate: '<li><a href="{url}" title="Telemetry">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle"> </li>
+  
+  <div class="sidebarSubtitle">Overview</div>
+  
+  
+  <li>
+      
+      <a href="/che/docs/che-7/introduction-to-eclipse-che">Introduction to Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/che-glossary">Che glossary</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Che quick-starts</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-quick-starts">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-the-chectl-management-tool">Installing the chectl management tool</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/running-che-locally">Running Che locally</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/deploying-che-on-kubernetes-on-aws">Che on Amazon Web Services</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Che on OpenShift 3</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-4-from-operatorhub">Che on OpenShift 4</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-che-on-google-cloud-platform">Che on Google Cloud Platform</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-eclipse-che-on-microsoft-azure">Che on Microsoft Azure</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/accessing-che-from-openshift-developer-perspective">Accessing Che from OpenShift Developer Perspective</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/hosted-che">Hosted Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Che architecture</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-architecture">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/high-level-che-architecture">High-level Che architecture</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-workspace-controller">Che workspace controller</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-workspaces-architecture">Che workspaces architecture</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+  <div class="sidebarSubtitle">End-user Guide</div>
+  
+  
+  <li>
+      
+      <a href="/che/docs/che-7/navigating-che-using-the-dashboard">Navigating Che: dashboard</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Che-Theia IDE basics</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-theia-ide-basics">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/defining-custom-commands-for-che-theia">Defining custom commands for Che-Theia</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/version-control">Version Control</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-theia-troubleshooting">Che-Theia Troubleshooting</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Using developer workspaces</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/workspaces-overview">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile">Configuring a workspace using a devfile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile">Making a workspace portable using a devfile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6 Workspace to a Che 7 devfile</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/creating-and-configuring-a-new-che-7-workspace">Creating and configuring a new Che 7 workspace</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/importing-a-kubernetes-application-into-a-che-workspace">Importing a Kubernetes application into a Che workspace</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/remotely-accessing-che-workspaces">Remotely accessing workspaces</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/creating-a-workspace-from-code-sample">Creating a workspace from code sample</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/creating-a-workspace-by-importing-source-code-of-a-project">Creating a workspace by importing source code of a project</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-workspace-exposure-strategies">Configuring workspace exposure strategies</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a secret as a file or an environment variable into a workspace container</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Customizing developer environments</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/customizing-developer-environments">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/what-is-a-che-theia-plug-in">What is a Che-Theia plug-in</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-alternative-ides-in-che">Using alternative IDEs in Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-a-visual-studio-code-extension-in-che">Using a VS Code extension in Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/adding-tools-to-che-after-creating-a-workspace">Adding tools to Che after creating a workspace</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Configuring OAuth authorization</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-oauth-authorization">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-github-oauth">Configuring GitHub OAuth</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-openshift-oauth">Configuring OpenShift OAuth</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Using artifact repositories in a restricted environment</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-artifact-repositories-in-a-restricted-environment">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-maven-artifact-repositories">Using Maven artifact repositories</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-gradle-artifact-repositories">Using Gradle artifact repositories</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-python-artifact-repositories">Using Python artifact repositories</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-go-artifact-repositories">Using Go artifact repositories</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-nuget-artifact-repositories">Using NuGet artifact repositories</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-npm-artifact-repositories">Using npm artifact repositories</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/troubleshooting-for-che-end-users">Troubleshooting for Che end users</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+      
+  <div class="sidebarSubtitle">Installation Guide</div>
+  
+  
+  <li>
+      
+      <a href="/che/docs/che-7/supported_platforms">Supported platforms</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Configuring Che</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-che">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-the-che-installation">Configuring the Che installation</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/advanced-configuration-options-for-the-che-server-component">Advanced configuration options for Che server</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-namespace-strategies">Configuring namespace strategies</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/deploying-che-with-support-for-git-repositories-with-self-signed-certificates">Deploying Che with support for Git repositories with self-signed certificates</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-che-using-storage-classes">Installing Che using storage classes</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/mounting-custom-ssl-certificates-to-che-workspace-pods">Mounting custom SSL certificates to Che workspace Pods</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/installing-che-in-tls-mode-with-self-signed-certificates">Installing Che in TLS mode with self-signed certificates</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/installing-che-in-restricted-environment">Installing Che in restricted environment</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/upgrading-che">Upgrading Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/uninstalling-che">Uninstalling Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+      
+  <div class="sidebarSubtitle">Administration Guide</div>
+  
+  
+  <li>
+      
+      <a href="#" class="expandable">Customizing devfile and plug-in registries</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/customizing-the-devfile-and-plug-in-registries">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/building-and-running-a-custom-registry-image">Building and running a custom registry image</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/including-the-plug-in-binaries-in-the-registry-image">Including the plug-in binaries in the registry image</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/editing-a-devfile-and-plug-in-at-runtime">Editing a devfile and plug-in at runtime</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Retrieving Che logs</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/retrieving-che-logs">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/viewing-kubernetes-events">Accessing Kubernetes events on OpenShift</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/viewing-che-server-logs">Viewing Che server logs</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/viewing-external-service-logs">Viewing external service logs</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/viewing-che-workspaces-logs">Viewing Che workspaces logs</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/viewing-plug-in-broker-logs">Viewing Plug-in broker logs</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/collecting-logs-using-chectl">Collecting logs using chectl</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/monitoring-che">Monitoring Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/tracing-che">Tracing Che</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Managing users</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/managing-users">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/configuring-authorization">Configuring authorization</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-organizations">Using organizations</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/removing-user-data">Removing user data</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Securing Che</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/securing-che">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/authenticating-users">Authenticating users</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/authorizing-users">Authorizing users</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Backup and disaster recovery</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/backup-and-disaster-recovery">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/external-database-setup">External database setup</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/persistent-volumes-backups">Persistent Volumes backups</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/calculating-che-resource-requirements">Calculating Che resource requirements</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/caching-images-for-faster-workspace-start">Caching images for faster workspace start</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+      
+  <div class="sidebarSubtitle">Contributor Guide</div>
+  
+  
+  <li>
+      
+      <a href="/che/docs/che-7/branding-che-theia">Branding Che-Theia</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/developing-che-theia-plug-ins">Developing Che-Theia plug-ins</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/testing-che-theia-plug-ins">Testing Che-Theia plug-ins</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/publishing-che-theia-plug-ins">Publishing Che-Theia plug-ins</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/adding-support-for-a-new-language">Adding support for a new language</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/adding-support-for-a-new-debugger">Adding support for a new debugger</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">Che extensibility reference</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-extensibility-reference">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-extension-points">Che extension points</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/che-theia-plug-in-api">Che-Theia plug-in API</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/debug-adapter-protocol">Debug Adapter Protocol</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/language-server-protocol">Language Server Protocol</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+      
+  <div class="sidebarSubtitle">Extensions</div>
+  
+  
+  <li>
+      
+      <a href="/che/docs/che-7/eclipse-che4z">Eclipse Che4z</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="#" class="expandable">OpenShift Connector</a>
+      
+      <ul>
+          
+          
+          
+          <li><a href="/che/docs/che-7/openshift-connector-overview">Overview</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/features-of-openshift-connector">Features of OpenShift Connector</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/installing-openshift-connector-in-eclipse-che">Installing OpenShift Connector in Eclipse Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/authenticating-with-openshift-connector-from-eclipse-che">Authenticating with OpenShift Connector from Eclipse Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/creating-components-with-openshift-connector-in-eclipse-che">Creating Components with OpenShift Connector in Eclipse Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/connecting-source-code-from-github-to-a-openshift-component-using-openshift-connector">Connecting source code from GitHub to a OpenShift Component</a></li>
+          
+          
+          
+          
+      </ul>
+   </li>
+     
+      
+  
+  <li>
+      
+      <a href="/che/docs/che-7/telemetry">Telemetry</a>
+      
+      <ul>
+          
+      </ul>
+   </li>
+     
+      
+      
+      <!-- if you aren't using the accordion, uncomment this block: -->
+<!--         <p class="external">
+             <a href="#" id="collapseAll">Collapse all</a> | <a href="#" id="expandAll">Expand all</a>
+         </p>-->
+         
+</ul>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+            </div>
+
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">Telemetry</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2' });
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    <!-- 
+
+
+     -->
+
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Telemetry is the transparent and ethical collection of the usage data. By default, telemetry is not available in the Eclipse Che, but there is an abstract API that allows enabling telemetry via the plug-in mechanism. This approach is used in the <a href="/che/docs/che-7/hosted-che/">Hosted Che</a> service where telemetry is enabled for every workspace.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use-cases">Use cases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Eclipse Che telemetry API allows tracking:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Duration of workspace usage</p>
+</li>
+<li>
+<p>User-driven actions like file editing, committing, and pushing to remote repositories</p>
+</li>
+<li>
+<p>The list of plug-ins enabled in a workspace</p>
+</li>
+<li>
+<p>Programming languages and <a href="/che/docs/che-7/making-a-workspace-portable-using-a-devfile/devfiles">devfiles</a> used in workspaces</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-it-works">How it works?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When a Che workspace starts, the <code>che-theia</code> container starts the telemetry plug-in, which is responsible for sending telemetry events to a back-end. If the <code>$CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</code> environment variable is set in the workspace pod, the telemetry plug-in will send events to a back-end listening at that port.</p>
+</div>
+<div class="paragraph">
+<p>If the Che workspace has a telemetry back-end container running, and it is listening on <code>$CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</code>, it takes the events sent from the telemetry plug-in, turns them into the back-end-specific representation of events, and sends them to the configured analytics back-end (for example, Segment or Woopra).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/che/docs/images/telemetry/telemetry_diagram.png" alt="telemetry diagram">
+</div>
+</div>
+<div class="paragraph">
+<p>This section shows how to create an <code>AnalyticsManager</code> class that extends <a href="https://github.com/che-incubator/che-workspace-telemetry-client/blob/master/back-end-base/src/main/java/org/eclipse/che/incubator/workspace/telemetry/base/AbstractAnalyticsManager.java"><code>AbstractAnalyticsManager</code></a> and implements the following methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>isEnabled()</code> - determines whether or not the telemetry back-end is functioning correctly. This can mean always returning <code>true</code>, or have more complex checks, for example, returning <code>false</code> when a connection property is missing.</p>
+</li>
+<li>
+<p><code>destroy()</code> - cleaning method that is run before shutting down the telemetry back-end. This method sends the <code>WORKSPACE_STOPPED</code> event.</p>
+</li>
+<li>
+<p><code>onActivity()</code> - notifies that some activity is still occuring for a given user. This is mainly used to send <code>WORKSPACE_INACTIVE</code> events.</p>
+</li>
+<li>
+<p><code>onEvent()</code> - submits telemetry events to the telemetry server, such as <code>WORKSPACE_USED</code> or <code>WORKSPACE_STARTED</code>.</p>
+</li>
+<li>
+<p><code>increaseDuration()</code> - increases the duration of a current event rather than sending multiple events in a small frame of time.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started">Getting Started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document describes the steps required to extend the Che telemetry system to connect to a custom back-end:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Creating a server process that receives events</p>
+</li>
+<li>
+<p>Extending Che libraries to create a back-end that send events to the server</p>
+</li>
+<li>
+<p>Packaging the telemetry back-end in a container and deploying it to an image registry</p>
+</li>
+<li>
+<p>Adding a plug-in for your back-end and instructing Che to load the plug-in in your workspaces</p>
+</li>
+</ol>
+</div>
+<h2 id="optional-creating-a-server-that-receives-events" class="discrete">Optional: creating a server that receives events</h2>
+<div class="paragraph">
+<p>This example shows how to create a server that receives events from Che and writes them to standard output.</p>
+</div>
+<div class="paragraph">
+<p>For production use cases, consider integrating with a third-party telemetry system (for example, Segment, Woopra) rather than creating your own telemetry server. In this case, use your provider&#8217;s APIs to send events from your custom back-end to their system.</p>
+</div>
+<div class="paragraph">
+<p>The following Go code starts a server on port 8080 and writes events to standard output:</p>
+</div>
+<div class="listingblock">
+<div class="title">main.go</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="go"><span style="color:#080;font-weight:bold">package</span> main
+
+<span style="color:#080;font-weight:bold">import</span> (
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">io/ioutil</span><span style="color:#710">&quot;</span></span>
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">net/http</span><span style="color:#710">&quot;</span></span>
+
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">go.uber.org/zap</span><span style="color:#710">&quot;</span></span>
+)
+
+<span style="color:#080;font-weight:bold">var</span> logger *zap.SugaredLogger
+
+<span style="color:#080;font-weight:bold">func</span> event(w http.ResponseWriter, req *http.Request) {
+        <span style="color:#080;font-weight:bold">switch</span> req.Method {
+        <span style="color:#080;font-weight:bold">case</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GET</span><span style="color:#710">&quot;</span></span>:
+                logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GET /event</span><span style="color:#710">&quot;</span></span>)
+        <span style="color:#080;font-weight:bold">case</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">POST</span><span style="color:#710">&quot;</span></span>:
+                logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">POST /event</span><span style="color:#710">&quot;</span></span>)
+        }
+        body, err := req.GetBody()
+        <span style="color:#080;font-weight:bold">if</span> err != <span style="color:#069">nil</span> {
+                logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">err</span><span style="color:#710">&quot;</span></span>, err).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error getting body</span><span style="color:#710">&quot;</span></span>)
+                <span style="color:#080;font-weight:bold">return</span>
+        }
+        responseBody, err := ioutil.ReadAll(body)
+        <span style="color:#080;font-weight:bold">if</span> err != <span style="color:#069">nil</span> {
+                logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error</span><span style="color:#710">&quot;</span></span>, err).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error reading response body</span><span style="color:#710">&quot;</span></span>)
+                <span style="color:#080;font-weight:bold">return</span>
+        }
+        logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">body</span><span style="color:#710">&quot;</span></span>, <span style="color:#0a8;font-weight:bold">string</span>(responseBody)).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">got event</span><span style="color:#710">&quot;</span></span>)
+}
+
+<span style="color:#080;font-weight:bold">func</span> activity(w http.ResponseWriter, req *http.Request) {
+        <span style="color:#080;font-weight:bold">switch</span> req.Method {
+        <span style="color:#080;font-weight:bold">case</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GET</span><span style="color:#710">&quot;</span></span>:
+                logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">GET /activity, doing nothing</span><span style="color:#710">&quot;</span></span>)
+        <span style="color:#080;font-weight:bold">case</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">POST</span><span style="color:#710">&quot;</span></span>:
+                logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">POST /activity</span><span style="color:#710">&quot;</span></span>)
+                body, err := req.GetBody()
+                <span style="color:#080;font-weight:bold">if</span> err != <span style="color:#069">nil</span> {
+                        logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error</span><span style="color:#710">&quot;</span></span>, err).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error getting body</span><span style="color:#710">&quot;</span></span>)
+                        <span style="color:#080;font-weight:bold">return</span>
+                }
+                responseBody, err := ioutil.ReadAll(body)
+                <span style="color:#080;font-weight:bold">if</span> err != <span style="color:#069">nil</span> {
+                        logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error</span><span style="color:#710">&quot;</span></span>, err).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">error reading response body</span><span style="color:#710">&quot;</span></span>)
+                        <span style="color:#080;font-weight:bold">return</span>
+                }
+                logger.With(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">body</span><span style="color:#710">&quot;</span></span>, <span style="color:#0a8;font-weight:bold">string</span>(responseBody)).Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">got activity</span><span style="color:#710">&quot;</span></span>)
+        }
+}
+
+<span style="color:#080;font-weight:bold">func</span> main() {
+
+        log, _ := zap.NewProduction()
+        logger = log.Sugar()
+
+        http.HandleFunc(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/event</span><span style="color:#710">&quot;</span></span>, event)
+        http.HandleFunc(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/activity</span><span style="color:#710">&quot;</span></span>, activity)
+        logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Added Handlers</span><span style="color:#710">&quot;</span></span>)
+
+        logger.Info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Starting to serve</span><span style="color:#710">&quot;</span></span>)
+        http.ListenAndServe(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">:8080</span><span style="color:#710">&quot;</span></span>, <span style="color:#069">nil</span>)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create a container image based on this code and expose it as a deployment in OpenShift in the <code>che</code> namespace.  The code for the example telemetry server is available at <a href="https://github.com/che-incubator/che-workspace-telemetry-example">che-workspace-telemetry-example</a>. To deploy the telemetry server, clone the repository and build the container:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/che-incubator/che-workspace-telemetry-example
+$ cd che-workspace-telemetry-example
+$ docker build -t registry/organization/che-workspace-telemetry-example:latest
+$ docker push registry/organization/che-workspace-telemetry-example:latest</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In <code>manifest.yaml</code>, replace the <code>image</code> and <code>host</code> fields to match the image you pushed, and the public hostname of your Kubernetes cluster. Then run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f manifest.yaml -n <em>&lt;namespace to deploy&gt;</em></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-new-maven-project">Creating a new Maven project</h2>
+<div class="sectionbody">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For fast feedback when developing, it is recommended to do development inside a Che workspace. This way, you can run the application in a cluster and connect to the workspaces front-end telemetry plug-in to send events to your custom back-end.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a new Maven Quarkus project scaffolding:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ mvn io.quarkus:quarkus-maven-plugin:1.2.1.Final:create \
+  -DprojectGroupId=mygroup -DprojectArtifactId=telemetryback-end \
+  -DprojectVersion=my-version -DclassName="org.my.group.MyResource"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add a dependency to <code>org.eclipse.che.incubator.workspace-telemetry.back-end-base</code> in your <code>pom.xml</code>:</p>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;groupId&gt;</span>org.eclipse.che.incubator.workspace-telemetry<span style="color:#070;font-weight:bold">&lt;/groupId&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;artifactId&gt;</span>backend-base<span style="color:#070;font-weight:bold">&lt;/artifactId&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;version&gt;</span>0.0.11<span style="color:#070;font-weight:bold">&lt;/version&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/dependency&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;groupId&gt;</span>org.apache.httpcomponents<span style="color:#070;font-weight:bold">&lt;/groupId&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;artifactId&gt;</span>httpclient<span style="color:#070;font-weight:bold">&lt;/artifactId&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;version&gt;</span>4.5.12<span style="color:#070;font-weight:bold">&lt;/version&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the Apache HTTP components library to send HTTP requests.</p>
+</li>
+<li>
+<p>Consult the <a href="https://github.com/che-incubator/che-workspace-telemetry-client/packages">GitHub packages</a> for the latest version and Maven coordinates of <code>back-end-base</code>. GitHub packages require a <a href="https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens">personal access token</a> with <code>read:packages</code> permissions to download the Che telemetry libraries. Create a personal access token and copy the token value.</p>
+</li>
+<li>
+<p>Create a <code>settings.xml</code> file in the repository root and add the coordinates and token to the <code>che-incubator</code> packages:</p>
+<div class="listingblock">
+<div class="title">settings.xml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;settings</span> <span style="color:#b48">xmlns</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://maven.apache.org/SETTINGS/1.0.0</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#b48">xmlns:xsi</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://www.w3.org/2001/XMLSchema-instance</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#b48">xsi:schemaLocation</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://maven.apache.org/SETTINGS/1.0.0</span>
+<span style="color:#D20">http://maven.apache.org/xsd/settings-1.0.0.xsd</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+   <span style="color:#070;font-weight:bold">&lt;servers&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;server&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;id&gt;</span>che-incubator<span style="color:#070;font-weight:bold">&lt;/id&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;username&gt;</span>${env.GITHUB_USERNAME}<span style="color:#070;font-weight:bold">&lt;/username&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;password&gt;</span>${env.GITHUB_TOKEN}<span style="color:#070;font-weight:bold">&lt;/password&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;/server&gt;</span>
+   <span style="color:#070;font-weight:bold">&lt;/servers&gt;</span>
+
+   <span style="color:#070;font-weight:bold">&lt;profiles&gt;</span>
+      <span style="color:#070;font-weight:bold">&lt;profile&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;id&gt;</span>github<span style="color:#070;font-weight:bold">&lt;/id&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;activation&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;activeByDefault&gt;</span>true<span style="color:#070;font-weight:bold">&lt;/activeByDefault&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;/activation&gt;</span>
+         <span style="color:#070;font-weight:bold">&lt;repositories&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;repository&gt;</span>
+               <span style="color:#070;font-weight:bold">&lt;id&gt;</span>central<span style="color:#070;font-weight:bold">&lt;/id&gt;</span>
+               <span style="color:#070;font-weight:bold">&lt;url&gt;</span>https://repo1.maven.org/maven2<span style="color:#070;font-weight:bold">&lt;/url&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;releases&gt;</span><span style="color:#070;font-weight:bold">&lt;enabled&gt;</span>true<span style="color:#070;font-weight:bold">&lt;/enabled&gt;</span><span style="color:#070;font-weight:bold">&lt;/releases&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;snapshots&gt;</span><span style="color:#070;font-weight:bold">&lt;enabled&gt;</span>false<span style="color:#070;font-weight:bold">&lt;/enabled&gt;</span><span style="color:#070;font-weight:bold">&lt;/snapshots&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;/repository&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;repository&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;id&gt;</span>che-incubator<span style="color:#070;font-weight:bold">&lt;/id&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;name&gt;</span>GitHub navikt Apache Maven Packages<span style="color:#070;font-weight:bold">&lt;/name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;url&gt;</span>https://maven.pkg.github.com/che-incubator/che-workspace-telemetry-client<span style="color:#070;font-weight:bold">&lt;/url&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;/repository&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/repositories&gt;</span>
+        <span style="color:#070;font-weight:bold">&lt;/profile&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;/profiles&gt;</span>
+    <span style="color:#070;font-weight:bold">&lt;/settings&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This file is used when packaging the application in a container. When running locally, add the information to your personal <code>settings.xml</code> file.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application_telemetry">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run and test the application is in a Che workspace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ mvn quarkus:dev -Dquarkus.http.port=${CHE_WORKSPACE_TELEMETRY_BACKEND_PORT}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If Che is secured using a self-signed certificate, add the certificate to a trust store and mount it into the workspace. Also add the Java system property, <code>-Djavax.net.ssl.trustStore=/path/to/trustStore</code>, to the <code>mvn</code> command. For example, assuming the trust store is located in <code>$JAVA_HOME/jre/lib/security/cacerts</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ keytool -import -alias self-signed-certificate \
+  -file <em>&lt;path/to/self-signed-certificate&gt;</em> -keystore $JAVA_HOME/jre/lib/security/cacerts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Followed by:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ mvn quarkus:dev -Dquarkus.http.port=${CHE_WORKSPACE_TELEMETRY_BACKEND_PORT} \
+  -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-concrete-implementation-of-analyticsmanager-and-adding-specialized-logic">Creating a concrete implementation of AnalyticsManager and adding specialized logic</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create two new files in your project:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AnalyticsManager.java</code> contains the logic specific to our telemetry system.</p>
+</li>
+<li>
+<p><code>MainConfiguration.java</code> is the main entrypoint that creates an instance of <code>AnalyticsManager</code> and starts listening for events.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#080;font-weight:bold">package</span> <span style="color:#707;font-weight:bold">org.my.group</span>;
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">java.util.Map</span>;
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">org.eclipse.che.api.core.rest.HttpJsonRequestFactory</span>;
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">org.eclipse.che.incubator.workspace.telemetry.base.AbstractAnalyticsManager</span>;
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">org.eclipse.che.incubator.workspace.telemetry.base.AnalyticsEvent</span>;
+
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">AnalyticsManager</span> <span style="color:#088;font-weight:bold">extends</span> AbstractAnalyticsManager {
+
+    <span style="color:#088;font-weight:bold">public</span> AnalyticsManager(<span style="color:#0a8;font-weight:bold">String</span> apiEndpoint, <span style="color:#0a8;font-weight:bold">String</span> workspaceId, <span style="color:#0a8;font-weight:bold">String</span> machineToken,
+            HttpJsonRequestFactory requestFactory) {
+        <span style="color:#950">super</span>(apiEndpoint, workspaceId, machineToken, requestFactory);
+    }
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">boolean</span> isEnabled() {
+        <span style="color:#777">// TODO Auto-generated method stub</span>
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">true</span>;
+    }
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> destroy() {
+        <span style="color:#777">// TODO Auto-generated method stub</span>
+    }
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> onEvent(AnalyticsEvent event, <span style="color:#0a8;font-weight:bold">String</span> ownerId, <span style="color:#0a8;font-weight:bold">String</span> ip, <span style="color:#0a8;font-weight:bold">String</span> userAgent, <span style="color:#0a8;font-weight:bold">String</span> resolution,
+            <span style="color:#0a8;font-weight:bold">Map</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt; properties) {
+        <span style="color:#777">// TODO Auto-generated method stub</span>
+    }
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> increaseDuration(AnalyticsEvent event, <span style="color:#0a8;font-weight:bold">Map</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt; properties) {
+        <span style="color:#777">// TODO Auto-generated method stub</span>
+    }
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> onActivity() {
+        <span style="color:#777">// TODO Auto-generated method stub</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">MainConfiguration.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#080;font-weight:bold">package</span> <span style="color:#707;font-weight:bold">org.my.group</span>;
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">javax.enterprise.context.Dependent</span>;
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">javax.enterprise.inject.Produces</span>;
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">org.eclipse.che.incubator.workspace.telemetry.base.AbstractAnalyticsManager</span>;
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">org.eclipse.che.incubator.workspace.telemetry.base.BaseConfiguration</span>;
+
+<span style="color:#007">@Dependent</span>
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MainConfiguration</span> <span style="color:#088;font-weight:bold">extends</span> BaseConfiguration {
+    <span style="color:#007">@Produces</span>
+    <span style="color:#088;font-weight:bold">public</span> AbstractAnalyticsManager analyticsManager() {
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">new</span> AnalyticsManager(apiEndpoint, workspaceId, machineToken, requestFactory());
+
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-isenabled">Implementing <code>isEnabled()</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the purposes of the example, this method just returns <code>true</code> whenever it is called. Whenever the server is running, it is enabled and operational.</p>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#007">@Override</span>
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">boolean</span> isEnabled() {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">true</span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is possible to put more a complex login in <code>isEnabled()</code>. For example, the service should not be considered operational in certain cases. The <a href="https://github.com/redhat-developer/che-workspace-telemetry-woopra-back-end/blob/master/src/main/java/com/redhat/che/workspace/services/telemetry/woopra/AnalyticsManager.java#L174">hosted Che woopra back-end</a> checks that a configuration property exists before determining if the back-end is enabled.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-onevent">Implementing <code>onEvent()</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>onEvent()</code> sends the event passed to the back-end to the telemetry system. For the example application, it sends an HTTP POST payload to our server.  The example telemetry server application is deployed to OpenShift at the following URL: <code><a href="http://little-telemetry-back-end-che.apps-crc.testing" class="bare">http://little-telemetry-back-end-che.apps-crc.testing</a></code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#007">@Override</span>
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> onEvent(AnalyticsEvent event, <span style="color:#0a8;font-weight:bold">String</span> ownerId, <span style="color:#0a8;font-weight:bold">String</span> ip, <span style="color:#0a8;font-weight:bold">String</span> userAgent, <span style="color:#0a8;font-weight:bold">String</span> resolution, <span style="color:#0a8;font-weight:bold">Map</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt; properties) {
+    HttpClient httpClient = HttpClients.createDefault();
+    HttpPost httpPost = <span style="color:#080;font-weight:bold">new</span> HttpPost(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">http://little-telemetry-backend-che.apps-crc.testing/event</span><span style="color:#710">&quot;</span></span>);
+    <span style="color:#0a8;font-weight:bold">HashMap</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt; eventPayload = <span style="color:#080;font-weight:bold">new</span> <span style="color:#0a8;font-weight:bold">HashMap</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt;(properties);
+    eventPayload.put(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">event</span><span style="color:#710">&quot;</span></span>, event);
+    StringEntity requestEntity = <span style="color:#080;font-weight:bold">new</span> StringEntity(<span style="color:#080;font-weight:bold">new</span> JsonObject(eventPayload).toString(),
+            ContentType.APPLICATION_JSON);
+    httpPost.setEntity(requestEntity);
+    <span style="color:#080;font-weight:bold">try</span> {
+        HttpResponse response = httpClient.execute(httpPost);
+    } <span style="color:#080;font-weight:bold">catch</span> (<span style="color:#C00;font-weight:bold">IOException</span> e) {
+        e.printStackTrace();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This sends an HTTP request to the telemetry server and automatically debounces identical events in a small time period (the default is 1500 milliseconds, and it can be changed by subclasses.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-increaseduration">Implementing <code>increaseDuration()</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many telemetry systems recognize event duration. The <code>AbstractAnalyticsManager</code> merges similar events that happen in the same frame of time into one event, so that you do not get several identical events sent to the server in a small frame of time. This implementation of <code>increaseDuration()</code> is a no-op. This method uses the APIs of your telemetry provider to alter the event or event properties to reflect an increased duration of the event.</p>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#007">@Override</span>
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> increaseDuration(AnalyticsEvent event, <span style="color:#0a8;font-weight:bold">Map</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, <span style="color:#0a8;font-weight:bold">Object</span>&gt; properties) {}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-onactivity">Implementing <code>onActivity()</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Set an inactive timeout limit, and use <code>onActivity()</code> to send a <code>WORKSPACE_INACTIVE</code> event if the last event time is longer than the inactivity timeout.</p>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">AnalyticsManager</span> <span style="color:#088;font-weight:bold">extends</span> AbstractAnalyticsManager {
+
+    ...
+
+    private <span style="color:#339;font-weight:bold">long</span> inactiveTimeLimt = <span style="color:#00D">60000</span> * <span style="color:#00D">3</span>;
+
+    ...
+
+
+    <span style="color:#007">@Override</span>
+    <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> onActivity() {
+        <span style="color:#080;font-weight:bold">if</span> (<span style="color:#0a8;font-weight:bold">System</span>.currentTimeMillis() - lastEventTime &gt;= inactiveTimeLimt) {
+            onEvent(WORKSPACE_INACTIVE, lastOwnerId, lastIp, lastUserAgent, lastResolution, commonProperties);
+        }
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-destroy">Implementing <code>destroy()</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When <code>destroy()</code> is called, send a <code>WORKSPACE_STOPPED</code> event and shutdown any resources, such as connection pools.</p>
+</div>
+<div class="listingblock">
+<div class="title">AnalyticsManager.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#007">@Override</span>
+<span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> destroy() {
+    onEvent(WORKSPACE_STOPPED, lastOwnerId, lastIp, lastUserAgent, lastResolution, commonProperties);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now when you run <code>mvn quarkus:dev</code> as described in <a href="#running-the-application_telemetry">Running the application</a>, you should see a <code>WORKSPACE_STOPPED</code> event sent to the server when you kill the Quarkus application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="packaging-the-quarkus-application">Packaging the Quarkus application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>See <a href="https://quarkus.io/guides/building-native-image#creating-a-container-with-a-multi-stage-docker-build">the quarkus documentation</a> for the best instructions to package the application in a container.  Build and push the container to a container registry of your choice.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-meta-yaml-for-your-plug-in">Creating a <code>meta.yaml</code> for your plug-in.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a <code>meta.yaml</code> definition representing a Che plug-in that runs your custom back-end in a workspace Pod. For more information on <code>meta.yaml</code>, see <a href="/che/docs/che-7/what-is-a-che-theia-plugin/">What is a Che-Theia plug-in</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">meta.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v2</span></span>
+<span style="color:#606">publisher</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">demo-publisher</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">little-telemetry-backend</span></span>
+<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">0.0.1</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Che Plugin</span></span>
+<span style="color:#606">displayName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Little Telemetry Backend</span></span>
+<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">A Demo telemetry backend</span></span>
+<span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Little Telemetry Backend</span></span>
+<span style="color:#606">category</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Other</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">workspaceEnv</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</span></span>
+      <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'4167'</span></span>
+  <span style="color:#606">containers</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: YOUR BACKEND NAME</span></span>
+    <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">YOUR IMAGE NAME</span></span>
+    <span style="color:#606">env</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: CHE_API</span></span>
+        <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">$(CHE_API_INTERNAL)</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ordinarily, you would deploy this file to a corporate web server. For this guide, we create an Apache web server on OpenShift and host the plug-in there. Create a configMap referencing your new <code>meta.yaml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc create configmap --from-file=meta.yaml -n che telemetry-plugin-meta</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then create a deployment, a service, and a route to expose the web server. The deployment references this configMap and places it in the <code>/var/www/html</code> directory.</p>
+</div>
+<div class="listingblock">
+<div class="title">manifests.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Deployment</span></span>
+<span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apps/v1</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+  <span style="color:#606">namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">replicas</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1</span></span>
+  <span style="color:#606">selector</span>:
+    <span style="color:#606">matchLabels</span>:
+      <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+  <span style="color:#606">template</span>:
+    <span style="color:#606">metadata</span>:
+      <span style="color:#606">labels</span>:
+        <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+    <span style="color:#606">spec</span>:
+      <span style="color:#606">volumes</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: plugin-meta-yaml</span></span>
+          <span style="color:#606">configMap</span>:
+            <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">telemetry-plugin-meta</span></span>
+            <span style="color:#606">defaultMode</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">420</span></span>
+      <span style="color:#606">containers</span>:
+        - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: apache</span></span>
+          <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'registry.redhat.io/rhscl/httpd-24-rhel7:latest'</span></span>
+          <span style="color:#606">ports</span>:
+            - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">containerPort: 8080</span></span>
+              <span style="color:#606">protocol</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">TCP</span></span>
+          <span style="color:#606">resources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">{}</span></span>
+          <span style="color:#606">volumeMounts</span>:
+            - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: plugin-meta-yaml</span></span>
+              <span style="color:#606">mountPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/var/www/html</span></span>
+  <span style="color:#606">strategy</span>:
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">RollingUpdate</span></span>
+    <span style="color:#606">rollingUpdate</span>:
+      <span style="color:#606">maxUnavailable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">25%</span></span>
+      <span style="color:#606">maxSurge</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">25%</span></span>
+  <span style="color:#606">revisionHistoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">10</span></span>
+  <span style="color:#606">progressDeadlineSeconds</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">600</span></span>
+<span style="color:#f8f;background:#505"><span style="color:#f4f">---</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Service</span></span>
+<span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+  <span style="color:#606">namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">ports</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">protocol: TCP</span></span>
+      <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span>
+      <span style="color:#606">targetPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span>
+  <span style="color:#606">selector</span>:
+    <span style="color:#606">app</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+  <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ClusterIP</span></span>
+<span style="color:#f8f;background:#505"><span style="color:#f4f">---</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Route</span></span>
+<span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">route.openshift.io/v1</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+  <span style="color:#606">namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">host</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache-che.apps-crc.testing</span></span>
+  <span style="color:#606">to</span>:
+    <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Service</span></span>
+    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">apache</span></span>
+    <span style="color:#606">weight</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">100</span></span>
+  <span style="color:#606">port</span>:
+    <span style="color:#606">targetPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">8080</span></span>
+  <span style="color:#606">wildcardPolicy</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">None</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc apply -f manifests.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait a few minutes for the image to pull and the deployment to start, and then confirm that <code>meta.yaml</code> is available in the webserver:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl apache-che.apps-crc.testing/meta.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command should return the <code>meta.yaml</code> file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="updating-che-to-reference-your-telemetry-plug-in">Updating Che to reference your telemetry plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Update the <code>CheCluster</code> custom resource, and add the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable to <code>spec.server.customCheProperties</code>. The value of the environment variable should be the URL of the location of the <code>meta.yaml</code> file on your web server.  This can be accomplished by running <code>oc edit checluster -n che</code> and typing in the change at the terminal, or by editing the CR in the OpenShift console (<strong>Installed Operators &#8594; Eclipse Che &#8594; Eclipse Che Cluster &#8594; eclipse-che &#8594; YAML</strong>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">org.eclipse.che/v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">CheCluster</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">creationTimestamp</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'2020-05-14T13:21:51Z'</span></span>
+  <span style="color:#606">finalizers</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">oauthclients.finalizers.che.eclipse.org</span></span>
+  <span style="color:#606">generation</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">18</span></span>
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse-che</span></span>
+  <span style="color:#606">namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+  <span style="color:#606">resourceVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'5108404'</span></span>
+  <span style="color:#606">selfLink</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/apis/org.eclipse.che/v1/namespaces/che/checlusters/eclipse-che</span></span>
+  <span style="color:#606">uid</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">bae08db2-104d-4e44-a001-c9affc07528d</span></span>
+<span style="color:#606">spec</span>:
+  <span style="color:#606">auth</span>:
+    <span style="color:#606">identityProviderURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://keycloak-che.apps-crc.testing'</span></span>
+    <span style="color:#606">identityProviderRealm</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+    <span style="color:#606">updateAdminPassword</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">oAuthSecret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ZMmNPRbgOJJQ</span></span>
+    <span style="color:#606">oAuthClientName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">eclipse-che-openshift-identity-provider-yrlcxs</span></span>
+    <span style="color:#606">identityProviderClientId</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-public</span></span>
+    <span style="color:#606">identityProviderPostgresSecret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-identity-postgres-secret</span></span>
+    <span style="color:#606">externalIdentityProvider</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">identityProviderSecret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-identity-secret</span></span>
+    <span style="color:#606">openShiftoAuth</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+  <span style="color:#606">database</span>:
+    <span style="color:#606">chePostgresDb</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dbche</span></span>
+    <span style="color:#606">chePostgresHostName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">postgres</span></span>
+    <span style="color:#606">chePostgresPort</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'5432'</span></span>
+    <span style="color:#606">chePostgresSecret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-postgres-secret</span></span>
+    <span style="color:#606">externalDb</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+  <span style="color:#606">k8s</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">{}</span></span>
+  <span style="color:#606">metrics</span>:
+    <span style="color:#606">enable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+  <span style="color:#606">server</span>:
+    <span style="color:#606">cheLogLevel</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">INFO</span></span>
+    <span style="color:#606">customCheProperties</span>:
+      <span style="color:#606">CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'http://apache-che.apps-crc.testing/meta.yaml'</span></span>
+    <span style="color:#606">externalDevfileRegistry</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">cheHost</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-che.apps-crc.testing</span></span>
+    <span style="color:#606">selfSignedCert</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">cheDebug</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'false'</span></span>
+    <span style="color:#606">tlsSupport</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">allowUserDefinedWorkspaceNamespaces</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">externalPluginRegistry</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">gitSelfSignedCert</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">false</span></span>
+    <span style="color:#606">cheFlavor</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che</span></span>
+  <span style="color:#606">storage</span>:
+    <span style="color:#606">preCreateSubPaths</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">pvcClaimSize</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1Gi</span></span>
+    <span style="color:#606">pvcStrategy</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">per-workspace</span></span>
+<span style="color:#606">status</span>:
+  <span style="color:#606">devfileRegistryURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://devfile-registry-che.apps-crc.testing'</span></span>
+  <span style="color:#606">keycloakProvisioned</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+  <span style="color:#606">cheClusterRunning</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Available</span></span>
+  <span style="color:#606">cheURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://che-che.apps-crc.testing'</span></span>
+  <span style="color:#606">openShiftoAuthProvisioned</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+  <span style="color:#606">dbProvisioned</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+  <span style="color:#606">cheVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">7.13.1</span></span>
+  <span style="color:#606">keycloakURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://keycloak-che.apps-crc.testing'</span></span>
+  <span style="color:#606">pluginRegistryURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'https://plugin-registry-che.apps-crc.testing/v3'</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for the Che server to restart, and create a new workspace. You should see a new message saying that your plug-in is being installed into the workspace.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/che/docs/images/telemetry/custom_telemetry_plugin.png" alt="custom telemetry plugin">
+</div>
+</div>
+<div class="paragraph">
+<p>Perform a some operations in the workspace you started. You should see those events in the logs of the example telemetry server.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this guide, you:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Created a telemetry server to echo events to standard out.</p>
+</li>
+<li>
+<p>Extended the Che telemetry client and implemented your own custom back-end.</p>
+</li>
+<li>
+<p>Created a <code>meta.yaml</code> file to represent a Che workspace plug-in for your custom back-end.</p>
+</li>
+<li>
+<p>Told Che where to find your custom plug-in by changing the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        
+        
+    </div>
+
+<!-- 
+ -->
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    Eclipse Che - Documentation <br/>
+                    Site last generated: Jun 22, 2020 <br/>
+                    <hr>
+                    <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
+                    <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
+                    <a href="http://www.eclipse.org/legal/termsofuse.php" target="_blank">Terms of Use</a><br/>
+                    <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">Eclipse Public License</a><br/>
+                    <a href="http://www.eclipse.org/legal" target="_blank">Legal Resources</a><br/>
+                </div>
+            </div>
+</footer>
+
+
+
+
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+
+</html>
