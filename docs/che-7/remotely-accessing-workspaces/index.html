@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Importing a Kubernetes application into a workspace | Eclipse Che Documentation</title>
+<title>Remotely accessing workspaces | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Importing a Kubernetes application into a workspace page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Remotely accessing workspaces page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Importing a Kubernetes application into a workspace">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Remotely accessing workspaces">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -450,14 +450,14 @@
           
           
           
-          <li><a href="/che/docs/che-7/importing-a-kubernetes-application-into-a-che-workspace">Importing a Kubernetes application into a Che workspace</a></li>
+          <li><a href="/che/docs/che-7/importing-a-kubernetes-application-into-a-workspace">Importing a Kubernetes application into a workspace</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/remotely-accessing-che-workspaces">Remotely accessing workspaces</a></li>
+          <li><a href="/che/docs/che-7/remotely-accessing-workspaces">Remotely accessing workspaces</a></li>
           
           
           
@@ -1222,7 +1222,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Importing a Kubernetes application into a workspace</h1>
+   <h1 class="post-title-main">Remotely accessing workspaces</h1>
 </div>
 
 
@@ -1262,157 +1262,59 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to import a Kubernetes application into a Che workspace.</p>
+<p>This section describes how to remotely access Che workspaces outside of the browser.</p>
 </div>
 <div class="paragraph">
-<p>For demonstration purposes, the section uses a sample Kubernetes application having the following two Pods:</p>
+<p>Che workspaces exist as containers and are, by default, modified from a browser window. In addition to this, there are the following methods of interacting with a Che workspace:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A Node.js application specified by this <a href="https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/nodejs-app.yaml">nodejs-app.yaml</a></p>
+<p>Opening a command line in the workspace container using the Kubernetes command-line tool, <code>kubectl</code></p>
 </li>
 <li>
-<p>A MongoDB Pod specified by this <a href="https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/mongo-db.yaml">mongo-db.yaml</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>To run the application on a Kubernetes cluster:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ node=https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/nodejs-app.yaml &amp;&amp; \
-mongo=https://raw.githubusercontent.com/redhat-developer/devfile/master/samples/web-nodejs-with-db-sample/mongo-db.yaml &amp;&amp; \
-kubectl apply -f ${mongo} &amp;&amp; \
-kubectl apply -f ${node}</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To deploy a new instance of this application in a Che workspace, use one of the following three scenarios:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Starting from scratch: <a href="#including-a-kubernetes-application-in-a-workspace-devfile-definition_importing-a-kubernetes-application-into-a-workspace">Writing a new devfile</a></p>
-</li>
-<li>
-<p>Modifying an existing workspace: <a href="#adding-a-kubernetes-application-to-an-existing-workspace-using-the-dashboard_importing-a-kubernetes-application-into-a-workspace">Using the Dashboard user interface</a></p>
-</li>
-<li>
-<p>From a running application: <a href="#generating-a-devfile-from-an-existing-kubernetes-application_importing-a-kubernetes-application-into-a-workspace">Generating a devfile with <code>chectl</code></a></p>
+<p>Uploading and downloading files using the <code>kubectl</code> tool</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="including-a-kubernetes-application-in-a-workspace-devfile-definition_importing-a-kubernetes-application-into-a-workspace">Including a Kubernetes application in a workspace devfile definition</h2>
+<h2 id="remotely-accessing-workspaces-using-the-kubernetes-command-line-tool_remotely-accessing-workspaces">Remotely accessing workspaces using the Kubernetes command-line tool</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This procedure demonstrates how to define the Che 7.9 workspace devfile by Kubernetes application.</p>
+<p>To access Che workspaces remotely using Kubernetes command-line tool (<code>kubectl</code>), follow the instructions in this section.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>kubectl</code> tool is used in this section to open a shell and manage files in a Che workspace. Alternatively, it is possible to use the <code>oc</code>  OpenShift command-line tool.
+</td>
+</tr>
+</table>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+<p>The <code>kubectl</code> binary file from the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Kubernetes website</a>.</p>
 </li>
 <li>
-<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The devfile format is used to define a Che workspace, and its format is described in the <a href="#making-a-workspace-portable-using-a-devfile_using-developer-environments-workspaces">Making a workspace portable using a devfile</a> section. The following is an example of the simplest devfile:</p>
-</div>
+<p>Verify the installation of <code>kubectl</code> using the <code>kubectl version</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
-<span style="color:#606">metadata</span>:
- <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span></code></pre>
+<pre>$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.0", GitCommit:"e8462b5b5dc2584fdcd18e6bcfe9f1e4d970a529", GitTreeState:"clean", BuildDate:"2019-06-19T16:40:16Z", GoVersion:"go1.12.5", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.0", GitCommit:"e8462b5b5dc2584fdcd18e6bcfe9f1e4d970a529", GitTreeState:"clean", BuildDate:"2019-06-19T16:32:14Z", GoVersion:"go1.12.5", Compiler:"gc", Platform:"linux/amd64"}</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Only the name (<strong>minimal-workspace</strong>) is specified. After the Che server processes this devfile, the devfile is converted to a minimal Che workspace that only has the default editor (Che-Theia) and the default editor plug-ins (example: the terminal).</p>
+<p>For versions 1.5.0 or higher, proceed with the steps in this section.</p>
 </div>
-<div class="paragraph">
-<p>Use the <code>Kubernetes</code> type of components in the devfile to add Kubernetes applications to a workspace.</p>
-</div>
-<div class="paragraph">
-<p>For example, the user can embed the <code>NodeJS-Mongo</code> application in the minimal-workspace defined in this paragraph by adding a <code>components</code> section.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
-<span style="color:#606">metadata</span>:
- <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span>
-<span style="color:#606">components</span>:
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
-   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../mongo-db.yaml</span></span>
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: nodejs-app</span></span>
-   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
-   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../nodejs-app.yaml</span></span>
-   <span style="color:#606">entrypoints</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">command: ['sleep']</span></span>
-       <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that the <code>sleep infinity</code> command is added as the entrypoint of the Node.js application. This prevents the application from starting at the workspace start phase. It allows the user to start it when needed for testing or debugging purposes.</p>
-</div>
-<div class="paragraph">
-<p>To make it easier for a developer to test the application, add the commands in the devfile:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
-<span style="color:#606">metadata</span>:
- <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">minimal-workspace</span></span>
-<span style="color:#606">components</span>:
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: kubernetes</span></span>
-   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../mongo-db.yaml</span></span>
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">alias: nodejs-app</span></span>
-   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">kubernetes</span></span>
-   <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/.../nodejs-app.yaml</span></span>
-   <span style="color:#606">entrypoints</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">command: ['sleep']</span></span>
-       <span style="color:#606">args</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">['infinity']</span></span>
-<span style="color:#606">commands</span>:
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: run</span></span>
-   <span style="color:#606">actions</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
-       <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">nodejs-app</span></span>
-       <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">cd ${CHE_PROJECTS_ROOT}/nodejs-mongo-app/EmployeeDB/ &amp;&amp; npm install &amp;&amp; sed -i -- ''s/localhost/mongo/g'' app.js &amp;&amp; node app.js</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Use this devfile to create and start a workspace with the <code>chectl</code> command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl worspace:start --devfile <em>&lt;devfile-path&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>run</code> command added to the devfile is available as a task in Che-Theia from the command palette. When executed, the command starts the Node.js application.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="adding-a-kubernetes-application-to-an-existing-workspace-using-the-dashboard_importing-a-kubernetes-application-into-a-workspace">Adding a Kubernetes application to an existing workspace using the dashboard</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This procedure demonstrates how to modify an existing workspace and import the Kubernetes application using the newly created devfile.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
-</li>
-<li>
-<p>An existing workspace defined on this instance of Eclipse Che <a href="/che/docs/che-7/creating-and-configuring-a-new-che-7-workspace/">Creating a workspace from user dashboard</a>.</p>
 </li>
 </ul>
 </div>
@@ -1420,121 +1322,125 @@ kubectl apply -f ${node}</pre>
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>After the creation of a workspace, use the <strong>Workspace</strong> menu and then the <strong>Configure workspace</strong> icon to manage the workspace.</p>
-<div class="imageblock">
+<p>Use the <code>exec</code> command to open a remote shell.</p>
+</li>
+<li>
+<p>To find the name of the Kubernetes namespace and the Pod that runs the Che workspace:</p>
+<div class="listingblock">
 <div class="content">
-<img src="/che/docs/images/workspaces/configure-workspace.png" alt="configure workspace">
+<pre>$ kubectl get pod -l che.workspace_id --all-namespaces
+NAMESPACE   NAME                                               READY   STATUS    RESTARTS   AGE
+che         workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4   4/4     Running   0          6m4s</pre>
 </div>
 </div>
-</li>
-<li>
-<p>To modify the workspace details, use the <strong>Devfile</strong> tab. The workspace details are displayed in this tab in the devfile format.</p>
-<div class="imageblock">
-<div class="content">
-<img src="/che/docs/images/workspaces/configure-workspace-devfile.png" alt="configure workspace devfile">
-</div>
-</div>
-</li>
-<li>
-<p>To add a Kubernetes component, use the <strong>Devfile</strong> editor on the dashboard.</p>
-</li>
-<li>
-<p>For the changes to take effect, save the devfile and restart the Che workspace.</p>
 </li>
 </ol>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="generating-a-devfile-from-an-existing-kubernetes-application_importing-a-kubernetes-application-into-a-workspace">Generating a devfile from an existing Kubernetes application</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>This procedure demonstrates how to generate a devfile from an existing Kubernetes application using the <code>chectl</code> tool.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
-</li>
-<li>
-<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a></p>
-</li>
-</ul>
+<p>In the example above, the Pod name is <code>workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4</code>, and the namespace is <code>che</code>.</p>
 </div>
 <div class="olist arabic">
-<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Use the <code>chectl devfile:generate</code> command to generate a devfile:</p>
+<p>To find the name of the container:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl devfile:generate</pre>
+<pre>$ NAMESPACE=che
+$ POD=workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4
+$ kubectl get pod ${POD} -o custom-columns=CONTAINERS:.spec.containers[*].name
+CONTAINERS
+maven,che-machine-execpau,theia-ide6dj,vscode-javaw92</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
-<p>The user can also use the <code>chectl devfile:generate</code> command to generate a devfile from, for example, the <code>NodeJS-MongoDB</code> application.</p>
-<div class="paragraph">
-<p>The following example generates a devfile that includes the <code>NodeJS</code> component:</p>
+<p>When you have the namespace, pod name, and the name of the container, use the <code>kubectl</code> command to open a remote shell:</p>
+<div class="literalblock">
+<div class="content">
+<pre class="nowrap">$ NAMESPACE=che
+$ POD=workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4
+$ CONTAINER=maven
+$ kubectl exec -ti -n ${NAMESPACE} ${POD} -c ${CONTAINER} bash
+user@workspace7b2wemdf3hx7s3ln $</pre>
 </div>
+</div>
+</li>
+<li>
+<p>From the container, execute the <code>build</code> and <code>run</code> commands (as if from the Che workspace terminal):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl devfile:generate --selector="app=nodejs"
-apiVersion: 1.0.0
-metadata:
-  name: chectl-generated
-components:
-  - type: kubernetes
-    alias: app=nodejs
-    referenceContent: |
-      kind: List
-      apiVersion: v1
-      metadata:
-        name: app=nodejs
-      items:
-        - apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            labels:
-              app: nodejs
-            name: web
+<pre>user@workspace7b2wemdf3hx7s3ln $ mvn clean install
+[INFO] Scanning for projects...
 (...)</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The Node.js application YAML definition is included in the devfile, inline, using the <code>referenceContent</code> attribute.</p>
-</div>
 </li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
 <li>
-<p>To include support for a language, use the <code>--language</code> parameter:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl devfile:generate --selector="app=nodejs" --language="typescript"
-apiVersion: 1.0.0
-metadata:
-  name: chectl-generated
-components:
-  - type: kubernetes
-    alias: app=nodejs
-    referenceContent: |
-      kind: List
-      apiVersion: v1
-(...)
-  - type: chePlugin
-    alias: typescript-ls
-    id: che-incubator/typescript/latest</pre>
-</div>
-</div>
+<p>For more about <code>kubectl</code>, see the <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Kubernetes documentation</a>.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="downloading-and-uploading-a-file-to-a-workspace-using-the-command-line-interface_remotely-accessing-workspaces">Downloading and uploading a file to a workspace using the command-line interface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This procedure describes how to use the <code>kubectl</code> tool to download or upload files remotely from or to an Eclipse Che workspace.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
 </li>
 <li>
-<p>Use the generated devfile to start a Che workspace with <code>chectl</code>.</p>
+<p>Remote access to the Che workspace you intend to modify. For instructions see <a href="#remotely-accessing-workspaces-using-the-kubernetes-command-line-tool_remotely-accessing-workspaces">Remotely accessing workspaces using the Kubernetes command-line tool</a>.</p>
 </li>
-</ol>
+<li>
+<p>The <code>kubectl</code> binary file from the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Kubernetes website</a>.</p>
+</li>
+<li>
+<p>Verify the installation of <code>kubectl</code> using the <code>kubectl version</code> command:</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>To download a local file named <code>downloadme.txt</code> from a workspace container to the current home directory of the user, use the following in the Che remote shell.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ REMOTE_FILE_PATH=/projects/downloadme.txt
+$ NAMESPACE=che
+$ POD=workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4
+$ CONTAINER=maven
+$ kubectl cp ${NAMESPACE}/${POD}:${REMOTE_FILE_PATH} ~/downloadme.txt -c ${CONTAINER}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To upload a local file named <code>uploadme.txt</code> to a workspace container in the <code>/projects</code> directory:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ LOCAL_FILE_PATH=./uploadme.txt
+$ NAMESPACE=che
+$ POD=workspace7b2wemdf3hx7s3ln.maven-74885cf4d5-kf2q4
+$ CONTAINER=maven
+$ kubectl cp ${LOCAL_FILE_PATH} ${NAMESPACE}/${POD}:/projects -c ${CONTAINER}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the preceding steps, the user can also download and upload directories.</p>
 </div>
 </div>
 </div>
@@ -1558,7 +1464,7 @@ components:
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 22, 2020 <br/>
+                    Site last generated: Jun 23, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

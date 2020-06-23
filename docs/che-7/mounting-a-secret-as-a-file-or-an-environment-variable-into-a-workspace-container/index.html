@@ -450,14 +450,14 @@
           
           
           
-          <li><a href="/che/docs/che-7/importing-a-kubernetes-application-into-a-che-workspace">Importing a Kubernetes application into a Che workspace</a></li>
+          <li><a href="/che/docs/che-7/importing-a-kubernetes-application-into-a-workspace">Importing a Kubernetes application into a workspace</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/remotely-accessing-che-workspaces">Remotely accessing workspaces</a></li>
+          <li><a href="/che/docs/che-7/remotely-accessing-workspaces">Remotely accessing workspaces</a></li>
           
           
           
@@ -1316,6 +1316,18 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <div class="sect1">
 <h2 id="mounting-a-secret-as-a-file-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a secret as a file into a workspace container</h2>
 <div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Eclipse Che uses Kubernetes VolumeMount <code>subPath</code> feature to mount files into containers. This is supported and enabled by default since Kubernetes v1.15 and OpenShift 4.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>This section describes how to mount a secret from the user&#8217;s namespace as a file in single-workspace or multiple-workspace containers of Che.</p>
 </div>
@@ -1331,7 +1343,7 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a new Kubernetes secret in the k8s namespace where a Che workspace will be created.</p>
+<p>Create a new Kubernetes secret in the Kubernetes namespace where a Che workspace will be created.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1341,9 +1353,9 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
 </li>
 <li>
-<p>` app.kubernetes.io/component: workspace-secret` :</p>
+<p><code>app.kubernetes.io/component: workspace-secret</code></p>
 <div class="listingblock">
-<div class="title">Example:</div>
+<div class="title">Example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
@@ -1355,10 +1367,11 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
 </div>
 </div>
-<div class="paragraph">
+</li>
+<li>
 <p>Annotations must indicate the given secret is mounted as a file, provide the mount path, and, optionally, specify the name of the container in which the secret is mounted. If there is no target-container annotation, the secret will be mounted into all user containers of the Che workspace.</p>
-</div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
@@ -1372,10 +1385,11 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
 </div>
 </div>
-<div class="paragraph">
+</li>
+<li>
 <p>Data of the Kubernetes secret must contain exactly one item, the name of which must match the desired file name mounted into the container.</p>
-</div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
@@ -1392,9 +1406,6 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
   <span style="color:#606">settings.xml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20"><em>&lt;base64 encoded data content here&gt;</em></span></span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of the user container named <code>maven</code>.</p>
-</div>
 </li>
 </ul>
 </div>
@@ -1402,7 +1413,10 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 </ol>
 </div>
 <div class="paragraph">
-<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</a>.</p>
+<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of the user container named <code>maven</code>.</p>
+</div>
+<div class="paragraph">
+<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">[the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container]</a>.</p>
 </div>
 </div>
 </div>
@@ -1434,8 +1448,9 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
 </li>
 <li>
-<p><code>app.kubernetes.io/component: workspace-secret</code> :</p>
+<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
@@ -1447,10 +1462,11 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 <span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
 </div>
 </div>
-<div class="paragraph">
+</li>
+<li>
 <p>Annotations must indicate that the given secret is mounted as an environment variable, provides variable names, and optionally, specifies the container name where this mount will be applied. If there is no target-container annotation defined, the secret will be mounted into all user containers of the Che workspace.</p>
-</div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
@@ -1466,11 +1482,20 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
   <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span></code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
 <div class="paragraph">
 <p>This results in the environment variable named <code>FOO_ENV</code> and value <code>myvalue</code> being provisioned into a container named <code>maven</code>.</p>
 </div>
 <div class="paragraph">
 <p>If the secret provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1491,33 +1516,20 @@ SSH key pairs can also be mounted as a file, but this format is primarily aimed 
 </div>
 </div>
 <div class="paragraph">
-<p>This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into the container named <code>maven</code> in that specific order.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ol>
+<p>+
+This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into the container named <code>maven</code> in that specific order.</p>
 </div>
 <div class="paragraph">
-<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</a>.</p>
+<p>+
+NOTE: The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.</p>
+</div>
+<div class="paragraph">
+<p>For additional information about Kubernetes annotation items, see: <a href="#the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">[the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container]</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the-use-of-annotations-in-a-process-of-mounting-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in a process of mounting a secret into a workspace container</h2>
+<h2 id="the-use-of-annotations-in-the-process-of-mounting-a-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in the process of mounting a secret into a workspace container</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Kubernetes annotations and labels are tools used by libraries, tools, and other clients, to attach arbitrary non-identifying metadata to Kubernetes native objects.</p>
@@ -1540,10 +1552,10 @@ The maximum length of annotation names in a Kubernetes secret is 63 characters, 
 <p><code>che.eclipse.org/env-name</code>: The name of the environment variable that is used to mount a secret.</p>
 </li>
 <li>
-<p><code>che.eclipse.org/mount-as</code>: This item describes if a secret will be mounted as an environmental variable or a file . Options: <code>env</code> or <code>file</code></p>
+<p><code>che.eclipse.org/mount-as</code>: This item describes if a secret will be mounted as an environmental variable or a file. Options: <code>env</code> or <code>file</code></p>
 </li>
 <li>
-<p><code>che.eclipse.org/<em>&lt;mykeyName&gt;</em>-env-name: FOO_ENV</code>: The name of the environment variable used when data contains multiple items. <code>mykeyName</code> is used as an example.</p>
+<p><code>che.eclipse.org/<em>&lt;mykeyName&gt;</em>-env-name</code>: The name of the environment variable used when data contains multiple items. <code><em>&lt;mykeyName&gt;</em></code> is used as an example.</p>
 </li>
 </ul>
 </div>
@@ -1569,7 +1581,7 @@ The maximum length of annotation names in a Kubernetes secret is 63 characters, 
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 22, 2020 <br/>
+                    Site last generated: Jun 23, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
