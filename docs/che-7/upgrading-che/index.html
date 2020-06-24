@@ -833,6 +833,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/viewing-operator-events">Viewing the Operator events on OpenShift</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/viewing-che-server-logs">Viewing Che server logs</a></li>
           
           
@@ -1280,7 +1287,7 @@ $('#toc').on('click', 'a', function() {
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#upgrading-che-on-openshift-4-using-the-openshift-web-console_upgrading-che">Upgrading Che on OpenShift 4 using the web console</a></p>
+<p><a href="#upgrading-from-che-6-on-openshift-4-using-the-web-console_upgrading-che">Upgrading from Che 6.x on OpenShift 4 using the web console</a></p>
 </li>
 <li>
 <p><a href="#upgrading-che-on-openshift-4-using-the-cli-management-tool_upgrading-che">Upgrading Che on OpenShift 4 using the CLI management tool</a></p>
@@ -1306,32 +1313,19 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="upgrading-che-on-openshift-4-using-the-openshift-web-console_upgrading-che">Upgrading Che on OpenShift 4 using the web console</h2>
+<h2 id="upgrading-from-che-6-on-openshift-4-using-the-web-console_upgrading-che">Upgrading from Che 6.x on OpenShift 4 using the web console</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes how to upgrade from Che 6.x to Che 7.9 on OpenShift 4 using the OpenShift web console. This method is using the Operator from OperatorHub.</p>
-</div>
-<div class="sect2">
-<h3 id="preparing-the-upgrade-of-che-on-openshift-using-the-operator_upgrading-che-on-openshift-4-using-the-openshift-web-console">Preparing the upgrade of Che on OpenShift using the Operator</h3>
-<div class="paragraph">
-<p>This section describes how to prepare upgrade from Che 6.x to Che 7.9 on OpenShift using the Operator.</p>
-</div>
-<div class="paragraph">
-<p>Uninstalling the Eclipse Che 6.x Operator means that the OpenShift cluster does not receive any updates of the Che 6.x Operator.
-As a consequence, the existing Che instances do not receive any update.
-The Che instances that are already present, including their database, remains present.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>And administrative account on an OpenShift 4 instance.</p>
+<p>An administration account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>Eclipse Che 6.x Operator is installed on this OpenShift 4 instance.</p>
-</li>
-<li>
-<p>A running instance of Che 6.x on this OpenShift 4 instance.</p>
+<p>A running instance of Che 6.x on this OpenShift 4 instance, deployed using the Eclipse Che 6.x Operator.</p>
 </li>
 </ul>
 </div>
@@ -1348,7 +1342,10 @@ The Che instances that are already present, including their database, remains pr
 <p>Open the OpenShift console.</p>
 </li>
 <li>
-<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
+<p>Navigate to the <strong>Project</strong> containing the Eclipse Che 6.x Operator and instance.</p>
+</li>
+<li>
+<p>To uninstall the <strong>Eclipse Che 6.x</strong> Operator, in the left panel, navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
 </li>
 <li>
 <p>Click on <strong>Eclipse Che 6.x</strong>.</p>
@@ -1357,95 +1354,13 @@ The Che instances that are already present, including their database, remains pr
 <p>Click on the <b class="button">Actions</b> button on the top right.</p>
 </li>
 <li>
-<p>A drop-down menu appears.</p>
+<p>In the drop-down menu, click on <strong>Uninstall Operator</strong> to uninstall the Che 6.x Operator.</p>
 </li>
 <li>
-<p>Click on <strong>Uninstall Operator</strong> to uninstall the Che 6.x Operator.</p>
+<p>Accept the selected option <code>Also completely remove the Operator from the selected namespace</code> and click on the <b class="button">Remove</b> button.</p>
 </li>
 <li>
-<p>Accept the selected option <code>Also completely remove the Operator from the selected namespace</code>.</p>
-</li>
-<li>
-<p>Click on the <b class="button">Remove</b> button.</p>
-</li>
-<li>
-<p>Navigate to <strong>Operators &gt; Installed Operators</strong>.</p>
-</li>
-<li>
-<p>The Operator is removed from the list of installed operators.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="creating-the-che-project-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Creating the Che project in OpenShift 4 web console</h3>
-<div class="paragraph">
-<p>This section describes how to create the <code>Che</code> project in OpenShift 4 web console.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>An administrator account on a running instance of OpenShift 4.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Open the OpenShift web console.</p>
-</li>
-<li>
-<p>In the left panel, navigate to <strong>Projects</strong>.</p>
-</li>
-<li>
-<p>Click the <b class="button">Create Project</b> button.</p>
-</li>
-<li>
-<p>Enter the project details:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>In the <strong>Name</strong> field, type <code>che</code>.</p>
-</li>
-<li>
-<p>In the <strong>Display Name</strong> field, type <code>Eclipse Che</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Click the <b class="button">Create</b> button.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="installing-the-che-operator-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Installing the Che Operator in OpenShift 4 web console</h3>
-<div class="paragraph">
-<p>This section describes how to install the Che Operator in OpenShift 4 web console.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>An administrator account on a running instance of OpenShift 4.</p>
-</li>
-<li>
-<p>Administrative rights on an existing project named <code>che</code> on this instance of OpenShift 4.
-See <a href="#creating-the-che-project-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Creating the Che project in OpenShift 4 web console</a>.</p>
-</li>
-<li>
-<p>The Eclipse Che 6.x Operator is not installed.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Open the OpenShift web console.</p>
+<p>Navigate to <strong>Operators &gt; Installed Operators</strong> and verify that the Operator does not appear in the list of installed operators.</p>
 </li>
 <li>
 <p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>OperatorHub</strong> section.</p>
@@ -1457,114 +1372,21 @@ See <a href="#creating-the-che-project-in-openshift-4-web-console_upgrading-che-
 <p>Click on the <strong>Eclipse Che</strong> tile.</p>
 </li>
 <li>
-<p>Click the <b class="button">Install</b> button in the <strong>Eclipse Che</strong> pop-up window.</p>
+<p>In the <strong>Eclipse Che</strong> pop-up window, click the <b class="button">Install</b> button.</p>
 </li>
 <li>
-<p>In the <strong>A specific namespace on the cluster</strong> field, in the cluster drop-down list, select the namespace into which the previous version of the Che Operator was installed.</p>
-</li>
-<li>
-<p>Click the <b class="button">Subscribe</b> button.</p>
-</li>
-<li>
-<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
-</li>
-<li>
-<p>Eclipse Che is displayed as an installed Operator having the <strong>InstallSucceeded</strong> status.</p>
-</li>
-<li>
-<p>Click on the <strong>Eclipse Che</strong> name in the list of installed operators.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Overview</strong> tab.</p>
-</li>
-<li>
-<p>In the <strong>Conditions</strong> sections at the bottom of the page, wait for this message: <code>install strategy completed with no errors</code>.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Events</strong> tab.</p>
-</li>
-<li>
-<p>Wait for this message: <code>install strategy completed with no errors</code>.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Viewing the state of the Che instance deployment in OpenShift 4 web console</h3>
-<div class="paragraph">
-<p>This section describes how to view the state of the Che instance deployment in OpenShift 4 web console.</p>
-</div>
+<p>In the <strong>Install Operator</strong> screen, choose following options and validate:</p>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An administrator account on a running instance of OpenShift 4.</p>
+<p><strong>Installation mode</strong>: <strong>A specific namespace on the cluster</strong>.</p>
 </li>
 <li>
-<p>A Che is being deployed on this instance of OpenShift 4.</p>
+<p><strong>Installed Namespace</strong>: <code>Che</code>.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Open the OpenShift web console.</p>
 </li>
-<li>
-<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
-</li>
-<li>
-<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Eclipse Che Cluster</strong> tab.</p>
-</li>
-<li>
-<p>Click <strong>eclipse-che</strong> <code>CheCluster</code> in the table.</p>
-<div class="paragraph">
-<p>The <strong>Overview</strong> tab is displayed.</p>
-</div>
-</li>
-<li>
-<p>Watch the content of the <strong>Message</strong> field. The field contain error messages, if any. The expected content is <code>None</code>.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Resources</strong> tab.</p>
-<div class="paragraph">
-<p>The screen displays the state of the resources assigned to the Che deployment.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/installation/eclipse-che-resources-tab.png"><img src="/che/docs/images/installation/eclipse-che-resources-tab.png" alt="eclipse che resources tab"></a>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="finishing-the-upgrade-of-che-on-openshift-using-the-operator_upgrading-che-on-openshift-4-using-the-openshift-web-console">Finishing the upgrade of Che on OpenShift using the Operator</h3>
-<div class="paragraph">
-<p>This section describes how to finish the upgrade from Che 6.x to Che 7.9 on OpenShift using the Operator.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The Che 6.x Operator is removed. See <a href="#preparing-the-upgrade-of-che-on-openshift-using-the-operator_upgrading-che-on-openshift-4-using-the-openshift-web-console">Preparing the upgrade of Che on OpenShift using the Operator</a></p>
-</li>
-<li>
-<p>The Che 7.9 Operator is deployed. See <a href="#installing-the-che-operator-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Installing the Che Operator in OpenShift 4 web console</a></p>
-</li>
-<li>
-<p>The Che 7.9 Operator has finished upgrading the Eclipse Che cluster. See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_upgrading-che-on-openshift-4-using-the-openshift-web-console">Viewing the state of the Che instance deployment in OpenShift 4 web console</a></p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
 <li>
 <p>Log into the Eclipse Che instance.</p>
 </li>
@@ -1575,13 +1397,29 @@ See <a href="#creating-the-che-project-in-openshift-4-web-console_upgrading-che-
 <p>An error message appears, with a link to the documentation explaining how to migrate a workspace to a devfile.</p>
 </li>
 <li>
-<p>For each workspace, create a devfile that represent your workspace. See <a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6.x workspace to a Che 7.9 devfile</a>.</p>
+<p>For each workspace, create a devfile that represents your workspace. See <a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6.x workspace to a Che 7.9 devfile</a>.</p>
 </li>
 <li>
 <p>Use the devfile to start the new workspace. See <a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile">Configuring a workspace using a devfile</a></p>
 </li>
 </ol>
 </div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="/che/docs/che-7/navigating-che-using-the-dashboard">Navigating Eclipse Che using the Dashboard</a>.</p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/viewing-operator-events">Viewing Eclipse Che Operator events</a>.</p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6.x workspace to a Che 7.9 devfile</a>.</p>
+</li>
+<li>
+<p><a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile">Configuring a workspace using a devfile</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

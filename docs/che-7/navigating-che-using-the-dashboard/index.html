@@ -833,6 +833,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/viewing-operator-events">Viewing the Operator events on OpenShift</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/viewing-che-server-logs">Viewing Che server logs</a></li>
           
           
@@ -1308,37 +1315,139 @@ OpenShift.</p>
 <li>
 <p>Click on to the mini-che route link: <code>http://che-che.<em>&lt;IP-address&gt;.</em>nip.io/</code>.</p>
 </li>
-<li>
-<p>The <strong>Dashboard</strong> is displayed by default.</p>
-</li>
 </ol>
+</div>
+<div class="ulist">
+<div class="title">Validation steps</div>
+<ul>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="navigating-che-using-the-dashboard-on-openshift_navigating-che-using-the-dashboard">Navigating Che using the Dashboard on OpenShift</h2>
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-using-oauth_navigating-che-using-the-dashboard">Logging in to Che on OpenShift for the first time using OAuth</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to access the Eclipse Che Dashboard on OpenShift.</p>
+<p>This section describes how to log in to Che on OpenShift for the first time using OAuth.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Know some way to contact the administrator of the OpenShift instance.</p>
-</li>
-<li>
-<p>Use the latest version of Google Chrome. Google Chrome is the officially supported browser for Eclipse Che&#160;7.9</p>
+<p>Contact the administrator of the OpenShift instance to obtain the <strong>Eclipse Che URL</strong>.</p>
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>OpenShift OAuth</strong> option.</p>
+</li>
+<li>
+<p>The <strong>Authorize Access</strong> page is displayed.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Allow selected permissions</b> button.</p>
+</li>
+<li>
+<p>Update the account information: specify the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> fields and click the <b class="button">Submit</b> button.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Validation steps</div>
 <ul>
 <li>
-<p>Contact the administrator of the OpenShift instance to obtain the URL for the Eclipse Che instance.</p>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-registering-as-a-new-user_navigating-che-using-the-dashboard">Logging in to Che on OpenShift for the first time registering as a new user</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to log in to Che on OpenShift for the first time registering as a new user.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Contact the administrator of the OpenShift instance to obtain the <strong>Eclipse Che URL</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>Register as a new user</strong> option.</p>
+</li>
+<li>
+<p>Update the account information: specify the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> field and click the <b class="button">Submit</b> button.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Validation steps</div>
+<ul>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_navigating-che-using-the-dashboard">Finding Che cluster URL using the OpenShift 4 CLI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to obtain the Che cluster URL using the OpenShift 4 CLI (command line interface). The URL can be retrieved from the OpenShift logs or from the <code>checluster</code> Custom Resource.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An instance of Eclipse Che running on OpenShift.</p>
+</li>
+<li>
+<p>User is located in a Che installation namespace.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>To retrieve the Che cluster URL from the <code>checluster</code> CR (Custom Resource), run:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc get checluster --output jsonpath='{.items[0].status.cheURL}'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Alternatively, to retrieve the Che cluster URL from the OpenShift logs, run:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc logs --tail=10 `(oc get pods -o name | grep operator)` | \
+  grep "available at" | \
+  awk -F'available at: ' '{print $2}' | sed 's/"//'</pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
