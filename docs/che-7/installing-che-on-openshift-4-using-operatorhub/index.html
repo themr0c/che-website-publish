@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Installing Che on-premise with Kubespray | Eclipse Che Documentation</title>
+<title>Installing Che on OpenShift 4 using OperatorHub | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che on-premise with Kubespray page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che on OpenShift 4 using OperatorHub page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Installing Che on-premise with Kubespray">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installing Che on OpenShift 4 using OperatorHub">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -245,7 +245,14 @@
           
           
           
-          <li><a href="/che/docs/che-7/installing-the-chectl-management-tool">Installing the chectl management tool</a></li>
+          <li><a href="/che/docs/che-7/3-minutes-to-che">3 minutes to Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-the-chectl-management-tool">Using the chectl management tool</a></li>
           
           
           
@@ -259,35 +266,35 @@
           
           
           
-          <li><a href="/che/docs/che-7/deploying-che-on-kubernetes-on-aws">Che on Amazon Web Services</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Che on OpenShift 3</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-4-using-operatorhub">Installing Che on OpenShift 4</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-openshift-4-from-operatorhub">Che on OpenShift 4</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-aws">Installing Che on AWS</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-google-cloud-platform">Che on Google Cloud Platform</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-google-cloud-platform">Installing Che on Google Cloud</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-eclipse-che-on-microsoft-azure">Che on Microsoft Azure</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-microsoft-azure">Installing Che on Microsoft Azure</a></li>
           
           
           
@@ -1222,7 +1229,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Installing Che on-premise with Kubespray</h1>
+   <h1 class="post-title-main">Installing Che on OpenShift 4 using OperatorHub</h1>
 </div>
 
 
@@ -1262,31 +1269,26 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This article explains how to create a single or multi-node bare metal Kubernetes cluster to deploy Che.</p>
-</div>
-<div class="paragraph">
-<p>A bare metal cluster has multiple advantages (performance, density, etc.) but also drawbacks (longer to reset, etc.). An other type of installation is inside Virtual Machines for example.</p>
-</div>
-<div class="paragraph">
-<p>There are a lot of ways to deploy a bare metal cluster, we will use Kubespray in this article for its simplicity.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration">Configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Hardware:</p>
+<p>Operators are a method of packaging, deploying, and managing a Kubernetes application which also provide the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>CPU: 2 preferable (no check performed by Kubespray)</p>
+<p>Repeatability of installation and upgrade.</p>
 </li>
 <li>
-<p>RAM: 1024MB/1500MB minimum for worker/master nodes enforced in Kubespray (configurable)</p>
+<p>Constant health checks of every system component.</p>
+</li>
+<li>
+<p>Over-the-air (OTA) updates for OpenShift components and independent software vendor (ISV) content.</p>
+</li>
+<li>
+<p>A place to encapsulate knowledge from field engineers and spread it to all users.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>On OpenShift, Eclipse Che can be installed using the OperatorHub Catalog present in the OpenShift web console.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1296,733 +1298,66 @@ $('#toc').on('click', 'a', function() {
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Eclipse Che requires minimum CPU and RAM to run itself and to spawn user environments</p>
+<p>It is possible to use the <code>chectl</code> utility script for deploying Che on OpenShift Container Platform and OpenShift Dedicated versions 4.3. This method is considered unofficial and serves as a backup installation method for situations where the installation method using OperatorHub is not available.</p>
+</div>
+<div class="paragraph">
+<p>For information about how to use the <code>chectl</code> utility script for deploying Che on OpenShift, see the
+<a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3 using the Operator</a> section.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Software:</p>
+<p>Following steps are described:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>O/S: <a href="https://github.com/kubernetes-sigs/kubespray#supported-linux-distributions">check the supported distributions</a></p>
+<p><a href="#creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Creating the Che project in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>Kubespray: 2.12.5</p>
+<p><a href="#installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing the Che Operator in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>Python: 3.7</p>
+<p><a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing Che using the Che Operator in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>Helm: 3.1.2</p>
+<p><a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p><a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p><a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Finding Che instance URL in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p><a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
+</li>
+<li>
+<p><a href="#enabling-ssl-on-openshift-4_installing-che-on-openshift-4-using-operatorhub">Enabling SSL on OpenShift 4</a>.</p>
+</li>
+<li>
+<p><a href="#logging-in-to-che-on-openshift-for-the-first-time-using-oauth_installing-che-on-openshift-4-using-operatorhub">Logging in to Che on OpenShift for the first time using OAuth</a>.</p>
+</li>
+<li>
+<p><a href="#logging-in-to-che-on-openshift-for-the-first-time-registering-as-a-new-user_installing-che-on-openshift-4-using-operatorhub">Logging in to Che on OpenShift for the first time registering as a new user</a>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-kubespray-to-set-up-kubernetes_installing-che-on-premise-with-kubespray">Set up Kubernetes using Kubespray</h2>
+<h2 id="creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Creating the Che project in OpenShift 4 web console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Commands are given for bash on Ubuntu.</p>
-</div>
-<div class="paragraph">
-<div class="title">System update</div>
-<p>Start with a system update before installing new packages.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ sudo apt-get update
-$ sudo apt-get upgrade</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This step is only required on the machine used to run Kubespray. Kubespray will take care of system updates on the cluster nodes.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">SSH access</div>
-<ul>
-<li>
-<p>Install SSH server</p>
-<div class="paragraph">
-<p>If a node does not have SSH server installed by default, you have to install it to remotely control this machine.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ sudo apt-get install openssh-server</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create SSH key pair</p>
-<div class="paragraph">
-<p>You have to generate one or multiple SSH key pair(s) to allow Kubespray/Ansible automatic login using SSH. You can use a different key pair for each node or use the same for all nodes.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ ssh-keygen -b 2048 -t rsa -f /home/&lt;local-user&gt;/.ssh/id_rsa -q -N ""</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Copy your public key(s) on nodes</p>
-<div class="paragraph">
-<p>Copy your public key(s) in the ~/.ssh/authorized_keys file of the user accounts you will use on each node for deployment.
-You will be prompted twice for the password corresponding to account, the first time for the public key upload using SSH and the second time for adding the public key in the authorized_keys file.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
-   scp /home/&lt;local-user&gt;/.ssh/id_rsa.pub &lt;node-user&gt;@$ip:/home/&lt;node-user&gt;/.ssh
-   ssh &lt;node-user&gt;@$ip "cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys"
-done</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You will never be prompted again for password using SSH, the key will be used to authenticate you!</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">IPv4 forwarding</div>
-<p>Kubespray requires to turn on IPv4 forwarding. This should be done automatically by Kubepsray.</p>
-</div>
-<div class="paragraph">
-<p>To do it manually, run the following command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
-   ssh &lt;node-user&gt;@$ip "echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward"
-done</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Turn off swap</div>
-<p>Turning swap off is required by Kubernetes. See this issue for more information.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>for ip in &lt;node1-ip&gt; &lt;node2-ip&gt; ...; do
-   ssh &lt;node-user&gt;@$ip "sudo swapoff -a &amp;&amp; sudo sed -i '/ swap / s/^/#/' /etc/fstab"
-done</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Get Kubespray</div>
-<p>Start by installing curl.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sudo apt-get install curl</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Get the lastest Kubespray source code from its repo.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The latest release when writing this tutorial, v2.12.5, throws error not encountered in the master version.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>mkdir -p ~/projects/ &amp;&amp; \
-curl -LJO https://github.com/kubernetes-sigs/kubespray/archive/master.zip &amp;&amp; \
-unzip kubespray-master.zip -d kubespray &amp;&amp; \
-rm kubespray-master.zip &amp;&amp; \
-cd kubespray</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Install Kubespray requirements</div>
-<p>Kubespray uses Python 3 and several dependencies to be installed.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Install Python 3</p>
-<div class="paragraph">
-<p>Install Python 3 but also pip (package installer for Python) and venv to create virtual environnements (see below).</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sudo apt-get install python3.7 python3-pip python3-venv</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create a virtual env</p>
-<div class="paragraph">
-<p>This is a best isolation pratice using Python to use virtual env (or conda env for conda users).</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>python3 -m venv ~/projects/kubespray-venv
-source ~/projects/kubespray-venv/bin/activate</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install Kubespray dependencies</p>
-<div class="listingblock">
-<div class="content">
-<pre>pip install -r requirements.txt</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Create a new cluster configuration</div>
-<p>Start creating a copy of the default settings from sample cluster.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>cp -rfp inventory/sample inventory/mycluster</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Be sure you are still in the ~/projects/kubespray/ directory before executing this command!</p>
-</div>
-<div class="paragraph">
-<p>Then customize your new cluster</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Update Ansible inventory file with inventory builder</p>
-<div class="listingblock">
-<div class="content">
-<pre>declare -a IPS=(&lt;node1-ip&gt; &lt;node2-ip&gt; ...)
-CONFIG_FILE=inventory/mycluster/hosts.yaml python contrib/inventory_builder/inventory.py ${IPS[@]}</pre>
-</div>
-</div>
-</li>
-<li>
-<p>(optional) Rename your nodes or deactivate hostname renaming</p>
-<div class="paragraph">
-<p>If you skip this step, your cluster hostnames will be renamed node1, node2, etc.</p>
-</div>
-<div class="paragraph">
-<p>You can either edit the file ~/projects/kubespray/inventory/mycluster/hosts.yaml</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sed -e 's/node1/tower/g' -e 's/node2/laptop/g' ... -i inventory/mycluster/hosts.yaml</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>OR</p>
-</div>
-<div class="paragraph">
-<p>keep the current hostnames</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>echo "override_system_hostname: false" &gt;&gt;  inventory/mycluster/group_vars/all/all.yml</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Check localhost vs nodes usernames</p>
-<div class="paragraph">
-<p>If your localhost username differ from a node username (the one that owns your SSH public key), you must specify it to Ansible by editing (manually) the hosts.yaml file.</p>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 50%;">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-middle">localhost username</th>
-<th class="tableblock halign-center valign-middle">node1 username</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">foo</p></td>
-<td class="tableblock halign-center valign-middle"><p class="tableblock">bar</p></td>
-</tr>
-</tbody>
-</table>
-<div class="listingblock">
-<div class="content">
-<pre>&gt; cat inventory/mycluster/hosts.yaml
-all:
-  hosts:
-    node1:
-      ansible_ssh_user: bar</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<div class="title">Deploy your cluster!</div>
-<p>It&#8217;s time to deploy Kubernetes by running the Ansible playbook command.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Access your cluster API</div>
-<p>The cluster is created but you currently have no access to its API for configuration purpose.
-<code>kubectl</code> has been installed by Kubespray on master nodes of your cluster and configuration files are saved in root home directories of master nodes.</p>
-</div>
-<div class="paragraph">
-<p>If you want to access the cluster API from another computer on your network, install kubectl first.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then copy the configuration files from the root home directory of a master node:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>On the master node, copy configurations files from root to your useraccount</p>
-<div class="listingblock">
-<div class="content">
-<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "sudo cp -R /root/.kube ~ &amp;&amp; sudo chown -R &lt;node-user&gt;:&lt;node-user&gt; ~/.kube"</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Then download the configuration files to a remote computer</p>
-<div class="listingblock">
-<div class="content">
-<pre>scp -r &lt;node-user&gt;@&lt;master-node-ip&gt;:~/.kube ~
-sudo chown -R &lt;local-user&gt;:&lt;local-user&gt; ~/.kube</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Keep secrets protected on the master node</p>
-<div class="listingblock">
-<div class="content">
-<pre>ssh &lt;node-user&gt;@&lt;master-node-ip&gt; "rm -r ~/.kube"</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For sanity, use autocompletion!</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>echo 'source &lt;(kubectl completion bash)' &gt;&gt;~/.bashrc</pre>
-</div>
-</div>
-<hr>
-<div class="paragraph">
-<p>title: Installing a load balancer on a bare metal cluster
-keywords:
-tags: []
-sidebar: che_7_docs
-permalink: che-7/installing-load-balancer-on-a-bare-metal-cluster/
-folder: che-7/overview
-summary:
----</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installing-a-load-balancer-on-bare-metal-cluster_installing-che-on-premise-with-kubespray">Installing a load balancer on a bare metal cluster</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On a bare metal Kubernetes cluster, you don&#8217;t have a load balancer already running since it&#8217;s usually part of your cloud provider infrastructure.</p>
-</div>
-<div class="paragraph">
-<p>For more details, refer to the official Kubernetes <a href="https://kubernetes.io/docs/concepts/services-networking/service/"><code>Service</code> documentation</a>.</p>
-</div>
-<div class="paragraph">
-<p>Fortunately, MetalLB is a open-source implementation of a load balancer for bare metal deployments!</p>
-</div>
-<div class="paragraph">
-<div class="title">Install MetalLB</div>
-<p>Follow the official installation guide.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>kubectl edit configmap -n kube-system kube-proxy</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>apiVersion: kubeproxy.config.k8s.io/v1alpha1
-kind: KubeProxyConfiguration
-mode: "ipvs"
-ipvs:
-  strictARP: true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then apply the manifests:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-# On first install only
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Set MetalLB configuration</div>
-<p>To allow the load balancer to distribute external IPs, you must specify in its configuration what is the IP chunk allocated for it.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>cat &lt;&lt; EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - &lt;your-ip-range&gt;
-EOF</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Don&#8217;t forget to set &lt;your-ip-range&gt; to the ip chunk you want to use!</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>That&#8217;s it!</p>
-</div>
-<hr>
-<div class="paragraph">
-<p>title: Installing a storage on a bare metal cluster
-keywords:
-tags: []
-sidebar: che_7_docs
-permalink: che-7/installing-storage-on-a-bare-metal-cluster/
-folder: che-7/overview
-summary:
----</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installing-a-storage-on-bare-metal-cluster_installing-che-on-premise-with-kubespray">Installing a storage on a bare metal cluster</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Deployments usually require storage in order to persist data since pods are designed to be ephemerals.</p>
-</div>
-<div class="paragraph">
-<p>Kubernetes introduced several concepts around this:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Persistant Volume <code>PV</code>: a declaration of an available volume</p>
-</li>
-<li>
-<p>Persistant Volume Claim <code>PVC</code>: a claim for Persistent Volume</p>
-</li>
-<li>
-<p>etc.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For more details, please refer to the official Kubernetes documentation about storage that covers <code>volumes</code>, <code>PV</code>, <code>PVC</code>, provisioning and much more.</p>
-</div>
-<div class="paragraph">
-<p>In this article, you will use a <code>nfs</code> volume type for its simplicity, accessiblity between nodes and capability to be dynamically provisioned.</p>
-</div>
-<div class="paragraph">
-<div class="title">Set up the NFS server</div>
-<p>Based on the Vitux tutorial.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Install NFS server</p>
-<div class="paragraph">
-<p>Just pick a machine on the same network as your cluster nodes (it can be one of them), and run:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sudo apt-get install -y nfs-kernel-server</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Choose export directory</p>
-<div class="paragraph">
-<p>Choose or create a directory and share it:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sudo mkdir -p /mnt/my-nfs</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As we want all clients to have access, change its permissions</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>sudo chown nobody:nogroup /mnt/my-nfs
-sudo chmod 777 /mnt/my-nfs</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Do the NFS export</p>
-<div class="listingblock">
-<div class="content">
-<pre>echo "&lt;mount-path&gt; &lt;subnet&gt;(rw,sync,no_subtree_check)" | sudo tee /etc/exports
-sudo exportfs -a
-sudo systemctl restart nfs-kernel-server</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>You have to replace &lt;subnet&gt; and &lt;mount-path&gt; with your <code>nfs</code> settings</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<div class="title">Define the StorageClass and the provisioner</div>
-<p>Based on the Yolanda tutorial.
-We will use an <a href="https://github.com/kubernetes-incubator/external-storage">external-storage</a> template.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Set authorizations</p>
-<div class="listingblock">
-<div class="content">
-<pre>kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs-client/deploy/rbac.yaml</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Set StorageClass</p>
-<div class="listingblock">
-<div class="content">
-<pre>cat &lt;&lt; EOF | kubectl apply -f -
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: managed-nfs-storage
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: nfs-provisioner
-parameters:
-  archiveOnDelete: "false"
-EOF</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We declare the <code>StorageClass</code> as default one to automatically be selected by `PVC`s.</p>
-</div>
-</li>
-<li>
-<p>Set provisioner</p>
-<div class="listingblock">
-<div class="content">
-<pre>cat &lt;&lt; EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nfs-client-provisioner
-  labels:
-    app: nfs-client-provisioner
-  # replace with namespace where provisioner is deployed
-  namespace: default
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: nfs-client-provisioner
-  template:
-    metadata:
-      labels:
-        app: nfs-client-provisioner
-    spec:
-      serviceAccountName: nfs-client-provisioner
-      containers:
-        - name: nfs-client-provisioner
-          image: quay.io/external_storage/nfs-client-provisioner:latest
-          volumeMounts:
-            - name: nfs-client-root
-              mountPath: /persistentvolumes
-          env:
-            - name: PROVISIONER_NAME
-              value: nfs-provisioner
-            - name: NFS_SERVER
-              value: &lt;nfs-server-ip&gt;
-            - name: NFS_PATH
-              value: &lt;mount-path&gt;
-      volumes:
-        - name: nfs-client-root
-          nfs:
-            server: &lt;nfs-server-ip&gt;
-            path: &lt;mount-path&gt;
-EOF</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Don&#8217;t forget to replace &lt;nfs-server-ip&gt; and &lt;mount-path&gt; with your custom <code>nfs</code> settings</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="title">Check everything is OK</div>
-<div class="content">
-<pre>kubectl get deployments.apps,pods,sc -n default</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should see the <code>Deployment</code> of the provisioner, the corresponding <code>Pod</code> and also the <code>StorageClass</code> as default one.</p>
-</div>
-<hr>
-<div class="paragraph">
-<p>title: Installing chectl
-keywords:
-tags: []
-sidebar: che_7_docs
-permalink: che-7/installing-chectl/
-folder: che-7/overview
-summary:
----</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installing-chectl_installing-che-on-premise-with-kubespray">Installing chectl</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>chectl</code> is the Eclipse Che command-line management tool. It is used for operations on the Che server (start, stop, update, delete) and on workspaces (list, start, stop, inject) and to generate devfiles.</p>
-</div>
-<div class="sect2">
-<h3 id="installing-the-chectl-management-tool-on-windows_installing-chectl">Installing the chectl management tool on Windows</h3>
-<div class="paragraph">
-<p>This section describes how to install the <code>chectl</code> management tool on Windows.</p>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>Run the following command in the PowerShell terminal:</p>
-<div class="listingblock">
-<div class="content">
-<pre>C:\Users&gt; Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://www.eclipse.org/che/chectl/win/'))</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The chectl binary file is installed at <code>C:\ProgramData\chectl</code>.</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="#upgrading-the-chectl-management-tool_installing-chectl">Upgrading the <code>chectl</code> management tool</a></p>
-</li>
-<li>
-<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="installing-the-chectl-management-tool-on-linux-or-macos_installing-chectl">Installing the chectl management tool on Linux or macOS</h3>
-<div class="paragraph">
-<p>This section describes how to install the <code>chectl</code> management tool on Linux or macOS.</p>
+<p>This section describes how to create the <code>Che</code> project in OpenShift 4 web console.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The directory <code>/usr/local/bin</code> is in the user <code>$PATH</code>.</p>
-</li>
-<li>
-<p>The <code>sudo</code> command is configured for the current user.</p>
-</li>
-<li>
-<p>Remove all old or undesired versions of <code>chectl</code>.</p>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 </ul>
 </div>
@@ -2030,144 +1365,578 @@ summary:
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Run the following command in the terminal (this downloads and executes the <code>install.sh</code> script):</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ bash &lt;(curl -sL  https://www.eclipse.org/che/chectl/)</pre>
-</div>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to <strong>Projects</strong>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Create Project</b> button.</p>
+</li>
+<li>
+<p>Enter the project details:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the <strong>Name</strong> field, type <code>che</code>.</p>
+</li>
+<li>
+<p>In the <strong>Display Name</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+</ul>
 </div>
 </li>
 <li>
-<p>Run the following command to verify that the <code>chectl</code> binary file used is <code>/usr/local/bin/chectl</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ which chectl
-/usr/local/bin/chectl</pre>
-</div>
-</div>
+<p>Click the <b class="button">Create</b> button.</p>
 </li>
-<li>
-<p>Run the following command to verify that the version of chectl that is the expected one.</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl --version</pre>
+</ol>
 </div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+</div>
+<div class="sect1">
+<h2 id="installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing the Che Operator in OpenShift 4 web console</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>To identify the latest stable release, see the <a href="https://github.com/che-incubator/chectl/releases">list of chectl releases</a> and search for a release not containing "next" in the name.</p>
+<p>This section describes how to install the Che Operator in OpenShift 4 web console.</p>
 </div>
-</td>
-</tr>
-</table>
-</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>Read the installation logs.</p>
-<div class="listingblock">
+<p>Administrative rights on an existing project named <code>che</code> on this instance of OpenShift 4.
+See <a href="#creating-the-che-project-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Creating the Che project in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>The Eclipse Che 6.x Operator is not installed.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>OperatorHub</strong> section.</p>
+</li>
+<li>
+<p>In the <strong>Search by keyword</strong> field, type <code>Eclipse Che</code>.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> tile.</p>
+</li>
+<li>
+<p>Click the <b class="button">Install</b> button in the <strong>Eclipse Che</strong> pop-up window.</p>
+</li>
+<li>
+<p>In the <strong>A specific namespace on the cluster</strong> field, in the cluster drop-down list, select the namespace into which the previous version of the Che Operator was installed.</p>
+</li>
+<li>
+<p>Click the <b class="button">Subscribe</b> button.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Eclipse Che is displayed as an installed Operator having the <strong>InstallSucceeded</strong> status.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> name in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>In the <strong>Conditions</strong> sections at the bottom of the page, wait for this message: <code>install strategy completed with no errors</code>.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Events</strong> tab.</p>
+</li>
+<li>
+<p>Wait for this message: <code>install strategy completed with no errors</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing Che using the Che Operator in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to install Che using the Che Operator in OpenShift 4 web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An administrator account on a running instance of OpenShift 4.</p>
+</li>
+<li>
+<p>At least one OAuth user provisioned on this instance of OpenShift 4.</p>
+</li>
+<li>
+<p>The Che Operator is installed on this instance of OpenShift 4. See <a href="#installing-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing the Che Operator in OpenShift 4 web console</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+</li>
+<li>
+<p>Click the <strong>Create Instance</strong> link in <strong>Provided APIs</strong> section.</p>
+</li>
+<li>
+<p>The <strong>Create CheCluster</strong> page contains the configuration of the overall Che installation to create. It is a YAML fragment describing the <code>CheCluster</code> Custom Resource to create. For an installation using the default configuration, keep the default values.
+To modify the configuration, see <a href="/che/docs/che-7/configuring-the-che-installation">Configuring the Che installation</a>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Create</b> button in the lower left corner of the window.</p>
+</li>
+<li>
+<p>The <code>eclipse-che</code> cluster is created.</p>
+<div class="imageblock">
 <div class="content">
-<pre>$ cat chectl-install.log</pre>
+<a class="image" href="/che/docs/images/installation/eclipse-che-cluster-create-che-cluster.png"><img src="/che/docs/images/installation/eclipse-che-cluster-create-che-cluster.png" alt="eclipse che cluster create che cluster"></a>
 </div>
 </div>
 </li>
 </ol>
 </div>
-<h4 id="additional-resources" class="discrete">Additional resources</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#upgrading-the-chectl-management-tool_installing-chectl">Upgrading the <code>chectl</code> management tool</a></p>
-</li>
-<li>
-<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Related information</div>
-<ul>
-<li>
-<p><a href="https://github.com/che-incubator/chectl/blob/master/README.md"><code>chectl</code> README</a></p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-kubespray-using-chectl_installing-che-on-premise-with-kubespray">Installing che on Kubespray using chectl</h2>
+<h2 id="viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to view the state of the Che instance deployment in OpenShift 4 web console.</p>
+</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running Kubernetes cluster set up with Kubespray on bare metal. See <a href="#using-kubespray-to-set-up-kubernetes_installing-che-on-premise-with-kubespray">Set up Kubernetes using Kubespray</a>.</p>
+<p>An administrator account on a running instance of OpenShift 4.</p>
 </li>
 <li>
-<p>A load balancer is running on your cluster. See <a href="/che/docs/che-7/installing-load-balancer-on-a-bare-metal-cluster">this article</a>.</p>
-</li>
-<li>
-<p>A storage is defined with a provisioner. See <a href="/che/docs/che-7/installing-storage-on-a-bare-metal-cluster">this article</a>.</p>
-</li>
-<li>
-<p><code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/installing-chectl">this article</a>.</p>
+<p>A Che is being deployed on this instance of OpenShift 4.</p>
 </li>
 </ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse Che</strong> in the list of installed operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Eclipse Che Cluster</strong> tab.</p>
+</li>
+<li>
+<p>Click <strong>eclipse-che</strong> <code>CheCluster</code> in the table.</p>
+<div class="paragraph">
+<p>The <strong>Overview</strong> tab is displayed.</p>
+</div>
+</li>
+<li>
+<p>Watch the content of the <strong>Message</strong> field. The field contain error messages, if any. The expected content is <code>None</code>.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Resources</strong> tab.</p>
+<div class="paragraph">
+<p>The screen displays the state of the resources assigned to the Che deployment.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/installation/eclipse-che-resources-tab.png"><img src="/che/docs/images/installation/eclipse-che-resources-tab.png" alt="eclipse che resources tab"></a>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Finding Che instance URL in OpenShift 4 web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to find the Che instance URL in OpenShift 4 web console.</p>
 </div>
 <div class="ulist">
-<div class="title">Procedure</div>
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Deploy an ingress controller</p>
-<div class="paragraph">
-<p>We will use nginx for that, get the <em>cloud</em> deployment since you have configured a load balancer!</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml</pre>
-</div>
-</div>
+<p>A running Eclipse Che instance.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</a>.</p>
 </li>
 <li>
-<p>Get the IP attributed by the load balancer</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl get svc -n ingress-nginx</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>It corresponds to the <code>EXTERNAL-IP</code> of the <code>ingress-nginx-controller</code> service. We will refer it as &lt;ip-from-load-balancer&gt;.</p>
-</div>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
 </li>
-<li>
-<p>Run the following command:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:start --platform k8s --domain &lt;ip-from-load-balancer&gt;.nip.io --self-signed-cert</pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Unless you provide a certificate, don&#8217;t forget the <em>self-signed-cert</em> flag</p>
-</div>
-</td>
-</tr>
-</table>
+</ul>
 </div>
 </li>
 </ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click the <strong>Eclipse Che</strong> Operator tile.</p>
+</li>
+<li>
+<p>Click <strong>eclipse-che</strong> <code>CheCluster</code> in the table.</p>
+<div class="paragraph">
+<p>The <strong>Overview</strong> tab is displayed.</p>
+</div>
+</li>
+<li>
+<p>Read the value of the <strong>Eclipse Che URL</strong> field.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to view the state of the Che cluster deployment using OpenShift 4 CLI tools.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An installation of an Eclipse Che cluster. See <a href="#installing-che-using-the-che-operator-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Installing Che using the Che Operator in OpenShift 4 web console</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Run the following commands to select the <code>che</code> project:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc project <em>&lt;project_name&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the following commands to get the name and status of the Pods running in the selected project:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get pods</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the status of all the Pods is <code>Running</code>.</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">NAME                            READY     STATUS    RESTARTS   AGE
+che-8495f4946b-jrzdc            0/1       Running   0          86s
+che-operator-578765d954-99szc   1/1       Running   0          42m
+keycloak-74fbfb9654-g9vp5       1/1       Running   0          4m32s
+postgres-5d579c6847-w6wx5       1/1       Running   0          5m14s</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To see the state of the Che cluster deployment, run:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc logs --tail=10 -f `(oc get pods -o name | grep operator)`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example output of the command:</p>
+</div>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">time="2019-07-12T09:48:29Z" level=info msg="Exec successfully completed"
+time="2019-07-12T09:48:29Z" level=info msg="Updating eclipse-che CR with status: provisioned with OpenShift identity provider: true"
+time="2019-07-12T09:48:29Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: ConfigMap, name: che"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: ConfigMap, name: custom"
+time="2019-07-12T09:48:29Z" level=info msg="Creating a new object: Deployment, name: che"
+time="2019-07-12T09:48:30Z" level=info msg="Updating eclipse-che CR with status: Che API: Unavailable"
+time="2019-07-12T09:48:30Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:48:30Z" level=info msg="Waiting for deployment che. Default timeout: 420 seconds"</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to obtain the Che cluster URL using the OpenShift 4 CLI (command line interface). The URL can be retrieved from the OpenShift logs or from the <code>checluster</code> Custom Resource.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Che is deployed in an OpenShift cluster. To verify the state of the deployment, see <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+<li>
+<p>User is located in a Che installation namespace.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>To retrieve a Che cluster URL from the <code>checluster</code> CR (Custom Resource), run:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc get checluster --output jsonpath='{.items[0].status.cheURL}'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>The Che cluster URL is displayed.</p>
+<div class="paragraph">
+<p>Alternatively, wait for the deployment logs as mentioned in the Prerequisites section to display the message: <code>Eclipse Che is now available at:</code> followed by the Che cluster URL:</p>
+</div>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">time="2019-07-12T09:50:13Z" level=info msg="Custom resource eclipse-che updated"
+time="2019-07-12T09:50:13Z" level=info msg="Eclipse Che is now available at: http://che-che.apps.cluster-fre-f0a2.fre-f0a2.openshiftworkshop.com"
+time="2019-07-12T09:50:13Z" level=info msg="Updating eclipse-che CR with version: 7.8.0-RC-2.0"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>After the deployment is finished, in the log output, click the Che cluster URL to start the Che instance, or use the following command to isolate it:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc logs --tail=10 `(oc get pods -o name | grep operator)` | \
+  grep "available at" | \
+  awk -F'available at: ' '{print $2}' | sed 's/"//'</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-ssl-on-openshift-4_installing-che-on-openshift-4-using-operatorhub">Enabling SSL on OpenShift 4</h2>
+<div class="sectionbody">
+<h3 id="prerequisites" class="discrete">Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A running Eclipse Che cluster.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<h3 id="procedure" class="discrete">Procedure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OpenShift web console.</p>
+</li>
+<li>
+<p>In the left panel, navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click on the <strong>Eclipse Che</strong> Operator tile.</p>
+</li>
+<li>
+<p>Click on <strong>eclipse-che</strong> in the table.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>Toggle the <strong>TLS MODE</strong> switch to <strong>True</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Confirm change</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/installation/tls-mode-true.png"><img src="/che/docs/images/installation/tls-mode-true.png" alt="tls mode true"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the <strong>Resources</strong> tab.</p>
+</li>
+<li>
+<p>Wait that the Pods are restarted.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Overview</strong> tab.</p>
+</li>
+<li>
+<p>Click the <strong>ECLIPSE CHE URL</strong> link.</p>
+</li>
+<li>
+<p>Notice that the link is redirected to HTTPS.</p>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong> using a valid <em>Let’s Encrypt</em> certificate.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-using-oauth_installing-che-on-openshift-4-using-operatorhub">Logging in to Che on OpenShift for the first time using OAuth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to log in to Che on OpenShift for the first time using OAuth.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running Eclipse Che cluster.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Know the Eclipse Che URL.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Finding Che instance URL in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>OpenShift OAuth</strong> option.</p>
+</li>
+<li>
+<p>The <strong>Authorize Access</strong> page is displayed.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Allow selected permissions</b> button.</p>
+</li>
+<li>
+<p>Update the account information: specify the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> field and click the <b class="button">Submit</b> button.</p>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logging-in-to-che-on-openshift-for-the-first-time-registering-as-a-new-user_installing-che-on-openshift-4-using-operatorhub">Logging in to Che on OpenShift for the first time registering as a new user</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to log in to Che on OpenShift for the first time registering as a new user.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running Eclipse Che cluster.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che instance deployment in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>See <a href="#viewing-the-state-of-the-che-cluster-deployment-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Viewing the state of the Che cluster deployment using OpenShift 4 CLI tools</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Know the Eclipse Che URL.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#finding-che-cluster-url-in-openshift-4-web-console_installing-che-on-openshift-4-using-operatorhub">Finding Che instance URL in OpenShift 4 web console</a>.</p>
+</li>
+<li>
+<p>See <a href="#finding-che-cluster-url-using-openshift-4-cli-tools_installing-che-on-openshift-4-using-operatorhub">Finding Che cluster URL using the OpenShift 4 CLI</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Eclipse Che URL</strong> to display the Eclipse Che login page.</p>
+</li>
+<li>
+<p>Choose the <strong>Register as a new user</strong> option.</p>
+</li>
+<li>
+<p>Update the account information: specify the <code>Username</code>, <code>Email</code>, <code>First name</code> and <code>Last name</code> field and click the <b class="button">Submit</b> button.</p>
+</li>
+<li>
+<p>The browser displays the Eclipse Che <strong>Dashboard</strong>.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>

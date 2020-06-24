@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Installing a load balancer on a bare metal cluster | Eclipse Che Documentation</title>
+<title>3 minutes to Che on Minikube using chectl | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing a load balancer on a bare metal cluster page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the 3 minutes to Che on Minikube using chectl page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Installing a load balancer on a bare metal cluster">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="3 minutes to Che on Minikube using chectl">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -245,7 +245,14 @@
           
           
           
-          <li><a href="/che/docs/che-7/installing-the-chectl-management-tool">Installing the chectl management tool</a></li>
+          <li><a href="/che/docs/che-7/3-minutes-to-che">3 minutes to Che</a></li>
+          
+          
+          
+          
+          
+          
+          <li><a href="/che/docs/che-7/using-the-chectl-management-tool">Using the chectl management tool</a></li>
           
           
           
@@ -259,35 +266,35 @@
           
           
           
-          <li><a href="/che/docs/che-7/deploying-che-on-kubernetes-on-aws">Che on Amazon Web Services</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-openshift-3-using-the-operator">Che on OpenShift 3</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-openshift-4-using-operatorhub">Installing Che on OpenShift 4</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-openshift-4-from-operatorhub">Che on OpenShift 4</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-aws">Installing Che on AWS</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-che-on-google-cloud-platform">Che on Google Cloud Platform</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-google-cloud-platform">Installing Che on Google Cloud</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/installing-eclipse-che-on-microsoft-azure">Che on Microsoft Azure</a></li>
+          <li><a href="/che/docs/che-7/installing-che-on-microsoft-azure">Installing Che on Microsoft Azure</a></li>
           
           
           
@@ -1222,7 +1229,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Installing a load balancer on a bare metal cluster</h1>
+   <h1 class="post-title-main">3 minutes to Che on Minikube using chectl</h1>
 </div>
 
 
@@ -1260,84 +1267,16 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>On a bare metal Kubernetes cluster, you don&#8217;t have a load balancer already running since it&#8217;s usually part of your cloud provider infrastructure.</p>
+<p>The video shows how to deploy Che on Minikube in 3 minutes using chectl.</p>
 </div>
-<div class="paragraph">
-<p>For more details, refer to the official Kubernetes <a href="https://kubernetes.io/docs/concepts/services-networking/service/"><code>Service</code> documentation</a>.</p>
-</div>
-<div class="paragraph">
-<p>Fortunately, MetalLB is a open-source implementation of a load balancer for bare metal deployments!</p>
-</div>
-<div class="paragraph">
-<div class="title">Install MetalLB</div>
-<p>Follow the official installation guide.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>kubectl edit configmap -n kube-system kube-proxy</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>apiVersion: kubeproxy.config.k8s.io/v1alpha1
-kind: KubeProxyConfiguration
-mode: "ipvs"
-ipvs:
-  strictARP: true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then apply the manifests:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-# On first install only
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"</pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Set MetalLB configuration</div>
-<p>To allow the load balancer to distribute external IPs, you must specify in its configuration what is the IP chunk allocated for it.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>cat &lt;&lt; EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - &lt;your-ip-range&gt;
-EOF</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Don&#8217;t forget to set &lt;your-ip-range&gt; to the ip chunk you want to use!</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>That&#8217;s it!</p>
+<script id="asciicast-216201" src="https://asciinema.org/a/216201.js" async></script>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="/che/docs/che-7/installing-che-on-minikube">Installing Che on Minikube</a></p>
+</li>
+</ul>
 </div>
 
     <div class="tags">
