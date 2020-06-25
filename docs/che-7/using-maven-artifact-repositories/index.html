@@ -1393,7 +1393,7 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
 </div>
 <div class="paragraph">
 <div class="title">Prerequisites</div>
-<p>This is required to set your private credentials to a Maven repository (see Maven documentation <a href="https://maven.apache.org/settings.html#servers">Settings.xml#Servers</a>).</p>
+<p>This is required to set your private credentials to a Maven repository. See the Maven documentation <a href="https://maven.apache.org/settings.html#servers">Settings.xml#Servers</a> for additional information.</p>
 </div>
 <div class="paragraph">
 <p>To mount this <code>settings.xml</code>:</p>
@@ -1446,8 +1446,36 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
 </div>
 </div>
 </li>
+</ol>
+</div>
+<div class="paragraph">
+<p>As of {7-15-2-2} version of Che, the target container annotation has been deprecated. An example of the updated annotation looks as follows:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven-settings-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/automount-workspace-secret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Opaque</span></span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">settings.xml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">PHNldHRpbmdzIHhtbG5zPSJodHRwOi8vbWF2ZW4uYXBhY2hlLm9yZy9TRVRUSU5HUy8xLjAuMCIKICAgICAgICAgIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiCiAgICAgICAgICB4c2k6c2NoZW1hTG9jYXRpb249Imh0dHA6Ly9tYXZlbi5hcGFjaGUub3JnL1NFVFRJTkdTLzEuMC4wCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh0dHBzOi8vbWF2ZW4uYXBhY2hlLm9yZy94c2Qvc2V0dGluZ3MtMS4wLjAueHNkIj4KICA8c2VydmVycz4KICAgIDxzZXJ2ZXI+CiAgICAgIDxpZD5yZXBvc2l0b3J5LWlkPC9pZD4KICAgICAgPHVzZXJuYW1lPnVzZXJuYW1lPC91c2VybmFtZT4KICAgICAgPHBhc3N3b3JkPnBhc3N3b3JkMTIzPC9wYXNzd29yZD4KICAgIDwvc2VydmVyPgogIDwvc2VydmVycz4KPC9zZXR0aW5ncz4K</span></span></code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Create this secret in your cluster:</p>
+<p>Create this secret in the cluster:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl apply -f secret.yaml</pre>
@@ -1587,7 +1615,7 @@ Certificate was added to keystore</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 24, 2020 <br/>
+                    Site last generated: Jun 25, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
