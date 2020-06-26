@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Installing Che on CodeReady Containers | Eclipse Che Documentation</title>
+<title>Installing Che on Minishift | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che on CodeReady Containers page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Installing Che on Minishift page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -177,7 +177,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Installing Che on CodeReady Containers">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Installing Che on Minishift">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1236,7 +1236,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Installing Che on CodeReady Containers</h1>
+   <h1 class="post-title-main">Installing Che on Minishift</h1>
 </div>
 
 
@@ -1276,7 +1276,7 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This article explains how to create a single-node OpenShift cluster with CodeReady Containers to deploy Che.</p>
+<p>This article explains how to create a single-node OpenShift 3 cluster with Minishift to deploy Che.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1293,107 +1293,42 @@ Remember that single-node OpenShift clusters are suited only for testing or sing
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-codeready-containers-to-set-up-openshift-4_installing-che-on-codeready-containers">Using CodeReady Containers to set up OpenShift 4</h2>
+<h2 id="using-minishift-to-set-up-openshift-3_installing-che-on-minishift">Using Minishift to set up OpenShift 3</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to use CodeReady Containers to set up OpenShift 4.</p>
+<p>This section describes how to use Minishift to set up OpenShift 3.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An installation of CodeReady Containers. See <a href="https://cloud.redhat.com/openshift/install/crc/installer-provisioned">Installing CodeReady Containers</a>.</p>
+<p>An installation of Minishift version <code>1.34.1</code> or greater. See <a href="https://docs.okd.io/latest/install/index.html">Installing Minishift</a>.</p>
+</li>
+<li>
+<p>The path of the <code>oc</code> binary file is set. See <a href="https://docs.okd.io/latest/minishift/command-ref/minishift_oc-env.html">Setting the path of the <code>oc</code> binary</a>.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Set up your host machine for CodeReady Containers:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc setup</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Remove any previous cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc delete</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Start the CodeReady Containers virtual machine with at least 12 GB of RAM:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc start --memory 12288</pre>
-</div>
-</div>
-</li>
-<li>
-<p>When prompted, supply your user pull secret.</p>
-</li>
-<li>
-<p>Take note of the password for the user <code>kubedmin</code> that is displayed at the end of the installation.</p>
-</li>
-<li>
-<p>Access the OpenShift web console:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc console</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Log in for the first time with the <code>developer</code> account (password: <code>developer</code>) to initialize the first user using OAuth:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc login --username="developer" --password="developer"</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Log out:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc logout</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Log in again with the previously mentioned <code>kubedmin</code> user and password:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc login --username="kubeadmin" --password="__&lt;kubeadmin-password&gt;__"</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Follow the procedure for <a href="/che/docs/che-7/installing-che-on-openshift-4-from-operatorhub/">Installing Che on OpenShift 4 from OperatorHub</a>.</p>
-</li>
-</ol>
-</div>
 <div class="ulist">
-<div class="title">Additional resources</div>
+<div class="title">Procedure</div>
 <ul>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/">Product documentation for Red Hat CodeReady Containers</a>.</p>
-</li>
-<li>
-<p><a href="https://github.com/code-ready/crc">CodeReady Containers on GitHub</a>.</p>
+<p>Start Minishift with at least 4 GB of RAM:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ minishift start --memory=4096</pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-codeready-containers-using-chectl_installing-che-on-codeready-containers">Installing Che on CodeReady Containers using chectl</h2>
+<h2 id="installing-che-on-minishift-using-chectl_installing-che-on-minishift">Installing Che on Minishift using chectl</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to install Che on CodeReady Containers using chectl.</p>
+<p>This section describes how to install Che on Minishift using chectl.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1402,7 +1337,7 @@ Remember that single-node OpenShift clusters are suited only for testing or sing
 <p>The <code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/using-the-chectl-management-tool/">Installing the <code>chectl</code> management tool</a>.</p>
 </li>
 <li>
-<p>A running instance of CodeReady Containers. See <a href="#using-codeready-containers-to-set-up-openshift-4_installing-che-on-codeready-containers">Using CodeReady Containers to set up OpenShift 4</a>.</p>
+<p>A running instance of Minishift. See <a href="#using-minishift-to-set-up-openshift-3_installing-che-on-minishift">Using Minishift to set up OpenShift 3</a>.</p>
 </li>
 </ul>
 </div>
@@ -1413,7 +1348,7 @@ Remember that single-node OpenShift clusters are suited only for testing or sing
 <p>Run the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:start --platform crc --multiuser</pre>
+<pre>$ chectl server:start --platform minishift --multiuser</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1453,7 +1388,7 @@ Omit the <code>--multiuser</code> option to install a single-user instance of Ch
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 25, 2020 <br/>
+                    Site last generated: Jun 26, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
