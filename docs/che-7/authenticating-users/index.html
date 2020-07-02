@@ -1287,6 +1287,103 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
+<h2 id="authentication-modes_authenticating-users">Authentication modes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che supports <code>multiuser</code> and <code>singleuser</code> mode.</p>
+</div>
+<div class="paragraph">
+<div class="title">Single-user mode</div>
+<p><code>singleuser</code> mode is a mode that requires no authentication and anyone can access all cluster resources. In <code>singleuser</code> mode server performs all operations as the predefined user, regardless of who accesses the server. Therefore, this mode is suitable only for use in a private instance for testing product possibilities and configurations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>H2 database is used.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If Che is deployed in <code>singleuser</code> mode then there is no authentication and anyone who can access the URL of the Che deployment sees all workspaces and owns all resources. Since the deployment in this mode has fewer containers, RAM and CPU usage requirements are decreased. This mode is useful if the whole Che deployment is used by a single person or for lowering resources which are used for Che itself, but since the server does not authenticate, actions of several users logged in the same workspace can easily interfere with each other.</p>
+</div>
+<div class="paragraph">
+<p>Usually, in <code>singleuser</code> mode Che has protection by third party services such as <code>haproxy</code> and <code>nginix</code>, but it is the responsibility of the user to configure them.</p>
+</div>
+<div class="paragraph">
+<div class="title">Multi-user mod</div>
+<p><code>multiuser</code> mode is the default mode for Che that requires user authentication and offers isolated workspaces and their resources. In multi-user mode workspaces are used in the scope of registered users and workspace definitions, the devfiles of particular workspaces, can be shared and reused between many users.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Keycloak is used to authenticate users.</p>
+</li>
+<li>
+<p>PostgreSQL database is used.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="changing-the-authentication-mode">Changing the authentication mode</h3>
+<div class="paragraph">
+<p>By default, the Che operator deploys Che in <code>multiuser</code> mode. To change that:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update the Che custom resource (CR) <code>CHE_MULTIUSER</code> property to <code>false</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+ <span style="color:#606">server</span>:
+   <span style="color:#606">customCheProperties</span>:
+      <span style="color:#606">CHE_MULTIUSER</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">false</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If Che is deployed via Helm installer, it defaults to <code>singleuser</code> mode.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To deploy Che in <code>multiuser</code> mode with Helm installer:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the <code>multiuser</code> Helm chart field to <code>true</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --install che --force --namespace che --set global.cheDomain=__&lt;Che-domain-address&gt;__  -f multi-user.yaml</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>To deploy Che in <code>multiuser</code> mode with chectl:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use <code>--multiuser</code> flag, or <code>-m</code> option to <code>chectl server:start</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:start --platfrom=minikube --installer=helm --multiuser</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="authenticating-to-the-che-server_authenticating-users">Authenticating to the Che server</h2>
 <div class="sectionbody">
 <div class="sect2">
