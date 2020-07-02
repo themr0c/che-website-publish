@@ -443,14 +443,14 @@
           
           
           
-          <li><a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-che-7-devfile">Converting a Che 6 Workspace to a Che 7 devfile</a></li>
+          <li><a href="/che/docs/che-7/converting-a-che-6-workspace-to-a-devfile">Converting a Che 6 Workspace to a devfile</a></li>
           
           
           
           
           
           
-          <li><a href="/che/docs/che-7/creating-and-configuring-a-new-che-7-workspace">Creating and configuring a new Che 7 workspace</a></li>
+          <li><a href="/che/docs/che-7/creating-and-configuring-a-new-workspace">Creating and configuring a new workspace</a></li>
           
           
           
@@ -1304,7 +1304,7 @@ $('#toc').on('click', 'a', function() {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This approach is only supported for use with OpenShift Container Platform and OpenShift Dedicated version 3.11, but also work for newer versions of OpenShift Container Platform and OpenShift Dedicated, and serves as a backup installation method for situations when the installation method using OperatorHub is not available.
+This approach is only supported for use with OpenShift{nbsp}Container{nbsp}Platform and OpenShift{nbsp}Dedicated version 3.11, but also work for newer versions of OpenShift{nbsp}Container{nbsp}Platform and OpenShift{nbsp}Dedicated, and serves as a backup installation method for situations when the installation method using OperatorHub is not available.
 </td>
 </tr>
 </table>
@@ -1383,7 +1383,10 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 <h2 id="installing-che-on-openshift-3-using-the-operator_installing-che-on-openshift-3-using-the-operator">Installing Che on OpenShift 3 using the Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to install Che on OpenShift 3 with the CLI management tool, using the Operator method.</p>
+<p>This section describes how to install Che on OpenShift 3 with the CLI management tool using the Operator with SSL (HTTPS) enabled.</p>
+</div>
+<div class="paragraph">
+<p>As of 2.1.1, SSL/TLS is enabled by default as it is required by the Che-Theia IDE.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1401,7 +1404,7 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 <p>The URL for applications on this OpenShift instance is known as <code>&lt;OPENSHIFT_APPS_URL&gt;</code>. See <a href="#preparing-openshift-3-for-installing-che_installing-che-on-openshift-3-using-the-operator">Preparing OpenShift 3 for installing Che</a>.</p>
 </li>
 <li>
-<p>To apply settings that can&#8217;t be set directly by the main chectl command line parameters, prepare a YAML file <code>configuration.yaml</code> containing the configuration options. See <a href="/che/docs/che-7/configuring-the-che-installation">Configuring the Che installation</a>.</p>
+<p>To apply settings that cannot be set directly by the main chectl command-line parameters, prepare a YAML file, <code>configuration.yaml</code>, containing the configuration options. See <a href="/che/docs/che-7/configuring-the-che-installation">Configuring the Che installation</a>.</p>
 </li>
 </ul>
 </div>
@@ -1409,12 +1412,18 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
+<p>Log in to OpenShift. See <a href="https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#basic-setup-and-login">Basic Setup and Login</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc login</pre>
+</div>
+</div>
+</li>
+<li>
 <p>Run the following command to create the Che instance:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ chectl server:start --platform=openshift --installer=operator \
-  --domain=<em>&lt;OPENSHIFT_APPS_URL&gt;</em> \
-  --che-operator-cr-patch-yaml=configuration.yaml</pre>
+<pre class="nowrap">$ chectl server:start -n <em>&lt;openshift_namespace&gt;</em></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1425,7 +1434,7 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 </td>
 <td class="content">
 <div class="paragraph">
-<p>To install Che with the default values, omit the <code>--che-operator-cr-patch-yaml=configuration.yaml</code> option.</p>
+<p>To create the Che instance on OpenShift clusters that have not been configured with a valid certificate for the routes, run the <code>chectl</code> command with the <code>--self-signed-cert</code> flag.</p>
 </div>
 </td>
 </tr>
@@ -1446,7 +1455,7 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 </div>
 </li>
 <li>
-<p>Navigate to the Che cluster instance: <code>http(s)://che-host:che-port</code>.</p>
+<p>Navigate to the Che cluster instance: <code>http(s)://<che-host>:<che-port></code>. The domain uses <em>Let’s Encrypt</em> ACME certificates.</p>
 </li>
 </ol>
 </div>
@@ -1548,7 +1557,7 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jun 30, 2020 <br/>
+                    Site last generated: Jul 2, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
