@@ -1538,7 +1538,7 @@ Eclipse{nbsp}Che uses Kubernetes VolumeMount <code>subPath</code> feature to mou
 </div>
 </div>
 <div class="paragraph">
-<p>Annotations must indicate the given secret is mounted as a file, provide the mount path, and, optionally, specify the name of the container in which the secret is mounted. If there is no target-container annotation, the secret will be mounted into all user containers of the Che workspace, but this is applicable <strong><em>only for the Che version 7.14</em></strong>.</p>
+<p>Annotations must indicate that the given secret is mounted as an environment variable, provides variable names, and optionally, specifies the container name where this mount will be applied. If there is no target-container annotation defined, the secret will be mounted into all user containers of the Che workspace, but this is applicable <strong><em>only for the Che version 7.14</em></strong>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1548,11 +1548,16 @@ Eclipse{nbsp}Che uses Kubernetes VolumeMount <code>subPath</code> feature to mou
   <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
   <span style="color:#606">annotations</span>:
     <span style="color:#606">che.eclipse.org/target-container</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
-    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/</span></span>
-    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+    <span style="color:#606">che.eclipse.org/env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">FOO_ENV</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">env</span></span>
   <span style="color:#606">labels</span>:
-<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
+   <span style="color:#F00;background-color:#FAA">...</span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into the container named <code>maven</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong><em>Since the Che version 7.15</em></strong>, the <code>target-container</code> annotation is deprecated and <code>automount-workspace-secret</code> annotation with Boolean values is introduced. Its purpose is to define the default secret mounting behavior, with the ability to be overridden in a devfile. The <code>true</code> value enables the automatic mounting into all workspace containers. In contrast, the <code>false</code> value disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
@@ -1565,14 +1570,19 @@ Eclipse{nbsp}Che uses Kubernetes VolumeMount <code>subPath</code> feature to mou
   <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
   <span style="color:#606">annotations</span>:
     <span style="color:#606">che.eclipse.org/automount-workspace-secret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
-    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/</span></span>
-    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+    <span style="color:#606">che.eclipse.org/env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">FOO_ENV</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">env</span></span>
   <span style="color:#606">labels</span>:
-<span style="color:#f8f;background:#505"><span style="color:#f4f">...</span></span></code></pre>
+   <span style="color:#F00;background-color:#FAA">...</span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Data of the Kubernetes secret may contain several items, whose names must match the desired file name mounted into the container.</p>
+<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into all workspace containers.</p>
+</div>
+<div class="paragraph">
+<p>If the secret provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1580,40 +1590,32 @@ Eclipse{nbsp}Che uses Kubernetes VolumeMount <code>subPath</code> feature to mou
 <span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
 <span style="color:#606">metadata</span>:
   <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mvn-settings-secret</span></span>
-  <span style="color:#606">labels</span>:
-    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
-    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
   <span style="color:#606">annotations</span>:
     <span style="color:#606">che.eclipse.org/automount-workspace-secret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
-    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/</span></span>
-    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">env</span></span>
+    <span style="color:#606">che.eclipse.org/mykey_env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">FOO_ENV</span></span>
+    <span style="color:#606">che.eclipse.org/otherkey_env-name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">OTHER_ENV</span></span>
+  <span style="color:#606">labels</span>:
+   <span style="color:#F00;background-color:#FAA">...</span>
 <span style="color:#606">data</span>:
-  <span style="color:#606">settings.xml</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20"><em>&lt;base64 encoded data content here&gt;</em></span></span></code></pre>
+  <span style="color:#606">mykey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myvalue</span></span>
+  <span style="color:#606">otherkey</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">othervalue</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of all workspace containers.</p>
+<p>This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into all workpsace containers.</p>
 </div>
-<div class="paragraph">
-<p>The secret-s mount path can be overridden for specific components of the workspace using devfile. To change mount path, an additional volume should be declared in a component of the devfile, with name matching overridden secret name, and desired mount path.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
-<span style="color:#606">metadata</span>:
-  <span style="color:#F00;background-color:#FAA">...</span>
-<span style="color:#606">components</span>:
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
-   <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
-   <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven:3.11</span></span>
-   <span style="color:#606">volumes</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: &lt;secret-name&gt;</span></span>
-       <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/my/new/path</span></span>
-   <span style="color:#F00;background-color:#FAA">...</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that for this kind of overrides, components must declare an alias to be able to distinguish containers which belong to them and apply override path exclusively for those containers.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ul>
@@ -1679,7 +1681,7 @@ Eclipse{nbsp}Che uses Kubernetes VolumeMount <code>subPath</code> feature to mou
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 2, 2020 <br/>
+                    Site last generated: Jul 3, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
