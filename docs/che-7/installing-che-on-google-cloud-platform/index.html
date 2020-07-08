@@ -1679,8 +1679,8 @@ $ kubectl apply \
 <p>Create the <strong>che</strong> namespace if it does not exist already:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create namespace che
-namespace/che created</pre>
+<pre>$ kubectl create namespace <em>&lt;che&gt;</em>
+namespace/<em>&lt;che&gt;</em> created</pre>
 </div>
 </div>
 </li>
@@ -1720,20 +1720,20 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
  name: che-tls
- namespace: che
+ namespace: <em>&lt;che&gt;</em>
 spec:
  secretName: che-tls
  issuerRef:
    name: che-certificate-issuer
    kind: ClusterIssuer
  dnsNames:
-   - '*.gcp.my-ide.cloud'
+   - '<strong>.gcp.my-ide.cloud'
  acme:
    config:
      - dns01:
          provider: clouddns
        domains:
-         - '*.gcp.my-ide.cloud'
+         - '</strong>.gcp.my-ide.cloud'
 EOF</pre>
 </div>
 </div>
@@ -1762,7 +1762,7 @@ I0729 13:50:49.406767 1 controller.go:213] cert-manager/controller/challenges "l
 
 I0729 13:50:49.409802 1 dns.go:112] Checking DNS propagation for "gcp.my-ide.cloud" using name servers: [10.112.0.10:53]
 
-E0729 13:50:49.420131 1 sync.go:180] cert-manager/controller/challenges "msg"="propagation check failed" "error"="DNS record for \"gcp.my-ide.cloud\" not yet propagated" "dnsName"="gcp.my-ide.cloud" "resource_kind"="Challenge" "resource_name"="che-tls-3529929423-0" "resource_namespace"="che" "type"="dns-01"
+E0729 13:50:49.420131 1 sync.go:180] cert-manager/controller/challenges "msg"="propagation check failed" "error"="DNS record for \"gcp.my-ide.cloud\" not yet propagated" "dnsName"="gcp.my-ide.cloud" "resource_kind"="Challenge" "resource_name"="che-tls-3529929423-0" "resource_namespace"="<em>&lt;che&gt;</em>" "type"="dns-01"
 
 I0729 13:50:49.420198 1 controller.go:219] cert-manager/controller/challenges "level"=0 "msg"="finished processing work item" "key"="che/che-tls-3529929423-0"</pre>
 </div>
@@ -1772,7 +1772,7 @@ I0729 13:50:49.420198 1 controller.go:219] cert-manager/controller/challenges "l
 <p>Ensure that the certificate is ready:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n che
+<pre>$ kubectl describe certificate/che-tls -n <em>&lt;che&gt;</em>
 
 Status:
  Conditions:
@@ -1802,7 +1802,7 @@ Events:
 <p>Ensure that the status is up-to-date:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n che
+<pre>$ kubectl describe certificate/che-tls -n <em>&lt;che&gt;</em>
 
 Status:
  Conditions:
