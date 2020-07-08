@@ -922,13 +922,6 @@
           
           
           
-          <li><a href="/che/docs/che-7/using-organizations">Using organizations</a></li>
-          
-          
-          
-          
-          
-          
           <li><a href="/che/docs/che-7/removing-user-data">Removing user data</a></li>
           
           
@@ -1324,6 +1317,9 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p>To apply settings that the main chectl command-line parameters cannot set, prepare a configuration file <code>operator-cr-patch.yaml</code> that will override the default values in the <code>CheCluster</code> Custom Resource used by the Operator. See <a href="/che/docs/che-7/configuring-the-che-installation">Configuring the Che installation</a>.</p>
 </li>
+<li>
+<p><em>&lt;che&gt;</em> represents the project of the target installation.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
@@ -1367,6 +1363,28 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">$ oc delete project hello-world</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To upgrade from a previous Che installation in the same OpenShift{nbsp}Container{nbsp}Platform 3.11 cluster, remove the Custom Resource Definition and the Cluster Roles:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc delete customresourcedefinition/checlusters.org.eclipse.che
+$ oc patch customresourcedefinition/checlusters.org.eclipse.che \
+    --type merge \
+    -p '{ "metadata": { "finalizers": null }}'
+$ oc delete clusterrole che-operator</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To have multiple Che deployments in parallel using different versions in the same OpenShift{nbsp}Container{nbsp}Platform 3.11 cluster, create a new service account for the new deployment. It is, however, strongly recommended that you update all your old Che deployments to the latest version instead, as this mix of versions may cause unexpected and unsupported results.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc patch clusterrolebinding che-operator \
+    --type='json' \
+    -p '[{"op": "add", "path": "/subjects/0", "value": {"kind":"ServiceAccount", "namespace": "<em>&lt;che&gt;</em>", "name": "che-operator"} }]'</pre>
 </div>
 </div>
 </li>
@@ -1416,7 +1434,7 @@ httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex      
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 7, 2020 <br/>
+                    Site last generated: Jul 8, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
