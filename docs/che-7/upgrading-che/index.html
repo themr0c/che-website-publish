@@ -1262,49 +1262,37 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes how to upgrade from Che 6.x instance to Che 7.15.</p>
+<p>This chapter describes how to upgrade a Che instance from previous minor version to Che 7.15.</p>
 </div>
 <div class="paragraph">
-<p>The method that was used to install the Che 6.x instance determines the method to proceed with for the upgrade.</p>
-</div>
-<div class="paragraph">
-<p>Following scenarios are covered:</p>
+<p>The method used to install the Che instance determines the method to proceed with for the upgrade:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#upgrading-che-on-openshift-4-using-the-cli-management-tool_upgrading-che">Upgrading Che on OpenShift 4 using the CLI management tool</a></p>
+<p><a href="#upgrading-che-using-operatorhub_upgrading-che">Upgrading Che using OperatorHub</a></p>
 </li>
 <li>
-<p><a href="#upgrading-che-on-openshift-3-using-the-cli-management-tool_upgrading-che">Upgrading Che on OpenShift 3 using the CLI management tool</a></p>
-</li>
-<li>
-<p><a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile">Configuring a workspace using a devfile</a>.</p>
+<p><a href="#upgrading-che-using-the-cli-management-tool_upgrading-che">Upgrading Che using the CLI management tool</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="upgrading-che-on-openshift-4-using-the-cli-management-tool_upgrading-che">Upgrading Che on OpenShift 4 using the CLI management tool</h2>
+<h2 id="upgrading-che-using-operatorhub_upgrading-che">Upgrading Che using OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to upgrade from Che 6.x to Che 7.15 on OpenShift 4 using the CLI management tool.</p>
+<p>This section describes how to upgrade from a previous minor version using the Operator from OperatorHub in the OpenShift web console.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>And administrative account on an OpenShift 4 instance.</p>
+<p>An administrator account on an OpenShift instance.</p>
 </li>
 <li>
-<p>A running instance of Eclipse{nbsp}Che running on OpenShift 4.</p>
-</li>
-<li>
-<p>This instance was installed using the CLI management tool, not using OperatorHub.</p>
-</li>
-<li>
-<p>The <code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/using-the-chectl-management-tool/">Using the <code>chectl</code> management tool</a>.</p>
+<p>An instance of a previous minor version of Che, installed using the Operator from OperatorHub on the same instance of OpenShift.</p>
 </li>
 </ul>
 </div>
@@ -1312,10 +1300,70 @@ $('#toc').on('click', 'a', function() {
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In all running workspaces in the Che 6.x instance, save and push changes back to the Git repositories.</p>
+<p>Open the OpenShift web console.</p>
 </li>
 <li>
-<p>Shut down all workspaces in the Che 6.x instance.</p>
+<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Eclipse{nbsp}Che</strong> in the list of the installed Operators.</p>
+</li>
+<li>
+<p>Navigate to the <strong>Subscription</strong> tab and enable the following options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Channel</strong>: <code>latest</code></p>
+</li>
+<li>
+<p><strong>Approval</strong>: <code>Automatic</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Navigate to the Che instance.</p>
+</li>
+<li>
+<p>The 7.15 version number is visible at the bottom of the page.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="upgrading-che-using-the-cli-management-tool_upgrading-che">Upgrading Che using the CLI management tool</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to upgrade from previous minor version using the CLI management tool.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>And administrative account on an OpenShift instance.</p>
+</li>
+<li>
+<p>A running instance of a previous minor version of Eclipse{nbsp}Che, installed using the CLI management tool on the same instance of OpenShift.</p>
+</li>
+<li>
+<p>An installation of the <code>chectl</code> management tool. See <a href="/che/docs/che-7/using-the-chectl-management-tool/">Using the <code>chectl</code> management tool</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In all running workspaces in the Che 7.14 instance, save and push changes back to the Git repositories.</p>
+</li>
+<li>
+<p>Shut down all workspaces in the Che 7.14 instance.</p>
 </li>
 <li>
 <p>Run the following command:</p>
@@ -1331,65 +1379,10 @@ $('#toc').on('click', 'a', function() {
 <div class="title">Verification steps</div>
 <ol class="arabic">
 <li>
-<p>Log in to the Che instance.</p>
+<p>Navigate to the Che instance.</p>
 </li>
 <li>
-<p>The 7.15 version number is displayed at the bottom of the page.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="upgrading-che-on-openshift-3-using-the-cli-management-tool_upgrading-che">Upgrading Che on OpenShift 3 using the CLI management tool</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to upgrade from Che 6.x to Che 7.15 on OpenShift 3 using the CLI management tool.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>And administrative account on an OpenShift 3 instance.</p>
-</li>
-<li>
-<p>A running instance of Eclipse{nbsp}Che running on OpenShift 3.</p>
-</li>
-<li>
-<p>This instance was installed using the CLI management tool.</p>
-</li>
-<li>
-<p>The <code>chectl</code> management tool is installed. See <a href="/che/docs/che-7/using-the-chectl-management-tool/">Using the <code>chectl</code> management tool</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>In all running workspaces in the Che 6.x instance, save and push changes back to the Git repositories.</p>
-</li>
-<li>
-<p>Shut down all workspaces in the Che 6.x instance.</p>
-</li>
-<li>
-<p>Run the following command:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:update</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">Verification steps</div>
-<ol class="arabic">
-<li>
-<p>Log in to the Che instance.</p>
-</li>
-<li>
-<p>The 7.15 version number is displayed at the bottom of the page.</p>
+<p>The 7.15 version number is visible at the bottom of the page.</p>
 </li>
 </ol>
 </div>
