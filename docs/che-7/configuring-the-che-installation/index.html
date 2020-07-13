@@ -1278,12 +1278,68 @@ $('#toc').on('click', 'a', function() {
 <h2 id="understanding-the-checluster-custom-resource_configuring-the-che-installation">Understanding the <code>CheCluster</code> Custom Resource</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A default deployment of Che consist in the application of a parametrized <code>CheCluster</code> <a href="https://docs.openshift.com/container-platform/latest/operators/crds/crd-managing-resources-from-crds.html">Custom Resource</a> by the Eclipse{nbsp}Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operator</a>.
-The <code>CheCluster</code> Custom Resource is a YAML document describing the configuration of the overall Che installation.
-The Operator translates the <code>CheCluster</code> Custom Resource into configuration usable by each component of the Che installation: authentication, database, registry, server, storage.</p>
+<p>A default deployment of Che consist in the application of a parametrized <code>CheCluster</code> Custom Resource by the Eclipse{nbsp}Che Operator.</p>
 </div>
-<div class="paragraph">
-<p>For instance, to configure the main properties of the Che server component, the Operator generates a necessary <code>ConfigMap</code>, called <code>che</code>. And any change in the <code>ConfigMap</code> automatically triggers a restart of the Che Pod.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>CheCluster</code> Custom Resource</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>A YAML document describing the configuration of the overall Che installation.</p>
+</li>
+<li>
+<p>Contains sections to configure each component: <code>auth</code>, <code>database</code>, <code>server</code>, <code>storage</code>.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Role of the Eclipse{nbsp}Che Operator</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>To translate the <code>CheCluster</code> Custom Resource into configuration (ConfigMap) usable by each component of the Che installation.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Role of Kubernetes</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>To apply the configuration (ConfigMap) for each component.</p>
+</li>
+<li>
+<p>To create the necessary Pods.</p>
+</li>
+<li>
+<p>When Kubernetes detects a change in the configuration of a component, it restarts the Pods accordingly.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Configuring the main properties of the Che server component</div>
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The user applies a <code>CheCluster</code> Custom Resource containing some configuration related to the <code>server</code>.</p>
+</li>
+<li>
+<p>The Operator generates a necessary ConfigMap, called <code>che</code>.</p>
+</li>
+<li>
+<p>Kubernetes detects change in the ConfigMap and triggers a restart of the Che Pod.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
@@ -1333,7 +1389,7 @@ The Operator translates the <code>CheCluster</code> Custom Resource into configu
 </ul>
 </div>
 <div id="a-minimal-checluster-custom-resource-example_configuring-the-che-installation" class="exampleblock">
-<div class="title">Example 1. A minimal <code>CheCluster</code> Custom Resource example.</div>
+<div class="title">Example 2. A minimal <code>CheCluster</code> Custom Resource example.</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1852,7 +1908,7 @@ The Operator translates the <code>CheCluster</code> Custom Resource into configu
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 10, 2020 <br/>
+                    Site last generated: Jul 13, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
