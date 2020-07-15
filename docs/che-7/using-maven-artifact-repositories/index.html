@@ -1437,9 +1437,6 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
 <div class="paragraph">
 <p>As of {7-15-2-2} version of Che, the target container annotation has been deprecated. An example of the updated annotation looks as follows:</p>
 </div>
-<div class="paragraph">
-<p>+</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
@@ -1472,6 +1469,27 @@ To do that, ensure, that <code>settings.xml</code> is present in all the contain
 <p>Start a new workspace. You will see <code>/home/user/.m2/settings.xml</code> with your original content in the <code>maven</code> container.</p>
 </li>
 </ol>
+</div>
+<div class="sect3">
+<h4 id="openshift-3-11-and-kubernetes-1-13">Openshift 3.11 and Kubernetes &lt;1.13</h4>
+<div class="paragraph">
+<p>On Kubernetes versions older than 1.13, it&#8217;s not possible to have multiple VolumeMounts at same path so having devfile with volume <code>/home/user/.m2</code> and secret at <code>/home/user/.m2/settings.xml</code> would resolve into the conflict. On these clusters use <code>/home/user/.m2/repository</code> as a volume for maven repository in the devfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#F00;background-color:#FAA">...</span>
+<span style="color:#606">components</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: dockerimage</span></span>
+   <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+   <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven:3.11</span></span>
+   <span style="color:#606">volumes</span>:
+     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: m2</span></span>
+       <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2/repository</span></span>
+   <span style="color:#F00;background-color:#FAA">...</span></code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1601,7 +1619,7 @@ Certificate was added to keystore</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 14, 2020 <br/>
+                    Site last generated: Jul 15, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
