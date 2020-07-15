@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Using NuGet artifact repositories | Eclipse Che Documentation</title>
+<title>Mounting custom TLS certificates to Che workspace Pods | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Using NuGet artifact repositories page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Mounting custom TLS certificates to Che workspace Pods page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Using NuGet artifact repositories">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Mounting custom TLS certificates to Che workspace Pods">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1224,7 +1224,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Using NuGet artifact repositories</h1>
+   <h1 class="post-title-main">Mounting custom TLS certificates to Che workspace Pods</h1>
 </div>
 
 
@@ -1261,91 +1261,128 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
+  <div class="paragraph">
+<p>When a Che user attempts to authenticate with Keycloak that is using OpenShift OAuth, the authentication fails if the Keycloak does not know the certificates needed for authorization.</p>
+</div>
 <div class="paragraph">
-<p>To configure NuGet in a restricted environment, modify the <code>nuget.config</code> file and use the <code>SSL_CERT_FILE</code> environment variable in the devfile to add self-signed certificates.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-nuget-to-use-a-non-standard-registry_using-nuget-artifact-repositories">Configuring NuGet to use a non-standard artifact repository</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>NuGet searches for configuration files anywhere between the solution directory and the driver root directory. If you put the <code>nuget.config</code> file in the <code>/projects</code> directory, the <code>nuget.config</code> file defines NuGet behavior for all projects in <code>/projects</code>.</p>
+<p>To fix this problem, configure Che to authorize HTTPS communication with various components, such as identity and Git servers, by adding information about the self-signed TLS certificates to the Che configuration.</p>
 </div>
 <div class="ulist">
-<div class="title">Procedure</div>
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Create and place the <code>nuget.config</code> file in the <code>/projects</code> directory.</p>
-<div class="listingblock">
-<div class="title">Example <code>nuget.config</code> with a Nexus repository hosted at <code>nexus.example.org</code>:</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#579">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span style="color:#070;font-weight:bold">&lt;configuration&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;packageSources&gt;</span>
-    <span style="color:#070;font-weight:bold">&lt;add</span> <span style="color:#b48">key</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">nexus2</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://nexus.example.org/repository/nuget-hosted/</span><span style="color:#710">&quot;</span></span><span style="color:#070;font-weight:bold">/&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;/packageSources&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;packageSourceCredentials&gt;</span>
-    <span style="color:#070;font-weight:bold">&lt;nexus2&gt;</span>
-        <span style="color:#070;font-weight:bold">&lt;add</span> <span style="color:#b48">key</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Username</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">user</span><span style="color:#710">&quot;</span></span> <span style="color:#070;font-weight:bold">/&gt;</span>
-        <span style="color:#070;font-weight:bold">&lt;add</span> <span style="color:#b48">key</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Password</span><span style="color:#710">&quot;</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">...</span><span style="color:#710">&quot;</span></span> <span style="color:#070;font-weight:bold">/&gt;</span>
-    <span style="color:#070;font-weight:bold">&lt;/nexus2&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;/packageSourceCredentials&gt;</span>
-<span style="color:#070;font-weight:bold">&lt;/configuration&gt;</span></code></pre>
+<p>The OpenShift command-line tool, <code>oc</code>
+or the Kubernetes command-line tool, <code>kubectl</code>,
+is installed.</p>
+</li>
+</ul>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Save the desired self-signed certificates to a local file system.</p>
+</li>
+<li>
+<p>Create a new configMap with the required self-signed TLS certificates:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create configmap <em>&lt;configMap-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To apply more than one certificate, add another <code>--from-file=<em>&lt;certificate-file-path&gt;</em></code> option to the above command.</p>
+</div>
+</li>
+<li>
+<p>Define a name for the newly created configMap.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use these steps with existing instances of Che. To install a new instance of Che with self-signed TLS certificates, create a new <code>CheCluster</code> Custom Resource or Helm Chart property, based on the installation method selected, instead of updating the existing configuration.
+</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>For a Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> deployment:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Define a name for the newly created configMap by editing the <code>spec.server.ServerTrustStoreConfigMapName</code> <code>CheCluster</code> Custom Resource property to match the previously created configMap:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "<em>&lt;config-map-name&gt;</em>"}]'</pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="using-self-signed-certificates-in-nuget-projects_using-nuget-artifact-repositories">Using self-signed certificates in NuGet projects</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Internal artifact repositories often do not have a self-signed TLS certificate signed by an authority that is trusted by default. They are usually signed by an internal company authority or are self-signed. Configure your tools to accept these certificates.</p>
-</div>
+<div class="exampleblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>For a Che <a href="https://helm.sh/">Helm Chart</a> deployment:</p>
 <div class="olist arabic">
-<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Obtain the certificate file of a non-standard repository and place it in the <code>/projects/tls/rootCA.crt</code> file to make it accessible from all your containers.</p>
+<p>Clone the <a href="https://github.com/eclipse/che">che</a> project.</p>
 </li>
 <li>
-<p>Specify the location of the certificate file in the <code>SSL_CERT_FILE</code> environment variable in your devfile for the OmniSharp plug-in and for the .NET container.</p>
-<div class="listingblock">
-<div class="title">Example of the devfile:</div>
+<p>Go to the <code>deploy/kubernetes/helm/che</code> directory.</p>
+</li>
+<li>
+<p>Define a name for the newly created configMap by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the previously created configMap:</p>
+<div class="listingblock white-space-pre">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">id: redhat-developer/che-omnisharp-plugin/latest</span></span>
-    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1024Mi</span></span>
-    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
-    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">omnisharp</span></span>
-    <span style="color:#606">env</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">value: /projects/tls/rootCA.crt</span></span>
-       <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">SSL_CERT_FILE</span></span>
- - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mountSources: true</span></span>
-   <span style="color:#606">endpoints</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: 5000/tcp</span></span>
-       <span style="color:#606">port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">5000</span></span>
-   <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
-   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
-   <span style="color:#606">volumes</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: dotnet</span></span>
-       <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user</span></span>
-   <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dotnet</span></span>
-   <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'quay.io/eclipse/che-dotnet-2.2:7.7.1'</span></span>
-   <span style="color:#606">env</span>:
-     - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">value: /projects/tls/rootCA.crt</span></span>
-       <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">SSL_CERT_FILE</span></span></code></pre>
+<pre class="nowrap">$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=<em>&lt;config-map name&gt;</em> \
+   --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using Minikube to run Che, substitute <em>&lt;kubernetes-cluster-domain&gt;</em> with <code>$(minikube ip).nip.io</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<div class="title">Verification</div>
+<p>If the certificates have been added correctly, the Che server starts and obtains Keycloak configuration over HTTPS with a self-signed TLS certificate, allowing user to:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access the Che server.</p>
+</li>
+<li>
+<p>Log in using OpenShift OAuth.</p>
+</li>
+<li>
+<p>Clone from a Git repository that has a custom self-signed TLS certificate over HTTPS.</p>
+</li>
+</ul>
 </div>
 
     <div class="tags">
