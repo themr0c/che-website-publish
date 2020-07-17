@@ -1884,6 +1884,80 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="extending-che-monitoring-metrics_monitoring-che">Extending Che monitoring metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to create a metric or a group of metrics to extend the monitoring metrics that Che is exposing.</p>
+</div>
+<div class="paragraph">
+<p>Che has two major modules metrics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>che-core-metrics-core</code>&#8201;&#8212;&#8201;contains core metrics module</p>
+</li>
+<li>
+<p><code>che-core-api-metrics</code>&#8201;&#8212;&#8201;contains metrics that are dependent on core Che components, such as workspace or user managers</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Create a class that extends the <code>MeterBinder</code> class. This allows to register the created metric in the overridden <code>bindTo(MeterRegistry registry)</code> method.</p>
+<div class="paragraph">
+<p>The following is an example of a metric that has a function that supplies the value for it:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example metric</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">UserMeterBinder</span> <span style="color:#088;font-weight:bold">implements</span> MeterBinder {
+
+  <span style="color:#088;font-weight:bold">private</span> <span style="color:#088;font-weight:bold">final</span> UserManager userManager;
+
+  <span style="color:#007">@Inject</span>
+  <span style="color:#088;font-weight:bold">public</span> UserMeterBinder(UserManager userManager) {
+    <span style="color:#950">this</span>.userManager = userManager;
+  }
+
+  <span style="color:#007">@Override</span>
+  <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">void</span> bindTo(MeterRegistry registry) {
+    Gauge.builder(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">che.user.total</span><span style="color:#710">&quot;</span></span>, <span style="color:#950">this</span>::count)
+        .description(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Total amount of users</span><span style="color:#710">&quot;</span></span>)
+        .register(registry);
+  }
+
+  <span style="color:#088;font-weight:bold">private</span> <span style="color:#339;font-weight:bold">double</span> count() {
+    <span style="color:#080;font-weight:bold">try</span> {
+      <span style="color:#080;font-weight:bold">return</span> userManager.getTotalCount();
+    } <span style="color:#080;font-weight:bold">catch</span> (<span style="color:#C00;font-weight:bold">ServerException</span> e) {
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#0a8;font-weight:bold">Double</span>.NaN;
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, the metric can be stored with a reference and updated manually in some other place in the code.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://prometheus.io/docs/practices/naming/">Metric and label naming for Prometheus</a></p>
+</li>
+<li>
+<p><a href="https://prometheus.io/docs/concepts/metric_types/">Metric types for Prometheus</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 
     <div class="tags">
         
@@ -1904,7 +1978,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 16, 2020 <br/>
+                    Site last generated: Jul 17, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
