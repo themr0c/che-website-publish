@@ -1468,7 +1468,10 @@ $('#toc').on('click', 'a', function() {
 <p>The Che-Theia plug-in metadata, for each specific plug-in, is defined in a <code>meta.yaml</code> file.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="https://github.com/eclipse/che-plugin-registry/tree/master/v3/plugins">che-plugin-registry repository</a> contains .</p>
+<p>Here is an overview of all fields that can be available in plugin meta YAML files. This document represents the <a href="https://github.com/eclipse/che-plugin-registry#plugin-meta-yaml-structure">Plugin meta YAML structure version 3</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://github.com/eclipse/che-plugin-registry/tree/master/v3/plugins">che-plugin-registry repository</a> contains:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. <code>meta.yml</code></caption>
@@ -1479,43 +1482,53 @@ $('#toc').on('click', 'a', function() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apiVersion</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API version (`v2`and higher)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version 2 and higher where version is 1 supported for backwards compatibility</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>category</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Available: <code>Language</code>, <code>Other</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Available: Category must be set to one of the followings: <code>Editor</code>, <code>Debugger</code>, <code>Formatter</code>, <code>Language</code>, <code>Linter</code>, <code>Snippet</code>, <code>Theme</code>, <code>Other</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description (a phrase)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Short description of plugin&#8217;s purpose</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Display name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name shown in user dashboard</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deprecate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; section for deprecating plugins in favor of others</p>
+<p class="tableblock">            * autoMigrate - boolean</p>
+<p class="tableblock">            * migrateTo - new org/plugin-id/version, for example <code>redhat/vscode-apache-camel/latest</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>firstPublicationDate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Date in the form <code>"YYYY-MM-DD"</code> Example: <code>"2019-12-02"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not required to be present in YAML, as if not present, it will be generated during Plugin Registry dockerimage build</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latestUpdateDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not required to be present in YAML, as if not present, it will be generated during Plugin Registry dockerimage build</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>icon</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL of an SVG icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of an SVG or PNG icon</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name (no spaces allowed)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name (no spaces allowed), must match [-a-z0-9]</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>publisher</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the publisher</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the publisher, must match [-a-z0-9]</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the source repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL for plugin repository, for example, GitHub</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Title (long)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plugin title (long)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
@@ -1523,11 +1536,11 @@ $('#toc').on('click', 'a', function() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Version information, for example: <code>7.5.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version information, for example: 7.5.1, [-.a-z0-9]</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifications (see underneath)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifications (see below)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1540,23 +1553,23 @@ $('#toc').on('click', 'a', function() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>endpoints</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in endpoints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; plugin endpoint. See <a href="https://www.eclipse.org/che/docs/che-7/making-a-workspace-portable-using-a-devfile/#endpoints">endpoint description</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>containers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sidecar containers for the plug-in. <code>Che Plugin</code> and <code>VS Code extension</code> supports only one container</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; sidecar containers for the plug-in. Che Plugin and VS Code extension supports only one container</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>initContainers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sidecar init containers for the plug-in</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; sidecar init containers for the plug-in</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceEnv</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Environment variables for the workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; environment variables for the workspace</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>extensions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional attribute required for VS Code and Che-Theia plug-ins. A list of URLs to plug-in artefacts, such as <code>.vsix</code> or <code>.theia</code> files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; Attribute that is required for VS Code and Che-Theia plug-ins in a form list of URLs to plug-in artefacts, such as .vsix or .theia files</p></td>
 </tr>
 </tbody>
 </table>
@@ -1577,19 +1590,19 @@ $('#toc').on('click', 'a', function() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>memoryLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes or OpenShift memory limit string, for example <code>512Mi</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift memory limit string, for example <code>512Mi</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>memoryRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes or OpenShift memory request string, for example <code>512Mi</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift memory request string, for example <code>512Mi</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cpuLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes or OpenShift CPU limit string, for example <code>2500m</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift CPU limit string, for example <code>2500m</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cpuRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes or OpenShift CPU request string, for example <code>125m</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift CPU request string, for example <code>125m</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>env</code></p></td>
@@ -1619,10 +1632,18 @@ $('#toc').on('click', 'a', function() {
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mountSources</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean flag to bound volume with source code <code>/projects</code> to the plug-in container</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>initContainers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional; init containers for sidecar plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Lifecycle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container lifecycle hooks. See <a href="https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/"><code>lifecycle</code> description</a></p></td>
+</tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. <code>spec.containers.env</code> (and <code>spec.initContainers.env</code>) attributes. Notice: <code>workspaceEnv</code> has absolutely the same attributes</caption>
+<caption class="title">Table 4. <code>spec.containers.env</code> and <code>spec.initContainers.env</code> attributes. Notice:  <code>workspaceEnv</code> has absolutely the same attributes</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1639,7 +1660,7 @@ $('#toc').on('click', 'a', function() {
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. <code>spec.containers.volumes</code> (and <code>spec.initContainers.volumes</code>) attributes</caption>
+<caption class="title">Table 5. <code>spec.containers.volumes</code> and <code>spec.initContainers.volumes</code> attributes</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1660,7 +1681,7 @@ $('#toc').on('click', 'a', function() {
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. <code>spec.containers.ports</code> (and <code>spec.initContainers.ports</code>) attributes</caption>
+<caption class="title">Table 6. <code>spec.containers.ports</code> and <code>spec.initContainers.ports</code> attributes</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1673,7 +1694,7 @@ $('#toc').on('click', 'a', function() {
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. <code>spec.containers.commands</code> (and <code>spec.initContainers.commands</code>) attributes</caption>
+<caption class="title">Table 7. <code>spec.containers.commands</code> and <code>spec.initContainers.commands</code> attributes</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1702,7 +1723,7 @@ $('#toc').on('click', 'a', function() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name (no spaces allowed)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name (no spaces allowed), must match [-a-z0-9]</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
@@ -1744,6 +1765,27 @@ $('#toc').on('click', 'a', function() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookiesAuthEnabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code>, <code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. <code>spec.containers.lifecycle</code> and <code>spec.initContainers.lifecycle</code> attributes</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postStart</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>postStart</code> event that runs immediately after a Container is started. See <a href="https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/">postStart and preStop handlers</a></p>
+<p class="tableblock">* <code>exec</code>: Executes a specific command, resources consumed by the command are counted against the Container</p>
+<p class="tableblock">* <code>command</code>: ["/bin/sh", "-c", "/bin/post-start.sh"]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>preStop</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>preStop</code> event that runs before a Container is terminated. See <a href="https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/">postStart and preStop handlers</a></p>
+<p class="tableblock">* <code>exec</code>: Executes a specific command, resources consumed by the command are counted against the Container</p>
+<p class="tableblock">* <code>command</code>: ["/bin/sh", "-c", "/bin/post-start.sh"]</p></td>
 </tr>
 </tbody>
 </table>
@@ -1972,7 +2014,7 @@ Different types of plug-ins exist. A broker ensures all installation requirement
 <p>When a Che-Theia plug-in (or a VS Code extension) does not need extra dependencies inside its container, it is an embedded plug-in. A container with extra dependencies that includes a plug-in is a remote plug-in.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Che-Theia plug-in comparison matrix: embedded vs remote</caption>
+<caption class="title">Table 11. Che-Theia plug-in comparison matrix: embedded vs remote</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -2269,7 +2311,7 @@ CMD ${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}</code></pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 20, 2020 <br/>
+                    Site last generated: Jul 21, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
