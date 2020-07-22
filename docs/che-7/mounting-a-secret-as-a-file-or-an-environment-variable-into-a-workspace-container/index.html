@@ -1283,6 +1283,9 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p>AWS authorization tokens</p>
 </li>
+<li>
+<p>Git credentials store file</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -1614,6 +1617,73 @@ The maximum length of annotation names in a Kubernetes secret is 63 characters, 
 </div>
 </div>
 <div class="sect1">
+<h2 id="mounting-a-git-credential-store-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">Mounting a git credetials store into a workspace container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to mount git credetials store as secret from the user&#8217;s namespace into the file in single-workspace or multiple-workspace containers of Che.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Prepare git credential file in format <a href="https://git-scm.com/docs/git-credential-store#_storage_format" class="bare">https://git-scm.com/docs/git-credential-store#_storage_format</a>.</p>
+</li>
+<li>
+<p>Encode content of the file to the base64 format.</p>
+</li>
+<li>
+<p>Create a new Kubernetes secret in the Kubernetes namespace where a Che workspace will be created.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. The default labels are:</p>
+</li>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+</li>
+<li>
+<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
+<div class="listingblock">
+<div class="title">Example:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v1</span></span>
+<span style="color:#606">kind</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Secret</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git-credentials-secret</span></span>
+  <span style="color:#606">labels</span>:
+    <span style="color:#606">app.kubernetes.io/part-of</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che.eclipse.org</span></span>
+    <span style="color:#606">app.kubernetes.io/component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">workspace-secret</span></span>
+  <span style="color:#606">annotations</span>:
+    <span style="color:#606">che.eclipse.org/automount-workspace-secret</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+    <span style="color:#606">che.eclipse.org/mount-path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/theia/.git-credentials</span></span>
+    <span style="color:#606">che.eclipse.org/mount-as</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">file</span></span>
+    <span style="color:#606">che.eclipse.org/git-credential</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+<span style="color:#606">data</span>:
+  <span style="color:#606">credentials</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">aHR0cHM6Ly91c2VyOnBhc3NAZXhhbXBsZS5jb20K</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Content of the credential field has to be bas64 encoded to avoid collision with special characters in password.
+This results in a file named <code>credentials</code> being mounted at the /home/theia/.git-credentials path of all workspace containers.
+Also, the system configuration of git would be linked to the mounted file.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="the-use-of-annotations-in-the-process-of-mounting-a-secret-into-a-workspace-container_mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container">The use of annotations in the process of mounting a secret into a workspace container</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1644,6 +1714,9 @@ The maximum length of annotation names in a Kubernetes secret is 63 characters, 
 </li>
 <li>
 <p><code>che.eclipse.org/<em>&lt;mykeyName&gt;</em>-env-name: FOO_ENV</code>: The name of the environment variable used when data contains multiple items. <code>mykeyName</code> is used as an example.</p>
+</li>
+<li>
+<p><code>che.eclipse.org/git-credential: 'true'</code>: The flag indicates that the secret contains git credential file.</p>
 </li>
 </ul>
 </div>
