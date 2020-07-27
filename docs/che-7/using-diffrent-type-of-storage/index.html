@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Supported platforms | Eclipse Che Documentation</title>
+<title>Using different type of storage | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Supported platforms page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Using different type of storage page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Supported platforms">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Using different type of storage">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -1224,7 +1224,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Supported platforms</h1>
+   <h1 class="post-title-main">Using different type of storage</h1>
 </div>
 
 
@@ -1261,136 +1261,75 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="sect1">
-<h2 id="supported-platforms-and-installation-methods_{context}">Supported platforms and installation methods</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The following section provides information about the availability of Che 7.15 on Kubernetes and OpenShift infrastructures, and about their supported installation methods.</p>
+  <div class="paragraph">
+<p>Since 7.17.0 Eclipse Che supports three types of storage with different capabilities: persistent storage, ephemeral and asynchronous.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse Che can be installed on:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Kubernetes infrastructures starting at version 1.9</p>
-</li>
-<li>
-<p>OpenShift Container Platform versions 3.11, 4.3, and 4.4</p>
-</li>
-</ul>
+<div class="title">Persistent storage</div>
+<p>This kind of storage gives you an ability to store your changes directly in the mounted Persistent Volume. In this case your changes will be totally safe and Kubernetes infrastructure takes care of it (storage backend in particular), but the price for that is slow I/O, especially with a huge amount of small files. For example, some NodeJS projects may have many dependencies and node_modules is filled with thousands of small files.</p>
 </div>
 <div class="paragraph">
-<p>The following options are available:</p>
+<p>For now this is the default mode for any new workspace, no additional attributes are required. If you want to explicitly make this setting visible in your workspace configuration you can add:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Local installation on Kubernetes</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
+ <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">‘true’</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Ephemeral Storage</div>
+<p>With this kind of storage files are mounted to emptyDir. As the name says, it is initially empty. When a Pod is removed from a node for any reason, the data in the emptyDir is deleted forever.  This means that you lose all your changes if you stop your workspace (or workspace pod restarts for any reason).</p>
+</div>
+<div class="paragraph">
+<p>Thus, you need to take care of committing and pushing your changes to the remote before stopping a workspace. At the same time Ephemeral mode gives you faster I/O, as a result it will work fast for any kind of project. To enable this storage type add the following to your workspace configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
+ <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">‘false’</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Asynchronous storage</div>
+<p>This is a combination of the above two. The initial workspace container will mount an emptyDir, however  your changes will be restored on workspace start and a backup is performed on workspace stop. This storage type also offers fast I/O (similar to an ephemeral mode) however, workspace project changes are persisted. Keep in mind that this is still an experimental feature.</p>
+</div>
+<div class="paragraph">
+<p>Synchronization is powered by ‘rsync’ via SSH protocol. When a workspace is configured with this storage type, a special plugin is automatically added to the workspace configuration. This plugin will run ‘rsync’ command on workspace start to restore changes if they exist. When a workspace is stopped, it will send changes to the permanent storage. Rsync process can take some time, so a workspace will not start immediately like in case with a persistent and ephemeral storage. For relatively small projects the restore procedure is completed very fast and you will see project source files and folders immediately after Che Theia is initialized. If rsync takes longer time, the synchronization process will be shown in Che Theia UI status bar area.</p>
+</div>
+<div class="admonitionblock note">
+<table>
 <tr>
-<th class="tableblock halign-left valign-middle">Kubernetes</th>
-<th class="tableblock halign-left valign-middle">Installation method</th>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Currently, this mode has some limitations, such as:
+supports only with ‘common’ PVC strategy;
+only  ‘per-user’ namespace strategy is supported;
+a user can simultaneously  run only 1 workspace with asynchronous storage
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>minikube</p>
-</li>
-<li>
-<p>microk8s</p>
-</li>
-<li>
-<p>docker-desktop</p>
-</li>
-<li>
-<p>kind</p>
-</li>
-</ul>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>chectl</code> using Helm Chart or Operator</p></td>
-</tr>
-</tbody>
 </table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Local installation on OpenShift</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">OpenShift Container Platform</th>
-<th class="tableblock halign-left valign-top">Installation method</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CodeReady Containers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OperatorHub</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Public cloud installation on Kubernetes and OpenShift</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"></th>
-<th class="tableblock halign-left valign-top">Kubernetes<br>
-1.9 or higher</th>
-<th class="tableblock halign-left valign-top">OpenShift Container Platform<br>
-3.11</th>
-<th class="tableblock halign-left valign-top">OpenShift Container Platform<br>
-4.3 and 4.4</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Microsoft Azure</p>
-</li>
-<li>
-<p>Amazon Web Services</p>
-</li>
-<li>
-<p>Google Cloud</p>
-</li>
-<li>
-<p>IBM Cloud</p>
-</li>
-</ul>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>chectl</code> using Helm Chart</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>chectl</code> using Operator</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OperatorHub</p></td>
-</tr>
-</tbody>
-</table>
+</div>
 <div class="paragraph">
-<p>It is possible to use the <code>chectl</code> utility for deploying Che on OpenShift Container Platform version 4.3 and 4.4. This method is considered unofficial and serves as a backup installation method for situations where installation using OperatorHub is not available.</p>
+<p>To configure asynchronous storage for your workspace add the following to workspace configuration:</p>
 </div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>Installation instructions: <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a></p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
+ <span style="color:#606">asyncPersist</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span>
+ <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'false'</span></span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Aslo two new properties added to <code>che.properties</code> that can be used to configure behavior of a client like Che UserDashboard:</p>
+</div>
+<div class="paragraph">
+<p><code>che.workspace.storage.available_types</code>: this configuration property defines available values for storage types that clients like Dashboard should propose for users during workspace creation/update. Available values: 'persistent’,'ephemeral', 'async'. You can use several type comma separate (e.g. <code>che.workspace.storage.available_types=persistent,ephemeral,async</code>)</p>
+</div>
+<div class="paragraph">
+<p><code>che.workspace.storage.preferred_type</code>: this configuration property defines a default value for storage type that clients like Dashboard should propose for users during workspace creation/update. The 'async' value not recommended as a default type since it&#8217;s still experimental (e.g. <code>che.workspace.storage.preferred_type=persistent</code>)</p>
 </div>
 
     <div class="tags">

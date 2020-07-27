@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Mounting custom TLS certificates to Che workspace Pods | Eclipse Che Documentation</title>
+<title>Importing TLS certificates to Che server Java truststore | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Mounting custom TLS certificates to Che workspace Pods page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Importing TLS certificates to Che server Java truststore page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -178,7 +178,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: "/che/docs/search.json",
-                                searchResultTemplate: '<li><a href="{url}" title="Mounting custom TLS certificates to Che workspace Pods">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Importing TLS certificates to Che server Java truststore">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -703,7 +703,7 @@
           
           
           
-          <li><a href="/che/docs/che-7/mounting-custom-ssl-certificates-to-che-workspace-pods">Mounting custom SSL certificates to Che workspace Pods</a></li>
+          <li><a href="/che/docs/che-7/importing-tls-certificates-to-che-server-java-truststore">Importing TLS certificates to Che server Java truststore</a></li>
           
           
           
@@ -1224,7 +1224,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Mounting custom TLS certificates to Che workspace Pods</h1>
+   <h1 class="post-title-main">Importing TLS certificates to Che server Java truststore</h1>
 </div>
 
 
@@ -1262,10 +1262,10 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="paragraph">
-<p>When a Che user attempts to authenticate with Keycloak that is using OpenShift OAuth, the authentication fails if the Keycloak does not know the certificates needed for authorization.</p>
+<p>When Che server attempts to send an HTTPS request to an external service as Keycloak, a proxy or a git server, the connection fails if Che does not trust the TLS certificate used by the external service.</p>
 </div>
 <div class="paragraph">
-<p>To fix this problem, configure Che to authorize HTTPS communication with various components, such as identity and Git servers, by adding information about the self-signed TLS certificates to the Che configuration.</p>
+<p>To fix this problem, configure Che to authorize HTTPS communication with external services, such as identity and Git servers, by adding information about the TLS certificates to the Che configuration.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1279,10 +1279,10 @@ $('#toc').on('click', 'a', function() {
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Save the desired self-signed certificates to a local file system.</p>
+<p>Save the external services certificates to a local file system.</p>
 </li>
 <li>
-<p>Create a new configMap with the required self-signed TLS certificates:</p>
+<p>Create a new configMap with the required TLS certificates:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl create configmap <em>&lt;configMap-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
@@ -1293,7 +1293,7 @@ $('#toc').on('click', 'a', function() {
 </div>
 </li>
 <li>
-<p>Define a name for the newly created configMap.</p>
+<p>Update the existing Che server configuration</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1367,18 +1367,64 @@ Use these steps with existing instances of Che. To install a new instance of Che
 </div>
 <div class="paragraph">
 <div class="title">Verification</div>
-<p>If the certificates have been added correctly, the Che server starts and obtains Keycloak configuration over HTTPS with a self-signed TLS certificate, allowing user to:</p>
+<p>If the certificates have been added correctly, the Che server starts and obtains Keycloak configuration over HTTPS. Otherwise here is a list of things to verify:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Access the Che server.</p>
+<p>CheCluster attribute <code>serverTrustStoreConfigMapName</code> value matches the name of the ConfigMap. Get the value using the following command :</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl get -o json checluster/eclipse-che -n che | jq .spec.server.serverTrustStoreConfigMapName</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Log in using OpenShift OAuth.</p>
+<p>Che Pod Volumes list contains one Volume that uses the ConfigMap as data-source. To get the list of Volumes of the Che Pod:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl get po -o json <em>&lt;che-pod-name&gt;</em> -n che | jq .spec.volumes</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Clone from a Git repository that has a custom self-signed TLS certificate over HTTPS.</p>
+<p>Certificates are mounted in folder <code>/public-certs/</code> of the Che server container. This command returns the list of files in that folder:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- ls /public-certs/</pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the Che server logs there is a line for every certificate added to the Java truststore, including Che self signed certificate.</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n che
+(...)
+Found a custom cert. Adding it to java trust store based on /usr/lib/jvm/java-1.8.0/jre/lib/security/cacerts
+(...)</pre>
+</div>
+</div>
+</li>
+<li>
+<p>$Che server Java trustore contains the certificates. The certificates SHA1 fingerpints are among the list of the SHA1 of the certificates included in the trustore returned by the following command:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- keytool -list -keystore /home/che/cacerts
+Your keystore contains 141 entries
+
+(...)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get the SHA1 hash of a certificate on the local filesystem:</p>
+</div>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ openssl x509 -in <em>&lt;certificate-file-path&gt;</em> -fingerprint -noout
+SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
