@@ -1261,7 +1261,9 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div class="paragraph">
+  <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>The PostgreSQL database is used by the Che server for persisting data about the state of Che. It contains information about user accounts, workspaces, preferences, and other details.</p>
 </div>
 <div class="paragraph">
@@ -1282,9 +1284,6 @@ $('#toc').on('click', 'a', function() {
 <p>Point In Time Recovery (PITR)</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>When using an external PostgreSQL database, it is also necessary to use an external Keycloak.</p>
 </div>
 <div class="paragraph">
 <p>Configure an external PostgreSQL instance on-premises or use a cloud service, such as Amazon Relational Database Service (Amazon RDS). With Amazon RDS, it is possible to deploy production databases in a Multi-Availability Zone configuration for a resilient disaster recovery strategy with daily and on-demand snapshots.</p>
@@ -1334,8 +1333,189 @@ $('#toc').on('click', 'a', function() {
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>To make the Operator skip deploying a database and pass connection details of an existing database to a Che server using <code>chePostgresHostName</code>, <code>chePostgresPort</code>, <code>chePostgresUser</code>, <code>chePostgresPassword</code>, <code>chePostgresDb</code> parameters, specify the <code>externalDb: true</code> property in the Che Custom Resource.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-external-PostgreSQL_external-database-setup">Configuring external PostgreSQL</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Use the following SQL script to create user and database for the Che server to persist workspaces metadata etc:</p>
+<div class="listingblock">
+<div class="content">
+<pre>CREATE USER &lt;database-user&gt; WITH PASSWORD '&lt;database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
+CREATE DATABASE &lt;database&gt;                                      <i class="conum" data-value="3"></i><b>(3)</b>
+GRANT ALL PRIVILEGES ON DATABASE &lt;database&gt; TO &lt;database-user&gt;
+ALTER USER &lt;database-user&gt; WITH SUPERUSER</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Che server database username</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Che server database password</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Che server database name</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Use the following SQL script to create database for Keycloak back end to persist user information:</p>
+<div class="listingblock">
+<div class="content">
+<pre>CREATE USER &lt;identity-database-user&gt; WITH PASSWORD '&lt;identity-database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
+CREATE DATABASE &lt;identity-database&gt;                                               <i class="conum" data-value="3"></i><b>(3)</b>
+GRANT ALL PRIVILEGES ON DATABASE &lt;identity-database&gt; TO &lt;identity-database-user&gt;</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Keycloak database username</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Keycloak database password</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Keycloak database name</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-che-to-work-with-external-PostgreSQL_external-database-setup">Configuring Che to work with an external PostgreSQL</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The <code>kubectl</code> tool is available.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Pre-create a namespace for Che:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create namespace che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a secret to store Che server database credentials:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret generic &lt;server-database-credentials&gt; \ <i class="conum" data-value="1"></i><b>(1)</b>
+--from-literal=user=&lt;database-user&gt; \                            <i class="conum" data-value="2"></i><b>(2)</b>
+--from-literal=password=&lt;database-password&gt; \                    <i class="conum" data-value="3"></i><b>(3)</b>
+-n che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Secret name to store Che server database credentials</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Che server database username</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Che server database password</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a secret to store Keycloak database credentials:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret generic &lt;identity-database-credentials&gt; \ <i class="conum" data-value="1"></i><b>(1)</b>
+--from-literal=user=&lt;identity-database-user&gt; \                     <i class="conum" data-value="2"></i><b>(2)</b>
+--from-literal=password=&lt;identity-database-password&gt; \             <i class="conum" data-value="3"></i><b>(3)</b>
+-n che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Secret name to store Keycloak database credentials</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Keycloak database username</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Keycloak database password</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>To make the Operator skip deploying a database and pass connection details of an existing database to a Che server set the following values in the Custom Resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre>spec:
+  database:
+    externalDb: true
+    chePostgresHostName: &lt;hostname&gt;                     <i class="conum" data-value="1"></i><b>(1)</b>
+    chePostgresPort: &lt;port&gt;                             <i class="conum" data-value="2"></i><b>(2)</b>
+    chePostgresSecret: &lt;server-database-credentials&gt;    <i class="conum" data-value="3"></i><b>(3)</b>
+    chePostgresDb: &lt;database&gt;                           <i class="conum" data-value="4"></i><b>(4)</b>
+spec:
+  auth:
+    identityProviderPostgresSecret: &lt;identity-database-credentials&gt; <i class="conum" data-value="5"></i><b>(5)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>External database hostname</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>External database port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Secret name with Che server database credentials</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Che server database username</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Secret name with Keycloak database credentials</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
@@ -1347,6 +1527,8 @@ $('#toc').on('click', 'a', function() {
 <p><a href="https://aws.amazon.com/rds/">RDS</a></p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 
     <div class="tags">
@@ -1370,7 +1552,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 27, 2020 <br/>
+                    Site last generated: Jul 30, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
