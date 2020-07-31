@@ -1367,20 +1367,10 @@ $ kubectl get pods --all-namespaces</pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Install the default configuration:</p>
+<p>Install the cloud configuration:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install the configuration for cloud:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml</pre>
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.34.1/deploy/static/provider/cloud/deploy.yaml</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1612,15 +1602,23 @@ namespace/cert-manager created
 $ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
 </div>
 </div>
-</li>
-<li>
-<p>Set <code>validate=false</code>. Without it, cert-manager only works with the latest Kubernetes version:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml --validate=false</pre>
+<pre>$ kubectl apply \
+  -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml</pre>
 </div>
 </div>
 </li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply \
+ --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Create the <strong>che</strong> namespace if it does not already exist:</p>
 <div class="listingblock">
@@ -1631,26 +1629,27 @@ namespace/che created</pre>
 </div>
 </li>
 <li>
-<p>Create the certificate issuer. Enter your email address in the <strong>email</strong> field:</p>
+<p>Create the certificate issuer. Enter your email address in the <strong>email</strong> field and set <strong>clientID</strong>, <strong>CLIENT_SECRET</strong> <strong>subscriptionID</strong>, <strong>tenantID</strong>, <strong>hostedZoneName</strong>  fields:</p>
 <div class="listingblock">
 <div class="content">
 <pre>cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: che-certificate-issuer
 spec:
   acme:
-    dns01:
-      providers:
-      - azuredns:
+    solvers:
+    - dns01:
+        azuredns:
           # Service principal clientId (It's the value printed in the previous lines: echo ID=$AZURE_CERT_MANAGER_SP_APP_ID )
           clientID: &lt;AZURE_CERT_MANAGER_SP_APP_ID&gt;
           # A secretKeyRef to a service principal ClientSecret (password)
           # ref: https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
           clientSecretSecretRef:
             name: azuredns-config
-            key: CLIENT_SECRET
+            # CLIENT_SECRET is the value of AZURE_CERT_MANAGER_SP_PASSWORD
+            key: &lt;CLIENT_SECRET&gt;
           # Azure subscription Id that can be obtained with command:
           # $ az account show  | jq -r '.id'
           subscriptionID: &lt;SUBSCRIPTION_ID&gt;
@@ -1660,7 +1659,6 @@ spec:
           resourceGroupName: eclipseCheResourceGroup
           # The DNS Zone to use
           hostedZoneName: azr.my-ide.cloud
-        name: azuredns
     email: florent@example.com
     privateKeySecretRef:
       name: letsencrypt
@@ -1674,11 +1672,11 @@ EOF</pre>
 <div class="listingblock">
 <div class="content">
 <pre>cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
  name: che-tls
- namespace: __&lt;{prod-namespace}&gt;__
+ namespace: {prod-namespace}
 spec:
  secretName: che-tls
  issuerRef:
@@ -1686,12 +1684,6 @@ spec:
    kind: ClusterIssuer
  dnsNames:
    - '*.azr.my-ide.cloud'
- acme:
-   config:
-     - dns01:
-         provider: azuredns
-       domains:
-         - '*.azr.my-ide.cloud'
 EOF</pre>
 </div>
 </div>
@@ -1742,27 +1734,19 @@ Events:
 <p>Wait for the status to show <strong>OK</strong> and ensure that the log contains the following:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n che
+<pre>$ kubectl describe certificate/che-tls -n {prod-namespace}
 Name:         che-tls
 Namespace:    che
 Labels:       &lt;none&gt;
-Annotations:  kubectl.kubernetes.io/last-applied-configuration:
-                {"apiVersion":"certmanager.k8s.io/v1alpha1","kind":"Certificate","metadata":{"annotations":{},"name":"che-tls","namespace":"che"},"spec":{...
-API Version:  certmanager.k8s.io/v1alpha1
+Annotations:  API Version:  cert-manager.io/v1alpha3
 Kind:         Certificate
 Metadata:
-  Creation Timestamp:  2019-07-30T08:22:13Z
+  Creation Timestamp:  2020-07-29T10:32:49Z
   Generation:          1
-  Resource Version:    76822
-  Self Link:           /apis/certmanager.k8s.io/v1alpha1/namespaces/che/certificates/che-tls
-  UID:                 225a1cfb-b2a3-11e9-9e1c-76b96a78248b
+  Resource Version:    7961
+  Self Link:           /apis/cert-manager.io/v1alpha3/namespaces/che/certificates/che-tls
+  UID:                 2034c6d5-bce3-4ce8-8489-df31d02b84e9
 Spec:
-  Acme:
-    Config:
-      dns01:
-        Provider:  azuredns
-      Domains:
-        *.azr.my-ide.cloud
   Dns Names:
     *.azr.my-ide.cloud
   Issuer Ref:
@@ -1771,18 +1755,18 @@ Spec:
   Secret Name:  che-tls
 Status:
   Conditions:
-    Last Transition Time:  2019-07-30T08:23:21Z
+    Last Transition Time:  2020-07-29T10:35:05Z
     Message:               Certificate is up to date and has not expired
     Reason:                Ready
     Status:                True
     Type:                  Ready
-  Not After:               2019-10-28T07:23:19Z
+  Not After:               2020-10-27T09:35:02Z
 Events:
-  Type    Reason         Age   From          Message
-  ----    ------         ----  ----          -------
-  Normal  OrderCreated   102s  cert-manager  Created Order resource "che-tls-3633081213"
-  Normal  OrderComplete  34s   cert-manager  Order "che-tls-3633081213" completed successfully
-  Normal  CertIssued     34s   cert-manager  Certificate issued successfully</pre>
+  Type    Reason        Age    From          Message
+  ----    ------        ----   ----          -------
+  Normal  GeneratedKey  5m49s  cert-manager  Generated a new private key
+  Normal  Requested     5m49s  cert-manager  Created new CertificateRequest resource "che-tls-2082883576"
+  Normal  Issued        3m34s  cert-manager  Certificate issued successfully</pre>
 </div>
 </div>
 </li>
@@ -1811,42 +1795,71 @@ Events:
 <p>To install Che, run the following <code>chectl</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:start --installer=helm --platform=k8s \
-  --domain=azr.my-ide.cloud --multiuser
+<pre>$ chectl chectl server:start --installer=helm --platform=k8s \                           --domain=azr.my-ide.cloud --multiuser
+› Current Kubernetes context: 'Eclipse Che'
+  ✔ Verify Kubernetes API...OK
+  ✔ 👀  Looking for an already existing Eclipse Che instance
+    ✔ Verify if Eclipse Che is deployed into namespace "che"...it is not
   ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
+    ✔ Check Kubernetes version: Found v1.16.10.
     ✔ Verify domain is set...set to azr.my-ide.cloud.
-  ✔ 🏃‍  Running Helm to install Che
+    ↓ Check if cluster accessible [skipped]
+Eclipse Che logs will be available in '/var/folders/tg/_5rxbhmj4xncz4szvpgswrmc0000gn/T/chectl-logs/1596019249675'
+  ✔ Start following logs
+    ↓ Start following Operator logs [skipped]
+    ✔ Start following Eclipse Che logs...done
+    ✔ Start following Postgres logs...done
+    ✔ Start following Keycloak logs...done
+    ✔ Start following Plugin registry logs...done
+    ✔ Start following Devfile registry logs...done
+  ✔ Start following events
+    ✔ Start following namespace events...done
+ ›   Warning: Consider using the more reliable 'OLM' installer when deploying a stable release of Eclipse Che (--installer=olm).
+  ✔ 🏃‍  Running Helm to install Eclipse Che
     ✔ Verify if helm is installed
-    ✔ Check for TLS secret prerequisites...che-tls secret found.
-    ✔ Create Tiller Role Binding...done.
-    ✔ Create Tiller Service Account...done.
-    ✔ Create Tiller RBAC
-    ✔ Create Tiller Service...done.
-    ✔ Preparing Che Helm Chart...done.
+    ✔ Check Helm Version: Found v3.1.2+gd878d4d
+    ✔ Create Namespace (che)...does already exist.
+    ✔ Check Eclipse Che TLS certificate...TLS certificate secret found
+    ✔ Check Cluster Role Binding...does not exists.
+    ✔ Preparing Eclipse Che Helm Chart...done.
     ✔ Updating Helm Chart dependencies...done.
-    ✔ Deploying Che Helm Chart...done.
+    ✔ Deploying Eclipse Che Helm Chart...done.
   ✔ ✅  Post installation checklist
     ✔ PostgreSQL pod bootstrap
       ✔ scheduling...done.
       ✔ downloading images...done.
       ✔ starting...done.
-    ✔ Keycloak pod bootstrap
+    ✔ Devfile registry pod bootstrap
       ✔ scheduling...done.
       ✔ downloading images...done.
       ✔ starting...done.
-    ✔ Che pod bootstrap
+    ✔ Plugin registry pod bootstrap
       ✔ scheduling...done.
       ✔ downloading images...done.
       ✔ starting...done.
-    ✔ Retrieving Che Server URL...https://che-che.azr.my-ide.cloud
-    ✔ Che status check
+    ✔ Eclipse Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Eclipse Che server URL... https://che-che.azr.my-ide.cloud
+    ✔ Eclipse Che status check
+  ✔ Show important messages
+    ✔ Autogenerated Keycloak credentials are: "xxx:xxx"
 Command server:start has completed successfully.</pre>
 </div>
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Track installation events with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get events --namespace che --sort-by=.metadata.creationTimestamp</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Keycloak and Che now have valid wildcard certificates.</p>
@@ -1884,7 +1897,7 @@ Command server:start has completed successfully.</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 30, 2020 <br/>
+                    Site last generated: Jul 31, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>

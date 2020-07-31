@@ -1262,86 +1262,6 @@ $('#toc').on('click', 'a', function() {
      -->
 
   <div class="sect1">
-<h2 id="creating-a-google-kubernetes-engine-instance_installing-che-on-google-cloud-platform">Creating a Google Kubernetes Engine instance</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to create a Google Kubernetes Engine instance.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The Google Cloud SDK is available. See <a href="https://cloud.google.com/sdk/install">Installing Google Cloud SDK</a>.</p>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To install the SDK on macOS, use the <code>$ brew cask install google-cloud-sdk</code> command.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Create a Kubernetes, version 1.9 or higher, cluster. For details, see <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster">Creating a cluster</a>.</p>
-</li>
-<li>
-<p>Create a new project with the <code>eclipse-che-1</code> ID in the Google Cloud Platform (GCP) web console.</p>
-</li>
-<li>
-<p>Configure the different default options (such as using the <code>europe-wes1-b</code> zone) in the shell:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ gcloud config set project eclipse-che-1
-$ gcloud config set compute/zone europe-west1-b
-$ gcloud config set compute/region europe-west1</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Check if all the components are up-to-date:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ gcloud components update
-All components are up to date.</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create a cluster with the name <code>eclipse-che</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ gcloud container clusters create eclipse-che --zone europe-west1-b</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Wait for the cluster to be ready.</p>
-</li>
-<li>
-<p>The Kubernetes context is defined automatically. To verify it:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl config current-context
-gke_eclipse-che-1_europe-west1-b_eclipse-che</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="preparing-google-cloud-platform-for-installing-che_installing-che-on-google-cloud-platform">Preparing Google Cloud Platform for installing Che</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1381,13 +1301,26 @@ gke_eclipse-che-1_europe-west1-b_eclipse-che</pre>
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a Kubernetes, version 1.9 or higher, cluster. For details, see <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster">Creating a cluster</a>.</p>
+<p>Ensure <code>gcloud</code> CLI is setup</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ gcloud init</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Create a new project with the <code>eclipse-che-1</code> ID in the Google Cloud Platform (GCP) web console.</p>
+<p>Create a new project with the <code>eclipse-che-1</code> ID</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ gcloud projects create eclipse-che-1</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Configure the different default options (such as using the <code>europe-wes1-b</code> zone) in the shell:</p>
+<p>Check from GCP webconsole kubernetes engine is available on this project</p>
+</li>
+<li>
+<p>Configure the different default options (such as using the <code>europe-west1-b</code> zone) in the shell:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ gcloud config set project eclipse-che-1
@@ -1417,7 +1350,7 @@ All components are up to date.</pre>
 <p>Wait for the cluster to be ready.</p>
 </li>
 <li>
-<p>The Kubernetes context is defined automatically. To verify it:</p>
+<p>This commands updates the Kubernetes context. To verify it:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl config current-context
@@ -1440,20 +1373,10 @@ gke_eclipse-che-1_europe-west1-b_eclipse-che</pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Install the default configuration:</p>
+<p>Install the cloud configuration:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install the configuration for cloud:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl apply \
-  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml</pre>
+<pre>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.34.1/deploy/static/provider/cloud/deploy.yaml</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1641,6 +1564,14 @@ Keep the key file safe, and do not share it with anyone because it can be used t
 </div>
 </li>
 <li>
+<p>Create cert-manager namespace</p>
+<div class="listingblock">
+<div class="content">
+<pre>$  kubectl create ns cert-manager</pre>
+</div>
+</div>
+</li>
+<li>
 <p>Create a Secret from this file.</p>
 <div class="listingblock">
 <div class="content">
@@ -1666,7 +1597,8 @@ namespace/cert-manager created
 $ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
 
 $ kubectl apply \
-  -f https://github.com/jetstack/cert-manager/releases/download/v0.8.1/cert-manager.yaml --validate=false</pre>
+  -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml \
+  --validate=false</pre>
 </div>
 </div>
 </li>
@@ -1684,20 +1616,19 @@ namespace/<em>&lt;che&gt;</em> created</pre>
 <div class="listingblock">
 <div class="content">
 <pre>$ cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: che-certificate-issuer
 spec:
   acme:
-    dns01:
-      providers:
-      - clouddns:
+    solvers:
+    - dns01:
+        clouddns:
           project: eclipse-che-1
           serviceAccountSecretRef:
             key: key.json
             name: clouddns-dns01-solver-svc-acct
-        name: clouddns
     email: joe@example.com
     privateKeySecretRef:
       name: letsencrypt
@@ -1711,24 +1642,18 @@ EOF</pre>
 <div class="listingblock">
 <div class="content">
 <pre>$ cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
  name: che-tls
- namespace: <em>&lt;che&gt;</em>
+ namespace: che
 spec:
  secretName: che-tls
  issuerRef:
    name: che-certificate-issuer
    kind: ClusterIssuer
  dnsNames:
-   - '<strong>.gcp.my-ide.cloud'
- acme:
-   config:
-     - dns01:
-         provider: clouddns
-       domains:
-         - '</strong>.gcp.my-ide.cloud'
+   - '*.gcp.my-ide.cloud'
 EOF</pre>
 </div>
 </div>
@@ -1767,7 +1692,7 @@ I0729 13:50:49.420198 1 controller.go:219] cert-manager/controller/challenges "l
 <p>Ensure that the certificate is ready:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n <em>&lt;che&gt;</em>
+<pre>$ kubectl describe certificate/che-tls -n che
 
 Status:
  Conditions:
@@ -1830,41 +1755,59 @@ Status:
 <div class="title">Procedure</div>
 <p>To install Che on Google Cloud Platform, run the following <code>chectl</code> command:</p>
 </div>
-<div class="paragraph">
-<p>+</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ chectl server:start --installer=helm --platform=k8s --domain=gcp.my-ide.cloud --multiuser
- ✔ ✈️ Kubernetes preflight checklist
- ✔ Verify if kubectl is installed
- ✔ Verify remote kubernetes status...done.
- ✔ Verify domain is set...set to gcp.my-ide.cloud.
- ✔ 🏃‍ Running Helm to install Che
- ✔ Verify if helm is installed
- ✔ Check for TLS secret prerequisites...che-tls secret found.
- ✔ Create Tiller Role Binding...it already exist.
- ✔ Create Tiller Service Account...it already exist.
- ✔ Create Tiller RBAC
- ✔ Create Tiller Service...it already exist.
- ✔ Preparing Che Helm Chart...done.
- ✔ Updating Helm Chart dependencies...done.
- ✔ Deploying Che Helm Chart...done.
- ✔ ✅ Post installation checklist
- ✔ PostgreSQL pod bootstrap
- ✔ scheduling...done.
- ✔ downloading images...done.
- ✔ starting...done.
- ✔ Keycloak pod bootstrap
- ✔ scheduling...done.
- ✔ downloading images...done.
- ✔ starting...done.
- ✔ Che pod bootstrap
- ✔ scheduling...done.
- ✔ downloading images...done.
- ✔ starting...done.
- ✔ Retrieving Che Server URL...https://che-che.gcp.my-ide.cloud
- ✔ Che status check
+  ✔ Verify Kubernetes API...OK
+  ✔ 👀  Looking for an already existing Eclipse Che instance
+    ✔ Verify if Eclipse Che is deployed into namespace "che"...it is not
+  ✔ ✈️  Kubernetes preflight checklist
+    ✔ Verify if kubectl is installed
+    ✔ Verify remote kubernetes status...done.
+    ✔ Check Kubernetes version: Found v1.15.12-gke.2.
+    ✔ Verify domain is set...set to gcp.my-ide.cloud.
+    ↓ Check if cluster accessible [skipped]
+Eclipse Che logs will be available in '/var/folders/tg/_5rxbhmj4xncz4szvpgswrmc0000gn/T/chectl-logs/1596035521904'
+  ✔ Start following logs
+    ↓ Start following Operator logs [skipped]
+    ✔ Start following Eclipse Che logs...done
+    ✔ Start following Postgres logs...done
+    ✔ Start following Keycloak logs...done
+    ✔ Start following Plugin registry logs...done
+    ✔ Start following Devfile registry logs...done
+  ✔ Start following events
+    ✔ Start following namespace events...done
+ ›   Warning: Consider using the more reliable 'OLM' installer when deploying a stable release of Che (--installer=olm).
+  ✔ 🏃‍  Running Helm to install Eclipse Che
+    ✔ Verify if helm is installed
+    ✔ Check Helm Version: Found v3.1.2+gd878d4d
+    ✔ Create Namespace (che)...does already exist.
+    ✔ Check Eclipse Che TLS certificate...TLS certificate secret found
+    ✔ Check Cluster Role Binding...does not exists.
+    ✔ Preparing Eclipse Che Helm Chart...done.
+    ✔ Updating Helm Chart dependencies...done.
+    ✔ Deploying Eclipse Che Helm Chart...done.
+  ✔ ✅  Post installation checklist
+    ✔ PostgreSQL pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Devfile registry pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Plugin registry pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Eclipse Che pod bootstrap
+      ✔ scheduling...done.
+      ✔ downloading images...done.
+      ✔ starting...done.
+    ✔ Retrieving Eclipse Che server URL... https://che-che.gcp.my-ide.cloud
+    ✔ Eclipse Che status check
+  ✔ Show important messages
+    ✔ Autogenerated Keycloak credentials are: "xxx:xxx"
 Command server:start has completed successfully.</pre>
 </div>
 </div>
@@ -1902,7 +1845,7 @@ Command server:start has completed successfully.</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Jul 30, 2020 <br/>
+                    Site last generated: Jul 31, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
