@@ -1369,7 +1369,20 @@ $('#toc').on('click', 'a', function() {
 </dl>
 </div>
 <div class="paragraph">
-<p>For a list of available tasks and launch configurations, see the <code>tasks.json</code> and the <code>launch.json</code> configuration files in the <code>/workspace/.theia</code> directory where the configuration from the devfile is exported to.</p>
+<p>For a list of available tasks and launch configurations, see the:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tasks.json</code> file in the  <code>/projects/.theia</code> directory</p>
+</li>
+<li>
+<p><code>launch.json</code> file in the <code>/home/theia/.theia</code> directory</p>
+<div class="paragraph">
+<p>of the <code>theia-ide</code> container.</p>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1377,20 +1390,75 @@ $('#toc').on('click', 'a', function() {
 <h2 id="che-theia-task-types_defining-custom-commands-for-che-theia">Che-Theia task types</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Two types of tasks exist in a devfile: tasks in the VS Code format and Che commands. Tasks from the devfile are copied to the configuration file when the workspace is started. Depending on the type of the task, the task is then available for running:</p>
+<p>The <code>commands</code> section in a devfile allows a user to automate certain actions when running a Che workspace.</p>
+</div>
+<div class="paragraph">
+<p>There are three types of Che commands:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Che commands: From the <strong>Terminal</strong> &#8594; <strong>Run Task</strong> menu in the <strong>configured tasks</strong> section, or from the <strong>My Workspace</strong> panel</p>
+<p><code>exec</code>: Each command of type <code>exec</code> is translated into a Che-Theia task of type <code>che</code>. A <code>che</code> command executes a shell command, but in contrast to regular Che-Theia shell-type tasks, a user can choose a workspace container for the command execution.</p>
 </li>
 <li>
-<p>Tasks in the VS Code format: From the <strong>Run Tasks</strong> menu</p>
+<p><code>vscode-task</code>: <code>vscode-task</code> is a single command type that copies the contents of the <code>referenceContentfield</code> of the specific command directly to the user-level task configurations in Che-Theia.</p>
+</li>
+<li>
+<p><code>vscode-launch</code>: Functions like a <code>vscode-task</code> command, but instead of being copied into the task configurations, the content of the <code>referenceContent</code> field is copied into the <code>launch.json</code> configuration file.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>To run the task definitions provided by plug-ins, select the <strong>Terminal</strong> &#8594; <strong>Run Task</strong> menu option. The tasks are placed in the <strong>detected tasks</strong> section.</p>
+<p>Tasks of type <code>che</code>, also known as <code>exec</code> commands, can be executed from the <strong>Terminal&#8594;Run Task</strong> menu or by clicking them in the <strong>My Workspace</strong> panel.
+Other tasks are only available via <strong>Terminal&#8594;Run Task</strong>. Launch configurations are available in the Che-Theia debugger.</p>
+</div>
+<div class="paragraph">
+<div class="title">Example:</div>
+<p>The following example contains a  <code>che</code> task and <code>vscode-task</code> task sample.</p>
+</div>
+<div class="paragraph">
+<p>The configuration in <a href="https://www.eclipse.org/che/docs/che-7/defining-custom-commands-for-che-theia/">Defining custom commands for Che-Theia</a> sets up the <code>theia:watch</code> and <code>theia:build</code> tasks in the <code>theia</code> workspace:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>theia:watch</code>, which runs the <code>theia</code> project in <code>watch</code> mode.</p>
+</li>
+<li>
+<p><code>theia:build</code>, which builds the <code>theia</code> project in the <code>che-dev</code> component.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Descriptions of used <code>che</code> commands in the above-mentioned example <code>theia:build</code></div>
+<ul>
+<li>
+<p>The <code>exec</code> type implies that the Che runner is used for command execution.</p>
+</li>
+<li>
+<p>The user can specify the component in whose container the command is executed.</p>
+</li>
+<li>
+<p>The <code>command</code> field contains the command line for execution.</p>
+</li>
+<li>
+<p>The <code>workdir</code> is the working directory in which the command is executed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These tasks are available for running in a workspace from the <strong>Terminal&#8594;Run Task</strong> menu or by clicking them in the <strong>My Workspace</strong> panel.</p>
+</div>
+<div class="ulist">
+<div class="title">Additional examples</div>
+<ul>
+<li>
+<p><a href="https://github.com/eclipse/che-devfile-registry/blob/master/devfiles/quarkus-command-mode/devfile.yaml#L63-L71">Theia task of type <code>che</code> example</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse/che-devfile-registry/blob/master/devfiles/quarkus-command-mode/devfile.yaml#L84-L100"><code>vscode-lunch</code> task example`</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1447,15 +1515,23 @@ $('#toc').on('click', 'a', function() {
 </div>
 </li>
 <li>
-<p>Open the context menu of the breakpoint to add conditions.</p>
+<p>After opening a context menu, use the <strong>Edit Breakpoint</strong> command to add conditions.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/ide/che-theia-basics-3-c.png" alt="che theia basics 3 c">
 </div>
 </div>
+<div class="paragraph">
+<p>The IDE then displays the <code>Expresion</code> input field.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/che/docs/images/ide/che-theia-basics-3-d.png" alt="che theia basics 3 d">
+</div>
+</div>
 </li>
 <li>
-<p>To start debugging, click <strong>View</strong> &#8594; <strong>Debug</strong>.</p>
+<p>To start debugging, click <strong>View&#8594;Debug</strong>.</p>
 <div class="imageblock">
 <div class="content">
 <img src="/che/docs/images/ide/che-theia-basics-4.png" alt="che theia basics 4">
@@ -1502,7 +1578,7 @@ The changes are stored in the configuration file.
 </div>
 </li>
 <li>
-<p>To customize the task configuration provided by plug-ins, select the <strong>Terminal</strong> &#8594; <strong>Configure TasksS</strong> menu option, and choose the task to configure. The configuration is then copied to the <code>tasks.json</code> file and is available for editing.</p>
+<p>To customize the task configuration provided by plug-ins, select the <strong>Terminal</strong> &#8594; <strong>Configure Tasks</strong> menu option, and choose the task to configure. The configuration is then copied to the <code>tasks.json</code> file and is available for editing.</p>
 </li>
 </ol>
 </div>
