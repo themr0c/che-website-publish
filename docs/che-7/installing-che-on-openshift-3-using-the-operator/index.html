@@ -1268,6 +1268,20 @@ $('#toc').on('click', 'a', function() {
   <div class="paragraph">
 <p>This section describes how to install Che on OpenShift 3 with the <code>chectl</code> CLI management tool. The method of installation is using the Operator and enable TLS (HTTPS).</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Methods for updating from a previous Che installation and enabling multiple instances in the same OpenShift Container Platform 3.11 cluster are provided below the installation procedure.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Operators are a method of packaging, deploying, and managing a Kubernetes application which also provide the following:</p>
 </div>
@@ -1342,57 +1356,26 @@ oc v3.11.0+0cbc58b</pre>
 </div>
 </li>
 <li>
-<p>Run the following commands to create a dummy project to find the URL that this OpenShift instance is using to deploy applications.</p>
+<p>Run the following command to create the Che instance</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the user-defined <em>&lt;che&gt;</em>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc new-project hello-world
-$ oc new-app centos/httpd-24-centos7~https://github.com/openshift/httpd-ex
-$ oc expose svc/httpd-ex
-$ oc get route httpd-ex
-NAME     HOST/PORT                                                PATH     SERVICES PORT     TERMINATION WILDCARD
-httpd-ex httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com httpd-ex          8080-tcp             None</pre>
+<pre class="nowrap">$ chectl server:start -n <em>&lt;che&gt;</em> -p openshift</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Extract the domain from <code>httpd-ex-hello-world.apps.rhpds311.openshift.opentlc.com</code>. It is the part after the first name: <code>apps.rhpds311.openshift.opentlc.com</code>. Remember this URL as <code><em>&lt;OPENSHIFT_APPS_URL&gt;</em></code>.</p>
-</li>
-<li>
-<p>Remove the dummy project:</p>
+<p>In the default namespace called che:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ oc delete project hello-world</pre>
+<pre class="nowrap">$ chectl server:start -p openshift</pre>
 </div>
 </div>
 </li>
-<li>
-<p>To upgrade from a previous Che installation in the same OpenShift Container Platform 3.11 cluster, remove the Custom Resource Definition and the Cluster Roles:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">$ oc delete customresourcedefinition/checlusters.org.eclipse.che
-$ oc patch customresourcedefinition/checlusters.org.eclipse.che \
-    --type merge \
-    -p '{ "metadata": { "finalizers": null }}'
-$ oc delete clusterrole che-operator</pre>
-</div>
-</div>
-</li>
-<li>
-<p>To have multiple Che deployments in parallel using different versions in the same OpenShift Container Platform 3.11 cluster, create a new service account for the new deployment. It is, however, strongly recommended that you update all your old Che deployments to the latest version instead, as this mix of versions may cause unexpected and unsupported results.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">$ oc patch clusterrolebinding che-operator \
-    --type='json' \
-    -p '[{"op": "add", "path": "/subjects/0", "value": {"kind":"ServiceAccount", "namespace": "<em>&lt;che&gt;</em>", "name": "che-operator"} }]'</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Run the following command to create the Che instance:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">$ chectl server:start -n <em>&lt;che&gt;</em> --che-operator-cr-patch-yaml=operator-cr-patch.yaml</pre>
-</div>
+</ul>
 </div>
 </li>
 </ol>
@@ -1412,6 +1395,38 @@ $ oc delete clusterrole che-operator</pre>
 <p>Navigate to the Che cluster instance: <code>http(s)://<che-host>:<che-port></code>. The domain uses <em>Let’s Encrypt</em> ACME certificates.</p>
 </li>
 </ol>
+</div>
+<div class="ulist">
+<div class="title">Upgrading from a previous Che installation</div>
+<ul>
+<li>
+<p>To upgrade from a previous Che installation in the same OpenShift Container Platform 3.11 cluster, remove the Custom Resource Definition and the Cluster Roles:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc delete customresourcedefinition/checlusters.org.eclipse.che
+$ oc patch customresourcedefinition/checlusters.org.eclipse.che \
+    --type merge \
+    -p '{ "metadata": { "finalizers": null }}'
+$ oc delete clusterrole che-operator</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Having multiple Che deployments</div>
+<ul>
+<li>
+<p>To have multiple Che deployments in parallel using different versions in the same OpenShift Container Platform 3.11 cluster, create a new service account for the new deployment. It is, however, strongly recommended that you update all your old Che deployments to the latest version instead, as this mix of versions may cause unexpected and unsupported results.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ oc patch clusterrolebinding che-operator \
+    --type='json' \
+    -p '[{"op": "add", "path": "/subjects/0", "value": {"kind":"ServiceAccount", "namespace": "<em>&lt;che&gt;</em>", "name": "che-operator"} }]'</pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 
     <div class="tags">
