@@ -1409,11 +1409,11 @@ version: 0.0.1</pre>
 <p>Copy the new <code>index.json</code>, <code>devfile.yaml</code> and <code>meta.yaml</code> files from the new local devfile folder to the container.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ cd che-devfile-registry; \
-  LOCAL_FILES="$(pwd)/${STACK}/meta.yaml $(pwd)/${STACK}/devfile.yaml $(pwd)/index.json"; \
-  kubectl exec ${DEVFILE_REG_POD} -i -t -- mkdir -p /var/www/html/devfiles/${STACK}; \
-  for f in $LOCAL_FILES; do e=${f/$(pwd)\//}; echo "Upload ${f} -&gt; /var/www/html/devfiles/${e}"
-    kubectl cp "${f}" ${DEVFILE_REG_POD}:/var/www/html/devfiles/${e}; done</pre>
+<pre>$ cd che-devfile-registry
+  kubectl exec ${DEVFILE_REG_POD} -i -t -- mkdir -p /var/www/html/devfiles/${STACK}
+  kubectl cp $(pwd)/devfiles/${STACK}/meta.yaml ${DEVFILE_REG_POD}:/var/www/html/devfiles/${STACK}/meta.yaml
+  kubectl cp $(pwd)/devfiles/${STACK}/devfile.yaml ${DEVFILE_REG_POD}:/var/www/html/devfiles/${STACK}/devfile.yaml
+  kubectl cp $(pwd)/index.json ${DEVFILE_REG_POD}:/var/www/html/devfiles/index.json</pre>
 </div>
 </div>
 </li>
