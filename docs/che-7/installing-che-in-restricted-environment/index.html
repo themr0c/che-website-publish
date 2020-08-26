@@ -675,6 +675,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/configuring-workspaces-nodeselector">Configuring workspaces nodeSelector</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/configuring-che-hostname">Configuring Che hostname</a></li>
           
           
@@ -1257,13 +1264,8 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following sections describe the steps necessary to deploy Che in a Kubernetes or OpenShift cluster in a restricted environment (also called <em>offline mode</em> or <em>air-gap scenario</em>).</p>
+<p>The following sections describe how to deploy Che in a Kubernetes or OpenShift cluster in a restricted environment (also called <em>offline mode</em> or <em>air-gap scenario</em>).</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="introduction">Introduction</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p>By default, Eclipse Che workspaces reference various external resources, including container images available in public registries or sample projects hosted on GitHub.</p>
 </div>
@@ -1283,10 +1285,24 @@ $('#toc').on('click', 'a', function() {
 </li>
 </ul>
 </div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You are logged in to the cluster using the developer account.</p>
+</li>
+<li>
+<p>Dynamic provisioning or pre-defined PVs configured before the deployment.</p>
+</li>
+<li>
+<p>Block-based storage volume or NFS share available outside of the cluster to serve dynamic storage provisioning or PVs. Block-based storage is recommended for optimal performance.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="notes-on-network-connectivity-in-restricted-environments">Notes on network connectivity in restricted environments</h2>
+<h2 id="network-connectivity-in-restricted-environments">Network connectivity in restricted environments</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Restricted network environments range from a private subnetwork in a cloud provider to a separate network owned by a company, disconnected from the public Internet. Regardless of the network configuration, Che works <strong>provided that the Ingress and Routes that are created for Che components (che-server, keycloak, devfile-registry, plugin-registry) are accessible from inside the Kubernetes or OpenShift cluster.</strong></p>
@@ -1297,16 +1313,54 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</h2>
+<h2 id="building-offline-versions-of-the-plug-in-and-devfile-registries_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registries</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes how to build <em>offline</em> registry images. For additional information, see <a href="/che/docs/che-7/building-and-running-a-custom-registry-image/">Building and running a custom registry image</a>.</p>
 </div>
 <div class="paragraph">
-<p>The main purpose of building offline registry images is to ensure that workspaces can be started without relying on resources from the outside internet. For the plug-in registry, this means building a registry that serves all plug-in or extension artifacts in addition to plug-in metadata. Similarly, an offline devfile registry serves all sample projects referenced in devfiles as <code>zip</code> files.</p>
+<p>The main purpose of building offline registry images is to ensure that workspaces can be started without relying on resources from the outside Internet. For the plug-in registry, this means building a registry that serves all plug-in or extension artifacts in addition to plug-in metadata. Similarly, an offline devfile registry serves all sample projects referenced in devfiles as <code>zip</code> files.</p>
 </div>
 <div class="paragraph">
 <p>Plug-in registry repositories contain scripts to make it easier to build custom images.</p>
+</div>
+<div class="sect2">
+<h3 id="building-offline-devfile-registry_installing-che-in-restricted-environment">Building offline devfile registry</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the devfile registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-devfile-registry.git
+$ cd che-devfile-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to be deployed:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.3.0</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the devfile registry image:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
+</div>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect2">
 <h3 id="building-offline-plug-in-registry_installing-che-in-restricted-environment">Building offline plug-in registry</h3>
@@ -1349,51 +1403,13 @@ $ cd che-plugin-registry</pre>
 <p>This build of the registry builds a container image that contains all <code>.vsix</code> and <code>.theia</code> extensions that can be used in workspaces. This results in a large image. To build a version of the registry that contains only the <em>latest</em> version of each plug-in, use the <code>--latest-only</code> argument.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="building-offline-devfile-registry_installing-che-in-restricted-environment">Building offline devfile registry</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the devfile registry repository:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git clone https://github.com/eclipse/che-devfile-registry.git
-$ cd che-devfile-registry</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Check out version of the registry to be deployed:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git checkout 7.3.0</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Build the devfile registry image:</p>
-<div class="listingblock">
-<div class="content">
-<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
-           --registry <em>&lt;my-registry&gt;</em> \
-           --tag <em>&lt;my-tag&gt;</em> \
-           --offline</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
-</div>
-</li>
-</ol>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="pulling-images-used-by-che-to-a-private-registry_installing-che-in-restricted-environment">Pulling images used by Che to a private registry</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Che workspaces consist of pods running on a cluster, and therefore, many images are required to support all languages and plug-ins that can be used for a workspace. In an offline deployment, these images must be made available to the Che server running in the cluster.</p>
+<p>Che workspaces consist of Pods running in a cluster, and therefore, many images are required to support all languages and plug-ins that can be used for a workspace. In an offline deployment, these images must be made available to the Che server running in the cluster.</p>
 </div>
 <div class="sect2">
 <h3 id="essential-images">Essential images</h3>
@@ -1431,7 +1447,7 @@ $ cd che-devfile-registry</pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code><br>
   <code>quay.io/eclipse/che-devfile-registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in and devfile registries that store metadata for workspaces. See <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</a> for information about building appropriate images.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in and devfile registries that store metadata for workspaces. See <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">[building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment]</a> for information about building appropriate images.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1484,7 +1500,7 @@ $ cd che-devfile-registry</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-che-to-run-in-restricted-environment">Configuring Che to run in restricted environment</h2>
+<h2 id="configuring-che-to-run-in-a-restricted-environment_installing-che-in-restricted-environment">Configuring Che to run in a restricted environment</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes how to configure Che and related containers to use images in a restricted environment rather than the default images in an online registry.</p>
@@ -1493,7 +1509,7 @@ $ cd che-devfile-registry</pre>
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>All required images available in an image registry that is visible to the cluster where Che is to be deployed.</p>
+<p>All required images available in an image registry that is accessible from the cluster where Che is to be deployed.</p>
 </li>
 </ul>
 </div>
@@ -1519,7 +1535,7 @@ $ cd che-devfile-registry</pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-offline-devfile-registry&gt;</code><br>
   <code>&lt;my-offline-plug-in-registry&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">offline plug-in and devfile registries (see <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">Building offline versions of the plug-in and devfile registry</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">offline plug-in and devfile registries (see <a href="#building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment">[building-offline-versions-of-the-plug-in-and-devfile-registry_installing-che-in-restricted-environment]</a>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;ver&gt;</code></p></td>
@@ -1528,7 +1544,7 @@ $ cd che-devfile-registry</pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The <code>CheCluster</code> Custom Resource, which is managed by the Che Operator, includes fields to facilitate deploying an instance of Che in a restricted environment:</p>
+<p>The <code>CheCluster</code> custom resource, which is managed by the Che Operator, includes fields to facilitate deploying an instance of Che in a restricted environment:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1545,8 +1561,8 @@ $ cd che-devfile-registry</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre><em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/my-offline-plug-in-registry:<em>&lt;ver&gt;</em>
-<em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/my-offline-plug-in-registry:<em>&lt;ver&gt;</em></pre>
+<pre><em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/<em>&lt;my-offline-plug-in-registry&gt;</em>:<em>&lt;ver&gt;</em>
+<em>&lt;my-internal-registry&gt;</em>/<em>&lt;my-organization&gt;</em>/<em>&lt;my-offline-devfile-registry&gt;</em>:<em>&lt;ver&gt;</em></pre>
 </div>
 </div>
 </div>
@@ -1567,7 +1583,7 @@ $ cd che-devfile-registry</pre>
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 20, 2020 <br/>
+                    Site last generated: Aug 26, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
