@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Using a Visual Studio Code extension in Che | Eclipse Che Documentation</title>
+<title>Restarting a Che workspace in debug mode after start failure | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Using a Visual Studio Code extension in Che page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Restarting a Che workspace in debug mode after start failure page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -1248,7 +1248,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Using a Visual Studio Code extension in Che</h1>
+   <h1 class="post-title-main">Restarting a Che workspace in debug mode after start failure</h1>
 </div>
 
 
@@ -1285,220 +1285,9 @@ $('#toc').on('click', 'a', function() {
 
      -->
 
-  <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Starting with Eclipse Che 7.15, Visual Studio Code (VS Code) extensions can be installed to extend the functionality of a Che workspace. VS Code extensions can run in the Che-Theia editor container, or they can be packaged in their own isolated and pre-configured containers with their prerequisites.</p>
+  <div class="paragraph">
+<p>This section describes how to restart the Eclipse Che workspace in debug mode after a failure during workspace start.</p>
 </div>
-<div class="paragraph">
-<p>This document describes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use of a VS Code extension in Che with workspaces.</p>
-</li>
-<li>
-<p>Che Plug-ins panel.</p>
-</li>
-<li>
-<p>How to publish a VS Code extension in the Che plug-in registry (to share the extension with other Che users).</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The extension-hosting sidecar container and the use of the extension in a devfile are optional for this.</p>
-</li>
-<li>
-<p>How to review the compatibility of the VS Code extensions to be informed whether a specific API is supported or has not been implemented yet.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="publishing-a-vs-code-extension-into-the-che-plug-in-registry_using-a-visual-studio-code-extension-in-che">Publishing a VS Code extension into the Che plug-in registry</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The user of Che can use a workspace devfile to use any plug-in, also known as Visual Studio Code (VS Code) extension. This plug-in can be added to the plug-in registry, then easily reused by anyone in the same organization with access to that workspaces installation.</p>
-</div>
-<div class="paragraph">
-<p>Some plug-ins need a runtime dedicated container for code compilation. This fact makes those plug-ins a combination of a runtime sidecar container and a VS Code extension.</p>
-</div>
-<div class="paragraph">
-<p>The following section describes the portability of a plug-in configuration and associating an extension with a runtime container that the plug-in needs.</p>
-</div>
-<div class="sect2">
-<h3 id="proc_writing-a-meta-yaml-file-and-adding-it-to-a-plug-in-registry_publishing-a-vs-code-extension-into-the-che-plug-in-registry">Writing a meta.yaml file and adding it to a plug-in registry</h3>
-<div class="paragraph">
-<p>The plug-in meta information is required to publish a VS Code extension in an Eclipse Che plug-in registry. This meta information is provided as a <code>meta.yaml</code> file. This section describes how to create a <code>meta.yaml</code> file for an extension.</p>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Create a <code>meta.yaml</code> file in the following plug-in registry directory: <code><em>&lt;apiVersion&gt;</em>/plugins/<em>&lt;publisher&gt;</em>/<em>&lt;plug-inName&gt;</em>/<em>&lt;plug-inVersion&gt;</em>/</code>.</p>
-</li>
-<li>
-<p>Edit the <code>meta.yaml</code> file and provide the necessary information. The configuration file must adhere to the following structure:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v2                                                   </span></span><i class="conum" data-value="1"></i><b>(1)</b>
-<span style="color:#606">publisher</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">myorg                                                 </span></span><i class="conum" data-value="2"></i><b>(2)</b>
-<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">my-vscode-ext                                              </span></span><i class="conum" data-value="3"></i><b>(3)</b>
-<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.7.2                                                   </span></span><i class="conum" data-value="4"></i><b>(4)</b>
-<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">value                                                      </span></span><i class="conum" data-value="5"></i><b>(5)</b>
-<span style="color:#606">displayName</span>:                                                     <i class="conum" data-value="6"></i><b>(6)</b>
-<span style="color:#606">title</span>:                                                           <i class="conum" data-value="7"></i><b>(7)</b>
-<span style="color:#606">description</span>:                                                     <i class="conum" data-value="8"></i><b>(8)</b>
-<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://www.eclipse.org/che/images/logo-eclipseche.svg     </span></span><i class="conum" data-value="9"></i><b>(9)</b>
-<span style="color:#606">repository</span>:                                                     <i class="conum" data-value="10"></i><b>(10)</b>
-<span style="color:#606">category</span>:                                                       <i class="conum" data-value="11"></i><b>(11)</b>
-<span style="color:#606">spec</span>:
-  <span style="color:#606">containers</span>:                                                   <i class="conum" data-value="12"></i><b>(12)</b>
-    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image:                                                    </span></span><i class="conum" data-value="13"></i><b>(13)</b>
-      <span style="color:#606">memoryLimit</span>:                                              <i class="conum" data-value="14"></i><b>(14)</b>
-      <span style="color:#606">memoryRequest</span>:                                            <i class="conum" data-value="15"></i><b>(15)</b>
-      <span style="color:#606">cpuLimit</span>:                                                 <i class="conum" data-value="16"></i><b>(16)</b>
-      <span style="color:#606">cpuRequest</span>:                                               <i class="conum" data-value="17"></i><b>(17)</b>
-  <span style="color:#606">extensions</span>:                                                   <i class="conum" data-value="18"></i><b>(18)</b>
-          - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/redhat-developer/vscode-yaml/releases/download/0.4.0/redhat.vscode-yaml-0.4.0.vsix</span></span>
-          - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/SonarSource/sonarlint-vscode/releases/download/1.16.0/sonarlint-vscode-1.16.0.vsix</span></span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Version of the file structure.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Name of the plug-in publisher. Must be the same as the publisher in the path.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Name of the plug-in. Must be the same as in path.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Version of the plug-in. Must be the same as in path.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Type of the plug-in. Possible values: <code>Che Plugin</code>, <code>Che Editor</code>, <code>Theia plugin</code>, <code>VS Code extension</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>A short name of the plug-in.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Title of the plug-in.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>A brief explanation of the plug-in and what it does.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>The link to the plug-in logo.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="10"></i><b>10</b></td>
-<td>Optional. The link to the source-code repository of the plug-in.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="11"></i><b>11</b></td>
-<td>Defines the category that this plug-in belongs to. Should be one of the following: <code>Editor</code>, <code>Debugger</code>, <code>Formatter</code>, <code>Language</code>, <code>Linter</code>, <code>Snippet</code>, <code>Theme</code>, or <code>Other</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="12"></i><b>12</b></td>
-<td>If this section is omitted, the VS Code extension is added into the Che-Theia IDE container.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="13"></i><b>13</b></td>
-<td>The Docker image from which the sidecar container will be started. Example: <code>eclipse/che-theia-endpoint-runtime:next</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="14"></i><b>14</b></td>
-<td>The maximum RAM which is available for the sidecar container. Example: "512Mi". This value might be overridden by the user in the component configuration.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="15"></i><b>15</b></td>
-<td>The RAM which is given for the sidecar container by default. Example: "256Mi". This value might be overridden by the user in the component configuration.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="16"></i><b>16</b></td>
-<td>The maximum CPU amount in cores or millicores (suffixed with "m") which is available for the sidecar container. Examples: "500m", "2". This value might be overridden by the user in the component configuration.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="17"></i><b>17</b></td>
-<td>The CPU amount in cores or millicores (suffixed with "m") which is given for the sidecar container by default. Example: "125m". This value might be overridden by the user in the component configuration.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="18"></i><b>18</b></td>
-<td>A list of VS Code extensions run in this sidecar container.</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<div class="title">Additional resources</div>
-<p>To set up a custom plug-in registry, see: <a href="/che/docs/che-7/building-and-running-a-custom-registry-image/#building-a-custom-devfile-registry_building-and-running-a-custom-registry-image">Building a custom plug-in registry</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="adding-che-plug-in-registry-vs-code-extension-to-a-workspace_using-a-visual-studio-code-extension-in-che">Adding a plug-in registry VS Code extension to a workspace</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>When the required VS Code extension is added into a Che plug-in registry, the user can add it into the workspace through the <strong>Che Plugins</strong> panel or through the workspace configuration.</p>
-</div>
-<div class="sect2">
-<h3 id="adding-the-vs-code-extension-using-the-che-plugins-panel_adding-che-plug-in-registry-vs-code-extension-to-a-workspace">Adding a VS Code extension using the <strong>Che Plugins</strong> panel</h3>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To add a VS Code extension using the <strong>Che Plugins</strong> panel:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open the <strong>Che Plugins</strong> panel by pressing <code>CTRL+SHIFT+J</code> or navigate to <strong>View/Plugins</strong>.</p>
-</li>
-<li>
-<p>Change the current registry to the registry in which the VS Code extension was added.</p>
-</li>
-<li>
-<p>In the search bar, click the <strong>Menu</strong> button and then click <strong>Change Registry</strong> to choose the registry from the list. If the required registry is not in the list, add it using the <strong>Add Registry</strong> menu option. The registry link points to the <code>plugins</code> segment of the registry, for example: <code>https://my-registry.com/v3/plugins/index.json</code>.</p>
-</li>
-<li>
-<p>To update the list of plug-ins after adding a new registry link, use <code>Refresh</code> command from the search bar menu.</p>
-</li>
-<li>
-<p>Search for the required plug-in using the filter, and then click the <b class="button">Install</b> button.</p>
-</li>
-<li>
-<p>Restart the workspace for the changes to take effect.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="adding-the-vs-code-extension-using-the-workspace-configuration_adding-che-plug-in-registry-vs-code-extension-to-a-workspace">Adding a VS Code extension using the workspace configuration</h3>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -1506,102 +1295,33 @@ $('#toc').on('click', 'a', function() {
 <p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
 </li>
 <li>
-<p>An existing workspace defined on this instance of Eclipse Che <a href="/che/docs/che-7/creating-and-configuring-a-new-workspace/">Creating a workspace from user dashboard</a>.</p>
+<p>An existing workspace that failed to start.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To add a VS Code extension using the workspace configuration:</p>
-</div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Click the <strong>Workspaces</strong> tab on the <strong>Dashboard</strong> and select the workspace in which you want to add the plug-in. The <strong>Workspace <em>&lt;workspace-name&gt;</em></strong> window is opened showing the details of the workspace.</p>
-</li>
-<li>
-<p>Click the <strong>devfile</strong> tab.</p>
-</li>
-<li>
-<p>Locate the <strong>components</strong> section, and add a new entry with the following structure:</p>
-<div class="listingblock">
+<p>Find the target workspace from the recent workspaces. Click on the target workspace to see the logs:</p>
+<div class="imageblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"> - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
-   <span style="color:#606">id</span>:              <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<a class="image" href="/che/docs/images/troubleshooting/try_again_in_debug_mode.png"><img src="/che/docs/images/troubleshooting/try_again_in_debug_mode.png" alt="try again in debug mode" width="Try again in debug mode"></a>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>ID format: <em>&lt;publisher&gt;/&lt;plug-inName&gt;/&lt;plug-inVersion&gt;</em></td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Che automatically adds the other fields to the new component.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, you can link to a <code>meta.yaml</code> file hosted on GitHub, using the dedicated reference field.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"> - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: chePlugin</span></span>
-   <span style="color:#606">reference</span>:              <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>https://raw.githubusercontent.com/<em>&lt;username&gt;</em>/<em>&lt;registryRepository&gt;</em>/v3/plugins/<em>&lt;publisher&gt;</em>/<em>&lt;plug-inName&gt;</em>/<em>&lt;plug-inVersion&gt;</em>/meta.yaml</code></td>
-</tr>
-</table>
 </div>
 </li>
 <li>
-<p>Restart the workspace for the changes to take effect.</p>
+<p>Click the link for restarting in debug mode.</p>
+</li>
+<li>
+<p>Download full logs after start fail with the <strong>Download logs</strong> link:</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/troubleshooting/download_logs.png"><img src="/che/docs/images/troubleshooting/download_logs.png" alt="download logs" width="Download logs"></a>
+</div>
+</div>
 </li>
 </ol>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="verifying-the-vs-code-extension-api-compatibility-level_using-a-visual-studio-code-extension-in-che">Verifying the VS Code extension API compatibility level</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Che-Theia does not fully support the VS Code extensions API. The <a href="https://github.com/che-incubator/vscode-theia-comparator/">vscode-theia-comparator</a> is used to analyze the compatibility between the Che-Theia plug-in API and the VS Code extension API. This tool runs in a nightly cycle, and the results are published on the <a href="https://che-incubator.github.io/vscode-theia-comparator/status.html">vscode-theia-comparator</a> GitHub page.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Personal GitHub access token. For information about creating a personal access token for the command line see <a href="https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line">Creating a personal access token for the command line</a>. A GitHub access token is required to increase the GitHub download limit for your IP address.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To run the <strong>vscode-theia comparator</strong> manually:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the <a href="https://github.com/che-incubator/vscode-theia-comparator/">vscode-theia-comparator</a> repository, and build it using the <code>yarn</code> command.</p>
-</li>
-<li>
-<p>Set the <code>GITHUB_TOKEN</code> environment variable to your token.</p>
-</li>
-<li>
-<p>Execute the <code>yarn run generate</code> command to generate a report.</p>
-</li>
-<li>
-<p>Open the <code>out/status.html</code> file to view the report.</p>
-</li>
-</ol>
-</div>
-</div>
 </div>
 
     <div class="tags">
