@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content=",  ">
-<title>Using different type of storage | Eclipse Che Documentation</title>
+<title>Configuring storage types | Eclipse Che Documentation</title>
 <link rel="stylesheet" href="/che/docs/css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
@@ -159,7 +159,7 @@
 
 
 
-  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Using different type of storage page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
+  <a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:?subject= feedback&body=I have some feedback about the Configuring storage types page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a>
 
 </li>
  -->
@@ -703,6 +703,13 @@
           
           
           
+          <li><a href="/che/docs/che-7/configuring-storage-types">Configuring storage types</a></li>
+          
+          
+          
+          
+          
+          
           <li><a href="/che/docs/che-7/importing-tls-certificates-to-che-server-java-truststore">Importing TLS certificates to Che server Java truststore</a></li>
           
           
@@ -1224,7 +1231,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Using different type of storage</h1>
+   <h1 class="post-title-main">Configuring storage types</h1>
 </div>
 
 
@@ -1264,11 +1271,28 @@ $('#toc').on('click', 'a', function() {
   <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Since 7.17.0 Eclipse Che supports three types of storage with different capabilities: persistent storage, ephemeral and asynchronous.</p>
+<p>Eclipse Che supports three types of storage with different capabilities:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistent</p>
+</li>
+<li>
+<p>Ephemeral</p>
+</li>
+<li>
+<p>Asynchronous</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="persistent-storage">Persistent storage</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<div class="title">Persistent storage</div>
-<p>This kind of storage gives you an ability to store your changes directly in the mounted Persistent Volume. In this case your changes will be totally safe and Kubernetes infrastructure takes care of it (storage backend in particular), but the price for that is slow I/O, especially with a huge amount of small files. For example, some NodeJS projects may have many dependencies and node_modules is filled with thousands of small files.</p>
+<p>Persistent storage allows storing user changes directly in the mounted Persistent Volume. User changes are kept safe by the Kubernetes or OpenShift infrastructure (storage backend) at the cost of slow I/O, especially with many small files. For example, Node.js projects tend to have many dependencies and the <code>node_modules/</code> directory is filled with thousands of small files.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1277,51 +1301,51 @@ $('#toc').on('click', 'a', function() {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Speed of I/O varies depending on the <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</a> configured in the environment.
+I/O speeds vary depending on the <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</a> configured in the environment.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>For now this is the default mode for any new workspace, no additional attributes are required. If you want to explicitly make this setting visible in your workspace configuration you can add:</p>
+<p>Persistent storage is the default mode for new workspaces. To make this setting visible in workspace configuration, add the following to the devfile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
- <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">‘true’</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Ephemeral Storage</div>
-<p>With this kind of storage, files are mounted to the <a href="https://kubernetes.io/docs/concepts/storage/volumes/#emptydir"><code>emptyDir</code></a> volume. As the name says, it is initially empty. When a Pod is removed from a node for any reason, the data in the <code>emptyDir</code> is deleted forever. This means that all the changes will be lost once the workspace is stopped or restarted for any reason.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-To save the changes, commit and push to the remote before stopping an ephemeral workspace. Otherwise, all the changes will be lost.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Thus, you need to take care of committing and pushing your changes to the remote before stopping a workspace. At the same time Ephemeral mode gives you faster I/O, as a result it will work fast for any kind of project. To enable this storage type add the following to your workspace configuration:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
- <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">‘false’</span></span></code></pre>
+ <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'true'</span></span></code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="comparison-table-between-io-of-ephemeral-emptydir-vs-persitent-aws-ebs">Comparison table between I/O of Ephemeral (<code>emptyDir</code>) vs Persitent (<a href="https://kubernetes.io/docs/concepts/storage/storage-classes/#aws-ebs">AWS EBS</a>)</h2>
+<h2 id="ephemeral-storage">Ephemeral storage</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Ephemeral storage saves files to the <a href="https://kubernetes.io/docs/concepts/storage/volumes/#emptydir"><code>emptyDir</code></a> volume. This volume is initially empty. When a Pod is removed from a node, the data in the <code>emptyDir</code> volume is deleted forever. This means that all changes are lost on workspace stop or restart.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+To save the changes, commit and push to the remote before stopping an ephemeral workspace.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ephemeral mode provides faster I/O than persistent storage. To enable this storage type, add the following to workspace configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">attributes</span>:
+ <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'false'</span></span></code></pre>
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Comparison between I/O of ephemeral (<code>emptyDir</code>) and persitent modes on <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/#aws-ebs">AWS EBS</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1337,29 +1361,21 @@ To save the changes, commit and push to the remote before stopping an ephemeral 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clone  Eclipse Che</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0m 19s</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1m 26s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 m 19 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1 m 26 s</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Generate 1000 random files</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1m 12s</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">44m 53s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1 m 12 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">44 m 53 s</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<div class="title">Asynchronous storage (Experimental)</div>
-<p>This is a combination of the above two. The initial workspace container will mount an <code>emptyDir</code>, however, the changes will be restored on workspace start and a backup is performed on workspace stop. This storage type also offers fast I/O (similar to the ephemeral mode) and workspace project changes are persisted.</p>
-</div>
-<div class="paragraph">
-<p>Synchronization is powered by <a href="https://rsync.samba.org/"><code>rsync</code></a> via the <a href="https://www.openssh.com/">SSH</a> protocol. When a workspace is configured with an asynchronous storage type, the <a href="https://github.com/che-incubator/workspace-data-sync/">workspace-data-sync</a> plugin is automatically added to the workspace configuration. The plugin runs <code>rsync</code> command on workspace start to restore changes if they exist. When a workspace is stopped, it sends changes to the permanent storage. The <code>rsync</code> process can take some time -  for relatively small projects the restore procedure is completed fast and you can see project source files and folders immediately after Che Theia is initialized. If <code>rsync</code> takes a longer time, the synchronization process is shown in Che Theia UI status bar area. (<a href="https://github.com/eclipse/che-theia/tree/master/extensions/eclipse-che-theia-file-sync-tracker">Extension in Che Theia repository</a>).</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="/che/docs/images/troubleshooting/status-bar-file-sync.png"><img src="/che/docs/images/troubleshooting/status-bar-file-sync.png" alt="status bar file sync" width="Files synchronization progress"></a>
 </div>
 </div>
-<hr>
+<div class="sect1">
+<h2 id="asynchronous-storage">Asynchronous storage</h2>
+<div class="sectionbody">
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1367,16 +1383,54 @@ To save the changes, commit and push to the remote before stopping an ephemeral 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Currently, this mode has some limitations, such as:
-supports only with ‘common’ PVC strategy;
-only  ‘per-user’ namespace strategy is supported;
-a user can simultaneously  run only 1 workspace with asynchronous storage
+Asynchronous storage is an experimental feature.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>To configure asynchronous storage for your workspace add the following to workspace configuration:</p>
+<p>Asynchronous storage is a combination of persistent and ephemeral modes. The initial workspace container mounts the <code>emptyDir</code> volume. Then a backup is performed on workspace stop, and changes are restored on workspace start. Asynchronous storage provides fast I/O (similar to ephemeral mode), and workspace project changes are persisted.</p>
+</div>
+<div class="paragraph">
+<p>Synchronization is performed by the <a href="https://rsync.samba.org/">rsync</a> tool using the <a href="https://www.openssh.com/">SSH</a> protocol. When a workspace is configured with asynchronous storage, the <a href="https://github.com/che-incubator/workspace-data-sync/">workspace-data-sync</a> plug-in is automatically added to the workspace configuration. The plug-in runs the <code>rsync</code> command on workspace start to restore changes. When a workspace is stopped, it sends changes to the permanent storage.</p>
+</div>
+<div class="paragraph">
+<p>For relatively small projects, the restore procedure is fast, and project source files are immediately available after Che-Theia is initialized. In case <code>rsync</code> takes longer, the synchronization process is shown in the Che-Theia status-bar area. (<a href="https://github.com/eclipse/che-theia/tree/master/extensions/eclipse-che-theia-file-sync-tracker">Extension in Che-Theia repository</a>).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/troubleshooting/status-bar-file-sync.png"><img src="/che/docs/images/troubleshooting/status-bar-file-sync.png" alt="status bar file sync" width="Files synchronization progress"></a>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Asynchronous mode has the following limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Supports only the <em>common</em> PVC strategy</p>
+</li>
+<li>
+<p>Supports only the <em>per-user</em> namespace strategy</p>
+</li>
+<li>
+<p>Only one workspace can be running at a time</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To configure asynchronous storage for a workspace, add the following to workspace configuration:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1385,17 +1439,38 @@ a user can simultaneously  run only 1 workspace with asynchronous storage
  <span style="color:#606">persistVolumes</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'false'</span></span></code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-storage-type-defaults-for-che-dashboard">Configuring storage type defaults for Che dashboard</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Aslo two new properties added to <code>che.properties</code> that can be used to configure behavior of a client like Che UserDashboard:</p>
+<p>Use the fo;llowing two <code>che.properties</code> to configure the default client values in Che dashboard:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>che.workspace.storage.available_types</code></dt>
+<dd>
+<p>Defines available values for storage types that clients like the dashboard propose for users during workspace creation or update. Available values: <code>persistent</code>, <code>ephemeral</code>, and <code>async</code>. Separate multiple values by commas. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>che.workspace.storage.available_types=persistent,ephemeral,async</pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><code>che.workspace.storage.preferred_type</code></dt>
+<dd>
+<p>Defines the default value for storage type that clients like the dashboard propose for users during workspace creation or update. The <code>async</code> value is not recommended as the default type because it is experimental. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>che.workspace.storage.preferred_type=persistent</pre>
+</div>
+</div>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p><code>che.workspace.storage.available_types</code>: this configuration property defines available values for storage types that clients like Dashboard should propose for users during workspace creation/update. Available values: 'persistent’,'ephemeral', 'async'. You can use several type comma separate (e.g. <code>che.workspace.storage.available_types=persistent,ephemeral,async</code>)</p>
-</div>
-<div class="paragraph">
-<p><code>che.workspace.storage.preferred_type</code>: this configuration property defines a default value for storage type that clients like Dashboard should propose for users during workspace creation/update. The 'async' value not recommended as a default type since it&#8217;s still experimental (e.g. <code>che.workspace.storage.preferred_type=persistent</code>)</p>
-</div>
-<div class="paragraph">
-<p>The Storage Type switcher is available on the <strong>Create Custom Workspace</strong> page of the User Dashboard:</p>
+<p>The <strong>Storage Type</strong> drop-down menu is available on the <strong>Create Custom Workspace</strong> page of the user dashboard:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1406,6 +1481,29 @@ a user can simultaneously  run only 1 workspace with asynchronous storage
 <div class="content">
 <a class="image" href="/che/docs/images/workspaces/create-custom-ws-storage-type.png"><img src="/che/docs/images/workspaces/create-custom-ws-storage-type.png" alt="create custom ws storage type"></a>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="idling-asynchronous-storage-pods">Idling asynchronous storage Pods</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che can shut down the Asynchronous Storage Pod when not used for a configured period of time.</p>
+</div>
+<div class="paragraph">
+<p>Use these configuration properties to adjust the behavior:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>che.infra.kubernetes.async.storage.shutdown_timeout_min</code></dt>
+<dd>
+<p>Defines the idle time after which the asynchronous storage Pod is stopped following the stopping of the last active workspace. The default value is 120 minutes.</p>
+</dd>
+<dt class="hdlist1"><code>che.infra.kubernetes.async.storage.shutdown_check_period_min</code></dt>
+<dd>
+<p>Defines the frequency with which the asynchronous storage Pod is checked for idleness. The default value is 30 minutes.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
