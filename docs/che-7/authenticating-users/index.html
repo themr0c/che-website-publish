@@ -1598,17 +1598,17 @@ Before using this token exchange feature, it is required for an end user to be i
 <p>For easy user interaction with third-party services, the Che server supports OAuth authentication. OAuth tokens are also used for GitHub-related plug-ins.</p>
 </div>
 <div class="paragraph">
-<p>OAuth authentication has two main flows based on the Keycloak brokering mechanism. The following are the two main OAuth API implementations:</p>
+<p>OAuth authentication has two main flows:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">internal</dt>
+<dt class="hdlist1">delegated</dt>
 <dd>
-<p>org.eclipse.che.security.oauth.EmbeddedOAuthAPI</p>
+<p>Default. Delegates OAuth authentication to Keycloak server.</p>
 </dd>
-<dt class="hdlist1">external</dt>
+<dt class="hdlist1">embedded</dt>
 <dd>
-<p>org.eclipse.che.multiuser.keycloak.server.oauth2.DelegatedOAuthAPI</p>
+<p>Uses built-in Che server mechanism to communicate with OAuth providers.</p>
 </dd>
 </dl>
 </div>
@@ -1616,34 +1616,24 @@ Before using this token exchange feature, it is required for an end user to be i
 <p>To switch between the two implementations, use the <code>che.oauth.service_mode=<em>&lt;embedded|delegated&gt;</em></code> configuration property.</p>
 </div>
 <div class="paragraph">
-<p>The main REST endpoint in the OAuth API is <code>org.eclipse.che.security.oauth.OAuthAuthenticationService</code>, which contains:</p>
+<p>The main REST endpoint in the OAuth API is <code>/api/oauth</code>, which contains:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>An authentication method that the OAuth authentication flow can start with.</p>
+<p>An authentication method, <code>/authenticate</code>, that the OAuth authentication flow can start with.</p>
 </li>
 <li>
-<p>A callback method to process callbacks from the provider.</p>
+<p>A callback method, <code>/callback</code>, to process callbacks from the provider.</p>
 </li>
 <li>
-<p>A token to retrieve the current user&#8217;s OAuth token.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>These methods apply to the currently activated, embedded or delegated, OAuthAPI. The OAuthAPI then provides the following underlying operations:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Finding the appropriate authenticator.</p>
+<p>A token GET method, <code>/token</code>, to retrieve the current user&#8217;s OAuth token.</p>
 </li>
 <li>
-<p>Initializing the login process.</p>
+<p>A token DELETE method, <code>/token</code>, to invalidated the current user&#8217;s OAuth token.</p>
 </li>
 <li>
-<p>Forwarding the user.</p>
+<p>A GET method, <code>/</code>, to get the list of configured identity providers.</p>
 </li>
 </ul>
 </div>
