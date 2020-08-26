@@ -722,17 +722,6 @@
   
   <li>
       
-      <a href="/che/docs/che-7/installing-che-in-tls-mode-with-self-signed-certificates">Installing Che in TLS mode with self-signed certificates</a>
-      
-      <ul>
-          
-      </ul>
-   </li>
-     
-      
-  
-  <li>
-      
       <a href="/che/docs/che-7/installing-che-in-restricted-environment">Installing Che in restricted environment</a>
       
       <ul>
@@ -1317,6 +1306,237 @@ Remember that single-node OpenShift clusters are suited only for testing or sing
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>When deploying Che on Minishift, it is necessary to manually generate TLS certificates for use by the Che server.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generating-self-signed-tls-certificates_installing-che-on-minishift">Generating self-signed TLS certificates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to prepare self-signed TLS certificates to use with Che on Minishift.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The expected domain name where the Che deployment is planned. Typically, for Minishift, this is <code>$(minishift ip).nip.io</code></p>
+</li>
+<li>
+<p>The location of the <code>openssl.cnf</code> file on the target machine.</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Usual OpenSSL configuration file locations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Linux distribution</th>
+<th class="tableblock halign-left valign-top">File location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fedora, Red Hat Enterprise Linux, CentOS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/etc/pki/tls/openssl.cnf</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Debian, Ubuntu, Mint, Arch Linux</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/etc/ssl/openssl.cnf</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the necessary environment variables:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ CA_CN="Local Eclipse Che Signer"
+$ DOMAIN=*.<em>&lt;expected.domain.com&gt;</em>
+$ OPENSSL_CNF=<em>&lt;path_to_openssl.cnf&gt;</em></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example (Fedora)</div>
+<div class="content">
+<pre>$ CA_CN="Local Eclipse Che Signer"
+$ DOMAIN=\*.$( minishift ip ).nip.io
+$ OPENSSL_CNF=/etc/pki/tls/openssl.cnf</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example (macOS)</div>
+<div class="content">
+<pre>$ export CA_CN="Local Eclipse Che Signer"
+$ export DOMAIN=\*.$( minishift ip ).nip.io
+$ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the root Certificate Authority (CA) key. Add the <code>-des3</code> parameter to use a passphrase:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out ca.key 4096</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the root CA certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -x509 \
+  -new -nodes \
+  -key ca.key \
+  -sha256 \
+  -days 1024 \
+  -out ca.crt \
+  -subj /CN="${CA_CN}" \
+  -reqexts SAN \
+  -extensions SAN \
+  -config &lt;(cat ${OPENSSL_CNF} \
+      &lt;(printf '[SAN]\nbasicConstraints=critical, CA:TRUE\nkeyUsage=keyCertSign, cRLSign, digitalSignature'))</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the domain key:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out domain.key 2048</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the certificate signing request for the domain:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -new -sha256 \
+    -key domain.key \
+    -subj "/O=Local Eclipse Che/CN=${DOMAIN}" \
+    -reqexts SAN \
+    -config &lt;(cat ${OPENSSL_CNF} \
+        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=digitalSignature, keyEncipherment, keyAgreement, dataEncipherment\nextendedKeyUsage=serverAuth")) \
+    -out domain.csr</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the domain certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl x509 \
+    -req \
+    -sha256 \
+    -extfile &lt;(printf "subjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=digitalSignature, keyEncipherment, keyAgreement, dataEncipherment\nextendedKeyUsage=serverAuth") \
+    -days 365 \
+    -in domain.csr \
+    -CA ca.crt \
+    -CAkey ca.key \
+    -CAcreateserial -out domain.crt</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This procedure allows to use <code>domain.crt</code> and <code>domain.key</code> for TLS Route and Ingress, and <code>ca.crt</code> for importing into browsers.</p>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#importing-self-signed-tls-certificates-to-browsers_installing-che-on-minishift">Importing self-signed TLS certificates to browsers</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-self-signed-certificates-to-minishift">Adding self-signed certificates to Minishift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to add user-generated certificates to a Minishift cluster.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This method involves reconfiguration of the OpenShift router to use user-provided TLS certificates.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running OpenShift 3 instance, version 3.11 or higher.</p>
+</li>
+<li>
+<p>All required keys and certificates. See <a href="#generating-self-signed-tls-certificates_installing-che-on-minishift">Generating self-signed TLS certificates</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Log in to the default OpenShift project:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc login -u system:admin --insecure-skip-tls-verify=true
+$ oc project default</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Reconfigure the router with the generated certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc delete secret router-certs
+$ cat domain.crt domain.key &gt; openshift.crt
+$ oc create secret tls router-certs --key=domain.key --cert=openshift.crt
+$ oc rollout latest router</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a namespace for Che:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc create namespace che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a secret from the CA certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc create secret generic self-signed-certificate --from-file=ca.crt -n=che</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#importing-self-signed-tls-certificates-to-browsers_installing-che-on-minishift">Importing self-signed TLS certificates to browsers</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1360,6 +1580,162 @@ Omit the <code>--multiuser</code> option to install a single-user instance of Ch
 </div>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="importing-self-signed-tls-certificates-to-browsers_installing-che-on-minishift">Importing self-signed TLS certificates to browsers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to import a root certificate authority into a web browser to use Che with self-signed TLS certificates.</p>
+</div>
+<div class="paragraph">
+<p>When a TLS certificate is not trusted, the error message <strong>Authorization token is missing. Click here to reload page</strong> blocks the login process. To prevent this, add the public part of the self-signed CA certificate into the browser after installing Che.</p>
+</div>
+<div class="sect2">
+<h3 id="adding-certificates-to-google-chrome-on-linux-or-windows">Adding certificates to Google Chrome on Linux or Windows</h3>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to URL where Che is deployed.</p>
+</li>
+<li>
+<p>Save the certificate:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Click the lock icon on the left of the address bar.</p>
+</li>
+<li>
+<p>Click <strong>Certificates</strong> and navigate to the <strong>Details</strong> tab.</p>
+</li>
+<li>
+<p>Select the certificate to use and export it:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On Linux, click the <b class="button">Export</b> button.</p>
+</li>
+<li>
+<p>On Windows, click the <b class="button">Save to file</b> button.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Go to <a href="chrome://settings/certificates">Google Chrome Settings</a>, then to the <strong>Authorities</strong> tab</p>
+</li>
+<li>
+<p>In the left panel, select <strong>Advanced</strong> and continue to <strong>Privacy and security</strong>.</p>
+</li>
+<li>
+<p>At the center of the screen, click <strong>Manage certificates</strong> and navigate to <strong>Authorities</strong> tab.</p>
+</li>
+<li>
+<p>Click the <b class="button">Import</b> button and open the saved certificate file.</p>
+</li>
+<li>
+<p>Select <strong>Trust this certificate for identifying websites</strong> and click the <b class="button">OK</b> button.</p>
+</li>
+<li>
+<p>After adding the Che certificate to the browser, the address bar displays the closed lock icon next to the URL, indicating a secure connection.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-certificates-to-google-chrome-and-safari-on-macos">Adding certificates to Google Chrome and Safari on macOS</h3>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to URL where Che is deployed.</p>
+</li>
+<li>
+<p>Save the certificate:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Click the lock icon on the left of the address bar.</p>
+</li>
+<li>
+<p>Click <strong>Certificates</strong>.</p>
+</li>
+<li>
+<p>Select the certificate to use and drag and drop its displayed large icon to the desktop.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Open the <strong>Keychain Access</strong> application.</p>
+</li>
+<li>
+<p>Select the <strong>System</strong> keychain and drag and drop the saved certificate file to it.</p>
+</li>
+<li>
+<p>Double-click the imported CA, then go to <strong>Trust</strong> and select <strong>When using this certificate</strong>: <strong>Always Trust</strong>.</p>
+</li>
+<li>
+<p>Restart the browser for the added certificated to take effect.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-certificates-to-firefox">Adding certificates to Firefox</h3>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to URL where Che is deployed.</p>
+</li>
+<li>
+<p>Save the certificate:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Click the lock icon on the left of the address bar.</p>
+</li>
+<li>
+<p>Click the <b class="button">&gt;</b> button next to the <strong>Connection not secure</strong> warning.</p>
+</li>
+<li>
+<p>Click the <b class="button">More information</b> button.</p>
+</li>
+<li>
+<p>Click the <b class="button">View Certificate</b> button on the <strong>Security</strong> tab.</p>
+</li>
+<li>
+<p>Select the second certificate tab.  The certificate Common Name should start with <strong>ingress-operator</strong></p>
+</li>
+<li>
+<p>Click the <strong>PEM (cert)</strong> link and save the certificate.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Navigate to <a href="about:preferences">about:preferences</a>, search for <code>certificates</code>, and click <strong>View Certificates</strong>.</p>
+</li>
+<li>
+<p>Go to the <strong>Authorities</strong> tab, click the <b class="button">Import</b> button, and open the saved certificate file.</p>
+</li>
+<li>
+<p>Check <strong>Trust this CA to identify websites</strong> and click <b class="button">OK</b>.</p>
+</li>
+<li>
+<p>Restart Firefox for the added certificated to take effect.</p>
+</li>
+<li>
+<p>After adding the Che certificate to the browser, the address bar displays the closed lock icon next to the URL, indicating a secure connection.</p>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
