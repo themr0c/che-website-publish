@@ -839,6 +839,13 @@
           
           
           
+          
+          
+          <li><a href="/che/docs/che-7/testing-a-visual-studio-code-extension-in-che">Testing a VS Code extension in Che</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -1573,6 +1580,306 @@ $('#toc').on('click', 'a', function() {
 </table>
 </div>
 </li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="testing-the-vs-code-extension-using-gist_adding-che-plug-in-registry-vs-code-extension-to-a-workspace">Testing a VS Code extension using GitHub gist</h4>
+<div class="paragraph">
+<p>Each workspace can have its own set of plug-ins. The list of plug-ins and the list of projects to clone are defined in the <code>devfile.yaml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>For example, to enable an AsciiDoc plug-in from the Eclipse Che dashboard, add the following snippet to the devfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">components</span>:
+ - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">id: joaopinto/vscode-asciidoctor/latest</span></span>
+   <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To add a plug-in that is not in the default plug-in registry, build a custom plug-in registry. See <a href="link:/che/docs/che-7/building-and-running-a-custom-registry-image/#building-a-custom-devfile-registry_building-and-running-a-custom-registry-image">Building a custom plug-in registry</a>[the documentation on building custom registries], or, alternatively, use GitHub and the gist service.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse Che. To install an instance of Eclipse Che, see <a href="/che/docs/che-7/che-quick-starts/">Che 'quick-starts'</a>.</p>
+</li>
+<li>
+<p>A GitHub account.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Go to the <a href="https://gist.github.com/">gist</a> webpage and create a <code>README.md</code> file with the following description: <code>Try Bracket Pair Colorizer extension in Eclipse Che</code> and content: <code>Example VS Code extension</code>. (<a href="https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer">Bracket Pair Colorizer</a> is a popular VS Code extension.)</p>
+</li>
+<li>
+<p>Click the <b class="button">Create secret gist</b> button:</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/workspaces/vscode-gist-setup.png"><img src="/che/docs/images/workspaces/vscode-gist-setup.png" alt="vscode gist setup"></a>
+</div>
+</div>
+</li>
+<li>
+<p>Clone the gist repository by using the URL from the navigation bar of the browser:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://gist.github.com/<em>&lt;your-github-username&gt;</em>/<em>&lt;gist-id&gt;</em></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example of the output of the <code>git clone</code> command</div>
+<div class="content">
+<pre>git clone https://gist.github.com/benoitf/85c60c8c439177ac50141d527729b9d9 <i class="conum" data-value="1"></i><b>(1)</b>
+Cloning into '85c60c8c439177ac50141d527729b9d9'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Each gist has a unique ID.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Change the directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd <em>&lt;gist-directory-name&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Directory name matching the gist ID.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Download the plug-in from the <a href="https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer">VS Code marketplace</a> or from its <a href="https://github.com/CoenraadS/BracketPair/releases">GitHub page</a>, and store the plug-in file in the cloned directory.</p>
+</li>
+<li>
+<p>Create a <code>plugin.yaml</code> file in the cloned directory to add the definition of this plug-in.</p>
+<div class="listingblock">
+<div class="title">Example of the <code>plugin.yaml</code> file referencing the <code>.vsix</code> binary file extension</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">v2</span></span>
+<span style="color:#606">publisher</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">CoenraadS</span></span>
+<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">bracket-pair-colorizer</span></span>
+<span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.61</span></span>
+<span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">VS Code extension</span></span>
+<span style="color:#606">displayName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Bracket Pair Colorizer</span></span>
+<span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Bracket Pair Colorizer</span></span>
+<span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Bracket Pair Colorizer</span></span>
+<span style="color:#606">icon</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://raw.githubusercontent.com/redhat-developer/codeready-workspaces/master/dependencies/che-plugin-registry/resources/images/default.svg?sanitize=true</span></span>
+<span style="color:#606">repository</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">https://github.com/CoenraadS/BracketPair</span></span>
+<span style="color:#606">category</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">Language</span></span>
+<span style="color:#606">firstPublicationDate</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">'2020-07-30'</span></span>
+<span style="color:#606">spec</span>:                                                             <i class="conum" data-value="1"></i><b>(1)</b>
+  <span style="color:#606">extensions</span>:
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">{{REPOSITORY}}/CoenraadS.bracket-pair-colorizer-1.0.61.vsix</span><span style="color:#710">&quot;</span></span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span style="color:#606">latestUpdateDate</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">2020-07-30</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This extension requires a basic Node.js runtime, so it is not necessary to add a custom runtime image in <code>plugin.yaml</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>{{REPOSITORY}}</code> is a macro for a pre-commit hook.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Define a memory limit and volumes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">containers</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">image: &quot;quay.io/eclipse/che-sidecar-java:8-0cfbacb&quot;</span></span>
+      <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">vscode-java</span></span>
+      <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">1500Mi</span><span style="color:#710">&quot;</span></span>
+      <span style="color:#606">volumes</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">mountPath: &quot;/home/theia/.m2&quot;</span></span>
+        <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">m2</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>devfile.yaml</code> that references the <code>plugin.yaml</code> file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">apiVersion</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">1.0.0</span></span>
+<span style="color:#606">metadata</span>:
+  <span style="color:#606">generateName</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">java-maven-</span></span>
+<span style="color:#606">projects</span>:
+  -
+    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">console-java-simple</span></span>
+    <span style="color:#606">source</span>:
+      <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">git</span></span>
+      <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">https://github.com/che-samples/console-java-simple.git</span><span style="color:#710">&quot;</span></span>
+      <span style="color:#606">branch</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">java1.11</span></span>
+<span style="color:#606">components</span>:
+  -
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin</span></span>
+    <span style="color:#606">id</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">redhat/java11/latest</span></span>
+  -
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">chePlugin </span></span><i class="conum" data-value="1"></i><b>(1)</b>
+    <span style="color:#606">reference</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">{{REPOSITORY}}/plugin.yaml</span><span style="color:#710">&quot;</span></span>
+  -
+    <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">dockerimage</span></span>
+    <span style="color:#606">alias</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+    <span style="color:#606">image</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">quay.io/eclipse/che-java11-maven:nightly</span></span>
+    <span style="color:#606">memoryLimit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">512Mi</span></span>
+    <span style="color:#606">mountSources</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">volumes</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: m2</span></span>
+        <span style="color:#606">containerPath</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/home/user/.m2</span></span>
+<span style="color:#606">commands</span>:
+  -
+    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven build</span></span>
+    <span style="color:#606">actions</span>:
+      -
+        <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">exec</span></span>
+        <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+        <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">mvn clean install</span><span style="color:#710">&quot;</span></span>
+        <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${CHE_PROJECTS_ROOT}/console-java-simple</span></span>
+  -
+    <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven build and run</span></span>
+    <span style="color:#606">actions</span>:
+      -
+        <span style="color:#606">type</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">exec</span></span>
+        <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">maven</span></span>
+        <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">mvn clean install &amp;&amp; java -jar ./target/*.jar</span><span style="color:#710">&quot;</span></span>
+        <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${CHE_PROJECTS_ROOT}/console-java-simple</span></span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Any other devfile definition is also accepted. The important information in this devfile are the lines defining this external component. It means that an external reference defines the plug-in (instead of an ID pointing to a definition in the default plug-in registry).</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Verify there are 4 files in the current Git directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ ls -la
+.git
+CoenraadS.bracket-pair-colorizer-1.0.61.vsix
+README.md
+devfile.yaml
+plugin.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Before committing the files, add a pre-commit hook to update the <code>{{REPOSITORY}}</code> variable to the public external raw gist link:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a <code>.git/hooks/pre-commit</code> file with this content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sh">#!/bin/sh
+
+# get modified files
+FILES=$(git diff --cached --name-only --diff-filter=ACMR &quot;*.yaml&quot; | sed 's| |\\ |g')
+
+# exit fast if no files found
+[ -z &quot;$FILES&quot; ] &amp;&amp; exit 0
+
+# grab remote origin
+origin=$(git config --get remote.origin.url)
+url=&quot;${origin}/raw&quot;
+
+# iterate on files and add the good prefix pattern
+for FILE in ${FILES}; do
+ sed -e &quot;s#{{REPOSITORY}}#${url}#g&quot; &quot;${FILE}&quot; &gt; &quot;${FILE}.back&quot;
+ mv &quot;${FILE}.back&quot; &quot;${FILE}&quot;
+done
+
+# Add back to staging
+echo &quot;$FILES&quot; | xargs git add
+
+exit 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The hook replaces the <code>{{REPOSITORY}}</code> macro and adds the external raw link to the gist.</p>
+</div>
+</li>
+<li>
+<p>Make the script executable:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chmod u+x .git/hooks/pre-commit</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Commit and push the files:</p>
+<div class="listingblock">
+<div class="content">
+<pre># Add files
+$ git add *
+
+# Commit
+$ git commit -m "Initial Commit for the test of our extension"
+[master 98dd370] Initial Commit for the test of our extension
+ 3 files changed, 61 insertions(+)
+ create mode 100644 CoenraadS.bracket-pair-colorizer-1.0.61.vsix
+ create mode 100644 devfile.yaml
+ create mode 100644 plugin.yaml
+
+# and push the files to the main branch
+$ git push origin</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Visit the gist website and verify that all links have the correct public URL and do not contain any <code>{{REPOSITORY}}</code> variables. To reach the devfile:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo "$(git config --get remote.origin.url)/raw/devfile.yaml"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo "https://<em>&lt;che-server&gt;</em>/f?url=$(git config --get remote.origin.url)/raw/devfile.yaml"</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Restart the workspace for the changes to take effect.</p>
 </li>
@@ -1581,17 +1888,18 @@ $('#toc').on('click', 'a', function() {
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="verifying-the-vs-code-extension-api-compatibility-level_using-a-visual-studio-code-extension-in-che">Verifying the VS Code extension API compatibility level</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Che-Theia does not fully support the VS Code extensions API. The <a href="https://github.com/che-incubator/vscode-theia-comparator/">vscode-theia-comparator</a> is used to analyze the compatibility between the Che-Theia plug-in API and the VS Code extension API. This tool runs in a nightly cycle, and the results are published on the <a href="https://che-incubator.github.io/vscode-theia-comparator/status.html">vscode-theia-comparator</a> GitHub page.</p>
+<p>Che-Theia does not fully support the VS Code extensions API. The <a href="https://github.com/che-incubator/vscode-theia-comparator/">vscode-theia-comparator</a> is used to analyze the compatibility between the Che-Theia plug-in API and the VS Code extension API. This tool runs nightly, and the results are published on the <a href="https://che-incubator.github.io/vscode-theia-comparator/status.html">vscode-theia-comparator</a> GitHub page.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Personal GitHub access token. For information about creating a personal access token for the command line see <a href="https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line">Creating a personal access token for the command line</a>. A GitHub access token is required to increase the GitHub download limit for your IP address.</p>
+<p>Personal GitHub access token. See <a href="https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line">Creating a personal access token for the command line</a>. A GitHub access token is required to increase the GitHub download limit for your IP address.</p>
 </li>
 </ul>
 </div>
@@ -1637,7 +1945,7 @@ $('#toc').on('click', 'a', function() {
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 27, 2020 <br/>
+                    Site last generated: Aug 28, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
