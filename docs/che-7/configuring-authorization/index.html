@@ -1459,6 +1459,275 @@ See Instructions to <a href="https://www.keycloak.org/docs/6.0/server_admin/#git
 </div>
 </div>
 <div class="sect1">
+<h2 id="configuring-prod-short-to-use-external-keycloak_configuring-authorization">Configuring Che to use an external Keycloak installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Che installation in multiuser mode includes the deployment of a dedicated Keycloak instance. However, using an external Keycloak is also possible. This option is useful when a user has an existing Keycloak instance with already-defined users, for example, a company-wide Keycloak server used by several applications.</p>
+</div>
+<div class="paragraph">
+<p>This procedure uses the following placeholders:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Placeholders used in examples</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;provider-realm-name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity provider realm name intended for use by Che</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;oidc-client-name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of <code>oidc</code> client defined in <code>&lt;provider-realm-name&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;auth-base-url&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base URL of your external Keycloak server</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>This procedure is only applicable to Che installations done using the Che Operator. When using the <code>chectl</code> management tool and the <code>helm</code> installation mode to install Che, no supported method is available to use an external Keycloak instance.</p>
+</li>
+<li>
+<p>In the administration console of the Keycloak external installation, define a <a href="https://www.keycloak.org/docs/latest/server_admin/#_create-realm">realm</a> that will contain the users intended to connect to Che.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href=""/che/docs/images/keycloak/external_keycloak_realm.png"><img src="/che/docs/images/keycloak/external_keycloak_realm.png" alt="external keycloak realm"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In this <code>realm</code>, define an <a href="https://www.keycloak.org/docs/latest/server_admin/#oidc-clients">OIDC client</a> that Che will use to authenticate the users. Here is an example of such a client with the correct settings:</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href=""/che/docs/images/keycloak/external_keycloak_public_client.png"><img src="/che/docs/images/keycloak/external_keycloak_public_client.png" alt="external keycloak public client"></a>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Che only supports <code>public</code> OIDC clients. Therefore, selecting the <code>openid-connect</code> <code>Client Protocol</code> option and the <code>public</code> Access Type option is highly recommended.</p>
+</li>
+<li>
+<p>The list of <code>Valid Redirect URIs</code> must contain at least 2 URIs related to the Che server, one using the <code>http</code> protocol and the other <code>https</code>. These URIs must contain the base URL of the Che server, followed by <code>/*</code> wildcards.</p>
+</li>
+<li>
+<p>The list of <code>Web Origins</code> must contain at least 2 URIs related to the Che server, one using the <code>http</code> protocol and the other <code>https</code>. These URIs must contain the base URL of the Che server, without any path after the host.</p>
+<div class="paragraph">
+<p>The number of URIs depends on the number of installed product tools.</p>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If Che is installed
+on OpenShift
+and uses the default OpenShift OAuth support, user authentication relies on the integration of Keycloak with OpenShift OAuth. This allows users to log in to Che with their OpenShift login and have their workspaces created under personal OpenShift namespaces.</p>
+<div class="paragraph">
+<p>This requires setting up an OpenShift identity provider inside Keycloak. When using an external Keycloak, set up the identity provider manually. For instructions, see the appropriate Keycloak documentations for either <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-3">OpenShift 3</a> or <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-4">OpenShift 4</a>.</p>
+</div>
+</li>
+<li>
+<p>The configured identity provider has the options <code>Store Tokens</code> and <code>Stored Tokens Readable</code> enabled.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the following properties in the <code>CheCluster</code> Custom Resource (CR):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">auth</span>:
+    <span style="color:#606">externalIdentityProvider</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">identityProviderURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;auth-base-url&gt;</span></span>
+    <span style="color:#606">identityProviderRealm</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;provider-realm-name&gt;</span></span>
+    <span style="color:#606">identityProviderClientId</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;oidc-client-name&gt;</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If installing Che
+on OpenShift
+with OpenShift OAuth support enabled, set the following properties in the <code>CheCluster</code> Custom Resource (CR):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">auth</span>:
+    <span style="color:#606">openShiftoAuth</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#777"># Note: only if the OpenShift identity provider alias is different from 'openshift-v3' or 'openshift-v4'</span>
+<span style="color:#606">server</span>:
+  <span style="color:#606">customCheProperties</span>:
+    <span style="color:#606">CHE_INFRA_OPENSHIFT_OAUTH__IDENTITY__PROVIDER</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;OpenShift identity provider alias&gt;</span></span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-che-to-use-external-keycloak_configuring-authorization">Configuring Che to use an external Keycloak installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Che installation includes the deployment of a dedicated Keycloak instance. However, using an external Keycloak is also possible. This option is useful when a user has an existing Keycloak instance with already-defined users, for example, a company-wide Keycloak server used by several applications.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A dedicated Keycloak instance is only deployed with Che installed in multiuser mode.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Placeholders used in examples</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;provider-realm-name&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity provider realm name intended for use by Che</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;oidc-client-name&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the <code>oidc</code> client defined in <code><em>&lt;provider-realm-name&gt;</em></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;auth-base-url&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base URL of the external Keycloak server</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>This procedure is only applicable to Che installations done using the Che Operator. When using the <code>chectl</code> management tool and Helm to install Che, no supported method is available to use an external Keycloak instance.</p>
+</li>
+<li>
+<p>In the administration console of the external installation of Keycloak, define a <a href="https://www.keycloak.org/docs/latest/server_admin/#_create-realm">realm</a> containing the users intended to connect to Che:</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/keycloak/external_keycloak_realm.png"><img src="/che/docs/images/keycloak/external_keycloak_realm.png" alt="external keycloak realm"></a>
+</div>
+</div>
+</li>
+<li>
+<p>In this <code>realm</code>, define an <a href="https://www.keycloak.org/docs/latest/server_admin/#oidc-clients">OIDC client</a> that Che will use to authenticate the users. This is an example of such a client with the correct settings:</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="/che/docs/images/keycloak/external_keycloak_public_client.png"><img src="/che/docs/images/keycloak/external_keycloak_public_client.png" alt="external keycloak public client"></a>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Che only supports <code>public</code> OIDC clients. Therefore, selecting the <code>openid-connect</code> <strong>Client Protocol</strong> option and the <code>public</code> <strong>Access Type</strong> option is recommended.</p>
+</li>
+<li>
+<p>The list of <strong>Valid Redirect URIs</strong> must contain at least two URIs related to the Che server, one using the <code>http</code> protocol and the other <code>https</code>. These URIs must contain the base URL of the Che server, followed by <code>/*</code> wildcards.</p>
+</li>
+<li>
+<p>The list of <strong>Web Origins</strong> must contain at least two URIs related to the Che server, one using the <code>http</code> protocol and the other <code>https</code>. These URIs must contain the base URL of the Che server, without any path after the host.</p>
+<div class="paragraph">
+<p>The number of URIs depends on the number of installed product tools.</p>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>With Che
+installed on OpenShift
+that uses the default OpenShift OAuth support, user authentication relies on the integration of Keycloak with OpenShift OAuth. This allows users to log in to Che with their OpenShift login and have their workspaces created under personal OpenShift namespaces.</p>
+<div class="paragraph">
+<p>This requires setting up an OpenShift identity provider ins Keycloak. When using an external Keycloak, set up the identity provider manually. For instructions, see the appropriate Keycloak documentations for either <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-3">OpenShift 3</a> or <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-4">OpenShift 4</a>.</p>
+</div>
+</li>
+<li>
+<p>The configured identity provider has the options <strong>Store Tokens</strong> and <strong>Stored Tokens Readable</strong> enabled.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the following properties in the <code>CheCluster</code> Custom Resource (CR):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">auth</span>:
+    <span style="color:#606">externalIdentityProvider</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+    <span style="color:#606">identityProviderURL</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;auth-base-url&gt;</span></span>
+    <span style="color:#606">identityProviderRealm</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;provider-realm-name&gt;</span></span>
+    <span style="color:#606">identityProviderClientId</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;oidc-client-name&gt;</span></span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>When installing Che
+on OpenShift
+with OpenShift OAuth support enabled, set the following properties in the <code>CheCluster</code> Custom Resource (CR):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">spec</span>:
+  <span style="color:#606">auth</span>:
+    <span style="color:#606">openShiftoAuth</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">true</span></span>
+<span style="color:#777"># Note: only if the OpenShift identity provider alias is different from 'openshift-v3' or 'openshift-v4'</span>
+<span style="color:#606">server</span>:
+  <span style="color:#606">customCheProperties</span>:
+    <span style="color:#606">CHE_INFRA_OPENSHIFT_OAUTH__IDENTITY__PROVIDER</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">&lt;OpenShift identity provider alias&gt;</span></span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-prod-short-to-work-without-identity-provider_configuring-authorization">Configuring Che to work without Keycloak</h2>
 <div class="sectionbody">
 <div class="paragraph">
