@@ -1312,57 +1312,76 @@ $('#toc').on('click', 'a', function() {
 <p>The Che-Theia IDE allows users to define custom commands in a devfile that are then available when working in a workspace.</p>
 </div>
 <div class="paragraph">
+<p>This is useful, for example, for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Simplifying building, running, and debugging projects.</p>
+</li>
+<li>
+<p>Allowing lead developers to customize workspaces based on team requirements.</p>
+</li>
+<li>
+<p>Reducing time needed to onboard new team members.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See also <a href="/che/docs/che-7/configuring-a-workspace-using-a-devfile/">Configuring a workspace using a devfile</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="che-theia-task-types_defining-custom-commands-for-che-theia">Che-Theia task types</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The following is an example of the <code>commands</code> section of a devfile.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span style="color:#606">commands</span>:
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: theia:build</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
-    <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">che-dev</span></span>
-    <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&gt;</span><span style="color:#D20">
-              yarn</span></span>
-    <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">/projects/theia</span></span>
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: run</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-task</span></span>
-    <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
+
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: Package Native App</span></span>
+    <span style="color:#606">actions</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
+        <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">centos-quarkus-maven</span></span>
+        <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">mvn package -Dnative -Dmaven.test.skip</span><span style="color:#710">&quot;</span></span>
+        <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started</span></span>
+
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: Start Native App</span></span>
+    <span style="color:#606">actions</span>:
+      - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: exec</span></span>
+        <span style="color:#606">component</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">ubi-minimal</span></span>
+        <span style="color:#606">command</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">./getting-started-1.0-SNAPSHOT-runner</span></span>
+        <span style="color:#606">workdir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started/target</span></span>
+
+  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: Attach remote debugger</span></span>
+    <span style="color:#606">actions</span>:
+    - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-launch</span></span>
+      <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
+        {
+          &quot;version&quot;: &quot;0.2.0&quot;,
+          &quot;configurations&quot;: [
             {
-             &quot;version&quot;: &quot;2.0.0&quot;,
-             &quot;tasks&quot;:
-             [
-              {
-               &quot;label&quot;: &quot;theia:watch&quot;,
-                &quot;type&quot;: &quot;shell&quot;,
-                &quot;options&quot;: {&quot;cwd&quot;: &quot;/projects/theia&quot;},
-                &quot;command&quot;: &quot;yarn&quot;,
-                &quot;args&quot;: [&quot;watch&quot;]
-              }
-             ]
-            }</span></span>
-- <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">name: debug</span></span>
-  <span style="color:#606">actions</span>:
-  - <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">type: vscode-launch</span></span>
-    <span style="color:#606">referenceContent</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">|</span><span style="color:#D20">
-            {
-             &quot;version&quot;: &quot;0.2.0&quot;,
-             &quot;configurations&quot;: [
-              {
-               &quot;type&quot;: &quot;node&quot;,
-               &quot;request&quot;: &quot;attach&quot;,
-               &quot;name&quot;: &quot;Attach by Process ID&quot;,
-               &quot;processId&quot;: &quot;${command:PickProcess}&quot;
-              }
-             ]
-            }</span></span></code></pre>
+              &quot;type&quot;: &quot;java&quot;,
+              &quot;request&quot;: &quot;attach&quot;,
+              &quot;name&quot;: &quot;Attach to Remote Quarkus App&quot;,
+              &quot;hostName&quot;: &quot;localhost&quot;,
+              &quot;port&quot;: 5005
+            }
+          ]
+        }</span></span></code></pre>
 </div>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Che commands</dt>
+<dt class="hdlist1">prod-short} commands</dt>
 <dd>
-<p><code>theia:build</code></p>
+<p><code>Package Native App</code> and <code>Start Native App</code></p>
+<div class="paragraph">
+<p>The Che commands are to be used to define tasks that will be executed in the workspace container.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -1374,29 +1393,18 @@ $('#toc').on('click', 'a', function() {
 <li>
 <p>The <code>workdir</code> is the working directory in which the command is executed.</p>
 </li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">Visual Studio Code (VS Code) tasks</dt>
-<dd>
-<p><code>run</code></p>
-<div class="ulist">
-<ul>
 <li>
-<p>The type is <code>vscode-task</code>.</p>
-</li>
-<li>
-<p>For this type of command, the <code>referenceContent</code> field must contain content with task configurations in the VS Code format.</p>
-</li>
-<li>
-<p>For more information about VS Code tasks, see the Task section on the <a href="https://code.visualstudio.com/docs/editor/tasks">Visual Studio User Guide page</a>.</p>
+<p>The <code>component</code> field refers to the container where the command will be executed. The field contains the component <code>alias</code> where the container is defined.</p>
 </li>
 </ul>
 </div>
 </dd>
 <dt class="hdlist1">VS Code launch configurations</dt>
 <dd>
-<p><code>debug</code></p>
+<p><code>Attach remote debugger</code></p>
+<div class="paragraph">
+<p>VS Code launch configurations are usually used to define debugging configuration. To trigger these configurations, press <b class="button">F5</b> or choose <strong>Start Debugging</strong> from the <strong>Debug</strong> menu. The configurations provide information to the debugger, such as the port to connect to for debugging or the type of the application to debug (Node.js, Java, and others.).</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -1414,85 +1422,7 @@ $('#toc').on('click', 'a', function() {
 </dl>
 </div>
 <div class="paragraph">
-<p>For a list of available tasks and launch configurations, see the:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>tasks.json</code> file in the  <code>/projects/.theia</code> directory</p>
-</li>
-<li>
-<p><code>launch.json</code> file in the <code>/home/theia/.theia</code> directory</p>
-<div class="paragraph">
-<p>of the <code>theia-ide</code> container.</p>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="che-theia-task-types_defining-custom-commands-for-che-theia">Che-Theia task types</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <code>commands</code> section in a devfile allows a user to automate certain actions when running a Che workspace.</p>
-</div>
-<div class="paragraph">
-<p>There are three types of Che commands:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>exec</code>: Each command of type <code>exec</code> is translated into a Che-Theia task of type <code>che</code>. A <code>che</code> command executes a shell command, but in contrast to regular Che-Theia shell-type tasks, a user can choose a workspace container for the command execution.</p>
-</li>
-<li>
-<p><code>vscode-task</code>: <code>vscode-task</code> is a single command type that copies the contents of the <code>referenceContentfield</code> of the specific command directly to the user-level task configurations in Che-Theia.</p>
-</li>
-<li>
-<p><code>vscode-launch</code>: Functions like a <code>vscode-task</code> command, but instead of being copied into the task configurations, the content of the <code>referenceContent</code> field is copied into the <code>launch.json</code> configuration file.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Tasks of type <code>che</code>, also known as <code>exec</code> commands, can be executed from the <strong>Terminal&#8594;Run Task</strong> menu or by clicking them in the <strong>My Workspace</strong> panel.
-Other tasks are only available via <strong>Terminal&#8594;Run Task</strong>. Launch configurations are available in the Che-Theia debugger.</p>
-</div>
-<div class="paragraph">
-<div class="title">Example:</div>
-<p>The following example contains a  <code>che</code> task and <code>vscode-task</code> task sample.</p>
-</div>
-<div class="paragraph">
-<p>The configuration in <a href="/che/docs/che-7/defining-custom-commands-for-che-theia/">Defining custom commands for Che-Theia</a> sets up the <code>theia:watch</code> and <code>theia:build</code> tasks in the <code>theia</code> workspace:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>theia:watch</code>, which runs the <code>theia</code> project in <code>watch</code> mode.</p>
-</li>
-<li>
-<p><code>theia:build</code>, which builds the <code>theia</code> project in the <code>che-dev</code> component.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Descriptions of used <code>che</code> commands in the above-mentioned example <code>theia:build</code></div>
-<ul>
-<li>
-<p>The <code>exec</code> type implies that the Che runner is used for command execution.</p>
-</li>
-<li>
-<p>The user can specify the component in whose container the command is executed.</p>
-</li>
-<li>
-<p>The <code>command</code> field contains the command line for execution.</p>
-</li>
-<li>
-<p>The <code>workdir</code> is the working directory in which the command is executed.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>These tasks are available for running in a workspace from the <strong>Terminal&#8594;Run Task</strong> menu or by clicking them in the <strong>My Workspace</strong> panel.</p>
+<p>Tasks of type <code>che</code>, also known as <code>exec</code> commands, can be executed from the <strong>Terminal&#8594;Run Task</strong> menu or by selecting them in the <strong>My Workspace</strong> panel. Other tasks are only available from <strong>Terminal&#8594;Run Task</strong>. Launch configurations are available in the Che-Theia debugger.</p>
 </div>
 <div class="ulist">
 <div class="title">Additional examples</div>
@@ -1649,7 +1579,7 @@ The changes are stored in the configuration file.
             <div class="row">
                 <div class="col-lg-12 footer">
                     Eclipse Che - Documentation <br/>
-                    Site last generated: Aug 28, 2020 <br/>
+                    Site last generated: Aug 30, 2020 <br/>
                     <hr>
                     <a href="http://www.eclipse.org" target="_blank">Eclipse Foundation</a><br/>
                     <a href="http://www.eclipse.org/legal/privacy.php" target="_blank">Privacy Policy</a><br/>
