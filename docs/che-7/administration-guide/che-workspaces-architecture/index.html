@@ -631,13 +631,13 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-components_che"><a class="anchor" href="#che-workspace-components_che"></a>Che workspace components</h2>
+<h2 id="che-workspace-components_che-workspaces-architecture"><a class="anchor" href="#che-workspace-components_che-workspaces-architecture"></a>Che workspace components</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes the components of a Che workspace.</p>
 </div>
 <div class="sect2">
-<h3 id="che-plug-ins_che"><a class="anchor" href="#che-plug-ins_che"></a><code>Che Plugin</code> plug-ins</h3>
+<h3 id="che-plug-ins_che-workspace-components"><a class="anchor" href="#che-plug-ins_che-workspace-components"></a><code>Che Plugin</code> plug-ins</h3>
 <div class="paragraph">
 <p><code>Che Plugin</code> plug-ins are special services that extend Che workspace capabilities. <code>Che Plugin</code> plug-ins are packaged as containers. Packaging plug-ins into a container has the following benefits:</p>
 </div>
@@ -662,7 +662,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="che-editor-plug-in_che"><a class="anchor" href="#che-editor-plug-in_che"></a><code>Che Editor</code> plug-in</h3>
+<h3 id="che-editor-plug-in_che-workspace-components"><a class="anchor" href="#che-editor-plug-in_che-workspace-components"></a><code>Che Editor</code> plug-in</h3>
 <div class="paragraph">
 <p>A <code>Che Editor</code> plug-in is a Che workspace plug-in.
 It defines the web application that is used as an editor in a workspace.
@@ -699,7 +699,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="che-user-runtimes_che"><a class="anchor" href="#che-user-runtimes_che"></a>Che user runtimes</h3>
+<h3 id="che-user-runtimes_che-workspace-components"><a class="anchor" href="#che-user-runtimes_che-workspace-components"></a>Che user runtimes</h3>
 <div class="paragraph">
 <p>Use any non-terminating user container as a user runtime. An application that can be defined as a container image or as a set of Kubernetes or OpenShift resources can be included in a Che workspace. This makes it easy to test applications in the Che workspace.</p>
 </div>
@@ -711,7 +711,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="che-workspace-jwt-proxy_che"><a class="anchor" href="#che-workspace-jwt-proxy_che"></a>Che workspace JWT proxy</h3>
+<h3 id="che-workspace-jwt-proxy_che-workspace-components"><a class="anchor" href="#che-workspace-jwt-proxy_che-workspace-components"></a>Che workspace JWT proxy</h3>
 <div class="paragraph">
 <p>The JWT proxy is responsible for securing the communication of the Che workspace services. The Che workspace JWT proxy is included in a Che workspace only if the Che server is configured in multi-user mode.</p>
 </div>
@@ -736,7 +736,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="che-plug-in-broker_che"><a class="anchor" href="#che-plug-in-broker_che"></a>Che plug-ins broker</h3>
+<h3 id="che-plug-in-broker_che-workspace-components"><a class="anchor" href="#che-plug-in-broker_che-workspace-components"></a>Che plug-ins broker</h3>
 <div class="paragraph">
 <p>Plug-in brokers are special services that, given a plug-in <code>meta.yaml</code> file:</p>
 </div>
@@ -780,13 +780,13 @@ It has a plug-in system that supports VS Code extensions.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-configuration_che"><a class="anchor" href="#che-workspace-configuration_che"></a>Che workspace configuration</h2>
+<h2 id="che-workspace-configuration_che-workspaces-architecture"><a class="anchor" href="#che-workspace-configuration_che-workspaces-architecture"></a>Che workspace configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes the properties of the Che server that affect the provisioning of a Che workspace.</p>
 </div>
 <div class="sect2">
-<h3 id="storage-strategies-for-che-workspaces_che"><a class="anchor" href="#storage-strategies-for-che-workspaces_che"></a>Storage strategies for che workspaces</h3>
+<h3 id="storage-strategies-for-che-workspaces_che-workspace-configuration"><a class="anchor" href="#storage-strategies-for-che-workspaces_che-workspace-configuration"></a>Storage strategies for che workspaces</h3>
 <div class="paragraph">
 <p>Workspace Pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. It is possible to configure how the Che server uses PVCs for workspaces. The individual methods for this configuration are called PVC strategies:</p>
 </div>
@@ -832,7 +832,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 <p>Eclipse&#160;Che uses the <code>common</code> PVC strategy in combination with the "one namespace per user" namespace strategy when all Che workspaces operate in the user&#8217;s namespace, sharing one PVC.</p>
 </div>
 <div class="sect3">
-<h4 id="the-common-pvc-strategy_che"><a class="anchor" href="#the-common-pvc-strategy_che"></a>The <code>common</code> PVC strategy</h4>
+<h4 id="the-common-pvc-strategy_che-workspace-configuration"><a class="anchor" href="#the-common-pvc-strategy_che-workspace-configuration"></a>The <code>common</code> PVC strategy</h4>
 <div class="paragraph">
 <p>All workspaces inside a Kubernetes-native namespace use the same Persistent Volume Claim (PVC) as the default data storage when storing data such as the following in their declared volumes:</p>
 </div>
@@ -854,7 +854,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 In this strategy, all Che workspaces use the same PVC. When the user runs one workspace, it only binds to one node in the cluster at a time.</p>
 </div>
 <div class="paragraph">
-<p>The corresponding containers volume mounts link to a common volume, and sub-paths are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-PVC-name&gt;</em></code>. For more details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
+<p>The corresponding containers volume mounts link to a common volume, and sub-paths are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-PVC-name&gt;</em></code>. For more details, see <a href="#how-subpaths-are-used-in-pvcs_che-workspace-configuration">How subpaths are used in PVCs</a>.</p>
 </div>
 <div class="paragraph">
 <p>The Che Volume name is identical to the name of the user-defined PVC. It means that if a machine is configured to use a Che volume with the same name as the user-defined
@@ -885,7 +885,7 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="the-per-workspace-pvc-strategy_che"><a class="anchor" href="#the-per-workspace-pvc-strategy_che"></a>The <code>per-workspace</code> PVC strategy</h4>
+<h4 id="the-per-workspace-pvc-strategy_che-workspace-configuration"><a class="anchor" href="#the-per-workspace-pvc-strategy_che-workspace-configuration"></a>The <code>per-workspace</code> PVC strategy</h4>
 <div class="paragraph">
 <p>The <code>per-workspace</code> strategy is similar to the <code>common</code> PVC strategy. The only difference is that all workspace Volumes, but not all the workspaces, use the same PVC as the default data storage for:</p>
 </div>
@@ -910,7 +910,7 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="the-unique-pvc-strategy_che"><a class="anchor" href="#the-unique-pvc-strategy_che"></a>The <code>unique</code> PVC strategy</h4>
+<h4 id="the-unique-pvc-strategy_che-workspace-configuration"><a class="anchor" href="#the-unique-pvc-strategy_che-workspace-configuration"></a>The <code>unique</code> PVC strategy</h4>
 <div class="paragraph">
 <p>When using the `unique `PVC strategy, every Che Volume of a workspace has its own PVC. This means that workspace PVCs are:</p>
 </div>
@@ -927,7 +927,7 @@ Deleted when a corresponding workspace is deleted.</p>
 <p>They are provisioned with generated names to prevent naming conflicts with other PVCs in a namespace.</p>
 </li>
 <li>
-<p>Subpaths of the mounted Physical persistent volumes that reference user-defined PVCs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;PVC-name&gt;</em></code>. This ensures that the same PV data structure is set up with different PVC strategies. For details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
+<p>Subpaths of the mounted Physical persistent volumes that reference user-defined PVCs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;PVC-name&gt;</em></code>. This ensures that the same PV data structure is set up with different PVC strategies. For details, see <a href="#how-subpaths-are-used-in-pvcs_che-workspace-configuration">How subpaths are used in PVCs</a>.</p>
 </li>
 </ul>
 </div>
@@ -936,7 +936,7 @@ Deleted when a corresponding workspace is deleted.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="how-subpaths-are-used-in-pvcs_che"><a class="anchor" href="#how-subpaths-are-used-in-pvcs_che"></a>How subpaths are used in PVCs</h4>
+<h4 id="how-subpaths-are-used-in-pvcs_che-workspace-configuration"><a class="anchor" href="#how-subpaths-are-used-in-pvcs_che-workspace-configuration"></a>How subpaths are used in PVCs</h4>
 <div class="paragraph">
 <p>Subpaths illustrate the folder hierarchy in the Persistent Volumes (PV).</p>
 </div>
@@ -964,7 +964,7 @@ Deleted when a corresponding workspace is deleted.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuring-a-che-workspace-with-a-persistent-volume-strategy_che"><a class="anchor" href="#configuring-a-che-workspace-with-a-persistent-volume-strategy_che"></a>Configuring a Che workspace with a persistent volume strategy</h3>
+<h3 id="configuring-a-che-workspace-with-a-persistent-volume-strategy_che-workspace-configuration"><a class="anchor" href="#configuring-a-che-workspace-with-a-persistent-volume-strategy_che-workspace-configuration"></a>Configuring a Che workspace with a persistent volume strategy</h3>
 <div class="paragraph">
 <p>A persistent volume (PV) acts as a virtual storage instance that adds a volume to a cluster.</p>
 </div>
@@ -988,7 +988,7 @@ Deleted when a corresponding workspace is deleted.</p>
 <p>The mounted PVC is displayed as a folder in a container file system.</p>
 </div>
 <div class="sect3">
-<h4 id="configuring-a-pvc-strategy-using-the-helm-chart_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-helm-chart_che"></a>Configuring a PVC strategy using the Helm chart</h4>
+<h4 id="configuring-a-pvc-strategy-using-the-helm-chart_che-workspace-configuration"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-helm-chart_che-workspace-configuration"></a>Configuring a PVC strategy using the Helm chart</h4>
 <div class="paragraph">
 <p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Helm chart.</p>
 </div>
@@ -1041,7 +1041,7 @@ It is not recommended to reconfigure PVC strategies on an existing Che cluster w
 </div>
 </div>
 <div class="sect3">
-<h4 id="configuring-a-pvc-strategy-by-editing-a-configmap_che"><a class="anchor" href="#configuring-a-pvc-strategy-by-editing-a-configmap_che"></a>Configuring a PVC strategy strategy by editing a configMap</h4>
+<h4 id="configuring-a-pvc-strategy-by-editing-a-configmap_che-workspace-configuration"><a class="anchor" href="#configuring-a-pvc-strategy-by-editing-a-configmap_che-workspace-configuration"></a>Configuring a PVC strategy strategy by editing a configMap</h4>
 <div class="paragraph">
 <p>Based on the Che installation method, configMaps can be used to customize the working environment. A configMap is provided as an editable file that lists options to customize the Che environment. This method of configuring a persistent volume claim (PVC) strategy for a Che workspace is available only for the Helm installation.</p>
 </div>
@@ -1089,7 +1089,7 @@ $ oc scale --replicas=1 deployment {prod-deployment}</pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="configuring-a-pvc-strategy-using-the-operator_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-operator_che"></a>Configuring a PVC strategy using the Operator</h4>
+<h4 id="configuring-a-pvc-strategy-using-the-operator_che-workspace-configuration"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-operator_che-workspace-configuration"></a>Configuring a PVC strategy using the Operator</h4>
 <div class="paragraph">
 <p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Operator.</p>
 </div>
@@ -1163,7 +1163,7 @@ It is not recommended to reconfigure PVC strategies on an existing Che cluster w
 </div>
 </div>
 <div class="sect2">
-<h3 id="workspace-namespaces-configuration_che"><a class="anchor" href="#workspace-namespaces-configuration_che"></a>Workspace namespaces configuration</h3>
+<h3 id="workspace-namespaces-configuration_che-workspace-configuration"><a class="anchor" href="#workspace-namespaces-configuration_che-workspace-configuration"></a>Workspace namespaces configuration</h3>
 <div class="paragraph">
 <p>The Kubernetes namespace where a new workspace Pod is deployed depends on the Che server configuration. By default, every workspace is deployed in a distinct namespace, but the user can configure the Che server to deploy all workspaces in one specific namespace. The name of a namespace must be provided as a Che server configuration property and cannot be changed at runtime.</p>
 </div>
@@ -1171,7 +1171,7 @@ It is not recommended to reconfigure PVC strategies on an existing Che cluster w
 </div>
 </div>
 <div class="sect1">
-<h2 id="che-workspace-creation-flow_che"><a class="anchor" href="#che-workspace-creation-flow_che"></a>Che workspace creation flow</h2>
+<h2 id="che-workspace-creation-flow_che-workspaces-architecture"><a class="anchor" href="#che-workspace-creation-flow_che-workspaces-architecture"></a>Che workspace creation flow</h2>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
