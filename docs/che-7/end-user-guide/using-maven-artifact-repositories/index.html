@@ -76,16 +76,16 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Navigating Che</span>
+    <a class="nav-link" href="../navigating-che/">Navigating Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../navigating-che-using-the-dashboard/">Navigating Che: dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../importing-certificates-to-browsers/">Importing self-signed certificates to browsers</a>
+    <a class="nav-link" href="../importing-self-signed-certificates-to-browsers/">Importing certificates to browsers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../accessing-che-from-openshift-developer-perspective/">Accessing Che from OpenShift Developer Perspective</a>
+    <a class="nav-link" href="../accessing-che-from-openshift-developer-perspective/">Navigating Che from OpenShift Developer Perspective</a>
   </li>
 </ul>
   </li>
@@ -745,7 +745,7 @@ metadata:
     app.kubernetes.io/component: workspace-secret
   annotations:
     che.eclipse.org/automount-workspace-secret: true
-    che.eclipse.org/mount-path: {prod-home}/.m2
+    che.eclipse.org/mount-path: /home/user/.m2
     che.eclipse.org/mount-as: file
 type: Opaque
 data:
@@ -762,14 +762,14 @@ data:
 </div>
 </li>
 <li>
-<p>Start a new workspace. You will see <code>{prod-home}/.m2/settings.xml</code> with your original content in the <code>maven</code> container.</p>
+<p>Start a new workspace. You will see <code>/home/user/.m2/settings.xml</code> with your original content in the <code>maven</code> container.</p>
 </li>
 </ol>
 </div>
 <div class="sect2">
 <h3 id="_openshift_3_11_and_kubernetes_1_13"><a class="anchor" href="#_openshift_3_11_and_kubernetes_1_13"></a>Openshift 3.11 and Kubernetes &lt;1.13</h3>
 <div class="paragraph">
-<p>On Kubernetes versions older than 1.13, it&#8217;s not possible to have multiple VolumeMounts at same path so having devfile with volume <code>{prod-home}/.m2</code> and secret at <code>{prod-home}/.m2/settings.xml</code> would resolve into the conflict. On these clusters use <code>{prod-home}/.m2/repository</code> as a volume for maven repository in the devfile:</p>
+<p>On Kubernetes versions older than 1.13, it&#8217;s not possible to have multiple VolumeMounts at same path so having devfile with volume <code>/home/user/.m2</code> and secret at <code>/home/user/.m2/settings.xml</code> would resolve into the conflict. On these clusters use <code>/home/user/.m2/repository</code> as a volume for maven repository in the devfile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -782,7 +782,7 @@ components:
    image: maven:3.11
    volumes:
      - name: m2
-       containerPath: {prod-home}/.m2/repository
+       containerPath: /home/user/.m2/repository
    ...</code></pre>
 </div>
 </div>

@@ -76,16 +76,16 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Navigating Che</span>
+    <a class="nav-link" href="../navigating-che/">Navigating Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../navigating-che-using-the-dashboard/">Navigating Che: dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../importing-certificates-to-browsers/">Importing self-signed certificates to browsers</a>
+    <a class="nav-link" href="../importing-self-signed-certificates-to-browsers/">Importing certificates to browsers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../accessing-che-from-openshift-developer-perspective/">Accessing Che from OpenShift Developer Perspective</a>
+    <a class="nav-link" href="../accessing-che-from-openshift-developer-perspective/">Navigating Che from OpenShift Developer Perspective</a>
   </li>
 </ul>
   </li>
@@ -716,7 +716,7 @@ metadata:
   name: mvn-settings-secret
   annotations:
     che.eclipse.org/target-container: maven
-    che.eclipse.org/mount-path: {prod-home}/.m2/
+    che.eclipse.org/mount-path: /home/user/.m2/
     che.eclipse.org/mount-as: file
   labels:
 ...</code></pre>
@@ -733,7 +733,7 @@ metadata:
   name: mvn-settings-secret
   annotations:
     che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: {prod-home}/.m2/
+    che.eclipse.org/mount-path: /home/user/.m2/
     che.eclipse.org/mount-as: file
   labels:
 ...</code></pre>
@@ -753,14 +753,14 @@ metadata:
     app.kubernetes.io/component: workspace-secret
   annotations:
     che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: {prod-home}/.m2/
+    che.eclipse.org/mount-path: /home/user/.m2/
     che.eclipse.org/mount-as: file
 data:
   settings.xml: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This results in a file named <code>settings.xml</code> being mounted at the <code>{prod-home}/.m2/</code> path of all workspace containers.</p>
+<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of all workspace containers.</p>
 </div>
 <div class="paragraph">
 <p>The secret-s mount path can be overridden for specific components of the workspace using devfile. To change mount path, an additional volume should be declared in a component of the devfile, with name matching overridden secret name, and desired mount path.</p>
