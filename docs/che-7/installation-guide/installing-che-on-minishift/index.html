@@ -633,8 +633,153 @@ Remember that single-node OpenShift clusters are suited only for testing or sing
 <div class="paragraph">
 <p>When deploying Che on Minishift, it is necessary to manually generate TLS certificates for use by the Che server.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generating-self-signed-certificates_che"><a class="anchor" href="#generating-self-signed-certificates_che"></a>Generating self-signed TLS certificates</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Unresolved include directive in modules/installation-guide/partials/assembly_installing-che-on-minishift.adoc - include::partial$proc_generating-self-signed-certificates.adoc[]</p>
+<p>This section describes how to prepare self-signed TLS certificates to use with Che on Minishift.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The expected domain name where the Che deployment is planned. Typically, for Minishift, this is <code>$(minishift ip).nip.io</code></p>
+</li>
+<li>
+<p>The location of the <code>openssl.cnf</code> file on the target machine.</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Usual OpenSSL configuration file locations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Linux distribution</th>
+<th class="tableblock halign-left valign-top">File location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fedora, Red Hat Enterprise Linux, CentOS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/etc/pki/tls/openssl.cnf</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Debian, Ubuntu, Mint, Arch Linux</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/etc/ssl/openssl.cnf</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the necessary environment variables:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ CA_CN="Local Eclipse&#160;Che Signer"
+$ DOMAIN=*.<em>&lt;expected.domain.com&gt;</em>
+$ OPENSSL_CNF=<em>&lt;path_to_openssl.cnf&gt;</em></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example (Fedora)</div>
+<div class="content">
+<pre>$ CA_CN="Local Eclipse&#160;Che Signer"
+$ DOMAIN=\*.$( minishift ip ).nip.io
+$ OPENSSL_CNF=/etc/pki/tls/openssl.cnf</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example (macOS)</div>
+<div class="content">
+<pre>$ export CA_CN="Local Eclipse&#160;Che Signer"
+$ export DOMAIN=\*.$( minishift ip ).nip.io
+$ export OPENSSL_CNF=/System/Library/OpenSSL/openssl.cnf</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the root Certificate Authority (CA) key. Add the <code>-des3</code> parameter to use a passphrase:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out ca.key 4096</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the root CA certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -x509 \
+  -new -nodes \
+  -key ca.key \
+  -sha256 \
+  -days 1024 \
+  -out ca.crt \
+  -subj /CN="${CA_CN}" \
+  -reqexts SAN \
+  -extensions SAN \
+  -config &lt;(cat ${OPENSSL_CNF} \
+      &lt;(printf '[SAN]\nbasicConstraints=critical, CA:TRUE\nkeyUsage=keyCertSign, cRLSign, digitalSignature'))</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the domain key:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl genrsa -out domain.key 2048</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the certificate signing request for the domain:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl req -new -sha256 \
+    -key domain.key \
+    -subj "/O=Local Eclipse&#160;Che/CN=${DOMAIN}" \
+    -reqexts SAN \
+    -config &lt;(cat ${OPENSSL_CNF} \
+        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=digitalSignature, keyEncipherment, keyAgreement, dataEncipherment\nextendedKeyUsage=serverAuth")) \
+    -out domain.csr</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate the domain certificate:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ openssl x509 \
+    -req \
+    -sha256 \
+    -extfile &lt;(printf "subjectAltName=DNS:${DOMAIN}\nbasicConstraints=critical, CA:FALSE\nkeyUsage=digitalSignature, keyEncipherment, keyAgreement, dataEncipherment\nextendedKeyUsage=serverAuth") \
+    -days 365 \
+    -in domain.csr \
+    -CA ca.crt \
+    -CAkey ca.key \
+    -CAcreateserial -out domain.crt</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This procedure allows to use <code>domain.crt</code> and <code>domain.key</code> for TLS Route and Ingress, and <code>ca.crt</code> for importing into browsers.</p>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../end-user-guide/importing-self-signed-certificates-to-browsers/" class="page">Importing self-signed certificates to browsers</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -663,7 +808,7 @@ This method involves reconfiguration of the OpenShift router to use user-provide
 <p>A running OpenShift 3 instance, version 3.11 or higher.</p>
 </li>
 <li>
-<p>All required keys and certificates. See <a href="#generating-self-signed-certificates_che">[generating-self-signed-certificates_che]</a>.</p>
+<p>All required keys and certificates. See <a href="#generating-self-signed-certificates_che">Generating self-signed TLS certificates</a>.</p>
 </li>
 </ul>
 </div>
