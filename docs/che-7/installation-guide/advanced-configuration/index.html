@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Importing TLS certificates to Che server Java truststore :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/importing-tls-certificates-to-che-server-java-truststore/">
-    <meta name="keywords" content="installation-guide, importing-tls-certificates-to-che-server-java-truststore">
+    <title>Configuring Che :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/advanced-configuration/">
+    <meta name="keywords" content="installation-guide, advanced-configuration, advanced-configuration-options">
     <meta name="generator" content="Antora 2.3.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -275,9 +275,9 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../advanced-configuration/">Advanced configuration</a>
+    <a class="nav-link" href="./">Advanced configuration</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../advanced-configuration-options-for-the-che-server-component/">Advanced configuration options for Che server</a>
@@ -300,8 +300,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Importing TLS certificates to Che server Java truststore</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../importing-tls-certificates-to-che-server-java-truststore/">Importing TLS certificates to Che server Java truststore</a>
   </li>
 </ul>
   </li>
@@ -571,179 +571,49 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Eclipse Che 7 Documentation</a></li>
     <li>Installation Guide</li>
-    <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Importing TLS certificates to Che server Java truststore</a></li>
+    <li><a href="./">Advanced configuration</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/importing-tls-certificates-to-che-server-java-truststore.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/advanced-configuration.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Importing TLS certificates to Che server Java truststore</h1>
+<h1 class="page">Configuring Che</h1>
 <div class="paragraph">
-<p>When Che server attempts to send an HTTPS request to an external service as Keycloak, a proxy or a git server, the connection fails if Che does not trust the TLS certificate used by the external service.</p>
-</div>
-<div class="paragraph">
-<p>To fix this problem, configure Che to authorize HTTPS communication with external services, such as identity and Git servers, by adding information about the TLS certificates to the Che configuration.</p>
+<p>The following chapter describes configuration methods and options for Eclipse&#160;Che, with some user stories as example.</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
+<p><a href="../advanced-configuration-options-for-the-che-server-component/" class="page">Advanced configuration options for the Che server component</a> describes advanced configuration methods to use when the previous method is not applicable.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Save the external services certificates to a local file system.</p>
-</li>
-<li>
-<p>Create a new configMap with the required TLS certificates:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl create configmap <em>&lt;configMap-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
-</div>
-</div>
 <div class="paragraph">
-<p>To apply more than one certificate, add another <code>--from-file=<em>&lt;certificate-file-path&gt;</em></code> option to the above command.</p>
-</div>
-</li>
-<li>
-<p>Update the existing Che server configuration</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Use these steps with existing instances of Che. To install a new instance of Che with self-signed TLS certificates, create a new <code>CheCluster</code> Custom Resource or Helm Chart property, based on the installation method selected, instead of updating the existing configuration.
-</td>
-</tr>
-</table>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>For a Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> deployment:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Define a name for the newly created configMap by editing the <code>spec.server.ServerTrustStoreConfigMapName</code> <code>CheCluster</code> Custom Resource property to match the previously created configMap:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl patch checluster eclipse-che -n che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "<em>&lt;config-map-name&gt;</em>"}]'</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>For a Che <a href="https://helm.sh/">Helm Chart</a> deployment:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the <a href="https://github.com/eclipse/che">che</a> project.</p>
-</li>
-<li>
-<p>Go to the <code>deploy/kubernetes/helm/che</code> directory.</p>
-</li>
-<li>
-<p>Define a name for the newly created configMap by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the previously created configMap:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=<em>&lt;config-map name&gt;</em> \
-   --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>When using Minikube to run Che, substitute <em>&lt;kubernetes-cluster-domain&gt;</em> with <code>$(minikube ip).nip.io</code>.</p>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<div class="title">Verification</div>
-<p>If the certificates have been added correctly, the Che server starts and obtains Keycloak configuration over HTTPS. Otherwise here is a list of things to verify:</p>
+<p>The next sections describe some specific user stories.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>CheCluster attribute <code>serverTrustStoreConfigMapName</code> value matches the name of the ConfigMap. Get the value using the following command :</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl get -o json checluster/eclipse-che -n che | jq .spec.server.serverTrustStoreConfigMapName</pre>
-</div>
-</div>
+<p><a href="../configuring-namespace-strategies/" class="page">Configuring namespace strategies</a></p>
 </li>
 <li>
-<p>Che Pod Volumes list contains one Volume that uses the ConfigMap as data-source. To get the list of Volumes of the Che Pod:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl get po -o json <em>&lt;che-pod-name&gt;</em> -n che | jq .spec.volumes</pre>
-</div>
-</div>
+<p><a href="../configuring-workspaces-nodeselector/" class="page">Configuring workspaces nodeSelector</a></p>
 </li>
 <li>
-<p>Certificates are mounted in folder <code>/public-certs/</code> of the Che server container. This command returns the list of files in that folder:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- ls /public-certs/</pre>
-</div>
-</div>
+<p><a href="../configuring-che-hostname/" class="page">Configuring Eclipse&#160;Che server hostname</a></p>
 </li>
 <li>
-<p>In the Che server logs there is a line for every certificate added to the Java truststore, including Che self signed certificate.</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n che
-(...)
-Found a custom cert. Adding it to java trust store based on /usr/lib/jvm/java-1.8.0/jre/lib/security/cacerts
-(...)</pre>
-</div>
-</div>
+<p><a href="../deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="page">Deploying Che with support for Git repositories with self-signed certificates</a></p>
 </li>
 <li>
-<p>$Che server Java trustore contains the certificates. The certificates SHA1 fingerpints are among the list of the SHA1 of the certificates included in the trustore returned by the following command:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- keytool -list -keystore /home/che/cacerts
-Your keystore contains 141 entries
-
-(...)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To get the SHA1 hash of a certificate on the local filesystem:</p>
-</div>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ openssl x509 -in <em>&lt;certificate-file-path&gt;</em> -fingerprint -noout
-SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pre>
-</div>
-</div>
+<p><a href="../installing-che-using-storage-classes/" class="page">Installing Che using storage classes</a></p>
+</li>
+<li>
+<p><a href="../configuring-storage-types/" class="page">Configuring storage types</a></p>
+</li>
+<li>
+<p><a href="../importing-tls-certificates-to-che-server-java-truststore/" class="page">Importing TLS certificates to Che server Java truststore</a></p>
 </li>
 </ul>
 </div>
