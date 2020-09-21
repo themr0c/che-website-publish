@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installing Che locally :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/installing-che-locally/">
-    <meta name="keywords" content="overview, running-che-locally, installing-che-locally">
+    <title>Upgrading Che using the CLI management tool in restricted environment :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/upgrading-che-using-the-cli-management-tool-in-restricted-environment/">
+    <meta name="keywords" content="installation-guide, upgrading-che-using-the-cli-management-tool-in-restricted-environment, upgrading-che-in-restricted-environment">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -243,9 +243,9 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">Installing Che locally</a>
+    <a class="nav-link" href="../installing-che-locally/">Installing Che locally</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../installing-che-on-codeready-containers/">Installing Che on CodeReady Containers</a>
@@ -315,8 +315,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che using the CLI management tool in restricted environment</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Upgrading Che using the CLI management tool in restricted environment</a>
   </li>
 </ul>
   </li>
@@ -563,77 +563,91 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Eclipse Che 7 Documentation</a></li>
     <li>Installation Guide</li>
-    <li><a href="../installing-che/">Installing Che</a></li>
-    <li><a href="./">Installing Che locally</a></li>
+    <li><a href="../upgrading-che/">Upgrading Che</a></li>
+    <li><a href="./">Upgrading Che using the CLI management tool in restricted environment</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/installing-che-locally.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/upgrading-che-using-the-cli-management-tool-in-restricted-environment.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Installing Che locally</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Upgrading Che using the CLI management tool in restricted environment</h1>
 <div class="paragraph">
-<p>This section contains instructions for deploying and running Eclipse&#160;Che locally, on a personal workstation.</p>
+<p>This section describes how to upgrade from previous minor version using the CLI management tool in restricted environment.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The following method of upgrading an older version of Che in restricted environment is specific to OpenShift 3.11 and 4.x, but it is only relevant when the existing instance has been installed using the chectl <code>--installer operator</code> method, which is the default installation method for OpenShift 3.11.</p>
 </div>
 <div class="paragraph">
+<p>This method is also available for instances deployed on Kubernetes.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
 <div class="title">Prerequisites</div>
-<p>To run and manage Che:</p>
+<ul>
+<li>
+<p>An administrative account on an OpenShift instance.</p>
+</li>
+<li>
+<p>A running instance of a previous minor version of Eclipse&#160;Che, installed using the CLI management tool on the same instance of OpenShift, in the <code><em>&lt;che&gt;</em></code> project.</p>
+</li>
+<li>
+<p>Essential container images are available to the Che server running in the cluster. See <a href="../pulling-images-used-by-che-to-a-private-registry/" class="page">Pulling images used by Che to a private registry</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> 7.18 management tool is installed. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In all running workspaces in the Che 7.16 instance, save and push changes back to the Git repositories.</p>
+</li>
+<li>
+<p>Terminate all workspaces in the Che 7.16 instance.</p>
+</li>
+<li>
+<p>Run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:update --che-operator-image=<em>&lt;image-registry&gt;</em>/<em>&lt;organization&gt;</em>/che-operator:7.18 -n che</pre>
+</div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A Kubernetes (version 1.9 or higher) or OpenShift (version 3.11 or higher) cluster to deploy Che on.</p>
+<p><em>&lt;image-registry&gt;</em>: A host name and a port of the container-image registry accessible in the restricted environment.</p>
 </li>
 <li>
-<p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
+<p><em>&lt;organization&gt;</em>: An organization of the container-image registry. See: <a href="../pulling-images-used-by-che-to-a-private-registry/" class="page">Pulling images used by Che to a private registry</a>.</p>
 </li>
 </ul>
 </div>
-<script id="asciicast-216201" src="https://asciinema.org/a/216201.js" async></script>
+</li>
+</ol>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_deploying_che_locally_using_chectl"><a class="anchor" href="#_deploying_che_locally_using_chectl"></a>Deploying Che locally using chectl</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Choose one of the following procedures to start the Che Server using the <code>chectl</code> tool.</p>
-</div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
 <li>
-<p><a href="../installing-che-on-codeready-containers/" class="page">Installing Che on CodeReady Containers</a></p>
+<p>Navigate to the Che instance.</p>
 </li>
 <li>
-<p><a href="../installing-che-on-docker-desktop/" class="page">Installing Che on Docker Desktop</a></p>
+<p>The 7.18 version number is visible at the bottom of the page.</p>
 </li>
-<li>
-<p><a href="../installing-che-on-minikube/" class="page">Installing Che on Minikube</a></p>
-</li>
-<li>
-<p><a href="../installing-che-on-minishift/" class="page">Installing Che on Minishift</a></p>
-</li>
-<li>
-<p><a href="../installing-che-on-kind/" class="page">Installing Che on Kind</a></p>
-</li>
-<li>
-<p><a href="../installing-che-on-kubespray/" class="page">Installing Che on Kubespray</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="../../end-user-guide/creating-a-workspace-from-code-sample/" class="page">Creating a workspace from code sample</a></p>
-</li>
-<li>
-<p><a href="../../end-user-guide/creating-a-workspace-by-importing-source-code-of-a-project/" class="page">Creating a workspace by importing the source code of a project</a></p>
-</li>
-</ul>
-</div>
-</div>
+</ol>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
