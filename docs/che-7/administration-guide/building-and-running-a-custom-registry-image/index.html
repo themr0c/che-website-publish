@@ -784,7 +784,7 @@ $ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Prerequisites</div>
-<p>The <code>my-plug-in-registry</code> and <code>my-devfile-registry</code> images used in this section are built using the <code>docker</code> command. This section assumes that these images are available on the Kubernetes and OpenShift cluster where Che is deployed.</p>
+<p>The <code>my-plug-in-registry</code> and <code>my-devfile-registry</code> images used in this section are built using the <code>docker</code> command. This section assumes that these images are available on the Kubernetes or OpenShift cluster where Che is deployed.</p>
 </div>
 <div class="paragraph">
 <p>This is true on Minishift or Minikube, for example, if before running the <code>docker build</code> commands, the user executed the <code>eval $\{minikube docker-env}</code> command (or, the <code>eval $\{minishift docker-env}</code> command for Minishift).</p>
@@ -862,7 +862,7 @@ helm upgrade --install che-devfile-registry \
 <p>The Helm chart creates a Pod, a service, and an Ingress. To get them, use <code>app=che-plugin-registry</code> (or <code>app=che-plugin-registry</code> for the devfile registry).</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl get -o custom-columns=TYPE:.kind,NAME:.metadata.name \
+<pre>$ kubectl  get -o custom-columns=TYPE:.kind,NAME:.metadata.name \
   -l app=che-plugin-registry pod,svc,ingress
 TYPE      NAME
 Pod       che-plugin-registry-5c7cd8d5c9-zlqlz
@@ -879,7 +879,7 @@ Ingress   che-plugin-registry</pre>
 <p>To verify that the new plug-in is correctly published to the plug-in registry, make a request to the registry path <code>/v3/plugins/index.json</code> (or <code>/devfiles/index.json</code> for the devfile registry).</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ URL=$(kubectl get -o 'custom-columns=URL:.spec.rules[0].host' \
+<pre>$ URL=$(kubectl  get -o 'custom-columns=URL:.spec.rules[0].host' \
   -l app=che-plugin-registry ingress --no-headers)
 $ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
 $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
@@ -912,7 +912,7 @@ $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 <p>Verify that the Che server points to the URL of the registry. To do this, compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap (or <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> for the devfile registry):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl get \
+<pre>$ kubectl  get \
   -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN<em>REGISTRY</em>URL']" \
   --no-headers cm/che
 URL
@@ -924,7 +924,7 @@ http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl get -o 'custom-columns=URL:.spec.rules[0].host' \
+<pre>$ kubectl  get -o 'custom-columns=URL:.spec.rules[0].host' \
   -l app=che-plugin-registry ingress --no-headers
 che-plugin-registry-che.192.168.99.100.nip.io</pre>
 </div>
@@ -934,10 +934,10 @@ che-plugin-registry-che.192.168.99.100.nip.io</pre>
 <p>If they do not match, update the ConfigMap and restart the Che server.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl edit cm/che
+<pre>$ kubectl  edit cm/che
 (...)
-$ kubectl scale --replicas=0 deployment/che
-$ kubectl scale --replicas=1 deployment/che</pre>
+$ kubectl  scale --replicas=0 deployment/che
+$ kubectl  scale --replicas=1 deployment/che</pre>
 </div>
 </div>
 <div class="paragraph">

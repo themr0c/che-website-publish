@@ -1047,7 +1047,7 @@ It is impossible to mix the <code>id</code> and <code>reference</code> fields in
 <div class="sect3">
 <h4 id="_component_type_kubernetes"><a class="anchor" href="#_component_type_kubernetes"></a>Component type: kubernetes</h4>
 <div class="paragraph">
-<p>A complex component type that allows to apply configuration from a list of Kubernetes or OpenShift components.</p>
+<p>A complex component type that allows to apply configuration from a list of Kubernetes components.</p>
 </div>
 <div class="paragraph">
 <p>The content can be provided through the <code>reference</code> attribute, which points to the file with the component content.</p>
@@ -1090,7 +1090,7 @@ It is impossible to mix the <code>id</code> and <code>reference</code> fields in
 <div class="sect3">
 <h4 id="_overriding_container_entrypoints"><a class="anchor" href="#_overriding_container_entrypoints"></a>Overriding container entrypoints</h4>
 <div class="paragraph">
-<p>As with the <a href="#component-type-dockerimage_making-a-workspace-portable-using-a-devfile">understood</a> by Kubernetes).</p>
+<p>As with the <a href="#component-type-dockerimage_making-a-workspace-portable-using-a-devfile">understood</a> by Kubernetes or OpenShift).</p>
 </div>
 <div class="paragraph">
 <p>There can be more containers in the list (contained in Pods or Pod templates of deployments). To select which containers to apply the entrypoint changes to.</p>
@@ -1583,7 +1583,7 @@ components:
 <div class="ulist">
 <ul>
 <li>
-<p><code>discoverable</code>: If an endpoint is discoverable, it means that it can be accessed using its name as the host name within the workspace containers (in the Kubernetes parlance, a service is created for it with the provided name).
+<p><code>discoverable</code>: If an endpoint is discoverable, it means that it can be accessed using its name as the host name within the workspace containers (in the Kubernetes or OpenShift terminology, a service is created for it with the provided name).
 55</p>
 </li>
 <li>
@@ -1693,9 +1693,9 @@ components:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_kubernetes_and_openshift_resources"><a class="anchor" href="#_kubernetes_and_openshift_resources"></a>Kubernetes and OpenShift resources</h4>
+<h4 id="_kubernetes_or_openshift_resources"><a class="anchor" href="#_kubernetes_or_openshift_resources"></a>Kubernetes or OpenShift resources</h4>
 <div class="paragraph">
-<p>Complex deployments can be described using Kubernetes or OpenShift resource lists that can be referenced in the devfile. This makes them a part of the workspace.</p>
+<p>To describe complex deployments, include references to Kubernetes or OpenShift resource lists in the devfile. The Kubernetes or OpenShift resource lists become a part of the workspace.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1707,16 +1707,10 @@ components:
 <div class="ulist">
 <ul>
 <li>
-<p>Because a Che workspace is internally represented as a single deployment, all resources from the Kubernetes or OpenShift list are merged into that single deployment.</p>
+<p>Che merges all resources from the Kubernetes or OpenShift resource lists into a single deployment.</p>
 </li>
 <li>
-<p>Be careful when designing such lists because this can result in name conflicts and other problems.</p>
-</li>
-<li>
-<p>Only the following subset of the Kubernetes objects are supported: <code>deployments</code>, <code>pods</code>, <code>services</code>, <code>persistent volume claims</code>, <code>secrets</code>, and <code>ConfigMaps</code>. Kubernetes Ingresses are ignored, but OpenShift routes are supported. A workspace created from a devfile using any other object types fails to start.</p>
-</li>
-<li>
-<p>When running Che on a Kubernetes cluster, only Kubernetes lists are supported. When running Che on an OpenShift cluster, both Kubernetes or OpenShift lists are supported.</p>
+<p>Be careful when designing such lists to avoid name conflicts and other problems.</p>
 </li>
 </ul>
 </div>
@@ -1724,6 +1718,29 @@ components:
 </tr>
 </table>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Supported Kubernetes or OpenShift resources</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Platform</th>
+<th class="tableblock halign-left valign-top">Supported resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployments</code>, <code>pods</code>, <code>services</code>, <code>persistent volume claims</code>, <code>secrets</code>, <code>ConfigMaps</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployments</code>, <code>pods</code>, <code>services</code>, <code>persistent volume claims</code>, <code>secrets</code>, <code>ConfigMaps</code>, <code>Routes</code></p></td>
+</tr>
+</tbody>
+</table>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
@@ -1741,7 +1758,7 @@ components:
 </div>
 </div>
 <div class="paragraph">
-<p>The preceding component references a file that is relative to the location of the devfile itself. Meaning, this devfile is only loadable by a Che factory to which you supply the location of the devfile and therefore it is able to figure out the location of the referenced Kubernetes resource list.</p>
+<p>The preceding component references a file that is relative to the location of the devfile itself. Meaning, this devfile is only loadable by a Che factory to which you supply the location of the devfile and therefore it is able to figure out the location of the referenced Kubernetes or OpenShift resource list.</p>
 </div>
 <div class="paragraph">
 <p>The following is an example of the <code>postgres.yaml</code> file.</p>
@@ -1811,7 +1828,7 @@ items:
 <p>For a basic example of a devfile with an associated Kubernetes or OpenShift list, see <a href="https://github.com/redhat-developer/devfile/tree/master/samples/web-nodejs-with-db-sample">web-nodejs-with-db-sample</a> on redhat-developer GitHub.</p>
 </div>
 <div class="paragraph">
-<p>If you use generic or large resource lists from which you will only need a subset of resources, you can select particular resources from the list using a selector (which, as the usual Kubernetes selectors, works on the labels of the resources in the list).</p>
+<p>If you use generic or large resource lists from which you will only need a subset of resources, you can select particular resources from the list using a selector (which, as the usual Kubernetes or OpenShift selectors, works on the labels of the resources in the list).</p>
 </div>
 <div class="listingblock">
 <div class="content">
