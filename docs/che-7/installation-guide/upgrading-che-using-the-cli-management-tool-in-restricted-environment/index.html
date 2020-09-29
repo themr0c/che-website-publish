@@ -316,7 +316,7 @@
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Upgrading Che using the CLI management tool in restricted environment</a>
+    <a class="nav-link" href="./">Upgrading Che in restricted environment</a>
   </li>
 </ul>
   </li>
@@ -564,7 +564,7 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../upgrading-che/">Upgrading Che</a></li>
-    <li><a href="./">Upgrading Che using the CLI management tool in restricted environment</a></li>
+    <li><a href="./">Upgrading Che in restricted environment</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/upgrading-che-using-the-cli-management-tool-in-restricted-environment.adoc">Edit this Page</a></div>
@@ -572,25 +572,284 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Upgrading Che using the CLI management tool in restricted environment</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to upgrade from previous minor version using the CLI management tool in restricted environment.</p>
+<p>This section describes how to upgrade Eclipse&#160;Che using the CLI management tool in restricted environment. The upgrade path supports minor version update, from Che version 7.18 to version 7.19.</p>
 </div>
-<div class="admonitionblock note">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An administrative account on an instance of Kubernetes or OpenShift.</p>
+</li>
+<li>
+<p>A running instance version 7.18 of Eclipse&#160;Che, installed using the CLI management tool on the same instance of Kubernetes or OpenShift, with the chectl <code>--installer operator</code> method, in the <code><em>&lt;che&gt;</em></code> project. See <a href="../installing-che-in-a-restricted-environment/" class="page">Installing Che in a restricted environment</a>.</p>
+</li>
+<li>
+<p>The <code>chectl</code> 7.19 management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="understanding-network-connectivity-in-restricted-environments_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#understanding-network-connectivity-in-restricted-environments_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Understanding network connectivity in restricted environments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che requires that each Kubernetes Ingress or OpenShift Route created for Che is accessible from inside the Kubernetes or OpenShift cluster.
+These Che components have a Kubernetes Ingress or OpenShift Route: <code>che-server</code>, <code>keycloak</code>, <code>devfile-registry</code>, <code>plugin-registry</code>.</p>
+</div>
+<div class="paragraph">
+<p>Consider the network topology of the environment to determine how best to accomplish this.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Network owned by a company or an organization, disconnected from the public Internet</div>
+<div class="content">
+<div class="paragraph">
+<p>The network administrators must ensure that it is possible to route traffic bound from the cluster to Kubernetes Ingress or OpenShift Route host names.</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Private subnetwork in a cloud provider</div>
+<div class="content">
+<div class="paragraph">
+<p>Create a proxy configuration allowing the traffic to leave the node to reach an external-facing Load Balancer.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline plug-in registry image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to build an <em>offline</em> plug-in registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains plug-in metadata and all plug-in or extension artifacts.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Clone the plug-in registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-plugin-registry.git
+$ cd che-plugin-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to deploy:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.19.x</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the plug-in registry image, including only the <em>latest</em> version of each plug-in:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline \
+           --latest-only</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>The following method of upgrading an older version of Che in restricted environment is specific to OpenShift 3.11 and 4.x, but it is only relevant when the existing instance has been installed using the chectl <code>--installer operator</code> method, which is the default installation method for OpenShift 3.11.</p>
-</div>
-<div class="paragraph">
-<p>This method is also available for instances deployed on Kubernetes.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
+</li>
+</ul>
 </div>
 </td>
 </tr>
 </table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline devfile registry image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to build an <em>offline</em> devfile registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains all sample projects referenced in devfiles as <code>zip</code> files.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Clone the devfile registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-devfile-registry.git
+$ cd che-devfile-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to deploy:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.19.x</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the devfile registry image:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preparing-a-private-registry_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#preparing-a-private-registry_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Preparing a private registry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che workspaces consist of Pods running in a cluster, and therefore, many images are required to support all languages and plug-ins that can be used for a workspace. In an offline deployment, these images must be made available to the Che server running in the cluster.</p>
+</div>
+<div class="paragraph">
+<div class="title">Essential images</div>
+<p>Running any workspace requires these <em>essential</em> images:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Images essential to starting workspaces</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The main Che server image</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-postgres</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The database used by Che</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-keycloak</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak Pod for user authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-jwtproxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT proxy image for enabling authentication between services. See <a href="../../administration-guide/che-workspaces-architecture/#che-workspace-jwt-proxy_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment" class="page">Che workspace JWT proxy</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-artifacts-broker</code><br>
+  <code>quay.io/eclipse/che-plugin-metadata-broker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Images for adding plug-ins to workspaces. See <a href="../../administration-guide/che-workspaces-architecture/#che-plug-in-broker_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment" class="page">Che plug-ins broker</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in registry that store information about plugins and the runtime containers they require. See <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline plug-in registry image</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-devfile-registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile registry that store descriptions of the sample projects and how to load them as workspaces via the Getting Started tab in the dashboard. See <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline devfile registry image</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<div class="title">Workspace-specific images</div>
+<p>The images described in this section are required for running a workspace. Any one workspace uses a subset of the images below. It is only necessary to include the images that are used in workspaces created. For example, when using Che only for developing in Java, many images can be omitted.</p>
+</div>
+<div class="paragraph">
+<p>To avoid issues when only a subset of the images described in this section is needed, remove unnecessary plug-ins and devfiles when building custom registries (see <a href="../../administration-guide/customizing-the-devfile-and-plug-in-registries/" class="page">Customizing the devfile and plug-in registries</a> for more information).</p>
+</div>
+<div class="paragraph">
+<div class="title">Plug-in sidecar images</div>
+<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline plug-in registry image</a>) includes a file with the list of all images referenced in its plug-ins.</p>
+</div>
+<div class="paragraph">
+<p>To get a list of images required for plug-ins, display this file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -it --rm \
+  --entrypoint cat <em>&lt;my-offline-registry&gt;</em> /var/www/html/v3/external_images.txt</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom plug-in registry.</p>
+</div>
+<div class="paragraph">
+<div class="title">Devfile base images</div>
+<p>Every Che workspace uses one or more <em>base</em> images, which contain the development dependencies for projects that are being built. To use the samples, Che pull these images from the references to them in the devfile registry. This is needed because the sample devfiles included in the devfile registry apply to images suited for this purpose.</p>
+</div>
+<div class="paragraph">
+<p>An offline devfile registry (see <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline devfile registry image</a>) contains a file with the list of all images referenced in its devfiles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -it --rm \
+  --entrypoint cat <em>&lt;my-offline-registry&gt;</em> /var/www/html/devfiles/external_images.txt</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom devfile registry.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="upgrading-che-using-the-cli-management-tool-in-restricted-environment_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#upgrading-che-using-the-cli-management-tool-in-restricted-environment_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Upgrading Che using the CLI management tool in restricted environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to upgrade Eclipse&#160;Che using the CLI management tool in restricted environment.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -599,13 +858,13 @@
 <p>An administrative account on an OpenShift instance.</p>
 </li>
 <li>
-<p>A running instance of a previous minor version of Eclipse&#160;Che, installed using the CLI management tool on the same instance of OpenShift, in the <code><em>&lt;che&gt;</em></code> project.</p>
+<p>A running instance version 7.18 of Eclipse&#160;Che, installed using the CLI management tool on the same instance of Kubernetes or OpenShift, with the chectl <code>--installer operator</code> method, in the <code><em>&lt;che&gt;</em></code> project. See <a href="../installing-che-in-a-restricted-environment/" class="page">Installing Che in a restricted environment</a>.</p>
 </li>
 <li>
-<p>Essential container images are available to the Che server running in the cluster. See <a href="../pulling-images-used-by-che-to-a-private-registry/" class="page">Pulling images used by Che to a private registry</a>.</p>
+<p>Essential container images are available to the Che server running in the cluster. See <a href="#preparing-a-private-registry_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Preparing a private registry</a>.</p>
 </li>
 <li>
-<p>The <code>chectl</code> 7.18 management tool is installed. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
+<p>The <code>chectl</code> 7.19 management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
 </li>
 </ul>
 </div>
@@ -613,16 +872,16 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In all running workspaces in the Che 7.16 instance, save and push changes back to the Git repositories.</p>
+<p>In all running workspaces in the Che 7.18 instance, save and push changes back to the Git repositories.</p>
 </li>
 <li>
-<p>Terminate all workspaces in the Che 7.16 instance.</p>
+<p>Stop all workspaces in the Che 7.18 instance.</p>
 </li>
 <li>
 <p>Run the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:update --che-operator-image=<em>&lt;image-registry&gt;</em>/<em>&lt;organization&gt;</em>/che-operator:7.18 -n che</pre>
+<pre>$ chectl server:update --che-operator-image=<em>&lt;image-registry&gt;</em>/<em>&lt;organization&gt;</em>/che-operator:7.19 -n che</pre>
 </div>
 </div>
 <div class="ulist">
@@ -631,7 +890,7 @@
 <p><em>&lt;image-registry&gt;</em>: A host name and a port of the container-image registry accessible in the restricted environment.</p>
 </li>
 <li>
-<p><em>&lt;organization&gt;</em>: An organization of the container-image registry. See: <a href="../pulling-images-used-by-che-to-a-private-registry/" class="page">Pulling images used by Che to a private registry</a>.</p>
+<p><em>&lt;organization&gt;</em>: An organization of the container-image registry. See: <a href="#preparing-a-private-registry_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Preparing a private registry</a>.</p>
 </li>
 </ul>
 </div>
@@ -645,7 +904,7 @@
 <p>Navigate to the Che instance.</p>
 </li>
 <li>
-<p>The 7.18 version number is visible at the bottom of the page.</p>
+<p>The 7.19 version number is visible at the bottom of the page.</p>
 </li>
 </ol>
 </div>
@@ -662,6 +921,8 @@
 </td>
 </tr>
 </table>
+</div>
+</div>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

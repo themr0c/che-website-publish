@@ -316,7 +316,7 @@
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che using the CLI management tool in restricted environment</a>
+    <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in restricted environment</a>
   </li>
 </ul>
   </li>
@@ -575,26 +575,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following sections describe how to deploy Che in a Kubernetes or OpenShift cluster in a restricted environment (also called <em>offline mode</em> or <em>air-gap scenario</em>).</p>
-</div>
-<div class="paragraph">
-<p>By default, Eclipse&#160;Che workspaces reference various external resources, including container images available in public registries or sample projects hosted on GitHub.</p>
-</div>
-<div class="paragraph">
-<p>To deploy Che in an environment where these external resources are not available (for example, on a cluster that is not exposed to the public Internet):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Build images containing external resources (workspace plug-ins, projects).</p>
-</li>
-<li>
-<p>Pull all images needed for running Che to a registry that is accessible.</p>
-</li>
-<li>
-<p>Configure Che to use these images.</p>
-</li>
-</ul>
+<p>By default, Che workspaces reference various external resources, including container images available in public registries or sample projects hosted on public resources. This section describes how to deploy Che in a restricted environment where these external resources are not available. This method is also called <em>offline mode</em> or <em>air-gap scenario</em>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -613,31 +594,109 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_network_connectivity_in_restricted_environments"><a class="anchor" href="#_network_connectivity_in_restricted_environments"></a>Network connectivity in restricted environments</h2>
+<h2 id="understanding-network-connectivity-in-restricted-environments_installing-che-in-a-restricted-environment"><a class="anchor" href="#understanding-network-connectivity-in-restricted-environments_installing-che-in-a-restricted-environment"></a>Understanding network connectivity in restricted environments</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Restricted network environments range from a private subnetwork in a cloud provider to a separate network owned by a company, disconnected from the public Internet. Regardless of the network configuration, Che works <strong>provided that the Kubernetes Ingress or OpenShift Route that are created for Che components (che-server, keycloak, devfile-registry, plugin-registry) are accessible from inside the Kubernetes or OpenShift cluster.</strong></p>
+<p>Che requires that each Kubernetes Ingress or OpenShift Route created for Che is accessible from inside the Kubernetes or OpenShift cluster.
+These Che components have a Kubernetes Ingress or OpenShift Route: <code>che-server</code>, <code>keycloak</code>, <code>devfile-registry</code>, <code>plugin-registry</code>.</p>
 </div>
 <div class="paragraph">
-<p>Consider the network topology of the environment to determine how best to accomplish this. For example, on a network owned by a company or an organization, the network administrators must ensure that traffic bound from the cluster can be routed to Ingress and Route host names. In other cases, for example, on AWS, create a proxy configuration allowing the traffic to leave the node to reach an external-facing Load Balancer.</p>
+<p>Consider the network topology of the environment to determine how best to accomplish this.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Network owned by a company or an organization, disconnected from the public Internet</div>
+<div class="content">
+<div class="paragraph">
+<p>The network administrators must ensure that it is possible to route traffic bound from the cluster to Kubernetes Ingress or OpenShift Route host names.</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Private subnetwork in a cloud provider</div>
+<div class="content">
+<div class="paragraph">
+<p>Create a proxy configuration allowing the traffic to leave the node to reach an external-facing Load Balancer.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="building-offline-versions-of-the-plug-in-and-devfile-registries_installing-che-in-a-restricted-environment"><a class="anchor" href="#building-offline-versions-of-the-plug-in-and-devfile-registries_installing-che-in-a-restricted-environment"></a>Building offline versions of the plug-in and devfile registries</h2>
+<h2 id="building-an-offline-plug-in-registry-image_installing-che-in-a-restricted-environment"><a class="anchor" href="#building-an-offline-plug-in-registry-image_installing-che-in-a-restricted-environment"></a>Building an offline plug-in registry image</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to build <em>offline</em> registry images. For additional information, see <a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a>.</p>
+<p>This section describes how to build an <em>offline</em> plug-in registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains plug-in metadata and all plug-in or extension artifacts.</p>
 </div>
-<div class="paragraph">
-<p>The main purpose of building offline registry images is to ensure that workspaces can be started without relying on resources from the outside Internet. For the plug-in registry, this means building a registry that serves all plug-in or extension artifacts in addition to plug-in metadata. Similarly, an offline devfile registry serves all sample projects referenced in devfiles as <code>zip</code> files.</p>
-</div>
-<div class="paragraph">
-<p>Plug-in registry repositories contain scripts to make it easier to build custom images.</p>
-</div>
-<div class="sect2">
-<h3 id="building-offline-devfile-registry_installing-che-in-a-restricted-environment"><a class="anchor" href="#building-offline-devfile-registry_installing-che-in-a-restricted-environment"></a>Building offline devfile registry</h3>
 <div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Clone the plug-in registry repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone https://github.com/eclipse/che-plugin-registry.git
+$ cd che-plugin-registry</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check out version of the registry to deploy:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout 7.19.x</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the plug-in registry image, including only the <em>latest</em> version of each plug-in:</p>
+<div class="listingblock">
+<div class="content">
+<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em> \
+           --offline \
+           --latest-only</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-an-offline-devfile-registry-image_installing-che-in-a-restricted-environment"><a class="anchor" href="#building-an-offline-devfile-registry-image_installing-che-in-a-restricted-environment"></a>Building an offline devfile registry image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to build an <em>offline</em> devfile registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains all sample projects referenced in devfiles as <code>zip</code> files.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
 <p>Clone the devfile registry repository:</p>
@@ -649,10 +708,10 @@ $ cd che-devfile-registry</pre>
 </div>
 </li>
 <li>
-<p>Check out version of the registry to be deployed:</p>
+<p>Check out version of the registry to deploy:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git checkout 7.3.0</pre>
+<pre>$ git checkout 7.19.x</pre>
 </div>
 </div>
 </li>
@@ -666,66 +725,46 @@ $ cd che-devfile-registry</pre>
            --offline</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
 </div>
-</div>
-<div class="sect2">
-<h3 id="building-offline-plug-in-registry_installing-che-in-a-restricted-environment"><a class="anchor" href="#building-offline-plug-in-registry_installing-che-in-a-restricted-environment"></a>Building offline plug-in registry</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
 <li>
-<p>Clone the plug-in registry repository:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git clone https://github.com/eclipse/che-plugin-registry.git
-$ cd che-plugin-registry</pre>
-</div>
-</div>
+<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
 </li>
-<li>
-<p>Check out version of the registry to be deployed:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git checkout 7.3.0</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Build the plug-in registry image:</p>
-<div class="listingblock">
-<div class="content">
-<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
-           --registry <em>&lt;my-registry&gt;</em> \
-           --tag <em>&lt;my-tag&gt;</em> \
-           --offline</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Use the <code>--help</code> parameter to display full options for the <code>build.sh</code> script.</p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>This build of the registry builds a container image that contains all <code>.vsix</code> and <code>.theia</code> extensions that can be used in workspaces. This results in a large image. To build a version of the registry that contains only the <em>latest</em> version of each plug-in, use the <code>--latest-only</code> argument.</p>
-</div>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pulling-images-used-by-che-to-a-private-registry_installing-che-in-a-restricted-environment"><a class="anchor" href="#pulling-images-used-by-che-to-a-private-registry_installing-che-in-a-restricted-environment"></a>Pulling images used by Che to a private registry</h2>
+<h2 id="preparing-a-private-registry_installing-che-in-a-restricted-environment"><a class="anchor" href="#preparing-a-private-registry_installing-che-in-a-restricted-environment"></a>Preparing a private registry</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Che workspaces consist of Pods running in a cluster, and therefore, many images are required to support all languages and plug-ins that can be used for a workspace. In an offline deployment, these images must be made available to the Che server running in the cluster.</p>
 </div>
-<div class="sect2">
-<h3 id="_essential_images"><a class="anchor" href="#_essential_images"></a>Essential images</h3>
 <div class="paragraph">
-<p>The images <em>essential</em> for starting a workspace are infrastructure images that are included in every workspace launch:</p>
+<div class="title">Essential images</div>
+<p>Running any workspace requires these <em>essential</em> images:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Images essential to starting workspaces</caption>
@@ -756,25 +795,25 @@ $ cd che-plugin-registry</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Images for adding plug-ins to workspaces. See <a href="../../administration-guide/che-workspaces-architecture/#che-plug-in-broker_installing-che-in-a-restricted-environment" class="page">Che plug-ins broker</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code><br>
-  <code>quay.io/eclipse/che-devfile-registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in and devfile registries that store metadata for workspaces. See <a href="#building-offline-versions-of-the-plug-in-and-devfile-registries_installing-che-in-a-restricted-environment">Building offline versions of the plug-in and devfile registries</a> for information about building appropriate images.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in registry that store information about plugins and the runtime containers they require. See <a href="#building-an-offline-plug-in-registry-image_installing-che-in-a-restricted-environment">Building an offline plug-in registry image</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-devfile-registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile registry that store descriptions of the sample projects and how to load them as workspaces via the Getting Started tab in the dashboard. See <a href="#building-an-offline-devfile-registry-image_installing-che-in-a-restricted-environment">Building an offline devfile registry image</a>.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_workspace_specific_images"><a class="anchor" href="#_workspace_specific_images"></a>Workspace-specific images</h3>
 <div class="paragraph">
+<div class="title">Workspace-specific images</div>
 <p>The images described in this section are required for running a workspace. Any one workspace uses a subset of the images below. It is only necessary to include the images that are used in workspaces created. For example, when using Che only for developing in Java, many images can be omitted.</p>
 </div>
 <div class="paragraph">
 <p>To avoid issues when only a subset of the images described in this section is needed, remove unnecessary plug-ins and devfiles when building custom registries (see <a href="../../administration-guide/customizing-the-devfile-and-plug-in-registries/" class="page">Customizing the devfile and plug-in registries</a> for more information).</p>
 </div>
-<div class="sect3">
-<h4 id="_plug_in_sidecar_images"><a class="anchor" href="#_plug_in_sidecar_images"></a>Plug-in sidecar images</h4>
 <div class="paragraph">
-<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-offline-plug-in-registry_installing-che-in-a-restricted-environment">Building offline plug-in registry</a>) includes a file with the list of all images referenced in its plug-ins.</p>
+<div class="title">Plug-in sidecar images</div>
+<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-an-offline-plug-in-registry-image_installing-che-in-a-restricted-environment">Building an offline plug-in registry image</a>) includes a file with the list of all images referenced in its plug-ins.</p>
 </div>
 <div class="paragraph">
 <p>To get a list of images required for plug-ins, display this file:</p>
@@ -788,14 +827,12 @@ $ cd che-plugin-registry</pre>
 <div class="paragraph">
 <p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom plug-in registry.</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_devfile_base_images"><a class="anchor" href="#_devfile_base_images"></a>Devfile base images</h4>
 <div class="paragraph">
-<p>Every Che workspace uses one or more <em>base</em> images, which contain the development dependencies for projects that are being built. To use the samples, pull these images from the offline devfile registry. This is needed because the sample devfiles included in the devfile registry apply to images suited for this purpose.</p>
+<div class="title">Devfile base images</div>
+<p>Every Che workspace uses one or more <em>base</em> images, which contain the development dependencies for projects that are being built. To use the samples, Che pull these images from the references to them in the devfile registry. This is needed because the sample devfiles included in the devfile registry apply to images suited for this purpose.</p>
 </div>
 <div class="paragraph">
-<p>An offline devfile registry (see <a href="#building-offline-devfile-registry_installing-che-in-a-restricted-environment">Building offline devfile registry</a>) contains a file with the list of all images referenced in its devfiles:</p>
+<p>An offline devfile registry (see <a href="#building-an-offline-devfile-registry-image_installing-che-in-a-restricted-environment">Building an offline devfile registry image</a>) contains a file with the list of all images referenced in its devfiles:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -805,8 +842,6 @@ $ cd che-plugin-registry</pre>
 </div>
 <div class="paragraph">
 <p>In the example above, substitute <code>&lt;my-offline-registry&gt;</code> for the image name and tag of the custom devfile registry.</p>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -837,16 +872,19 @@ $ cd che-plugin-registry</pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-internal-registry&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">a host name of the container-image registry (which is accessible in the restricted environment, see <a href="#pulling-images-used-by-che-to-a-private-registry_installing-che-in-a-restricted-environment">Pulling images used by Che to a private registry</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a host name of the container-image registry, accessible in the restricted environment, see <a href="#preparing-a-private-registry_installing-che-in-a-restricted-environment">Preparing a private registry</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-organization&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">organization of the container-image registry</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-offline-devfile-registry&gt;</code><br>
-  <code>&lt;my-offline-plug-in-registry&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">offline plug-in and devfile registries (see <a href="#building-offline-versions-of-the-plug-in-and-devfile-registries_installing-che-in-a-restricted-environment">Building offline versions of the plug-in and devfile registries</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-offline-plug-in-registry&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">offline plug-in registry, see <a href="#building-an-offline-plug-in-registry-image_installing-che-in-a-restricted-environment">Building an offline plug-in registry image</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;my-offline-devfile-registry&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">offline devfile registry, see <a href="#building-an-offline-devfile-registry-image_installing-che-in-a-restricted-environment">Building an offline devfile registry image</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;ver&gt;</code></p></td>
