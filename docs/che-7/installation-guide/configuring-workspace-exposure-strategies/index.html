@@ -670,13 +670,34 @@ Kubernetes or OpenShift, and uses a special pod with reverse-proxy running insid
 <p>This is convenient for TLS-secured Che servers because it is sufficient to have a single certificate for the Che server, which will cover all the workspace component deployments as well.</p>
 </div>
 <div class="paragraph">
-<p>This strategy limits the exposed components and user applications. Any absolute URL generated on the server side that points back to the server does not work. This is because the server is hidden behind a path-rewriting Ingress that hides the workspace and the component-specific URL prefix from the server.</p>
+<p>There are 2 ways of exposing the endpoints specified in the devfile. These can be configured using the <code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE</code> environment variable of the Che. This environment variable is only effective with the single-host server strategy and is applicable to all workspaces of all users.</p>
+</div>
+<div class="sect3">
+<h4 id="_devfile_endpoints_single_host"><a class="anchor" href="#_devfile_endpoints_single_host"></a>devfile endpoints: <code>single-host</code></h4>
+<div class="paragraph">
+<p><code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE: 'single-host'</code></p>
+</div>
+<div class="paragraph">
+<p>This single-host configuration exposes the endpoints on subpaths, for example: <code>https://&lt;che-host&gt;/serverihzmuqqc/go-cli-server-8080</code>. This limits the exposed components and user applications. Any absolute URL generated on the server side that points back to the server does not work. This is because the server is hidden behind a path-rewriting reverse proxy that hides the unique URL path prefix from the component or user application.</p>
 </div>
 <div class="paragraph">
 <p>For example, when the user accesses the hypothetical <code>[+https+://__<che-host>__:__<che-port>__/component-prefix-djh3d/app/index.php]</code> URL, the application sees the request coming to <code>https://internal-host/app/index.php</code>. If the application used the host in the URL that it generates in its UI, it would not work because the internal host is different from the externally visible host. However, if the application used an absolute path as the URL (for the example above, this would be <code>/app/index.php</code>), such URL would still not work. This is because on the outside, such URL does not point to the application, because it is missing the component-specific prefix.</p>
 </div>
 <div class="paragraph">
 <p>Therefore, only applications that use relative URLs in their UI work with the single-host workspace exposure strategy.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_devfile_endpoints_multi_host"><a class="anchor" href="#_devfile_endpoints_multi_host"></a>devfile endpoints: <code>multi-host</code></h4>
+<div class="paragraph">
+<p><code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE: 'multi-host'</code></p>
+</div>
+<div class="paragraph">
+<p>This single-host configuration exposes the endpoints on subdomains, for example: <code>http://serverihzmuqqc-go-cli-server-8080.&lt;che-host&gt;</code>. These endpoints are exposed on an unsecured HTTP port. A dedicated Ingress or Route is used for such endpoints, even with <code>gateway</code> single-host setup.</p>
+</div>
+<div class="paragraph">
+<p>This configuration limits the usability of previews shown directly in the editor page when Che is configured with TLS. Since <code>https</code> pages allow communication only with secured endpoints, users must open their application previews in another browser tab.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
