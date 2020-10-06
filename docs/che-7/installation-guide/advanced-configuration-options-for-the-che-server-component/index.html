@@ -918,7 +918,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_SERVER_LIVENESS__PROBES</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wsagent/http,exec-agent/http,terminal,theia,jupyter,dirigible,cloud-shell</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wsagent/http,exec-agent/http,terminal,theia,jupyter,dirigible,cloud-shell,intellij</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of servers names which require liveness probes</p></td>
 </tr>
 <tr>
@@ -1148,6 +1148,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_EXPOSURE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>native</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the way in which the workspace plugins and editors are exposed in the single-host mode. Supported exposures: - 'native': Exposes servers using Kubernetes Ingresses. Works only on Kubernetes. - 'gateway': Exposes servers using reverse-proxy gateway.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multi-host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines the way how to expose devfile endpoints, thus end-user&#8217;s applications, in single-host server strategy. They can either follow the single-host strategy and be exposed on subpaths, or they can be exposed on subdomains. - 'multi-host': expose on subdomains - 'single-host': expose on subpaths</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_SINGLEHOST_GATEWAY_CONFIGMAP__LABELS</code></p></td>
@@ -1460,7 +1465,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_SERVER_SECURE__EXPOSER</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jwtproxy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configures in which way secure servers will be protected with authentication. Suitable values:   - 'default': jwtproxy is configured in a pass-through mode.       So, servers should authenticate requests themselves.   - 'jwtproxy': jwtproxy will authenticate requests.       So, servers will receive only authenticated ones.</p></td>
 </tr>
 <tr>
@@ -1978,6 +1983,21 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_OAUTH_SERVICE__MODE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>delegated</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configuration of OAuth Authentication Service that can be used in 'embedded' or 'delegated' mode. If set to 'embedded', then the service work as a wrapper to Che&#8217;s OAuthAuthenticator ( as in Single User mode). If set to 'delegated', then the service will use Keycloak IdentityProvider mechanism. Runtime Exception wii be thrown, in case if this property is not set properly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_CASCADE__USER__REMOVAL__ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration for enabling removing user from Keycloak server on removing user from Che database. By default it&#8217;s disabled. Can be enabled in some special cases when deleting a user in Che database should execute removing related-user from Keycloak. For correct work need to set admin username ${che.keycloak.admin_username} and password ${che.keycloak.admin_password}.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_ADMIN__USERNAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak admin username. Will be used for deleting user from Keycloak on removing user from Che database. Make sense only in case ${che.keycloak.cascade_user_removal_enabled} set to 'true'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_ADMIN__PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak admin password. Will be used for deleting user from Keycloak on removing user from Che database. Make sense only in case ${che.keycloak.cascade_user_removal_enabled} set to 'true'</p></td>
 </tr>
 </tbody>
 </table>

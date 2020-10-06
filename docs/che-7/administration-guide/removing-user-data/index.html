@@ -579,14 +579,40 @@
 <article class="doc">
 <h1 class="page">Removing user data</h1>
 <div class="sect1">
-<h2 id="_gdpr"><a class="anchor" href="#_gdpr"></a>GDPR</h2>
+<h2 id="_removing_user_data_according_to_gdpr"><a class="anchor" href="#_removing_user_data_according_to_gdpr"></a>Removing user data according to GDPR</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In case user data needs to be deleted, the following API should be used with the <code>user</code> or the <code>admin</code> authorization token:</p>
+<p>The General Data Protection Regulation (GDPR) law enforces the right for individuals to have personal data erased.</p>
+</div>
+<div class="paragraph">
+<p>The following procedure describes how to remove a user’s data from a cluster and the Keycloak database.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A user or an administrator authorization token. If a user wants to delete any other data except the data bound to their user account, the <code>admin</code> privileges are required.
+The <code>admin</code> is a  special Che administrator account pre-created and enabled using the <code>CHE_SYSTEM_ADMIN<em>NAME / CHE_SYSTEM_SUPER</em>PRIVILEGED__MODE = true</code> Custom Resource definition .</p>
+<div class="listingblock">
+<div class="content">
+<pre>spec:
+ server:
+   customCheProperties:
+     CHE_SYSTEM_SUPER__PRIVILEGED__MODE: 'true'
+     CHE_SYSTEM_ADMIN__NAME: '&lt;admin_name&gt;'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If needed, use commands below for creating an <code>admin</code> user:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X DELETE `http(s)://__<che-host>__/api/user/{id}`</pre>
+<pre>$ oc patch checluster eclipse-che --type merge  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_SUPER<em>PRIVILEGED</em>MODE": "true"} } }}'  -n che</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc patch checluster eclipse-che --type merge  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_ADMIN__NAME": "&lt;admin_name&gt;"} } }}'  -n che</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -596,13 +622,121 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-All the user&#8217;s workspaces should be stopped beforehand. Otherwise, the API request will fail with <code>500</code> Error.
+<div class="paragraph">
+<p>All system permissions are granted to the administrative user who is configured in the <code>CHE_SYSTEM_ADMIN__NAME</code> property (the default is <code>admin</code>). The system permissions are granted when the Che server starts. If the user is not present in the Che user database, it happens after the first user’s login.</p>
+</div>
+<div class="ulist">
+<div class="title">Authorization token privileges:</div>
+<ul>
+<li>
+<p><code>admin</code> - Can delete all personal data of all users</p>
+</li>
+<li>
+<p><code>user</code> - Can delete only the data related to the user</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>
 </div>
+</li>
+<li>
+<p>A user or an administrator is logged in the OpenSift cluster with deployed Che.</p>
+</li>
+<li>
+<p>A user ID is obtained. Get the user ID using the commands below:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For the current user:</p>
+<div class="listingblock">
+<div class="content">
+<pre> $ curl -X GET 'http(s)://__<che-host>__/api/user'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To find a user by name:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -X GET 'http(s)://__<che-host>__/api/user/find?name=<em>&lt;username&gt;</em>'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To find a user by email:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -X GET 'http(s)://__<che-host>__/api/user/find?email=<em>&lt;email&gt;</em>'</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>To remove the data of all the users, follow instructions for <a href="../../installation-guide/uninstalling-che/" class="page">Uninstalling Che</a>.</p>
+<div class="title">Example of obtaining a user ID</div>
+<p>This example uses <code>vparfono</code> as a local user name.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -X GET --header 'Accept: application/json' --header 'Authorization: token 'https://che-vp-che.apps.che-dev.x6e0.p1.openshiftapps.com/api/user/find?name=vparfono'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The user ID is at the bottom of the curl command output.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>{
+ "name": "vparfono",
+ "links": [
+   {
+.
+.
+.
+   }
+ ],
+ "email": "vitaly.parfonov@gmail.com",
+ "id": "921b6f33-2657-407e-93a6-fb14cf2329ce"
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update the <code>customresourceCR</code> file to permit the removal of a user’s data from the Keycloak database:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc patch checluster/eclipse-che --patch "{\"spec\":{\"server\":{\"customCheProperties\": {\"CHE_KEYCLOAK_CASCADE<em>USER</em>REMOVAL__ENABLED\": \"true\"}}}}" --type=merge -n che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Remove the data using the API:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -X DELETE <code>http(s)://__<che-host>__/api/user/<em>&lt;user-id&gt;</em></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Verification</div>
+<p>The execution of the <code>curl -X DELETE `http(s)://__<che-host>__/api/user/<em>&lt;user-id&gt;</em></code> command, ` returns the code 204 as a API response.</p>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>To remove the data of all the users, follow the instructions for <a href="../../installation-guide/uninstalling-che/" class="page">Uninstalling Che</a>.</p>
 </div>
 </div>
 </div>

@@ -1072,7 +1072,7 @@ Status:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:start --installer=helm --platform=k8s --domain=gcp.my-ide.cloud --multiuser
+<pre>$ chectl server:start --installer=operator --platform=k8s --domain=gcp.my-ide.cloud --multiuser
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
     ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
@@ -1137,6 +1137,59 @@ Command server:start has completed successfully.</pre>
 <a class="image" href="../_images/installation/che-user-dashboard-gcp.png"><img src="../_images/installation/che-user-dashboard-gcp.png" alt="che user dashboard gcp"></a>
 </div>
 <div class="title">Figure 2. Che user dashboard</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-che-on-google-cloud-platform_installing-che-on-google-cloud-platform"><a class="anchor" href="#configuring-che-on-google-cloud-platform_installing-che-on-google-cloud-platform"></a>Configuring Che on Google Cloud Platform</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following section describes configuration guidelines after a Eclipse&#160;Che installation on Google Cloud Platform.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-che-operator-checluster-resource-with-kubectl_configuring-che-on-google-cloud-platform"><a class="anchor" href="#configuring-the-che-operator-checluster-resource-with-kubectl_configuring-che-on-google-cloud-platform"></a>Configuring CheCluster Custom Resource with kubectl</h3>
+<div class="paragraph">
+<p>Edit the CheCluster custom resource configuration with kubectl:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl edit CheCluster/eclipse-che -n che</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details on configuring CheCluster custom resource, see <a href="../configuring-the-che-installation/" class="page">Configuring the Che installation</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sizing-google-cloud-node-pools-for-your-eclipse-che-workspaces_configuring-che-on-google-cloud-platform"><a class="anchor" href="#sizing-google-cloud-node-pools-for-your-eclipse-che-workspaces_configuring-che-on-google-cloud-platform"></a>Sizing Google Cloud node pools for your Eclipse Che workspaces</h3>
+<div class="paragraph">
+<p>The default node pool is using machine types <code>n1-standard-1</code>. You may need to use different kind of machine to run your workspaces. See <a href="https://cloud.google.com/compute/docs/machine-types?hl=en#n1_standard_machine_types" class="bare">https://cloud.google.com/compute/docs/machine-types?hl=en#n1_standard_machine_types</a></p>
+</div>
+<div class="paragraph">
+<p>Changing the machine type configuration of an existing node pool is not possible with Google Cloud Platform.</p>
+</div>
+<div class="paragraph">
+<p>One solution is to create a new node pool and delete the existing one afterwards. Google Kubernetes Engine would then transfer the workloads to the new node pool automatically.</p>
+</div>
+<div class="paragraph">
+<p>Another solution is to have two node pools with one dedicated to the workspaces by configuring Eclipse&#160;Che with a NodeSelector. See <a href="../configuring-workspaces-nodeselector/" class="page">Configuring workspaces nodeSelector</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/installation/gcp-new-nodepool.png"><img src="../_images/installation/gcp-new-nodepool.png" alt="gcp new nodepool"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/installation/gcp-new-nodepool-select-machine-type-standard.png"><img src="../_images/installation/gcp-new-nodepool-select-machine-type-standard.png" alt="gcp new nodepool select machine type standard"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Preferably choose machine types according the workspaces CPU and memory requirements.</p>
+</div>
 </div>
 </div>
 </div>
