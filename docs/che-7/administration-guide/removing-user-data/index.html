@@ -582,37 +582,56 @@
 <h2 id="_removing_user_data_according_to_gdpr"><a class="anchor" href="#_removing_user_data_according_to_gdpr"></a>Removing user data according to GDPR</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The General Data Protection Regulation (GDPR) law enforces the right for individuals to have personal data erased.</p>
+<p>The General Data Protection Regulation (<a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">GDPR</a>) law enforces the right for individuals to have personal data erased.</p>
 </div>
 <div class="paragraph">
 <p>The following procedure describes how to remove a user’s data from a cluster and the Keycloak database.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The following commands use the default Kubernetes namespace or OpenShift project, <code>che</code>, as a user&#8217;s example for the <code>-n</code> option.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A user or an administrator authorization token. If a user wants to delete any other data except the data bound to their user account, the <code>admin</code> privileges are required.
-The <code>admin</code> is a  special Che administrator account pre-created and enabled using the <code>CHE_SYSTEM_ADMIN<em>NAME / CHE_SYSTEM_SUPER</em>PRIVILEGED__MODE = true</code> Custom Resource definition .</p>
+<p>A user or an administrator authorization token. To delete any other data except the data bound to a user account, <code>admin</code> privileges are required. The <code>admin</code> is a special Che administrator account pre-created and enabled using the <code>CHE_SYSTEM_ADMIN__NAME</code> and <code>CHE_SYSTEM_SUPER__PRIVILEGED__MODE = true</code> Custom Resource definitions.</p>
 <div class="listingblock">
 <div class="content">
 <pre>spec:
  server:
    customCheProperties:
      CHE_SYSTEM_SUPER__PRIVILEGED__MODE: 'true'
-     CHE_SYSTEM_ADMIN__NAME: '&lt;admin_name&gt;'</pre>
+     CHE_SYSTEM_ADMIN__NAME: '<em>&lt;admin-name&gt;</em>'</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If needed, use commands below for creating an <code>admin</code> user:</p>
+<p>If needed, use commands below for creating the <code>admin</code> user:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc patch checluster eclipse-che --type merge  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_SUPER<em>PRIVILEGED</em>MODE": "true"} } }}'  -n che</pre>
+<pre>$ oc patch checluster eclipse-che \
+  --type merge \
+  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_SUPER__PRIVILEGED__MODE": "true"} } }}' \
+  -n <em>che</em></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc patch checluster eclipse-che --type merge  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_ADMIN__NAME": "&lt;admin_name&gt;"} } }}'  -n che</pre>
+<pre>$ oc patch checluster eclipse-che \
+  --type merge \
+  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_ADMIN__NAME": "<em>&lt;admin-name&gt;</em>"} } }}' \
+  -n <em>che</em></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -642,7 +661,7 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 </div>
 </li>
 <li>
-<p>A user or an administrator is logged in the OpenSift cluster with deployed Che.</p>
+<p>A user or an administrator is logged in the OpenShift cluster with deployed Che.</p>
 </li>
 <li>
 <p>A user ID is obtained. Get the user ID using the commands below:</p>
@@ -652,7 +671,9 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 <p>For the current user:</p>
 <div class="listingblock">
 <div class="content">
-<pre> $ curl -X GET 'http(s)://__<che-host>__/api/user'</pre>
+<pre>$ curl -X GET \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  'https://<em>&lt;che-host&gt;</em>/api/user'</pre>
 </div>
 </div>
 </li>
@@ -660,7 +681,9 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 <p>To find a user by name:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X GET 'http(s)://__<che-host>__/api/user/find?name=<em>&lt;username&gt;</em>'</pre>
+<pre>$ curl -X GET \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  'https://<em>&lt;che-host&gt;</em>/api/user/find?name=<em>&lt;username&gt;</em>'</pre>
 </div>
 </div>
 </li>
@@ -668,14 +691,10 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 <p>To find a user by email:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X GET 'http(s)://__<che-host>__/api/user/find?email=<em>&lt;email&gt;</em>'</pre>
+<pre>$ curl -X GET \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  'https://<em>&lt;che-host&gt;</em>/api/user/find?email=<em>&lt;email&gt;</em>'</pre>
 </div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <div class="title">Example of obtaining a user ID</div>
@@ -685,7 +704,9 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X GET --header 'Accept: application/json' --header 'Authorization: token 'https://che-vp-che.apps.che-dev.x6e0.p1.openshiftapps.com/api/user/find?name=vparfono'</pre>
+<pre>$ curl -X GET \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  'https://che-vp-che.apps.che-dev.x6e0.p1.openshiftapps.com/api/user/find?name=vparfono'</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -702,21 +723,29 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 .
    }
  ],
- "email": "vitaly.parfonov@gmail.com",
+ "email": "vparfono@redhat.com",
  "id": "921b6f33-2657-407e-93a6-fb14cf2329ce"
 }</pre>
 </div>
 </div>
 </div>
 </div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Update the <code>customresourceCR</code> file to permit the removal of a user’s data from the Keycloak database:</p>
+<p>Update the <code>eclipse-che</code> <code>CheCluster Custom</code> Resource (CR) definition to permit the removal of a user’s data from the Keycloak database:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc patch checluster/eclipse-che --patch "{\"spec\":{\"server\":{\"customCheProperties\": {\"CHE_KEYCLOAK_CASCADE<em>USER</em>REMOVAL__ENABLED\": \"true\"}}}}" --type=merge -n che</pre>
+<pre>$ oc patch checluster/eclipse-che \
+  --patch "{\"spec\":{\"server\":{\"customCheProperties\": {\"CHE_KEYCLOAK_CASCADE__USER__REMOVAL__ENABLED\": \"true\"}}}}" \
+  --type=merge -n <em>che</em></pre>
 </div>
 </div>
 </li>
@@ -724,7 +753,9 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 <p>Remove the data using the API:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -X DELETE <code>http(s)://__<che-host>__/api/user/<em>&lt;user-id&gt;</em></code></pre>
+<pre>$ curl -i -X DELETE \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  https://<em>&lt;che-host&gt;</em>/api/user/<em>&lt;user-id&gt;</em></pre>
 </div>
 </div>
 </li>
@@ -732,11 +763,18 @@ The <code>admin</code> is a  special Che administrator account pre-created and e
 </div>
 <div class="paragraph">
 <div class="title">Verification</div>
-<p>The execution of the <code>curl -X DELETE `http(s)://__<che-host>__/api/user/<em>&lt;user-id&gt;</em></code> command, ` returns the code 204 as a API response.</p>
+<p>Running the following command returns code <code>204</code> as the API response:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -i -X DELETE \
+  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
+  https://<em>&lt;che-host&gt;</em>/api/user/<em>&lt;user-id&gt;</em></pre>
+</div>
 </div>
 <div class="paragraph">
 <div class="title">Additional resources</div>
-<p>To remove the data of all the users, follow the instructions for <a href="../../installation-guide/uninstalling-che/" class="page">Uninstalling Che</a>.</p>
+<p>To remove the data of all users, follow the instructions for <a href="../../installation-guide/uninstalling-che/" class="page">Uninstalling Che</a>.</p>
 </div>
 </div>
 </div>
