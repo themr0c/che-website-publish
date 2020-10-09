@@ -142,10 +142,19 @@
     <a class="nav-link" href="../../end-user-guide/what-is-a-che-theia-plug-in/">What is a Che-Theia plug-in</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-a-workspace/">Adding a VSCode extension</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/">Publishing a VS Code extension</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/using-alternative-ides-in-che/">Using alternative IDEs in Che</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/adding-tools-to-che-after-creating-a-workspace/">Adding tools to Che after creating a workspace</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/editing-a-devfile-and-plug-in-at-runtime/">Editing a devfile and plug-in at runtime</a>
   </li>
 </ul>
   </li>
@@ -364,27 +373,6 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../administration-guide/customizing-the-devfile-and-plug-in-registries/">Customizing devfile and plug-in registries</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/building-and-running-a-custom-registry-image/">Building and running a custom registry image</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/including-the-plug-in-binaries-in-the-registry-image/">Including the plug-in binaries in the registry image</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/editing-a-devfile-and-plug-in-at-runtime/">Editing a devfile and plug-in at runtime</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/using-a-visual-studio-code-extension-in-che/">Using a VS Code extension in Che</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/testing-a-visual-studio-code-extension-in-che/">Testing a VS Code extension in Che</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/retrieving-che-logs/">Retrieving Che logs</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -461,6 +449,24 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Contributor Guide</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../contributor-guide/customizing-the-devfile-and-plug-in-registries/">Customizing the registries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../contributor-guide/building-a-custom-devfile-registry/">Building custom devfile registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../contributor-guide/building-a-custom-plug-in-registry/">Building custom plug-in registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../contributor-guide/running-custom-registries/">Running custom registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../contributor-guide/testing-a-visual-studio-code-extension-in-che/">Testing a VS Code extension in Che</a>
+  </li>
+</ul>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../contributor-guide/branding-che-theia/">Branding Che-Theia</a>
   </li>
@@ -628,33 +634,28 @@ These Che components have a Kubernetes Ingress or OpenShift Route: <code>che-ser
 </div>
 </div>
 <div class="sect1">
-<h2 id="building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline plug-in registry image</h2>
+<h2 id="building-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline devfile registry image</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to build an <em>offline</em> plug-in registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains plug-in metadata and all plug-in or extension artifacts.</p>
+<p>This section describes how to build an offline devfile registry image.
+Starting workspaces without relying on resources from the outside Internet requires building this image.
+The image contains all sample projects referenced in devfiles as <code>zip</code> files.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Clone the plug-in registry repository:</p>
+<p>Clone the devfile registry repository and check out the version to deploy:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone https://github.com/eclipse/che-plugin-registry.git
-$ cd che-plugin-registry</pre>
+<pre>$ git clone git@github.com:eclipse/che-devfile-registry.git
+$ cd che-devfile-registry
+$ git checkout 7.19.x</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check out version of the registry to deploy:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git checkout 7.19.x</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Build the plug-in registry image, including only the <em>latest</em> version of each plug-in:</p>
+<p>Build an offline devfile registry image:</p>
 <div class="listingblock">
 <div class="content">
 <pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
@@ -671,12 +672,8 @@ $ cd che-plugin-registry</pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="ulist">
-<ul>
-<li>
+<div class="paragraph">
 <p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
-</li>
-</ul>
 </div>
 </td>
 </tr>
@@ -685,50 +682,38 @@ $ cd che-plugin-registry</pre>
 </li>
 </ol>
 </div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline devfile registry image</h2>
+<h2 id="building-offline-plugin-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"><a class="anchor" href="#building-offline-plugin-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment"></a>Building an offline plug-in registry image</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to build an <em>offline</em> devfile registry image. Starting workspaces without relying on resources from the outside Internet requires building this image. The image contains all sample projects referenced in devfiles as <code>zip</code> files.</p>
+<p>This section describes how to build an offline plug-in registry image.
+Starting workspaces without relying on resources from the outside Internet requires building this image.
+The image contains plug-in metadata and all plug-in or extension artifacts.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Clone the devfile registry repository:</p>
+<p>Clone the plug-in registry repository and check out the version to deploy:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone https://github.com/eclipse/che-devfile-registry.git
-$ cd che-devfile-registry</pre>
+<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
+$ cd che-plugin-registry
+$ git checkout 7.19.x</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check out version of the registry to deploy:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git checkout 7.19.x</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Build the devfile registry image:</p>
+<p>Build an offline plug-in registry image:</p>
 <div class="listingblock">
 <div class="content">
 <pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
            --registry <em>&lt;my-registry&gt;</em> \
            --tag <em>&lt;my-tag&gt;</em> \
-           --offline</pre>
+           --offline \
+           --latest-only</pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -738,12 +723,8 @@ $ cd che-devfile-registry</pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="ulist">
-<ul>
-<li>
+<div class="paragraph">
 <p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
-</li>
-</ul>
 </div>
 </td>
 </tr>
@@ -751,14 +732,6 @@ $ cd che-devfile-registry</pre>
 </div>
 </li>
 </ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="../../administration-guide/building-and-running-a-custom-registry-image/" class="page">Building and running a custom registry image</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -802,11 +775,11 @@ $ cd che-devfile-registry</pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-plugin-registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in registry that store information about plugins and the runtime containers they require. See <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline plug-in registry image</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-in registry that store information about plugins and the runtime containers they require. See <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">[building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment]</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/che-devfile-registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile registry that store descriptions of the sample projects and how to load them as workspaces via the Getting Started tab in the dashboard. See <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline devfile registry image</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile registry that store descriptions of the sample projects and how to load them as workspaces via the Getting Started tab in the dashboard. See <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">[building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment]</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -815,11 +788,11 @@ $ cd che-devfile-registry</pre>
 <p>The images described in this section are required for running a workspace. Any one workspace uses a subset of the images below. It is only necessary to include the images that are used in workspaces created. For example, when using Che only for developing in Java, many images can be omitted.</p>
 </div>
 <div class="paragraph">
-<p>To avoid issues when only a subset of the images described in this section is needed, remove unnecessary plug-ins and devfiles when building custom registries (see <a href="../../administration-guide/customizing-the-devfile-and-plug-in-registries/" class="page">Customizing the devfile and plug-in registries</a> for more information).</p>
+<p>To avoid issues when only a subset of the images described in this section is needed, remove unnecessary plug-ins and devfiles when building custom registries (see <a href="../../contributor-guide/customizing-the-devfile-and-plug-in-registries/" class="page">Customizing the registries</a> for more information).</p>
 </div>
 <div class="paragraph">
 <div class="title">Plug-in sidecar images</div>
-<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline plug-in registry image</a>) includes a file with the list of all images referenced in its plug-ins.</p>
+<p>Many workspace plug-ins are run in sidecar containers to ensure their dependencies are available. The offline plug-in registry (see <a href="#building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">[building-an-offline-plug-in-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment]</a>) includes a file with the list of all images referenced in its plug-ins.</p>
 </div>
 <div class="paragraph">
 <p>To get a list of images required for plug-ins, display this file:</p>
@@ -838,7 +811,7 @@ $ cd che-devfile-registry</pre>
 <p>Every Che workspace uses one or more <em>base</em> images, which contain the development dependencies for projects that are being built. To use the samples, Che pull these images from the references to them in the devfile registry. This is needed because the sample devfiles included in the devfile registry apply to images suited for this purpose.</p>
 </div>
 <div class="paragraph">
-<p>An offline devfile registry (see <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">Building an offline devfile registry image</a>) contains a file with the list of all images referenced in its devfiles:</p>
+<p>An offline devfile registry (see <a href="#building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment">[building-an-offline-devfile-registry-image_upgrading-prod-short-using-the-cli-management-tool-in-restricted-environment]</a>) contains a file with the list of all images referenced in its devfiles:</p>
 </div>
 <div class="listingblock">
 <div class="content">
