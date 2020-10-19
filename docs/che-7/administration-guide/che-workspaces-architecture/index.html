@@ -292,6 +292,9 @@
     <a class="nav-link" href="../../installation-guide/configuring-namespace-strategies/">Configuring namespace strategies</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../installation-guide/running-more-than-one-workspace-at-a-time/">Running more than one workspace at a time</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/configuring-workspace-exposure-strategies/">Configuring workspace exposure strategies</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -824,7 +827,7 @@ It has a plug-in system that supports VS Code extensions.</p>
 <td class="tableblock halign-center valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">If PV does not support <code>ReadWriteMany</code> (RWX) access mode, the configuration will work only if one or both of the following apply:</p>
 <p class="tableblock">* Each workspace is in a separate Kubernetes namespace or OpenShift project</p>
-<p class="tableblock">* Only one  workspace is running per Kubernetes namespace or OpenShift project at the same time. See <a href="../../installation-guide/configuring-namespace-strategies/" class="page">Configuring namespace strategies</a>.</p></td>
+<p class="tableblock">* Only one workspace is running per Kubernetes namespace or OpenShift project at the same time. See <a href="../../installation-guide/running-more-than-one-workspace-at-a-time/" class="page">Running more than one workspace at a time</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><strong>per-workspace</strong></p></td>
@@ -888,12 +891,12 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 <p>The workspace PVC access mode must be reconfigured to <code>ReadWriteMany</code> (RWM), so multiple nodes can use this PVC simultaneously.</p>
 </li>
 <li>
-<p>Only one workspace in the same namespace may be running. See <a href="../../installation-guide/configuring-namespace-strategies/" class="page">Configuring namespace strategies</a>.</p>
+<p>Only one workspace in the same namespace may be running. See <a href="../../installation-guide/running-more-than-one-workspace-at-a-time/" class="page">Running more than one workspace at a time</a>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>common</code> PVC strategy is not suitable for large multi-node clusters. Therefore, it is best to use it in single-node clusters. However, in combination with <code>per-workspace</code> namespace strategy, the <code>common</code> PVC strategy is usable for clusters with around 75 nodes. The PVC used in this strategy must be large enough to accommodate all projects since there is a risk of the event, in which one project depletes the resources of others.</p>
+<p>The <code>common</code> PVC strategy is not suitable for large multi-node clusters. Therefore, it is best to use it in single-node clusters. However, in combination with the <code>per-workspace</code> namespace strategy, the <code>common</code> PVC strategy is usable for clusters with not more than 75 nodes. The PVC used with this strategy must be large enough to accommodate all projects to prevent a situation in which one project depletes the resources of others.</p>
 </div>
 </div>
 <div class="sect3">
@@ -915,7 +918,7 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>It’s a strategy when Che keeps its workspace data in assigned PVs that are allocated by a single PVC.</p>
+<p>With this strategy, Che keeps its workspace data in assigned PVs that are allocated by a single PVC.</p>
 </div>
 <div class="paragraph">
 <p>The <code>per-workspace</code> PVC strategy is the most universal strategy out of the PVC strategies available and acts as a proper option for large multi-node clusters with a higher amount of users. Using the <code>per-workspace</code> PVC strategy, users can run multiple workspaces simultaneously, results in more PVCs being created.</p>
