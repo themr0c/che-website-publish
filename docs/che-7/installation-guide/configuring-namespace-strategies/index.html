@@ -730,6 +730,80 @@ By default, only one workspace in the same namespace can be running at one time.
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_pre_creating_namespaces_for_users"><a class="anchor" href="#_pre_creating_namespaces_for_users"></a>Pre-creating namespaces for users</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To pre-create namespaces for users, use namespace labels.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>metadata:
+  labels:
+    app.kubernetes.io/component: workspace
+    app.kubernetes.io/part-of: che.eclipse.org
+    che.eclipse.org/username: &lt;username&gt;  <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>target user&#8217;s username</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To configure the labels, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code> to desired labels. See the <a href="../advanced-configuration-options-for-the-che-server-component/#che-server-component-system-properties-reference_advanced-configuration-options-for-the-che-server-component" class="page">Che server component system properties reference</a> for more details.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift with OAuth, target user must have <code>admin</code> role privileges in target namespace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admin
+  namespace: &lt;namespace&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: &lt;username&gt; <i class="conum" data-value="2"></i><b>(2)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>pre-created namespace</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>target user</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>On Kubernetes, <code>che</code> ServiceAccount must have a cluster-wide <code>list namespaces</code> privilege as well as an <code>admin</code> role in target namespace.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
