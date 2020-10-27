@@ -148,6 +148,9 @@
     <a class="nav-link" href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/">Publishing a VS Code extension</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/testing-a-visual-studio-code-extension-in-che/">Testing a VS Code extension in Che</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/using-alternative-ides-in-che/">Using alternative IDEs in Che</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -376,6 +379,21 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/customizing-the-devfile-and-plug-in-registries/">Customizing the registries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../administration-guide/building-custom-registry-images/">Building custom registry images</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../administration-guide/running-custom-registries/">Running custom registries</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../administration-guide/managing-users/">Managing users</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/retrieving-che-logs/">Retrieving Che logs</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -405,11 +423,8 @@
     <a class="nav-link" href="../../administration-guide/monitoring-che/">Monitoring Che</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../administration-guide/tracing-che/">Tracing Che</a>
-  </li>
-  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../administration-guide/managing-users/">Managing users</a>
+    <a class="nav-link" href="../../administration-guide/tracing-che/">Tracing Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/configuring-authorization/">Configuring authorization</a>
@@ -452,24 +467,6 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Contributor Guide</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../contributor-guide/customizing-the-devfile-and-plug-in-registries/">Customizing the registries</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../contributor-guide/building-a-custom-devfile-registry/">Building custom devfile registry</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../contributor-guide/building-a-custom-plug-in-registry/">Building custom plug-in registry</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../contributor-guide/running-custom-registries/">Running custom registries</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../contributor-guide/testing-a-visual-studio-code-extension-in-che/">Testing a VS Code extension in Che</a>
-  </li>
-</ul>
-  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../contributor-guide/branding-che-theia/">Branding Che-Theia</a>
   </li>
@@ -740,10 +737,20 @@ By default, only one workspace in the same namespace can be running at one time.
 </div>
 </div>
 <div class="sect1">
+<h2 id="_handling_incompatible_usernames_or_user_ids"><a class="anchor" href="#_handling_incompatible_usernames_or_user_ids"></a>Handling incompatible usernames or user IDs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Che server automatically checks usernames and IDs for compatibility with Kubernetes objects naming convention before creating a namespace from a template.
+Incompatible username or IDs are reduced to the nearest valid name by replacing groups of unsuitable symbols with the <code>-</code> symbol. To avoid collisions,
+a random 6-symbol suffix is added and the result is stored in preferences for reuse.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_pre_creating_namespaces_for_users"><a class="anchor" href="#_pre_creating_namespaces_for_users"></a>Pre-creating namespaces for users</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To pre-create namespaces for users, use namespace labels.</p>
+<p>To pre-create namespaces for users, use namespace labels and annotations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -751,6 +758,7 @@ By default, only one workspace in the same namespace can be running at one time.
   labels:
     app.kubernetes.io/component: workspace
     app.kubernetes.io/part-of: che.eclipse.org
+  annotations:
     che.eclipse.org/username: &lt;username&gt;  <i class="conum" data-value="1"></i><b>(1)</b></pre>
 </div>
 </div>
@@ -763,7 +771,7 @@ By default, only one workspace in the same namespace can be running at one time.
 </table>
 </div>
 <div class="paragraph">
-<p>To configure the labels, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code> to desired labels. See the <a href="../advanced-configuration-options-for-the-che-server-component/#che-server-component-system-properties-reference_advanced-configuration-options-for-the-che-server-component" class="page">Che server component system properties reference</a> for more details.</p>
+<p>To configure the labels, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code> to desired labels. To configure the annotations, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_ANNOTATIONS</code> to desired annotations. See the <a href="../advanced-configuration-options-for-the-che-server-component/#che-server-component-system-properties-reference_advanced-configuration-options-for-the-che-server-component" class="page">Che server component system properties reference</a> for more details.</p>
 </div>
 <div class="admonitionblock important">
 <table>
