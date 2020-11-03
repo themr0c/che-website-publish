@@ -620,7 +620,18 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-By default, it is possible to run only one workspace at a time. To change the default value, see: <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/#users-workspace-limits" class="page">Users workspace limits</a>.
+<div class="paragraph">
+<p>By default, it is possible to run only one workspace at a time. To increase the number of concurrent workspaces a user can run, patch the checluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc patch checluster eclipse-che -n <em>&lt;user-project-namespace&gt;</em> --type=merge \
+-p '{ "spec": { "server": { "customCheProperties": { "CHE_LIMITS_USER_WORKSPACES_RUN_COUNT": "-1" } } } }'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For additional information, see: <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/#users-workspace-limits" class="page">Users workspace limits</a>.</p>
+</div>
 </td>
 </tr>
 </table>
