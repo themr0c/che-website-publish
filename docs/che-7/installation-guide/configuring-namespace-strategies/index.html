@@ -764,14 +764,14 @@ a random 6-symbol suffix is added and the result is stored in preferences for re
 <h2 id="_pre_creating_namespaces_for_users"><a class="anchor" href="#_pre_creating_namespaces_for_users"></a>Pre-creating namespaces for users</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To pre-create namespaces for users, use namespace labels and annotations.</p>
+<p>To pre-create namespaces for users, use namespace labels and annotations. Such namespace is used in preference to <code>CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT</code> variable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>metadata:
   labels:
-    app.kubernetes.io/component: workspace
     app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: workspaces-namespace
   annotations:
     che.eclipse.org/username: &lt;username&gt;  <i class="conum" data-value="1"></i><b>(1)</b></pre>
 </div>
@@ -786,6 +786,20 @@ a random 6-symbol suffix is added and the result is stored in preferences for re
 </div>
 <div class="paragraph">
 <p>To configure the labels, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code> to desired labels. To configure the annotations, set the <code>CHE_INFRA_KUBERNETES_NAMESPACE_ANNOTATIONS</code> to desired annotations. See the <a href="../advanced-configuration-options-for-the-che-server-component/#che-server-component-system-properties-reference_advanced-configuration-options-for-the-che-server-component" class="page">Che server component system properties reference</a> for more details.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>We do not recommend to create multiple namespaces for single user. It may lead to undefined behavior.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -827,7 +841,7 @@ subjects:
 </table>
 </div>
 <div class="paragraph">
-<p>On Kubernetes, <code>che</code> ServiceAccount must have a cluster-wide <code>list namespaces</code> privilege as well as an <code>admin</code> role in target namespace.</p>
+<p>On Kubernetes, <code>che</code> ServiceAccount must have a cluster-wide <code>list</code> and <code>get</code> <code>namespaces</code> permissions as well as an <code>admin</code> role in target namespace.</p>
 </div>
 </td>
 </tr>
