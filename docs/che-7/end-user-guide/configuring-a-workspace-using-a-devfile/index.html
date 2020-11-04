@@ -960,6 +960,120 @@ projects:
 <pre>$ chectl workspace:start --devfile=devfile.yaml</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="allowing-users-to-define-workspace-deployment-labels-and-annotations_configuring-a-workspace-using-a-devfile"><a class="anchor" href="#allowing-users-to-define-workspace-deployment-labels-and-annotations_configuring-a-workspace-using-a-devfile"></a>Allowing users to define workspace deployment labels and annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to customize workspace deployment labels and annotation using factory parameters.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse&#160;Che. To install an instance of Eclipse&#160;Che, see <a href="../../installation-guide/installing-che/" class="page">Installing Che</a>.</p>
+</li>
+<li>
+<p>A publicly accessible standalone <code>devfile.yaml</code> file. See <a href="../making-a-workspace-portable-using-a-devfile/" class="page">Making a workspace portable using a devfile</a> for detailed information about creating and using devfiles.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Open the workspace by navigating to the following URL: <code>\https://che-host:che-port/f?url=https://<em>&lt;hostURL&gt;</em>/devfile.yaml&amp;workspaceDeploymentLabels=<em>&lt;url_encoded_comma_separated_key_values&gt;</em>&amp;workspaceDeploymentAnnotations=<em>&lt;url_encoded_comma_separated_key_values override&gt;</em></code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Example of overriding the <code>deployment labels</code></div>
+<p>Consider the following labels to add:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ike.target=preference-v1
+ike.session=test</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To add or override labels, use the following factory URL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>https://che.openshift.io/f?url=https://gist.githubusercontent.com/themr0c/ef8e59a162748a8be07e900b6401e6a8/raw/8802c20743cde712bbc822521463359a60d1f7a9/devfile.yaml&amp;workspaceDeploymentLabels=ike.target%3Dpreference-v1%2Cike.session%3Dtest</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The resulting workspace has the following deployment labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2020-10-27T14:03:26Z"
+  generation: 1
+  labels:
+    che.component.name: che-docs-dev
+    che.original_name: che-docs-dev
+    che.workspace_id: workspacegln2g1shejjufpkd
+    ike.session: test
+    ike.target: preference-v1
+  name: workspacegln2g1shejjufpkd.che-docs-dev
+  namespace: opentlc-mgr-che
+  resourceVersion: "107516"
+spec:
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Example of overriding the <code>deployment annotations</code></div>
+<p>Consider the following annotations to add:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ike.A1=preference-v1
+ike.A=test</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To add or override annotations, use the following factory URL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>https://che.openshift.io/f?url=https://gist.githubusercontent.com/themr0c/ef8e59a162748a8be07e900b6401e6a8/raw/8802c20743cde712bbc822521463359a60d1f7a9/devfile.yaml&amp;workspaceDeploymentAnnotations=ike.A1%3Dpreference-v1%2Cike.A%3Dtest</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The resulting workspace has the following deployment annotations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    ike.A: test
+    ike.A1: preference-v1
+  creationTimestamp: "2020-10-28T09:58:52Z"
+  generation: 1
+  labels:
+    che.component.name: che-docs-dev
+    che.original_name: che-docs-dev
+    che.workspace_id: workspacexrtf710v64rl5ouz
+  name: workspacexrtf710v64rl5ouz.che-docs-dev
+  namespace: opentlc-mgr-che
+  resourceVersion: "213191"
+...</pre>
+</div>
+</div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
