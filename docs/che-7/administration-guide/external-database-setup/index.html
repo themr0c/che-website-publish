@@ -698,24 +698,16 @@ ALTER USER &lt;database-user&gt; WITH SUPERUSER</pre>
 <p>Use the following SQL script to create database for Keycloak back end to persist user information:</p>
 <div class="listingblock">
 <div class="content">
-<pre>CREATE USER &lt;identity-database-user&gt; WITH PASSWORD '&lt;identity-database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-CREATE DATABASE &lt;identity-database&gt;                                               <i class="conum" data-value="3"></i><b>(3)</b>
-GRANT ALL PRIVILEGES ON DATABASE &lt;identity-database&gt; TO &lt;identity-database-user&gt;</pre>
+<pre>CREATE USER keycloak WITH PASSWORD '&lt;identity-database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b>
+CREATE DATABASE keycloak
+GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak</pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Keycloak database username</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Keycloak database password</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Keycloak database name</td>
 </tr>
 </table>
 </div>
@@ -778,8 +770,7 @@ GRANT ALL PRIVILEGES ON DATABASE &lt;identity-database&gt; TO &lt;identity-datab
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl create secret generic &lt;identity-database-credentials&gt; \ <i class="conum" data-value="1"></i><b>(1)</b>
---from-literal=user=&lt;identity-database-user&gt; \                     <i class="conum" data-value="2"></i><b>(2)</b>
---from-literal=password=&lt;identity-database-password&gt; \             <i class="conum" data-value="3"></i><b>(3)</b>
+--from-literal=password=&lt;identity-database-password&gt; \             <i class="conum" data-value="2"></i><b>(2)</b>
 -n che</pre>
 </div>
 </div>
@@ -791,20 +782,27 @@ GRANT ALL PRIVILEGES ON DATABASE &lt;identity-database&gt; TO &lt;identity-datab
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Keycloak database username</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>Keycloak database password</td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>To make the Operator skip deploying a database and pass connection details of an existing database to a Che server set the following values in the Custom Resource:</p>
+<p>Deploy Eclipse&#160;Che by executing the <code>chectl</code> command with applying a patch. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre>spec:
+<pre>$ chectl server:deploy --che-operator-cr-patch-yaml=patch.yaml ...</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>patch.yaml should contain the following to make the Operator skip deploying a database and pass connection details of an existing database to a Che server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
   database:
     externalDb: true
     chePostgresHostName: &lt;hostname&gt;                     <i class="conum" data-value="1"></i><b>(1)</b>
@@ -813,7 +811,7 @@ GRANT ALL PRIVILEGES ON DATABASE &lt;identity-database&gt; TO &lt;identity-datab
     chePostgresDb: &lt;database&gt;                           <i class="conum" data-value="4"></i><b>(4)</b>
 spec:
   auth:
-    identityProviderPostgresSecret: &lt;identity-database-credentials&gt; <i class="conum" data-value="5"></i><b>(5)</b></pre>
+    identityProviderPostgresSecret: &lt;identity-database-credentials&gt; <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -832,16 +830,13 @@ spec:
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Che server database username</td>
+<td>Che server database name</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
 <td>Secret name with Keycloak database credentials</td>
 </tr>
 </table>
-</div>
-</li>
-</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
