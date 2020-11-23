@@ -627,9 +627,25 @@ metadata:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="title"><code>name</code> or <code>generateName</code> must be defined</div>
 <div class="paragraph">
-<p>Both <code>name</code> and <code>generateName</code> are optional parameters, but at least one of them must be defined. See <a href="#generating-workspace-names_making-a-workspace-portable-using-a-devfile">Generating workspace names</a>.</p>
+<p>A choice of use of the parameter <code>generateName</code> or <code>name</code> is optional, but only one of these parameters has to be chosen by a user and defined.
+When both attributes are specified, <code>generateName</code> is ignored.
+See <a href="#generating-workspace-names_making-a-workspace-portable-using-a-devfile">Generating workspace names</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">metadata:
+  generatedName:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">metadata:
+  name:</code></pre>
+</div>
 </div>
 </td>
 </tr>
@@ -1232,10 +1248,10 @@ This parameter is also applicable for <code>chePlugin</code> type components.</p
 metadata:
     name: MyDevfile
 components:
-type: dockerimage
-image: golang
-memoryLimit: 512Mi
-command: ['sleep', 'infinity']</code></pre>
+    - type: dockerimage
+      image: golang
+      memoryLimit: 512Mi
+      command: ['sleep', 'infinity']</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1256,11 +1272,10 @@ command: ['sleep', 'infinity']</code></pre>
 metadata:
     name: MyDevfile
 components:
-type: dockerimage
-image: golang
-memoryLimit: 512Mi
-mountSources: true
-command: ['sleep', 'infinity']</code></pre>
+    - type: dockerimage
+      image: golang
+      memoryLimit: 512Mi
+      command: ['sleep', 'infinity']</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1525,8 +1540,12 @@ the Kubernetes namespace or OpenShift project to which the workspace is deployed
 <li>
 <p><code>CHE_MACHINE_TOKEN</code>: The token used to authenticate the request against the Che server.</p>
 </li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p><code>CHE_MACHINE_AUTH_SIGNATURE<em>PUBLIC</em>KEY</code>: The public key used to secure the communication with the Che server.</p>
+<p><code>CHE_MACHINE_AUTH_SIGNATURE__PUBLIC__KEY</code>: The public key used to secure the communication with the Che server.</p>
 </li>
 <li>
 <p><code>CHE_MACHINE_AUTH_SIGNATURE__ALGORITHM</code>: The encryption algorithm used in the secured communication with the Che server.</p>
