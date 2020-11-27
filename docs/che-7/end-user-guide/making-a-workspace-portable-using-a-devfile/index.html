@@ -766,28 +766,54 @@ components:
 <div class="sect2">
 <h3 id="specifying-multiple-projects-in-a-devfile_making-a-workspace-portable-using-a-devfile"><a class="anchor" href="#specifying-multiple-projects-in-a-devfile_making-a-workspace-portable-using-a-devfile"></a>Specifying multiple projects in a devfile</h3>
 <div class="paragraph">
-<p>A single devfile can specify multiple projects. For each project, specify the type of the source repository, its location, and, optionally, the directory the project is cloned to.</p>
+<p>A single devfile can define multiple projects, which are cloned to the desired destination. These projects are created inside a user’s workspace after the workspace is started.</p>
+</div>
+<div class="paragraph">
+<p>For each project, specify the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The type of the source repository - this can be .git or .zip. For additional information, see the <a href="#devfile-reference_making-a-workspace-portable-using-a-devfile">Devfile reference</a> section.</p>
+</li>
+<li>
+<p>The location of the source repository - an URL to a Git repository or ZIP archive.</p>
+</li>
+<li>
+<p>Optionally, the directory to which the project is cloned. If none is specified, the default directory is used, which is a directory that matches the project name or project Git repository.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Example of a devfile with two projects</div>
+<p>In the following example, the projects <code>frontend</code> and <code>backend</code> act as examples of a user&#8217;s projects. Each project is located in a separate repository.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>backend</code> project has a specific requirement to be cloned into the <code>src/github.com/<em>&lt;github-organization&gt;</em>/<em>&lt;backend&gt;</em>/</code> directory under the source root, implicitly defined by the Che runtime.</p>
+</li>
+<li>
+<p>The <code>frontend</code> project will be cloned into the <code><em>&lt;frontend/&gt;</em></code> directory under the source root.</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
-<div class="title">Example of a devfile with two projects</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
 metadata:
   name: example-devfile
 projects:
-- name: frontend
+- name: <em>&lt;frontend&gt;</em>
   source:
     type: git
-    location: https://github.com/acmecorp/frontend.git
-- name: backend
-  clonePath: src/github.com/acmecorp/backend
+    location: https://github.com/<em>&lt;github-organization&gt;</em>/<em>&lt;frontend&gt;</em>.git
+- name: <em>&lt;backend&gt;</em>
+  clonePath: src/github.com/<em>&lt;github-organization&gt;</em>/<em>&lt;backend&gt;</em>
   source:
     type: git
-    location: https://github.com/acmecorp/backend.git</code></pre>
+    location: https://github.com/<em>&lt;github-organization&gt;</em>/<em>&lt;backend&gt;</em>.git</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>In the preceding example, there are two projects defined, <code>frontend</code> and <code>backend</code>. Each project is located in its own repository. The <code>backend</code> project has a specific requirement to be cloned into the <code>src/github.com/acmecorp/backend/</code> directory under the source root (implicitly defined by the Che runtime) while the <code>frontend</code> project will be cloned into the <code>frontend/</code> directory under the source root.</p>
 </div>
 <div class="paragraph">
 <div class="title">Additional resources</div>
@@ -895,11 +921,11 @@ projects:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>startPoint</code> is the general value for <code>tag</code>, <code>commitId</code>, and <code>branch</code>. The <code>startPoint</code>, <code>tag</code>, <code>commitId</code>, and <code>branch</code> parameters are mutually exclusive. When more than one is supplied, the following order is used: <code>startPoint</code>, <code>tag</code>, <code>commitId</code>, <code>branch</code>.</td>
+<td><code>startPoint</code>: The general value for <code>tag</code>, <code>commitId</code>, and <code>branch</code>. The <code>startPoint</code>, <code>tag</code>, <code>commitId</code>, and <code>branch</code> parameters are mutually exclusive. When more than one is supplied, the following order is used: <code>startPoint</code>, <code>tag</code>, <code>commitId</code>, <code>branch</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>sparseCheckoutDir</code> the template for the sparse checkout Git feature. This is useful when only a part of a project (typically only a single directory) is needed.</td>
+<td><code>sparseCheckoutDir</code>: The template for the sparse checkout Git feature. This is useful when only a part of a project, typically a single directory, is needed.</td>
 </tr>
 </table>
 </div>
@@ -1927,7 +1953,7 @@ components:
 <div class="ulist">
 <ul>
 <li>
-<p>An <code>action</code> attribute that is a command to execute.</p>
+<p>An <code>actions</code> attribute that specifies a command to execute.</p>
 </li>
 <li>
 <p>A <code>component</code> attribute that specifies the container in which to execute the command.</p>
@@ -1968,9 +1994,6 @@ commands:
        command: “go get -d &amp;&amp; go run main.go”
        workdir: “${CHE_PROJECTS_ROOT}/src/github.com/acme/my-go-project”</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>+</p>
 </div>
 <div class="admonitionblock note">
 <table>

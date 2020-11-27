@@ -748,6 +748,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">API service. Browsers initiate REST communications to Che server with this URL.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_API_INTERNAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://${CHE_HOST}:${CHE_PORT}/api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API service internal network url. Back-end services should initiate REST communications to Che server with this URL</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WEBSOCKET_ENDPOINT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ws://${CHE_HOST}:${CHE_PORT}/api/websocket</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Che websocket major endpoint. Provides basic communication endpoint for major websocket interactions and messaging.</p></td>
@@ -781,11 +786,6 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_NO__PROXY</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configuresproxiesused by runtimes powering workspaces.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_TRUSTED__CA__BUNDLES__CONFIGMAP</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When cluster-wide proxy is configured, che-operator creates a special configmap and allows the OpenShift Network Operator to inject the ca-bundle into it. In addition, it adds the <code>CHE_TRUSTED__CA__BUNDLES__CONFIGMAP</code> key with the name of this configmap in the Che server configmap (and corresponding environment variable). So, its presence can be used to detect if proxy mode is enabled or not. Do not set this property manually unless required for this purpose.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_AUTO__START</code></p></td>
@@ -1317,6 +1317,26 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines the period with which runtimes consistency checks will be performed. If runtime has inconsistent state then runtime will be stopped automatically. Value must be more than 0 or <code>-1</code>, where <code>-1</code> means that checks won&#8217;t be performed at all. It is disabled by default because there is possible Che Server configuration when Che Server doesn&#8217;t have an ability to interact with Kubernetes API when operation is not invoked by user. It DOES work on the following configurations: - workspaces objects are created in the same namespace where Che Server is located; - cluster-admin service account token is mount to Che Server pod; It DOES NOT work on the following configurations: - Che Server communicates with Kubernetes API using token from OAuth provider;</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_TRUSTED__CA_SRC__CONFIGMAP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of cofig map in Che server namespace with additional CA TLS certificates to be propagated into all user&#8217;s workspaces. If the property is set on OpenShift 4 infrastructure, and che.infra.openshift.trusted_ca.dest_configmap_labels includes config.openshift.io/inject-trusted-cabundle=true label, then cluster CA bundle will be propagated too.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_TRUSTED__CA_DEST__CONFIGMAP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ca-certs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of configmap in a workspace namespace with additional CA TLS certificates. Holds the copy of che.infra.kubernetes.trusted_ca.src_configmap but in a workspace namespace. Content of this config map is mounted into all workspace containers including plugin brokers. Do not change the config map name unless it conflicts with the already existing config map.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_TRUSTED__CA_MOUNT__PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/public-certs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures path on workspace containers where the CA bundle should be mount. Content of config map specified by che.infra.kubernetes.trusted_ca.dest_configmap is mounted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_TRUSTED__CA_DEST__CONFIGMAP__LABELS</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of labels to add to the CA certificates config map in user workspace. See che.infra.kubernetes.trusted_ca.dest_configmap property.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1343,19 +1363,9 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">DEPRECATED - please do not change the value of this property otherwise the existing workspaces will loose data. Do not set it on new installations. Defines OpenShift namespace in which all workspaces will be created. If not set, every workspace will be created in a new project, where project name = workspace id It&#8217;s possible to use &lt;username&gt; and &lt;userid&gt; placeholders (e.g.: che-workspace-&lt;username&gt;). In that case, new project will be created for each user. OpenShift oauth or service account with permission to create new projects must be used. If the project pointed to by this property exists, it will be used for all workspaces. If it does not exist, the namespace specified by the che.infra.kubernetes.namespace.default will be created and used.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_OPENSHIFT_TRUSTED__CA__BUNDLES__CONFIG__MAP</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ca-certs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Configures name of the trust-store config map where the CA bundles are stored in Openshift 4. This map is supposed to be initially created by Che installer (operator or etc) with basically any name, and Che server finds it by specific label (see below) during workspace startup and then creates and mounts same map in the namespace of the workspace. The property defines name of the map in workspace namespace.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_OPENSHIFT_TRUSTED__CA__BUNDLES__CONFIG__MAP__LABELS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_OPENSHIFT_TRUSTED__CA_DEST__CONFIGMAP__LABELS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>config.openshift.io/inject-trusted-cabundle=true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Label name for config maps which are used for automatic certificate injection in Openshift 4.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_OPENSHIFT_TRUSTED__CA__BUNDLES__MOUNT__PATH</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/public-certs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Configures path on workspace containers where the CA bundles are mount.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma separated list of labels to add to the CA certificates config map in user workspace. See che.infra.kubernetes.trusted_ca.dest_configmap property. This default value is used for automatic cluster CA bundle injection in Openshift 4.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_OPENSHIFT_ROUTE_LABELS</code></p></td>
@@ -1413,9 +1423,19 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace tooling plugins registry endpoint. Should be a valid HTTP URL. <code>Example: http://che-plugin-registry-eclipse-che.192.168.65.2.nip.io</code> In case Che plugins tooling is not needed value 'NULL' should be used</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_PLUGIN__REGISTRY__INTERNAL__URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace tooling plugins registry 'internal' endpoint. Should be a valid HTTP URL. Example: <a href="http://devfile-registry.che.svc.cluster.local:8080" class="bare">http://devfile-registry.che.svc.cluster.local:8080</a> In case Che plugins tooling is not needed value 'NULL' should be used</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>https://che-devfile-registry.prod-preview.openshift.io/</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Devfile Registry endpoint. Should be a valid HTTP URL. <code>Example: http://che-devfile-registry-eclipse-che.192.168.65.2.nip.io</code> In case Che plugins tooling is not needed value 'NULL' should be used</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_DEVFILE__REGISTRY__INTERNAL__URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Devfile Registry 'internal' endpoint. Should be a valid HTTP URL. Example: <a href="http://plugin-registry.che.svc.cluster.local:8080" class="bare">http://plugin-registry.che.svc.cluster.local:8080</a> In case Che plugins tooling is not needed value 'NULL' should be used</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_STORAGE_AVAILABLE__TYPES</code></p></td>
@@ -1555,12 +1575,12 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_FACTORY_DEFAULT__EDITOR</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/next</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Editor and plugin which will be used for factories which are created from remote git repository which doesn&#8217;t contain any Che-specific workspace descriptors (like .devfile of .factory.json) Multiple plugins must be comma-separated, for example: pluginFooPublisher/pluginFooName/pluginFooVersion,pluginBarPublisher/pluginBarName/pluginBarVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Editor and plugin which will be used for factories which are created from remote git repository which doesn&#8217;t contain any Che-specific workspace descriptor Multiple plugins must be comma-separated, for example: pluginFooPublisher/pluginFooName/pluginFooVersion,pluginBarPublisher/pluginBarName/pluginBarVersion</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_FACTORY_DEFAULT__PLUGINS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-machine-exec-plugin/nightly</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Editorand plugin which will be used for factories which are created from remote git repository which doesn&#8217;t contain any Che-specific workspace descriptors (like .devfile of .factory.json) Multiple plugins must be comma-separated, for example: pluginFooPublisher/pluginFooName/pluginFooVersion,pluginBarPublisher/pluginBarName/pluginBarVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Editorand plugin which will be used for factories which are created from remote git repository which doesn&#8217;t contain any Che-specific workspace descriptor Multiple plugins must be comma-separated, for example: pluginFooPublisher/pluginFooName/pluginFooVersion,pluginBarPublisher/pluginBarName/pluginBarVersion</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_FACTORY_DEFAULT__DEVFILE__FILENAMES</code></p></td>
@@ -1876,6 +1896,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_AUTH__SERVER__URL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://${CHE_HOST}:5050/auth</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Url to keycloak identity provider server Can be set to NULL only if <code>che.keycloak.oidcProvider</code> is used</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_AUTH__INTERNAL__SERVER__URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal network service Url to keycloak identity provider server</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_REALM</code></p></td>
