@@ -418,6 +418,9 @@
     <a class="nav-link" href="../../administration-guide/retrieving-che-logs/">Retrieving Che logs</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../administration-guide/configuring-server-logging/">Configuring server logging</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/viewing-kubernetes-events/">Accessing Kubernetes events on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -1994,6 +1997,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_ADMIN__PASSWORD</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak admin password. Will be used for deleting user from Keycloak on removing user from Che database. Make sense only in case ${che.keycloak.cascade_user_removal_enabled} set to 'true'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_KEYCLOAK_USERNAME_REPLACEMENT__PATTERNS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name adjustment configuration. Che needs to use the usernames as part of K8s object names and labels and therefore has stricter requirements on their format than the identity providers usually allow (it needs them to be DNS-compliant). The adjustment is represented by comma-separated key-value pairs. These are sequentially used as arguments to the String.replaceAll function on the original username. The keys are regular expressions, values are replacement strings that replace the characters in the username that match the regular expression. The modified username will only be stored in the Che database and will not be advertised back to the identity provider. It is recommended to use DNS-compliant characters as replacement strings (values in the key-value pairs). Example: <code>\\=-,@=-at-</code> changes <code>\</code> to <code>-</code> and <code>@</code> to <code>-at-</code> so the username <code>org\user@com</code> becomes <code>org-user-at-com.</code></p></td>
 </tr>
 </tbody>
 </table>
