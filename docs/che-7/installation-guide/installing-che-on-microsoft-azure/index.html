@@ -13,6 +13,7 @@
 <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','UA-37306001-2')</script>
+    <script>var uiRootPath = '../../../_'</script>
   </head>
   <body class="article">
 <header class="header" role="banner">
@@ -301,6 +302,12 @@
     <a class="nav-link" href="../configuring-namespace-strategies/">Configuring namespace strategies</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-strategies/">Configuring storage strategies</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../running-more-than-one-workspace-at-a-time/">Running more than one workspace at a time</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -323,9 +330,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-che-using-storage-classes/">Installing Che using storage classes</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
@@ -1115,7 +1119,7 @@ Events:
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-azure-using-the-chectl-command_installing-che-on-microsoft-azure"><a class="anchor" href="#installing-che-on-azure-using-the-chectl-command_installing-che-on-microsoft-azure"></a>Installing Che on Azure using the chectl command</h2>
+<h2 id="installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-microsoft-azure"><a class="anchor" href="#installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-microsoft-azure"></a>Installing Che on Microsoft Azure using chectl</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1132,88 +1136,110 @@ Events:
 <div class="title">Procedure</div>
 <ul>
 <li>
-<p>To install Che, run the following <code>chectl</code> command:</p>
+<p>To install Che on Microsoft Azure, run the following <code>chectl</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:deploy --installer=helm --platform=k8s \                           --domain=azr.my-ide.cloud --multiuser
-› Current Kubernetes context: 'Eclipse&#160;Che'
+<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=azr.my-ide.cloud --multiuser
+› Current Kubernetes context: 'minikube'
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
     ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
   ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
-    ✔ Check Kubernetes version: Found v1.16.10.
+    ✔ Check Kubernetes version: Found v1.15.12-gke.2.
     ✔ Verify domain is set...set to azr.my-ide.cloud.
     ↓ Check if cluster accessible [skipped]
-Eclipse&#160;Che logs will be available in '/var/folders/tg/_5rxbhmj4xncz4szvpgswrmc0000gn/T/chectl-logs/1596019249675'
-  ✔ Start following logs
+  ✔ Following Eclipse&#160;Che logs
     ↓ Start following Operator logs [skipped]
-    ✔ Start following Eclipse&#160;Che logs...done
+    ✔ Start following Eclipse&#160;Che server logs...done
     ✔ Start following Postgres logs...done
     ✔ Start following Keycloak logs...done
     ✔ Start following Plugin registry logs...done
     ✔ Start following Devfile registry logs...done
-  ✔ Start following events
     ✔ Start following namespace events...done
- ›   Warning: Consider using the more reliable 'OLM' installer when deploying a stable release of Eclipse&#160;Che (--installer=olm).
   ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
     ✔ Verify if helm is installed
-    ✔ Check Helm Version: Found v3.1.2+gd878d4d
+    ✔ Check Helm Version: Found v3.4.1+gc4e7485
     ✔ Create Namespace (che)...does already exist.
-    ✔ Check Eclipse&#160;Che TLS certificate...TLS certificate secret found
+    ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
     ✔ Check Cluster Role Binding...does not exists.
     ✔ Preparing Eclipse&#160;Che Helm Chart...done.
     ✔ Updating Helm Chart dependencies...done.
     ✔ Deploying Eclipse&#160;Che Helm Chart...done.
   ✔ ✅  Post installation checklist
     ✔ PostgreSQL pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Devfile registry pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Plugin registry pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Eclipse&#160;Che pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Retrieving Eclipse&#160;Che server URL... https://che-che.azr.my-ide.cloud
-    ✔ Eclipse&#160;Che status check
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse&#160;Che status check...done
+  ✔ Prepare post installation output...done
   ✔ Show important messages
-    ✔ Autogenerated Keycloak credentials are: "xxx:xxx"
-Command server:deploy has completed successfully.</pre>
+    ✔ Eclipse&#160;Che 7.19 has been successfully deployed.
+    ✔ Documentation             : https://www.eclipse.org/che/docs
+    ✔ -------------------------------------------------------------------------------
+    ✔ Users Dashboard           : https://che-che.azr.my-ide.cloud
+    ✔ Admin user login          : "XXX:XXX". NOTE: must change after first login.
+    ✔ -------------------------------------------------------------------------------
+    ✔ Plug-in Registry          : https://plugin-registry-che.azr.my-ide.cloud/v3
+    ✔ Devfile Registry          : https://devfile-registry-che.azr.my-ide.cloud
+    ✔ -------------------------------------------------------------------------------
+    ✔ Identity Provider URL     : https://keycloak-che.azr.my-ide.cloud/auth
+    ✔ Identity Provider login   : "XXX:XXX".
+    ✔ -------------------------------------------------------------------------------</pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Track installation events with:</p>
-</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Investigate Eclipse&#160;Che logs:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl get events --namespace che --sort-by=.metadata.creationTimestamp</pre>
+<pre>$ chectl server:logs --namespace che</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Keycloak and Che now have valid wildcard certificates.</p>
+</li>
+<li>
+<p>Verify that certificates are set correctly</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Open Eclipse&#160;Che server URL from the output above</p>
+</li>
+<li>
+<p>Click on the lock in address bar</p>
+</li>
+<li>
+<p>Verify it has <strong>Connection is secure</strong></p>
+</li>
+</ol>
 </div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/installation/wildcard-certificates-for-keycloak-che.png"><img src="../_images/installation/wildcard-certificates-for-keycloak-che.png" alt="wildcard certificates for keycloak che"></a>
+</li>
+</ol>
 </div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/installation/che-user-dashboard.png"><img src="../_images/installation/che-user-dashboard.png" alt="che user dashboard"></a>
-</div>
-<div class="title">Figure 1. Che user dashboard</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../end-user-guide/navigating-che-using-the-dashboard/" class="page">Navigating Che using the Dashboard</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

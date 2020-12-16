@@ -13,6 +13,7 @@
 <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','UA-37306001-2')</script>
+    <script>var uiRootPath = '../../../_'</script>
   </head>
   <body class="article">
 <header class="header" role="banner">
@@ -301,6 +302,12 @@
     <a class="nav-link" href="../configuring-namespace-strategies/">Configuring namespace strategies</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-strategies/">Configuring storage strategies</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../running-more-than-one-workspace-at-a-time/">Running more than one workspace at a time</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -323,9 +330,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-che-using-storage-classes/">Installing Che using storage classes</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
@@ -1078,7 +1082,7 @@ Status:
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-google-cloud-platform-using-chectl_installing-che-on-google-cloud-platform"><a class="anchor" href="#installing-che-on-google-cloud-platform-using-chectl_installing-che-on-google-cloud-platform"></a>Installing Che on Google Cloud Platform using chectl</h2>
+<h2 id="installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-google-cloud-platform"><a class="anchor" href="#installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-google-cloud-platform"></a>Installing Che on Google Cloud Platform using chectl</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1086,15 +1090,20 @@ Status:
 <li>
 <p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
 </li>
+<li>
+<p>The <code>helm</code> tool is available, with version 2.15 or higher. See <a href="https://helm.sh/">Helm</a>.</p>
+</li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="ulist">
 <div class="title">Procedure</div>
+<ul>
+<li>
 <p>To install Che on Google Cloud Platform, run the following <code>chectl</code> command:</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:deploy --installer=operator --platform=k8s --domain=gcp.my-ide.cloud --multiuser
+<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=gcp.my-ide.cloud --multiuser
+› Current Kubernetes context: 'minikube'
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
     ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
@@ -1104,61 +1113,96 @@ Status:
     ✔ Check Kubernetes version: Found v1.15.12-gke.2.
     ✔ Verify domain is set...set to gcp.my-ide.cloud.
     ↓ Check if cluster accessible [skipped]
-Eclipse&#160;Che logs will be available in '/var/folders/tg/_5rxbhmj4xncz4szvpgswrmc0000gn/T/chectl-logs/1596035521904'
-  ✔ Start following logs
+  ✔ Following Eclipse&#160;Che logs
     ↓ Start following Operator logs [skipped]
-    ✔ Start following Eclipse&#160;Che logs...done
+    ✔ Start following Eclipse&#160;Che server logs...done
     ✔ Start following Postgres logs...done
     ✔ Start following Keycloak logs...done
     ✔ Start following Plugin registry logs...done
     ✔ Start following Devfile registry logs...done
-  ✔ Start following events
     ✔ Start following namespace events...done
- ›   Warning: Consider using the more reliable 'OLM' installer when deploying a stable release of Che (--installer=olm).
   ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
     ✔ Verify if helm is installed
-    ✔ Check Helm Version: Found v3.1.2+gd878d4d
+    ✔ Check Helm Version: Found v3.4.1+gc4e7485
     ✔ Create Namespace (che)...does already exist.
-    ✔ Check Eclipse&#160;Che TLS certificate...TLS certificate secret found
+    ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
     ✔ Check Cluster Role Binding...does not exists.
     ✔ Preparing Eclipse&#160;Che Helm Chart...done.
     ✔ Updating Helm Chart dependencies...done.
     ✔ Deploying Eclipse&#160;Che Helm Chart...done.
   ✔ ✅  Post installation checklist
     ✔ PostgreSQL pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Devfile registry pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Plugin registry pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
     ✔ Eclipse&#160;Che pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Retrieving Eclipse&#160;Che server URL... https://che-che.gcp.my-ide.cloud
-    ✔ Eclipse&#160;Che status check
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse&#160;Che status check...done
+  ✔ Prepare post installation output...done
   ✔ Show important messages
-    ✔ Autogenerated Keycloak credentials are: "xxx:xxx"
-Command server:deploy has completed successfully.</pre>
+    ✔ Eclipse&#160;Che 7.19 has been successfully deployed.
+    ✔ Documentation             : https://www.eclipse.org/che/docs
+    ✔ -------------------------------------------------------------------------------
+    ✔ Users Dashboard           : https://che-che.gcp.my-ide.cloud
+    ✔ Admin user login          : "XXX:XXX". NOTE: must change after first login.
+    ✔ -------------------------------------------------------------------------------
+    ✔ Plug-in Registry          : https://plugin-registry-che.gcp.my-ide.cloud/v3
+    ✔ Devfile Registry          : https://devfile-registry-che.gcp.my-ide.cloud
+    ✔ -------------------------------------------------------------------------------
+    ✔ Identity Provider URL     : https://keycloak-che.gcp.my-ide.cloud/auth
+    ✔ Identity Provider login   : "XXX:XXX".
+    ✔ -------------------------------------------------------------------------------</pre>
 </div>
 </div>
-<div class="imageblock">
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Investigate Eclipse&#160;Che logs:</p>
+<div class="listingblock">
 <div class="content">
-<a class="image" href="../_images/installation/keycloak-and-che-with-valid-wildcard-certs.gif"><img src="../_images/installation/keycloak-and-che-with-valid-wildcard-certs.gif" alt="keycloak and che with valid wildcard certs"></a>
+<pre>$ chectl server:logs --namespace che</pre>
 </div>
-<div class="title">Figure 1. Keycloak and Che with valid wildcard certificates</div>
 </div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/installation/che-user-dashboard-gcp.png"><img src="../_images/installation/che-user-dashboard-gcp.png" alt="che user dashboard gcp"></a>
+</li>
+<li>
+<p>Verify that certificates are set correctly</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Open Eclipse&#160;Che server URL from the output above</p>
+</li>
+<li>
+<p>Click on the lock in address bar</p>
+</li>
+<li>
+<p>Verify it has <strong>Connection is secure</strong></p>
+</li>
+</ol>
 </div>
-<div class="title">Figure 2. Che user dashboard</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../end-user-guide/navigating-che-using-the-dashboard/" class="page">Navigating Che using the Dashboard</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1172,9 +1216,6 @@ Command server:deploy has completed successfully.</pre>
 <h3 id="configuring-the-che-operator-checluster-resource-with-kubectl_configuring-che-on-google-cloud-platform"><a class="anchor" href="#configuring-the-che-operator-checluster-resource-with-kubectl_configuring-che-on-google-cloud-platform"></a>Configuring CheCluster Custom Resource with kubectl</h3>
 <div class="paragraph">
 <p>Edit the CheCluster custom resource configuration with kubectl:</p>
-</div>
-<div class="paragraph">
-<p>+</p>
 </div>
 <div class="listingblock">
 <div class="content">

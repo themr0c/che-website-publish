@@ -13,6 +13,7 @@
 <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','UA-37306001-2')</script>
+    <script>var uiRootPath = '../../../_'</script>
   </head>
   <body class="article">
 <header class="header" role="banner">
@@ -301,6 +302,12 @@
     <a class="nav-link" href="../configuring-namespace-strategies/">Configuring namespace strategies</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-strategies/">Configuring storage strategies</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../running-more-than-one-workspace-at-a-time/">Running more than one workspace at a time</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -323,9 +330,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-che-using-storage-classes/">Installing Che using storage classes</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
@@ -1268,7 +1272,7 @@ Events:
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-kubernetes-using-the-chectl-command_installing-che-on-aws"><a class="anchor" href="#installing-che-on-kubernetes-using-the-chectl-command_installing-che-on-aws"></a>Installing Che on Kubernetes using the chectl command</h2>
+<h2 id="installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-aws"><a class="anchor" href="#installing-che-on-kubernetes-using-chectl_and_helm_installing-che-on-aws"></a>Installing Che on AWS using chectl</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1276,66 +1280,119 @@ Events:
 <li>
 <p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
 </li>
+<li>
+<p>The <code>helm</code> tool is available, with version 2.15 or higher. See <a href="https://helm.sh/">Helm</a>.</p>
+</li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="ulist">
 <div class="title">Procedure</div>
-<p>To install Che:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
+<ul>
 <li>
-<p>Run the following command:</p>
+<p>To install Che on AWS, run the following <code>chectl</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ {prod-cli} server:deploy --platform=k8s --installer=helm --domain=aws.my-ide.cloud --multiuser
-  ✔ ✈️  {kubernetes} preflight checklist
+<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=aws.my-ide.cloud --multiuser
+› Current Kubernetes context: 'minikube'
+  ✔ Verify Kubernetes API...OK
+  ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
+    ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
+  ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
+    ✔ Check Kubernetes version: Found v1.15.12-gke.2.
     ✔ Verify domain is set...set to aws.my-ide.cloud.
-  ✔ 🏃‍  Running Helm to install {prod-short}
+    ↓ Check if cluster accessible [skipped]
+  ✔ Following Eclipse&#160;Che logs
+    ↓ Start following Operator logs [skipped]
+    ✔ Start following Eclipse&#160;Che server logs...done
+    ✔ Start following Postgres logs...done
+    ✔ Start following Keycloak logs...done
+    ✔ Start following Plugin registry logs...done
+    ✔ Start following Devfile registry logs...done
+    ✔ Start following namespace events...done
+  ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
     ✔ Verify if helm is installed
-    ✔ Check for TLS secret prerequisites...che-tls secret found.
-    ✔ Create Tiller Role Binding...it already exist.
-    ✔ Create Tiller Service Account...it already exist.
-    ✔ Create Tiller RBAC
-    ✔ Create Tiller Service...it already exist.
-    ✔ Preparing {prod-short} Helm Chart...done.
+    ✔ Check Helm Version: Found v3.4.1+gc4e7485
+    ✔ Create Namespace (che)...does already exist.
+    ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
+    ✔ Check Cluster Role Binding...does not exists.
+    ✔ Preparing Eclipse&#160;Che Helm Chart...done.
     ✔ Updating Helm Chart dependencies...done.
-    ✔ Deploying {prod-short} Helm Chart...done.
+    ✔ Deploying Eclipse&#160;Che Helm Chart...done.
   ✔ ✅  Post installation checklist
     ✔ PostgreSQL pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ {identity-provider} pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ {prod-short} pod bootstrap
-      ✔ scheduling...done.
-      ✔ downloading images...done.
-      ✔ starting...done.
-    ✔ Retrieving {prod-short} Server URL...https://che-che.aws.my-ide.cloud
-    ✔ {prod-short} status check
-Command server:deploy has completed successfully.</pre>
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Devfile registry pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Plugin registry pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse&#160;Che pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse&#160;Che status check...done
+  ✔ Prepare post installation output...done
+  ✔ Show important messages
+    ✔ Eclipse&#160;Che 7.19 has been successfully deployed.
+    ✔ Documentation             : https://www.eclipse.org/che/docs
+    ✔ -------------------------------------------------------------------------------
+    ✔ Users Dashboard           : https://che-che.aws.my-ide.cloud
+    ✔ Admin user login          : "XXX:XXX". NOTE: must change after first login.
+    ✔ -------------------------------------------------------------------------------
+    ✔ Plug-in Registry          : https://plugin-registry-che.aws.my-ide.cloud/v3
+    ✔ Devfile Registry          : https://devfile-registry-che.aws.my-ide.cloud
+    ✔ -------------------------------------------------------------------------------
+    ✔ Identity Provider URL     : https://keycloak-che.aws.my-ide.cloud/auth
+    ✔ Identity Provider login   : "XXX:XXX".
+    ✔ -------------------------------------------------------------------------------</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Investigate Eclipse&#160;Che logs:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:logs --namespace che</pre>
 </div>
 </div>
 </li>
 <li>
-<p>The certificate generated by Let’s Encrypt is a valid certificate.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/installation/certificate-generate-lets-encrypt.png"><img src="../_images/installation/certificate-generate-lets-encrypt.png" alt="certificate generate lets encrypt"></a>
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/installation/eclipse-che-welcome-to-your-workspace.png"><img src="../_images/installation/eclipse-che-welcome-to-your-workspace.png" alt="eclipse che welcome to your workspace"></a>
-</div>
+<p>Verify that certificates are set correctly</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Open Eclipse&#160;Che server URL from the output above</p>
+</li>
+<li>
+<p>Click on the lock in address bar</p>
+</li>
+<li>
+<p>Verify it has <strong>Connection is secure</strong></p>
+</li>
+</ol>
 </div>
 </li>
 </ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../end-user-guide/navigating-che-using-the-dashboard/" class="page">Navigating Che using the Dashboard</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
