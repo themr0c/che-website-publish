@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Switching between external and internal ways in inter-component communication :: Eclipse Che Documentation</title>
+    <title>Switching between external and internal DNS names in inter-component communication :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/switching-between-external-and-internal-communication/">
     <meta name="keywords" content="installation-guide">
     <meta name="generator" content="Antora 2.3.4">
@@ -602,20 +602,36 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Switching between external and internal ways in inter-component communication</h1>
+<h1 class="page">Switching between external and internal DNS names in inter-component communication</h1>
 <div class="paragraph">
-<p>The communication between Eclipse&#160;Che components uses the internal cluster host name.
-In following situations, instead, use external Kubernetes Ingress or OpenShift Route in inter-component communication:</p>
+<p>By default, new Che deployments use Kubernetes services DNS names for communications between Che server, Keycloak, registries, and helps with:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Multi-cluster OpenShift environment.</p>
+<p>Bypassing proxy, certificates, and firewalls issues</p>
 </li>
 <li>
-<p>The environment is restricting communication between namespaces.</p>
+<p>Speeding up the traffic</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>This type of communication is an alternative to the external method of inter-component communication, which uses Kubernetes Ingress or OpenShift Route cluster host names. In the situations described below, using Kubernetes internal DNS names is not supported. By disabling the use of the internal cluster host name in inter-component communication, the communication using external Kubernetes Ingress or OpenShift Route will come into effect.</p>
+</div>
+<div class="ulist">
+<div class="title">Internal inter-component communication restrictions in Kubernetes or OpenShift</div>
+<ul>
+<li>
+<p>The Che components are deployed across multi-cluster Kubernetes or OpenShift environments.</p>
+</li>
+<li>
+<p>The Kubernetes NetworkPolicies restricts communication between namespaces.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following section describes how to enable and disable the external inter-component communication for Kubernetes Ingress or OpenShift Route.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -624,12 +640,15 @@ In following situations, instead, use external Kubernetes Ingress or OpenShift R
 <p>The <code>kubectl</code> tool is available.</p>
 </li>
 <li>
-<p>An instance of Che running in {platform-name}.</p>
+<p>An instance of Che running in Kubernetes or OpenShift.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="paragraph">
 <div class="title">Procedure</div>
+<p>Switching between external and internal inter-component communication method is reached through the update against Custom Resource (CR).</p>
+</div>
+<div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>To use external Kubernetes Ingress or OpenShift Route in inter-component communication:</p>
@@ -641,7 +660,7 @@ In following situations, instead, use external Kubernetes Ingress or OpenShift R
 </div>
 </li>
 <li>
-<p>To use internal cluster host name in inter-component communication:</p>
+<p>To use internal Kubernetes DNS names in the inter-component communication:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch checluster eclipse-che -n che --type=json -p \
