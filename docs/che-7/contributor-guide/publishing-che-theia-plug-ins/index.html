@@ -711,16 +711,23 @@ latestUpdateDate: "2019-12-09"</code></pre>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>Submit a PR with the <code>meta.yaml</code> file of your Che-Theia plug-in in the <code>v3/plugins/&lt;your-plugin-group&gt;/&lt;your-plugin-name&gt;/&lt;version&gt;/</code> directory to the Che plug-in registry GitHub repository at <a href="https://github.com/eclipse/che-plugin-registry/">che-plugin-registry</a>.</p>
-<div class="paragraph">
-<p>For example, SonarLint Che-Theia plug-in is located in the <code>v3/plugins/sonarsource/sonarlint-vscode/0.0.1/meta.yaml</code> file.</p>
+<p>Submit a pull request to <a href="https://github.com/eclipse/che-plugin-registry">the plug-in registry repository</a> containing the <code>meta.yaml</code> file of the plug-in in the <code>v3/plugins/<em>&lt;plugin-publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em>/</code> directory.</p>
+<div class="exampleblock">
+<div class="title">Example 1. Location of <code>meta.yaml</code> file for the SonarLint Che-Theia plug-in</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>v3/plugins/sonarsource/sonarlint-vscode/0.0.1/meta.yaml</pre>
+</div>
+</div>
+</div>
 </div>
 </li>
-</ol>
+</ul>
 </div>
 <div class="paragraph">
 <p>After the new Che-Theia plug-ins are added and merged into the repository, the list of available plug-ins in the registry is updated.</p>
@@ -747,44 +754,91 @@ latestUpdateDate: "2019-12-09"</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>Using the Che-Theia dashboard</p>
+<p>At Theia runtime</p>
 </li>
 <li>
-<p>By configuring a workspace</p>
+<p>By configuring a workspace devfile</p>
 </li>
 <li>
-<p>At runtime</p>
+<p>By preparing shareable devfile</p>
 </li>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="adding-a-plug-in-through-the-dashboard_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-through-the-dashboard_publishing-che-theia-plug-ins"></a>Adding a plug-in through the dashboard</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<h3 id="adding-a-plug-in-at-runtime_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-at-runtime_publishing-che-theia-plug-ins"></a>Adding a plug-in at Theia runtime</h3>
+<div class="paragraph">
+<p>This method adds a plug-in to an already running workspace. The plug-in is not added permanently; it is removed when the workspace stops. This is a good method to test a plug-in without affecting the permanent workspace configuration.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
 <li>
-<p>Navigate to the <strong>Workspaces</strong> tab in the dashboard.</p>
-</li>
-<li>
-<p>Select the workspace to which you want to add the plug-in.</p>
-</li>
-<li>
-<p>In <strong>Workspace &gt; <em>&lt;workspace-name&gt;</em></strong> window, click the <strong>Plugins</strong> tab, and select the required plug-ins.</p>
-<div class="imageblock">
+<p>Run the <code>Deploy Plugin by Id</code> command, and specify the ID of the plug-in to add to the workspace. A plug-in ID can be:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">A local directory with plug-ins</dt>
+<dd>
+<p>Che loads all the plug-in binaries (<code>.theia</code> files) in the specified directory.</p>
+<div class="exampleblock">
+<div class="title">Example 2. Adding the local directory <code>/home/theia/plugins/</code></div>
 <div class="content">
-<a class="image" href="../_images/extensibility/adding-plug-ins-in-dashboard.png"><img src="../_images/extensibility/adding-plug-ins-in-dashboard.png" alt="adding plug ins in dashboard"></a>
+<div class="listingblock">
+<div class="content">
+<pre>local-dir:///home/theia/plugins/</pre>
 </div>
-<div class="title">Figure 1. Adding plug-ins through the dashboard</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">VS Code extension link</dt>
+<dd>
+<p>To obtain the link, go to the VS Code marketplace, find the needed extension, copy its ID, and append the ID to the <code>vscode:extension/</code> prefix.</p>
+<div class="exampleblock">
+<div class="title">Example 3. VS Code extension link for the <a href="https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml">XML language server</a> plug-in</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>vscode:extension/redhat.vscode-xml</pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Link to plug-in binaries (<code>.theia</code> files)</dt>
+<dd>
+<p>Can be both HTTP and HTTPS.</p>
+<div class="exampleblock">
+<div class="title">Example 4. Link to plug-in binaries</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>https://domain.net/path/plugin.theia</pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+</dl>
 </div>
 </li>
-</ol>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Verification steps</div>
+<ul>
+<li>
+<p>Open the <strong>Plugins panel</strong> (<strong>View</strong> &gt; <strong>Plugins</strong> in the main menu) and search for the plug-in in the list.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="adding-a-plug-in-by-configuring-a-workspace_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-by-configuring-a-workspace_publishing-che-theia-plug-ins"></a>Adding a plug-in by configuring a devfile</h3>
+<h3 id="adding-a-plug-in-by-configuring-a-workspace_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-by-configuring-a-workspace_publishing-che-theia-plug-ins"></a>Adding a plug-in by configuring a workspace devfile</h3>
 <div class="paragraph">
 <p>This method is useful when you need to add plug-ins from a non-default registry.</p>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
 <p>Navigate to the <strong>Workspaces</strong> tab in the dashboard.</p>
@@ -794,149 +848,66 @@ latestUpdateDate: "2019-12-09"</code></pre>
 </li>
 <li>
 <p>Switch to the <strong>Devfile</strong> tab, and find the <code>components</code> section.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/extensibility/adding-plug-ins-in-workspace-devfile.png"><img src="../_images/extensibility/adding-plug-ins-in-workspace-devfile.png" alt="adding plug ins in workspace devfile"></a>
-</div>
-<div class="title">Figure 2. Adding plug-ins by configuring a component</div>
-</div>
-<div class="paragraph">
-<p>Plug-ins are added in YAML format as array elements in the <code>components</code> section.</p>
-</div>
 </li>
 <li>
-<p>To add plug-ins, append this lines to the <code>components</code> section. A record has the following format:</p>
+<p>To add plug-ins, append your plugin component to the <code>components</code> section. A record has the following format:</p>
 <div class="listingblock">
 <div class="content">
-<pre>  - type: chePlugin
+<pre>components:
+  - type: chePlugin
     reference: &gt;-
-      &lt;registry-base-uri&gt;/v3/plugins/&lt;plugins-group&gt;/&lt;plugin-name&gt;/&lt;version&gt;</pre>
+      <em>&lt;registry-base-uri&gt;</em>/v3/plugins/<em>&lt;plugin-publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Reference URL examples:</p>
+<div class="exampleblock">
+<div class="title">Example 5. <code>chePlugin</code> reference URLs pointing to a plug-in <code>meta.yaml</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>https://custom-registry/v3/plugins/custom-plugin-name/0.0.1/
+https://raw.githubusercontent.com/username/che-custom-plugins/master/v3/plugins/custom-plugin-name/0.0.1/meta.yaml</pre>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>https://custom-registry/v3/plugins/custom-plugin-name/0.0.1/</p>
-</li>
-<li>
-<p>https://raw.githubusercontent.com/username/che-custom-plugins/master/v3/plugins/custom-plugin-name/0.0.1/meta.yaml</p>
-</li>
-</ul>
+</div>
+</div>
 </div>
 </li>
 </ol>
 </div>
 </div>
 <div class="sect2">
-<h3 id="adding-a-plug-in-at-runtime_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-at-runtime_publishing-che-theia-plug-ins"></a>Adding a plug-in at runtime</h3>
-<div class="paragraph">
-<p>This method adds a plug-in to an already running workspace. The plug-in is not added permanently; it is removed when the workspace stops. This is a good method to test a plug-in without affecting the permanent workspace configuration.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Run the <code>Deploy Plugin by Id</code> command, and specify the ID of the plug-in that you want to add to the workspace. A plug-in ID can be:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>A local directory with plug-ins. All the plug-in binaries (<code>.theia</code> files) in the specified directory would be loaded. Example: <code>local-dir:///home/theia/plugins/</code>.</p>
-</li>
-<li>
-<p>VS Code extension link. To obtain the link, go to the VS Code marketplace, find the needed extension, copy its ID, and append the ID to the <code>vscode:extension/</code> prefix.</p>
-<div class="paragraph">
-<p>For example, for the <a href="https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml">XML language server</a> plug-in, it is: <code>vscode:extension/redhat.vscode-xml</code>.</p>
-</div>
-</li>
-<li>
-<p>Link to plug-in binaries (<code>.theia</code> files). Can be both HTTP and HTTPS. Example: <code><a href="https://domain.net/path/plugin.theia" class="bare">https://domain.net/path/plugin.theia</a></code>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>To check if the plug-in loaded successful, open the <strong>Plugins panel</strong> (<strong>View</strong> &gt; <strong>Plugins</strong> in the main menu) and search for the plug-in in the list.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sharing-your-che-theia-plug-in-with-a-factory_publishing-che-theia-plug-ins"><a class="anchor" href="#sharing-your-che-theia-plug-in-with-a-factory_publishing-che-theia-plug-ins"></a>Sharing your Che-Theia plug-in with a factory</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to use a Che-Theia factory to share a plug-in in development environment with other users.</p>
-</div>
-<div class="sect2">
-<h3 id="sharing-a-factory-with-a-plug-in-development-environment_publishing-che-theia-plug-ins"><a class="anchor" href="#sharing-a-factory-with-a-plug-in-development-environment_publishing-che-theia-plug-ins"></a>Sharing a factory with a plug-in development environment</h3>
+<h3 id="adding-a-plug-in-by-shareable-devfile_publishing-che-theia-plug-ins"><a class="anchor" href="#adding-a-plug-in-by-shareable-devfile_publishing-che-theia-plug-ins"></a>Adding a plug-in by preparing shareable devfile</h3>
 <div class="paragraph">
 <p>This approach brings an advantage of other users being able to contribute to the development, provided they have write access to the repository with the plug-in.</p>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a factory with the plug-in development environment and share it with reviewers to provide them with the same environment. Reviewers then must build and run the plug-in to test it, using a script or a set of instructions on how to include the build in the plug-in repository.</p>
+<p>Create a devfile with the plug-in development environment and share it with reviewers to provide them with the same environment. Reviewers then must build and run the plug-in to test it, using a script or a set of instructions on how to include the build in the plug-in repository.</p>
 </li>
 <li>
-<p>The reviewer starts a hosted plug-in instance and specify the path to the plug-in project inside the workspace. For instructions on how to start a hosted instance of Che-Theia for plug-in testing, see <a href="../testing-che-theia-plug-ins/" class="page">Testing Che-Theia plug-ins</a>.</p>
-</li>
-<li>
-<p>To make the reviewers' work easier, it is possible to invoke a command to build the plug-in after the loading of the factory is completed. For more details, see the factory documentation.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="sharing-a-factory-with-plug-in-configuration_publishing-che-theia-plug-ins"><a class="anchor" href="#sharing-a-factory-with-plug-in-configuration_publishing-che-theia-plug-ins"></a>Sharing a factory with plug-in configuration</h3>
-<div class="paragraph">
-<p>This method provides a workspace with a ready-to-use plug-in. The author of the plug-in must host the plug-in binaries in a custom registry.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a factory.</p>
-</li>
-<li>
-<p>Go to the factory details, and scroll to the <strong>Configuration</strong> section.</p>
-</li>
-<li>
-<p>Add the plug-in to the <code>workspace.attributes.plugins</code> field.</p>
-<div class="imageblock">
+<p>Share with reviewers factory link with a URL to a repository with devfile or a direct URL to content of the devfile.</p>
+<div class="exampleblock">
+<div class="title">Example 6. Factory URL pointing to a repository containing a devfile</div>
 <div class="content">
-<a class="image" href="../_images/extensibility/sharing-plug-in-with-factory.png"><img src="../_images/extensibility/sharing-plug-in-with-factory.png" alt="sharing plug in with factory"></a>
+<div class="paragraph">
+<p>https://che-host:che-port/f?url=https://github.com/eclipse/che</p>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 7. Factory URL pointing to a devfile</div>
+<div class="content">
+<div class="paragraph">
+<p>https://che-host:che-port/f?url=https://raw.githubusercontent.com/eclipse/che/master/devfile.yaml</p>
+</div>
 </div>
 </div>
 </li>
 <li>
-<p>Share the factory link.</p>
+<p>The reviewer starts a workspace by opening a link where they are able to starts a hosted plug-in instance and specify the path to the plug-in project inside the workspace. For instructions on how to start a hosted instance of Che-Theia for plug-in testing, see <a href="../testing-che-theia-plug-ins/" class="page">Testing Che-Theia plug-ins</a>.</p>
 </li>
 </ol>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Only accept factories from trusted sources. Malicious factories can potentially steal data that is accessible from within your workspace.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="#adding-a-che-theia-plug-in-into-a-workspace_publishing-che-theia-plug-ins">Adding a Che-Theia plug-in into a workspace</a></p>
-</li>
-<li>
-<p><a href="../testing-che-theia-plug-ins/" class="page">Testing Che-Theia plug-ins</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -971,7 +942,7 @@ Using this notation, units that contain the character <code>i</code>, denote a n
 </table>
 </div>
 <div class="exampleblock">
-<div class="title">Example 1. Limiting RAM use for a plug-in</div>
+<div class="title">Example 8. Limiting RAM use for a plug-in</div>
 <div class="content">
 <div class="paragraph">
 <p>Example of an attribute that sets the RAM limit for the <a href="https://github.com/eclipse/che-plugin-registry/blob/master/v3/plugins/redhat/vscode-yaml/0.8.0/meta.yaml">YAML language server plug-in</a> to 768 mebibytes (1073741824 bytes) and RAM request to 500 megabytes:</p>
@@ -988,7 +959,7 @@ Using this notation, units that contain the character <code>i</code>, denote a n
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 2. Limiting CPU use for a plug-in</div>
+<div class="title">Example 9. Limiting CPU use for a plug-in</div>
 <div class="content">
 <div class="paragraph">
 <p>Example of an attribute that sets the CPU limit for the <a href="https://github.com/eclipse/che-plugin-registry/blob/master/v3/plugins/redhat/vscode-yaml/0.8.0/meta.yaml">YAML language server plug-in</a> to 1.5 cores and CPU request to 500 millicores:</p>
