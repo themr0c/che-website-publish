@@ -638,7 +638,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-registries-in-kubernetes_running-custom-registries"><a class="anchor" href="#deploying-registries-in-kubernetes_running-custom-registries"></a>Deploying registries in Kubernetes</h2>
+<h2 id="deploying-registries-in-kubernetes_running-custom-registries-on-kubernetes"><a class="anchor" href="#deploying-registries-in-kubernetes_running-custom-registries-on-kubernetes"></a>Deploying registries in Kubernetes</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Procedure</div>
@@ -658,7 +658,7 @@ helm upgrade --install che-plugin-registry \
  --namespace ${NAMESPACE} \
  --set global.ingressDomain=${DOMAIN} \
  --set chePluginRegistryImage=${IMAGE} \
- --set chePluginRegistryImagePullPolicy="IfNotPresent" \
+ --set chePluginRegistryImagePullPolicy="Always" \
  ./kubernetes/che-plugin-registry/</pre>
 </div>
 </div>
@@ -687,7 +687,7 @@ helm upgrade --install che-devfile-registry \
  --namespace ${NAMESPACE} \
  --set global.ingressDomain=${DOMAIN} \
  --set cheDevfileRegistryImage=${IMAGE} \
- --set cheDevfileRegistryImagePullPolicy="IfNotPresent" \
+ --set cheDevfileRegistryImagePullPolicy="Always" \
  ./deploy/kubernetes/che-devfile-registry/</pre>
 </div>
 </div>
@@ -705,11 +705,11 @@ helm upgrade --install che-devfile-registry \
 </div>
 </li>
 <li>
-<p>The Helm chart creates a Pod, a service, and an Ingress. To get them, use <code>app=che-plugin-registry</code> (or <code>app=che-plugin-registry</code> for the devfile registry).</p>
+<p>The Helm chart creates a Pod, a service, and an Ingress. To get them, use <code>component=plugin-registry</code> (or <code>component=plugin-registry</code> for the devfile registry)</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl  get -o custom-columns=TYPE:.kind,NAME:.metadata.name \
-  -l app=che-plugin-registry pod,svc,ingress
+  -l component=plugin-registry pod,svc,ingress
 TYPE      NAME
 Pod       che-plugin-registry-5c7cd8d5c9-zlqlz
 Service   che-plugin-registry
@@ -717,19 +717,20 @@ Ingress   che-plugin-registry</pre>
 </div>
 </div>
 </li>
-<li>
-<p>Check if the registries are deployed successfully on Kubernetes.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+</ol>
+</div>
+<div id="verification-custom_registries-_running-custom-registries-on-kubernetes" class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
 <li>
 <p>To verify that the new plug-in is correctly published to the plug-in registry, make a request to the registry path <code>/v3/plugins/index.json</code> (or <code>/devfiles/index.json</code> for the devfile registry).</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ URL=$(kubectl  get -o 'custom-columns=URL:.spec.rules[0].host' \
-  -l app=che-plugin-registry ingress --no-headers)
+<pre>$ URL=$(kubectl  get ingress -l app=che,component=plugin-registry \
+  -o 'custom-columns=URL:.spec.rules[0].host' --no-headers)
 $ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
-$ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
-,\{
+$ echo ${INDEX_JSON} | jq '.[] | select(.name == "my-plug-in")'
+{
  "id": "my-org/my-plug-in/1.0.0",
  "displayName":"This is my first plug-in for Che",
  "version":"1.0.0",
@@ -737,11 +738,11 @@ $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
  "name":"my-plug-in",
  "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plug-in/1.0.0" }
+ "links": {"self":"/v3/plugins/my-org/my-plug-in/1.0.0"}
 }
 --
 --
-,\{
+{
  "id": "my-org/my-plug-in/latest",
  "displayName":"This is my first plug-in for Che",
  "version":"latest",
@@ -749,7 +750,7 @@ $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
  "name":"my-plug-in",
  "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plug-in/latest" }
+ "links": {"self":"/v3/plugins/my-org/my-plug-in/latest" }
 }</pre>
 </div>
 </div>
@@ -758,24 +759,25 @@ $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 <p>Verify that the Che server points to the URL of the registry. To do this, compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap (or <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> for the devfile registry):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl  get \
-  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN<em>REGISTRY</em>URL']" \
-  --no-headers cm/che
+<pre>$ kubectl  get cm/che \
+  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN__REGISTRY__URL']" \
+  --no-headers
 URL
 http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>with the URL of the Ingress:</p>
+<p>with the URL of the ingress:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl  get -o 'custom-columns=URL:.spec.rules[0].host' \
-  -l app=che-plugin-registry ingress --no-headers
+<pre>$ kubectl  get ingress -l app=che,component=plugin-registry \
+  -o 'custom-columns=URL: .spec.rules[0].host' --no-headers
 che-plugin-registry-che.192.168.99.100.nip.io</pre>
 </div>
 </div>
-</li>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>If they do not match, update the ConfigMap and restart the Che server.</p>
 <div class="listingblock">
@@ -786,36 +788,36 @@ $ kubectl  scale --replicas=0 deployment/che
 $ kubectl  scale --replicas=1 deployment/che</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>When the new registries are deployed and the Che server is configured to use them, the new plug-ins are available in the <strong>Plugin</strong> view of a workspace.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/customization/che-deploying-plugin-registry-in-kubernetes.png" alt="che deploying plugin registry in kubernetes">
-</div>
-</div>
-<div class="paragraph">
-<p>The new stacks are displayed in the <strong>New Workspace</strong> tab of the user dashboard.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/customization/deploying-devfile-registry-in-kubernetes.png" alt="deploying devfile registry in kubernetes">
-</div>
-</div>
 </li>
 </ol>
 </div>
+</li>
+<li>
+<p>When the new plugin registry is deployed and the Che server is configured to use them, UI should be reflected in the following places:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The new plug-ins are available in the completion to <strong>chePlugin</strong> components in <strong>Devfile</strong> tab of a workspace details;</p>
+</li>
+<li>
+<p>The new plug-ins are available in the <strong>Plugin</strong> Theia view of a workspace.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>When the new devfile registry is deployed the Che server is configured to use them, the new devfiles are displayed in the <strong>Get Started</strong> and <strong>Create Custom Workspace</strong> tab of the user dashboard.</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-registries-in-openshift_running-custom-registries"><a class="anchor" href="#deploying-registries-in-openshift_running-custom-registries"></a>Deploying registries in OpenShift</h2>
+<h2 id="deploying-registries-in-openshift_running-custom-registries-on-openshift"><a class="anchor" href="#deploying-registries-in-openshift_running-custom-registries-on-openshift"></a>Deploying registries in OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>An OpenShift template to deploy the plug-in registry is available in the <code>openshift/</code> directory of the GitHub repository.</p>
+<p>An OpenShift template to deploy the plug-in registry is available in the <code>deploy/openshift/</code> directory of the GitHub repository.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -830,7 +832,7 @@ oc new-app -f openshift/che-plugin-registry.yml \
  -n "$\{NAMESPACE}" \
  -p IMAGE="$\{IMAGE_NAME}" \
  -p IMAGE_TAG="$\{IMAGE_TAG}" \
- -p PULL_POLICY="IfNotPresent"</pre>
+ -p PULL_POLICY="Always"</pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -853,7 +855,7 @@ oc new-app -f openshift/che-devfile-registry.yml \
  -n "$\{NAMESPACE}" \
  -p IMAGE="$\{IMAGE_NAME}" \
  -p IMAGE_TAG="$\{IMAGE_TAG}" \
- -p PULL_POLICY="IfNotPresent"</pre>
+ -p PULL_POLICY="Always"</pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -865,39 +867,40 @@ oc new-app -f openshift/che-devfile-registry.yml \
 </table>
 </div>
 </li>
-<li>
-<p>Check if the registries are deployed successfully on OpenShift.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+</ol>
+</div>
+<div id="verification-custom_registries-_running-custom-registries-on-openshift" class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
 <li>
 <p>To verify that the new plug-in is correctly published to the plug-in registry, make a request to the registry path <code>/v3/plugins/index.json</code> (or <code>/devfiles/index.json</code> for the devfile registry).</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ URL=$(oc get -o 'custom-columns=URL:.spec.rules[0].host' \
-  -l app=che-plugin-registry route --no-headers)
+<pre>$ URL=$(kubectl  get route -l app=che,component=plugin-registry \
+  -o 'custom-columns=URL:.spec.host' --no-headers)
 $ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
-$ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
-,\{
+$ echo ${INDEX_JSON} | jq '.[] | select(.name == "my-plug-in")'
+{
  "id": "my-org/my-plug-in/1.0.0",
  "displayName":"This is my first plug-in for Che",
  "version":"1.0.0",
  "type":"VS Code extension",
  "name":"my-plug-in",
- "description":"This plugin shows that we are able to add plugins to the registry",
+ "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plug-in/1.0.0" }
+ "links": {"self":"/v3/plugins/my-org/my-plug-in/1.0.0"}
 }
 --
 --
-,\{
+{
  "id": "my-org/my-plug-in/latest",
  "displayName":"This is my first plug-in for Che",
  "version":"latest",
  "type":"VS Code extension",
  "name":"my-plug-in",
- "description":"This plugin shows that we are able to add plugins to the registry",
+ "description":"This plugins shows that we are able to add plugins to the registry...",
  "publisher":"my-org",
- "links": \{"self":"/v3/plugins/my-org/my-plug-in/latest" }
+ "links": {"self":"/v3/plugins/my-org/my-plug-in/latest" }
 }</pre>
 </div>
 </div>
@@ -906,9 +909,9 @@ $ echo ${INDEX_JSON} | grep -A 4 -B 5 "\"name\":\"my-plug-in\""
 <p>Verify that the Che server points to the URL of the registry. To do this, compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap (or <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> for the devfile registry):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get \
-  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN<em>REGISTRY</em>URL']" \
-  --no-headers cm/che
+<pre>$ kubectl  get cm/che \
+  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN__REGISTRY__URL']" \
+  --no-headers
 URL
 http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
 </div>
@@ -918,30 +921,44 @@ http://che-plugin-registry-che.192.168.99.100.nip.io/v3</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get -o 'custom-columns=URL:.spec.rules[0].host' \
-  -l app=che-plugin-registry route --no-headers
+<pre>$ kubectl  get route -l app=che,component=plugin-registry \
+  -o 'custom-columns=URL: .spec.host' --no-headers
 che-plugin-registry-che.192.168.99.100.nip.io</pre>
 </div>
 </div>
-</li>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>If they do not match, update the ConfigMap and restart the Che server.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc edit cm/che
+<pre>$ kubectl  edit cm/che
 (...)
-$ oc scale --replicas=0 deployment/che
-$ oc scale --replicas=1 deployment/che</pre>
+$ kubectl  scale --replicas=0 deployment/che
+$ kubectl  scale --replicas=1 deployment/che</pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
 </li>
+<li>
+<p>When the new plugin registry is deployed and the Che server is configured to use them, UI should be reflected in the following places:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The new plug-ins are available in the completion to <strong>chePlugin</strong> components in <strong>Devfile</strong> tab of a workspace details;</p>
+</li>
+<li>
+<p>The new plug-ins are available in the <strong>Plugin</strong> Theia view of a workspace.</p>
+</li>
 </ol>
 </div>
-<div class="paragraph">
-<p>When the new registries are deployed and the Che server is configured to use them, the new plug-ins are available in the <strong>Plugin</strong> view of a workspace and the new stacks are displayed in the <strong>New Workspace</strong> tab of the user dashboard.</p>
+</li>
+<li>
+<p>When the new devfile registry is deployed the Che server is configured to use them, the new devfiles are displayed in the <strong>Get Started</strong> and <strong>Create Custom Workspace</strong> tab of the user dashboard.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
