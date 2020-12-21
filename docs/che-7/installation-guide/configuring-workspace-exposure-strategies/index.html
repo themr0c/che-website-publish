@@ -608,50 +608,213 @@
 <div class="paragraph">
 <p>The following section describes how to configure workspace exposure strategies of a Che server and ensure that applications running inside are not vulnerable to outside attacks.</p>
 </div>
-<div class="paragraph">
-<p>The workspace exposure strategy is configured per Che server, using the <code>che.infra.kubernetes.server_strategy</code> configuration property or the <code>CHE_INFRA_KUBERNETES_SERVER__STRATEGY</code> environment variable.</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="configuring-workspace-exposure-strategies-using-an-operator_configuring-workspace-exposure-strategies"><a class="anchor" href="#configuring-workspace-exposure-strategies-using-an-operator_configuring-workspace-exposure-strategies"></a>Configuring workspace exposure strategies using an Operator</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The supported values for <code>che.infra.kubernetes.server_strategy</code> are:</p>
+<p><a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes or OpenShift that use <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/crds/crd-managing-resources-from-crds.html">Custom Resources</a> to manage applications and their components.</p>
 </div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p><code>multi-host</code></p>
-</li>
-<li>
-<p><code>single-host</code></p>
-</li>
-<li>
-<p><code>default-host</code></p>
+<p>The <code>kubectl</code> tool is available.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For enabling of the <code>multi-host</code> strategy:</p>
+<div class="title">Procedure</div>
+<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.server.serverExposureStrategy</code> property of the CheCluster Custom Resource object YAML file.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Set the:</p>
+<div class="paragraph">
+<p>The supported values for <code>spec.server.serverExposureStrategy</code> are:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>che.infra.kubernetes.ingress.domain</code> configuration property</p>
-<div class="paragraph">
-<p>or</p>
-</div>
+<p><a href="#multi-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>multi-host</code></a></p>
 </li>
 <li>
-<p><code>CHE_INFRA_KUBERNETES_INGRESS_DOMAIN</code> environment variable</p>
+<p><a href="#single-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>single-host</code></a></p>
+</li>
+<li>
+<p><a href="#default-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>default-host</code></a></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>to match the domain name that will host workspace component subdomains.</p>
+<p>See <a href="#workspace-exposure-strategies_configuring-workspace-exposure-strategies">Workspace exposure strategies</a> for more detail about individual strategies.</p>
+</div>
+<div class="paragraph">
+<p>To activate changes done to CheCluster YAML file, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a new cluster by executing the <code>chectl</code> command with applying a patch. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:deploy  --installer=operator --platform=<em>&lt;platform&gt;</em> \
+  --che-operator-cr-patch-yaml=patch.yaml</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For a list of available Kubernetes or OpenShift deployment platforms, use <code>chectl server:deploy --platform --help</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the following <code>patch.yaml</code> file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
+kind: CheCluster
+metadata:
+  name: eclipse-che
+spec:
+  server:
+    serverExposureStrategy: '<em>&lt;exposure-strategy&gt;</em>' <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>- used workspace exposure strategy</td>
+</tr>
+</table>
 </div>
 </li>
 </ul>
 </div>
 </li>
-</ol>
+<li>
+<p>Update the YAML file properties of an already running cluster by executing the <code>kubectl patch</code> command. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster eclipse-che --type=json \
+  -p '[{"op": "replace",
+  "path": "/spec/server/serverExposureStrategy",
+  "value": "<em>&lt;exposure-strategy&gt;</em>"}]' \ <i class="conum" data-value="1"></i><b>(1)</b>
+  -n <em>&lt;namespace-name&gt;</em></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>- used workspace exposure strategy</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Gateway single-host on Kubernetes</div>
+<p>Single-host on Kubernetes has two implementations, <code>native</code>(default) and <code>gateway</code>. To deploy with <code>gateway</code> set the <code>k8s.singleHostExposureType</code> of CheCluster Custom Resource to <code>gateway</code>, or use this patch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
+kind: CheCluster
+metadata:
+  name: eclipse-che
+spec:
+  server:
+    serverExposureStrategy: 'single-host'
+  k8s:
+    singleHostExposureType: 'gateway'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-workspace-exposure-strategies-using-a-helm-chart_configuring-workspace-exposure-strategies"><a class="anchor" href="#configuring-workspace-exposure-strategies-using-a-helm-chart_configuring-workspace-exposure-strategies"></a>Configuring workspace exposure strategies using a Helm chart</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>When deploying Che using the Helm chart, configure the workspace exposure strategy using the <code>global.serverStrategy</code>.  For single-host, optional <code>global.singleHostExposure</code> and <code>cheSinglehostGateway.deploy</code> properties may be configured as well. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
+</div>
+<div class="paragraph">
+<p>Example for <code>native</code> single-host strategy type and <code>multi-host</code> or <code>default-host</code> strategies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm install --set global.serverStrategy=<em>&lt;exposure-strategy&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --set global.serverStrategy=<em>&lt;exposure-strategy&gt;</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The supported values for <code>global.serverStrategy</code> are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#multi-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>multi-host</code></a></p>
+</li>
+<li>
+<p><a href="#single-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>single-host</code></a></p>
+</li>
+<li>
+<p><a href="#default-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><code>default-host</code></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Gateway single-host on Kubernetes</div>
+<p>Single-host on Kubernetes has 2 implementations, <code>native</code>(default) and <code>gateway</code>. To deploy with <code>gateway</code> use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm install --namespace <em>&lt;namespace&gt;</em> \
+--set global.serverStrategy=single-host \
+--set global.singleHostExposure=gateway \
+--set cheSinglehostGateway.deploy=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --install che --namespace <em>&lt;namespace&gt;</em> \
+--set global.serverStrategy=single-host \
+--set global.singleHostExposure=gateway \
+--set cheSinglehostGateway.deploy=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, predefined values file can be used as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade --install che --namespace <em>&lt;namespace&gt;</em> \
+-f "${SOURCE_HOME_DIR}"/deploy/kubernetes/helm/che/values/single-host-gateway.yaml</pre>
+</div>
 </div>
 </div>
 </div>
@@ -691,9 +854,9 @@
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_multi_host_strategy"><a class="anchor" href="#_multi_host_strategy"></a>Multi-host strategy</h3>
+<h3 id="multi-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><a class="anchor" href="#multi-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"></a>Multi-host strategy</h3>
 <div class="paragraph">
-<p>With this strategy, each workspace component is assigned a new subdomain of the main domain configured for the Che server. On OpenShift, this is the only possible strategy, and manual configuration of the workspace exposure strategy is therefore always ignored.</p>
+<p>With multi-host strategy, each workspace component is assigned a new subdomain of the main domain configured for the Che server. This is the default strategy.</p>
 </div>
 <div class="paragraph">
 <p>This strategy is the easiest to understand from the perspective of component deployment because any paths present in the URL to the component are received as they are by the component.</p>
@@ -703,16 +866,29 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="_single_host_strategy"><a class="anchor" href="#_single_host_strategy"></a>Single-host strategy</h3>
+<h3 id="single-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><a class="anchor" href="#single-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"></a>Single-host strategy</h3>
 <div class="paragraph">
-<p>Single-host strategy have two subtypes with different implementation methods. First subtype is named <code>native</code>. This strategy is available and default on Kubernetes, but not on OpenShift, since it uses ingresses for servers exposing. The second subtype named <code>gateway</code>, works both on
-Kubernetes or OpenShift, and uses a special pod with reverse-proxy running inside to route requests.</p>
-</div>
-<div class="paragraph">
-<p>When any of those single-host types is used, all workspaces are deployed to sub-paths of the main Che server domain.</p>
+<p>With single-host strategy, all workspaces are deployed to sub-paths of the main Che server domain.</p>
 </div>
 <div class="paragraph">
 <p>This is convenient for TLS-secured Che servers because it is sufficient to have a single certificate for the Che server, which will cover all the workspace component deployments as well.</p>
+</div>
+<div class="paragraph">
+<p>Single-host strategy have two subtypes with different implementation methods. First subtype is named <code>native</code>. This strategy is available and default on Kubernetes, but not on OpenShift, since it uses Ingresses for servers exposing. The second subtype named <code>gateway</code>, works both on Kubernetes or OpenShift, and uses a special pod with reverse-proxy running inside to route requests.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>With <code>gateway</code> single-host strategy, cluster network policies has to be configured so that workspace&#8217;s services are reachable from reverse-proxy Pod (typically in Che namespace). These typically lives in different namespace.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>There are two ways of exposing the endpoints specified in the devfile. These can be configured using the <code>CHE_INFRA_KUBERNETES_SINGLEHOST_WORKSPACE_DEVFILE__ENDPOINT__EXPOSURE</code> environment variable of the Che. This environment variable is only effective with the single-host server strategy and is applicable to all workspaces of all users.</p>
@@ -746,174 +922,10 @@ Kubernetes or OpenShift, and uses a special pod with reverse-proxy running insid
 </div>
 </div>
 <div class="sect2">
-<h3 id="_default_host_strategy"><a class="anchor" href="#_default_host_strategy"></a>Default-host strategy</h3>
+<h3 id="default-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"><a class="anchor" href="#default-host-workspace-exposure-strategy_configuring-workspace-exposure-strategies"></a>Default-host strategy</h3>
 <div class="paragraph">
 <p>This strategy exposes the components to the outside world on the sub-paths of the default host of the cluster. It is similar to the single-host strategy. All the limitations and advantages of the single-host strategy applying to this strategy as well.</p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-workspace-exposure-strategies-using-a-helm-chart_configuring-workspace-exposure-strategies"><a class="anchor" href="#configuring-workspace-exposure-strategies-using-a-helm-chart_configuring-workspace-exposure-strategies"></a>Configuring workspace exposure strategies using a Helm chart</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>When deploying Che using the Helm chart, configure the workspace exposure strategy using the <code>global.serverStrategy</code>.  For single-host, optional <code>global.singleHostExposure</code> and <code>cheSinglehostGateway.deploy</code> properties may be configured as well. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
-</div>
-<div class="paragraph">
-<p>Example for <code>native</code> single-host strategy type and <code>multi-host</code> or <code>default-host</code> strategies:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --set global.serverStrategy=<em>&lt;single-host&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --set global.serverStrategy=<em>&lt;single-host&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;single-host&gt;</em></code> option in the above example with <code>multi-host</code> or <code>default-host</code>.</p>
-</div>
-<div class="paragraph">
-<p>Example for <code>gateway</code> single-host strategy type:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --namespace <em>&lt;namespace&gt;</em> --set global.serverStrategy=single-host --set global.singleHostExposure=gateway --set cheSinglehostGateway.deploy=true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --install che --namespace <em>&lt;namespace&gt;</em> --set global.serverStrategy=single-host --set global.singleHostExposure=gateway --set cheSinglehostGateway.deploy=true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Alternatively, predefined values file can be used as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --install che --namespace <em>&lt;namespace&gt;</em> \
-...
--f "${SOURCE_HOME_DIR}"/deploy/kubernetes/helm/che/values/single-host-gateway.yaml \
-...</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-workspace-exposure-strategies-using-an-operator_configuring-workspace-exposure-strategies"><a class="anchor" href="#configuring-workspace-exposure-strategies-using-an-operator_configuring-workspace-exposure-strategies"></a>Configuring workspace exposure strategies using an Operator</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operators</a> are software extensions to Kubernetes or OpenShift that use <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/crds/crd-managing-resources-from-crds.html">Custom Resources</a> to manage applications and their components.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The <code>kubectl</code> tool is available.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>When deploying Che using the Operator, configure the intended strategy by modifying the <code>spec.server.serverExposureStrategy</code> and  optionally <code>spec.k8s.singleHostExposureType</code> properties of the CheCluster Custom Resource object YAML file.</p>
-</div>
-<div class="paragraph">
-<p>To activate changes done to CheCluster YAML file, do one of the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Create a new cluster by executing the <code>chectl</code> command with applying a patch. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:deploy  --installer=operator --platform=<em>&lt;platform&gt;</em> \
-  --che-operator-cr-patch-yaml=patch.yaml</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>For a list of available Kubernetes or OpenShift deployment platforms, use <code>chectl server:deploy --platform --help</code>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>For the <code>native</code> single-host exposure type, use the following <code>patch.yaml</code> file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
-kind: CheCluster
-metadata:
-  name: eclipse-che
-spec:
-  server:
-    serverExposureStrategy: '<em>single-host</em>'
-  k8s:
-    singleHostExposureType: 'native'</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>For the <code>gateway</code> type, use the following <code>patch.yaml</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
-kind: CheCluster
-metadata:
-  name: eclipse-che
-spec:
-  server:
-    serverExposureStrategy: 'single-host'
-  k8s:
-    singleHostExposureType: 'gateway'</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Update the YAML file properties of an already running cluster by executing the <code>kubectl patch</code> command. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster eclipse-che --type=json \
-  -p '[{"op": "replace", "path": "/spec/server/serverExposureStrategy", "value": "<em>single-host</em>"}] -n <em>&lt;namespace-name&gt;</em>'</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>single-host</em></code> option in the above example with <code>multi-host</code>
- or <code>default-host</code>
-.</p>
-</div>
-<div class="paragraph">
-<p>To change the <code>single-host</code> type, too, use:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster eclipse-che --type=json \
-  -p '[{"op": "replace", "path": "/spec/server/serverExposureStrategy", "value": "single-host"}, {"op": "replace", "path": "/spec/k8s/singleHostExposureType", "value": "gateway"}]' \
-  -n <em>&lt;namespace-name&gt;</em></pre>
-</div>
-</div>
-</li>
-</ul>
 </div>
 </div>
 </div>
