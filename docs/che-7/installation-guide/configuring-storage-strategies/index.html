@@ -635,7 +635,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="storage-strategies-for-che-workspaces_configuring-storage-strategies"><a class="anchor" href="#storage-strategies-for-che-workspaces_configuring-storage-strategies"></a>Storage strategies for che workspaces</h2>
+<h2 id="storage-strategies-for-che-workspaces_che"><a class="anchor" href="#storage-strategies-for-che-workspaces_che"></a>Storage strategies for che workspaces</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Workspace Pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. It is possible to configure how the Che server uses PVCs for workspaces. The individual methods for this configuration are called PVC strategies:</p>
@@ -682,7 +682,7 @@
 <p>Eclipse&#160;Che uses the <code>common</code> PVC strategy in combination with the "one namespace per user" namespace strategy when all Che workspaces operate in the user&#8217;s namespace, sharing one PVC.</p>
 </div>
 <div class="sect2">
-<h3 id="the-common-pvc-strategy_configuring-storage-strategies"><a class="anchor" href="#the-common-pvc-strategy_configuring-storage-strategies"></a>The <code>common</code> PVC strategy</h3>
+<h3 id="the-common-pvc-strategy_che"><a class="anchor" href="#the-common-pvc-strategy_che"></a>The <code>common</code> PVC strategy</h3>
 <div class="paragraph">
 <p>All workspaces inside a Kubernetes namespace or OpenShift project use the same Persistent Volume Claim (PVC) as the default data storage when storing data such as the following in their declared volumes:</p>
 </div>
@@ -704,7 +704,7 @@
 In this strategy, all Che workspaces use the same PVC. When the user runs one workspace, it only binds to one node in the cluster at a time.</p>
 </div>
 <div class="paragraph">
-<p>The corresponding containers volume mounts link to a common volume, and sub-paths are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-PVC-name&gt;</em></code>. For more details, see <a href="#how-subpaths-are-used-in-pvcs_configuring-storage-strategies">How subpaths are used in PVCs</a>.</p>
+<p>The corresponding containers volume mounts link to a common volume, and sub-paths are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-PVC-name&gt;</em></code>. For more details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
 </div>
 <div class="paragraph">
 <p>The Che Volume name is identical to the name of the user-defined PVC. It means that if a machine is configured to use a Che volume with the same name as the user-defined
@@ -735,7 +735,7 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-per-workspace-pvc-strategy_configuring-storage-strategies"><a class="anchor" href="#the-per-workspace-pvc-strategy_configuring-storage-strategies"></a>The <code>per-workspace</code> PVC strategy</h3>
+<h3 id="the-per-workspace-pvc-strategy_che"><a class="anchor" href="#the-per-workspace-pvc-strategy_che"></a>The <code>per-workspace</code> PVC strategy</h3>
 <div class="paragraph">
 <p>The <code>per-workspace</code> strategy is similar to the <code>common</code> PVC strategy. The only difference is that all workspace Volumes, but not all the workspaces, use the same PVC as the default data storage for:</p>
 </div>
@@ -760,7 +760,7 @@ PVC has, they will use the same shared folder in the common PVC.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-unique-pvc-strategy_configuring-storage-strategies"><a class="anchor" href="#the-unique-pvc-strategy_configuring-storage-strategies"></a>The <code>unique</code> PVC strategy</h3>
+<h3 id="the-unique-pvc-strategy_che"><a class="anchor" href="#the-unique-pvc-strategy_che"></a>The <code>unique</code> PVC strategy</h3>
 <div class="paragraph">
 <p>When using the `unique `PVC strategy, every Che Volume of a workspace has its own PVC. This means that workspace PVCs are:</p>
 </div>
@@ -777,7 +777,7 @@ Deleted when a corresponding workspace is deleted.</p>
 <p>They are provisioned with generated names to prevent naming conflicts with other PVCs in a namespace.</p>
 </li>
 <li>
-<p>Subpaths of the mounted Physical persistent volumes that reference user-defined PVCs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;PVC-name&gt;</em></code>. This ensures that the same PV data structure is set up with different PVC strategies. For details, see <a href="#how-subpaths-are-used-in-pvcs_configuring-storage-strategies">How subpaths are used in PVCs</a>.</p>
+<p>Subpaths of the mounted Physical persistent volumes that reference user-defined PVCs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;PVC-name&gt;</em></code>. This ensures that the same PV data structure is set up with different PVC strategies. For details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
 </li>
 </ul>
 </div>
@@ -786,7 +786,7 @@ Deleted when a corresponding workspace is deleted.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="how-subpaths-are-used-in-pvcs_configuring-storage-strategies"><a class="anchor" href="#how-subpaths-are-used-in-pvcs_configuring-storage-strategies"></a>How subpaths are used in PVCs</h3>
+<h3 id="how-subpaths-are-used-in-pvcs_che"><a class="anchor" href="#how-subpaths-are-used-in-pvcs_che"></a>How subpaths are used in PVCs</h3>
 <div class="paragraph">
 <p>Subpaths illustrate the folder hierarchy in the Persistent Volumes (PV).</p>
 </div>
@@ -815,7 +815,7 @@ Deleted when a corresponding workspace is deleted.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-a-che-workspace-with-a-persistent-volume-strategy_configuring-storage-strategies"><a class="anchor" href="#configuring-a-che-workspace-with-a-persistent-volume-strategy_configuring-storage-strategies"></a>Configuring a Che workspace with a persistent volume strategy</h2>
+<h2 id="configuring-a-che-workspace-with-a-persistent-volume-strategy_che"><a class="anchor" href="#configuring-a-che-workspace-with-a-persistent-volume-strategy_che"></a>Configuring a Che workspace with a persistent volume strategy</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A persistent volume (PV) acts as a virtual storage instance that adds a volume to a cluster.</p>
@@ -840,7 +840,7 @@ Deleted when a corresponding workspace is deleted.</p>
 <p>The mounted PVC is displayed as a folder in a container file system.</p>
 </div>
 <div class="sect2">
-<h3 id="configuring-a-pvc-strategy-using-the-helm-chart_configuring-storage-strategies"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-helm-chart_configuring-storage-strategies"></a>Configuring a PVC strategy using the Helm chart</h3>
+<h3 id="configuring-a-pvc-strategy-using-the-helm-chart_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-helm-chart_che"></a>Configuring a PVC strategy using the Helm chart</h3>
 <div class="paragraph">
 <p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Helm chart.</p>
 </div>
@@ -893,7 +893,7 @@ It is not recommended to reconfigure PVC strategies on an existing Che cluster w
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuring-a-pvc-strategy-by-editing-a-configmap_configuring-storage-strategies"><a class="anchor" href="#configuring-a-pvc-strategy-by-editing-a-configmap_configuring-storage-strategies"></a>Configuring a PVC strategy strategy by editing a configMap</h3>
+<h3 id="configuring-a-pvc-strategy-by-editing-a-configmap_che"><a class="anchor" href="#configuring-a-pvc-strategy-by-editing-a-configmap_che"></a>Configuring a PVC strategy strategy by editing a configMap</h3>
 <div class="paragraph">
 <p>Based on the Che installation method, configMaps can be used to customize the working environment. A configMap is provided as an editable file that lists options to customize the Che environment. This method of configuring a persistent volume claim (PVC) strategy for a Che workspace is available only for the Helm installation.</p>
 </div>
@@ -941,7 +941,7 @@ $ oc scale --replicas=1 deployment {prod-deployment}</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuring-a-pvc-strategy-using-the-operator_configuring-storage-strategies"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-operator_configuring-storage-strategies"></a>Configuring a PVC strategy using the Operator</h3>
+<h3 id="configuring-a-pvc-strategy-using-the-operator_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-operator_che"></a>Configuring a PVC strategy using the Operator</h3>
 <div class="paragraph">
 <p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Operator.</p>
 </div>
