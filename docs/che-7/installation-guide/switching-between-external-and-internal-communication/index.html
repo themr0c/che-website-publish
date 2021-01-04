@@ -651,6 +651,10 @@
 <div class="title">Procedure</div>
 <p>Switching between external and internal inter-component communication method is reached through the update against Custom Resource (CR).</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>For Che deployed using Operators</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -672,6 +676,59 @@
 </div>
 </li>
 </ol>
+</div>
+</li>
+<li>
+<p>For Che deployed using a Helm Chart</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the <a href="https://github.com/eclipse/che">che</a> project</p>
+</li>
+<li>
+<p>Go to <code>deploy/kubernetes/helm/che</code> directory</p>
+</li>
+<li>
+<p>Update the <code>global.useInternalClusterSVCNames</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To use external Kubernetes Ingress or OpenShift Route in inter-component communication:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade che -n che --set global.useInternalClusterSVCNames=false \
+-f values/multi-user.yaml -f values/tls.yaml .</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To use internal Kubernetes DNS names in the inter-component communication:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade che -n che --set global.useInternalClusterSVCNames=true  \
+-f values/multi-user.yaml -f values/tls.yaml .</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if Eclipse&#160;Che has been deployed in single-host mode or without TLS then remove the corresponding flags from the <code>helm upgrade</code> command and add others if needed.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
 </div>
 </article>
   </div>
