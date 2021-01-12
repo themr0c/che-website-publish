@@ -490,7 +490,28 @@
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="./">Caching images for faster workspace start</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../defining-the-list-of-images-to-pull/">Defining the list of images to pull</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../defining-the-memory-parameters-for-the-image-puller/">Defining the memory settings for the image puller</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-image-puller-on-kubernetes-using-the-operator/">Installing on Kubernetes using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-image-puller-on-openshift-using-operatorhub/">Installing on OpenShift using OperatorHub</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift using CLI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-image-puller-on-kubernetes-using-helm/">Installing on Kubernetes using Helm</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -626,55 +647,17 @@
 </aside>
 <article class="doc">
 <h1 class="page">Caching images for faster workspace start</h1>
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes installing the <a href="https://github.com/che-incubator/kubernetes-image-puller">Image Puller</a> on a Che cluster to cache images on cluster nodes.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="image-puller-overview_che"><a class="anchor" href="#image-puller-overview_che"></a>Image Puller overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Slow starts of Eclipse&#160;Che workspaces may be caused by waiting for the underlying cluster to pull images used in workspaces from remote registries. As such, pre-pulling images can improve start times significantly. The <em>Image Puller</em> can be used to pre-pull images and shorten workspace start times.</p>
+<p>To improve the start time performance of Che workspaces, use the Image Puller.
+The Image Puller is an additional Kubernetes or OpenShift deployment.
+It creates a <em>DaemonSet</em> downloading and running the relevant container images on each node. These images are already available when a Che workspace starts.</p>
 </div>
 <div class="paragraph">
-<p>The Image Puller is an additional deployment that runs alongside Eclipse&#160;Che. Given a list of images to pre-pull, the application runs inside a cluster and creates a <em>DaemonSet</em> that pulls the images on each node.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The minimal requirement for an image to be pre-pulled is the availability of the <code>sleep</code> command, which means that <code>FROM scratch</code> images (for example, 'che-machine-exec') are currently not supported. Also, images that mount volumes in the <code>Dockerfile</code> are not supported for pre-pulling on OpenShift.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The application can be deployed:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>using OperatorHub or installing the <a href="https://github.com/che-incubator/kubernetes-image-puller-operator">Kubernetes Image Puller Operator</a></p>
-</li>
-<li>
-<p>using Helm</p>
-</li>
-<li>
-<p>by processing and applying OpenShift templates.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The Image Puller loads its configuration from a <code>ConfigMap</code> with the following available parameters:</p>
+<p>The Image Puller loads its configuration from a <code>ConfigMap</code> accepting following parameters. The installation method determines the procedure to configure the ConfigMap.
+The underlying platform determines the installation method.</p>
 </div>
 <table id="image-puller-configuration_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Image Puller default parameters</caption>
+<caption class="title">Table 1. Image Puller <code>ConfigMap</code> parameters</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -690,598 +673,88 @@ The minimal requirement for an image to be pre-pulled is the availability of the
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_INTERVAL_HOURS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Interval, in hours, between checking health of DaemonSets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DaemonSets health checks interval in hours</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_MEMORY_REQUEST</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The memory request for each cached image when the puller is running</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The memory request for each cached image when the puller is running. See <a href="../defining-the-memory-parameters-for-the-image-puller/" class="page">Defining the memory parameters for the Image Puller</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>10Mi</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_MEMORY_LIMIT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The memory limit for each cached image when the puller is running</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The memory limit for each cached image when the puller is running. See <a href="../defining-the-memory-parameters-for-the-image-puller/" class="page">Defining the memory parameters for the Image Puller</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>20Mi</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_REQUEST</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The CPU request for each cached image when the puller is running</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.05</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The processor request for each cached image when the puller is running</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.05</code> or 50 millicores</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_LIMIT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The CPU limit for each cached image when the puller is running</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The processor limit for each cached image when the puller is running</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.2</code> or 200 millicores</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAEMONSET_NAME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of DaemonSet to be created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of DaemonSet to create</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPLOYMENT_NAME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Deployment to be created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Deployment to create</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NAMESPACE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Namespace where DaemonSet is to be created</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace or OpenShift project containing DaemonSet to create</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>k8s-image-puller</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGES</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of images to be cached, in the format <code>&lt;name&gt;=&lt;image&gt;;&#8230;&#8203;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a default list of images. Before deploying, fill this with the images that fit the current requirements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGES</code>
+<!-- vale IBM.Ellipses = NO --></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Semicolon separated list of images to pull, in the format <code><em>&lt;name&gt;</em>=<em>&lt;image&gt;</em>;&#8230;&#8203;</code> See <a href="../defining-the-list-of-images-to-pull/" class="page">Defining the list of images to pull</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><!-- vale IBM.Ellipses = YES --></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NODE_SELECTOR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Node selector applied to the Pods created by the DaemonSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node selector to apply to the Pods created by the DaemonSet</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'{}'</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The default memory requests and limits ensure that the container has enough memory to start. When changing <code>CACHING_MEMORY_REQUEST</code> or <code>CACHING_MEMORY_LIMIT</code>, you will need to consider the total memory allocated to the DaemonSet Pods in the cluster:</p>
-</div>
-<div class="paragraph">
-<p><code>(memory limit) * (number of images) * (number of nodes in the cluster)</code></p>
-</div>
-<div class="paragraph">
-<p>For example, running the Image Puller that caches 5 images on 20 nodes, with a container memory limit of <code>20Mi</code> requires <code>2000Mi</code> of memory.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploying-image-puller-using-operator_che"><a class="anchor" href="#deploying-image-puller-using-operator_che"></a>Deploying Image Puller using the Operator</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The recommended way to deploy the Image Puller is through the <a href="https://github.com/che-incubator/kubernetes-image-puller-operator">Operator</a>.</p>
-</div>
-<div class="sect2">
-<h3 id="_installing_the_image_puller_on_openshift_using_operatorhub"><a class="anchor" href="#_installing_the_image_puller_on_openshift_using_operatorhub"></a>Installing the Image Puller on OpenShift using OperatorHub</h3>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A namespace in your cluster to host the Image Puller. This document uses the namespace <code>image-puller</code> as an example.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Navigate to your OpenShift cluster console, navigate to <b class="button"><strong>Operators</strong></b> → <b class="button"><strong>OperatorHub</strong></b>.</p>
-</li>
-<li>
-<p>Use the <b class="button"><strong>Filter by keyword</strong></b> box to search for <code>Kubernetes Image Puller Operator</code>. Click the <b class="button">Kubernetes Image Puller Operator</b>.</p>
-</li>
-<li>
-<p>Read the description of the Operator. Click <b class="button"><strong>Continue</strong></b> → <b class="button"><strong>Install</strong></b>.</p>
-</li>
-<li>
-<p>Select <b class="button"><strong>A specific namespace on the cluster</strong></b> for the <b class="button"><strong>Installation Mode</strong></b>. In the drop-down find the namespace you created to install the Image Puller. Click <b class="button"><strong>Subscribe</strong></b>.</p>
-</li>
-<li>
-<p>Wait for the Kubernetes Image Puller Operator to install. Click the <b class="button"><strong>KubernetesImagePuller</strong></b> → <b class="button"><strong>Create instance</strong></b>.</p>
-</li>
-<li>
-<p>In a redirected window with a YAML editor, make modifications to the <code>KubernetesImagePuller</code> Custom Resource and click <b class="button"><strong>Create</strong></b>.</p>
-</li>
-<li>
-<p>Navigate to the <b class="button"><strong>Workloads</strong></b> and <b class="button"><strong>Pods</strong></b> menu in the namespace and verify that the Image Puller is available.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_installing_the_image_puller_on_kubernetes_using_the_operator"><a class="anchor" href="#_installing_the_image_puller_on_kubernetes_using_the_operator"></a>Installing the Image Puller on Kubernetes using the Operator</h3>
-<div class="paragraph">
-<p>Create a namespace to host the Image Puller, and apply the following manifests from the <a href="https://github.com/che-incubator/kubernetes-image-puller-operator">GitHub repository</a>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">export NAMESPACE=&lt;namespace you created to host the image puller&gt;
-kubectl  apply -f https://raw.githubusercontent.com/che-incubator/kubernetes-image-puller-operator/master/deploy/crds/che.eclipse.org_kubernetesimagepullers_crd.yaml -n $NAMESPACE
-kubectl  apply -f https://raw.githubusercontent.com/che-incubator/kubernetes-image-puller-operator/master/deploy/role.yaml -n $NAMESPACE
-kubectl  apply -f https://raw.githubusercontent.com/che-incubator/kubernetes-image-puller-operator/master/deploy/role_binding.yaml -n $NAMESPACE
-kubectl  apply -f https://raw.githubusercontent.com/che-incubator/kubernetes-image-puller-operator/master/deploy/service_account.yaml -n $NAMESPACE
-kubectl  apply -f https://raw.githubusercontent.com/che-incubator/kubernetes-image-puller-operator/master/deploy/operator.yaml -n $NAMESPACE</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then create a <code>KubernetesImagePuller</code> Custom Resource:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: che.eclipse.org/v1alpha1
-kind: {image-puller-cr-name}
-metadata:
-  name: image-puller
-  namespace: &lt;namespace you installed the image puller in&gt;
-spec:
-  configMapName: {image-puller-deployment-name}
-  daemonsetName: {image-puller-deployment-name}
-  deploymentName: {image-puller-deployment-name}
-  images: &gt;-
-    java11-maven=quay.io/eclipse/che-java11-maven:nightly;che-theia=quay.io/eclipse/che-theia:next</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploying-image-puller-using-openshift-templates_che"><a class="anchor" href="#deploying-image-puller-using-openshift-templates_che"></a>Deploying Image Puller using OpenShift templates</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Image Puller repository contains OpenShift templates for deploying on OpenShift.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, you can use <a href="#deploying-image-puller-using-helm_che">Deploying Image Puller using Helm</a>.</p>
+<div class="title">Additional resources</div>
+<p><!-- vale CheDocs.Attributes = NO --></p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running OpenShift cluster.</p>
+<p><a href="../defining-the-list-of-images-to-pull/" class="page">Defining the list of images to pull</a></p>
 </li>
 <li>
-<p>The <code>oc</code> tool is available.</p>
+<p><a href="../defining-the-memory-parameters-for-the-image-puller/" class="page">Defining the memory parameters for the Image Puller</a>.</p>
+</li>
+<li>
+<p><a href="../installing-image-puller-on-kubernetes-using-the-operator/" class="page">Installing Image Puller on Kubernetes using the Operator</a></p>
+</li>
+<li>
+<p><a href="../installing-image-puller-on-openshift-using-operatorhub/" class="page">Installing the Image Puller on OpenShift using OperatorHub</a></p>
+</li>
+<li>
+<p><a href="../installing-image-puller-on-openshift-using-openshift-templates/" class="page">Installing Image Puller using OpenShift templates</a></p>
+</li>
+<li>
+<p><a href="../installing-image-puller-on-kubernetes-using-helm/" class="page">Installing Image Puller using Helm</a></p>
+</li>
+<li>
+<p><a href="https://github.com/che-incubator/kubernetes-image-puller">Kubernetes Image Puller source code repository</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The following parameters are available to further configure the OpenShift templates:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Parameters for installing with OpenShift templates</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Value</th>
-<th class="tableblock halign-left valign-top">Usage</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAEMONSET_NAME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DAEMONSET_NAME</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPLOYMENT_NAME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DEPLOYMENT_NAME</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Image used for the <code>kubernetes-image-puller</code> deployment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/kubernetes-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE_TAG</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The image tag to pull</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SERVICEACCOUNT_NAME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the ServiceAccount used by the deployment (created as part of installation)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>k8s-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_INTERVAL_HOURS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_INTERVAL_HOURS</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_INTERVAL_REQUEST</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_REQUEST</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"10Mi"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_INTERVAL_LIMIT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_LIMIT</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"20Mi"`</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_REQUEST</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_REQUEST</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.05</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_LIMIT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_LIMIT</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.2</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NODE_SELECTOR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>NODE_SELECTOR</code> to set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"{}"</code></p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. List of recommended images to pre-pull</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Image</th>
-<th class="tableblock halign-left valign-top">URL</th>
-<th class="tableblock halign-left valign-top">Tag</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-plugin-metadata-broker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-plugin-metadata-broker:v3.4.0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">v3.4.0</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-plugin-artifacts-broker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-plugin-artifacts-broker:v3.4.0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">v3.4.0</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-theia</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-theia:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-python-3.7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-python-3.7:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-php-7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-php-7:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-cpp-rhel7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-cpp-rhel7:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-golang-1.14</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-golang-1.14:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-java11-maven</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-java11-maven:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-nodejs10-ubi</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-nodejs10-ubi:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-quarkus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quay.io/eclipse/che-quarkus:7.23</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.23</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>See <a href="#image-puller-configuration_che">Image Puller default parameters</a> for more information about configuration values, such as <code>DAEMONSET_NAME</code>, <code>CACHING_INTERVAL_HOURS</code>, and <code>CACHING_MEMORY_REQUEST</code>.</p>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p><strong>Installing</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the Kubernetes Image Puller repository:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git clone https://github.com/che-incubator/kubernetes-image-puller
-$ cd kubernetes-image-puller</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create a new OpenShift project to deploy the puller into:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc new-project k8s-image-puller</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Process and apply the templates to deploy the puller:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc process -f deploy/openshift/serviceaccount.yaml | oc apply -f -
-$ oc process -f deploy/openshift/configmap.yaml | oc apply -f -
-$ oc process -f deploy/openshift/app.yaml | oc apply -f -</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><strong>Verifying the installation</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Confirm that a new deployment, <code>kubernetes-image-puller</code>, and a DaemonSet (named based on the value of the <code>DAEMONSET_NAME</code> parameter) exist. The DaemonSet needs to have a Pod for each node in the cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get deployment,daemonset,pod --namespace k8s-image-puller
-deployment.extensions/kubernetes-image-puller   1/1       1            1           2m19s
-
-NAME                                           DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-daemonset.extensions/kubernetes-image-puller   1         1         1         1            1           &lt;none&gt;          2m10s
-
-NAME                                           READY     STATUS    RESTARTS   AGE
-pod/kubernetes-image-puller-5495f46497-mkd4p   1/1       Running   0          2m18s
-pod/kubernetes-image-puller-n8bmf              3/3       Running   0          2m10s</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Check that the <code>ConfigMap</code> named <code>k8s-image-puller</code> has the values you specified in your parameter substitution, or that they contain the default values:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get configmap k8s-image-puller --output yaml
-apiVersion: v1
-data:
-  CACHING_INTERVAL_HOURS: "1"
-  CACHING_MEMORY_LIMIT: 20Mi
-  CACHING_MEMORY_REQUEST: 10Mi
-  DAEMONSET_NAME: kubernetes-image-puller
-  IMAGES: |
-    java11-maven=quay.io/eclipse/che-java11-maven:nightly; che-theia=eclipse/che-theia:next; java-plugin-runner=eclipse/che-remote-plugin-runner-java8:latest;
-  NAMESPACE: k8s-image-puller
-  NODE_SELECTOR: '{}'
-kind: ConfigMap
-metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"CACHING_INTERVAL_HOURS":"1","CACHING_MEMORY_LIMIT":"20Mi","CACHING_MEMORY_REQUEST":"10Mi","DAEMONSET_NAME":"kubernetes-image-puller","IMAGES":"java11-maven=quay.io/eclipse/che-java11-maven:nightly; che-th
-eia=eclipse/che-theia:next; java-plugin-runner=eclipse/che-remote-plugin-runner-java8:latest;\n","NAMESPACE":"k8s-image-puller","NODE_SELECTOR":"{}"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"k8s-image-puller","namespace":"k
-8s-image-puller"},"type":"Opaque"}
-  creationTimestamp: 2020-02-17T22:40:13Z
-  name: k8s-image-puller
-  namespace: k8s-image-puller
-  resourceVersion: "72250"
-  selfLink: /api/v1/namespaces/k8s-image-puller/configmaps/k8s-image-puller
-  uid: 76430ed6-51d6-11ea-9c19-52fdfc072182</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploying-image-puller-using-helm_che"><a class="anchor" href="#deploying-image-puller-using-helm_che"></a>Deploying Image Puller using Helm</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to install the Image Puller using Helm.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>A running Kubernetes or OpenShift cluster.</p>
-</li>
-<li>
-<p>The <code>helm</code> tool is available.</p>
-</li>
-<li>
-<p>The `kubectl` or `oc` tool is available.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-In the instructions later in this section, use the <code>oc</code> command when installing on OpenShift and the `kubectl ` command for installing on Kubernetes.
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The following parameters are available for configuring the installation with Helm:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Parameters for installing with Helm</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Value</th>
-<th class="tableblock halign-left valign-top">Usage</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deploymentName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DAEMONSET_NAME</code> and <code>DEPLOYMENT_NAME</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image.repository</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The repository to pull the image from</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/kubernetes-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image.tag</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The image tag to pull</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serviceAccount.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the ServiceAccount to create</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>k8s-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the ConfigMap to create</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>k8s-image-puller</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.cachingIntervalHours</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_INTERVAL_HOURS</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.cachingMemoryRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_REQUEST</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"10Mi"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.cachingMemoryLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_LIMIT</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"20Mi"`</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.cachingCpuRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_REQUEST</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.05</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.cachingCpuLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_LIMIT</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.2</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configMap.nodeSelector</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>NODE_SELECTOR</code> to be set in the ConfigMap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"{}"</code></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p><strong>Installing</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the Kubernetes Image Puller repository:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ git clone https://github.com/che-incubator/kubernetes-image-puller
-$ cd kubernetes-image-puller</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create a namespace to deploy the puller into:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc create namespace k8s-image-puller</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Run <code>helm install</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install kubernetes-image-puller --namespace k8s-image-puller deploy/helm</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To set values, edit the <code>deploy/helm/values.yaml</code> file, or use the <code>--set property.name=<em>&lt;value&gt;</em></code> parameter.</p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><strong>Verifying the installation</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Confirm that a new deployment, <code>kubernetes-image-puller</code>, and a DaemonSet (named based on the value of the <code>DAEMONSET_NAME</code> parameter) exist. The DaemonSet needs to have a Pod for each node in the cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get deployment,daemonset,pod --namespace k8s-image-puller
-NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/kubernetes-image-puller   1/1     1            1           4m21s
-
-NAME                                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-daemonset.apps/kubernetes-image-puller   3         3         3       3            3           &lt;none&gt;          3m40s
-
-NAME                                          READY   STATUS    RESTARTS   AGE
-pod/kubernetes-image-puller-b556c8bd4-qxwwl   1/1     Running   0          4m21s
-pod/kubernetes-image-puller-glh87             3/3     Running   0          3m40s
-pod/kubernetes-image-puller-h7lxf             3/3     Running   0          3m40s
-pod/kubernetes-image-puller-nrt6p             3/3     Running   0          3m40s</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Check that the <code>ConfigMap</code> named <code>k8s-image-puller</code> has the values specified in the Helm configuration, or that they contain the default values:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get configmap k8s-image-puller --output yaml
-apiVersion: v1
-data:
-  CACHING_INTERVAL_HOURS: "1"
-  CACHING_MEMORY_LIMIT: 20Mi
-  CACHING_MEMORY_REQUEST: 10Mi
-  DAEMONSET_NAME: kubernetes-image-puller
-  IMAGES: java11-maven=quay.io/eclipse/che-java11-maven:nightly; che-theia=eclipse/che-theia:next;
-    java-plugin-runner=eclipse/che-remote-plugin-runner-java8:latest;
-  NAMESPACE: k8s-image-puller
-  NODE_SELECTOR: '{}'
-kind: ConfigMap
-metadata:
-  creationTimestamp: "2020-02-17T22:15:22Z"
-  name: k8s-image-puller
-  namespace: k8s-image-puller
-  resourceVersion: "3078"
-  selfLink: /api/v1/namespaces/k8s-image-puller/configmaps/k8s-image-puller
-  uid: 71bc5ce4-d095-468e-ab7b-23c1e0a36638</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
+<p><!-- vale CheDocs.Attributes = YES --></p>
 </div>
 </article>
   </div>
