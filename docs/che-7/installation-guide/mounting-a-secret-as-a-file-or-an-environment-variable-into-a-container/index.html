@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Setting up the Keycloak che-username-readonly theme for the Eclipse&#160;Che login page :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page/">
-    <meta name="keywords" content="installation-guide, setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page, keycloak">
+    <title>Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container/">
+    <meta name="keywords" content="installation-guide, mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -358,11 +358,11 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../switching-between-external-and-internal-communication/">Switching between external and internal ways in inter-component communication</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Setting up the Keycloak che-username-readonly theme for the Eclipse Che login page</a>
-  </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container/">Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container</a>
+    <a class="nav-link" href="../setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page/">Setting up the Keycloak che-username-readonly theme for the Eclipse Che login page</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container</a>
   </li>
 </ul>
   </li>
@@ -640,55 +640,247 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Setting up the Keycloak che-username-readonly theme for the Eclipse Che login page</a></li>
+    <li><a href="./">Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Setting up the Keycloak che-username-readonly theme for the Eclipse&#160;Che login page</h1>
+<h1 class="page">Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>The following procedure is relevant for all Che instances with the OpenShift OAuth service enabled.</p>
+<p>Secrets are Kubernetes or OpenShift objects that store sensitive data such as user names, passwords, authentication tokens, and configurations in an encrypted form.</p>
 </div>
 <div class="paragraph">
-<p>When a user with pre-created namespaces logs in to Eclipse&#160;Che Dashboard for the first time, a page allowing the user to update account information is displayed. It is possible to change the username, but choosing a username that doesn&#8217;t match the OpenShift username, prevents the user&#8217;s workspaces from running. This is caused by Che attempts to use a non-existing namespace, the name of which is derived from a user OpenShift username, to create a workspace. To prevent this, modify the Keycloak settings using the steps below.</p>
+<p>Users can mount a Kubernetes or OpenShift secret that contains sensitive data in a Eclipse&#160;Che container as:</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An instance of Che running in OpenShift.</p>
+<p>a file</p>
 </li>
 <li>
-<p>A user is logged in to the Keycloak service.</p>
+<p>an environment variable</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Procedure</div>
-<p>After changing a username, set the <strong>Login Theme</strong> option to <code>readonly</code>.</p>
+<p>The mounting process uses the standard Kubernetes or OpenShift mounting mechanism, but it requires additional annotations and labeling.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mounting-a-secret-as-a-file-into-a-container_che"><a class="anchor" href="#mounting-a-secret-as-a-file-into-a-container_che"></a>Mounting a secret as a file into a Eclipse&#160;Che container</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Che. To install an instance of Che, see <a href="../installing-che/" class="page">Installing Che</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the main <strong>Configure</strong> menu on the left, select <strong>Realm Settings</strong>:</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/keycloak/che-keycloak-username-readonly-theme.png"><img src="../_images/keycloak/che-keycloak-username-readonly-theme.png" alt="che keycloak username readonly theme"></a>
-</div>
-</div>
+<p>Create a new Kubernetes or OpenShift secret in the Kubernetes or OpenShift namespace where a Che is deployed. The labels of the secret that is about to be created must match the set of labels:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
 </li>
 <li>
-<p>Navigate to the <strong>Themes</strong> tab.</p>
+<p><code>app.kubernetes.io/component: &lt;DEPLOYMENT_NAME&gt;-secret</code></p>
 </li>
-<li>
-<p>In the <strong>Login Theme</strong> field, select the <code>che-username-readonly</code> option and click the <b class="button">Save</b> button to apply the changes.</p>
+</ul>
+</div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>Where <code>&lt;DEPLOYMENT_NAME&gt;</code> is one of the following deployments: <code>postgres</code>, <code>keycloak</code>, <code>devfile-registry</code>, <code>plugin-registry</code> or <code>che</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-certificate
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotations must indicate that the given secret is mounted as a file. Set up the annotation values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>che.eclipse.org/mount-as: file</code> - to indicate that a secret is mounted as a file</p>
+</li>
+<li>
+<p><code>che.eclipse.org/mount-path: <em>&lt;FOO_ENV&gt;</em></code> - to provide a required mount path</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-certificate
+  annotations:
+    che.eclipse.org/mount-path: /custom-certificates
+    che.eclipse.org/mount-as: file
+  labels:
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Kubernetes secret may contain several items whose names must match the desired file name mounted into the container.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-certificate
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+  annotations:
+    che.eclipse.org/mount-path: /custom-certificates
+    che.eclipse.org/mount-as: file
+data:
+  ca.crt: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a file named <code>ca.crt</code> being mounted at the <code>/custom-certificates</code> path of Che container.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mounting-a-secret-as-an-environment-variable-into-a-container_che"><a class="anchor" href="#mounting-a-secret-as-an-environment-variable-into-a-container_che"></a>Mounting a secret as an environment variable into a Eclipse&#160;Che container</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse&#160;Che. To install an instance of Eclipse&#160;Che, see <a href="../installing-che/" class="page">Installing Che</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a new Kubernetes or OpenShift secret in the Kubernetes or OpenShift namespace where a Che is deployed. The labels of the secret that is about to be created must match the set of labels:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+</li>
+<li>
+<p><code>app.kubernetes.io/component: &lt;DEPLOYMENT_NAME&gt;-secret</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Where <code>&lt;DEPLOYMENT_NAME&gt;</code> is one of the following deployments: <code>postgres</code>, <code>keycloak</code>, <code>devfile-registry</code>, <code>plugin-registry</code> or <code>che</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-settings
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotations must indicate that the given secret is mounted as a environment variable. Set up the annotation values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>che.eclipse.org/mount-as: env</code> - to indicate that a secret is mounted as an environment variable</p>
+</li>
+<li>
+<p><code>che.eclipse.org/env-name: <em>&lt;FOO_ENV&gt;</em></code> - to provide an environment variable name, which is required to mount a secret key value</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-settings
+  annotations:
+    che.eclipse.org/env-name: FOO_ENV
+    che.eclipse.org/mount-as: env
+  labels:
+   ...
+data:
+  mykey: myvalue</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into a Che container.</p>
+</div>
+<div class="paragraph">
+<p>If the secret provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-settings
+  annotations:
+    che.eclipse.org/mount-as: env
+    che.eclipse.org/mykey_env-name: FOO_ENV
+    che.eclipse.org/otherkey_env-name: OTHER_ENV
+  labels:
+   ...
+data:
+  mykey: myvalue
+  otherkey: othervalue</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into a  Che container.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </article>
   </div>
