@@ -191,9 +191,6 @@
     <a class="nav-link" href="../../end-user-guide/configuring-oauth-authorization/">Configuring OAuth authorization</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/configuring-github-oauth/">Configuring GitHub OAuth</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/configuring-openshift-oauth/">Configuring OpenShift OAuth</a>
   </li>
 </ul>
@@ -748,37 +745,122 @@
 <p>Keycloak provides built-in support for GitHub, OpenShift, and most common social networks such as Facebook and Twitter.
 See Keycloak documentation to learn how to <a href="https://www.keycloak.org/docs/6.0//server_admin/#github">enable Login with GitHub</a>.</p>
 </div>
+<div class="sect2">
+<h3 id="configuring-github-oauth_che"><a class="anchor" href="#configuring-github-oauth_che"></a>Configuring GitHub OAuth</h3>
 <div class="paragraph">
-<p>You can also enable the SSH key and upload it to the Che users’ GitHub accounts.</p>
+<p>OAuth for GitHub allows for automatic SSH key upload to GitHub.</p>
 </div>
-<div class="paragraph">
-<p>To enable this feature when you register a GitHub identity provider:</p>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The <code>kubectl</code> tool is available.</p>
+</li>
+</ul>
 </div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Create a <a href="https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app">OAuth application in GitHub</a> using Che URL as the value for the application <code>Homepage URL</code> and Keycloak GitHub endpoint URL as the value for Authorization callback URL. The default values are <code><a href="https://che-che.&lt;DOMAIN&gt;/" class="bare">https://che-che.&lt;DOMAIN&gt;/</a></code> and <code><a href="https://keycloak-che.&lt;DOMAIN&gt;/auth/realms/che/broker/github/endpoint" class="bare">https://keycloak-che.&lt;DOMAIN&gt;/auth/realms/che/broker/github/endpoint</a></code> respectively, where <code>&lt;DOMAIN&gt;</code> is Kubernetes cluster domain.</p>
+</li>
+<li>
+<p>For Che deployed in multi-user mode:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Set scope to <code>repo,user,write:public_key</code>.</p>
+<p>Create a new secret in the namespace where Che is deployed.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+kind: Secret
+apiVersion: v1
+metadata:
+  name: github-oauth-credentials
+  namespace: &lt;...&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: keycloak-secret
+  annotations:
+    che.eclipse.org/github-oauth-credentials: 'true'
+    che.eclipse.org/mount-as: env
+    che.eclipse.org/id_env-name: GITHUB_CLIENT_ID
+    che.eclipse.org/secret_env-name: GITHUB_SECRET
+data:
+  id: &lt;...&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+  secret: &lt;...&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+type: Opaque
+EOF</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Che namespace. The default is che</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>base64 encoded GitHub OAuth Client ID</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>base64 encoded GitHub OAuth Client Secret</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
-<p>Set store tokens and stored tokens readable to <strong>ON</strong>.</p>
-<div class="imageblock">
+<p>If Che was already installed wait until rollout of Keycloak component finishes.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>For Che deployed in single-user mode:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>On Kubernetes or OpenShift, update the deployment configuration (see <a href="../../installation-guide/configuring-the-che-installation/" class="page">Configuring the Che installation</a> and <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/#authentication-parameters" class="page">installation-guide:advanced-configuration-options-for-the-che-server-component.adoc#authentication-parameters</a>).</p>
+<div class="listingblock">
 <div class="content">
-<a class="image" href="../_images/git/kc_provider.png"><img src="../_images/git/kc_provider.png" alt="kc provider"></a>
+<pre>CHE_OAUTH_GITHUB_CLIENTID=<em>&lt;your-github-client-ID&gt;</em>
+CHE_OAUTH_GITHUB_CLIENTSECRET=<em>&lt;your-github-secret&gt;</em></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Add a default read-token role.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/git/kc_roles.png"><img src="../_images/git/kc_roles.png" alt="kc roles"></a>
+<p>In the <strong>Authorization callback URL</strong> field of the GitHub OAuth application, enter <code><em>&lt;prod-url</em>/api/oauth/callback</code>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Substitute <code><em>&lt;prod-url&gt;</em></code> with the URL and port of the Che installation.</p>
+</li>
+<li>
+<p>Substitute <code><em>&lt;your-github-client-ID&gt;</em></code> and <code><em>&lt;your-github-secret&gt;</em></code> with your GitHub client ID and secret.</p>
+</li>
+<li>
+<p>This configuration only applies to single-user deployments of Che.</p>
+</li>
+</ul>
 </div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>This is the default <code>delegated</code> OAuth service mode for multiuser Che. You can configure the OAuth service mode with the property <code>che.oauth.service_mode</code>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
