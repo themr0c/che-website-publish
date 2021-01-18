@@ -781,7 +781,7 @@ see <a href="../importing-untrusted-tls-certificates-old/" class="page">this gui
 <p>Create a new ConfigMap with the required TLS certificates:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap custom-certs --from-file=<em>&lt;bundle-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
+<pre>$ kubectl create configmap custom-certs --from-file=<em>&lt;bundle-file-path&gt;</em> -n=eclipse-che</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -852,7 +852,7 @@ Ensure you override the <code>global.tls.serverTrustStoreConfigMapName</code> He
 <p>Update the name of the configMap Che will use, by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the created or updated ConfigMap:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map-name&gt; .</pre>
+<pre class="nowrap">$ helm upgrade che -n eclipse-che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map-name&gt; .</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -876,7 +876,7 @@ Ensure you override the <code>global.tls.serverTrustStoreConfigMapName</code> He
 <p>In case of a Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operator</a> deployment, namespace where <code>CheCluster</code> located contains labeled ConfigMaps with right content:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm --selector=app.kubernetes.io/component=ca-bundle,app.kubernetes.io/part-of=che.eclipse.org -n <em>&lt;che-namespace-name&gt;</em></pre>
+<pre class="nowrap">$ kubectl get cm --selector=app.kubernetes.io/component=ca-bundle,app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -887,7 +887,7 @@ Ensure you override the <code>global.tls.serverTrustStoreConfigMapName</code> He
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ {orch-cli} get cm __&lt;name&gt;__ -n __&lt;{project-context}-namespace-name&gt;__ -o yaml</pre>
+<pre>$ {orch-cli} get cm __&lt;name&gt;__ -n {prod-namespace} -o yaml</pre>
 </div>
 </div>
 <div class="ulist">
@@ -897,7 +897,7 @@ Ensure you override the <code>global.tls.serverTrustStoreConfigMapName</code> He
 To get the list of Volumes of the Che Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get pod -o json <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em> | jq .spec.volumes</pre>
+<pre class="nowrap">$ kubectl get pod -o json <em>&lt;che-pod-name&gt;</em> -n eclipse-che | jq .spec.volumes</pre>
 </div>
 </div>
 </li>
@@ -905,7 +905,7 @@ To get the list of Volumes of the Che Pod:</p>
 <p>Che mounts certificates in folder <code>/public-certs/</code> of the Che server container. This command returns the list of files in that folder:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em> -- ls /public-certs/</pre>
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- ls /public-certs/</pre>
 </div>
 </div>
 </li>
@@ -913,7 +913,7 @@ To get the list of Volumes of the Che Pod:</p>
 <p>In the Che server logs there is a line for every certificate added to the Java truststore, including configured Che certificates.</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em></pre>
+<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n eclipse-che</pre>
 </div>
 </div>
 </li>
@@ -921,7 +921,7 @@ To get the list of Volumes of the Che Pod:</p>
 <p>Che server Java truststore contains the certificates. The certificates SHA1 fingerprints are among the list of the SHA1 of the certificates included in the truststore returned by the following command:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- keytool -list -keystore /home/user/cacerts
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- keytool -list -keystore /home/user/cacerts
 Your keystore contains 141 entries
 
 (...)</pre>

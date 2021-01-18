@@ -673,7 +673,7 @@ on Amazon Elastic Compute Cloud (Amazon EC2).</p>
 <p>A running instance of Kubernetes, version 1.9 or higher, and Ingress.</p>
 </li>
 <li>
-<p>The `kubectl ` tool installed.</p>
+<p>The <code>kubectl</code> tool installed.</p>
 </li>
 <li>
 <p>The <code>chectl</code> tool installed.</p>
@@ -813,10 +813,10 @@ Your cluster eu.aws.my-ide.cloud is ready</pre>
 <p>Check the cluster using the <code>kubectl ` command. The `kubectl ` context is also configured automatically by the `kops</code> tool:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl config current-context
+<pre class="nowrap">$ {orch-cli} config current-context
 eu.aws.my-ide.cloud
 
-$ kubectl get pods --all-namespaces
+$ {orch-cli} get pods --all-namespaces
 
 All the pods in the running state are displayed.</pre>
 </div>
@@ -836,7 +836,7 @@ All the pods in the running state are displayed.</pre>
 <p>Install the configuration for AWS.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl apply \
+<pre class="nowrap">$ {orch-cli} apply \
   -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.0/deploy/static/provider/aws/deploy.yaml</pre>
 </div>
 </div>
@@ -845,7 +845,7 @@ All the pods in the running state are displayed.</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl get pods --namespace ingress-nginx
+<pre class="nowrap">$ {orch-cli} get pods --namespace ingress-nginx
 NAME                                        READY   STATUS    RESTARTS   AGE
 nginx-ingress-controller-76c86d76c4-gswmg   1/1     Running   0          9m3s</pre>
 </div>
@@ -855,7 +855,7 @@ nginx-ingress-controller-76c86d76c4-gswmg   1/1     Running   0          9m3s</p
 <p>Find the external IP of ingress-nginx.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
+<pre class="nowrap">$ {orch-cli} get services --namespace ingress-nginx -o jsonpath='{.items[].status.loadBalancer.ingress[0].hostname}'
 Ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com</pre>
 </div>
 </div>
@@ -864,7 +864,7 @@ Ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe service -n ingress-nginx ingress-nginx</pre>
+<pre>$ {orch-cli} describe service -n ingress-nginx ingress-nginx</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1035,9 +1035,9 @@ ade9c9f48b2cd11e9a28c0611bc28f24-1591254057.eu-west-1.elb.amazonaws.com has addr
 <p>To install cert-manager, run the following commands (for details, see <a href="https://docs.cert-manager.io/en/latest/getting-started/install/kubernetes.html">Installing Cert on Kubernetes</a>):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl create namespace cert-manager
+<pre class="nowrap">$ {orch-cli} create namespace cert-manager
 namespace/cert-manager created
-$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+$ {orch-cli} label namespace cert-manager certmanager.k8s.io/disable-validation=true
 namespace/cert-manager labeled</pre>
 </div>
 </div>
@@ -1046,7 +1046,7 @@ namespace/cert-manager labeled</pre>
 <p>Set <code>validate=false</code>. If set to <code>true</code>, it will only work with the latest Kubernetes:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl apply \
+<pre class="nowrap">$ {orch-cli} apply \
   -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml \
   --validate=false</pre>
 </div>
@@ -1056,8 +1056,8 @@ namespace/cert-manager labeled</pre>
 <p>Create the Che namespace if it does not already exist:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl create namespace che
-namespace/che created</pre>
+<pre class="nowrap">$ kubectl create namespace eclipse-che
+namespace/eclipse-che created</pre>
 </div>
 </div>
 </li>
@@ -1111,7 +1111,7 @@ Remember the access key for later use.
 <p>Create a secret from the <code>SecretAccessKey</code> content.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl create secret generic aws-cert-manager-access-key \
+<pre class="nowrap">$ {orch-cli} create secret generic aws-cert-manager-access-key \
   --from-literal=CLIENT_SECRET=&lt;REPLACE WITH SecretAccessKey content&gt; -n cert-manager</pre>
 </div>
 </div>
@@ -1171,7 +1171,7 @@ Remember the access key for later use.
 <p>To create the certificate issuer, change the email address and specify the <code>accessKeyID</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ cat &lt;&lt;EOF | kubectl apply -f -
+<pre>$ cat &lt;&lt;EOF | {orch-cli} apply -f -
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
@@ -1202,7 +1202,7 @@ EOF</pre>
 <p>Add the certificate by editing the domain name value (<code>aws.my-ide.cloud</code>, in this case) and the <code>dnsName</code> value:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ cat &lt;&lt;EOF | kubectl apply -f -
+<pre>$ cat &lt;&lt;EOF | {orch-cli} apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
@@ -1240,7 +1240,7 @@ EOF</pre>
 <p>Obtain the name of the Pods:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl get pods --namespace cert-manager
+<pre class="nowrap">$ {orch-cli} get pods --namespace cert-manager
 NAME                                       READY   STATUS    RESTARTS   AGE
 cert-manager-6587688cb8-wj68p              1/1     Running   0          6h
 cert-manager-cainjector-76d56f7f55-zsqjp   1/1     Running   0          6h
@@ -1252,7 +1252,7 @@ cert-manager-webhook-7485dd47b6-88m6l      1/1     Running   0          6h</pre>
 <p>Obtain the logs using the following command (here, <code>cert-manager-8d478bb45-sdfmz</code> is the name of the cert-manager Pod):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl logs -f cert-manager-8d478bb45-sdfmz -n cert-manager
+<pre class="nowrap">$ {orch-cli} logs -f cert-manager-8d478bb45-sdfmz -n cert-manager
 I0730 14:46:25.382385       1 sync.go:274] Need to create 0 challenges
 I0730 14:46:25.382401       1 sync.go:319] Waiting for all challenges for order "che-tls-3365293372" to enter 'valid' state
 I0730 14:46:25.382431       1 controller.go:204] cert-manager/controller/orders "level"=0 "msg"="finished processing work item" "key"="che/che-tls-3365293372"
@@ -1268,7 +1268,7 @@ I0730 14:47:03.220952       1 dns.go:124] Waiting DNS record TTL (60s) to allow 
 <p>Ensure that the certificate is ready:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl describe certificate/che-tls -n che
+<pre class="nowrap">$ kubectl describe certificate/che-tls -n eclipse-che
 Status:
   Conditions:
     Last Transition Time:  2019-07-30T14:46:23Z
@@ -1295,7 +1295,7 @@ Events:
 <p>Ensure that the status is up-to-date using the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">$ kubectl describe certificate/che-tls -n che
+<pre class="nowrap">$ kubectl describe certificate/che-tls -n eclipse-che
 
 Status:
   Conditions:
@@ -1344,7 +1344,7 @@ Events:
 › Current Kubernetes context: 'minikube'
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
-    ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
+    ✔ Verify if Eclipse&#160;Che is deployed into namespace "eclipse-che"...it is not
   ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
@@ -1362,7 +1362,7 @@ Events:
   ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
     ✔ Verify if helm is installed
     ✔ Check Helm Version: Found v3.4.1+gc4e7485
-    ✔ Create Namespace (che)...does already exist.
+    ✔ Create Namespace (eclipse-che)...does already exist.
     ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
     ✔ Check Cluster Role Binding...does not exists.
     ✔ Preparing Eclipse&#160;Che Helm Chart...done.
@@ -1391,13 +1391,13 @@ Events:
     ✔ Eclipse&#160;Che 7.23 has been successfully deployed.
     ✔ Documentation             : https://www.eclipse.org/che/docs
     ✔ -------------------------------------------------------------------------------
-    ✔ Users Dashboard           : https://che-che.aws.my-ide.cloud
+    ✔ Users Dashboard           : https://eclipse-che-eclipse-che.aws.my-ide.cloud
     ✔ Admin user login          : "XXX:XXX". NOTE: must change after first login.
     ✔ -------------------------------------------------------------------------------
-    ✔ Plug-in Registry          : https://plugin-registry-che.aws.my-ide.cloud/v3
-    ✔ Devfile Registry          : https://devfile-registry-che.aws.my-ide.cloud
+    ✔ Plug-in Registry          : https://plugin-registry-eclipse-che.aws.my-ide.cloud/v3
+    ✔ Devfile Registry          : https://devfile-registry-eclipse-che.aws.my-ide.cloud
     ✔ -------------------------------------------------------------------------------
-    ✔ Identity Provider URL     : https://keycloak-che.aws.my-ide.cloud/auth
+    ✔ Identity Provider URL     : https://keycloak-eclipse-che.aws.my-ide.cloud/auth
     ✔ Identity Provider login   : "XXX:XXX".
     ✔ -------------------------------------------------------------------------------</pre>
 </div>
@@ -1412,7 +1412,7 @@ Events:
 <p>Investigate Eclipse&#160;Che logs:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:logs --namespace che</pre>
+<pre>$ chectl server:logs --namespace eclipse-che</pre>
 </div>
 </div>
 </li>

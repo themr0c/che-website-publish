@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Creating A Telemetry Plugin :: Eclipse Che Documentation</title>
+    <title>Creating A Telemetry Plug-in :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/extensions/creating-a-telemetry-plugin/">
     <meta name="keywords" content="extensions, telemetry">
     <meta name="generator" content="Antora 2.3.4">
@@ -650,7 +650,7 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Creating A Telemetry Plugin</h1>
+<h1 class="page">Creating A Telemetry Plug-in</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -672,6 +672,25 @@
 </li>
 <li>
 <p><code>increaseDuration()</code> - increases the duration of a current event rather than sending multiple events in a small frame of time.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following sections cover:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creation of a telemetry server to echo events to standard output.</p>
+</li>
+<li>
+<p>Extending the Che telemetry client and implementing a user&#8217;s custom back-end.</p>
+</li>
+<li>
+<p>Creating a <code>meta.yaml</code> file representing a Che workspace plug-in for a user&#8217;s custom back-end.</p>
+</li>
+<li>
+<p>Specifying of a location of a custom plug-in to Che by setting the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable.</p>
 </li>
 </ul>
 </div>
@@ -778,7 +797,7 @@ func main() {
 </div>
 </div>
 <div class="paragraph">
-<p>Create a container image based on this code and expose it as a deployment in OpenShift in the <code>che</code> namespace. The code for the example telemetry server is available at <a href="https://github.com/che-incubator/che-workspace-telemetry-example">che-workspace-telemetry-example</a>. To deploy the telemetry server, clone the repository and build the container:</p>
+<p>Create a container image based on this code and expose it as a deployment in OpenShift in the eclipse-che namespace. The code for the example telemetry server is available at <a href="https://github.com/che-incubator/che-workspace-telemetry-example">che-workspace-telemetry-example</a>. To deploy the telemetry server, clone the repository and build the container:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -793,7 +812,7 @@ $ docker push registry/organization/che-workspace-telemetry-example:latest</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply -f manifest.yaml -n <em>&lt;namespace to deploy&gt;</em></pre>
+<pre>$ kubectl apply -f manifest.yaml -n {prod-namespace}</pre>
 </div>
 </div>
 </div>
@@ -938,10 +957,10 @@ http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
 <div class="ulist">
 <ul>
 <li>
-<p><code>AnalyticsManager.java</code> contains the logic specific to our telemetry system.</p>
+<p><code>AnalyticsManager.java</code> - contains the logic specific to our telemetry system.</p>
 </li>
 <li>
-<p><code>MainConfiguration.java</code> is the main entrypoint that creates an instance of <code>AnalyticsManager</code> and starts listening for events.</p>
+<p><code>MainConfiguration.java</code> - is the main entrypoint that creates an instance of <code>AnalyticsManager</code> and starts listening for events.</p>
 </li>
 </ul>
 </div>
@@ -1062,7 +1081,7 @@ public void onEvent(AnalyticsEvent event, String ownerId, String ip, String user
 </div>
 </div>
 <div class="paragraph">
-<p>This sends an HTTP request to the telemetry server and automatically debounces identical events in a small time period (the default is 1500 milliseconds, and it can be changed by subclasses.</p>
+<p>This sends an HTTP request to the telemetry server and automatically debounces identical events in a small time period, where the default value is 1500 milliseconds. It is possible to modify this period by setting subclasses.</p>
 </div>
 </div>
 </div>
@@ -1070,7 +1089,7 @@ public void onEvent(AnalyticsEvent event, String ownerId, String ip, String user
 <h2 id="_implementing_increaseduration"><a class="anchor" href="#_implementing_increaseduration"></a>Implementing <code>increaseDuration()</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Many telemetry systems recognize event duration. The <code>AbstractAnalyticsManager</code> merges similar events that happen in the same frame of time into one event, so that you do not get several identical events sent to the server in a small frame of time. This implementation of <code>increaseDuration()</code> is a no-op. This method uses the APIs of your telemetry provider to alter the event or event properties to reflect an increased duration of the event.</p>
+<p>Many telemetry systems recognize event duration. The <code>AbstractAnalyticsManager</code> merges similar events that happen in the same frame of time into one event, so that a user does not get several identical events sent to the server in a small time frame. This implementation of <code>increaseDuration()</code> is a no-op. This method uses the APIs of a user&#8217;s telemetry provider to alter the event or event properties to reflect an event&#8217;s increased duration.</p>
 </div>
 <div class="listingblock">
 <div class="title">AnalyticsManager.java</div>
@@ -1168,15 +1187,18 @@ spec:
 </div>
 </div>
 <div class="paragraph">
-<p>Ordinarily, you would deploy this file to a corporate web server. For this guide, we create an Apache web server on OpenShift and host the plug-in there. Create a configMap referencing your new <code>meta.yaml</code> file.</p>
+<p>Usually, a user would deploy this file to a corporate web server. For this guide, we create an Apache web server on OpenShift and host the plug-in there.</p>
+</div>
+<div class="paragraph">
+<p>Create a configMap referencing the new <code>meta.yaml</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc create configmap --from-file=meta.yaml -n che telemetry-plugin-meta</pre>
+<pre>$ oc create configmap --from-file=meta.yaml -n eclipse-che telemetry-plugin-meta</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then create a deployment, a service, and a route to expose the web server. The deployment references this configMap and places it in the <code>/var/www/html</code> directory.</p>
+<p>Create a deployment, a service, and a route to expose the web server. The deployment references this configMap and places it in the <code>/var/www/html</code> directory.</p>
 </div>
 <div class="listingblock">
 <div class="title">manifests.yaml</div>
@@ -1185,7 +1207,7 @@ spec:
 apiVersion: apps/v1
 metadata:
   name: apache
-  namespace: <em>&lt;che&gt;</em>
+  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   replicas: 1
   selector:
@@ -1223,7 +1245,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: apache
-  namespace: <em>&lt;che&gt;</em>
+  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   ports:
     - protocol: TCP
@@ -1237,7 +1259,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: apache
-  namespace: <em>&lt;che&gt;</em>
+  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   host: apache-che.apps-crc.testing
   to:
@@ -1271,7 +1293,7 @@ spec:
 <h2 id="_updating_che_to_reference_your_telemetry_plug_in"><a class="anchor" href="#_updating_che_to_reference_your_telemetry_plug_in"></a>Updating Che to reference your telemetry plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Update the <code>CheCluster</code> Custom Resource, and add the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable to <code>spec.server.customCheProperties</code>. The value of the environment variable should be the URL of the location of the <code>meta.yaml</code> file on your web server.  This can be accomplished by running <code>oc edit checluster -n che</code> and typing in the change at the terminal, or by editing the CR in the OpenShift console (<strong>Installed Operators &#8594; Eclipse&#160;Che &#8594; Eclipse&#160;Che Cluster &#8594; eclipse-che &#8594; YAML</strong>).</p>
+<p>Update the <code>CheCluster</code> Custom Resource, and add the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable to <code>spec.server.customCheProperties</code>. The value of the environment variable should be the URL of the location of the <code>meta.yaml</code> file on your web server.  This can be accomplished by running <code>oc edit checluster -n eclipse-che</code> and typing in the change at the terminal, or by editing the CR in the OpenShift console (<strong>Installed Operators &#8594; Eclipse&#160;Che &#8594; Eclipse&#160;Che Cluster &#8594; eclipse-che &#8594; YAML</strong>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1283,7 +1305,7 @@ metadata:
     - oauthclients.finalizers.che.eclipse.org
   generation: 18
   name: eclipse-che
-  namespace: <em>&lt;che&gt;</em>
+  namespace: <em>&lt;eclipse-che&gt;</em>
   resourceVersion: '5108404'
   selfLink: /apis/org.eclipse.che/v1/namespaces/che/checlusters/eclipse-che
   uid: bae08db2-104d-4e44-a001-c9affc07528d
@@ -1338,7 +1360,7 @@ status:
 </div>
 </div>
 <div class="paragraph">
-<p>Wait for the Che server to restart, and create a new workspace. You should see a new message saying that your plug-in is being installed into the workspace.</p>
+<p>Wait for the Che server to restart, and create a new workspace. See a new message stating that the plug-in is being installed into the workspace.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1346,31 +1368,7 @@ status:
 </div>
 </div>
 <div class="paragraph">
-<p>Perform a some operations in the workspace you started. You should see those events in the logs of the example telemetry server.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In this guide, you:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Created a telemetry server to echo events to standard out.</p>
-</li>
-<li>
-<p>Extended the Che telemetry client and implemented your own custom back-end.</p>
-</li>
-<li>
-<p>Created a <code>meta.yaml</code> file to represent a Che workspace plug-in for your custom back-end.</p>
-</li>
-<li>
-<p>Told Che where to find your custom plug-in by changing the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable.</p>
-</li>
-</ul>
+<p>Perform any operations in the started workspace and observe their events in the example telemetry server logs.</p>
 </div>
 </div>
 </div>

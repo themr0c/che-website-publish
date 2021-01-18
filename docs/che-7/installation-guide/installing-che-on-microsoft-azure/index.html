@@ -981,6 +981,14 @@ $ echo PASSWORD=$AZURE_CERT_MANAGER_SP_PASSWORD</pre>
 <div class="sect1">
 <h2 id="installing-cert-manager-on-azure_che"><a class="anchor" href="#installing-cert-manager-on-azure_che"></a>Installing cert-manager on Azure</h2>
 <div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The <code>kubectl</code> tool is available.</p>
+</li>
+</ul>
+</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
@@ -988,15 +996,15 @@ $ echo PASSWORD=$AZURE_CERT_MANAGER_SP_PASSWORD</pre>
 <p>To install the cert-manager on Azure, create the <strong>cert-manager</strong> namespace:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create namespace cert-manager
+<pre>$ {orch-cli} create namespace cert-manager
 namespace/cert-manager created
 
-$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
+$ {orch-cli} label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply \
+<pre>$ {orch-cli} apply \
   -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml</pre>
 </div>
 </div>
@@ -1005,7 +1013,7 @@ $ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=tru
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply \
+<pre>$ {orch-cli} apply \
  --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml</pre>
 </div>
 </div>
@@ -1015,8 +1023,8 @@ $ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=tru
 <p>Create the <strong>che</strong> namespace if it does not already exist:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create namespace che
-namespace/che created</pre>
+<pre>$ kubectl create namespace eclipse-che
+namespace/eclipse-che created</pre>
 </div>
 </div>
 </li>
@@ -1024,7 +1032,7 @@ namespace/che created</pre>
 <p>Create the certificate issuer. Enter your email address in the <strong>email</strong> field and set <strong>clientID</strong>, <strong>CLIENT_SECRET</strong> <strong>subscriptionID</strong>, <strong>tenantID</strong>, <strong>hostedZoneName</strong>  fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre>cat &lt;&lt;EOF | kubectl apply -f -
+<pre>cat &lt;&lt;EOF | {orch-cli} apply -f -
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
@@ -1063,7 +1071,7 @@ EOF</pre>
 <p>Create the certificate. Edit the domain name:</p>
 <div class="listingblock">
 <div class="content">
-<pre>cat &lt;&lt;EOF | kubectl apply -f -
+<pre>cat &lt;&lt;EOF | {orch-cli} apply -f -
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
@@ -1095,7 +1103,7 @@ EOF</pre>
 <p>Obtain the logs using the following command (here, <code>cert-manager-8d478bb45-2924h</code> is the name of the cert-manager Pod):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$  kubectl logs -f -n cert-manager cert-manager-8d478bb45-2924h</pre>
+<pre>$  {orch-cli} logs -f -n cert-manager cert-manager-8d478bb45-2924h</pre>
 </div>
 </div>
 </li>
@@ -1103,7 +1111,7 @@ EOF</pre>
 <p>Ensure that the certificate is ready:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n che
+<pre>$ kubectl describe certificate/che-tls -n eclipse-che
 
 Status:
   Conditions:
@@ -1126,7 +1134,7 @@ Events:
 <p>Wait for the status to show <strong>OK</strong> and ensure that the log contains the following:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl describe certificate/che-tls -n {prod-namespace}
+<pre>$ {orch-cli} describe certificate/che-tls -n {prod-namespace}
 Name:         che-tls
 Namespace:    che
 Labels:       &lt;none&gt;
@@ -1191,7 +1199,7 @@ Events:
 › Current Kubernetes context: 'minikube'
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
-    ✔ Verify if Eclipse&#160;Che is deployed into namespace "che"...it is not
+    ✔ Verify if Eclipse&#160;Che is deployed into namespace "eclipse-che"...it is not
   ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
@@ -1209,7 +1217,7 @@ Events:
   ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
     ✔ Verify if helm is installed
     ✔ Check Helm Version: Found v3.4.1+gc4e7485
-    ✔ Create Namespace (che)...does already exist.
+    ✔ Create Namespace (eclipse-che)...does already exist.
     ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
     ✔ Check Cluster Role Binding...does not exists.
     ✔ Preparing Eclipse&#160;Che Helm Chart...done.
@@ -1238,13 +1246,13 @@ Events:
     ✔ Eclipse&#160;Che 7.23 has been successfully deployed.
     ✔ Documentation             : https://www.eclipse.org/che/docs
     ✔ -------------------------------------------------------------------------------
-    ✔ Users Dashboard           : https://che-che.azr.my-ide.cloud
+    ✔ Users Dashboard           : https://eclipse-che-eclipse-che.azr.my-ide.cloud
     ✔ Admin user login          : "XXX:XXX". NOTE: must change after first login.
     ✔ -------------------------------------------------------------------------------
-    ✔ Plug-in Registry          : https://plugin-registry-che.azr.my-ide.cloud/v3
-    ✔ Devfile Registry          : https://devfile-registry-che.azr.my-ide.cloud
+    ✔ Plug-in Registry          : https://plugin-registry-eclipse-che.azr.my-ide.cloud/v3
+    ✔ Devfile Registry          : https://devfile-registry-eclipse-che.azr.my-ide.cloud
     ✔ -------------------------------------------------------------------------------
-    ✔ Identity Provider URL     : https://keycloak-che.azr.my-ide.cloud/auth
+    ✔ Identity Provider URL     : https://keycloak-eclipse-che.azr.my-ide.cloud/auth
     ✔ Identity Provider login   : "XXX:XXX".
     ✔ -------------------------------------------------------------------------------</pre>
 </div>
@@ -1259,7 +1267,7 @@ Events:
 <p>Investigate Eclipse&#160;Che logs:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:logs --namespace che</pre>
+<pre>$ chectl server:logs --namespace eclipse-che</pre>
 </div>
 </div>
 </li>

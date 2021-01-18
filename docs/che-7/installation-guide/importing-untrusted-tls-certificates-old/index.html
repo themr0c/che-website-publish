@@ -774,7 +774,7 @@ the cluster contains cluster-wide trusted CA certificates added through the <a h
 <p>Create a new ConfigMap with the required TLS certificates:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap ca-certs --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em></pre>
+<pre>$ kubectl create configmap ca-certs --from-file=<em>&lt;certificate-file-path&gt;</em> -n=eclipse-che</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -835,7 +835,7 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 </div>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get checluster eclipse-che -n <em>&lt;che-namespace-name&gt;</em> -o jsonpath={.spec.server.serverTrustStoreConfigMapName}</pre>
+<pre class="nowrap">$ kubectl get checluster eclipse-che -n eclipse-che -o jsonpath={.spec.server.serverTrustStoreConfigMapName}</pre>
 </div>
 </div>
 </div>
@@ -910,7 +910,7 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <p>Add the required TLS certificates in the ConfigMap:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap <em>&lt;config-map-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=<em>&lt;che-namespace-name&gt;</em> -o yaml --dry-run | kubectl apply -f -</pre>
+<pre>$ kubectl create configmap <em>&lt;config-map-name&gt;</em> --from-file=<em>&lt;certificate-file-path&gt;</em> -n=eclipse-che -o yaml --dry-run | kubectl apply -f -</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -930,7 +930,7 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <p>Edit the <code>spec.server.ServerTrustStoreConfigMapName</code> <code>CheCluster</code> Custom Resource property to match the name of the ConfigMap:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl patch checluster eclipse-che -n <em>&lt;che-namespace-name&gt;</em> --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map-name&gt;"}]'</pre>
+<pre class="nowrap">$ kubectl patch checluster eclipse-che -n eclipse-che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map-name&gt;"}]'</pre>
 </div>
 </div>
 </li>
@@ -955,7 +955,7 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <p>Update the name of the configMap Che will use, by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the created or updated ConfigMap:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ helm upgrade che -n che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map-name&gt; \
+<pre class="nowrap">$ helm upgrade che -n eclipse-che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map-name&gt; \
    --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
 </div>
 </div>
@@ -972,9 +972,9 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <p>Restart the Che Operator, the Che server and Keycloak to load the new certificates:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl rollout restart -n <em>&lt;che-namespace-name&gt;</em> deployment/che-operator
-$ kubectl rollout restart -n <em>&lt;che-namespace-name&gt;</em> deployment/keycloak
-$ kubectl rollout restart -n <em>&lt;che-namespace-name&gt;</em> deployment/che</pre>
+<pre class="nowrap">$ kubectl rollout restart -n eclipse-che deployment/che-operator
+$ kubectl rollout restart -n eclipse-che deployment/keycloak
+$ kubectl rollout restart -n eclipse-che deployment/che</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1010,7 +1010,7 @@ and higher.</p>
 <p>In case of a Che <a href="https://docs.openshift.com/container-platform/latest/operators/olm-what-operators-are.html">Operator</a> deployment, the <code>CheCluster</code> attribute <code>serverTrustStoreConfigMapName</code> value matches the name of the ConfigMap. Get the value using the following command :</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get -o json checluster/eclipse-che -n <em>&lt;che-namespace-name&gt;</em> | jq .spec.server.serverTrustStoreConfigMapName</pre>
+<pre class="nowrap">$ kubectl get -o json checluster/eclipse-che -n eclipse-che | jq .spec.server.serverTrustStoreConfigMapName</pre>
 </div>
 </div>
 </li>
@@ -1018,7 +1018,7 @@ and higher.</p>
 <p>Che Pod Volumes list contains one Volume that uses the ConfigMap as data-source. To get the list of Volumes of the Che Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get pod -o json <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em> | jq .spec.volumes</pre>
+<pre class="nowrap">$ kubectl get pod -o json <em>&lt;che-pod-name&gt;</em> -n eclipse-che | jq .spec.volumes</pre>
 </div>
 </div>
 </li>
@@ -1026,7 +1026,7 @@ and higher.</p>
 <p>Che mounts certificates in folder <code>/public-certs/</code> of the Che server container. This command returns the list of files in that folder:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em> -- ls /public-certs/</pre>
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- ls /public-certs/</pre>
 </div>
 </div>
 </li>
@@ -1034,7 +1034,7 @@ and higher.</p>
 <p>In the Che server logs there is a line for every certificate added to the Java truststore, including configured Che certificates.</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n <em>&lt;che-namespace-name&gt;</em>
+<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n eclipse-che
 (...)
 Found a custom cert. Adding it to java trust store based on /usr/lib/jvm/java-1.8.0/jre/lib/security/cacerts
 (...)</pre>
@@ -1045,7 +1045,7 @@ Found a custom cert. Adding it to java trust store based on /usr/lib/jvm/java-1.
 <p>Che server Java truststore contains the certificates. The certificates SHA1 fingerprints are among the list of the SHA1 of the certificates included in the truststore returned by the following command:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n che -- keytool -list -keystore /home/user/cacerts
+<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- keytool -list -keystore /home/user/cacerts
 Your keystore contains 141 entries
 
 (...)</pre>
@@ -1112,7 +1112,7 @@ manually-added-certificate.crt</pre>
 <p>Make sure that the <code>ca-certs</code> ConfigMap has been added as a volume in the workspace Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
+<pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n eclipse-che | \
     jq '.spec.volumes[] | select(.configMap.name == "ca-certs")'
 {
   "configMap": {
