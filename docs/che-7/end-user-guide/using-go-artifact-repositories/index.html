@@ -700,10 +700,7 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Obtain the certificate used by the Athens server in the Privacy-Enhanced Mail (PEM) format and place it in the <code>/projects/tls/rootCA.crt</code> file to make it accessible from all your containers.</p>
-</li>
-<li>
-<p>Right-click the project explorer and select <strong>Upload files</strong> to upload the <code>rootCA.crt</code> certificate file to your Eclipse&#160;Che workspace.</p>
+<p>Obtain the certificate used by the Athens server in the Privacy-Enhanced Mail (PEM) format. It is customary for administrators to provide certificates of internal artifact servers as Kubernetes secrets (see <a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>). The relevant server certificates will be mounted in <code>/public-certs</code> in every container in the workspace.</p>
 </li>
 <li>
 <p>Add the appropriate environment variables to your devfile:</p>
@@ -721,7 +718,7 @@
     name: GOPROXY
   - value: 'on'
     name: GO111MODULE
-  - value: '/projects/tls/rootCA.crt'
+  - value: '/public-certs/athens-server.cer'
     name: SSL_CERT_FILE</code></pre>
 </div>
 </div>

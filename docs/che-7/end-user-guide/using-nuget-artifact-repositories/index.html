@@ -701,7 +701,7 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Obtain the certificate file of a non-standard repository and place it in the <code>/projects/tls/rootCA.crt</code> file to make it accessible from all your containers.</p>
+<p>Obtain the certificate used by the Athens server in the Privacy-Enhanced Mail (PEM) format. It is customary for administrators to provide certificates of internal artifact servers as Kubernetes secrets (see <a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>). The relevant server certificates will be mounted in <code>/public-certs</code> in every container in the workspace.</p>
 </li>
 <li>
 <p>Specify the location of the certificate file in the <code>SSL_CERT_FILE</code> environment variable in your devfile for the OmniSharp plug-in and for the .NET container.</p>
@@ -714,7 +714,7 @@
     type: chePlugin
     alias: omnisharp
     env:
-     - value: /projects/tls/rootCA.crt
+     - value: /public-certs/nuget.cer
        name: SSL_CERT_FILE
  - mountSources: true
    endpoints:
