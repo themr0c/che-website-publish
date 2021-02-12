@@ -645,12 +645,70 @@
 </aside>
 <article class="doc">
 <h1 class="page">Setting up the Keycloak che-username-readonly theme for the Eclipse&#160;Che login page</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>The following procedure is relevant for all Che instances with the OpenShift OAuth service enabled.</p>
 </div>
 <div class="paragraph">
-<p>When a user with pre-created namespaces logs in to Eclipse&#160;Che Dashboard for the first time, a page allowing the user to update account information is displayed. It is possible to change the username, but choosing a username that doesn&#8217;t match the OpenShift username, prevents the user&#8217;s workspaces from running. This is caused by Che attempts to use a non-existing namespace, the name of which is derived from a user OpenShift username, to create a workspace. To prevent this, modify the Keycloak settings using the steps below.</p>
+<p>When a user with pre-created namespaces logs in to Eclipse&#160;Che Dashboard for the first time, a page allowing the user to update account information is displayed. It is possible to change the username, but choosing a username that doesn&#8217;t match the OpenShift username, prevents the user&#8217;s workspaces from running. This is caused by Che attempts to use a non-existing namespace, the name of which is derived from a user OpenShift username, to create a workspace. To prevent this, log in to Keycloak and modify the theme settings.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="proc_logging-in-to-identity-provider_che"><a class="anchor" href="#proc_logging-in-to-identity-provider_che"></a>Logging in to Keycloak</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following procedure describes how to log in to Keycloak, which acts as a route for OpenShift platforms. To log in to Keycloak, a user has to obtain the Keycloak URL and a user&#8217;s credentials first.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The <code>kubectl</code> tool installed.</p>
+</li>
+<li>
+<p>Logged in to OpenShift cluster using the <code>kubectl</code> tool.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Obtain a user Keycloak login:</p>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl get secret che-identity-secret  -n eclipse-che -o json | jq -r '.data.user' | base64 -d</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain a user Keycloak password:</p>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl get secret che-identity-secret  -n eclipse-che -o json | jq -r '.data.password' | base64 -d</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain the Keycloak URL:</p>
+<div class="listingblock">
+<div class="content">
+<pre>kubectl  get ingress -n eclipse-che -l app=che,component=keycloak   -o 'custom-columns=URL:.spec.rules[0].host' --no-headers</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Open the URL in a browser and log in to Keycloak using the obtained login and password.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_up_the_keycloak_che_username_readonly_theme"><a class="anchor" href="#_setting_up_the_keycloak_che_username_readonly_theme"></a>Setting up the Keycloak che-username-readonly theme</h2>
+<div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -670,12 +728,16 @@
 <ol class="arabic">
 <li>
 <p>In the main <strong>Configure</strong> menu on the left, select <strong>Realm Settings</strong>:</p>
+</li>
+</ol>
+</div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/keycloak/che-keycloak-username-readonly-theme.png"><img src="../_images/keycloak/che-keycloak-username-readonly-theme.png" alt="che keycloak username readonly theme"></a>
 </div>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Navigate to the <strong>Themes</strong> tab.</p>
 </li>
@@ -683,6 +745,8 @@
 <p>In the <strong>Login Theme</strong> field, select the <code>che-username-readonly</code> option and click the <b class="button">Save</b> button to apply the changes.</p>
 </li>
 </ol>
+</div>
+</div>
 </div>
 </article>
   </div>
