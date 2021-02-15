@@ -754,22 +754,25 @@
 <p><a href="#a-minimal-checluster-custom-resource-example_che">A minimal <code>CheCluster</code> Custom Resource example.</a></p>
 </li>
 <li>
-<p><a href="#checluster-custom-resource-auth-settings_che"><code>CheCluster</code> Custom Resource <code>auth</code> configuration settings related to authentication used by Che installation</a></p>
-</li>
-<li>
-<p><a href="#checluster-custom-resource-database-settings_che"><code>CheCluster</code> Custom Resource <code>database</code> configuration settings related to the database used by Che</a></p>
-</li>
-<li>
 <p><a href="#checluster-custom-resource-server-settings_che"><code>CheCluster</code> Custom Resource <code>server</code> settings, related to the Che server component.</a></p>
 </li>
 <li>
-<p><a href="#checluster-custom-resource-storage-settings_che"><code>CheCluster</code> Custom Resource <code>storage</code> configuration settings related to persistent storage used by Che</a></p>
+<p><a href="#checluster-custom-resource-database-settings_che"><code>CheCluster</code> Custom Resource <code>database</code> configuration settings related to the database used by Che.</a></p>
 </li>
 <li>
-<p><a href="#checluster-custom-resource-k8s-settings_che"><code>CheCluster</code> Custom Resource <code>k8s</code> configuration settings specific to Che installations on Kubernetes or OpenShift</a></p>
+<p><a href="#checluster-custom-resource-auth-settings_che">Custom Resource <code>auth</code> configuration settings related to authentication used by Che.</a></p>
 </li>
 <li>
-<p><a href="#checluster-custom-resource-installation-settings_che"><code>CheCluster</code> Custom Resource <code>status</code> defines the observed state of Che installation</a></p>
+<p><a href="#checluster-custom-resource-storage-settings_che"><code>CheCluster</code> Custom Resource <code>storage</code> configuration settings related to persistent storage used by Che.</a></p>
+</li>
+<li>
+<p><a href="#checluster-custom-resource-k8s-settings_che"><code>CheCluster</code> Custom Resource <code>k8s</code> configuration settings specific to Che installations on Kubernetes or OpenShift.</a></p>
+</li>
+<li>
+<p><a href="#checluster-custom-resource-metrics-settings_che"><code>CheCluster</code> Custom Resource <code>metrics</code> settings, related to the Che metrics collection used by Che.</a></p>
+</li>
+<li>
+<p><a href="#checluster-custom-resource-status-settings_che"><code>CheCluster</code> Custom Resource <code>status</code> defines the observed state of Che installation</a></p>
 </li>
 </ul>
 </div>
@@ -801,418 +804,471 @@ spec:
 <table id="checluster-custom-resource-server-settings_che" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. <code>CheCluster</code> Custom Resource <code>server</code> settings, related to the Che server component.</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default value</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>airGapContainerRegistryHostname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An optional host name or URL to an alternative container registry to pull images from. This value overrides the container registry host name defined in all default container images involved in a Che deployment. This is particularly useful to install Che in an air-gapped environment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">airGapContainerRegistryHostname</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional host name, or URL, to an alternate container registry to pull images from. This value overrides the container registry host name defined in all the default container images involved in a Che deployment. This is particularly useful to install Che in a restricted environment.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>airGapContainerRegistryOrganization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional repository name of an alternative container registry to pull images from. This value overrides the container registry organization defined in all the default container images involved in a Che deployment. This is particularly useful to install Che in an air-gapped environment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">airGapContainerRegistryOrganization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional repository name of an alternate container registry to pull images from. This value overrides the container registry organization defined in all the default container images involved in a Che deployment. This is particularly useful to install Che in a restricted environment.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheDebug</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the debug mode for Che server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allowUserDefinedWorkspaceNamespaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines that a user is allowed to specify a Kubernetes namespace, or an OpenShift project, which differs from the default. It&#8217;s NOT RECOMMENDED to set to <code>true</code> without OpenShift OAuth configured. The OpenShift infrastructure also uses this property.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheFlavor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Flavor of the installation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheClusterRoles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of ClusterRoles that will be assigned to Che ServiceAccount. Be aware that the Che Operator has to already have all permissions in these ClusterRoles to grant them.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheHost</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Operator automatically sets the value.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A public host name of the installed Che server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheDebug</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the debug mode for Che server. Defaults to <code>false</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheImagePullPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in Che deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheFlavor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a variation of the installation. The options are <code>che</code> for upstream Che installations, or <code>codeready</code> for CodeReady Workspaces installation. If not necessary, do not override the default value.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheImageTag</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheHost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public host name of the installed Che server. When value is omitted, the value it will be automatically set by the Operator. See the <code>cheHostTLSSecret</code> field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheHostTLSSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing certificates to secure ingress or route for the custom host name of the installed Che server. See the <code>cheHost</code> field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in Che deployment. This does NOT include the container image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheImagePullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in Che deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheImageTag</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the tag of the container image used in Che deployment. Omit it or leave it empty to use the default image tag provided by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in Che deployment. This does not include the container image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheLogLevel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log level for the Che server: <code>INFO</code> or <code>DEBUG</code>. Defaults to <code>INFO</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheLogLevel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INFO</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log level for the Che server: <code>INFO</code> or <code>DEBUG</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheServerIngress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Che server ingress custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheClusterRoles</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-namespace-editor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of ClusterRoles that will be assigned to che ServiceAccount. Che uses default <code>che-namespace-editor</code> ClusterRole to label workspace namespaces. Be aware that che-operator has to already have all permissions in these ClusterRoles to be able to grant them.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheServerRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Che server route custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheWorkspaceClusterRole</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom cluster role bound to the user for the Che workspaces. Omit or leave empty to use the default roles.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheWorkspaceClusterRole</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom cluster role bound to the user for the Che workspaces. The default roles are used if this is omitted or left blank.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>customCheProperties</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of additional environment variables that will be applied in the generated <code>che</code> ConfigMap to be used by the Che server, in addition to the values already generated from other fields of the <code>CheCluster</code> Custom Resource (CR). If <code>customCheProperties</code> contains a property that would be normally generated in <code>che</code> ConfigMap from other CR fields, then the value defined in the <code>customCheProperties</code> will be used instead.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">customCheProperties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of additional environment variables that will be applied in the generated <code>che</code> configMap to be used by the Che server, in addition to the values already generated from other fields of the <code>CheCluster</code> custom resource (CR). When <code>customCheProperties</code> contains a property that would be normally generated in <code>che</code> configMap from other CR fields, the value defined in the <code>customCheProperties</code> is used instead.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the Devfile registry deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryCpuLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU limit used in the devfile registry deployment. In cores. (500m = .5 cores). Default to 500m.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryMemoryLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>256Mi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the Devfile registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryCpuRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU request used in the devfile registry deployment. In cores. (500m = .5 cores). Default to 100m.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryMemoryRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>16Mi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the Devfile registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the devfile registry deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryPullPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Devfile registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryIngress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The devfile registry ingress custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryUrl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Operator automatically sets the value.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the Devfile registry that serves sample, ready-to-use devfiles. Set it if you use an external devfile registry (see the <code>externalDevfileRegistry</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryMemoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the devfile registry deployment. Defaults to 256Mi.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>externalDevfileRegistry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator to deploy a dedicated Devfile registry server. By default a dedicated devfile registry server is started. If <code>externalDevfileRegistry</code> set to <code>true</code>, the Operator does not start a dedicated registry server automatically and you need to set the <code>devfileRegistryUrl</code> field manually.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryMemoryRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the devfile registry deployment. Defaults to 16Mi.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>externalPluginRegistry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator to deploy a dedicated Plugin registry server. By default, a dedicated plug-in registry server is started. If <code>externalPluginRegistry</code> set to <code>true</code>, the Operator does not deploy a dedicated server automatically and you need to set the <code>pluginRegistryUrl</code> field manually.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryPullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the devfile registry deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonProxyHosts</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of hosts that will not use the configured proxy. Use <code>|`</code> as delimiter, for example <code>localhost|my.host.com|123.42.12.32</code> Only use when configuring a proxy is required (see also the <code>proxyURL</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The devfile registry route custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the Plugin registry deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the devfile registry, that serves sample, ready-to-use devfiles. Set this ONLY when a use of an external devfile registry is needed. See the <code>externalDevfileRegistry</code> field. By default, this will be automatically calculated by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryMemoryLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>256Mi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the Plugin registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externalDevfileRegistry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated devfile registry server. By default, a dedicated devfile registry server is started. When <code>externalDevfileRegistry</code> is <code>true</code>, no such dedicated server will be started by the Operator and you will have to manually set the <code>devfileRegistryUrl</code> field</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryMemoryRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>16Mi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the Plugin registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externalPluginRegistry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated plugin registry server. By default, a dedicated plugin registry server is started. When <code>externalPluginRegistry</code> is <code>true</code>, no such dedicated server will be started by the Operator and you will have to manually set the <code>pluginRegistryUrl</code> field.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryPullPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Plugin registry deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gitSelfSignedCert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the certificate from <code>che-git-self-signed-cert</code> configMap will be propagated to the Che components and provide particular configuration for Git.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryUrl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the Plugin registry that serves sample ready-to-use devfiles. Set it only when using an external devfile registry (see the <code>externalPluginRegistry</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nonProxyHosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of hosts that will be reached directly, bypassing the proxy. Specify wild card domain use the following form <code>.&lt;DOMAIN&gt;</code> and <code>|</code> as delimiter, for example: <code>localhost|.my.host.com|123.42.12.32</code> Only use when configuring a proxy is required. Operator respects OpenShift cluster wide proxy configuration and no additional configuration is required, but defining <code>nonProxyHosts</code> in a custom resource leads to merging non proxy hosts lists from the cluster proxy configuration and ones defined in the custom resources. See the doc <a href="https://docs.openshift.com/container-platform/4.4/networking/enable-cluster-wide-proxy.html" class="bare">https://docs.openshift.com/container-platform/4.4/networking/enable-cluster-wide-proxy.html</a>). See also the <code>proxyURL</code> fields.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyPassword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password of the proxy server. Only use when proxy configuration is required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryCpuLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU limit used in the plugin registry deployment. In cores. (500m = .5 cores). Default to 500m.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyPort</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Port of the proxy server. Only use when configuring a proxy is required (see also the <code>proxyURL</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryCpuRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU request used in the plugin registry deployment. In cores. (500m = .5 cores). Default to 100m.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyURL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL (protocol+host name) of the proxy server. This drives the appropriate changes in the <code>JAVA_OPTS</code> and <code>https(s)_proxy</code> variables in the Che server and workspaces containers. Only use when configuring a proxy is required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the plugin registry deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyUser</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User name of the proxy server. Only use when configuring a proxy is required (see also the <code>proxyURL</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryIngress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plugin registry ingress custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serverMemoryLimit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1Gi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the Che server deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryMemoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the plugin registry deployment. Defaults to 256Mi.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serverMemoryRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>512Mi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the Che server deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryMemoryRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the plugin registry deployment. Defaults to 16Mi.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsSupport</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator to deploy Che in TLS mode.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryPullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the plugin registry deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plugin registry route custom settings.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the plugin registry that serves sample ready-to-use devfiles. Set this ONLY if a use of an external devfile registry is needed. See the <code>externalPluginRegistry</code> field. By default, this will be automatically calculated by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">proxyPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password of the proxy server. Only use when proxy configuration is required. See the <code>proxyURL</code>, <code>proxyUser</code> and <code>proxySecret</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">proxyPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port of the proxy server. Only use when configuring a proxy is required. See also the <code>proxyURL</code> and <code>nonProxyHosts</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">proxySecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for a proxy server. When the secret is defined, the <code>proxyUser</code> and <code>proxyPassword</code> are ignored.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">proxyURL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL (protocol+host name) of the proxy server. This drives the appropriate changes in the <code>JAVA_OPTS</code> and <code>https(s)_proxy</code> variables in the Che server and workspaces containers. Only use when configuring a proxy is required. Operator respects OpenShift cluster wide proxy configuration and no additional configuration is required, but defining <code>proxyUrl</code> in a custom resource leads to overrides the cluster proxy configuration with fields <code>proxyUrl</code>, <code>proxyPort</code>, <code>proxyUser</code> and <code>proxyPassword</code> from the custom resource. See the doc <a href="https://docs.openshift.com/container-platform/4.4/networking/enable-cluster-wide-proxy.html" class="bare">https://docs.openshift.com/container-platform/4.4/networking/enable-cluster-wide-proxy.html</a>). See also the <code>proxyPort</code> and <code>nonProxyHosts</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">proxyUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name of the proxy server. Only use when configuring a proxy is required. See also the <code>proxyURL</code>, <code>proxyPassword</code> and <code>proxySecret</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selfSignedCert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. The value of this flag is ignored. The Che Operator will automatically detect if the router certificate is self-signed and propagate it to other components, such as the Che server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverCpuLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU limit used in the Che server deployment In cores. (500m = .5 cores). Default to 1.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverCpuRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the CPU request used in the Che server deployment In cores. (500m = .5 cores). Default to 100m.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverExposureStrategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server and workspaces exposure type. Possible values are <code>multi-host</code>, <code>single-host</code>, <code>default-host</code>. Defaults to <code>multi-host</code>, which creates a separate ingress, or OpenShift routes, for every required endpoint. <code>single-host</code> makes Che exposed on a single host name with workspaces exposed on subpaths. Read the docs to learn about the limitations of this approach. Also consult the <code>singleHostExposureType</code> property to further configure how the Operator and the Che server make that happen on Kubernetes. <code>default-host</code> exposes the Che server on the host of the cluster. Read the docs to learn about the limitations of this approach.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverMemoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory limit used in the Che server deployment. Defaults to 1Gi.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverMemoryRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the Che server deployment. Defaults to 512Mi.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverTrustStoreConfigMapName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the configMap with public certificates to add to Java trust store of the Che server. This is often required when adding the OpenShift OAuth provider, which has HTTPS endpoint signed with self-signed cert. The Che server must be aware of its CA cert to be able to request it. This is disabled by default.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">singleHostGatewayConfigMapLabels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The labels that need to be present in the configMaps representing the gateway configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">singleHostGatewayConfigSidecarImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The image used for the gateway sidecar that provides configuration to the gateway. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">singleHostGatewayImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The image used for the gateway in the single host mode. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tlsSupport</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. Instructs the Operator to deploy Che in TLS mode. This is enabled by default. Disabling TLS sometimes cause malfunction of some Che components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useInternalClusterSVCNames</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use internal cluster SVC names to communicate between components to speed up the traffic and avoid proxy issues. The default value is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workspaceNamespaceDefault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines Kubernetes default namespace in which user&#8217;s workspaces are created if user does not override it. It&#8217;s possible to use <code>&lt;username&gt;</code>,<code>&lt;userid&gt;</code> and <code>&lt;workspaceid&gt;</code> placeholders, such as che-workspace-&lt;username&gt;. In that case, a new namespace will be created for each user or workspace. Is used by OpenShift infrastructure as well to specify Project.</p></td>
 </tr>
 </tbody>
 </table>
 <table id="checluster-custom-resource-database-settings_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. <code>CheCluster</code> Custom Resource <code>database</code> configuration settings related to the database used by Che</caption>
+<caption class="title">Table 2. <code>CheCluster</code> Custom Resource <code>database</code> configuration settings related to the database used by Che.</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default value</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePostgresDb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbche</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL database name that the Che server uses to connect to the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresContainerResources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL container custom settings</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePostgresHostName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL Database host name that the Che server uses to connect to. Defaults to <code>postgres</code>. Override this value only when using an external database. (See the field <code>externalDb</code>.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresDb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL database name that the Che server uses to connect to the DB. Defaults to <code>dbche</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePostgresPassword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">auto-generated value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL password that the Che server uses to connect to the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresHostName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL Database host name that the Che server uses to connect to. Defaults to postgres. Override this value ONLY when using an external database. See field <code>externalDb</code>. In the default case it will be automatically set by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePostgresPort</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5432</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL Database port that the Che server uses to connect to. Override this value only when using an external database (see field <code>externalDb</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL password that the Che server uses to connect to the DB. When omitted or left blank, it will be set to an automatically generated value.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chePostgresUser</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pgche</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL user that the Che server uses to connect to the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL Database port that the Che server uses to connect to. Defaults to 5432. Override this value ONLY when using an external database. See field <code>externalDb</code>. In the default case it will be automatically set by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>externalDb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator to deploy a dedicated database. By default, a dedicated PostgreSQL database is deployed as part of the Che installation. If set to <code>true</code>, the Operator does not deploy a dedicated database automatically, you need to provide connection details to an external database. See all the fields starting with: <code>chePostgres</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains PosgreSQL`user` and <code>password</code> that the Che server uses to connect to the DB. When the secret is defined, the <code>chePostgresUser</code> and <code>chePostgresPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>chePostgresUser</code> and <code>chePostgresPassword</code> are defined, then they will be used to connect to the DB. 2. <code>chePostgresUser</code> or <code>chePostgresPassword</code> are not defined, then a new secret with the name <code>che-postgres-secret</code> will be created with default value of <code>pgche</code> for <code>user</code> and with an auto-generated value for <code>password</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgresImagePullPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Always` for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the PostgreSQL database deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL user that the Che server uses to connect to the DB. Defaults to <code>pgche</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgresImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the PostgreSQL database deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externalDb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated database. By default, a dedicated PostgreSQL database is deployed as part of the Che installation. When <code>externalDb</code> is <code>true</code>, no dedicated database will be deployed by the Operator and you will need to provide connection details to the external DB you are about to use. See also all the fields starting with: <code>chePostgres</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgresImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the PosgreSQL database deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgresImagePullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the PosgreSQL database deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 </tbody>
 </table>
 <table id="checluster-custom-resource-auth-settings_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. <code>CheCluster</code> Custom Resource <code>auth</code> configuration settings related to authentication used by Che installation</caption>
+<caption class="title">Table 3. Custom Resource <code>auth</code> configuration settings related to authentication used by Che.</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default value</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>externalIdentityProvider</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">By default, a dedicated Identity Provider server is deployed as part of the Che installation. But if <code>externalIdentityProvider</code> is <code>true</code>, then no dedicated identity provider will be deployed by the Operator and you might need to provide details about the external identity provider you want to use. See also all the other fields starting with: <code>identityProvider</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externalIdentityProvider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated Identity Provider (Keycloak or RH-SSO instance). By default, a dedicated Identity Provider server is deployed as part of the Che installation. When <code>externalIdentityProvider</code> is <code>true</code>, no dedicated identity provider will be deployed by the Operator and you will need to provide details about the external identity provider you are about to use. See also all the other fields starting with: <code>identityProvider</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderAdminUserName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the name of the Identity Provider admin user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderAdminUserName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the name of the Identity Provider administrator user. Defaults to <code>admin</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderClientId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of an Identity provider (Keycloak) <code>client-id</code> that must be used for Che. This is useful to override it ONLY if you use an external Identity Provider (see the <code>externalIdentityProvider</code> field). If omitted or left blank, it will be set to the value of the <code>flavor</code> field suffixed with <code>-public</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderClientId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a Identity provider, Keycloak or RH-SSO, <code>client-id</code> that is used for Che. This is useful to override it ONLY if you use an external Identity Provider. See the <code>externalIdentityProvider</code> field. When omitted or left blank, it is set to the value of the <code>flavour</code> field suffixed with <code>-public</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderImagePullPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Identity Provider (Keycloak) deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderContainerResources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity provider container custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the Identity Provider (Keycloak) deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used in the Identity Provider, Keycloak or RH-SSO, deployment. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderPassword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the password of Keycloak admin user. Override it only when using an external Identity Provider (see the <code>externalIdentityProvider</code> field). Omit or leave empty to set an auto-generated password.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderImagePullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Identity Provider, Keycloak or RH-SSO, deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderPostgresPassword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for The Identity Provider (Keycloak) to connect to the database. This is useful to override it ONLY if you use an external Identity Provider (see the <code>externalIdentityProvider</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderIngress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ingress custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderRealm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of an Identity provider (Keycloak) realm. Override it only when using an external Identity Provider (see the <code>externalIdentityProvider</code> field). Omit or leave empty blank to set it to the value of the <code>flavor</code> field.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the password of Keycloak administrator user. This is useful to override it ONLY if you use an external Identity Provider. See the <code>externalIdentityProvider</code> field. When omitted or left blank, it is set to an auto-generated password.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>identityProviderURL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator to deploy a dedicated Identity Provider (Keycloak instance). Public URL of the Identity Provider server (Keycloak server). Set it only when using an external Identity Provider (see the <code>externalIdentityProvider</code> field).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderPostgresPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for a Identity Provider, Keycloak or RH-SSO, to connect to the database. This is useful to override it ONLY if you use an external Identity Provider. See the <code>externalIdentityProvider</code> field. When omitted or left blank, it is set to an auto-generated password.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oAuthClientName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the OpenShift <code>OAuthClient</code> resource used to setup identity federation on the OpenShift side. See also the <code>OpenShiftoAuth</code> field.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderPostgresSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>password</code> for the Identity Provider, Keycloak or RH-SSO, to connect to the database. When the secret is defined, the <code>identityProviderPostgresPassword</code> is ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderPostgresPassword</code> is defined, then it will be used to connect to the database. 2. <code>identityProviderPostgresPassword</code> is not defined, then a new secret with the name <code>che-identity-postgres-secret</code> will be created with an auto-generated value for <code>password</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oAuthSecret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the Operator sets the value automatically</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the secret set in the OpenShift <code>OAuthClient</code> resource used to setup identity federation on the OpenShift side. See also the <code>OAuthClientName</code> field.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderRealm</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a Identity provider, Keycloak or RH-SSO, realm that is used for Che. This is useful to override it ONLY if you use an external Identity Provider. See the <code>externalIdentityProvider</code> field. When omitted or left blank, it is set to the value of the <code>flavour</code> field.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openShiftoAuth</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> on OpenShift</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the integration of the identity provider (Keycloak / RHSSO) with OpenShift OAuth. This allows users to log in with their OpenShift login and have their workspaces created under personal OpenShift namespaces. The <code>kubeadmin</code> user is not supported, and logging through does not allow access to the Che Dashboard.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Route custom settings.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updateAdminPassword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Forces the default <code>admin</code> Che user to update password on first login.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for Identity Provider. When the secret is defined, the <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are defined, then they will be used. 2. <code>identityProviderAdminUserName</code> or <code>identityProviderPassword</code> are not defined, then a new secret with the name <code>che-identity-secret</code> will be created with default value <code>admin</code> for <code>user</code> and with an auto-generated value for <code>password</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderURL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the Identity Provider server (Keycloak / RH-SSO server). Set this ONLY when a use of an external Identity Provider is needed. See the <code>externalIdentityProvider</code> field. By default, this will be automatically calculated and set by the Operator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oAuthClientName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the OpenShift <code>OAuthClient</code> resource used to setup identity federation on the OpenShift side. Auto-generated if left blank. See also the <code>OpenShiftoAuth</code> field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oAuthSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the secret set in the OpenShift <code>OAuthClient</code> resource used to setup identity federation on the OpenShift side. Auto-generated if left blank. See also the <code>OAuthClientName</code> field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openShiftoAuth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the integration of the identity provider (Keycloak / RHSSO) with OpenShift OAuth. Empty value on OpenShift by default. This will allow users to directly login with their OpenShift user through the OpenShift login, and have their workspaces created under personal OpenShift namespaces. WARNING: the <code>kubeadmin</code> user is NOT supported, and logging through it will NOT allow accessing the Che Dashboard.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">updateAdminPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Forces the default <code>admin</code> Che user to update password on first login. Defaults to <code>false</code>.</p></td>
 </tr>
 </tbody>
 </table>
 <table id="checluster-custom-resource-storage-settings_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. <code>CheCluster</code> Custom Resource <code>storage</code> configuration settings related to persistent storage used by Che</caption>
+<caption class="title">Table 4. <code>CheCluster</code> Custom Resource <code>storage</code> configuration settings related to persistent storage used by Che.</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default value</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgresPVCStorageClassName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage class for the Persistent Volume Claim dedicated to the PostgreSQL database. Omitted or leave empty to use a default storage class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgresPVCStorageClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage class for the Persistent Volume Claim dedicated to the PosgreSQL database. When omitted or left blank, a default storage class is used.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>preCreateSubPaths</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Che server to launch a special Pod to pre-create a subpath in the Persistent Volumes. Enable it according to the configuration of your K8S cluster.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preCreateSubPaths</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Che server to start a special Pod to pre-create a sub-path in the Persistent Volumes. Defaults to <code>false</code>, however it will need to enable it according to the configuration of your K8S cluster.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pvcClaimSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1Gi</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the persistent volume claim for workspaces.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pvcClaimSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the persistent volume claim for workspaces. Defaults to <code>1Gi</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pvcJobsImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pvcJobsImage</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the container image used to create sub-paths in the Persistent Volumes. This includes the image tag. Omit it or leave it empty to use the default container image provided by the Operator. See also the <code>preCreateSubPaths</code> field.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pvcStrategy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>common</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Available options:`common` (all workspaces PVCs in one volume), <code>per-workspace</code> (one PVC per workspace for all declared volumes) and <code>unique</code> (one PVC per declared volume).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pvcStrategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Persistent volume claim strategy for the Che server. This Can be:`common` (all workspaces PVCs in one volume), <code>per-workspace</code> (one PVC per workspace for all declared volumes) and <code>unique</code> (one PVC per declared volume). Defaults to <code>common</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspacePVCStorageClassName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage class for the Persistent Volume Claims dedicated to the Che workspaces. Omit or leave empty to use a default storage class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workspacePVCStorageClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage class for the Persistent Volume Claims dedicated to the Che workspaces. When omitted or left blank, a default storage class is used.</p></td>
 </tr>
 </tbody>
 </table>
 <table id="checluster-custom-resource-k8s-settings_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. <code>CheCluster</code> Custom Resource <code>k8s</code> configuration settings specific to Che installations on Kubernetes or OpenShift</caption>
+<caption class="title">Table 5. <code>CheCluster</code> Custom Resource <code>k8s</code> configuration settings specific to Che installations on Kubernetes or OpenShift.</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default value</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingressClass</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nginx</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ingress class that defines which controller manages ingresses.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingressClass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ingress class that will define the which controller will manage ingresses. Defaults to <code>nginx</code>. NB: This drives the <code>kubernetes.io/ingress.class</code> annotation on Che-related ingresses.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingressDomain</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">omit</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Global ingress domain for a K8S cluster. This field must be explicitly specified. This drives the <code>is kubernetes.io/ingress.class</code> annotation on Che-related ingresses.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingressDomain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global ingress domain for a K8S cluster. This MUST be explicitly specified: there are no defaults.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingressStrategy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multi-host</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Strategy for ingress creation. This can be <code>multi-host</code> (host is explicitly provided in ingress), <code>single-host</code> (host is provided, path-based rules) and <code>default-host.*</code>(no host is provided, path-based rules).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingressStrategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strategy for ingress creation. Options are: <code>multi-host</code> (host is explicitly provided in ingress), <code>single-host</code> (host is provided, path-based rules) and <code>default-host</code> (no host is provided, path-based rules). Defaults to <code>multi-host</code> Deprecated in favor of <code>serverExposureStrategy</code> in the <code>server</code> section, which defines this regardless of the cluster type. When both are defined, the <code>serverExposureStrategy</code> option takes precedence.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>securityContextFsGroup,omitempty</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1724</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">FSGroup the Che Pod and Workspace Pods containers run in.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContextFsGroup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The FSGroup in which the Che Pod and workspace Pods containers runs in. Default value is <code>1724</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>securityContextRunAsUser</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1724</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the user the Che Pod and Workspace Pods containers run as.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContextRunAsUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the user the Che Pod and workspace Pods containers run as. Default value is <code>1724</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsSecretName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">che-tls</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret that is used to set ingress TLS termination if TLS is enabled. If the specified secret does not exist, a self-signed certificate will be created. If the value is empty or omitted, the default ingress controller certificate will be used. See also the <code>tlsSupport</code> field. Note, when switching to the default ingress controller certificate, <code>self-signed-certificate</code> secret should be deleted manually.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">singleHostExposureType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When the serverExposureStrategy is set to <code>single-host</code>, the way the server, registries and workspaces are exposed is further configured by this property. The possible values are <code>native</code>, which means that the server and workspaces are exposed using ingresses on K8s or <code>gateway</code> where the server and workspaces are exposed using a custom gateway based on Traefik. All the endpoints whether backed by the ingress or gateway <code>route</code> always point to the subpaths on the same domain. Defaults to <code>native</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tlsSecretName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret that will be used to setup ingress TLS termination when TLS is enabled. When the field is empty string, the default cluster certificate will be used. See also the <code>tlsSupport</code> field.</p></td>
 </tr>
 </tbody>
 </table>
-<table id="checluster-custom-resource-installation-settings_che" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. <code>CheCluster</code> Custom Resource <code>status</code> defines the observed state of Che installation</caption>
+<table id="checluster-custom-resource-metrics-settings_che" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. <code>CheCluster</code> Custom Resource <code>metrics</code> settings, related to the Che metrics collection used by Che.</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
 </colgroup>
 <thead>
 <tr>
@@ -1222,52 +1278,75 @@ spec:
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheClusterRunning</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <code>metrics</code> the Che server endpoint. Default to <code>true</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table id="checluster-custom-resource-status-settings_che" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. <code>CheCluster</code> Custom Resource <code>status</code> defines the observed state of Che installation</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheClusterRunning</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Status of a Che installation. Can be <code>Available</code>, <code>Unavailable</code>, or <code>Available, Rolling Update in Progress</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheURL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the Che server.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cheVersion</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Currently installed Che version.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cheVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current installed Che version.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbProvisioned</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether a PostgreSQL instance has been correctly provisioned.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dbProvisioned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates that a PosgreSQL instance has been correctly provisioned or not.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devfileRegistryURL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the Devfile registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryURL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the devfile registry.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>helpLink</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A URL to where to find help related to the current Operator status.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gitHubOAuthProvisioned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance, Keycloak or RH-SSO, has been configured to integrate with the GitHub OAuth.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keycloakProvisioned</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance (Keycloak / RH SSO) has been provisioned with realm, client and user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">helpLink</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A URL that points to some URL where to find help related to the current Operator status.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keycloakURL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the Identity Provider server (Keycloak / RH SSO).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keycloakProvisioned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance, Keycloak or RH-SSO, has been provisioned with realm, client and user.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A human-readable message with details about why the Pod is in this state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keycloakURL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the Identity Provider server, Keycloak or RH-SSO,.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openShiftoAuthProvisioned</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance (Keycloak / RH SSO) has been configured to integrate with the OpenShift OAuth.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A human readable message indicating details about why the Pod is in this condition.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pluginRegistryURL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the Plugin registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openShiftoAuthProvisioned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance, Keycloak or RH-SSO, has been configured to integrate with the OpenShift OAuth.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reason</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A brief CamelCase message with details about why the Pod is in this state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryURL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the plugin registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reason</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A brief CamelCase message indicating details about why the Pod is in this state.</p></td>
 </tr>
 </tbody>
 </table>
