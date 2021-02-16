@@ -654,13 +654,12 @@
 <p>Authentication with the <a href="../../extensions/openshift-connector-overview/" class="page">OpenShift Connector overview</a> is a possible way for Che users to authenticate with an OpenShift cluster.</p>
 </div>
 <div class="paragraph">
-<p>The following section describes the OpenShift OAuth configuration options
-and its use with a Eclipse&#160;Che.</p>
+<p>The following section describes the OpenShift OAuth configuration options and its use with a Che.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-openshift-oauth_che"><a class="anchor" href="#configuring-openshift-oauth_che"></a>Configuring OpenShift OAuth</h2>
+<h2 id="configuring-openshift-oauth-with-initial-user_che"><a class="anchor" href="#configuring-openshift-oauth-with-initial-user_che"></a>Configuring OpenShift OAuth with initial user</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -681,7 +680,10 @@ and its use with a Eclipse&#160;Che.</p>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<p>If skip this step and there are identity providers configured on the OpenShift cluster, then Eclipse&#160;Che will create initial OpenShift user for HTPasswd identity provider and put user&#8217;s credentials in <code>openshift-oauth-user-credentials</code> secret in eclipse-che namespace. Follow these steps to obtain credentials to log in into OpenShift cluster and Eclipse&#160;Che:</p>
+<p>When a user skips the Configuring step of OpenShift identity providers, and the OpenShift cluster does not already contain configured identity providers, Che creates an initial OpenShift user for the <code>HTPasswd</code> identity provider. Credentials of this user are stored in the <code>openshift-oauth-user-credentials</code> secret, located in the eclipse-che namespace.</p>
+</div>
+<div class="paragraph">
+<p>Obtain the credentials for logging in to an OpenShift cluster and Che instance:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -689,7 +691,7 @@ and its use with a Eclipse&#160;Che.</p>
 <p>Obtain OpenShift user name:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get secret openshift-oauth-user-credentials  -n eclipse-che -o json | jq -r '.data.user' | base64 -d</pre>
+<pre>$ oc get secret openshift-oauth-user-credentials -n eclipse-che -o json | jq -r '.data.user' | base64 -d</pre>
 </div>
 </div>
 </li>
