@@ -773,20 +773,17 @@ See Keycloak documentation to learn how to <a href="https://www.keycloak.org/doc
 kind: Secret
 apiVersion: v1
 metadata:
-  name: github-oauth-credentials
+  name: github-oauth-config
   namespace: &lt;...&gt; <i class="conum" data-value="1"></i><b>(1)</b>
   labels:
     app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: keycloak-secret
+    app.kubernetes.io/component: oauth-scm-configuration
   annotations:
-    che.eclipse.org/github-oauth-credentials: 'true'
-    che.eclipse.org/mount-as: env
-    che.eclipse.org/id_env-name: GITHUB_CLIENT_ID
-    che.eclipse.org/secret_env-name: GITHUB_SECRET
+    che.eclipse.org/oauth-scm-server: github
+type: Opaque
 data:
   id: &lt;...&gt; <i class="conum" data-value="2"></i><b>(2)</b>
   secret: &lt;...&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-type: Opaque
 EOF</pre>
 </div>
 </div>
@@ -918,26 +915,25 @@ openssl rand -base64 24 &gt; <em>&lt;bitbucket_shared_secret&gt;</em></pre>
 </div>
 </li>
 <li>
-<p>Create a Kubernetes Secret in Che namespace containing the RSA key pair, the consumer key and the shared secret.</p>
+<p>Create a Kubernetes Secret in Che namespace containing the consumer and private keys.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl apply -f - &lt;&lt;EOF
 kind: Secret
 apiVersion: v1
 metadata:
-  name: github-oauth-credentials
+  name: bitbucket-oauth-config
   namespace: &lt;...&gt; <i class="conum" data-value="1"></i><b>(1)</b>
   labels:
     app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: che-secret
+    app.kubernetes.io/component: oauth-scm-configuration
   annotations:
-    che.eclipse.org/mount-path: /home/user/eclipse-che/conf/oauth1/bitbucket
-    che.eclipse.org/mount-as: file
-data:
-  private.key: &lt;...&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-  consumer.key: &lt;...&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-  shared_secret: &lt;...&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+    che.eclipse.org/oauth-scm-server: bitbucket
+    che.eclipse.org/scm-server-endpoint: &lt;...&gt; <i class="conum" data-value="2"></i><b>(2)</b>
 type: Opaque
+data:
+  private.key: &lt;...&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+  consumer.key: &lt;...&gt; <i class="conum" data-value="4"></i><b>(4)</b>
 EOF</pre>
 </div>
 </div>
@@ -949,32 +945,17 @@ EOF</pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>base64 encoded content of the <em>&lt;privatepkcs8.pem&gt;</em> file without first and last lines.</td>
+<td>Bitbucket Server URL</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>base64 encoded content of the <code><em>&lt;bitbucket_server_consumer_key&gt;</em></code> file.</td>
+<td>base64 encoded content of the <em>&lt;privatepkcs8.pem&gt;</em> file without first and last lines.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>base64 encoded content of the <code><em>&lt;bitbucket_shared_secret&gt;</em></code> file.</td>
+<td>base64 encoded content of the <code><em>&lt;bitbucket_server_consumer_key&gt;</em></code> file.</td>
 </tr>
 </table>
-</div>
-</li>
-<li>
-<p>Configure the Che server environment variables:</p>
-<div class="listingblock">
-<div class="content">
-<pre>spec:
- server:
-   customCheProperties:
-     CHE_OAUTH1_BITBUCKET_CONSUMERKEYPATH: '/home/user/eclipse-che/conf/oauth1/bitbucket/consumer.key'
-     CHE_OAUTH1_BITBUCKET_SHAREDSECRETPATH: '/home/user/eclipse-che/conf/oauth1/bitbucket/shared_secret'
-     CHE_OAUTH1_BITBUCKET_PRIVATEKEYPATH: '/home/user/eclipse-che/conf/oauth1/bitbucket/private.key'
-     CHE_OAUTH1_BITBUCKET_ENDPOINT: '<em>&lt;Bitbucket Server URL&gt;</em>'
-     CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS: '<em>&lt;Bitbucket Server URL&gt;</em>'</pre>
-</div>
 </div>
 </li>
 <li>
