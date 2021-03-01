@@ -33,12 +33,11 @@
 <hr class="gray">
 <div class="container-fluid content start-working">
 <h3>Try Eclipse Che using the online service hosted by Red Hat</h3>
-<blockquote style="border-style:solid;border-color:red"><a href="https://che.openshift.io/">Eclipse Che hosted by Red Hat</a> is going to be shut down on <strong>March 1, 2021 at 00:01 GMT</strong>. A new service based on <a href='https://developers.redhat.com/developer-sandbox#assembly-field-sections-59571'>Red Hat CodeReady Workspaces</a> is available now. <a href='https://developers.redhat.com/developer-sandbox'>Developer Sandbox for Red Hat OpenShift</a> provides more details about the new service.</blockquote>
 
   <div class="row">
     <div class="col-sm-4 col-md-3">
         <div class="border media">
-         <a href="https://che.openshift.io/" class="media-body">
+         <a href="https://workspaces.openshift.com/" class="media-body">
            <p>Try</p>
            <h4>Custom</h4>
          </a>
@@ -47,7 +46,7 @@
     </div>
     <div class="col-sm-4 col-md-3">
         <div class="border media">
-         <a href="https://che.openshift.io/f?url=https://raw.githubusercontent.com/redhat-developer/devfile/master/getting-started/quarkus/devfile.yaml" class="media-body">
+         <a href="https://workspaces.openshift.com/f?url=https://raw.githubusercontent.com/redhat-developer/codeready-workspaces/crw-2.6-rhel-8/dependencies/che-devfile-registry/devfiles/03_java11-quarkus/devfile.yaml&override.attributes.persistVolumes=false" class="media-body">
            <p>Launch sample stack</p>
            <h4>Quarkus</h4>
          </a>
@@ -56,11 +55,11 @@
     </div>
     <div class="col-sm-4 col-md-3">
         <div class="border media">
-         <a href="https://che.openshift.io/f?url=https://raw.githubusercontent.com/redhat-developer/devfile/master/getting-started/angular/devfile.yaml" class="media-body">
+         <a href="https://workspaces.openshift.com/f?url=https://raw.githubusercontent.com/redhat-developer/codeready-workspaces/crw-2.6-rhel-8/dependencies/che-devfile-registry/devfiles/05_python/devfile.yaml&override.attributes.persistVolumes=false" class="media-body">
            <p>Launch sample stack</p>
-           <h4>Angular 2</h4>
+           <h4>Python</h4>
          </a>
-         <p class="media-content">Official Angular 2 quick start tutorial.</p>
+         <p class="media-content">Official Python quick start tutorial.</p>
         </div>
     </div>
     <div class="col-sm-12 col-md-3">
@@ -174,7 +173,7 @@
     <div class="row">
       <div class="col-md-6">
         <h3>SaaS</h3>
-        <p>Self-service Che workspaces hosted at che.openshift.io</p>
+        <p>Self-service Che workspaces hosted at workspaces.openshift.com</p>
         <a href="<?php echo $rootPath; ?>/getting-started/cloud/" class="btn-yellow">Create Free Account</a></li>
       </div>
       <div class="col-md-6">

@@ -18,7 +18,7 @@
 <div class="jumbotron">
   <div class="container-fluid">
     <h1>Eclipse Che hosted by Red Hat</h1>
-    <h3>Self-service Eclipse Che developer workspaces hosted at che.openshift.io</h3>
+    <h3>Self-service Eclipse Che developer workspaces hosted at workspaces.openshift.com</h3>
   </div> <!-- /.container-fluid -->
 </div> <!-- /.jumbotron -->
 
@@ -63,7 +63,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Go!</button>
       </form>
-      <p style="font-size:0.7em">This will create a new workspace in Codenvy, an Eclipse Che provider. You will be asked to accept their TOS. The workspace will be powered with an Ubuntu / JDK8 stack. You can customize the runtime and project configuration by adding <samp>.codenvy.dockerfile</samp> or <samp>codenvy.json</samp> files inside your repository.
+      <p style="font-size:0.7em">This will create a new workspace in Codenvy, an Eclipse Che provider. You will be asked to accept their TOS. You can customize the runtime and project configuration by adding <samp>.codenvy.dockerfile</samp> or <samp>codenvy.json</samp> files inside your repository.
         <a href="https://codenvy.com/docs/integration-guide/workspace-automation/index.html">See docs</a>.</p>
     </div>
   </div>
