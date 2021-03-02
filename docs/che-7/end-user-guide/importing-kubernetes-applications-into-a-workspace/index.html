@@ -678,13 +678,10 @@ kubectl  apply -f ${node}</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To deploy a new instance of this application in a Che workspace, use one of the following three scenarios:</p>
+<p>To deploy a new instance of this application in a Che workspace, use one of the following scenarios:</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>Starting from scratch: <a href="#including-kubernetes-applications-in-a-workspace-devfile-definition_che">Writing a new devfile</a></p>
-</li>
 <li>
 <p>Modifying an existing workspace: <a href="#adding-a-kubernetes-application-to-an-existing-workspace-using-the-dashboard_che">Using the Dashboard user interface</a></p>
 </li>
@@ -693,121 +690,8 @@ kubectl  apply -f ${node}</pre>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="including-kubernetes-applications-in-a-workspace-devfile-definition_che"><a class="anchor" href="#including-kubernetes-applications-in-a-workspace-devfile-definition_che"></a>Including a Kubernetes or OpenShift application in a workspace devfile definition</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>This procedure describes how to define a Che workspace devfile to include a Kubernetes application.</p>
-</div>
-<div class="paragraph">
-<p>The devfile format is used to define a Che workspace, and its format is described in the <a href="../configuring-a-workspace-using-a-devfile/" class="page">Configuring a workspace using a devfile</a> section.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You are logged in to the cluster with a running instance of Eclipse&#160;Che. To install an instance of Eclipse&#160;Che, see <a href="../../installation-guide/installing-che/" class="page">Installing Che</a>.</p>
-</li>
-<li>
-<p><code>chectl</code> management tool is available. See <a href="../../installation-guide/using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Create the simplest devfile:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-metadata:
- name: minimal-workspace <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Only the name <code>minimal-workspace</code> is specified. After the Che server processes this devfile, the devfile is converted to a minimal Che workspace that only has the default editor (Che-Theia) and the default editor plug-ins, including, for example, the terminal.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>To add Kubernetes applications to a workspace, modify the devfile and add the <code>Kubernetes</code> component type.</p>
-<div class="paragraph">
-<p>For example, to embed the NodeJS-Mongo application in the <code>minimal-workspace</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-metadata:
- name: minimal-workspace
-components:
- - type: kubernetes
-   reference: https://raw.githubusercontent.com/.../mongo-db.yaml
- - alias: nodejs-app
-   type: kubernetes
-   reference: https://raw.githubusercontent.com/.../nodejs-app.yaml
-   entrypoints:
-     - command: ['sleep']  <i class="conum" data-value="1"></i><b>(1)</b>
-       args: ['infinity']</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <code>sleep infinity</code> command is added as the entrypoint of the Node.js application. The command prevents the application from starting at the workspace start phase. This configuration allows the user to start the application when needed for testing or debugging purposes.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Add the commands in the devfile to make it easier for a developer to test the application:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-metadata:
- name: minimal-workspace
-components:
- - type: kubernetes
-   reference: https://raw.githubusercontent.com/.../mongo-db.yaml
- - alias: nodejs-app
-   type: kubernetes
-   reference: https://raw.githubusercontent.com/.../nodejs-app.yaml
-   entrypoints:
-     - command: ['sleep']
-       args: ['infinity']
-commands:
- - name: run  <i class="conum" data-value="1"></i><b>(1)</b>
-   actions:
-     - type: exec
-       component: nodejs-app
-       command: cd ${CHE_PROJECTS_ROOT}/nodejs-mongo-app/EmployeeDB/ &amp;&amp; npm install &amp;&amp; sed -i -- ''s/localhost/mongo/g'' app.js &amp;&amp; node app.js</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <code>run</code> command added to the devfile is available as a task in Che-Theia from the command palette. When executed, the command starts the Node.js application.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Use the devfile to create and start a workspace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl workspace:start --devfile <em>&lt;devfile-path&gt;</em></pre>
-</div>
-</div>
-</li>
-</ol>
+<p>Unresolved include directive in modules/end-user-guide/partials/assembly_importing-kubernetes-applications-into-a-workspace.adoc - include::example$proc_che-including-kubernetes-applications-in-a-workspace-devfile-definition.adoc[]</p>
 </div>
 </div>
 </div>
