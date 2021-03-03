@@ -649,12 +649,23 @@
 <article class="doc">
 <h1 class="page">Building custom registry images</h1>
 <div class="sect1">
-<h2 id="building-custom-devfile-registry-image_che"><a class="anchor" href="#building-custom-devfile-registry-image_che"></a>Building a custom devfile registry image</h2>
+<h2 id="building-a-custom-devfile-registry-image_che"><a class="anchor" href="#building-a-custom-devfile-registry-image_che"></a>Building a custom devfile registry image</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes how to build a custom devfile registry image.
-The procedure explains how to add a new devfile.
+The procedure explains how to add a devfile.
 The image contains all sample projects referenced in devfiles.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running installation of <a href="http://podman.io">podman</a> or <a href="http://docker.io">docker</a>.</p>
+</li>
+<li>
+<p>Valid content for the devfile to add. See: <a href="../../end-user-guide/configuring-a-workspace-using-a-devfile/" class="page">Configuring a workspace using a devfile</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -663,21 +674,25 @@ The image contains all sample projects referenced in devfiles.</p>
 <p>Clone the devfile registry repository and check out the version to deploy:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone git@github.com:eclipse/che-devfile-registry.git
-$ cd che-devfile-registry
+<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
+$ cd che-plugin-registry
 $ git checkout 7.26.x</pre>
 </div>
 </div>
 </li>
 <li>
 <p>In the <code>./che-devfile-registry/devfiles/</code> directory, create a subdirectory <code><em>&lt;devfile-name&gt;</em>/</code> and add the <code>devfile.yaml</code> and <code>meta.yaml</code> files.</p>
+<div class="exampleblock">
+<div class="title">Example 1. File organization for a devfile</div>
+<div class="content">
 <div class="listingblock">
-<div class="title">File organization for a devfile</div>
 <div class="content">
 <pre>./che-devfile-registry/devfiles/
 └── <em>&lt;devfile-name&gt;</em>
     ├── devfile.yaml
     └── meta.yaml</pre>
+</div>
+</div>
 </div>
 </div>
 </li>
@@ -722,7 +737,7 @@ $ git checkout 7.26.x</pre>
 </tbody>
 </table>
 <div class="exampleblock">
-<div class="title">Example 1. Example devfile <code>meta.yaml</code></div>
+<div class="title">Example 2. Example devfile <code>meta.yaml</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -738,35 +753,12 @@ globalMemoryLimit: 1686Mi</code></pre>
 </li>
 <li>
 <p>Build a custom devfile registry image:</p>
-<div class="ulist">
-<div class="title">Prerequisites:</div>
-<ul>
-<li>
-<p>NodeJS 12.x</p>
-</li>
-<li>
-<p>A running version of yarn. See <a href="https://yarnpkg.com/getting-started/install">Installing Yarn</a>.</p>
-</li>
-<li>
-<p><code>./node_modules/.bin</code> is in the <code>PATH</code> environment variable.</p>
-</li>
-<li>
-<p>A running installation of <a href="http://podman.io">podman</a> or <a href="http://docker.io">docker</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+<pre>$ ./build.sh --organization <em>&lt;my-org&gt;</em> \
            --registry <em>&lt;my-registry&gt;</em> \
-           --tag <em>&lt;my-tag&gt;</em> \</pre>
+           --tag <em>&lt;my-tag&gt;</em></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>+</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -782,33 +774,69 @@ globalMemoryLimit: 1686Mi</code></pre>
 </tr>
 </table>
 </div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../../end-user-guide/configuring-a-workspace-using-a-devfile/" class="page">Configuring a workspace using a devfile</a>.</p>
+</li>
+<li>
+<p><a href="../running-custom-registries/" class="page">Running custom registries</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="building-custom-plugin-registry-image_che"><a class="anchor" href="#building-custom-plugin-registry-image_che"></a>Building a custom plug-in registry image</h2>
+<h2 id="building-a-custom-plug-ins-registry-image_che"><a class="anchor" href="#building-a-custom-plug-ins-registry-image_che"></a>Building a custom plug-ins registry image</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to build a custom plug-in registry image.
-The procedure explains how to add a new plug-in.
+<p>This section describes how to build a custom plug-ins registry image.
+The procedure explains how to add a plug-in.
 The image contains plug-ins or extensions metadata.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>NodeJS 12.x</p>
+</li>
+<li>
+<p>A running version of yarn. See: <a href="https://yarnpkg.com/getting-started/install">Installing Yarn</a>.</p>
+</li>
+<li>
+<p><code>./node_modules/.bin</code> is in the <code>PATH</code> environment variable.</p>
+</li>
+<li>
+<p>A running installation of <a href="http://podman.io">podman</a> or <a href="http://docker.io">docker</a>.</p>
+</li>
+<li>
+<p>Valid content for the <code>meta.yaml</code> file describing the plug-in to add. See: <a href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/" class="page">Publishing metadata for a VS Code extension</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Clone the plug-in registry repository and check out the version to deploy:</p>
+<p>Clone the plug-ins registry repository and check out the version to deploy:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
-$ cd che-plugin-registry
+<pre>$ git clone git@github.com:eclipse/che-devfile-registry.git
+$ cd che-devfile-registry
 $ git checkout 7.26.x</pre>
 </div>
 </div>
 </li>
 <li>
 <p>In the <code>./che-plugin-registry/v3/plugins/</code> directory, create new directories <code><em>&lt;publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em>/</code> and a <code>meta.yaml</code> file in the last directory.</p>
+<div class="exampleblock">
+<div class="title">Example 3. File organization for a plugin</div>
+<div class="content">
 <div class="listingblock">
-<div class="title">File organization for a plugin</div>
 <div class="content">
 <pre>./che-plugin-registry/v3/plugins/
 ├── <em>&lt;publisher&gt;</em>
@@ -818,6 +846,8 @@ $ git checkout 7.26.x</pre>
 │       └── latest.txt</pre>
 </div>
 </div>
+</div>
+</div>
 </li>
 <li>
 <p>Add valid content to the <code>meta.yaml</code> file. See: <a href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/" class="page">Publishing metadata for a VS Code extension</a>.</p>
@@ -825,7 +855,7 @@ $ git checkout 7.26.x</pre>
 <li>
 <p>Create a file named <code>latest.txt</code> with content the name of the latest <code><em>&lt;plugin-version&gt;</em></code> directory.</p>
 <div class="exampleblock">
-<div class="title">Example 2. Example plug-in files tree</div>
+<div class="title">Example 4. Example plug-in files tree</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -850,36 +880,13 @@ $ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
 </div>
 </li>
 <li>
-<p>Build a custom plug-in registry image:</p>
-<div class="ulist">
-<div class="title">Prerequisites:</div>
-<ul>
-<li>
-<p>NodeJS 12.x</p>
-</li>
-<li>
-<p>A running version of yarn. See <a href="https://yarnpkg.com/getting-started/install">Installing Yarn</a>.</p>
-</li>
-<li>
-<p><code>./node_modules/.bin</code> is in the <code>PATH</code> environment variable.</p>
-</li>
-<li>
-<p>A running installation of <a href="http://podman.io">podman</a> or <a href="http://docker.io">docker</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
+<p>Build a custom plug-ins registry image:</p>
 <div class="listingblock">
 <div class="content">
-<pre>./build.sh --organization <em>&lt;my-org&gt;</em> \
+<pre>$ ./build.sh --organization <em>&lt;my-org&gt;</em> \
            --registry <em>&lt;my-registry&gt;</em> \
-           --tag <em>&lt;my-tag&gt;</em> \</pre>
+           --tag <em>&lt;my-tag&gt;</em></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>+</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -889,14 +896,23 @@ $ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
 </td>
 <td class="content">
 <div class="paragraph">
-<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.</p>
-</div>
-<div class="paragraph">
-<p>To include the plug-in binaries in the registry image, add the <code>--offline</code> parameter.</p>
+<p>To display full options for the <code>build.sh</code> script, use the <code>--help</code> parameter.
+To include the plug-in binaries in the registry image, add the <code>--offline</code> parameter.</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../running-custom-registries/" class="page">Running custom registries</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
