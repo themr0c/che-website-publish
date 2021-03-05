@@ -780,6 +780,43 @@ Many APIs in the namespace are experimental and can change in the future.
 </div>
 </div>
 <div class="sect1">
+<h2 id="using-the-che-in-plug-ins_che"><a class="anchor" href="#using-the-che-in-plug-ins_che"></a>Using the <code>che</code> namespace in plug-ins</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VS Code extensions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Adding the <code>@eclipse-che/plugin</code> dependency for backend plug-ins to a <code>package.json</code> file is a possibility.</p>
+</li>
+<li>
+<p>For quick calls, it is simpler to use VS Code extension mechanism because it does not require relying on a third-party party dependency or trying and catching the error.</p>
+</li>
+<li>
+<p>Import and use the namespace. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">const eclipseCheExtPlugin = vscode.extensions.getExtension('@eclipse-che.ext-plugin');
+if (eclipseCheExtPlugin) {
+  // grab user
+  const user = await eclipseCheExtPlugin.exports.user.getCurrentUser();
+ vscode.window.showInformationMessage(`Eclipse Che user information: id ${user.id} with name ${user.name}`);
+} else {
+  vscode.window.showWarningMessage('Not running inside Eclipse Che, not displaying any user information');
+}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="using-the-che-namespace-in-plug-ins_che"><a class="anchor" href="#using-the-che-namespace-in-plug-ins_che"></a>Using the <code>che</code> namespace in plug-ins</h2>
 <div class="sectionbody">
 <div class="dlist">
