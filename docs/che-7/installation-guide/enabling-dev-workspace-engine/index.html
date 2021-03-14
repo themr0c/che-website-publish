@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring Eclipse&#160;Che server hostname :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-che-hostname/">
-    <meta name="keywords" content="installation-guide, configuring-che-hostname">
+    <title>Enabling Dev Workspace engine :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/enabling-dev-workspace-engine/">
+    <meta name="keywords" content="installation-guide, Dev Workspace">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -331,8 +331,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-workspaces-nodeselector/">Configuring workspaces nodeSelector</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Configuring Che hostname</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-che-hostname/">Configuring Che hostname</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-labels-for-ingresses/">Configuring labels for Kubernetes Ingress</a>
@@ -358,8 +358,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container/">Mounting a secret as a file or an environment variable into a Eclipse&#160;Che container</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../enabling-dev-workspace-engine/">Enabling Dev Workspace engine</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Enabling Dev Workspace engine</a>
   </li>
 </ul>
   </li>
@@ -643,144 +643,97 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Configuring Che hostname</a></li>
+    <li><a href="./">Enabling Dev Workspace engine</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-che-hostname.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/enabling-dev-workspace-engine.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring Eclipse&#160;Che server hostname</h1>
+<h1 class="page">Enabling Dev Workspace engine</h1>
 <div class="paragraph">
-<p>This procedure describes how to configure Eclipse&#160;Che to use custom hostname.</p>
+<p>This procedure describes how to enable the Dev Workspace engine to support the Devfile 2.0.0 file format and mentions how to do so on existing instances or those about to be installed.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
-</li>
-<li>
-<p>The certificate and the private key files are generated.</p>
+<p>The <code>kubectl</code> and <code>chectl</code> tools are available.</p>
 </li>
 </ul>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-To generate the pair of private key and certificate the same CA must be used as for other Eclipse&#160;Che hosts.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Ask a DNS provider to point the custom hostname to the cluster ingress.
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>Pre-create a namespace for Che:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl create namespace eclipse-che</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create a TLS secret:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl create secret TLS ${secret} \  <i class="conum" data-value="1"></i><b>(1)</b>
---key ${key_file} \                       <i class="conum" data-value="2"></i><b>(2)</b>
---cert ${cert_file} \                     <i class="conum" data-value="3"></i><b>(3)</b>
--n eclipse-che</pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The TLS secret name</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>A file with the private key</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>A file with the certificate</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Set the following values in the Custom Resource:</p>
-<div class="listingblock">
-<div class="content">
-<pre>spec:
-  server:
-    cheHost: &lt;hostname&gt;         <i class="conum" data-value="1"></i><b>(1)</b>
-    cheHostTLSSecret: &lt;secret&gt;  <i class="conum" data-value="2"></i><b>(2)</b></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Custom Eclipse&#160;Che server hostname</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The TLS secret name</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><!-- vale Vale.Spelling = NO --></p>
-</div>
-<div class="paragraph">
-<p><!-- vale Vale.Terms = NO --></p>
-</div>
+<p>For a new OperatorHub installation:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>If Che has been already deployed and Che reconfiguring to use a new Che hostname is required, log in using Keycloak and select the <code>che-public</code> client in the <code>Che</code> realm and update <code>Validate Redirect URIs</code> and <code>Web Origins</code> fields with the value of the Che hostname.</p>
-<div class="imageblock">
+<p>Enter the Eclipse&#160;Che Cluster using OpenShift&#160;Container&#160;Platform and create CheCluster Custom Resource (CR). See, <a href="../installing-che-on-openshift-4-using-operatorhub/#creating-an-instance-of-the-che-operator_che" class="page">Creating an instance of the Eclipse&#160;Che Operator</a></p>
+</li>
+<li>
+<p>Set the following values in eclipse-che Custom Resource (CR):</p>
+<div class="listingblock">
 <div class="content">
-<img src="../_images/keycloak/keycloak_che_public_client.png" alt="keycloak che public client">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  devWorkspace:
+    enable: true</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>For logging in to Keycloak, follow the <a href="../setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page/#logging-in-to-identity-provider_che" class="page">Logging in to Keycloak</a> procedure.</p>
 </div>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><!-- vale Vale.Spelling = YES --></p>
+</li>
+<li>
+<p>For a  new <code>chectl</code> installation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the the <code>chectl</code> installation using:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:deploy --che-operator-cr-patch-yaml=patch.yaml ...</pre>
+</div>
 </div>
 <div class="paragraph">
-<p><!-- vale Vale.Terms = YES --></p>
+<p><code>patch.yaml</code> must contain the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  devWorkspace:
+    enable: true</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>For already existing Che installation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update <code>eclipse-che</code> CR using the <code>kubectl</code> tool:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/devWorkspace/enable", "value": true}]'</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>For information about installation methods mentioned in this chapter, see <a href="../installing-che/" class="page">Installing Che</a>.</p>
 </div>
 </article>
   </div>
