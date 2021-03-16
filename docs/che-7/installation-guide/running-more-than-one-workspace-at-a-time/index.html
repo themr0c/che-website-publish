@@ -689,7 +689,24 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Change the default limit of <code>1</code> to <code>-1</code> to allow an unlimited number of concurrent workspaces per user:</p>
+<p>Set the <code>per-workspace</code> or <code>unique</code> PVC strategy if the underlying storage backend does not support or not configured to use the <code>ReadWriteMany</code> access mode. See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default <code>common</code> PVC strategy, which uses a single PVC per user, supports running multiple workspaces simultaneously only if the persistent volumes on the cluster are configured to use the <code>ReadWriteMany</code> access mode.
+That way, any of the user&#8217;s concurrent workspaces can read from and write to the common PVC.
+In some cases, configuring <code>ReadWriteMany</code> is not possible due to the storage limitations, for example, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html">EBS</a> only supports <code>ReadWriteOnce</code> access mode.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Change the default limit of <code>1</code> to <code>-1</code> to allow an unlimited number of concurrent workspaces, or to the precise value, for example, <code>10</code> to allow running <code>10</code> concurrent workspaces per user simultaneously:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -710,23 +727,6 @@
 </div>
 </li>
 </ul>
-</div>
-</li>
-<li>
-<p>Set the <code>per-workspace</code> or <code>unique</code> PVC strategy. See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>When using the <em>common PVC</em> strategy, configure the persistent volumes to use the <code>ReadWriteMany</code> access mode. That way, any of the user&#8217;s concurrent workspaces can read from and write to the common PVC.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </li>
 </ol>
