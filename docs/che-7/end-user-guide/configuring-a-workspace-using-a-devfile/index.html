@@ -192,6 +192,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../adding-tools-to-che-after-creating-a-workspace/">Adding tools to Che after creating a workspace</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../using-private-container-registries/">Using private container registries</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -998,7 +1001,75 @@ projects:
 <p>This section contains devfile reference and instructions on how to use the various elements that devfiles consist of.</p>
 </div>
 <div class="sect2">
-<h3 id="_adding_projects_to_a_devfile"><a class="anchor" href="#_adding_projects_to_a_devfile"></a>Adding projects to a devfile</h3>
+<h3 id="adding-schema-version-to-a-devfile_che"><a class="anchor" href="#adding-schema-version-to-a-devfile_che"></a>Adding schema version to a devfile</h3>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Define the <code>schemaVersion</code> attribute in the devfile:</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Adding schema version to a devfile</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 1.0.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-a-name-to-a-devfile_che"><a class="anchor" href="#adding-a-name-to-a-devfile_che"></a>Adding a name to a devfile</h3>
+<div class="paragraph">
+<p>Adding a name to a devfile is mandatory. Both <code>name</code> and <code>generateName</code> are optional attributes, but at least one of them must be defined.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>To specify a static name for the workspace, define the <code>name</code> attribute.</p>
+<div class="listingblock">
+<div class="title">Adding a static name to a devfile</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 1.0.0
+metadata:
+  name: devfile-sample</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To specify a prefix for automatically generated workspace names, define the <code>generateName</code> attribute and don&#8217;t define the <code>name</code> attribute. The workspace name will be in the <code>&lt;generateName&gt;YYYYY</code> format, for example, <code>devfile-sample-2y7kp</code>, where <code>Y</code> is a random <code>[a-z0-9]</code> character.</p>
+<div class="listingblock">
+<div class="title">Adding a generated name to a devfile</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 1.0.0
+metadata:
+  generateName: devfile-sample-</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For workspaces created using a factory, defining <code>name</code> or <code>generateName</code> has the same effect. The defined value is used as the name prefix: <code>&lt;name&gt;YYYYY</code> or <code>&lt;generateName&gt;YYYYY</code>. When both <code>generateName</code> and <code>name</code> are defined, <code>generateName</code> takes precedence.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-projects-to-a-devfile_che"><a class="anchor" href="#adding-projects-to-a-devfile_che"></a>Adding projects to a devfile</h3>
 <div class="paragraph">
 <p>A devfile is designed to contain one or more projects. A workspace is created to develop those projects. Projects are added in the <code>projects</code> section of devfiles.</p>
 </div>
@@ -1076,7 +1147,7 @@ projects:
 </table>
 </div>
 <div class="exampleblock">
-<div class="title">Example 1. <code>sparseCheckoutDir</code> parameter settings</div>
+<div class="title">Example 2. <code>sparseCheckoutDir</code> parameter settings</div>
 <div class="content">
 <div class="ulist">
 <ul>
@@ -1199,7 +1270,7 @@ projects:
 <div class="sect3">
 <h4 id="_specifying_a_component_by_linking_to_its_descriptor"><a class="anchor" href="#_specifying_a_component_by_linking_to_its_descriptor"></a>Specifying a component by linking to its descriptor</h4>
 <div class="paragraph">
-<p>An alternative way of specifying <code>cheEditor</code> or <code>chePlugin</code>, rather than a  use of the editor or plug-in <code>id</code> (and optionally an alternative registry), is to provide a direct link to the component descriptor (typically named <code>meta.yaml</code>) by using the <code>reference</code> field:</p>
+<p>Rather than using the editor or plug-in <code>id</code> to specify <code>cheEditor</code> or <code>chePlugin</code>, provide a direct link to the component descriptor, typically named as <code>meta.yaml</code>, using the <code>reference</code> field:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1254,7 +1325,7 @@ It is impossible to mix the <code>id</code> and <code>reference</code> fields in
 </div>
 </div>
 <div class="sect3">
-<h4 id="_component_type_kubernetes"><a class="anchor" href="#_component_type_kubernetes"></a>Component type: kubernetes</h4>
+<h4 id="_component_type_kubernetes"><a class="anchor" href="#_component_type_kubernetes"></a>Component type: <code>kubernetes</code></h4>
 <div class="paragraph">
 <p>A complex component type that allows to apply configuration from a list of Kubernetes components.</p>
 </div>
@@ -1742,7 +1813,7 @@ the Kubernetes namespace or OpenShift project to which the workspace is deployed
 </ul>
 </div>
 <div class="paragraph">
-<p>A devfiles may only need the <code>CHE_PROJECTS_ROOT</code> environment variable to locate the cloned projects in the component&#8217;s container. More advanced devfiles might use the <code>CHE_WORKSPACE_LOGS_ROOT__DIR</code> environment variable to read the logs (for example as part of a devfile command). The environment variables used to securely access the Che server are, for the most part, out of scope for devfiles and are present only for advanced use cases that are handled by the Che plug-ins.</p>
+<p>A devfiles may only need the <code>CHE_PROJECTS_ROOT</code> environment variable to locate the cloned projects in the component&#8217;s container. More advanced devfiles might use the <code>CHE_WORKSPACE_LOGS_ROOT__DIR</code> environment variable to read the logs (for example as part of a devfile command). The environment variables used to securely access the Che server are out of scope for devfiles and are present only for advanced use cases, which are handled by the Che plug-ins.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1854,7 +1925,7 @@ This setting potentially allows a <a href="https://en.wikipedia.org/wiki/Cross-s
 </ul>
 </div>
 <div class="paragraph">
-<p>When starting a new server within a component, Che detects this automatically, and the UI offers to automatically expose this port as a <code>public</code> port. This is useful for debugging a web application, for example. It is impossible to do this for servers that start automatically with the container (for example, a database server). For such components, specify the endpoints explicitly.</p>
+<p>When starting a new server within a component, Che automatically detects this, and the UI offers to expose this port as a <code>public</code> port automatically. This behavior is useful for debugging a web application. It is impossible to do this for servers, such as a database server, which automatically starts at the container start. For such components, specify the endpoints explicitly.</p>
 </div>
 <div class="paragraph">
 <p>Example specifying endpoints for <code>kubernetes</code>/<code>openshift</code> and <code>chePlugin</code>/<code>cheEditor</code> types:</p>
@@ -2077,7 +2148,7 @@ components:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_adding_commands_to_a_devfile"><a class="anchor" href="#_adding_commands_to_a_devfile"></a>Adding commands to a devfile</h3>
+<h3 id="adding-commands-to-a-devfile_che"><a class="anchor" href="#adding-commands-to-a-devfile_che"></a>Adding commands to a devfile</h3>
 <div class="paragraph">
 <p>A devfile allows to specify commands to be available for execution in a workspace. Every command can contain a subset of actions, which are related to a specific component in whose container it will be executed.</p>
 </div>
@@ -2217,7 +2288,7 @@ commands:
 <p>This example shows association of a <code>tasks.json</code> file with a devfile. Notice the <code>vscode-task</code> type that instructs the Che-Theia editor to interpret this command as a tasks definition and <code>referenceContent</code> attribute that contains the contents of the file itself. You can also save this file separately from the devfile and use <code>reference</code> attribute to specify a relative or absolute URL to it.</p>
 </div>
 <div class="paragraph">
-<p>In addition to the <code>vscode-task</code> commands, the Che-Theia editor understands <code>vscode-launch</code> type using which you can specify the launch configurations.</p>
+<p>In addition to the <code>vscode-task</code> commands, the Che-Theia editor understands <code>vscode-launch</code> type using which you can specify the start configurations.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2292,7 +2363,7 @@ commands:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_devfile_attributes"><a class="anchor" href="#_devfile_attributes"></a>Devfile attributes</h3>
+<h3 id="_adding_attributes_to_a_devfile"><a class="anchor" href="#_adding_attributes_to_a_devfile"></a>Adding attributes to a devfile</h3>
 <div class="paragraph">
 <p>Devfile attributes can be used to configure various features.</p>
 </div>
