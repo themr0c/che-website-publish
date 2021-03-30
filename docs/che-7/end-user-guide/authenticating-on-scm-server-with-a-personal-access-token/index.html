@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Authenticating on Bitbucket servers :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/end-user-guide/authentication-against-bitbucket-server-with-the-personal-access-token/">
-    <meta name="keywords" content="end-user-guide, authentication-against-bitbucket-server-with-the-personal-access-token">
+    <title>Authenticating users on private repositories of SCM servers :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/end-user-guide/authenticating-on-scm-server-with-a-personal-access-token/">
+    <meta name="keywords" content="end-user-guide, authentication-on-scm-server-with-a-personal-access-token">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -142,7 +142,7 @@
     <a class="nav-link" href="../mounting-a-secret-as-a-file-or-an-environment-variable-into-a-workspace-container/">Mounting a secret as a file or an environment variable into a workspace container</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Authentication against Bitbucket Server with the personal access token</a>
+    <a class="nav-link" href="./">Authenticating on SCM Server with a personal access token</a>
   </li>
 </ul>
   </li>
@@ -651,31 +651,49 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>End-user Guide</li>
     <li><a href="../workspaces-overview/">Using developer workspaces</a></li>
-    <li><a href="./">Authentication against Bitbucket Server with the personal access token</a></li>
+    <li><a href="./">Authenticating on SCM Server with a personal access token</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/authentication-against-bitbucket-server-with-the-personal-access-token.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/authenticating-on-scm-server-with-a-personal-access-token.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Authenticating on Bitbucket servers</h1>
+<h1 class="page">Authenticating users on private repositories of SCM servers</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following section describes how to configure user authentications for SCM servers.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#configuring_gitlab_authentication_che">Authenticating on GitLab servers</a></p>
+</li>
+<li>
+<p><a href="#configuring_bitbucket_authentication_che">Authenticating on Bitbucket servers</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring_bitbucket_authentication_che"><a class="anchor" href="#configuring_bitbucket_authentication_che"></a>Authenticating on Bitbucket servers</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Eclipse&#160;Che users may use public or private repositories on Bitbucket SCM (Source Code Management) system as a source of their projects.</p>
 </div>
 <div class="paragraph">
-<p>The use of private repositories, requires some additional configuration described below.</p>
+<p>The use of private repositories requires additional configuration described below.</p>
 </div>
 <div class="paragraph">
-<p>Bitbucket authentication is based on using personal access tokens. Each Bitbucket user is able to request some
-amount of personal access tokens with different names, permissions, expiration times, and so on. Those tokens
-can be used to sign Bitbucket REST API calls and perform Git repository operations.</p>
+<p>Bitbucket authentication is based on using personal access tokens. Each Bitbucket user is able to request several personal access tokens with different names, permissions, expiration times, and so on. Those tokens can be used to sign Bitbucket REST API calls and perform Git repository operations.</p>
 </div>
 <div class="paragraph">
-<p>To allow Bitbucket authentication on Eclipse&#160;Che side, personal tokens must be stored in user&#8217;s namespace in a form of
-secret. The secret must look as follows:</p>
+<p>To allow Bitbucket authentication on Che side, personal tokens must be stored in the user&#8217;s namespace in the form of
+a secret. The secret must look as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -781,6 +799,155 @@ Encoding a string into the base64 format using the <code>base64</code> tool on L
 <p>With the token credentials obtained from a secret, another secret is automatically created, allowing authorization to Git operations. This secret is mounted into a workspace container as a Git credentials file, and any additional configurations are not required to work with private Git repositories.</p>
 </li>
 <li>
+<p>When a remote Git repository uses a self-signed certificate, add an additional server configuration. See <a href="../../installation-guide/deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring_gitlab_authentication_che"><a class="anchor" href="#configuring_gitlab_authentication_che"></a>Authenticating on GitLab servers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Configuring authentication on the GitLab system is similar to Bitbucket.</p>
+</div>
+<div class="paragraph">
+<p>GitLab authentication is based on using personal access tokens. Each GitLab user is able to request several personal access tokens with different names, permissions, expiration times, and so on. Those tokens can be used to sign GitLab REST API calls and perform Git repository operations.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-tokens">GitLab documentation</a> for more details about personal access tokens.</p>
+</div>
+<div class="paragraph">
+<p>To allow GitLab authentication on Che side, personal tokens must be stored in the user&#8217;s namespace in the form of
+a secret. The secret must look as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pass:[&lt;!-- vale Vale.Spelling = NO --&gt;]
+
+pass:[&lt;!-- vale Vale.Terms = NO --&gt;]
+
+pass:[&lt;!-- vale IBM.Usage = NO --&gt;]
+
+pass:[&lt;!-- vale IBM.PassiveVoice = NO --&gt;]
+
+pass:[&lt;!-- vale IBM.Slash = NO --&gt;]
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-personal-access-token-secret
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: scm-personal-access-token
+  annotations:
+    che.eclipse.org/expired-after: '-1'
+    che.eclipse.org/che-userid: '355d1ce5-990e-401e-9a8c-094bca10b5b3'
+    che.eclipse.org/scm-userid: '2'
+    che.eclipse.org/scm-username: 'user-foo'
+    che.eclipse.org/scm-url: 'https://gitlab.apps.cluster-example.com'
+data:
+  token: Yzh5cEt6cURxUWVCa3FKazhtaHg=
+
+pass:[&lt;!-- vale Vale.Spelling = YES --&gt;]
+
+pass:[&lt;!-- vale Vale.Terms = YES --&gt;]
+
+pass:[&lt;!-- vale IBM.Usage = YES --&gt;]
+
+pass:[&lt;!-- vale IBM.PassiveVoice = YES --&gt;]
+
+pass:[&lt;!-- vale IBM.Slash = YES --&gt;]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The main parts of the secret are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app.kubernetes.io/component</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates it is a SCM personal token secret.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/che-userid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse&#160;Che id of the user token belongs to</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/scm-userid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitLab user id to which token belongs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/scm-username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitlLab user name to which token belongs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/scm-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitLab server URL to which this token belong</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/expired-after</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Personal access token expiration time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data entry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base-64 encoded value of the personal access token</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Encoding a string into the base64 format using the <code>base64</code> tool on Linux machines leads to adding the newline character to the end of the source string and causing a value to be unusable as the authentication header value after decoding. Avoid this by using <code>base64 -w0</code>, which removes newly added lines, or strip newlines explicitly using`tr -d \\n`.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To obtain a user ID from a secret, take a look into user profile page on GitLab web UI or make a call to a REST API URL:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For GitLab:</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://<em>&lt;gitlab-hostname&gt;</em>/api/v4/users?username=<em>&lt;username&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>For Che</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://che-host:che-port/api/user</pre>
+</div>
+</div>
+</li>
+<li>
+<p>With the token credentials obtained from a secret, another secret is automatically created, allowing authorization to Git operations. This secret is mounted into a workspace container as a Git credentials file, and any additional configurations are not required to work with private Git repositories.</p>
+</li>
+<li>
 <p>When a remote Git repository uses a self-signed certificate, add an additional server configuration. See:
 <a href="../../installation-guide/deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
 </li>
@@ -788,6 +955,8 @@ Encoding a string into the base64 format using the <code>base64</code> tool on L
 </div>
 </li>
 </ol>
+</div>
+</div>
 </div>
 </article>
   </div>
