@@ -154,7 +154,10 @@
     <a class="nav-link" href="../../end-user-guide/what-is-a-che-theia-plug-in/">What is a Che-Theia plug-in</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-a-workspace/">Adding a VS Code extension</a>
+    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-a-workspace/">Adding a VS Code extension to a workspace</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-the-che-plugin-registry/">Adding a VS Code extension to the Che plugin registry</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/">Publishing a VS Code extension</a>
@@ -380,6 +383,9 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in restricted environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../installation-guide/upgrading-che-namespace-strategies-other-than-per-user/">Updating che that is used namespace strategies other than 'per user'</a>
   </li>
 </ul>
   </li>
@@ -689,7 +695,7 @@ The image contains all sample projects referenced in devfiles.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ git clone git@github.com:eclipse/che-devfile-registry.git
-$ cd che-plugin-registry
+$ cd che-devfile-registry
 $ git checkout 7.28.x</pre>
 </div>
 </div>
@@ -827,9 +833,6 @@ The image contains plug-ins or extensions metadata.</p>
 <li>
 <p>A running installation of <a href="http://podman.io">podman</a> or <a href="http://docker.io">docker</a>.</p>
 </li>
-<li>
-<p>Valid content for the <code>meta.yaml</code> file describing the plug-in to add. See: <a href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/" class="page">Publishing metadata for a VS Code extension</a>.</p>
-</li>
 </ul>
 </div>
 <div class="olist arabic">
@@ -840,58 +843,16 @@ The image contains plug-ins or extensions metadata.</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
-$ cd che-devfile-registry
+$ cd che-plugin-registry
 $ git checkout 7.28.x</pre>
 </div>
 </div>
 </li>
 <li>
-<p>In the <code>./che-plugin-registry/v3/plugins/</code> directory, create new directories <code><em>&lt;publisher&gt;</em>/<em>&lt;plugin-name&gt;</em>/<em>&lt;plugin-version&gt;</em>/</code> and a <code>meta.yaml</code> file in the last directory.</p>
-<div class="exampleblock">
-<div class="title">Example 3. File organization for a plugin</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>./che-plugin-registry/v3/plugins/
-├── <em>&lt;publisher&gt;</em>
-│   └── <em>&lt;plugin-name&gt;</em>
-│       ├── <em>&lt;plugin-version&gt;</em>
-│       │   └── meta.yaml
-│       └── latest.txt</pre>
-</div>
-</div>
-</div>
-</div>
+<p>In the <code>./che-plugin-registry/</code> directory, edit the <code>che-theia-plugins.yaml</code> file.</p>
 </li>
 <li>
-<p>Add valid content to the <code>meta.yaml</code> file. See: <a href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/" class="page">Publishing metadata for a VS Code extension</a>.</p>
-</li>
-<li>
-<p>Create a file named <code>latest.txt</code> with content the name of the latest <code><em>&lt;plugin-version&gt;</em></code> directory.</p>
-<div class="exampleblock">
-<div class="title">Example 4. Example plug-in files tree</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ tree che-plugin-registry/v3/plugins/redhat/java/
-che-plugin-registry/v3/plugins/redhat/java/
-├── 0.38.0
-│   └── meta.yaml
-├── 0.43.0
-│   └── meta.yaml
-├── 0.45.0
-│   └── meta.yaml
-├── 0.46.0
-│   └── meta.yaml
-├── 0.50.0
-│   └── meta.yaml
-└── latest.txt
-$ cat che-plugin-registry/v3/plugins/redhat/java/latest.txt
-0.50.0</pre>
-</div>
-</div>
-</div>
-</div>
+<p>Add valid content to the <code>che-theia-plugins.yaml</code> file, for detailed information see: <a href="../../end-user-guide/adding-a-vs-code-extension-to-the-che-plugin-registry/" class="page">Adding a VS Code extension to the Che plugin registry</a>.</p>
 </li>
 <li>
 <p>Build a custom plug-ins registry image:</p>
@@ -918,7 +879,17 @@ To include the plug-in binaries in the registry image, add the <code>--offline</
 </table>
 </div>
 </li>
-</ol>
+<li>
+<p>Observe the contents of <code>./che-plugin-registry/v3/plugins/</code> present in the container after building the registry. All <code>meta.yaml</code> files resulting from a successful plugin registry build will be located here.</p>
+<div class="listingblock">
+<div class="content">
+<pre>./che-plugin-registry/v3/plugins/
+├── <em>&lt;publisher&gt;</em>
+│   └── <em>&lt;plugin-name&gt;</em>
+│       ├── <em>&lt;plugin-version&gt;</em>
+│       │   └── meta.yaml
+│       └── latest.txt</pre>
+</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
@@ -927,6 +898,9 @@ To include the plug-in binaries in the registry image, add the <code>--offline</
 <p><a href="../running-custom-registries/" class="page">Running custom registries</a>.</p>
 </li>
 </ul>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>

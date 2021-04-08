@@ -154,7 +154,10 @@
     <a class="nav-link" href="../../end-user-guide/what-is-a-che-theia-plug-in/">What is a Che-Theia plug-in</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-a-workspace/">Adding a VS Code extension</a>
+    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-a-workspace/">Adding a VS Code extension to a workspace</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/adding-a-vs-code-extension-to-the-che-plugin-registry/">Adding a VS Code extension to the Che plugin registry</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/publishing-metadata-for-a-vs-code-extension/">Publishing a VS Code extension</a>
@@ -380,6 +383,9 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in restricted environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../installation-guide/upgrading-che-namespace-strategies-other-than-per-user/">Updating che that is used namespace strategies other than 'per user'</a>
   </li>
 </ul>
   </li>
@@ -849,13 +855,42 @@ $ docker push username/che-theia-codeready-workspaces:next</pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Download <a href="https://github.com/eclipse/che-plugin-registry/blob/master/che-editors.yaml">che-editors.yaml</a>.</p>
+<p>Clone the che-plugin-registry repository and check out the version to deploy. See,</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ git clone git@github.com:eclipse/che-plugin-registry.git
+$ cd che-plugin-registry
+$ git checkout 7.28.x</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Replace the <code>image</code> value in the <code>containers</code> section to point to the custom Che-Theia container image and publish the .</p>
+<p>Open the <code>che-editors.yaml</code> file.</p>
 </li>
 <li>
-<p>Create a workspace using the sample <a href="https://github.com/che-samples/che-theia-branding-example/blob/master/devfile.yaml">che-theia-branding-example devfile</a> to apply the changes:</p>
+<p>Edit the entry where <code>id</code> equals <code>eclipse/che-theia/next</code> and replace the <code>image</code> value in the <code>containers</code> section to point to the custom Che-Theia container image.</p>
+</li>
+<li>
+<p>Build the registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./build.sh --organization <em>&lt;my-org&gt;</em> \
+           --registry <em>&lt;my-registry&gt;</em> \
+           --tag <em>&lt;my-tag&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the <code>./che-plugin-registry/v3/plugins/eclipse/che-theia/next</code> directory.</p>
+</li>
+<li>
+<p>Publish the <code>meta.yaml</code> file in this directory to a publicly accessible location where it can be used as an HTTP resource.</p>
+</li>
+<li>
+<p>Create a workspace using the sample <a href="https://github.com/che-samples/che-theia-branding-example/blob/master/devfile.yaml">che-theia-branding-example devfile</a> to apply the changes.</p>
+<div class="paragraph">
+<p>Make sure the <code>reference</code> field points to your published <code>meta.yaml</code> file:</p>
+</div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="https://workspaces.openshift.com/f?url=https://raw.githubusercontent.com/che-samples/che-theia-branding-example/master/devfile.yaml"><img src="https://www.eclipse.org/che/contribute.svg" alt="contribute"></a>
