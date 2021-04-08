@@ -681,6 +681,19 @@
 <div class="paragraph">
 <p>This section describes how to start a Che workspace using a factory URL. The factory URL is a link pointing Che to a Git source repository containing a devfile.</p>
 </div>
+<div class="paragraph">
+<p>The factory URL exist in two forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the short form <code>/#$URL</code></p>
+</li>
+<li>
+<p>long <code>/f?url=$URL</code> form that supports additional configuration parameters used in previous versions of Che</p>
+</li>
+</ul>
+</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -836,14 +849,15 @@
 </li>
 </ol>
 </div>
+<div class="exampleblock">
+<div class="title">Example 3. Example of overriding the <code>generateName</code> property</div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Example of overriding the <code>generateName</code> property</div>
 <p>Consider the following initial devfile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: 1.0.0
+<pre>apiVersion: 1.0.0
 metadata:
   generateName: golang-
 projects:
@@ -863,22 +877,24 @@ projects:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: 1.0.0
+<pre>apiVersion: 1.0.0
 metadata:
   generateName: myprefix
 projects:
 ...</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. Example of overriding project source branch property</div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Example of overriding project source branch property</div>
 <p>Consider the following initial devfile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: 1.0.0
+<pre>apiVersion: 1.0.0
 metadata:
   generateName: java-mysql-
 projects:
@@ -914,14 +930,17 @@ projects:
 ...</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 5. Example of overriding or creating an attribute value</div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Example of overriding or creating an attribute value</div>
 <p>Consider the following initial devfile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: 1.0.0
+<pre>apiVersion: 1.0.0
 metadata:
   generateName: golang-
 attributes:
@@ -966,8 +985,7 @@ projects:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: 1.0.0
+<pre>apiVersion: 1.0.0
 metadata:
   generateName: golang-
 attributes:
@@ -975,6 +993,16 @@ attributes:
 projects:
 ...</pre>
 </div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Using Che Dashboard, move to the <strong>Devfile</strong> tab of the newly created workspace and check its content.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -1003,8 +1031,10 @@ projects:
 </li>
 </ol>
 </div>
+<div class="exampleblock">
+<div class="title">Example 6. Example of overriding the <code>deployment labels</code></div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Example of overriding the <code>deployment labels</code></div>
 <p>Consider the following labels to add:</p>
 </div>
 <div class="listingblock">
@@ -1026,8 +1056,7 @@ ike.session=test</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: apps/v1
+<pre>apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -1047,8 +1076,12 @@ spec:
 ...</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 7. Example of overriding the <code>deployment annotations</code></div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Example of overriding the <code>deployment annotations</code></div>
 <p>Consider the following annotations to add:</p>
 </div>
 <div class="listingblock">
@@ -1070,8 +1103,7 @@ ike.A=test</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-apiVersion: apps/v1
+<pre>apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -1089,6 +1121,77 @@ metadata:
   resourceVersion: "213191"
 ...</pre>
 </div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Verification steps</div>
+<p>To display the deployment labels and annotations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the name of the user&#8217;s namespace:</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = NO --></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Using Che Dashboard, move to the <strong>Workspaces</strong> tab and read the name of the Kubernetes Namespace field.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = YES --></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the cluster:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Retrieve the Che cluster URL from the <code>checluster</code> CR (Custom Resource), run:</p>
+<div class="listingblock white-space-pre">
+<div class="content">
+<pre class="nowrap">$ oc get checluster --output jsonpath='{.items[0].status.cheURL}'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log in:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc login -u <em>&lt;username&gt;</em> -p <em>&lt;password&gt;</em> <em>&lt;cluster_URL&gt;</em></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = NO --></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Display the deployment labels and annotations for all deployments in the namespace using the Kubernetes Namespace name from the first step:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc get deployment -n <em>&lt;NAMESPACE&gt;</em> -o=custom-columns="NAMESPACE:.metadata.namespace,NAME:.metadata.name,LABELS:.metadata.labels,ANNOTATIONS:.metadata.annotations"</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = YES --></p>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
