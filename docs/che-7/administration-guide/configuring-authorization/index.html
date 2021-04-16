@@ -881,15 +881,9 @@ CHE_OAUTH_GITHUB_CLIENTSECRET=<em>&lt;your-github-secret&gt;</em></pre>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><!-- vale IBM.Headings = NO --></p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="proc_configuring-bitbucket-server-oauth1_che"><a class="anchor" href="#proc_configuring-bitbucket-server-oauth1_che"></a>Configuring Bitbucket Server OAuth 1</h3>
-<div class="paragraph">
-<p><!-- vale IBM.Headings = YES --></p>
-</div>
 <div class="paragraph">
 <p>This procedure describes how to activate OAuth 1 for Bitbucket Server to:</p>
 </div>
@@ -1157,7 +1151,7 @@ A dedicated Keycloak instance is only deployed with Che installed in multiuser m
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;provider-realm-name&gt;</em></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Identity provider realm name intended for use by Che</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak realm name intended for use by Che</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;oidc-client-name&gt;</em></code></p></td>
@@ -1179,7 +1173,7 @@ A dedicated Keycloak instance is only deployed with Che installed in multiuser m
 <p>In the administration console of the external installation of Keycloak, define a <a href="https://www.keycloak.org/docs/latest/server_admin/#_create-realm">realm</a> containing the users intended to connect to Che:</p>
 <div class="imageblock">
 <div class="content">
-<a class="image" href="../_images/keycloak/external_keycloak_realm.png"><img src="../_images/keycloak/external_keycloak_realm.png" alt="external keycloak realm"></a>
+<a class="image" href="../_images/keycloak/external_keycloak_realm.png"><img src="../_images/keycloak/external_keycloak_realm.png" alt="External Keycloak realm"></a>
 </div>
 </div>
 </li>
@@ -1187,7 +1181,7 @@ A dedicated Keycloak instance is only deployed with Che installed in multiuser m
 <p>In this <code>realm</code>, define an <a href="https://www.keycloak.org/docs/latest/server_admin/#oidc-clients">OIDC client</a> that Che will use to authenticate the users. This is an example of such a client with the correct settings:</p>
 <div class="imageblock">
 <div class="content">
-<a class="image" href="../_images/keycloak/external_keycloak_public_client.png"><img src="../_images/keycloak/external_keycloak_public_client.png" alt="external keycloak public client"></a>
+<a class="image" href="../_images/keycloak/external_keycloak_public_client.png"><img src="../_images/keycloak/external_keycloak_public_client.png" alt="External Keycloak public client"></a>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1226,11 +1220,11 @@ A dedicated Keycloak instance is only deployed with Che installed in multiuser m
 installed on OpenShift
 that uses the default OpenShift OAuth support, user authentication relies on the integration of Keycloak with OpenShift OAuth. This allows users to log in to Che with their OpenShift login and have their workspaces created under personal OpenShift projects.</p>
 <div class="paragraph">
-<p>This requires setting up an OpenShift identity provider ins Keycloak. When using an external Keycloak, configure the identity provider manually. For instructions, see the appropriate Keycloak documentations for either <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-3">OpenShift 3</a> or <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-4">OpenShift 4</a>.</p>
+<p>This requires setting up an OpenShift Identity Provider (Keycloak or RH-SSO). When using an external Keycloak, configure the Keycloak manually. For instructions, see the appropriate Keycloak documentations for either <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-3">OpenShift 3</a> or <a href="https://www.keycloak.org/docs/latest/server_admin/#openshift-4">OpenShift 4</a>.</p>
 </div>
 </li>
 <li>
-<p>The configured identity provider has the options <strong>Store Tokens</strong> and <strong>Stored Tokens Readable</strong> enabled.</p>
+<p>The configured Keycloak has the options <strong>Store Tokens</strong> and <strong>Stored Tokens Readable</strong> enabled.</p>
 </li>
 </ul>
 </div>
@@ -1259,10 +1253,10 @@ with OpenShift OAuth support enabled, set the following properties in the <code>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
   auth:
     openShiftoAuth: true
-# Note: only if the OpenShift identity provider alias is different from 'openshift-v3' or 'openshift-v4'
+# Note: only if the OpenShift Identity Provider (Keycloak or RH-SSO) alias is different from 'openshift-v3' or 'openshift-v4'
 server:
   customCheProperties:
-    CHE_INFRA_OPENSHIFT_OAUTH__IDENTITY__PROVIDER: &lt;OpenShift identity provider alias&gt;</code></pre>
+    CHE_INFRA_OPENSHIFT_OAUTH<em>IDENTITY</em>PROVIDER: &lt;OpenShift Identity Provider (Keycloak or RH-SSO) alias&gt;</code></pre>
 </div>
 </div>
 </li>
