@@ -706,7 +706,7 @@
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<p>When a user skips the Configuring step of OpenShift Identity Provider (Keycloak or RH-SSO), and the OpenShift cluster does not already contain a configured {identity provider}, Che creates an initial OpenShift user for the <code>HTPasswd</code> identity provider. Credentials of this user are stored in the <code>openshift-oauth-user-credentials</code> secret, located in the eclipse-che namespace.</p>
+<p>When a user skips the Configuring step of OpenShift Identity Provider (Keycloak or RH-SSO), and the OpenShift cluster does not already contain a configured Keycloak, Che creates an initial OpenShift user for the <code>HTPasswd</code> identity provider. Credentials of this user are stored in the <code>openshift-oauth-user-credentials</code> secret, located in the <code>openshift-config</code> namespace.</p>
 </div>
 <div class="paragraph">
 <p>Obtain the credentials for logging in to an OpenShift cluster and Che instance:</p>
@@ -717,7 +717,7 @@
 <p>Obtain OpenShift user name:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get secret openshift-oauth-user-credentials -n eclipse-che -o json | jq -r '.data.user' | base64 -d</pre>
+<pre>$ oc get secret openshift-oauth-user-credentials -n openshift-config -o json | jq -r '.data.user' | base64 -d</pre>
 </div>
 </div>
 </li>
@@ -725,7 +725,7 @@
 <p>Obtain OpenShift user password:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get secret openshift-oauth-user-credentials -n eclipse-che -o json | jq -r '.data.password' | base64 -d</pre>
+<pre>$ oc get secret openshift-oauth-user-credentials -n openshift-config -o json | jq -r '.data.password' | base64 -d</pre>
 </div>
 </div>
 </li>
