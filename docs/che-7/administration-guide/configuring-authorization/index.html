@@ -1106,6 +1106,92 @@ EOF</pre>
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="configuring-gitlab-oauth2_che"><a class="anchor" href="#configuring-gitlab-oauth2_che"></a>Configuring GitLab OAuth2</h3>
+<div class="paragraph">
+<p>OAuth2 for GitLab allows accepting factories from private GitLab repositories.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>GitLab server is running and available from {prod-shord}</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Create a <a href="https://docs.gitlab.com/ee/integration/oauth_provider.html#authorized-applications">Authorized OAuth2 application in GitLab</a> using Che as the application <code>Name</code> and Keycloak GitLab endpoint URL as the value for <code>Redirect URI</code>. The callback URL default value is <code>https://keycloak-eclipse-che.<em>&lt;DOMAIN&gt;</em>/auth/realms/che/broker/gitlab/endpoint</code>, where <code><em>&lt;DOMAIN&gt;</em></code> is Kubernetes cluster domain. Store the <code>Application ID</code> and <code>Secret</code> values.
+All three types of GitLab OAuth2 applications are supported: User owned, Group owned and Instance-wide.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a custom OIDC provider link on Keycloak pointing to GitLab server. Fill the following fields:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Client ID</dt>
+<dd>
+<p>a value from the <code>Application ID</code> field provided by GitLab server in previous step;</p>
+</dd>
+<dt class="hdlist1">Client Secret</dt>
+<dd>
+<p>a value from <code>Secret</code> field provided by GitLab server in previous step;</p>
+</dd>
+<dt class="hdlist1">Authorization URL</dt>
+<dd>
+<p>a URL which have a <code>++https://<em>&lt;GITLAB_DOMAIN&gt;</em>/oauth/oauth/authorize</code> format;</p>
+</dd>
+<dt class="hdlist1">Token URL</dt>
+<dd>
+<p>a URL which have a <code>++https://<em>&lt;GITLAB_DOMAIN&gt;</em>/oauth/oauth/token</code> format;</p>
+</dd>
+<dt class="hdlist1">Scopes</dt>
+<dd>
+<p>set of scopes which must contain (but not limited to) the following set: <code>api write_repository openid</code></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Substitute <code><em>&lt;GITLAB_DOMAIN&gt;</em></code> with the URL and port of the GitLab installation.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>In case of having issues Che accessing GitLab related to TLS keys, consult with the following docs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>.</p>
+</li>
+<li>
+<p><a href="../../installation-guide/deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
