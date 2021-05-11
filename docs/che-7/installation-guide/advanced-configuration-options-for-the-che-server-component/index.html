@@ -1329,16 +1329,6 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines if Che Server should wait workspaces Persistent Volume Claims to become bound after creating. Default value is <code>true</code>. The parameter is used by all Persistent Volume Claim strategies. It should be set to <code>false</code> when <code>volumeBindingMode</code> is configured to <code>WaitForFirstConsumer</code> otherwise workspace starts will hangs up on phase of waiting PVCs.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_INSTALLER__SERVER__MIN__PORT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defined range of ports for installers servers By default, installer will use own port, but if it conflicts with another installer servers then OpenShift infrastructure will reconfigure installer to use first available from this range Unused, will be removed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_INSTALLER__SERVER__MAX__PORT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>20000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unused, will be removed.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_INGRESS_ANNOTATIONS__JSON</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines annotations for ingresses which are used for servers exposing. Value depends on the kind of ingress controller. OpenShift infrastructure ignores this property because it uses Routes rather than Ingresses. the Che Operator that for a single-host deployment strategy to work, a controller supporting URL rewriting has to be used (so that URLs can point to different servers while the servers do not need to support changing the app root). The <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> property defines how the path of the ingress should be transformed to support the URL rewriting and this property defines the set of annotations on the ingress itself that instruct the chosen ingress controller to actually do the URL rewriting, potentially building on the path transformation (if required by the chosen ingress controller). For example for Nginx ingress controller 0.22.0 and later the following value is recommended: <code>{'ingress.kubernetes.io/rewrite-target': '/$1','ingress.kubernetes.io/ssl-redirect': 'false',\     'ingress.kubernetes.io/proxy-connect-timeout': '3600','ingress.kubernetes.io/proxy-read-timeout': '3600'}</code> and the <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> should be set to <code>'%s(.*)'</code>. For nginx ingress controller older than 0.22.0, the rewrite-target should be set to merely <code>/</code> and the path transform to <code>%s</code> (see the <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> property). See the Nginx ingress controller documentation for the explanation of how the ingress controller uses the regular expression present in the ingress path and how it achieves the URL rewriting.</p></td>
@@ -1685,7 +1675,7 @@ spec:
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_FACTORY_DEFAULT__PLUGINS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redhat/vscode-commons/latest</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Editor and plugin which will be used for factories that are created from a remote Git repository which does not contain any Che-specific workspace descriptor Multiple plugins must be comma-separated, for example: <code>pluginFooPublisher/pluginFooName/pluginFooVersion,pluginBarPublisher/pluginBarName/pluginBarVersion</code></p></td>
 </tr>
 <tr>
@@ -1771,7 +1761,7 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INTEGRATION_GITLAB_SERVER__ENDPOINTS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL#</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GitLab endpoints used for factory integrations. Comma separated list of GitLab server URLs or NULL if no integration expected.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitLab endpoints used for factory integrations. Comma separated list of GitLab server URLs or NULL if no integration expected. Address of the server with expected OAuth 2 integration MUST be the first in the list.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1831,7 +1821,7 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1800000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The length of time that a user is idle with their workspace when the system will suspend the workspace and then stopping it. Idleness is the length of time that the user has not interacted with the workspace, meaning that one of our agents has not received interaction. Leaving a browser window open counts toward idleness.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The length of time in milliseconds that a user is idle with their workspace when the system will suspend the workspace and then stopping it. Idleness is the length of time that the user has not interacted with the workspace, meaning that one of our agents has not received interaction. Leaving a browser window open counts toward idleness.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_LIMITS_WORKSPACE_RUN_TIMEOUT</code></p></td>
@@ -1908,78 +1898,13 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of running workspaces that a single organization is allowed. If the organization has reached this threshold and they try to start an additional workspace, they will be prompted with an error message. The organization will need to stop a running workspace to activate another.</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_MAIL_FROM__EMAIL__ADDRESS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che@noreply.com</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Address that will be used as from email for email notifications</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="LOrganizations-notifications-settings"><a class="anchor" href="#LOrganizations-notifications-settings"></a>Organizations notifications settings</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Organizations notifications settings</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Environment Variable Name</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_MEMBER__ADDED__SUBJECT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You'vebeen added to a Che Organization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You&#8217;ve been added to a Che Organization</code> organization notification subject.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_MEMBER__ADDED__TEMPLATE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st-html-templates/user_added_to_organization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You&#8217;ve been added to a Che Organization</code> organization notification template.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_MEMBER__REMOVED__SUBJECT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You'vebeen removed from a Che Organization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You&#8217;ve been removed from a Che Organization</code> organization notification subject.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_MEMBER__REMOVED__TEMPLATE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st-html-templates/user_removed_from_organization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>You&#8217;ve been removed from a Che Organization</code> organization notification template.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_ORG__REMOVED__SUBJECT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CheOrganization deleted</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Che Organization deleted</code> organization notification subject.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_ORG__REMOVED__TEMPLATE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st-html-templates/organization_deleted</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Che Organization deleted</code> organization notification template.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_ORG__RENAMED__SUBJECT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CheOrganization renamed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Che Organization renamed</code> organization notification subject.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_ORGANIZATION_EMAIL_ORG__RENAMED__TEMPLATE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st-html-templates/organization_renamed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Che Organization renamed</code> organization notification template.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
 <h3 id="LMulti-user-specific-OpenShift-infrastructure-configuration"><a class="anchor" href="#LMulti-user-specific-OpenShift-infrastructure-configuration"></a>Multi-user-specific OpenShift infrastructure configuration</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Multi-user-specific OpenShift infrastructure configuration</caption>
+<caption class="title">Table 15. Multi-user-specific OpenShift infrastructure configuration</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2004,7 +1929,7 @@ spec:
 <div class="sect2">
 <h3 id="LKeycloak-configuration"><a class="anchor" href="#LKeycloak-configuration"></a>Keycloak configuration</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. Keycloak configuration</caption>
+<caption class="title">Table 16. Keycloak configuration</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
