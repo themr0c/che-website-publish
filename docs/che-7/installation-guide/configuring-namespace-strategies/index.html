@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring namespace strategies :: Eclipse Che Documentation</title>
+    <title>Configuring workspace target namespace :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-namespace-strategies/">
-    <meta name="keywords" content="installation-guide, configuring-namespace-strategies">
+    <meta name="keywords" content="installation-guide, configuring-namespace">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -325,7 +325,7 @@
     <a class="nav-link" href="../advanced-configuration-options-for-the-che-server-component/">Advanced configuration options for Che server</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Configuring namespace strategies</a>
+    <a class="nav-link" href="./">Configuring workspace target namespace</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-storage-strategies/">Configuring storage strategies</a>
@@ -660,7 +660,7 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Configuring namespace strategies</a></li>
+    <li><a href="./">Configuring workspace target namespace</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-namespace-strategies.adoc">Edit this Page</a></div>
@@ -670,11 +670,11 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring namespace strategies</h1>
+<h1 class="page">Configuring workspace target namespace</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Kubernetes namespace or OpenShift project where a new workspace Pod is deployed depends on the Che server configuration. By default, every workspace is deployed in a distinct Kubernetes namespace or OpenShift project, but the user can configure the Che server to deploy all workspaces in one specific Kubernetes namespace or OpenShift project. The name of a Kubernetes namespace or OpenShift project must be provided as a Che server configuration property and cannot be changed at runtime.</p>
+<p>The Kubernetes namespace or OpenShift project where a new workspace Pod is deployed depends on the Che server configuration. By default, every workspace is deployed in an individual namespace per user. The name of a Kubernetes namespace or OpenShift project must be provided as a Che server configuration property or pre-created by Che administrator.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -761,31 +761,7 @@ The underlying environment variable that Che server uses is <code>CHE_INFRA_KUBE
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<code>CHE_INFRA_KUBERNETES_NAMESPACE</code> and <code>CHE_INFRA_OPENSHIFT_PROJECT</code> are legacy variables. Keep these variables unset for a new installations. Changing these variables during an update can lead to data loss.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
 By default, only one workspace in the same namespace can be running at one time. See <a href="../running-more-than-one-workspace-at-a-time/" class="page">Running more than one workspace at a time</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The namespace strategies other than per user are deprecated and are subject to removal.
 </td>
 </tr>
 </table>
@@ -833,7 +809,7 @@ The namespace strategies other than per user are deprecated and are subject to r
 <div class="ulist">
 <ul>
 <li>
-<p>OpenShift OAuth with a <code>self-provisioner</code> cluster role is not linked to the`system:authenticated:oauth` group</p>
+<p>OpenShift OAuth with a <code>self-provisioner</code> cluster role is not linked to the <code>system:authenticated:oauth</code> group</p>
 </li>
 </ul>
 </div>
@@ -889,151 +865,6 @@ spec:
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_one_namespace_per_workspace_strategy"><a class="anchor" href="#_one_namespace_per_workspace_strategy"></a>One namespace per workspace strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The strategy creates a new namespace for each new workspace.</p>
-</div>
-<div class="paragraph">
-<p>To use the strategy, set the <em>Che workspace namespace configuration</em> value to contain the <code><em>&lt;workspaceID&gt;</em></code> identifier. It can be used alone or combined with other identifiers or any string.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. One namespace per workspace</div>
-<div class="content">
-<div class="paragraph">
-<p>To assign namespace names composed of a <em>`che-ws`</em> prefix and workspace id, set:</p>
-</div>
-<div class="paragraph">
-<p><strong>Operator installer (CheCluster CustomResource)</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>...
-spec:
-  server:
-    workspaceNamespaceDefault: <em>che-ws</em>-<em>&lt;workspaceID&gt;</em>
-...</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Helm</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm ... --set global.cheWorkspacesNamespace=<em>che-ws</em>-<em>&lt;workspaceID&gt;</em></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-This strategy is deprecated and is subject to removal.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_one_namespace_for_all_workspaces_strategy"><a class="anchor" href="#_one_namespace_for_all_workspaces_strategy"></a>One namespace for all workspaces strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The strategy uses one predefined namespace for all workspaces.</p>
-</div>
-<div class="paragraph">
-<p>To use the strategy, set the <em>Che workspace namespace configuration</em> value to the name of the desired namespace to use.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 3. One namespace for all workspaces</div>
-<div class="content">
-<div class="paragraph">
-<p>To have all workspaces created in <em>`che-ws`</em> namespace, set:</p>
-</div>
-<div class="paragraph">
-<p><strong>Operator installer (CheCluster CustomResource)</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>...
-spec:
-  server:
-    workspaceNamespaceDefault: <em>che-ws</em>
-...</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Helm</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm ... --set global.cheWorkspacesNamespace=<em>che-ws</em></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-This strategy is deprecated and is subject to removal.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_allowing_user_defined_workspace_namespaces"><a class="anchor" href="#_allowing_user_defined_workspace_namespaces"></a>Allowing user-defined workspace namespaces</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Che server can be configured to honor the user selection of a namespace when a workspace is created. This feature is disabled by default. To allow user-defined workspace namespaces:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>For Helm Chart deployments, set the following environment variable in the Che ConfigMap:</p>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_INFRA_KUBERNETES_NAMESPACE_ALLOW__USER__DEFINED=true</pre>
-</div>
-</div>
-</li>
-<li>
-<p>For Operator deployments, set the following field in the CheCluster Custom Resource:</p>
-<div class="listingblock">
-<div class="content">
-<pre>...
-server:
-  allowUserDefinedWorkspaceNamespaces: true
-...</pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-This parameter is deprecated and is subject to removal.
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
 </div>
 </div>
 </div>
