@@ -1016,29 +1016,25 @@ $ echo PASSWORD=$AZURE_CERT_MANAGER_SP_PASSWORD</pre>
 <p>To install the cert-manager on Azure, create the <strong>cert-manager</strong> namespace:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ {orch-cli} create namespace cert-manager
+<pre>$ kubectl create namespace cert-manager
 namespace/cert-manager created
 
-$ {orch-cli} label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
+$ kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ {orch-cli} apply \
+<pre>$ kubectl apply \
   -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml</pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>$ {orch-cli} apply \
+<pre>$ kubectl apply \
  --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>Create the <strong>che</strong> namespace if it does not already exist:</p>
 <div class="listingblock">
@@ -1052,7 +1048,7 @@ namespace/eclipse-che created</pre>
 <p>Create the certificate issuer. Enter your email address in the <strong>email</strong> field and set <strong>clientID</strong>, <strong>CLIENT_SECRET</strong> <strong>subscriptionID</strong>, <strong>tenantID</strong>, <strong>hostedZoneName</strong>  fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre>cat &lt;&lt;EOF | {orch-cli} apply -f -
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">cat &lt;&lt;EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
@@ -1083,7 +1079,7 @@ spec:
     privateKeySecretRef:
       name: letsencrypt
     server: https://acme-v02.api.letsencrypt.org/directory
-EOF</pre>
+EOF</code></pre>
 </div>
 </div>
 </li>
@@ -1091,12 +1087,12 @@ EOF</pre>
 <p>Create the certificate. Edit the domain name:</p>
 <div class="listingblock">
 <div class="content">
-<pre>cat &lt;&lt;EOF | {orch-cli} apply -f -
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">cat &lt;&lt;EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
  name: che-tls
- namespace: {prod-namespace}
+ namespace: eclipse-che
 spec:
  secretName: che-tls
  issuerRef:
@@ -1104,7 +1100,7 @@ spec:
    kind: ClusterIssuer
  dnsNames:
    - '*.azr.my-ide.cloud'
-EOF</pre>
+EOF</code></pre>
 </div>
 </div>
 </li>
@@ -1123,7 +1119,7 @@ EOF</pre>
 <p>Obtain the logs using the following command (here, <code>cert-manager-8d478bb45-2924h</code> is the name of the cert-manager Pod):</p>
 <div class="listingblock">
 <div class="content">
-<pre>$  {orch-cli} logs -f -n cert-manager cert-manager-8d478bb45-2924h</pre>
+<pre>$ kubectl logs -f -n cert-manager cert-manager-8d478bb45-2924h</pre>
 </div>
 </div>
 </li>
@@ -1154,7 +1150,7 @@ Events:
 <p>Wait for the status to show <strong>OK</strong> and ensure that the log contains the following:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ {orch-cli} describe certificate/che-tls -n {prod-namespace}
+<pre>$ kubectl describe certificate/che-tls -n eclipse-che
 Name:         che-tls
 Namespace:    che
 Labels:       &lt;none&gt;
