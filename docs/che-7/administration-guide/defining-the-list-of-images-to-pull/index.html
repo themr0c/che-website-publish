@@ -706,8 +706,9 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -sSLo- <a href="https://raw.githubusercontent.com/eclipse/che-operator/master/olm/eclipse-che-preview-openshift/deploy/olm-catalog/eclipse-che-preview-openshift/7.30.2/eclipse-che-preview-openshift.v7.30.2.clusterserviceversion.yaml" class="bare">https://raw.githubusercontent.com/eclipse/che-operator/master/olm/eclipse-che-preview-openshift/deploy/olm-catalog/eclipse-che-preview-openshift/7.30.2/eclipse-che-preview-openshift.v7.30.2.clusterserviceversion.yaml</a> | \
-  yq -r '.spec.relatedImages[]'</pre>
+<pre>$ curl -sSLo- <a href="https://raw.githubusercontent.com/eclipse-che/che-operator/7.30.x/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml" class="bare">https://raw.githubusercontent.com/eclipse-che/che-operator/7.30.x/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml</a> | \
+yq -r '.spec.install.spec.deployments[].spec.template.spec.containers[].env[] | select(.name | test("RELATED_IMAGE_.*"; "g")) | .value' | \
+sort -u</pre>
 </div>
 </div>
 </div>
