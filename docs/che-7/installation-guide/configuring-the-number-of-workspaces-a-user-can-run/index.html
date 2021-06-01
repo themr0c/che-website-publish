@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Upgrading Che using the CLI management tool :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/upgrading-che-using-the-cli-management-tool/">
-    <meta name="keywords" content="installation-guide, upgrading-che-using-the-cli-management-tool">
+    <title>Configuring the number of workspaces a user can run :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-the-number-of-workspaces-a-user-can-run/">
+    <meta name="keywords" content="installation-guide, running-workspaces">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -333,8 +333,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-the-number-of-workspaces-a-user-can-run/">Configuring the number of workspaces</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Configuring the number of workspaces</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-workspace-exposure-strategies/">Configuring workspace exposure strategies</a>
@@ -381,8 +381,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-operatorhub/">Upgrading Che using OperatorHub</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Upgrading Che using the CLI management tool</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in restricted environment</a>
@@ -659,32 +659,69 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
-    <li><a href="../upgrading-che/">Upgrading Che</a></li>
-    <li><a href="./">Upgrading Che using the CLI management tool</a></li>
+    <li><a href="../advanced-configuration/">Advanced configuration</a></li>
+    <li><a href="./">Configuring the number of workspaces</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/upgrading-che-using-the-cli-management-tool.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-the-number-of-workspaces-a-user-can-run.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Upgrading Che using the CLI management tool</h1>
+<h1 class="page">Configuring the number of workspaces a user can run</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to upgrade from previous minor version using the CLI management tool.</p>
+<p>This article describes how to configure the number of workspaces a user can run simultaneously.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-number-of-workspaces-a-user-can-run-using-the-operator_che"><a class="anchor" href="#configuring-the-number-of-workspaces-a-user-can-run-using-the-operator_che"></a>Configuring the number of workspaces a user can run using the Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This procedure describes how to run more than one workspace simultaneously using the Operator.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>And administrative account on an OpenShift instance.</p>
+<p>An instance of <code>Che</code> installed using the Operator.
+Each new workspace creates at least one new mount point to the storage (PV), in write mode. The default <code>common</code> storage strategy in <code>ReadWriteOnce</code> access mode reuses the same PV to physically store all data from multiple volumes of all workspaces of the same user, and doesn&#8217;t support multiple mount points. Therefore to increase the number of simultaneously running workspaces, the combination of PVC strategy and access mode must meet the following criteria:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>ReadWriteMany</code> access mode and an arbitrary PVC strategy</p>
 </li>
 <li>
-<p>A running instance of a previous minor version of Eclipse&#160;Che, installed using the CLI management tool on the same instance of OpenShift, in the <code><em>&lt;eclipse-che&gt;</em></code> project.</p>
+<p><code>ReadWriteOnce</code> access mode and <code>per-workspace</code> or <code>unique</code> PVC strategy</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
+</div>
 </li>
 <li>
-<p>An installation of the <code>chectl</code> 7.31 version management tool. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
+<p>Determine the value of the following placeholder:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;number-of-workspaces&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of workspaces a user can run simultaneously. The default value is <code>1</code>. If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If it is a precise positive value, that many workspaces can run per user.</p></td>
+</tr>
+</tbody>
+</table>
 </li>
 </ul>
 </div>
@@ -692,45 +729,94 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In all running workspaces in the Che 7.30 instance, save and push changes back to the Git repositories.</p>
-</li>
-<li>
-<p>Shut down all workspaces in the Che 7.30 instance.</p>
-</li>
-<li>
-<p>Run the following command:</p>
+<p>In the <code>CheCluster</code> Custom Resource <code>server</code> settings, add the <code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code> property to <code>customCheProperties</code>:</p>
+<div class="exampleblock">
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:update -n <em>&lt;eclipse-che&gt;</em></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
+kind: CheCluster
+# [...]
+spec:
+  server:
+    # [...]
+    customCheProperties:
+      CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: "&lt;number-of-workspaces&gt;"</code></pre>
+</div>
+</div>
 </div>
 </div>
 </li>
 </ol>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>For slow systems or internet connections, add the <code>--k8spodwaittimeout=1800000</code> flag option to the <code>chectl server:update</code> command to extend the Pod timeout period to 1800000 ms or longer.</p>
 </div>
-</td>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-number-of-workspaces-a-user-can-run-using-configmap_che"><a class="anchor" href="#configuring-the-number-of-workspaces-a-user-can-run-using-configmap_che"></a>Configuring the number of workspaces a user can run using ConfigMap</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This procedure describes how to run more than one workspace simultaneously using ConfigMap.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An instance of <code>Che</code> installed using ConfigMap.
+Each new workspace creates at least one new mount point to the storage (PV), in write mode. The default <code>common</code> storage strategy in <code>ReadWriteOnce</code> access mode reuses the same PV to physically store all data from multiple volumes of all workspaces of the same user, and doesn&#8217;t support multiple mount points. Therefore to increase the number of simultaneously running workspaces, the combination of PVC strategy and access mode must meet the following criteria:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>ReadWriteMany</code> access mode and an arbitrary PVC strategy</p>
+</li>
+<li>
+<p><code>ReadWriteOnce</code> access mode and <code>per-workspace</code> or <code>unique</code> PVC strategy</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
+</div>
+</li>
+<li>
+<p>Determine the values of the following placeholders:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;product-namespace&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The namespace of the product. The default option for <code>Kubernetes namespace or OpenShift project</code> is <code>eclipse-che</code>.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;number-of-workspaces&gt;</em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of workspaces a user can run simultaneously. The default value is <code>1</code>. If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If it is a precise positive value, that many workspaces can run per user.</p></td>
+</tr>
+</tbody>
 </table>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
-<div class="title">Verification steps</div>
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Navigate to the Che instance.</p>
-</li>
-<li>
-<p>The 7.31 version number is visible at the bottom of the page.</p>
+<p>Configure the number of workspaces a user can run simultaneously:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ helm upgrade che -n &lt;product-namespace&gt; --set \
+che.limits.userWorkspacesRunCount=&lt;number-of-workspaces&gt;</pre>
+</div>
+</div>
 </li>
 </ol>
+</div>
+</div>
 </div>
 </article>
   </div>
