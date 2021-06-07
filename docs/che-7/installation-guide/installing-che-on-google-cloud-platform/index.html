@@ -1172,15 +1172,26 @@ Status:
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Procedure</div>
-<ul>
+<ol class="arabic">
 <li>
-<p>To install Che on Google Cloud Platform, run the following <code>chectl</code> command:</p>
+<p>Prepare the helmchart template <code>patch.yaml</code> file for the proper Dashboard ingress path exposure:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=gcp.my-ide.cloud --multiuser
-› Current Kubernetes context: 'minikube'
+<pre>$ cat &gt;patch.yaml&lt;&lt;EOF
+&gt; dashboard:
+&gt;   ingressPath: /dashboard/*
+&gt; EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the following <code>chectl</code> command to install Che on Google Cloud Platform:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=gcp.my-ide.cloud --multiuser --helm-patch-yaml patch.yaml
+› Current Kubernetes context: 'current-context'
   ✔ Verify Kubernetes API...OK
   ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
     ✔ Verify if Eclipse&#160;Che is deployed into namespace "eclipse-che"...it is not
@@ -1242,7 +1253,7 @@ Status:
 </div>
 </div>
 </li>
-</ul>
+</ol>
 </div>
 <div class="olist arabic">
 <div class="title">Verification steps</div>
