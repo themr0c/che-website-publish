@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring labels for Kubernetes Ingress :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-labels-for-ingresses/">
-    <meta name="keywords" content="installation-guide, configuring-labels">
+    <title>Configuring OpenShift Route to work with Router Sharding :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-routes/">
+    <meta name="keywords" content="installation-guide, configuring-routes">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
 <link rel="stylesheet" href="../../../_/css/extra.css">
@@ -354,11 +354,11 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-che-hostname/">Configuring Che hostname</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Configuring labels for Kubernetes Ingress</a>
-  </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-labels-and-domains-for-routes/">Configuring labels and domains for OpenShift Route</a>
+    <a class="nav-link" href="../configuring-ingresses/">Configuring Kubernetes Ingress</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Configuring OpenShift Route</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../deploying-che-with-support-for-git-repositories-with-self-signed-certificates/">Deploying Che with support for Git repositories with self-signed certificates</a>
@@ -669,31 +669,184 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Configuring labels for Kubernetes Ingress</a></li>
+    <li><a href="./">Configuring OpenShift Route</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-labels-for-ingresses.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-routes.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring labels for Kubernetes Ingress</h1>
+<h1 class="page">Configuring OpenShift Route to work with Router Sharding</h1>
 <div class="paragraph">
-<p>This procedure describes how to configure labels for Kubernetes Ingress to organize and categorize (scope and select) objects.</p>
+<p>This procedure describes how to configure labels, annotations, and domains for OpenShift Route to work with <a href="https://docs.openshift.com/container-platform/4.7/networking/ingress-operator.html#nw-ingress-sharding_configuring-ingress">Router Sharding</a>. The chapter then mentions the configuration process for existing instances or those about to be installed.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
-</li>
-<li>
-<p>An instance of Che running in Kubernetes.</p>
+<p>The <code>oc</code> and <code>chectl</code> tool is available.</p>
 </li>
 </ul>
 </div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>For a new OperatorHub installation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Enter the Che Cluster using OpenShift&#160;Container&#160;Platform and create CheCluster Custom Resource (CR). See, <a href="../installing-che-on-openshift-4-using-operatorhub/#creating-an-instance-of-the-che-operator_che" class="page">Creating an instance of the Eclipse&#160;Che Operator</a></p>
+</li>
+<li>
+<p>Set the following values in eclipse-che Custom Resource (CR):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  server:
+    devfileRegistryRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    pluginRegistryRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    dashboardRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    cheServerRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    customCheProperties:
+      CHE_INFRA_OPENSHIFT_ROUTE_LABELS: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      CHE_INFRA_OPENSHIFT_ROUTE_HOST_DOMAIN__SUFFIX: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+  auth:
+    identityProviderRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>comma separated list of labels that are used by the target ingress controller to filter the set of Routes to service</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>DNS name serviced by the target ingress controller</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>unstructured key value map stored with a resource</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>For a  new <code>chectl</code> installation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the installation using:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:deploy --che-operator-cr-patch-yaml=patch.yaml ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>patch.yaml</code> file must contain the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  server:
+    devfileRegistryRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    pluginRegistryRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    dashboardRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    cheServerRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2
+    customCheProperties:
+      CHE_INFRA_OPENSHIFT_ROUTE_LABELS: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      CHE_INFRA_OPENSHIFT_ROUTE_HOST_DOMAIN__SUFFIX: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+  auth:
+    identityProviderRoute:
+      labels: &lt;labels&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      domain: &lt;domain&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+      annotations:     <i class="conum" data-value="3"></i><b>(3)</b>
+        key1: value1
+        key2: value2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>comma separated list of labels that are used by the target ingress controller to filter the set of Routes to service</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>DNS name serviced by the target ingress controller</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>unstructured key value map stored with a resource</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>For already existing Che installation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update <code>eclipse-che</code> CR using the <code>kubectl</code> tool:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>To configure labels:</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -706,32 +859,151 @@ Use comma to separate labels: <code>key1=value1,key2=value2</code>
 </tr>
 </table>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>To configure labels for Kubernetes Ingress, update the Custom Resource with the following commands:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/cheServerIngress/labels", '\
-'"value": "<em>&lt;labels for a che server ingress&gt;</em>"}]'
-
-$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/auth/identityProviderIngress/labels", '\
-'"value": "<em>&lt;labels for a Keycloak ingress&gt;</em>"}]'
-
-$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/pluginRegistryIngress/labels", '\
-'"value": "<em>&lt;labels for a plug-ins registry ingress&gt;</em>"}]'
-
-$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/devfileRegistryIngress/labels",'\
-'"value": "<em>&lt;labels for a devfile registry ingress&gt;</em>"}]'</pre>
+'[{"op": "replace", "path": "/spec/server/cheServerRoute/labels",'\
+'"value": "<em>&lt;labels for a che server route&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/pluginRegistryRoute/labels", '\
+'"value": "<em>&lt;labels for a plug-ins registry route&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/devfileRegistryRoute/labels", '\
+'"value": "<em>&lt;labels for a devfile registry route&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/dashboardRoute/labels", '\
+'"value": "<em>&lt;labels for a dashboard route&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/auth/identityProviderRoute/labels", '\
+'"value": "<em>&lt;labels for a Keycloak route&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/customCheProperties/CHE_INFRA_OPENSHIFT_ROUTE_LABELS", '\
+'"value": "<em>&lt;labels for a workspace routes&gt;</em>"}]'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To configure domains:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/cheServerRoute/domain",'\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/pluginRegistryRoute/domain", '\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/devfileRegistryRoute/domain", '\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/dashboardRoute/domain", '\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/auth/identityProviderRoute/domain", '\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/customCheProperties/CHE_INFRA_OPENSHIFT_ROUTE_HOST_DOMAIN<em>_</em>_SUFFIX", '\
+'"value": "<em>&lt;ingress domain&gt;</em>"}]'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To configure annotations:</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Use object to specify annotations: <code>{"key1": "value1", "key2" : "value2"}</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/cheServerRoute/annotations",'\
+'"value": <em>&lt;annotations for a che ingress&gt;</em>}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/pluginRegistryRoute/annotations", '\
+'"value": <em>&lt;annotations for a plug-ins registry ingress&gt;</em>}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/devfileRegistryRoute/annotations", '\
+'"value": <em>&lt;annotations for a devfile registry ingress&gt;</em>}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/server/dashboardRoute/annotations", '\
+'"value": <em>&lt;annotations for a dashboard ingress&gt;</em>}]'</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
+'[{"op": "replace", "path": "/spec/auth/identityProviderRoute/annotations", '\
+'"value": <em>&lt;annotations for a Keycloak ingress&gt;</em>}]'</pre>
 </div>
 </div>
 </li>
 </ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
 </div>
 </article>
   </div>
