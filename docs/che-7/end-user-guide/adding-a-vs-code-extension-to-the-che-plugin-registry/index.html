@@ -724,30 +724,47 @@
     revision: 1.7.2                                              <i class="conum" data-value="4"></i><b>(4)</b>
   aliases:                                                       <i class="conum" data-value="5"></i><b>(5)</b>
     - publisher/my-vscode-ext-revised
-  sidecar:                                                       <i class="conum" data-value="6"></i><b>(6)</b>
-    image: quay.io/repository/eclipse/che-plugin-sidecar:sonarlint-2fcf341  <i class="conum" data-value="7"></i><b>(7)</b>
-    name: my-vscode-ext-sidecar                                  <i class="conum" data-value="8"></i><b>(8)</b>
-    memoryLimit: "1500Mi"                                        <i class="conum" data-value="9"></i><b>(9)</b>
-    memoryRequest: "1000Mi"                                      <i class="conum" data-value="10"></i><b>(10)</b>
-    cpuLimit: "500m"                                             <i class="conum" data-value="11"></i><b>(11)</b>
-    cpuRequest: "125m"                                           <i class="conum" data-value="12"></i><b>(12)</b>
-    command:                                                     <i class="conum" data-value="13"></i><b>(13)</b>
+  preferences:                                                   <i class="conum" data-value="6"></i><b>(6)</b>
+    asciidoc.use_asciidoctorpdf: true
+    shellcheck.executablePath: /bin/shellcheck
+    solargraph.bundlerPath: /usr/local/bin/bundle
+    solargraph.commandPath: /usr/local/bundle/bin/solargraph
+  sidecar:                                                       <i class="conum" data-value="7"></i><b>(7)</b>
+    image: quay.io/repository/eclipse/che-plugin-sidecar:sonarlint-2fcf341  <i class="conum" data-value="8"></i><b>(8)</b>
+    name: my-vscode-ext-sidecar                                  <i class="conum" data-value="9"></i><b>(9)</b>
+    memoryLimit: "1500Mi"                                        <i class="conum" data-value="10"></i><b>(10)</b>
+    memoryRequest: "1000Mi"                                      <i class="conum" data-value="11"></i><b>(11)</b>
+    cpuLimit: "500m"                                             <i class="conum" data-value="12"></i><b>(12)</b>
+    cpuRequest: "125m"                                           <i class="conum" data-value="13"></i><b>(13)</b>
+    command:                                                     <i class="conum" data-value="14"></i><b>(14)</b>
         - /bin/sh
-    args:                                                        <i class="conum" data-value="14"></i><b>(14)</b>
+    args:                                                        <i class="conum" data-value="15"></i><b>(15)</b>
         - "-c"
         - "./entrypoint.sh"
-    volumeMounts:                                                <i class="conum" data-value="15"></i><b>(15)</b>
-      - name: vscode-ext-volume                                  <i class="conum" data-value="16"></i><b>(16)</b>
-        path: "/home/theia/my-vscode-ext"                        <i class="conum" data-value="17"></i><b>(17)</b>
-    endpoints:                                                   <i class="conum" data-value="18"></i><b>(18)</b>
-      - name: "configuration-endpoint"                           <i class="conum" data-value="19"></i><b>(19)</b>
-        public: true                                             <i class="conum" data-value="20"></i><b>(20)</b>
-        targetPort: 61436                                        <i class="conum" data-value="21"></i><b>(21)</b>
-        attributes:                                              <i class="conum" data-value="22"></i><b>(22)</b>
+    volumeMounts:                                                <i class="conum" data-value="16"></i><b>(16)</b>
+      - name: vscode-ext-volume                                  <i class="conum" data-value="17"></i><b>(17)</b>
+        path: "/home/theia/my-vscode-ext"                        <i class="conum" data-value="18"></i><b>(18)</b>
+    endpoints:                                                   <i class="conum" data-value="19"></i><b>(19)</b>
+      - name: "configuration-endpoint"                           <i class="conum" data-value="20"></i><b>(20)</b>
+        public: true                                             <i class="conum" data-value="21"></i><b>(21)</b>
+        targetPort: 61436                                        <i class="conum" data-value="22"></i><b>(22)</b>
+        attributes:                                              <i class="conum" data-value="23"></i><b>(23)</b>
           protocol: http
-  extensions:                                                    <i class="conum" data-value="23"></i><b>(23)</b>
-          - https://github.com/redhat-developer/vscode-yaml/releases/download/0.4.0/redhat.vscode-yaml-0.4.0.vsix
-          - https://github.com/SonarSource/sonarlint-vscode/releases/download/1.16.0/sonarlint-vscode-1.16.0.vsix</code></pre>
+  extension: https://github.com/redhat-developer/vscode-yaml/releases/download/0.4.0/redhat.vscode-yaml-0.4.0.vsix    <i class="conum" data-value="24"></i><b>(24)</b>
+  skipDependencies:                                              <i class="conum" data-value="25"></i><b>(25)</b>
+    - id-of/extension1
+    - id-of/extension2
+  extraDependencies:                                             <i class="conum" data-value="26"></i><b>(26)</b>
+    - id-of/extension1
+    - id-of/extension2
+  metaYaml:
+    skipIndex: &lt;true|false&gt;                                      <i class="conum" data-value="27"></i><b>(27)</b>
+    skipDependencies:                                            <i class="conum" data-value="28"></i><b>(28)</b>
+      - id-of/extension1
+      - id-of/extension2
+    extraDependencies:                                           <i class="conum" data-value="29"></i><b>(29)</b>
+      - id-of/extension1
+      - id-of/extension2</code></pre>
 </div>
 </div>
 </li>
@@ -777,75 +794,99 @@
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>(OPTIONAL) If the plugin runs in a sidecar container, then the sidecar information is specified here</td>
+<td>(OPTIONAL) Plugin preferences in freeform format</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>A location of a container image to be used as this plugin&#8217;s sidecar. This line cannot be specified concurrently with <code>directory</code> (see above)</td>
+<td>(OPTIONAL) If the plugin runs in a sidecar container, then the sidecar information is specified here</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>(OPTIONAL) The name of the sidecar container</td>
+<td>A location of a container image to be used as this plugin&#8217;s sidecar. This line cannot be specified concurrently with <code>directory</code> (see above)</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>(OPTIONAL) The memory limit of the sidecar container</td>
+<td>(OPTIONAL) The name of the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="10"></i><b>10</b></td>
-<td>(OPTIONAL) The memory request of the sidecar container</td>
+<td>(OPTIONAL) The memory limit of the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="11"></i><b>11</b></td>
-<td>(OPTIONAL) The CPU limit of the sidecar container</td>
+<td>(OPTIONAL) The memory request of the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="12"></i><b>12</b></td>
-<td>(OPTIONAL) The CPU request of the sidecar container</td>
+<td>(OPTIONAL) The CPU limit of the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="13"></i><b>13</b></td>
-<td>(OPTIONAL) Definitions of root process commands inside container</td>
+<td>(OPTIONAL) The CPU request of the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="14"></i><b>14</b></td>
-<td>(OPTIONAL) Arguments for root process commands inside container</td>
+<td>(OPTIONAL) Definitions of root process commands inside container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="15"></i><b>15</b></td>
-<td>(OPTIONAL) Any volume mounting information for the sidecar container</td>
+<td>(OPTIONAL) Arguments for root process commands inside container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="16"></i><b>16</b></td>
-<td>The name of the mount</td>
+<td>(OPTIONAL) Any volume mounting information for the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="17"></i><b>17</b></td>
-<td>The path of the mount</td>
+<td>The name of the mount</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="18"></i><b>18</b></td>
-<td>(OPTIONAL) Any endpoint information for the sidecar container</td>
+<td>The path of the mount</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="19"></i><b>19</b></td>
-<td>Endpoint name</td>
+<td>(OPTIONAL) Any endpoint information for the sidecar container</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="20"></i><b>20</b></td>
-<td>Whether or not the endpoint is exposed publicly or not</td>
+<td>Endpoint name</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="21"></i><b>21</b></td>
-<td>The port number</td>
+<td>Whether or not the endpoint is exposed publicly or not</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="22"></i><b>22</b></td>
-<td>Attributes relating to the endpoint</td>
+<td>The port number</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="23"></i><b>23</b></td>
-<td>Direct link(s) to the <code>vsix</code> files included with this plugin. The <code>vsix</code> built by the repository specified, such as the main extension, must be listed first
+<td>Attributes relating to the endpoint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="24"></i><b>24</b></td>
+<td>Direct link(s) to the <code>vsix</code> files included with this plugin. The <code>vsix</code> built by the repository specified, such as the main extension, must be listed first</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="25"></i><b>25</b></td>
+<td># TODO #</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="26"></i><b>26</b></td>
+<td>(OPTIONAL) Extra dependencies in addition to the one listed in extensionDependencies field of package.json</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="27"></i><b>27</b></td>
+<td>(OPTIONAL) Do not include this plug-in in index.json if true. Useful in case of dependencies that you do not want to expose as standalone plug-ins</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="28"></i><b>28</b></td>
+<td>(OPTIONAL) Do not look at specified dependencies from extensionDependencies field of package.json (only for meta.yaml generation)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="29"></i><b>29</b></td>
+<td>(OPTIONAL) Extra dependencies in addition to the one listed in extensionDependencies field of package.json (only for meta.yaml generation)
 <div class="olist arabic">
 <ol class="arabic">
 <li>
