@@ -1009,6 +1009,9 @@ projects:
 <div class="paragraph">
 <p><!-- vale IBM.Terms = NO --></p>
 </div>
+<div class="paragraph">
+<p><!-- vale Vale.Avoid = NO --></p>
+</div>
 </div>
 </div>
 </div>
@@ -1253,21 +1256,21 @@ projects:
 <div class="sect3">
 <h4 id="_component_type_cheplugin"><a class="anchor" href="#_component_type_cheplugin"></a>Component type: chePlugin</h4>
 <div class="paragraph">
-<p>Describes plug-ins in a workspace by defining their <code>id</code>. It is allowed to have several <code>chePlugin</code> components.</p>
+<p>Describes plug-ins in a workspace by defining their <code>id</code>. A devfile is allowed to have multiple <code>chePlugin</code> components.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  components:
    - alias: exec-plugin
      type: chePlugin
-     id: eclipse/che-machine-exec-plugin/0.0.1</code></pre>
+     id: eclipse/che-machine-exec-plugin/latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Both types above use an ID, which is slash-separated publisher, name and version of plug-in from the Che Plug-in registry.</p>
+<p>Both types above use an ID, which is slash-separated publisher, name and version of plug-in from the Che Plug-in registry. Note that the Che Plug-in registry uses the <code>latest</code> version by default for all plug-ins.</p>
 </div>
 <div class="paragraph">
-<p>List of available Eclipse{nbsp}Che plug-ins and more information about registry can be found in the <a href="https://github.com/eclipse-che/che-plugin-registry">Eclipse{nbsp}Che plug-in registry</a> GitHub repository.</p>
+<p>To reference a custom plug-in by ID, build and deploy a custom plug-in registry. See <a href="../../administration-guide/building-custom-registry-images/" class="page">Building custom registry images</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1281,7 +1284,7 @@ projects:
    - alias: exec-plugin
      type: chePlugin
      registryUrl: https://my-customregistry.com
-     id: eclipse/che-machine-exec-plugin/0.0.1</code></pre>
+     id: eclipse/che-machine-exec-plugin/latest</code></pre>
 </div>
 </div>
 </div>
@@ -1297,6 +1300,9 @@ projects:
      type: chePlugin
      reference: https://raw.githubusercontent.com.../plugin/1.0.1/meta.yaml</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The URL in the <code>reference</code> field must be publicly accessible and should directly point to a fetchable <code>meta.yaml</code> file. URLs that redirect or do not directly point to a <code>meta.yaml</code> file will cause the workspace startup to fail. To learn more about publishing <code>meta.yaml</code> files, see <a href="../publishing-metadata-for-a-vs-code-extension/" class="page">Publishing metadata for a VS Code extension</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1318,7 +1324,7 @@ It is impossible to mix the <code>id</code> and <code>reference</code> fields in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  id: redhat/java/0.38.0
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  id: redhat/java/latest
   type: chePlugin
   preferences:
      java.jdt.ls.vmargs: '-noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication'</code></pre>
@@ -1329,7 +1335,7 @@ It is impossible to mix the <code>id</code> and <code>reference</code> fields in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  id: redhat/java/0.38.0
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  id: redhat/java/latest
   type: chePlugin
   preferences:
      go.lintFlags: ["--enable-all", "--new"]</code></pre>
@@ -1634,7 +1640,7 @@ components:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  components:
    - alias: exec-plugin
      type: chePlugin
-     id: eclipse/che-machine-exec-plugin/0.0.1
+     id: eclipse/che-machine-exec-plugin/latest
      memoryLimit: 1Gi
    - alias: maven
      type: dockerimage
@@ -1662,7 +1668,7 @@ components:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  components:
    - alias: exec-plugin
      type: chePlugin
-     id: eclipse/che-machine-exec-plugin/0.0.1
+     id: eclipse/che-machine-exec-plugin/latest
      memoryLimit: 1Gi
      memoryRequest: 512M
    - alias: maven
@@ -1692,7 +1698,7 @@ components:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  components:
    - alias: exec-plugin
      type: chePlugin
-     id: eclipse/che-machine-exec-plugin/0.0.1
+     id: eclipse/che-machine-exec-plugin/latest
      cpuLimit: 1.5
    - alias: maven
      type: dockerimage
@@ -1720,7 +1726,7 @@ components:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  components:
    - alias: exec-plugin
      type: chePlugin
-     id: eclipse/che-machine-exec-plugin/0.0.1
+     id: eclipse/che-machine-exec-plugin/latest
      cpuLimit: 1.5
      cpuRequest: 0.225
    - alias: maven
@@ -2473,6 +2479,9 @@ attributes:
 </div>
 <div class="paragraph">
 <p><!-- vale IBM.Terms = YES --></p>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Avoid = YES --></p>
 </div>
 </div>
 </div>
