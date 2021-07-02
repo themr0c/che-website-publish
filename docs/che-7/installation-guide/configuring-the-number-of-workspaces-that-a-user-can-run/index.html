@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring the number of workspaces a user can run :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-the-number-of-workspaces-a-user-can-run/">
+    <title>Configuring the number of workspaces that a user can run :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/installation-guide/configuring-the-number-of-workspaces-that-a-user-can-run/">
     <meta name="keywords" content="installation-guide, running-workspaces">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
@@ -343,7 +343,10 @@
     <a class="nav-link" href="../configuring-storage-types/">Configuring storage types</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Configuring the number of workspaces</a>
+    <a class="nav-link" href="./">Configuring the number of workspaces that a user can run</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuring-the-number-of-workspaces-that-a-user-can-create/">Configuring the number of workspaces that a user can create</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-workspace-exposure-strategies/">Configuring workspace exposure strategies</a>
@@ -669,36 +672,38 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Installation Guide</li>
     <li><a href="../advanced-configuration/">Advanced configuration</a></li>
-    <li><a href="./">Configuring the number of workspaces</a></li>
+    <li><a href="./">Configuring the number of workspaces that a user can run</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-the-number-of-workspaces-a-user-can-run.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/installation-guide/pages/configuring-the-number-of-workspaces-that-a-user-can-run.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring the number of workspaces a user can run</h1>
+<h1 class="page">Configuring the number of workspaces that a user can run</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This article describes how to configure the number of workspaces a user can run simultaneously.</p>
+<p>This article describes how to configure the number of workspaces that a user can run simultaneously.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-the-number-of-workspaces-a-user-can-run-using-the-operator_che"><a class="anchor" href="#configuring-the-number-of-workspaces-a-user-can-run-using-the-operator_che"></a>Configuring the number of workspaces a user can run using the Operator</h2>
+<h2 id="using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-run_che"><a class="anchor" href="#using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-run_che"></a>Using the Operator to configure the number of workspaces that a user can run</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This procedure describes how to run more than one workspace simultaneously using the Operator.</p>
+<p>This procedure describes how to configure <code>Che</code> to run more than one workspace simultaneously. By running multiple workspaces, users can use different work environments simultaneously.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An instance of <code>Che</code> installed using the Operator.
-Each new workspace creates at least one new mount point to the storage (PV), in write mode. The default <code>common</code> storage strategy in <code>ReadWriteOnce</code> access mode reuses the same PV to physically store all data from multiple volumes of all workspaces of the same user, and doesn&#8217;t support multiple mount points. Therefore to increase the number of simultaneously running workspaces, the combination of PVC strategy and access mode must meet the following criteria:</p>
+<p>You have installed an instance of <code>Che</code> by using the Operator.</p>
+</li>
+<li>
+<p>The combination of PVC strategy and access mode meets the following criteria:</p>
 <div class="openblock">
 <div class="content">
 <div class="ulist">
@@ -714,23 +719,25 @@ Each new workspace creates at least one new mount point to the storage (PV), in 
 </div>
 </div>
 <div class="paragraph">
-<p>For more information, see <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
+<p>See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
 </div>
 </li>
 <li>
-<p>Determine the value of the following placeholder:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<tbody>
+<p>You have determined the value of the <code><em>&lt;number-of-workspaces&gt;</em></code> placeholder.</p>
+<div class="admonitionblock note">
+<table>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;number-of-workspaces&gt;</em></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of workspaces a user can run simultaneously. The default value is <code>1</code>. If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If it is a precise positive value, that many workspaces can run per user.</p></td>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If the value is a positive integer, users can run as many workspaces as the value of the integer. The default value is <code>1</code>.</p>
+</div>
+</td>
 </tr>
-</tbody>
 </table>
+</div>
 </li>
 </ul>
 </div>
@@ -738,7 +745,7 @@ Each new workspace creates at least one new mount point to the storage (PV), in 
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the <code>CheCluster</code> Custom Resource <code>server</code> settings, add the <code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code> property to <code>customCheProperties</code>:</p>
+<p>In the <code>CheCluster</code> Custom Resource <code>server</code> settings, configure the number of workspaces that a user can run by adding the <code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code> property to <code>customCheProperties</code>:</p>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
@@ -750,7 +757,7 @@ spec:
   server:
     # [...]
     customCheProperties:
-      CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: "&lt;number-of-workspaces&gt;"</code></pre>
+      CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: "<em>&lt;number-of-workspaces&gt;</em>"</code></pre>
 </div>
 </div>
 </div>
@@ -761,17 +768,19 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-the-number-of-workspaces-a-user-can-run-using-configmap_che"><a class="anchor" href="#configuring-the-number-of-workspaces-a-user-can-run-using-configmap_che"></a>Configuring the number of workspaces a user can run using ConfigMap</h2>
+<h2 id="using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-run_che"><a class="anchor" href="#using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-run_che"></a>Using ConfigMap to configure the number of workspaces that a user can run</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This procedure describes how to run more than one workspace simultaneously using ConfigMap.</p>
+<p>This procedure describes how to configure <code>Che</code> to run more than one workspace simultaneously. By running multiple workspaces, users can use different work environments simultaneously.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An instance of <code>Che</code> installed using ConfigMap.
-Each new workspace creates at least one new mount point to the storage (PV), in write mode. The default <code>common</code> storage strategy in <code>ReadWriteOnce</code> access mode reuses the same PV to physically store all data from multiple volumes of all workspaces of the same user, and doesn&#8217;t support multiple mount points. Therefore to increase the number of simultaneously running workspaces, the combination of PVC strategy and access mode must meet the following criteria:</p>
+<p>You have installed an instance of <code>Che</code> by using Helm and the default namespace <code>eclipse-che</code>.</p>
+</li>
+<li>
+<p>The combination of PVC strategy and access mode meets the following criteria:</p>
 <div class="openblock">
 <div class="content">
 <div class="ulist">
@@ -787,27 +796,25 @@ Each new workspace creates at least one new mount point to the storage (PV), in 
 </div>
 </div>
 <div class="paragraph">
-<p>For more information, see <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
+<p>See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
 </div>
 </li>
 <li>
-<p>Determine the values of the following placeholders:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<tbody>
+<p>You have determined the value of the <code><em>&lt;number-of-workspaces&gt;</em></code> placeholder.</p>
+<div class="admonitionblock note">
+<table>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;product-namespace&gt;</em></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The namespace of the product. The default option for <code>Kubernetes namespace or OpenShift project</code> is <code>eclipse-che</code>.</p></td>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If the value is a positive integer, users can run as many workspaces as the value of the integer. The default value is <code>1</code>.</p>
+</div>
+</td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><em>&lt;number-of-workspaces&gt;</em></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of workspaces a user can run simultaneously. The default value is <code>1</code>. If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If it is a precise positive value, that many workspaces can run per user.</p></td>
-</tr>
-</tbody>
 </table>
+</div>
 </li>
 </ul>
 </div>
@@ -815,11 +822,11 @@ Each new workspace creates at least one new mount point to the storage (PV), in 
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Configure the number of workspaces a user can run simultaneously:</p>
+<p>To configure the number of workspaces that a user can run simultaneously, run:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ helm upgrade che -n &lt;product-namespace&gt; --set \
-che.limits.userWorkspacesRunCount=&lt;number-of-workspaces&gt;</pre>
+<pre>$ helm upgrade che -n eclipse-che --set \
+che.limits.userWorkspacesRunCount=<em>&lt;number-of-workspaces&gt;</em></pre>
 </div>
 </div>
 </li>
