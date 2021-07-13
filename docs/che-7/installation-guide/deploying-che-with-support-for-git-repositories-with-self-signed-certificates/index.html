@@ -701,21 +701,28 @@
 <div class="title">Procedure</div>
 <p>Configuring support for self-signed Git repositories.</p>
 </div>
-<div class="paragraph">
-<p>In the instructions below, substitute <code>kubectl</code> for <code>oc</code> when running Che on Kubernetes.</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Create a new <strong>ConfigMap</strong> with details about the Git server:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc create configmap che-git-self-signed-cert --from-file=ca.crt \
-  --from-literal=githost=<em>&lt;host:port&gt;</em> -n {prod-namespace}</pre>
+<pre>$ kubectl create configmap che-git-self-signed-cert \
+  --from-file=ca.crt=<em>&lt;path_to_certificate&gt;</em> \  <i class="conum" data-value="1"></i><b>(1)</b>
+  --from-literal=githost=<em>&lt;host:port&gt;</em> -n eclipse-che  <i class="conum" data-value="2"></i><b>(2)</b></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>In the command, substitute <code><em>&lt;host:port&gt;</em></code> for the host and port of the HTTPS connection on the Git server (optional).</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Path to self-signed certificate</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The host and port of the HTTPS connection on the Git server (optional).</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -730,9 +737,6 @@
 <p>When <code>githost</code> is not specified, the given certificate is used for all HTTPS repositories.</p>
 </li>
 <li>
-<p>The certificate file must be named <code>ca.crt</code>.</p>
-</li>
-<li>
 <p>Certificate files are typically stored as Base64 ASCII files, such as. <code>.pem</code>, <code>.crt</code>, <code>.ca-bundle</code>. Also, they can be encoded as binary data, for example, <code>.cer</code>.  All <code>Secrets</code> that hold certificate files should use the Base64 ASCII certificate rather than the binary data certificate.</p>
 </li>
 </ul>
@@ -743,7 +747,7 @@
 </div>
 </li>
 <li>
-<p>Configure the workspace exposure strategy:</p>
+<p>Configure Che to use self-signed certificates for git repositories:</p>
 <div class="exampleblock">
 <div class="content">
 <div class="olist arabic">
@@ -759,8 +763,10 @@
 <p>Update the <code>global.useGitSelfSignedCerts</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ helm upgrade che -n eclipse-che --set global.useGitSelfSignedCerts=true \
-  --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
+<pre>$ helm upgrade che -n eclipse-che \
+  --set global.useGitSelfSignedCerts=true \
+  --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> \
+  -f values/multi-user.yaml -f values/tls.yaml .</pre>
 </div>
 </div>
 </li>
@@ -791,7 +797,7 @@
 <div class="listingblock">
 <div class="content">
 <pre>[http "https://10.33.177.118:3000"]
-        sslCAInfo = /etc/che/git/cert/ca.crt</pre>
+sslCAInfo = /etc/che/git/cert/ca.crt</pre>
 </div>
 </div>
 </li>
