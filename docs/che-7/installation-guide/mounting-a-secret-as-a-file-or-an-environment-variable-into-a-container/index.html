@@ -699,16 +699,13 @@
 <li>
 <p>authentication tokens</p>
 </li>
-<li>
-<p>and configurations</p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
 <p>in an encrypted form.</p>
 </div>
 <div class="paragraph">
-<p>Users can mount a Kubernetes or OpenShift Secret that contains sensitive data or a ConfigMap in a Che container as:</p>
+<p>Users can mount a Kubernetes or OpenShift Secret that contains sensitive data or a ConfigMap that contains configuration in a Che managed containers as:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -732,7 +729,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Che. To install an instance of Che, see <a href="../installing-che/" class="page">Installing Che</a>.</p>
+<p>A running instance of Eclipse&#160;Che. To install an instance of Eclipse&#160;Che, see <a href="../installing-che/" class="page">Installing Che</a>.</p>
 </li>
 </ul>
 </div>
@@ -750,7 +747,7 @@
 <p><code>app.kubernetes.io/component: &lt;DEPLOYMENT_NAME&gt;-&lt;OBJECT_KIND&gt;</code></p>
 </li>
 <li>
-<p>The <code>&lt;DEPLOYMENT_NAME&gt;</code> coresponds to the one following deployments:</p>
+<p>The <code>&lt;DEPLOYMENT_NAME&gt;</code> corresponds to the one following deployments:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -803,7 +800,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: Secret
 metadata:
-  name: custom-data
+  name: custom-settings
   labels:
     app.kubernetes.io/part-of: che.eclipse.org
     app.kubernetes.io/component: che-secret
@@ -818,7 +815,7 @@ metadata:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: custom-data
+  name: custom-settings
   labels:
     app.kubernetes.io/part-of: che.eclipse.org
     app.kubernetes.io/component: che-configmap
@@ -828,17 +825,24 @@ metadata:
 </div>
 </div>
 <div class="paragraph">
-<p>Annotations must indicate that the given object is mounted as a file. Configure the annotation values:</p>
+<p>Annotations must indicate that the given object is mounted as a file.</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the annotation values:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>che.eclipse.org/mount-as: file</code> - to indicate that a object is mounted as a file</p>
+<p><code>che.eclipse.org/mount-as: file</code> - To indicate that a object is mounted as a file.</p>
 </li>
 <li>
-<p><code>che.eclipse.org/mount-path: <em>&lt;FOO_ENV&gt;</em></code> - to provide a required mount path</p>
+<p><code>che.eclipse.org/mount-path: <em>&lt;TARGET_PATH&gt;</em></code> - To provide a required mount path.</p>
 </li>
 </ul>
+</div>
+</li>
+</ol>
 </div>
 <div class="exampleblock">
 <div class="title">Example 2. Example:</div>
@@ -850,8 +854,8 @@ kind: Secret
 metadata:
   name: custom-data
   annotations:
-    che.eclipse.org/mount-path: /data
     che.eclipse.org/mount-as: file
+    che.eclipse.org/mount-path: /data
   labels:
 ...</code></pre>
 </div>
@@ -866,8 +870,8 @@ kind: ConfigMap
 metadata:
   name: custom-data
   annotations:
-    che.eclipse.org/mount-path: /data
     che.eclipse.org/mount-as: file
+    che.eclipse.org/mount-path: /data
   labels:
 ...</code></pre>
 </div>
@@ -890,8 +894,8 @@ metadata:
     app.kubernetes.io/part-of: che.eclipse.org
     app.kubernetes.io/component: che-secret
   annotations:
-    che.eclipse.org/mount-path: /data
     che.eclipse.org/mount-as: file
+    che.eclipse.org/mount-path: /data
 data:
   ca.crt: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
 </div>
@@ -909,8 +913,8 @@ metadata:
     app.kubernetes.io/part-of: che.eclipse.org
     app.kubernetes.io/component: che-configmap
   annotations:
-    che.eclipse.org/mount-path: /data
     che.eclipse.org/mount-as: file
+    che.eclipse.org/mount-path: /data
 data:
   ca.crt: <em>&lt;data content here&gt;</em></code></pre>
 </div>
@@ -919,6 +923,18 @@ data:
 </div>
 <div class="paragraph">
 <p>This results in a file named <code>ca.crt</code> being mounted at the <code>/data</code> path of Che container.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+To make the changes in a Che container visible, recreate the object entirely.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -947,7 +963,7 @@ data:
 <p><code>app.kubernetes.io/component: &lt;DEPLOYMENT_NAME&gt;-&lt;OBJECT_KIND&gt;</code></p>
 </li>
 <li>
-<p>The <code>&lt;DEPLOYMENT_NAME&gt;</code> coresponds to the one following deployments:</p>
+<p>The <code>&lt;DEPLOYMENT_NAME&gt;</code> corresponds to the one following deployments:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1018,15 +1034,19 @@ metadata:
   name: custom-settings
   labels:
     app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: che-secret
+    app.kubernetes.io/component: che-configmap
 ...</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>Annotations must indicate that the given object is mounted as a environment variable. Configure the annotation values:</p>
+<p>Annotations must indicate that the given object is mounted as a environment variable.</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the annotation values:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1036,6 +1056,9 @@ metadata:
 <p><code>che.eclipse.org/env-name: <em>&lt;FOO_ENV&gt;</em></code> - to provide an environment variable name, which is required to mount a object key value</p>
 </li>
 </ul>
+</div>
+</li>
+</ol>
 </div>
 <div class="exampleblock">
 <div class="title">Example 5. Example:</div>
@@ -1076,7 +1099,20 @@ data:
 </div>
 </div>
 <div class="paragraph">
-<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into a Che container.</p>
+<p>This results in two environment variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>FOO_ENV</code></p>
+</li>
+<li>
+<p><code>myvalue</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>being provisioned into a Che container.</p>
 </div>
 <div class="paragraph">
 <p>If the object provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
@@ -1147,6 +1183,18 @@ data:
 </td>
 <td class="content">
 The maximum length of annotation names in a Kubernetes object is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the object.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+To make the changes in a Che container visible, recreate the object entirely.
 </td>
 </tr>
 </table>
