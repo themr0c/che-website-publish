@@ -594,7 +594,7 @@
     <span class="nav-text">Extensions</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../extensions/eclipse-che4z/">Eclipse Che4z</a>
+    <a class="nav-link" href="../../extensions/eclipse-che4z/">eclipse-che4z.adoc</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -684,7 +684,7 @@
 <article class="doc">
 <h1 class="page">Installing Image Puller using the Che Operator</h1>
 <div class="paragraph">
-<p>This section describes how to use the Che Operator to install the Image Puller. This is a Community-supported technology preview feature.</p>
+<p>This section describes how to use the Che Operator to install the Image Puller, which is a community-supported feature in the technology preview state.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -707,9 +707,8 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Edit the <code>CheCluster</code> Custom Resource and set <code>.spec.imagePuller.enable</code> to <code>true</code></p>
+<p>Enable Image Puller in the <code>CheCluster</code> Custom Resource by setting <code>.spec.imagePuller.enable</code> to <code>true</code>:</p>
 <div class="exampleblock">
-<div class="title">Example 1. Enabling Image Puller in the <code>CheCluster</code> Custom Resource</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -725,30 +724,10 @@ spec:
 </div>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="title">Uninstalling Image Puller using Che Operator</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Edit the <code>CheCluster</code> Custom Resource and set <code>.spec.imagePuller.enable</code> to <code>false</code>.</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
 </li>
 <li>
-<p>Edit the <code>CheCluster</code> Custom Resource and set the <code>.spec.imagePuller.spec</code> to configure the optional Image Puller parameters for the Che Operator.</p>
+<p>Configure Image Puller in the <code>CheCluster</code> Custom Resource:</p>
 <div class="exampleblock">
-<div class="title">Example 2. Configuring Image Puller in the <code>CheCluster</code> Custom Resource</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -772,9 +751,21 @@ spec:
 </li>
 </ol>
 </div>
-<div class="olist arabic">
-<div class="title">Verification steps</div>
-<ol class="arabic">
+<div class="ulist">
+<div class="title">Default images</div>
+<ul>
+<li>
+<p>The Che Operator populates the <code>.spec.imagePuller.spec.images</code> field with default images used for workspace startup (Theia images, plugin broker images, sidecar plugin images), provided that no images were added to this field before creating the <code>CheCluster</code> Custom Resource. The Che Operator updates the default images in the <code>.spec.imagePuller.spec.images</code> field after every rollout update of Che. However, if images were added to the <code>.spec.imagePuller.spec.images</code> field before creating the <code>CheCluster</code> Custom Resource, the Che Operator will not add default images.</p>
+</li>
+<li>
+<p>If user-provided images are added to the <code>.spec.imagePuller.spec.images</code> field <strong>after</strong> creating the <code>CheCluster</code> Custom Resource, the Che Operator
+will still update default images on subsequent Che rollout updates. Non-default images remain unchanged in the <code>.spec.imagePuller.spec.images</code> field after rollout updates.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
 <li>
 <p>Kubernetes or OpenShift creates a <code>kubernetes-image-puller-operator</code> Subscription.</p>
 </li>
@@ -801,6 +792,17 @@ spec:
 <pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ kubectl get kubernetesimagepullers</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Uninstalling Image Puller using Che Operator</div>
+<ol class="arabic">
+<li>
+<p>Edit the <code>CheCluster</code> Custom Resource and set <code>.spec.imagePuller.enable</code> to <code>false</code>.</p>
+</li>
+<li>
+<p>Edit the <code>CheCluster</code> Custom Resource and set the <code>.spec.imagePuller.spec</code> to configure the optional Image Puller parameters for the Che Operator.</p>
 </li>
 </ol>
 </div>
