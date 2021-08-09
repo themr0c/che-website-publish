@@ -783,20 +783,6 @@ OpenShift 3.11, secrets mounted as file overrides volume mounts defined in the d
 </li>
 <li>
 <p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Note that the following example describes variations in the usage of the <code>target-container</code> annotation in versions 7.14 and 7.15 of Eclipse&#160;Che.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="title">Example:</div>
 <div class="content">
@@ -810,9 +796,9 @@ metadata:
 ...</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Annotations must indicate the given secret is mounted as a file, provide the mount path, and, optionally, specify the name of the container in which the secret is mounted. If there is no target-container annotation, the secret will be mounted into all user containers of the Che workspace, but this is applicable <strong><em>only for the Che version 7.14</em></strong>.</p>
-</div>
+</li>
+<li>
+<p>The following example shows how to mount the secret as a file by including the <code>&lt;url&gt;/mount-as: file</code> annotation:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -827,9 +813,16 @@ metadata:
 ...</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong><em>Since the Che version 7.15</em></strong>, the <code>target-container</code> annotation is deprecated and <code>automount-workspace-secret</code> annotation with boolean values is introduced. Its purpose is to define the default secret mounting behavior, with the ability to be overridden in a devfile. The <code>true</code> value enables the automatic mounting into all workspace containers. In contrast, the <code>false</code> value disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
-</div>
+</li>
+<li>
+<p>To define the default behavior for mounting secrets, use the <code>/automount-workspace-secret</code> annotation. Developers can override this default in a devfile. This annotation takes a boolean value:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
+</li>
+<li>
+<p><code>'false'</code> disables automatic mounting into all workspace containers. To mount a secret, a user must request it in the devfile component by using the <code>automountWorkspaceSecrets:true</code> property.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -844,9 +837,12 @@ metadata:
 ...</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Data of the Kubernetes secret may contain several items, whose names must match the desired file name mounted into the container.</p>
+</li>
+</ul>
 </div>
+</li>
+<li>
+<p>The following example shows how to mount the <code>settings.xml</code> file at the <code>/home/user/.m2/</code> path of all workspace containers:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -864,11 +860,38 @@ data:
   settings.xml: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This results in a file named <code>settings.xml</code> being mounted at the <code>/home/user/.m2/</code> path of all workspace containers.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>data</code> of the Kubernetes secret can contain several items. The names of these items must match the desired file name mounted into the container.
+</td>
+</tr>
+</table>
 </div>
+</li>
+<li>
+<p>To override the mount path of the secret for a workspace component, edit the devfile as follows:</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Declare a component alias for the containers in the override path.</p>
+</li>
+<li>
+<p>Declare an additional volume for the component.</p>
+</li>
+<li>
+<p>Use the name of the secret as the name of the volume.</p>
+</li>
+<li>
+<p>Provide the new mount path for the secret as <code>containerPath</code>.</p>
 <div class="paragraph">
-<p>The secret-s mount path can be overridden for specific components of the workspace using devfile. To change mount path, an additional volume should be declared in a component of the devfile, with name matching overridden secret name, and desired mount path.</p>
+<p>See the following example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -884,12 +907,6 @@ components:
        containerPath: /my/new/path
    ...</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Note that for this kind of overrides, components must declare an alias to be able to distinguish containers which belong to them and apply override path exclusively for those containers.</p>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ol>
@@ -925,20 +942,6 @@ components:
 </li>
 <li>
 <p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Note that the following example describes variations in the usage of the <code>target-container</code> annotation in versions 7.14 and 7.15 of Eclipse&#160;Che.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="title">Example:</div>
 <div class="content">
@@ -952,31 +955,16 @@ metadata:
 ...</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Annotations must indicate that the given secret is mounted as an environment variable, provides variable names, and optionally, specifies the container name where this mount will be applied. If there is no target-container annotation defined, the secret will be mounted into all user containers of the Che workspace, but this is applicable <strong><em>only for the Che version 7.14</em></strong>.</p>
+</li>
+</ul>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/target-container: maven
-    che.eclipse.org/env-name: FOO_ENV
-    che.eclipse.org/mount-as: env
-  labels:
-   ...
-data:
-  mykey: myvalue</code></pre>
+</li>
+</ol>
 </div>
-</div>
-<div class="paragraph">
-<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into the <code>maven</code> container.</p>
-</div>
-<div class="paragraph">
-<p><strong><em>Since the Che version 7.15</em></strong>, the <code>target-container</code> annotation is deprecated and <code>automount-workspace-secret</code> annotation with boolean values is introduced. Its purpose is to define the default secret mounting behavior, with the ability to be overridden in a devfile. The <code>true</code> value enables automatic mounting into all workspace containers. In contrast, the <code>false</code> value disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The following example shows how to mount the secret as an environment variable by including the <code>&lt;url&gt;/mount-as: env</code> annotation:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -994,11 +982,31 @@ data:
 </div>
 </div>
 <div class="paragraph">
-<p>This results in the environment variable named <code>FOO_ENV</code> and the value <code>myvalue</code> being provisioned into all workspace containers.</p>
+<p>In this example, the <code>FOO_ENV</code> environment variable and <code>myvalue</code> key value are provisioned into all workspace containers as follows:</p>
 </div>
-<div class="paragraph">
-<p>If the Secret provides more than one key, the environment variable name must be provided for each of the data keys as follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The secret&#8217;s environment variable, <code>env-name</code>, is declared as <code>FOO_ENV</code> in the <code>annotations</code>.</p>
+</li>
+<li>
+<p>The <code>automount-workspace-secret</code> annotation with a boolean value defines the default secret mounting behavior (that can be overridden in a devfile):</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
+</li>
+<li>
+<p><code>'false'</code> disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
+</li>
+</ul>
 </div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If the secret has more than one data key, declare an environment variable name using a <code>&lt;<em>key</em>&gt;_env-name</code> annotation for each data key, as shown in the following example. In this example, you provision the <code>myvalue</code> and <code>othervalue</code> data key values, and the environment variable names, <code>FOO_ENV</code> and <code>OTHER_ENV</code>, into all workspace containers.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -1017,26 +1025,11 @@ data:
   otherkey: othervalue</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This results in two environment variables with names <code>FOO_ENV</code>, <code>OTHER_ENV</code>, and values <code>myvalue</code> and <code>othervalue</code>, being provisioned into all workspace containers.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The maximum length of annotation names in a Kubernetes secret is 63 characters, where 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.
-</td>
-</tr>
-</table>
-</div>
+</li>
+<li>
+<p>The maximum length of an annotation name in a Kubernetes secret is 63 characters, of which 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.</p>
 </li>
 </ul>
-</div>
-</li>
-</ol>
 </div>
 </div>
 </div>
