@@ -781,52 +781,65 @@
 <div class="sect1">
 <h2 id="configuring-external-PostgreSQL_che"><a class="anchor" href="#configuring-external-PostgreSQL_che"></a>Configuring external PostgreSQL</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>By configuring the external PostgreSQL, you can make the workspace metadata and the user information persistent.</p>
+</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Use the following SQL script to create user and database for the Che server to persist workspaces metadata etc:</p>
+<p>Define the values of the following placeholders:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;database-user&gt;</code> is the Che server database user name</p>
+</li>
+<li>
+<p><code>&lt;database-password&gt;</code> is the Che server database password</p>
+</li>
+<li>
+<p><code>&lt;database&gt;</code> is the Che server database name</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use the following SQL script to create a user and a database for the Che server to make workspace metadata persistent:</p>
 <div class="listingblock">
 <div class="content">
-<pre>CREATE USER &lt;database-user&gt; WITH PASSWORD '&lt;database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-CREATE DATABASE &lt;database&gt;                                      <i class="conum" data-value="3"></i><b>(3)</b>
+<pre>CREATE USER &lt;database-user&gt; WITH PASSWORD '&lt;database-password&gt;'
+CREATE DATABASE &lt;database&gt;
 GRANT ALL PRIVILEGES ON DATABASE &lt;database&gt; TO &lt;database-user&gt;
 ALTER USER &lt;database-user&gt; WITH SUPERUSER</pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Che server database username</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Che server database password</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Che server database name</td>
-</tr>
-</table>
+</li>
+<li>
+<p>Define the value of the following placeholder:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;identity-database-password&gt;</code> is the Keycloak database password</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </li>
 <li>
-<p>Use the following SQL script to create database for Keycloak back end to persist user information:</p>
+<p>Use the following SQL script to create a database for the Keycloak back end to make the user information persistent:</p>
 <div class="listingblock">
 <div class="content">
-<pre>CREATE USER keycloak WITH PASSWORD '&lt;identity-database-password&gt;' <i class="conum" data-value="1"></i><b>(1)</b>
+<pre>CREATE USER keycloak WITH PASSWORD '&lt;identity-database-password&gt;'
 CREATE DATABASE keycloak
 GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak</pre>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Keycloak database password</td>
-</tr>
-</table>
 </div>
 </li>
 </ol>
