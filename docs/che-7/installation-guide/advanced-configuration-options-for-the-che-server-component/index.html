@@ -861,13 +861,18 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_API_INTERNAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://${CHE_HOST}:${CHE_PORT}/api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API service internal network URL. Back-end services should initiate REST communications to Che server with this URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WEBSOCKET_ENDPOINT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ws://${CHE_HOST}:${CHE_PORT}/api/websocket</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Che WebSocket major endpoint. Provides basic communication endpoint for major WebSocket interactions and messaging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WEBSOCKET_INTERNAL_ENDPOINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Che WebSocket major internal endpoint. Provides basic communication endpoint for major WebSocket interactions and messaging.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_PROJECTS_STORAGE</code></p></td>
@@ -1270,6 +1275,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether che-server should try to label the workspace namespaces.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_NAMESPACE_ANNOTATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines whether che-server should try to annotate the workspace namespaces.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>app.kubernetes.io/part-of=che.eclipse.org,app.kubernetes.io/component=workspaces-namespace</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of labels to find namespace that are used for Che Workspaces. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.annotations</code>.  - actively label namespace with any workspace.</p></td>
@@ -1277,7 +1287,7 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_NAMESPACE_ANNOTATIONS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>che.eclipse.org/username=&lt;username&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of annotations to find namespace prepared for Che users workspaces. Only namespace matching the <code>che.infra.kubernetes.namespace.labels</code> will be matched against these annotations. namespace that matches both <code>che.infra.kubernetes.namespace.labels</code> and <code>che.infra.kubernetes.namespace.annotations</code> will be preferentially used for User&#8217;s workspaces. It&#8217;s possible to use <code>&lt;username&gt;</code> placeholder to specify the namespace to concrete user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of annotations to find namespace prepared for Che users workspaces. Only namespace matching the <code>che.infra.kubernetes.namespace.labels</code> will be matched against these annotations. namespace that matches both <code>che.infra.kubernetes.namespace.labels</code> and <code>che.infra.kubernetes.namespace.annotations</code> will be preferentially used for User&#8217;s workspaces. It&#8217;s possible to use <code>&lt;username&gt;</code> placeholder to specify the namespace to concrete user. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.labels</code>.  - actively annotate namespace with any workspace.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_INFRA_KUBERNETES_SERVICE__ACCOUNT__NAME</code></p></td>
@@ -1741,7 +1751,7 @@ spec:
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_FACTORY_DEFAULT__EDITOR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/next</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Editor that will be used for factories that are created from a remote Git repository which does not contain any Che-specific workspace descriptor.</p></td>
 </tr>
 <tr>
@@ -1756,7 +1766,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/next</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default Editor that should be provisioned into Devfile if there is no specified Editor Format is <code>editorPublisher/editorName/editorVersion</code> value. <code>NULL</code> or absence of value means that default editor should not be provisioned.</p></td>
 </tr>
 <tr>
