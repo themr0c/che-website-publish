@@ -66,7 +66,13 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../hosted-che/hosted-che/">Eclipse Che hosted by Red Hat</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../hosted-che/try-in-web-ide-github-action/">Try in Web IDE GitHub action</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -103,7 +109,7 @@
     <a class="nav-link" href="../../end-user-guide/che-theia-troubleshooting/">Che-Theia Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in how Che-Theia Webview works on a single-host mode comparing to a multi-host mode</a>
+    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in Che-Theia Webview in single-host mode and multihost mode</a>
   </li>
 </ul>
   </li>
@@ -112,7 +118,10 @@
     <a class="nav-link" href="../../end-user-guide/workspaces-overview/">Using developer workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-code-sample/">Creating a workspace from code sample</a>
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-code-sample/">Creating a workspace from a code sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-template-devfile/">Creating a workspace from a template devfile</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-remote-devfile/">Creating a workspace from a remote devfile using the dashboard</a>
@@ -121,7 +130,7 @@
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-local-devfile-using-chectl/">Creating a workspace from local devfile using chectl</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-by-importing-the-source-code-of-a-project/">Creating a workspace by importing the source code of a project</a>
+    <a class="nav-link" href="../../end-user-guide/importing-the-source-code-of-a-project-into-a-workspace/">Importing the source code of a project into a workspace</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/configuring-a-workspace-with-dashboard/">Configuring a workspace</a>
@@ -151,7 +160,7 @@
     <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-1/">Authoring devfiles version 1</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring devfiles version 2</a>
+    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring a devfile 2.0.0</a>
   </li>
 </ul>
   </li>
@@ -695,7 +704,7 @@
     <li><a href="./">Configuring the Che installation</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.35.x/modules/installation-guide/pages/configuring-the-che-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.36.x/modules/installation-guide/pages/configuring-the-che-installation.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -914,7 +923,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheImagePullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in Che deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in Che deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheImageTag</p></td>
@@ -954,7 +963,11 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">dashboardImagePullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the dashboard deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the dashboard deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dashboardIngress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dashboard ingress custom settings.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">dashboardMemoryLimit</p></td>
@@ -963,6 +976,10 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">dashboardMemoryRequest</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the memory request used in the dashboard deployment. Defaults to 16Mi.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dashboardRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dashboard route custom settings.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryCpuLimit</p></td>
@@ -990,7 +1007,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryPullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the devfile registry deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the devfile registry deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryRoute</p></td>
@@ -998,11 +1015,19 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the devfile registry, that serves sample, ready-to-use devfiles. Set this ONLY when a use of an external devfile registry is needed. See the <code>externalDevfileRegistry</code> field. By default, this will be automatically calculated by the Operator.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated in favor of <code>externalDevfileRegistries</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disableInternalClusterSVCNames</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable internal cluster SVC names usage to communicate between components to speed up the traffic and avoid proxy issues.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externalDevfileRegistries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External devfile registries, that serves sample, ready-to-use devfiles. Configure this in addition to a dedicated devfile registry (when <code>externalDevfileRegistry</code> is <code>false</code>) or instead of it (when <code>externalDevfileRegistry</code> is <code>true</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">externalDevfileRegistry</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated devfile registry server. By default, a dedicated devfile registry server is started. When <code>externalDevfileRegistry</code> is <code>true</code>, no such dedicated server will be started by the Operator and you will have to manually set the <code>devfileRegistryUrl</code> field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether to deploy a dedicated devfile registry server. By default, a dedicated devfile registry server is started. When <code>externalDevfileRegistry</code> is <code>true</code>, no such dedicated server will be started by the Operator and configure at least one devfile registry with <code>externalDevfileRegistries</code> field.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">externalPluginRegistry</p></td>
@@ -1042,7 +1067,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryPullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the plugin registry deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the plugin registry deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pluginRegistryRoute</p></td>
@@ -1118,7 +1143,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">useInternalClusterSVCNames</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use internal cluster SVC names to communicate between components to speed up the traffic and avoid proxy issues. The default value is <code>true</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated in favor of <code>disableInternalClusterSVCNames</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workspaceNamespaceDefault</p></td>
@@ -1177,7 +1202,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">postgresImagePullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the PostgreSQL database deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the PostgreSQL database deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1199,6 +1224,18 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the Operator on whether or not to deploy a dedicated Identity Provider (Keycloak or RH SSO instance). Instructs the Operator on whether to deploy a dedicated Identity Provider (Keycloak or RH-SSO instance). By default, a dedicated Identity Provider server is deployed as part of the Che installation. When <code>externalIdentityProvider</code> is <code>true</code>, no dedicated identity provider will be deployed by the Operator and you will need to provide details about the external identity provider you are about to use. See also all the other fields starting with: <code>identityProvider</code>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gatewayAuthenticationSidecarImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gateway sidecar responsible for authentication when NativeUserMode is enabled. See <a href="https://github.com/oauth2-proxy/oauth2-proxy">oauth2-proxy</a> or <a href="https://github.com/openshift/oauth-proxy">openshift/oauth-proxy</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gatewayAuthorizationSidecarImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gateway sidecar responsible for authorization when NativeUserMode is enabled. See <a href="https://github.com/brancz/kube-rbac-proxy">kube-rbac-proxy</a> or <a href="https://github.com/openshift/kube-rbac-proxy">openshift/kube-rbac-proxy</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gatewayHeaderRewriteSidecarImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. The value of this flag is ignored. Sidecar functionality is now implemented in Traefik plugin.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderAdminUserName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the name of the Identity Provider administrator user. Defaults to <code>admin</code>.</p></td>
 </tr>
@@ -1216,7 +1253,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderImagePullPolicy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Identity Provider, Keycloak or RH-SSO, deployment. Default value is <code>Always</code> for <code>nightly</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the image pull policy used in the Identity Provider, Keycloak or RH-SSO, deployment. Default value is <code>Always</code> for <code>nightly</code>, <code>next</code> or <code>latest</code> images, and <code>IfNotPresent</code> in other cases.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderIngress</p></td>
@@ -1252,7 +1289,11 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">initialOpenShiftOAuthUser</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For operating with the OpenShift OAuth authentication, create a new user account since the kubeadmin can not be used. If the value is true, then a new OpenShift OAuth user will be created for the HTPasswd identity provider. If the value is false and the user has already been created, then it will be removed. If value is an empty, then do nothing. The user&#8217;s credentials are stored in the <code>openshift-oauth-user-credentials</code> secret in 'openshift-config' namespace by Operator. Note that this solution is OpenShift 4 platform-specific.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For operating with the OpenShift OAuth authentication, create a new user account since the kubeadmin can not be used. If the value is true, then a new OpenShift OAuth user will be created for the HTPasswd identity provider. If the value is false and the user has already been created, then it will be removed. If value is an empty, then do nothing. The user&#8217;s credentials are stored in the <code>openshift-oauth-user-credentials</code> secret in 'openshift-config' namespace by Operator. Note that this solution is Openshift 4 platform-specific.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nativeUserMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables native user mode. Currently works only on OpenShift and DevWorkspace engine. Native User mode uses OpenShift OAuth directly as identity provider, without Keycloak.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">oAuthClientName</p></td>
@@ -1405,6 +1446,10 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">devfileRegistryURL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public URL to the devfile registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">devworkspaceStatus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The status of the Devworkspace subsystem</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">gitHubOAuthProvisioned</p></td>

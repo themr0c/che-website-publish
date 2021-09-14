@@ -66,7 +66,13 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../hosted-che/hosted-che/">Eclipse Che hosted by Red Hat</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../hosted-che/try-in-web-ide-github-action/">Try in Web IDE GitHub action</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -103,7 +109,7 @@
     <a class="nav-link" href="../../end-user-guide/che-theia-troubleshooting/">Che-Theia Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in how Che-Theia Webview works on a single-host mode comparing to a multi-host mode</a>
+    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in Che-Theia Webview in single-host mode and multihost mode</a>
   </li>
 </ul>
   </li>
@@ -112,7 +118,10 @@
     <a class="nav-link" href="../../end-user-guide/workspaces-overview/">Using developer workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-code-sample/">Creating a workspace from code sample</a>
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-code-sample/">Creating a workspace from a code sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-template-devfile/">Creating a workspace from a template devfile</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-remote-devfile/">Creating a workspace from a remote devfile using the dashboard</a>
@@ -121,7 +130,7 @@
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-local-devfile-using-chectl/">Creating a workspace from local devfile using chectl</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-by-importing-the-source-code-of-a-project/">Creating a workspace by importing the source code of a project</a>
+    <a class="nav-link" href="../../end-user-guide/importing-the-source-code-of-a-project-into-a-workspace/">Importing the source code of a project into a workspace</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/configuring-a-workspace-with-dashboard/">Configuring a workspace</a>
@@ -151,7 +160,7 @@
     <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-1/">Authoring devfiles version 1</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring devfiles version 2</a>
+    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring a devfile 2.0.0</a>
   </li>
 </ul>
   </li>
@@ -696,7 +705,7 @@
     <li><a href="./">Configuring authorization</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.35.x/modules/administration-guide/pages/configuring-authorization.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.36.x/modules/administration-guide/pages/configuring-authorization.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -826,9 +835,6 @@ See Keycloak documentation to learn how to <a href="https://www.keycloak.org/doc
 <ul>
 <li>
 <p>Create a <a href="https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app">OAuth application in GitHub</a> using Che URL as the value for the application <code>Homepage URL</code> and Keycloak GitHub endpoint URL as the value for Authorization callback URL. The default values are <code>https://che-eclipse-che.<em>&lt;DOMAIN&gt;</em>/</code> and <code>https://keycloak-eclipse-che.<em>&lt;DOMAIN&gt;</em>/auth/realms/che/broker/github/endpoint</code> respectively, where <code><em>&lt;DOMAIN&gt;</em></code> is Kubernetes cluster domain.</p>
-</li>
-<li>
-<p>For Che deployed in multi-user mode:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -872,49 +878,6 @@ EOF</pre>
 </li>
 <li>
 <p>If Che was already installed wait until rollout of Keycloak component finishes.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>For Che deployed in single-user mode:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>On Kubernetes or OpenShift, update the deployment configuration (see <a href="../../installation-guide/configuring-the-che-installation/" class="page">Configuring the Che installation</a> and <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/#authentication-parameters" class="page">installation-guide:advanced-configuration-options-for-the-che-server-component.adoc#authentication-parameters</a>).</p>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_OAUTH_GITHUB_CLIENTID=<em>&lt;your-github-client-ID&gt;</em>
-CHE_OAUTH_GITHUB_CLIENTSECRET=<em>&lt;your-github-secret&gt;</em></pre>
-</div>
-</div>
-</li>
-<li>
-<p>In the <strong>Authorization callback URL</strong> field of the GitHub OAuth application, enter <code><em>&lt;prod-url</em>/api/oauth/callback</code>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>Substitute <code><em>&lt;prod-url&gt;</em></code> with the URL and port of the Che installation.</p>
-</li>
-<li>
-<p>Substitute <code><em>&lt;your-github-client-ID&gt;</em></code> and <code><em>&lt;your-github-secret&gt;</em></code> with your GitHub client ID and secret.</p>
-</li>
-<li>
-<p>This configuration only applies to single-user deployments of Che.</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
 </li>
 </ol>
 </div>
@@ -1348,18 +1311,6 @@ All three types of GitLab OAuth 2 applications are supported: User owned, Group 
 <div class="paragraph">
 <p>By default, Che installation includes the deployment of a dedicated Keycloak instance. However, using an external Keycloak is also possible. This option is useful when a user has an existing Keycloak instance with already-defined users, for example, a company-wide Keycloak server used by several applications.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-A dedicated Keycloak instance is only deployed with Che installed in multiuser mode.
-</td>
-</tr>
-</table>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Placeholders used in examples</caption>
 <colgroup>
@@ -1476,76 +1427,6 @@ server:
   customCheProperties:
     CHE_INFRA_OPENSHIFT_OAUTH<em>IDENTITY</em>PROVIDER: &lt;OpenShift Identity Provider (Keycloak or RH-SSO) alias&gt;</code></pre>
 </div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-prod-short-to-work-without-identity-provider_che"><a class="anchor" href="#configuring-prod-short-to-work-without-identity-provider_che"></a>Configuring Che to work without Keycloak</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>By default, Che is deployed in multiuser mode where Keycloak and PostgreSQL are enabled. However, it is possible to deploy it in the single-user mode too, by changing the <code>CHE_MULTIUSER</code> value to <code>false</code>. In that case, neither Keycloak nor PostgreSQL are installed.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The <code>chectl</code> management tool is available. See the <a href="../../installation-guide/using-the-chectl-management-tool/" class="page">Using the chectl management tool</a> section. Alternatively, the OpenShift command line tool, <code>oc</code>, can be used.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Prepare the <code>cr-patch.yaml</code> file with the following content:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
-  server:
-      customCheProperties:
-        CHE_MULTIUSER: false</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install Che in the single-user mode:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:deploy --platform <em>&lt;platform&gt;</em> --installer operator  --che-operator-cr-patch-yaml cr-patch.yaml</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>&lt;platform&gt;</em></code> option in the above example with <code>crc</code>, <code>minishift</code>, or <code>openshift</code>.
-Kubernetes-native platforms such as <code>minikube</code>, <code>microk8s</code>, <code>k8s</code>, and <code>docker-desktop</code> are also available.</p>
-</div>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">Verification</div>
-<ol class="arabic">
-<li>
-<p>Wait for the console log output to display the <code>Command server:deploy has completed successfully.</code> message:</p>
-<div class="listingblock">
-<div class="content">
-<pre>✔ Retrieving Eclipse&#160;Che server URL...&lt;ECLIPSE_CHE_URL&gt;
-   ✔ Eclipse&#160;Che status check
-Command server:deploy has completed successfully.</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Use the following command for correct boolean verification:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ {prod-cli} get checluster -o=jsonpath='{.items[0].spec.server.customCheProperties.CHE_MULTIUSER}'</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If the output of the command is <code>false</code>, Che has been successfully configured in single-user mode.</p>
 </div>
 </li>
 </ol>

@@ -66,7 +66,13 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../hosted-che/hosted-che/">Eclipse Che hosted by Red Hat</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../hosted-che/try-in-web-ide-github-action/">Try in Web IDE GitHub action</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -103,7 +109,7 @@
     <a class="nav-link" href="../che-theia-troubleshooting/">Che-Theia Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in how Che-Theia Webview works on a single-host mode comparing to a multi-host mode</a>
+    <a class="nav-link" href="../differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in Che-Theia Webview in single-host mode and multihost mode</a>
   </li>
 </ul>
   </li>
@@ -112,7 +118,10 @@
     <a class="nav-link" href="../workspaces-overview/">Using developer workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../creating-a-workspace-from-code-sample/">Creating a workspace from code sample</a>
+    <a class="nav-link" href="../creating-a-workspace-from-a-code-sample/">Creating a workspace from a code sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../creating-a-workspace-from-a-template-devfile/">Creating a workspace from a template devfile</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../creating-a-workspace-from-remote-devfile/">Creating a workspace from a remote devfile using the dashboard</a>
@@ -121,7 +130,7 @@
     <a class="nav-link" href="../creating-a-workspace-from-local-devfile-using-chectl/">Creating a workspace from local devfile using chectl</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../creating-a-workspace-by-importing-the-source-code-of-a-project/">Creating a workspace by importing the source code of a project</a>
+    <a class="nav-link" href="../importing-the-source-code-of-a-project-into-a-workspace/">Importing the source code of a project into a workspace</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuring-a-workspace-with-dashboard/">Configuring a workspace</a>
@@ -151,7 +160,7 @@
     <a class="nav-link" href="../authoring-devfiles-version-1/">Authoring devfiles version 1</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../authoring-devfiles-version-2/">Authoring devfiles version 2</a>
+    <a class="nav-link" href="../authoring-devfiles-version-2/">Authoring a devfile 2.0.0</a>
   </li>
 </ul>
   </li>
@@ -696,7 +705,7 @@
     <li><a href="./">Adding tools to Che after creating a workspace</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.35.x/modules/end-user-guide/pages/adding-tools-to-che-after-creating-a-workspace.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.36.x/modules/end-user-guide/pages/adding-tools-to-che-after-creating-a-workspace.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -794,10 +803,7 @@
 <h2 id="adding-language-support-plug-in-to-the-che-workspace_che"><a class="anchor" href="#adding-language-support-plug-in-to-the-che-workspace_che"></a>Adding a language support plug-in to a Che workspace</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This procedure describes adding a tool to an existing workspace by enabling a dedicated plug-in from the Dashboard.</p>
-</div>
-<div class="paragraph">
-<p>To add tools that are available as plug-ins into a Che workspace, use one of the following methods:</p>
+<p>This procedure describes adding a tool to a created workspace by enabling a dedicated plug-in from the Dashboard.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -806,43 +812,39 @@
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>This procedure uses the Language Support for Java plug-in as an example.</p>
-</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Che. To install an instance of Che, see <a href="../../installation-guide/installing-che/" class="page">Installing Che</a>.</p>
-</li>
-<li>
-<p>An existing workspace defined in this instance of Eclipse&#160;Che; see:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../configuring-a-workspace-with-dashboard/" class="page">Configuring a Che 7.35 workspace</a></p>
-</li>
-<li>
-<p><a href="../creating-a-workspace-from-code-sample/#creating-a-workspace-from-quick-add-view-of-user-dashboard_che" class="page">Creating a workspace from Quick Add view of user dashboard</a></p>
-</li>
-</ul>
+<p>A running instance of Che.</p>
+<div class="paragraph">
+<p>See <a href="../../installation-guide/installing-che/" class="page">Installing Che</a>.</p>
 </div>
 </li>
 <li>
-<p>The workspace must be in a <strong>stopped</strong> state. To stop a workspace:</p>
+<p>A created workspace that is defined in this instance of Eclipse&#160;Che.</p>
+<div class="paragraph">
+<p>See <a href="../configuring-a-workspace-with-dashboard/" class="page">Configuring a Che 7.36 workspace</a> and <a href="../creating-a-workspace-from-a-code-sample/" class="page">Creating a workspace from a code sample</a>.</p>
+</div>
+</li>
+<li>
+<p>The workspace must be in a <strong>stopped</strong> state.</p>
+<div class="paragraph">
+<p>The steps to stop a workspace:</p>
+</div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Navigate to the Che Dashboard. See <a href="../navigating-che-using-the-dashboard/" class="page">Navigating Che using the Dashboard</a>.</p>
+<p>Navigate to the Che Dashboard, as explained in <a href="../navigating-che-using-the-dashboard/" class="page">Navigating Che using the Dashboard</a>.</p>
 </li>
 <li>
 <p>In the <strong>Dashboard</strong>, click the <strong>Workspaces</strong> menu to open the workspaces list and locate the workspace.</p>
 </li>
 <li>
-<p>On the same row with the displayed workspace, on the right side of the screen, click the square <b class="button">Stop</b> button to stop the workspace.</p>
+<p>On the same row with the displayed workspace, on the right side of the screen, click <b class="button">Stop</b> to stop the workspace.</p>
 </li>
 <li>
-<p>Wait a few seconds for the workspace to stop (the workspace&#8217;s icon on the list will turn grey), then configure the workspace by selecting it.</p>
+<p>Wait a few seconds for the workspace to stop, and then configure the workspace by selecting it.</p>
 </li>
 </ol>
 </div>
@@ -851,29 +853,24 @@
 </div>
 <div class="paragraph">
 <div class="title">Procedure</div>
-<p>To add the plug-in from the Plug-in registry to an existing Che workspace, use one of the following methods:</p>
+<p>To add a plug-in from the plug-in registry to a created Che workspace, install the plug-in as follows by adding content to the devfile:</p>
 </div>
-<div id="installing-the-plug-in-by-adding-content-to-the-devfile_che" class="ulist">
-<ul>
-<li>
-<p>Installing the plug-in by adding content to the devfile.</p>
-<div class="olist arabic">
+<div id="installing-the-plug-in-by-adding-content-to-the-devfile_che" class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Navigate to the <strong>Devfile</strong> tab. The devfile YAML is displayed.</p>
+<p>Navigate to the <strong>Devfile</strong> tab, where the devfile YAML is displayed.</p>
 </li>
 <li>
-<p>Locate the <code>components</code> section of the devfile and add the following lines to add the Java language plugin with Java 8 to the workspace:</p>
+<p>In the <code>components</code> devfile section, add the following lines: <code>id</code> and <code>type</code>.</p>
 <div class="listingblock">
+<div class="title">Example: Adding the Java 8 language plugin</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"> - id: redhat/java8/latest
    type: chePlugin</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>An example of the final result:</p>
-</div>
 <div class="listingblock">
+<div class="title">Example: The end result</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">components:
  - id: redhat/php/latest
@@ -901,12 +898,15 @@
 </div>
 </li>
 <li>
-<p>On the bottom right side of the screen, save the changes using the <b class="button">Save</b> button. After changes are saved, the workspace can be restarted and will include the new plug-in.</p>
+<p>Click <b class="button">Save</b> to save the changes.</p>
+</li>
+<li>
+<p>Restart the workspace.</p>
+</li>
+<li>
+<p>Verify that the workspace includes the new plug-in.</p>
 </li>
 </ol>
-</div>
-</li>
-</ul>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>

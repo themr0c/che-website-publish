@@ -66,7 +66,13 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../hosted-che/hosted-che/">Eclipse Che hosted by Red Hat</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../hosted-che/try-in-web-ide-github-action/">Try in Web IDE GitHub action</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -103,7 +109,7 @@
     <a class="nav-link" href="../../end-user-guide/che-theia-troubleshooting/">Che-Theia Troubleshooting</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in how Che-Theia Webview works on a single-host mode comparing to a multi-host mode</a>
+    <a class="nav-link" href="../../end-user-guide/differences-in-how-che-theia-webview-works-on-a-single-host-mode-comparing-to-a-multi-host-mode/">Differences in Che-Theia Webview in single-host mode and multihost mode</a>
   </li>
 </ul>
   </li>
@@ -112,7 +118,10 @@
     <a class="nav-link" href="../../end-user-guide/workspaces-overview/">Using developer workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-code-sample/">Creating a workspace from code sample</a>
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-code-sample/">Creating a workspace from a code sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-a-template-devfile/">Creating a workspace from a template devfile</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-remote-devfile/">Creating a workspace from a remote devfile using the dashboard</a>
@@ -121,7 +130,7 @@
     <a class="nav-link" href="../../end-user-guide/creating-a-workspace-from-local-devfile-using-chectl/">Creating a workspace from local devfile using chectl</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/creating-a-workspace-by-importing-the-source-code-of-a-project/">Creating a workspace by importing the source code of a project</a>
+    <a class="nav-link" href="../../end-user-guide/importing-the-source-code-of-a-project-into-a-workspace/">Importing the source code of a project into a workspace</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/configuring-a-workspace-with-dashboard/">Configuring a workspace</a>
@@ -151,7 +160,7 @@
     <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-1/">Authoring devfiles version 1</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring devfiles version 2</a>
+    <a class="nav-link" href="../../end-user-guide/authoring-devfiles-version-2/">Authoring a devfile 2.0.0</a>
   </li>
 </ul>
   </li>
@@ -696,7 +705,7 @@
     <li><a href="./">Configuring OpenShift OAuth</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.35.x/modules/administration-guide/pages/configuring-openshift-oauth.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.36.x/modules/administration-guide/pages/configuring-openshift-oauth.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -770,92 +779,6 @@
 <li>
 <p>Deploy Che using <a href="../../installation-guide/installing-che-on-openshift-4-using-operatorhub/" class="page">OperatorHub</a> or the chectl, see the
 <a href="https://github.com/che-incubator/chectl#user-content-chectl-serverdeploy"><code>chectl server:deploy</code> specification</a> chapter. OpenShift OAuth will be enabled by default.</p>
-</li>
-<li>
-<p>For Che deployed in single-user mode:</p>
-<div class="exampleblock">
-<div class="content">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Register Che OAuth client in OpenShift. See the <a href="https://docs.openshift.com/container-platform/4.3/authentication/configuring-internal-oauth.html#oauth-register-additional-client_configuring-internal-oauth">Register an OAuth client in OpenShift</a> chapter.</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc create -f &lt;(echo '
-kind: OAuthClient
-apiVersion: oauth.openshift.io/v1
-metadata:
- name: che
-secret: "&lt;random set of symbols&gt;"
-redirectURIs:
- - "&lt;Che api url&gt;/oauth/callback"
-grantMethod: prompt
-')</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Add the OpenShift TLS certificate to the Che Java trust store.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Update the OpenShift deployment configuration.</p>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_OAUTH_OPENSHIFT_CLIENTID: <em>&lt;client-ID&gt;</em>
-CHE_OAUTH_OPENSHIFT_CLIENTSECRET: <em>&lt;openshift-secret&gt;</em>
-CHE_OAUTH_OPENSHIFT_OAUTH__ENDPOINT: <em>&lt;oauth-endpoint&gt;</em>
-CHE_OAUTH_OPENSHIFT_VERIFY__TOKEN__URL: <em>&lt;verify-token-url&gt;</em></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code><em>&lt;client-ID&gt;</em></code> a name specified in the OpenShift OAuthClient.</p>
-</li>
-<li>
-<p><code><em>&lt;openshift-secret&gt;</em></code> a secret specified in the OpenShift OAuthClient.</p>
-</li>
-<li>
-<p><code><em>&lt;oauth-endpoint&gt;</em></code> the URL of the OpenShift OAuth service:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>For OpenShift 3 specify the OpenShift master URL.</p>
-</li>
-<li>
-<p>For OpenShift 4 specify the <code>oauth-openshift</code> route.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code><em>&lt;verify-token-url&gt;</em></code> request URL that is used to verify the token. <code>&lt;OpenShift master url&gt;/api</code> can be used for OpenShift 3 and 4.</p>
-</li>
-<li>
-<p>See <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/" class="page">Advanced configuration options for the Che server component</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>See <a href="../authenticating-users/" class="page">Authenticating users</a>.</p>
 </li>
 </ul>
 </div>
