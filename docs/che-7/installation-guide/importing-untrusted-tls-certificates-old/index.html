@@ -751,7 +751,7 @@ This obsolete method is kept for backward compatibility . See <a href="../import
 <td class="content">
 <div class="paragraph">
 <p>On OpenShift, when
-the cluster contains cluster-wide trusted CA certificates added through the <a href="https://docs.openshift.com/container-platform/4.4/networking/configuring-a-custom-pki.html#nw-proxy-configure-object_configuring-a-custom-pki">cluster-wide-proxy configuration</a>, Che Operator detects them and automatically injects them into this ConfigMap:</p>
+the cluster contains cluster-wide trusted CA certificates added using the <a href="https://docs.openshift.com/container-platform/4.4/networking/configuring-a-custom-pki.html#nw-proxy-configure-object_configuring-a-custom-pki">cluster-wide-proxy configuration</a>, Che Operator detects them and automatically injects them into this ConfigMap:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1121,10 +1121,10 @@ SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pr
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start a workspace, get the namespace in which it has been created, and wait for it to be started</p>
+<p>Start a workspace, get the namespace in which it has been created, and wait for it to be started.</p>
 </li>
 <li>
-<p>Get the name of the workspace Pod with the following command:</p>
+<p>Get the name of the workspace Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get pods -o=jsonpath='{.items[0].metadata.name}' -n <em>&lt;workspace namespace&gt;</em> | grep '^workspace.*'</pre>
@@ -1132,7 +1132,7 @@ SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pr
 </div>
 </li>
 <li>
-<p>Get the name of the Theia IDE container in the workspace Pod with the following command:</p>
+<p>Get the name of the Che-Theia IDE container in the workspace Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em>  -n <em>&lt;workspace namespace&gt;</em> | \
@@ -1141,7 +1141,7 @@ SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pr
 </div>
 </li>
 <li>
-<p>Look for a <code>ca-certs</code> ConfigMap that should have been created inside the workspace namespace:</p>
+<p>Look for a <code>ca-certs</code> ConfigMap inside the workspace namespace:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get cm ca-certs <em>&lt;workspace namespace&gt;</em></pre>
@@ -1149,7 +1149,7 @@ SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pr
 </div>
 </li>
 <li>
-<p>Check that the entries in the <code>ca-certs</code> ConfigMap contain all the additional entries you added in the certificate ConfigMap at the Che installation level, in addition to the <code>ca-bundl.crt</code> entry which is a reserved one:</p>
+<p>Check that the entries in the <code>ca-certs</code> ConfigMap contain all the additional entries you added in the certificate ConfigMap at the Che installation level, in addition to the reserved <code>ca-bundle.crt</code> entry:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get cm ca-certs -n <em>&lt;workspace namespace&gt;</em> -o json | jq -r '.data | keys[]'
@@ -1175,7 +1175,7 @@ manually-added-certificate.crt</pre>
 </div>
 </li>
 <li>
-<p>Confirm that the volume has been mounted into containers, especially in the Theia IDE container:</p>
+<p>Confirm that the volume has been mounted into containers, especially in the Che-Theia IDE container:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
@@ -1189,7 +1189,7 @@ manually-added-certificate.crt</pre>
 </div>
 </li>
 <li>
-<p>Inspect <code>/public-certs</code> folder on the Theia IDE container and check that its contents match the list of entries in the <code>ca-certs</code> ConfigMap:</p>
+<p>Inspect <code>/public-certs</code> folder on the Che-Theia IDE container and check that its contents match the list of entries in the <code>ca-certs</code> ConfigMap:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl exec <em>&lt;workspace pod name&gt;</em> -c <em>&lt;theia ide container name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> -- ls /public-certs

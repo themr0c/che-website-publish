@@ -879,27 +879,134 @@ EOF</pre>
 <div class="sect2">
 <h3 id="configuring_bitbucket_servers_che"><a class="anchor" href="#configuring_bitbucket_servers_che"></a>Configuring Bitbucket servers</h3>
 <div class="paragraph">
-<p>To use the Bitbucket server as a project sources supplier:</p>
+<p>The following chapter describes how to configure the Bitbucket (BB) server so that you can use it with public repositories and as a project source supplier for Che. This includes the following processes:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Register the Bitbucket server URL on Che by using the <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS</code> property.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The value of the property must contain the hostname of the server to register.</p>
+<p>Creating ConfigMaps for additional TLS and <code>gitSelfSign</code> certificates. This enables:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Launching a factory using a devfile URL.</p>
 </li>
 <li>
-<p>For the configuration options changing examples, see <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/" class="page">Advanced configuration options for the Che server component</a>.</p>
+<p>Importing and cloning a project.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>Add the Bitbucket CA certificate into Che, see <a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>.</p>
+<p>Registering the BB server URL with the Che server using the CR <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS</code> property.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To configure BB for Che, configure the related CheCluster Custom Resource (CR) and Che instance YAML file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Configuring BB for the use with private repositories includes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configure <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS</code>.</p>
+</li>
+<li>
+<p>Configure the OAuth 1 authentication on the BB server side. For more information, see <a href="#proc_configuring-bitbucket-server-oauth1_che">Configuring Bitbucket Server OAuth 1</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A value of the BB server certification authority (CA) exported in the Base64 ASCII format and stored in a file named <code>ca.crt</code>.</p>
+</li>
+<li>
+<p>An instance of Che.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Provision the CA of the BB server to the Che server to enable it to read the devfiles stored in the BB server. To do so, add the following ConfigMap to the <code>eclipse-che</code> namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create configmap bitbucket-ca-cert-for-factory --from-file=ca.crt -n eclipse-che</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label configmap bitbucket-ca-cert-for-factory app.kubernetes.io/part-of=che.eclipse.org app.kubernetes.io/component=ca-bundle -n eclipse-che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Provision the CA of the BB server to the Che server to be able to use Git operations. To do so, add a new ConfigMap to the <code>eclipse-che</code> namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create configmap bitbucket-ca-for-git --from-file=ca.crt --from-literal=githost=<em>&lt;bitbucket_server_url&gt;</em> -n eclipse-che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit the CheCluster Custom Resource (CR) to configure the Che server.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  server:
+    # …
+    gitSelfSignedCert: __&lt;boolean&gt;__ <i class="conum" data-value="1"></i><b>(1)</b>
+    customCheProperties:
+      CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS:  "__&lt;bitbucket_server_url&gt;__" <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>true</code>: if BB is using a self-signed cert. Default value: <code>false</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>BB server URL is an HTTPS resource.
+<div class="ulist">
+<ul>
+<li>
+<p>Example: <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS: "https://bitbucket-bitbucket.apps.ocp48-aws.crw-qe.com/"`</code></p>
+</li>
+<li>
+<p>For more information, see <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/" class="page">Advanced configuration options for the Che server component</a>.</p>
+</li>
+</ul>
+</div></td>
+</tr>
+</table>
+</div>
 </li>
 </ol>
+</div>
+<div class="ulist">
+<div class="title">Reference</div>
+<ul>
+<li>
+<p>For adding a Bitbucket CA certificate into Che, see <a href="../../installation-guide/importing-untrusted-tls-certificates/" class="page">Importing untrusted TLS certificates to Che</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
