@@ -519,6 +519,9 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../migration-from-postgresql-9-to-postgresql-13/">Migration from PostgreSQL 9 to PostgreSQL 13</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
@@ -696,7 +699,7 @@
     <li><a href="./">Configuring authorization</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.36.x/modules/administration-guide/pages/configuring-authorization.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.37.x/modules/administration-guide/pages/configuring-authorization.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -877,9 +880,9 @@ EOF</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuring_bitbucket_servers_che"><a class="anchor" href="#configuring_bitbucket_servers_che"></a>Configuring a Bitbucket server that uses self-signed TLS certificates</h3>
+<h3 id="configuring_bitbucket_servers_che"><a class="anchor" href="#configuring_bitbucket_servers_che"></a>Configuring Bitbucket servers</h3>
 <div class="paragraph">
-<p>The following chapter describes how to configure a Bitbucket (BB) server that uses self-signed TLS certificates so that the Che server and workspace components can establish a trusted connection with BB.</p>
+<p>The following chapter describes how to configure the Bitbucket (BB) server so that you can use it with public repositories and as a project source supplier for Che. This includes the following processes:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -896,7 +899,13 @@ EOF</pre>
 </ul>
 </div>
 </li>
+<li>
+<p>Registering the BB server URL with the Che server using the CR <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS</code> property.</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
+<p>To configure BB for Che, configure the related CheCluster Custom Resource (CR) and Che instance YAML file.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -905,13 +914,16 @@ EOF</pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
+<div class="paragraph">
+<p>Configuring BB for the use with private repositories includes:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Configure the OAuth 1 authentication on the BB server side. For more information, see <a href="#proc_configuring-bitbucket-server-oauth1_che">Configuring Bitbucket Server OAuth 1</a></p>
+<p>Configure <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS</code>.</p>
 </li>
 <li>
-<p>Creating a ConfigMap for importing additional certificates is necessary only if a BB server is setup with self-signed TLS certificates. These certificates are needed for the proper functionality of Che server and tools inside of a workspace, which use them for performing Git operations related to a specific repository.</p>
+<p>Configure the OAuth 1 authentication on the BB server side. For more information, see <a href="#proc_configuring-bitbucket-server-oauth1_che">Configuring Bitbucket Server OAuth 1</a></p>
 </li>
 </ul>
 </div>
@@ -923,7 +935,7 @@ EOF</pre>
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A value of the BB server certification authority (CA) exported in the Base64 ASCII format and stored in a <code>ca.crt</code> file.</p>
+<p>A value of the BB server certification authority (CA) exported in the Base64 ASCII format and stored in a file named <code>ca.crt</code>.</p>
 </li>
 <li>
 <p>An instance of Che.</p>
@@ -950,7 +962,7 @@ EOF</pre>
 <p>Provision the CA of the BB server to the Che server to be able to use Git operations. To do so, add a new ConfigMap to the <code>eclipse-che</code> namespace:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap che-git-self-signed-cert --from-file=ca.crt --from-literal=githost=<em>&lt;bitbucket_server_url&gt;</em> -n eclipse-che</pre>
+<pre>$ kubectl create configmap bitbucket-ca-for-git --from-file=ca.crt --from-literal=githost=<em>&lt;bitbucket_server_url&gt;</em> -n eclipse-che</pre>
 </div>
 </div>
 </li>
@@ -961,16 +973,25 @@ EOF</pre>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
   server:
     # …
-    gitSelfSignedCert: <em>&lt;boolean&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+    gitSelfSignedCert: __&lt;boolean&gt;__ <i class="conum" data-value="1"></i><b>(1)</b>
+    customCheProperties:
+      CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS:  "__&lt;bitbucket_server_url&gt;__" <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Use <code>true</code> for a BB server that use a self-signed cert. Default value: <code>false</code>.
+<td><code>true</code>: if BB is using a self-signed cert. Default value: <code>false</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>BB server URL is an HTTPS resource.
 <div class="ulist">
 <ul>
+<li>
+<p>Example: <code>CHE_INTEGRATION_BITBUCKET_SERVER__ENDPOINTS: "https://bitbucket-bitbucket.apps.ocp48-aws.crw-qe.com/"`</code></p>
+</li>
 <li>
 <p>For more information, see <a href="../../installation-guide/advanced-configuration-options-for-the-che-server-component/" class="page">Advanced configuration options for the Che server component</a>.</p>
 </li>
@@ -992,42 +1013,9 @@ EOF</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="proc_configuring-bitbucket-server-oauth1_che"><a class="anchor" href="#proc_configuring-bitbucket-server-oauth1_che"></a>Configuring the Bitbucket and Che integration to use OAuth1</h3>
+<h3 id="proc_configuring-bitbucket-server-oauth1_che"><a class="anchor" href="#proc_configuring-bitbucket-server-oauth1_che"></a>Configuring Bitbucket Server OAuth 1</h3>
 <div class="paragraph">
-<p>The following section describes the configuration of the OAuth 1 authentication that is needed for performing read and write operations with Bitbucket (BB) repositories. To use BB repositories with allowed Git operations, such as <code>clone</code> and <code>push</code>, register a BB endpoint with Che first, and configure the OAuth 1 authentication.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This procedure requires:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>generating RSA key pairs</p>
-</li>
-<li>
-<p>generating a consumer key-secret pair</p>
-</li>
-<li>
-<p>creating an application link on the BB side</p>
-</li>
-<li>
-<p>configuring BB on the Che-server side</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>This procedure also describes how to activate OAuth 1 for Bitbucket Server to:</p>
+<p>This procedure describes how to activate OAuth 1 for Bitbucket Server to:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1035,9 +1023,12 @@ EOF</pre>
 <p>Use devfiles hosted on a Bitbucket Server.</p>
 </li>
 <li>
-<p>Enable Che to obtain and renew <a href="https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html">Bitbucket Server Personal access tokens</a>.</p>
+<p><a href="../../end-user-guide/authenticating-on-scm-server-with-a-personal-access-token/" class="page">Authenticating users on private repositories of SCM servers</a>.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>It enables Che to obtain and renew <a href="https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html">Bitbucket Server Personal access tokens</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1048,34 +1039,19 @@ EOF</pre>
 <li>
 <p>Bitbucket Server is available from Che server.</p>
 </li>
-<li>
-<p>An instance of Che.</p>
-</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Generate an RSA key pair and a stripped-down version of the public key:</p>
+<p>Generate a RSA key pair and a stripped down version of the public key:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ openssl genrsa -out <em>&lt;private.pem&gt;</em> 2048</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ openssl rsa -in <em>&lt;private.pem&gt;</em> -pubout &gt; <em>&lt;public.pub&gt;</em></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ openssl pkcs8 -topk8 -inform pem -outform pem -nocrypt -in <em>&lt;private.pem&gt;</em> -out <em>&lt;privatepkcs8.pem&gt;</em></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ cat <em>&lt;public.pub&gt;</em> | sed 's/-----BEGIN PUBLIC KEY-----//g' | sed 's/-----END PUBLIC KEY-----//g' | tr -d '\n' &gt; <em>&lt;public-stripped.pub&gt;</em></pre>
+<pre>openssl genrsa -out <em>&lt;private.pem&gt;</em> 2048
+openssl rsa -in <em>&lt;private.pem&gt;</em> -pubout &gt; <em>&lt;public.pub&gt;</em>
+openssl pkcs8 -topk8 -inform pem -outform pem -nocrypt -in <em>&lt;private.pem&gt;</em> -out <em>&lt;privatepkcs8.pem&gt;</em>
+cat <em>&lt;public.pub&gt;</em> | sed 's/-----BEGIN PUBLIC KEY-----//g' | sed 's/-----END PUBLIC KEY-----//g' | tr -d '\n' &gt; <em>&lt;public-stripped.pub&gt;</em></pre>
 </div>
 </div>
 </li>
@@ -1083,13 +1059,53 @@ EOF</pre>
 <p>Generate a consumer key and a shared secret.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ openssl rand -base64 24 &gt; <em>&lt;bitbucket_server_consumer_key&gt;</em></pre>
+<pre>openssl rand -base64 24 &gt; <em>&lt;bitbucket_server_consumer_key&gt;</em>
+openssl rand -base64 24 &gt; <em>&lt;bitbucket_shared_secret&gt;</em></pre>
 </div>
 </div>
+</li>
+<li>
+<p>Create a Kubernetes Secret in Che namespace containing the consumer and private keys.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ openssl rand -base64 24 &gt; <em>&lt;bitbucket_shared_secret&gt;</em></pre>
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+kind: Secret
+apiVersion: v1
+metadata:
+  name: bitbucket-oauth-config
+  namespace: &lt;...&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: oauth-scm-configuration
+  annotations:
+    che.eclipse.org/oauth-scm-server: bitbucket
+    che.eclipse.org/scm-server-endpoint: &lt;...&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+type: Opaque
+data:
+  private.key: &lt;...&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+  consumer.key: &lt;...&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+EOF</pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Che namespace. The default is eclipse-che</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Bitbucket Server URL</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>base64 encoded content of the <em>&lt;privatepkcs8.pem&gt;</em> file without first and last lines.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>base64 encoded content of the <code><em>&lt;bitbucket_server_consumer_key&gt;</em></code> file.</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -1099,16 +1115,41 @@ EOF</pre>
 <li>
 <p>In Bitbucket Server, click the cog in the top navigation bar to navigate to <strong>Administration</strong>  &gt; <strong>Application Links</strong>.</p>
 </li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale IBM.Usage = NO --></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Enter the application URL: <code>https://che-host:che-port</code> and click the <b class="button">Create new link</b> button.</p>
 </li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale IBM.Usage = YES --></p>
+</div>
+<div class="paragraph">
+<p><!-- vale IBM.PassiveVoice = NO --></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
-<p>In the warning message stating <code>No response was received from the URL</code> click the <b class="button">Continue</b> button.</p>
+<p>On the warning message stating "No response was received from the URL" click the <b class="button">Continue</b> button.</p>
 </li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale IBM.PassiveVoice = YES --></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
-<p>Complete the <strong>Link Applications</strong> form and click the <b class="button">Continue</b> button.</p>
-<div class="exampleblock">
-<div class="content">
+<p>Fill-in the <strong>Link Applications</strong> form and click the <b class="button">Continue</b> button.</p>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Application Name</dt>
@@ -1149,13 +1190,9 @@ EOF</pre>
 </dd>
 </dl>
 </div>
-</div>
-</div>
 </li>
 <li>
-<p>Complete the <strong>Link Applications</strong> form and click the <b class="button">Continue</b> button.</p>
-<div class="exampleblock">
-<div class="content">
+<p>Fill-in the <strong>Link Applications</strong> form and click the <b class="button">Continue</b> button.</p>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Consumer Key</dt>
@@ -1171,99 +1208,6 @@ EOF</pre>
 <p>Paste the content of the <code><em>&lt;public-stripped.pub&gt;</em></code> file.</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Create a Kubernetes Secret in Che namespace containing the consumer and private keys.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$ kubectl apply -f - &lt;&lt;EOF
-kind: Secret
-apiVersion: v1
-metadata:
-  name: bitbucket-oauth-config
-  namespace: <em>&lt;Che-namespace&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
-  labels:
-    app.kubernetes.io/component: oauth-scm-configuration
-    app.kubernetes.io/part-of: che.eclipse.org
-  annotations:
-    che.eclipse.org/oauth-scm-server: bitbucket
-    che.eclipse.org/scm-server-endpoint: '<em>&lt;scm-server-endpoint&gt;</em>' <i class="conum" data-value="2"></i><b>(2)</b>
-type: Opaque
-data:
-  private.key: '<em>&lt;user-private-key&gt;</em>' <i class="conum" data-value="3"></i><b>(3)</b>
-  consumer.key: '<em>&lt;bitbucket_server_consumer_key&gt;</em>' <i class="conum" data-value="4"></i><b>(4)</b>
-EOF</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Che namespace. The default is eclipse-che</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Bitbucket Server URL</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>base64 encoded content of the <code><em>&lt;privatepkcs8.pem&gt;</em></code> file without first and last lines.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>base64 encoded content of the <code><em>&lt;bitbucket_server_consumer_key&gt;</em></code> file.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">Example</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/usr/bin/env bash
-
-NS=${1:-eclipse-che}
-CONSUMER_KEY=$(cat ./certs/bitbucket_server_consumer_key)
-PRIVATE_KEY=$(cat ./certs/privatepkcs8.pem | sed 's/-----BEGIN PRIVATE KEY-----//g' |  sed 's/-----END PRIVATE KEY-----//g' | tr -d '\n')
-BITBUCKET_HOST='<em>&lt;your-bitbucket-host-here&gt;</em>'
-unameOut="$(uname -s)"
-
-case "${unameOut}" in
-    Linux*)     BASE64_FUNC='base64 -w 0';;
-    Darwin*)    BASE64_FUNC='base64';;
-    CYGWIN*)    BASE64_FUNC='base64 -w 0';;
-    MINGW*)     BASE64_FUNC='base64 -w 0';;
-    *)          BASE64_FUNC='base64 -w 0'
-esac
-
-cat &lt;&lt;EOF | oc apply -n $NS -f -
-kind: Secret
-apiVersion: v1
-metadata:
-  name: bitbucket-oauth-config
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: oauth-scm-configuration
-  annotations:
-    che.eclipse.org/oauth-scm-server: bitbucket
-    che.eclipse.org/scm-server-endpoint: https://$BITBUCKET_HOST
-type: Opaque
-data:
-  private.key: $(echo -n $PRIVATE_KEY | $BASE64_FUNC)
-  consumer.key: $(echo -n $CONSUMER_KEY | $BASE64_FUNC)
-EOF</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>See the whole script in this <a href="https://github.com/skabashnyuk/gitsrv/blob/main/bitbucket/4_setupche.sh">GitHub example</a>.</p>
-</li>
-</ul>
 </div>
 </li>
 </ol>
