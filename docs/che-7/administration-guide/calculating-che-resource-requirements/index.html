@@ -373,7 +373,7 @@
     <a class="nav-link" href="../../installation-guide/importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../installation-guide/switching-between-external-and-internal-communication/">Switching between external and internal ways in inter-component communication</a>
+    <a class="nav-link" href="../../installation-guide/configuring-communication-between-che-components/">Configuring communication between Che components</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page/">Setting up the Keycloak che-username-readonly theme for the Eclipse Che login page</a>
@@ -698,7 +698,7 @@
     <li><a href="./">Calculating Che resource requirements</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.37.x/modules/administration-guide/pages/calculating-che-resource-requirements.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.38.x/modules/administration-guide/pages/calculating-che-resource-requirements.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -1070,23 +1070,32 @@ for the <code>chePlugin</code> and <code>cheEditor</code> types in the <code>met
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
 metadata:
- generateName: guestbook-nodejs-sample-
+  generateName: nodejs-web-app-
 projects:
- - name: guestbook-nodejs-sample
-   source:
-     type: git
-     location: "https://github.com/l0rd/nodejs-sample"
+  -
+    name: react-web-app
+    source:
+      type: git
+      location: "https://github.com/che-samples/react-web-app"
 components:
- - type: chePlugin
-   id: che-incubator/typescript/latest
- - type: kubernetes
-   alias: guestbook-frontend
-   reference: https://raw.githubusercontent.com/l0rd/nodejs-sample/master/kubernetes-manifests/guestbook-frontend.deployment.yaml
-   mountSources: true
-   entrypoints:
-     - command: ['sleep']
-       args: ['infinity']</code></pre>
+  -
+    type: chePlugin
+    id: vscode/typescript-language-features/latest
+  -
+    type: dockerimage
+    alias: nodejs
+    image: quay.io/eclipse/che-nodejs12-community:ce0526f
+    endpoints:
+      - name: 'nodejs'
+        port: 3000
+    mountSources: true</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Spelling = NO --></p>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = NO --></p>
 </div>
 <div class="paragraph">
 <p>This table provides the memory requirements for each workspace component:</p>
@@ -1118,7 +1127,7 @@ components:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">machine-exec (default <code>chePlugin</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">128 MiB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32 MiB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
@@ -1128,7 +1137,7 @@ components:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Workspace</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">frontend (<code>kubernetes</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodejs (<code>dockerimage</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1 GiB</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">512 MiB</p></td>
 </tr>
@@ -1141,10 +1150,16 @@ components:
 <tr>
 <td class="tableblock halign-right valign-top" colspan="2"><p class="tableblock"><strong>Total</strong></p></td>
 <td class="tableblock halign-right valign-top"><p class="tableblock"><strong>2.25 GiB</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.75 GiB</strong></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.38 GiB</strong></p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><!-- vale Vale.Spelling = YES --></p>
+</div>
+<div class="paragraph">
+<p><!-- vale Vale.Terms = YES --></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -1160,7 +1175,7 @@ components:
 <p>The Typescript VS Code extension has also overridden the default memory limits. In its <code>meta.yaml</code> file, the limits are explicitly specified to <strong>512 MiB</strong>.</p>
 </li>
 <li>
-<p>Che is applying the defaults for the <code>kubernetes</code> component type: a memory limit of <strong>1 GiB</strong> and a memory request of <strong>512 MiB</strong>. This is because the <code>kubernetes</code> component references a <code>Deployment</code> manifest that has a container specification with no resource limits or requests.</p>
+<p>Che is applying the defaults for the dockerimage component type: a memory limit of <strong>1 GiB</strong> and a memory request of <strong>512 MiB</strong>.</p>
 </li>
 <li>
 <p>The JWT container requires <strong>128 MiB</strong> of memory.</p>
@@ -1168,7 +1183,7 @@ components:
 </ul>
 </div>
 <div class="paragraph">
-<p>Adding all together results in <strong>1.75 GiB</strong> of memory requests with a <strong>2.25 GiB</strong> limit.</p>
+<p>Adding all together results in <strong>1.38 GiB</strong> of memory requests with a <strong>2.25 GiB</strong> limit.</p>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>

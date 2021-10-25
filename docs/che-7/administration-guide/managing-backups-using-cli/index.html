@@ -373,7 +373,7 @@
     <a class="nav-link" href="../../installation-guide/importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../installation-guide/switching-between-external-and-internal-communication/">Switching between external and internal ways in inter-component communication</a>
+    <a class="nav-link" href="../../installation-guide/configuring-communication-between-che-components/">Configuring communication between Che components</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/setting-up-the-keycloak-che-username-readonly-theme-for-the-eclipse-che-login-page/">Setting up the Keycloak che-username-readonly theme for the Eclipse Che login page</a>
@@ -699,7 +699,7 @@
     <li><a href="./">Managing backups using CLI</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.37.x/modules/administration-guide/pages/managing-backups-using-cli.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.38.x/modules/administration-guide/pages/managing-backups-using-cli.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -710,7 +710,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following section describes how to create backups of Che installation and do recovery using chectl.</p>
+<p>The following section describes how to create and use backups of a Che installation to perform a recovery or a rollback to a previous version using <code>chectl</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -763,19 +763,19 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create a backup and send it to the pre-configured backup server:</p>
+<p>To create a backup snapshot and send it to a pre-configured backup server:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:backup --repository-url=<em>&lt;repository-url&gt;</em>  --repository-password=<em>&lt;repository-password&gt;</em></code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:backup --repository-url=<em>&lt;repository-url&gt;</em> --repository-password=<em>&lt;repository-password&gt;</em></code></pre>
 </div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>It is possible to create other backups to the same backup server using the <code>server:backup</code> command with no arguments.</p>
+<p>You can create other backups to the same backup server using the <code>server:backup</code> command with no arguments.</p>
 </li>
 <li>
-<p>After using the <code>server:backup</code> command with no arguments for the first time on installation of Che, an internal backup server is configured and used.</p>
+<p>Using the <code>server:backup</code> command with no arguments for the first time will configure and use an internal backup server.</p>
 </li>
 </ul>
 </div>
@@ -787,32 +787,74 @@
 <div class="sect1">
 <h2 id="cli-restoring-from-backup"><a class="anchor" href="#cli-restoring-from-backup"></a>Restoring from a backup</h2>
 <div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Recover the previous state of Che:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --repository-url=<em>&lt;repository-url&gt;</em> --repository-password=<em>&lt;repository-password&gt;</em></code></pre>
-</div>
+<div class="paragraph">
+<p>A Che administrator can use an existing snapshot of a particular Che version to restore  a desired state or version. The following instructions describe several variations of the restoration command. Adjust the command arguments according to your use case.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>server:restore</code> command can be run with no arguments when the backup server was used before.</p>
-</li>
-</ul>
+<p>To restore the previous functional state of the same version of Che:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --repository-url=<em>&lt;repository-url&gt;</em> --repository-password=<em>&lt;repository-password&gt;</em> --snapshot-id=<em>&lt;snapshot-id&gt;</em></code></pre>
+</div>
 </div>
 </li>
 <li>
-<p>Recover from a specific snapshot by specifying its ID:</p>
+<p>To roll back to a version different from the current version of Che:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --snapshot-id=<em>&lt;snapshot-id&gt;</em></code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --version=<em>&lt;version&gt;</em> --snapshot-id=<em>&lt;snapshot-id&gt;</em> --repository-url=<em>&lt;repository-url&gt;</em> --repository-password=<em>&lt;repository-password&gt;</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This performs a version rollback and restores a snapshot made from a previous version of Che. The provided snapshot must be created from the version of Che to which you want to roll back.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you have a dedicated backup repository for each Che version and want to use the most recent backup for the version, you can provide the <code>latest</code> argument as a snapshot ID. By doing so, the <code>latest</code> argument will be converted to the latest known ID in the given repository, which will be then used by the Che Operator to recover.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>To restore a state described by an existing backup Custom Resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --backup-cr-name=<em>&lt;CheClusterBackupCRName&gt;</em></code></pre>
 </div>
 </div>
 </li>
-</ol>
+<li>
+<p>To roll back a version upgrade of Che:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ chectl server:restore --rollback</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This recovers the version that Che was using before upgrading to a later version.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Che Operator automatically creates a backup before every upgrade.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
