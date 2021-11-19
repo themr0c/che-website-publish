@@ -718,32 +718,56 @@
 <h2 id="using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-run_che"><a class="anchor" href="#using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-run_che"></a>Using the Operator to configure the number of workspaces that a user can run</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This procedure describes how to configure <code>Che</code> to run more than one workspace simultaneously. By running multiple workspaces, users can use different work environments simultaneously.</p>
+<p>This procedure describes how to configure Che to run more than one workspace simultaneously. By running multiple workspaces, users can use different work environments simultaneously.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have installed an instance of <code>Che</code> by using the Operator.</p>
+<p>You have installed an instance of Che by using the Operator.</p>
 </li>
 <li>
-<p>The combination of PVC strategy and access mode meets the following criteria:</p>
-<div class="openblock">
-<div class="content">
+<p>The combination of storage strategy and access mode matches one of the following cases:</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Multiple workspaces compatibility list</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Storage strategy</th>
+<th class="tableblock halign-left valign-top"><code>common</code> (default)</th>
+<th class="tableblock halign-left valign-top"><code>per-workspace</code></th>
+<th class="tableblock halign-left valign-top"><code>unique</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReadWriteMany</code> access mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReadWriteOnce</code> access mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+</tr>
+</tbody>
+</table>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ReadWriteMany</code> access mode and an arbitrary PVC strategy</p>
+<p>To determine the access modes supported by your storage, see <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">Kubernetes documentation - Access Modes</a>. For example, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html">Amazon EBS</a> only supports the <code>ReadWriteOnce</code> access mode.</p>
 </li>
 <li>
-<p><code>ReadWriteOnce</code> access mode and <code>per-workspace</code> or <code>unique</code> PVC strategy</p>
+<p>See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
 </div>
 </li>
 <li>
@@ -765,9 +789,9 @@
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
 <p>In the <code>CheCluster</code> Custom Resource <code>server</code> settings, configure the number of workspaces that a user can run by adding the <code>CHE_LIMITS_USER_WORKSPACES_RUN_COUNT</code> property to <code>customCheProperties</code>:</p>
 <div class="exampleblock">
@@ -787,74 +811,7 @@ spec:
 </div>
 </div>
 </li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-run_che"><a class="anchor" href="#using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-run_che"></a>Using ConfigMap to configure the number of workspaces that a user can run</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This procedure describes how to configure <code>Che</code> to run more than one workspace simultaneously. By running multiple workspaces, users can use different work environments simultaneously.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You have installed an instance of <code>Che</code> by using Helm and the default namespace <code>eclipse-che</code>.</p>
-</li>
-<li>
-<p>The combination of PVC strategy and access mode meets the following criteria:</p>
-<div class="openblock">
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p><code>ReadWriteMany</code> access mode and an arbitrary PVC strategy</p>
-</li>
-<li>
-<p><code>ReadWriteOnce</code> access mode and <code>per-workspace</code> or <code>unique</code> PVC strategy</p>
-</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="../configuring-storage-strategies/" class="page">Configuring storage strategies</a>.</p>
-</div>
-</li>
-<li>
-<p>You have determined the value of the <code><em>&lt;number-of-workspaces&gt;</em></code> placeholder.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If the value is <code>-1</code>, an unlimited number of workspaces can run per user. If the value is a positive integer, users can run as many workspaces as the value of the integer. The default value is <code>1</code>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>To configure the number of workspaces that a user can run simultaneously, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade che -n eclipse-che --set \
-che.limits.userWorkspacesRunCount=<em>&lt;number-of-workspaces&gt;</em></pre>
-</div>
-</div>
-</li>
-</ol>
 </div>
 </div>
 </div>
