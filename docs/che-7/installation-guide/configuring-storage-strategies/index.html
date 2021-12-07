@@ -762,10 +762,17 @@
 <div class="sect1">
 <h2 id="storage-strategies-for-che-workspaces_che"><a class="anchor" href="#storage-strategies-for-che-workspaces_che"></a>Storage strategies for che workspaces</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Workspace Pods use Persistent Volume Claims (PVCs), which are bound to the physical Persistent Volumes (PVs) with <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">ReadWriteOnce access mode</a>. It is possible to configure how the Che server uses PVCs for workspaces. The individual methods for this configuration are called PVC strategies:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Storage strategy</dt>
+<dd>
+<p>A configurable method defining how Che workspaces use persistent volume claims (PVCs) and persistent volumes (PVs).
+This method defines the storage for workspace data, for example, projects, workspace logs, or additional volumes defined by a user.</p>
+</dd>
+</dl>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Storage strategies comparison</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -774,185 +781,152 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-center valign-top">Strategy</th>
-<th class="tableblock halign-center valign-top">Details</th>
-<th class="tableblock halign-center valign-top">Pros</th>
-<th class="tableblock halign-center valign-top">Cons</th>
+<th class="tableblock halign-left valign-top">Storage strategy name</th>
+<th class="tableblock halign-left valign-top"><code>common</code></th>
+<th class="tableblock halign-left valign-top"><code>per-workspace</code></th>
+<th class="tableblock halign-left valign-top"><code>unique</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>common (default)</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">One PVC for all workspaces in one Kubernetes namespace or OpenShift project</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Easy to manage and control storage</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">If PV does not support <code>ReadWriteMany</code> (RWX) access mode, the configuration will work only if one or both of the following apply:</p>
-<p class="tableblock">* Each workspace is in a separate Kubernetes namespace or OpenShift project</p>
-<p class="tableblock">* Only one workspace is running per Kubernetes namespace or OpenShift project at the same time. See <a href="../configuring-the-number-of-workspaces-that-a-user-can-run/" class="page">Configuring the number of workspaces that a user can run</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PV count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One per user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One per workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple PVs per workspace</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>per-workspace</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">One PVC for one workspace</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Easier to manage and control storage compared to unique strategy</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">PV count is not known and depends on the number of workspaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>unique</strong></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">One PVC per workspace volume or user-defined PVC</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">Storage isolation</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">An undefined number of PVs are required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limitations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum one running workspace per user when the PV is in the <code>ReadWriteOnce</code> access mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PV count depends on the number of workspaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unpredictable PV count</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>Che uses the <code>common</code> PVC strategy in combination with the "one namespace per user" namespace strategy when all Che workspaces operate in the user&#8217;s namespace, sharing one PVC.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Persistent volumes (PVs) access mode</dt>
+<dd>
+<p>The nature of the PV determines the available access mode: <code>ReadWriteMany</code> or <code>ReadWriteOnce</code>.
+See <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes">Kubernetes documentation - access mode</a>.
+For example, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html">Amazon EBS</a> supports only the <code>ReadWriteOnce</code> access mode.</p>
+</dd>
+</dl>
 </div>
 <div class="sect2">
-<h3 id="the-common-pvc-strategy_che"><a class="anchor" href="#the-common-pvc-strategy_che"></a>The <code>common</code> PVC strategy</h3>
+<h3 id="the-common-storage-strategy_che"><a class="anchor" href="#the-common-storage-strategy_che"></a>The <code>common</code> storage strategy</h3>
 <div class="paragraph">
-<p>All workspaces inside a Kubernetes namespace or OpenShift project use the same Persistent Volume Claim (PVC) as the default data storage when storing data such as the following in their declared volumes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>projects</p>
-</li>
-<li>
-<p>workspace logs</p>
-</li>
-<li>
-<p>additional Volumes defined by a use</p>
-</li>
-</ul>
+<p>This is the default storage strategy.
+For each user, all workspaces use the same PV for the default data storage.</p>
 </div>
 <div class="paragraph">
-<p>When the <code>common</code> PVC strategy is in use, user-defined PVCs are ignored, and volumes related to these user-defined PVCs are replaced with a volume that refers to the common PVC.
-In this strategy, all Che workspaces use the same PVC. When the user runs one workspace, it only binds to one node in the cluster at a time.</p>
+<p>When the user starts a first non-ephemeral workspace, the workspace engine creates a common PV.</p>
 </div>
 <div class="paragraph">
-<p>The corresponding containers volume mounts link to a common volume, and sub-paths are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-PVC-name&gt;</em></code>. For more details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
+<p>When the user starts another non-ephemeral workspace, the workspace engine uses the same common PV.
+The workspace only binds simultaneously to one node in the Kubernetes cluster.
+The workspace engine ignores user-defined volumes.
+The workspace engine replaces volumes related to user-defined volumes with a subPath in the common volume.
+SubPaths have a <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;original-volume-name&gt;</em></code> prefix.
+See <a href="#how-subpaths-are-used-in-persistent-volumes_che">How subPaths are used in persistent volumes (PVs)</a>.
+The Che volume name is identical to the name of the user-defined PV.
+Therefore, if a workspace container uses a Che volume with the same name as the user-defined PV, they will use the same shared folder in the common PV.</p>
 </div>
 <div class="paragraph">
-<p>The Che Volume name is identical to the name of the user-defined PVC. It means that if a machine is configured to use a Che volume with the same name as the user-defined
-PVC has, they will use the same shared folder in the common PVC.</p>
+<p>When the user deletes a workspace, the workspace engine deletes the corresponding subdirectory (<code>${ws-id}</code>) in the PV directory.</p>
 </div>
 <div class="paragraph">
-<p>When a workspace is deleted, a corresponding subdirectory (<code>${ws-id}</code>) is deleted in the PV directory.</p>
+<p>When the user deletes the last workspace, the workspace engine removes the common PV.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The common PVC will be removed when a user&#8217;s workspaces are all deleted. The PVC will be re-created when a non-ephemeral workspace is started.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<div class="title">Restrictions on using the <code>common</code> PVC strategy</div>
-<p>When the <code>common</code> strategy is used, and a workspace PVC access mode is ReadWriteOnce (RWO), only one node can simultaneously use the PVC.</p>
-</div>
-<div class="paragraph">
-<p>If there are several nodes, you can use the <code>common</code> strategy, but:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The workspace PVC access mode must be reconfigured to <code>ReadWriteMany</code> (RWM), so multiple nodes can use this PVC simultaneously.</p>
-</li>
-<li>
-<p>Only one workspace in the same namespace may be running. See <a href="../configuring-the-number-of-workspaces-that-a-user-can-run/" class="page">Configuring the number of workspaces that a user can run</a>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The <code>common</code> PVC strategy is not suitable for large multi-node clusters. Therefore, it is best to use it in single-node clusters. However, in combination with the <code>per-workspace</code> namespace strategy, the <code>common</code> PVC strategy is usable for clusters with not more than 75 nodes. The PVC used with this strategy must be large enough to accommodate all projects to prevent a situation in which one project depletes the resources of others.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Restrictions on the <code>common</code> storage strategy with the <code>ReadWriteOnce</code> access mode</dt>
+<dd>
+<p>The <code>ReadWriteOnce</code> access mode limits each user to run only one concurrent workspace.
+See <a href="../configuring-the-number-of-workspaces-that-a-user-can-run/" class="page">Configuring the number of workspaces that a user can run</a>.</p>
+</dd>
+<dt class="hdlist1">Scalability</dt>
+<dd>
+<p>The <code>common</code> storage strategy is not suitable for multi-node clusters with the 'ReadWriteOnce' access mode for PVs if the number of concurrently running workspaces per user is more than 1.</p>
+</dd>
+<dt class="hdlist1">Persistent volumes (PV) provisioning</dt>
+<dd>
+<p>Create a large enough PV to accommodate all projects to prevent a situation in which one project depletes the resources of others.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-per-workspace-pvc-strategy_che"><a class="anchor" href="#the-per-workspace-pvc-strategy_che"></a>The <code>per-workspace</code> PVC strategy</h3>
+<h3 id="the-per-workspace-storage-strategy_che"><a class="anchor" href="#the-per-workspace-storage-strategy_che"></a>The <code>per-workspace</code> storage strategy</h3>
 <div class="paragraph">
-<p>The <code>per-workspace</code> strategy is similar to the <code>common</code> PVC strategy. The only difference is that all workspace Volumes, but not all the workspaces, use the same PVC as the default data storage for:</p>
+<p>Each workspace uses one dedicated PV.
+All Che volumes defined within a single workspace use the same PV.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>projects</p>
-</li>
-<li>
-<p>workspace logs</p>
-</li>
-<li>
-<p>additional Volumes defined by a user</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>With this strategy, Che keeps its workspace data in assigned PVs that are allocated by a single PVC.</p>
-</div>
-<div class="paragraph">
-<p>The <code>per-workspace</code> PVC strategy is the universal strategy out of the PVC strategies available and acts as a proper option for large multi-node clusters with a higher amount of users. Using the <code>per-workspace</code> PVC strategy, users can run multiple workspaces simultaneously, which results in more PVCs being created.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Persistent volumes (PV) provisioning</dt>
+<dd>
+<p>Users can run multiple workspaces simultaneously. This action results in more PVs.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-unique-pvc-strategy_che"><a class="anchor" href="#the-unique-pvc-strategy_che"></a>The <code>unique</code> PVC strategy</h3>
+<h3 id="the-unique-storage-strategy_che"><a class="anchor" href="#the-unique-storage-strategy_che"></a>The <code>unique</code> storage strategy</h3>
 <div class="paragraph">
-<p>Using the `unique `PVC strategy, every Che Volume of a workspace has its own PVC. The workspace PVCs are then:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Created when a workspace starts for the first time.</p>
-</li>
-<li>
-<p>Deleted when a corresponding workspace is deleted.</p>
-</li>
-</ul>
+<p>Each Che volume defined in a workspace has its own PV.</p>
 </div>
 <div class="paragraph">
-<p>User-defined PVCs are created with the following specifics:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>They are provisioned with generated names to prevent naming conflicts with other PVCs in a namespace.</p>
-</li>
-<li>
-<p>Subpaths of the mounted Physical persistent volumes that reference user-defined PVCs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;PVC-name&gt;</em></code>. This ensures that the same PV data structure is configured with different PVC strategies. For details, see <a href="#how-subpaths-are-used-in-pvcs_che">How subpaths are used in PVCs</a>.</p>
-</li>
-</ul>
+<p>When the user starts a workspace, the workspace engine creates the workspace PVs.</p>
 </div>
 <div class="paragraph">
-<p>The <code>unique</code> PVC strategy is suitable for larger multi-node clusters with a lesser amount of users. Since this strategy operates with separate PVCs for each volume in a workspace, vastly more PVCs are created.</p>
+<p>The workspace engine generates a unique name for each PV to prevent name conflicts with other PVs in the same namespace.</p>
+</div>
+<div class="paragraph">
+<p>To ensure that different storage strategies use the same PV data structure, subPaths of the mounted PVs that reference user-defined PVs are prefixed with <code><em>&lt;workspace-ID&gt;</em></code> or <code><em>&lt;persistent-volume-name&gt;</em></code>.
+See <a href="#how-subpaths-are-used-in-persistent-volumes_che">How subPaths are used in persistent volumes (PVs)</a>.</p>
+</div>
+<div class="paragraph">
+<p>When the user deletes a workspace, the workspace engine deletes all workspace PVs.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">PV provisioning</dt>
+<dd>
+<p>This is the strategy, which creates the highest volume counts.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="how-subpaths-are-used-in-pvcs_che"><a class="anchor" href="#how-subpaths-are-used-in-pvcs_che"></a>How subpaths are used in PVCs</h3>
+<h3 id="how-subpaths-are-used-in-persistent-volumes_che"><a class="anchor" href="#how-subpaths-are-used-in-persistent-volumes_che"></a>How subPaths are used in persistent volumes (PVs)</h3>
 <div class="paragraph">
-<p>Subpaths illustrate the folder hierarchy in the Persistent Volumes (PV).</p>
+<p>SubPaths illustrate the folder hierarchy in the PV.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>/pv0001
-  /workspaceID1
-  /workspaceID2
-  /workspaceIDn
+<pre>/<em>&lt;pv0001&gt;</em>
+  /<em>&lt;workspaceID1&gt;</em>
+  /<em>&lt;workspaceID2&gt;</em>
+  /<em>&lt;workspaceIDn&gt;</em>
     /che-logs
     /projects
-    /&lt;volume1&gt;
-    /&lt;volume2&gt;
-    /&lt;User-defined PVC name 1 | volume 3&gt;
+    /<em>&lt;volume1&gt;</em>
+    /<em>&lt;volume2&gt;</em>
+    /<em>&lt;user-defined-volume-name-1&gt;</em>
+    /<em>&lt;user-defined-volume-name-2&gt;</em>
+    /<em>&lt;user-defined-volume-name-3|volume3&gt;</em>
     ...</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When a user defines volumes for components in the devfile, all components that define the volume of the same name will be backed by the same directory in the PV as <code><em>&lt;PV-name&gt;</em></code>, <code><em>&lt;workspace-ID&gt;</em>, or `<em>&lt;original-PVC-name&gt;</em></code>. Each component can have this location mounted on a different path in its containers.</p>
-</div>
-<div class="paragraph">
-<div class="title">Example</div>
-<p>Using the <code>common</code> PVC strategy, user-defined PVCs are replaced with subpaths on the common PVC. When the user references a volume as <code>my-volume</code>, it is mounted in the common-pvc with the <code>/workspace-id/my-volume</code> subpath.</p>
+<p>When a user defines volumes for components in the devfile, all components that define the volume of the same name will be backed by the same directory in the PV as <code><em>&lt;persistent-volume-name&gt;</em></code>, <code><em>&lt;workspace-ID&gt;</em></code>, or <code><em>&lt;original-volume-name&gt;</em></code>.
+Each component can have this location mounted on a different path in its containers.</p>
 </div>
 </div>
 </div>
