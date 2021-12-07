@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">External database setup</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/administration-guide/pages/external-database-setup.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/administration-guide/pages/external-database-setup.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -920,9 +947,9 @@ GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak</pre>
 <p>Create a secret to store Che server database credentials:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create secret generic &lt;server-database-credentials&gt; \ <i class="conum" data-value="1"></i><b>(1)</b>
---from-literal=user=&lt;database-user&gt; \                            <i class="conum" data-value="2"></i><b>(2)</b>
---from-literal=password=&lt;database-password&gt; \                    <i class="conum" data-value="3"></i><b>(3)</b>
+<pre>$ kubectl create secret generic <em>&lt;server-database-credentials&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+--from-literal=user=<em>&lt;database-user&gt;</em> \ <i class="conum" data-value="2"></i><b>(2)</b>
+--from-literal=password=<em>&lt;database-password&gt;</em> \ <i class="conum" data-value="3"></i><b>(3)</b>
 -n eclipse-che</pre>
 </div>
 </div>
@@ -944,11 +971,28 @@ GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak</pre>
 </div>
 </li>
 <li>
+<p>Add the required labels to the Che server database credentials secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret <em>&lt;server-database-credentials&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+ app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Secret name to store Che server database credentials</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
 <p>Create a secret to store Keycloak database credentials:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create secret generic &lt;identity-database-credentials&gt; \ <i class="conum" data-value="1"></i><b>(1)</b>
---from-literal=password=&lt;identity-database-password&gt; \             <i class="conum" data-value="2"></i><b>(2)</b>
+<pre>$ kubectl create secret generic <em>&lt;identity-database-credentials&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+--from-literal=password=<em>&lt;identity-database-password&gt;</em> \ <i class="conum" data-value="2"></i><b>(2)</b>
 -n eclipse-che</pre>
 </div>
 </div>
@@ -961,6 +1005,23 @@ GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak</pre>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Keycloak database password</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Add the required labels to the Keycloak database credentials secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret <em>&lt;identity-database-credentials&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Secret name to store Keycloak database credentials</td>
 </tr>
 </table>
 </div>

@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Configuring workspace exposure strategies</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-workspace-exposure-strategies.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-workspace-exposure-strategies.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -887,82 +914,6 @@ spec:
     serverExposureStrategy: 'single-host'
   k8s:
     singleHostExposureType: 'gateway'</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-workspace-exposure-strategies-using-a-helm-chart_che"><a class="anchor" href="#configuring-workspace-exposure-strategies-using-a-helm-chart_che"></a>Configuring workspace exposure strategies using a Helm chart</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A <a href="https://helm.sh/">Helm Chart</a> is a Kubernetes extension for defining, installing, and upgrading Kubernetes applications.</p>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>When deploying Che using the Helm chart, configure the workspace exposure strategy using the <code>global.serverStrategy</code>.  For single-host, optional <code>global.singleHostExposure</code> and <code>cheSinglehostGateway.deploy</code> properties may be configured as well. To do so, add the following option to the <code>helm install</code> or <code>helm upgrade</code> command:</p>
-</div>
-<div class="paragraph">
-<p>Example for <code>native</code> single-host strategy type and <code>multi-host</code> or <code>default-host</code> strategies:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --set global.serverStrategy=<em>&lt;exposure-strategy&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --set global.serverStrategy=<em>&lt;exposure-strategy&gt;</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The supported values for <code>global.serverStrategy</code> are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#multi-host-workspace-exposure-strategy_che"><code>multi-host</code></a></p>
-</li>
-<li>
-<p><a href="#single-host-workspace-exposure-strategy_che"><code>single-host</code></a></p>
-</li>
-<li>
-<p><a href="#default-host-workspace-exposure-strategy_che"><code>default-host</code></a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Gateway single-host on Kubernetes</div>
-<p>Single-host on Kubernetes has 2 implementations, <code>native</code>(default) and <code>gateway</code>. To deploy with <code>gateway</code> use:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --namespace eclipse-che \
---set global.serverStrategy=single-host \
---set global.singleHostExposure=gateway \
---set cheSinglehostGateway.deploy=true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --install che --namespace eclipse-che \
---set global.serverStrategy=single-host \
---set global.singleHostExposure=gateway \
---set cheSinglehostGateway.deploy=true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Alternatively, predefined values file can be used as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --install che --namespace eclipse-che \
--f "${SOURCE_HOME_DIR}"/deploy/kubernetes/helm/che/values/single-host-gateway.yaml</pre>
 </div>
 </div>
 </div>

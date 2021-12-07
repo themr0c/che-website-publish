@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Running custom registries</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/administration-guide/pages/running-custom-registries.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/administration-guide/pages/running-custom-registries.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -781,214 +808,6 @@
 </li>
 <li>
 <p>A private registry.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploying-registries-in-kubernetes_che"><a class="anchor" href="#deploying-registries-in-kubernetes_che"></a>Deploying registries in Kubernetes</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>A Helm chart for the plug-in registry is available in the <code>/kubernetes/che-plugin-registry/</code> directory of the GitHub repository.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>To deploy the plug-in registry using the Helm chart, run the following command:</p>
-<div class="listingblock">
-<div class="content">
-<pre>NAMESPACE=<em>&lt;namespace-name&gt;</em>     <i class="conum" data-value="1"></i><b>(1)</b>
-DOMAIN=<em>&lt;kubernetes-cluster-domain&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
-IMAGE="my-plug-in-registry"
-helm upgrade --install che-plugin-registry \
- --debug \
- --namespace ${NAMESPACE} \
- --set global.ingressDomain=${DOMAIN} \
- --set chePluginRegistryImage=${IMAGE} \
- --set chePluginRegistryImagePullPolicy="Always" \
- ./kubernetes/che-plugin-registry/</pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>If installed using chectl, the default Che namespace is <code>eclipse-che</code>. The OperatorHub installation method deploys Che to the users current namespace.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>On Minikube, use <code>$(minikube ip).nip.io</code></td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>The devfile registry also has a Helm chart in the <code>deploy/kubernetes/che-devfile-registry/</code> directory of the GitHub repository. To deploy it, run the command:</p>
-<div class="listingblock">
-<div class="content">
-<pre>NAMESPACE=<em>&lt;namespace-name&gt;</em>     <i class="conum" data-value="1"></i><b>(1)</b>
-DOMAIN=<em>&lt;kubernetes-cluster-domain&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
-IMAGE="my-devfile-registry"
-helm upgrade --install che-devfile-registry \
- --debug \
- --namespace ${NAMESPACE} \
- --set global.ingressDomain=${DOMAIN} \
- --set cheDevfileRegistryImage=${IMAGE} \
- --set cheDevfileRegistryImagePullPolicy="Always" \
- ./deploy/kubernetes/che-devfile-registry/</pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>If installed using chectl, the default Che namespace is <code>eclipse-che</code>. The OperatorHub installation method deploys Che to the users current namespace.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>On Minikube, use <code>$(minikube ip).nip.io</code></td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>The Helm chart creates a Pod, a service, and an Ingress. To get them, use <code>component=plugin-registry</code> (or <code>component=plugin-registry</code> for the devfile registry)</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl  get -o custom-columns=TYPE:.kind,NAME:.metadata.name \
-  -l component=plugin-registry pod,svc,ingress
-TYPE      NAME
-Pod       che-plugin-registry-5c7cd8d5c9-zlqlz
-Service   che-plugin-registry
-Ingress   che-plugin-registry</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">Verification steps</div>
-<ol class="arabic">
-<li>
-<p>The <em>&lt;plug-in&gt;</em> plug-in is available in the plug-in registry.</p>
-<div class="exampleblock">
-<div class="title">Example 1. Find <em>&lt;plug-in&gt;</em> requesting the plug-in registry API.</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ URL=$(kubectl  get ingress -l app=che,component=plugin-registry \
-  -o 'custom-columns=URL:.spec.rules[0].host' --no-headers)
-$ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
-$ echo ${INDEX_JSON} | jq '.[] | select(.name == "<em>&lt;plug-in&gt;</em>")'</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>The <em>&lt;devfile&gt;</em> devfile is available in the devfile registry.</p>
-<div class="exampleblock">
-<div class="title">Example 2. Find <em>&lt;devfile&gt;</em> requesting the devfile registry API.</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ URL=$(kubectl  get ingress -l app=che,component=devfile-registry \
-  -o 'custom-columns=URL:.spec.rules[0].host' --no-headers)
-$ INDEX_JSON=$(curl -sSL http://${URL}/v3/plugins/index.json)
-$ echo ${INDEX_JSON} | jq '.[] | select(.name == "<em>&lt;devfile&gt;</em>")'</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Che server points to the URL of the plug-in registry.</p>
-<div class="exampleblock">
-<div class="title">Example 3. Compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the plug-in registry ingress.</div>
-<div class="content">
-<div class="listingblock">
-<div class="title">Get the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap.</div>
-<div class="content">
-<pre>$ kubectl  get cm/che \
-  -o "custom-columns=URL:.data['CHE_WORKSPACE_PLUGIN__REGISTRY__URL']" \
-  --no-headers</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Get the URL of the plug-in registry ingress.</div>
-<div class="content">
-<pre>$ kubectl  get ingress -l app=che,component=plugin-registry \
-  -o 'custom-columns=URL: .spec.rules[0].host' --no-headers</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Che server points to the URL of the devfile registry.</p>
-<div class="exampleblock">
-<div class="title">Example 4. Compare the value of the <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the devfile registry ingress.</div>
-<div class="content">
-<div class="listingblock">
-<div class="title">Get the value of the <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap.</div>
-<div class="content">
-<pre>$ kubectl  get cm/che \
-  -o "custom-columns=URL:.data['CHE_WORKSPACE_DEVFILE__REGISTRY__URL']" \
-  --no-headers</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Get the URL of the devfile registry ingress.</div>
-<div class="content">
-<pre>$ kubectl  get ingress -l app=che,component=devfile-registry \
-  -o 'custom-columns=URL: .spec.rules[0].host' --no-headers</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>If the values do not match, update the ConfigMap and restart the Che server.</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl  edit cm/che
-(...)
-$ kubectl  scale --replicas=0 deployment/che
-$ kubectl  scale --replicas=1 deployment/che</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><!-- vale Vale.Terms = NO --></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The plug-ins are available in the:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Completion to <strong>chePlugin</strong> components in the <strong>Devfile</strong> tab of a workspace details</p>
-</li>
-<li>
-<p><strong>Plugin</strong> Che-Theia view of a workspace</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><!-- vale Vale.Terms = YES --></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The devfiles are available in the <strong>Quick Add</strong> and <strong>Custom Workspace</strong> tab of the <strong>Create Workspace</strong> page on the user dashboard.</p>
 </li>
 </ul>
 </div>
@@ -1057,7 +876,7 @@ oc new-app -f openshift/che-devfile-registry.yml \
 <li>
 <p>The <em>&lt;plug-in&gt;</em> plug-in is available in the plug-in registry.</p>
 <div class="exampleblock">
-<div class="title">Example 5. Find <em>&lt;plug-in&gt;</em> requesting the plug-in registry API.</div>
+<div class="title">Example 1. Find <em>&lt;plug-in&gt;</em> requesting the plug-in registry API.</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1073,7 +892,7 @@ $ echo ${INDEX_JSON} | jq '.[] | select(.name == "<em>&lt;plug-in&gt;</em>")'</p
 <li>
 <p>The <em>&lt;devfile&gt;</em> devfile is available in the devfile registry.</p>
 <div class="exampleblock">
-<div class="title">Example 6. Find <em>&lt;devfile&gt;</em> requesting the devfile registry API.</div>
+<div class="title">Example 2. Find <em>&lt;devfile&gt;</em> requesting the devfile registry API.</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1089,7 +908,7 @@ $ echo ${INDEX_JSON} | jq '.[] | select(.name == "<em>&lt;devfile&gt;</em>")'</p
 <li>
 <p>Che server points to the URL of the plug-in registry.</p>
 <div class="exampleblock">
-<div class="title">Example 7. Compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the plug-in registry route.</div>
+<div class="title">Example 3. Compare the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the plug-in registry route.</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Get the value of the <code>CHE_WORKSPACE_PLUGIN__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap.</div>
@@ -1112,7 +931,7 @@ $ echo ${INDEX_JSON} | jq '.[] | select(.name == "<em>&lt;devfile&gt;</em>")'</p
 <li>
 <p>Che server points to the URL of the devfile registry.</p>
 <div class="exampleblock">
-<div class="title">Example 8. Compare the value of the <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the devfile registry route.</div>
+<div class="title">Example 4. Compare the value of the <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap with the URL of the devfile registry route.</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Get the value of the <code>CHE_WORKSPACE_DEVFILE__REGISTRY__URL</code> parameter in the <code>che</code> ConfigMap.</div>

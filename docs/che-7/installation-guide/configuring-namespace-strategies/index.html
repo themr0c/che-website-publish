@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Configuring workspace target namespace</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-namespace-strategies.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-namespace-strategies.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -770,7 +797,7 @@ The term <em>namespace</em> (Kubernetes) is used interchangeably with <em>projec
 </table>
 </div>
 <div class="paragraph">
-<p>With <strong>Operator</strong> installer, Kubernetes namespace or OpenShift project strategies are configured using <code>server.workspaceNamespaceDefault</code> property.</p>
+<p>Kubernetes namespace or OpenShift project strategies are configured using <code>server.workspaceNamespaceDefault</code> property.</p>
 </div>
 <div class="paragraph">
 <p><strong>Operator CheCluster CR patch</strong></p>
@@ -784,35 +811,6 @@ metadata:
 spec:
   server:
     workspaceNamespaceDefault: <em>&lt;workspace-namespace&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>- Che workspace namespace configuration</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>With <strong>Helm</strong> installer, namespace strategies are configured using <code>global.cheWorkspacesNamespace</code> property.</p>
-</div>
-<div class="paragraph">
-<p><strong>Helm</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --namespace &lt;namespace&gt;
-  --set global.cheWorkspacesNamespace=<em>&lt;workspace-namespace&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --namespace &lt;namespace&gt;
-  --set global.cheWorkspacesNamespace=<em>&lt;workspace-namespace&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -923,10 +921,7 @@ By default, only one workspace in the same namespace can be running at one time.
 <div class="title">Example 1. One namespace per user</div>
 <div class="content">
 <div class="paragraph">
-<p>To assign namespace names composed of a <em>`che-ws`</em> prefix and individual usernames (<code><em>che-ws</em>-user1</code>, <code><em>che-ws</em>-user2</code>), set:</p>
-</div>
-<div class="paragraph">
-<p><strong>Operator installer (CheCluster CustomResource)</strong></p>
+<p>To assign namespace names composed of a <em>`che-ws`</em> prefix and individual usernames (<code><em>che-ws</em>-user1</code>, <code><em>che-ws</em>-user2</code>), set in CheCluster Custom Resource:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -935,14 +930,6 @@ spec:
   server:
     workspaceNamespaceDefault: <em>che-ws</em>-<em>&lt;username&gt;</em>
 ...</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Helm</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm ... --set global.cheWorkspacesNamespace=<em>che-ws</em>-<em>&lt;username&gt;</em></pre>
 </div>
 </div>
 </div>

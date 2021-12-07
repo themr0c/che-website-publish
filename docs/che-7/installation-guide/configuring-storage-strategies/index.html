@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Configuring storage strategies</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-storage-strategies.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-storage-strategies.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -955,107 +982,6 @@ Each component can have this location mounted on a different path in its contain
 </div>
 <div class="paragraph">
 <p>The mounted PVC is displayed as a folder in a container file system.</p>
-</div>
-<div class="sect2">
-<h3 id="configuring-a-pvc-strategy-using-the-helm-chart_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-helm-chart_che"></a>Configuring a PVC strategy using the Helm chart</h3>
-<div class="paragraph">
-<p>The following section describes how to configure workspace persistent volume claim (PVC) strategies of a Che server using the Helm chart.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-It is not recommended to reconfigure PVC strategies on an existing Che cluster with existing workspaces. Doing so causes data loss.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The <code>helm</code> tool is available. See <a href="https://helm.sh/">Helm Chart</a>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>When deploying Che using Helm Chart, configure the workspace PVC strategy by setting values for the <code>global.cheWorkspacesPVCStrategy</code> option.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>For a new installation, use the <code>helm install</code> command with the <code>global.cheWorkspacesPVCStrategy</code> option:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm install --set global.cheWorkspacesPVCStrategy=per-workspace</pre>
-</div>
-</div>
-</li>
-<li>
-<p>For an already installed instance, use the <code>helm upgrade</code> command with the <code>global.cheWorkspacesPVCStrategy</code> option:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade --set global.cheWorkspacesPVCStrategy=per-workspace</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code>per-workspace</code> value in the above examples with <code>unique</code> or <code>common</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configuring-a-pvc-strategy-by-editing-a-configmap_che"><a class="anchor" href="#configuring-a-pvc-strategy-by-editing-a-configmap_che"></a>Configuring a PVC strategy strategy by editing a configMap</h3>
-<div class="paragraph">
-<p>Based on the Che installation method, configMaps can be used to customize the working environment. A configMap is provided as an editable file that lists options to customize the Che environment. This method of configuring a persistent volume claim (PVC) strategy for a Che workspace is available only for the Helm installation.</p>
-</div>
-<div class="paragraph">
-<p>Changes to a configMap created during Operator installation are not permanent because the Operator overwrites them back to default.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The <code>helm</code> tool method was used to deploy Che.</p>
-</li>
-<li>
-<p>The <code>kubectl</code> tool is available.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Set the configMap variable to reflect the requested PVC strategy:</p>
-<div class="listingblock">
-<div class="content">
-<pre>CHE_INFRA_KUBERNETES_PVC_STRATEGY=per-workspace</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Depending on the strategy used, replace the <code><em>per-workspace</em></code> option in the above example with <code>unique</code> or <code>common</code>.</p>
-</div>
-</li>
-<li>
-<p>Restart Che by scaling the deployment to zero and then back to one again:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc scale --replicas=0 deployment {prod-deployment}
-$ oc scale --replicas=1 deployment {prod-deployment}</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Restart the workspace for the changes to take effect.</p>
-</li>
-</ol>
-</div>
 </div>
 <div class="sect2">
 <h3 id="configuring-a-pvc-strategy-using-the-operator_che"><a class="anchor" href="#configuring-a-pvc-strategy-using-the-operator_che"></a>Configuring a PVC strategy using the Operator</h3>

@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Deploying Che with support for Git repositories with self-signed certificates</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/deploying-che-with-support-for-git-repositories-with-self-signed-certificates.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/deploying-che-with-support-for-git-repositories-with-self-signed-certificates.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -760,9 +787,6 @@
 <ul>
 <li>
 <p>Git version 2 or later</p>
-</li>
-<li>
-<p><a href="https://helm.sh/">Helm</a> version 2.15 or higher</p>
 </li>
 </ul>
 </div>
@@ -816,61 +840,37 @@
 </div>
 </li>
 <li>
-<p>Configure Che to use self-signed certificates for git repositories:</p>
-<div class="exampleblock">
-<div class="content">
-<div class="olist arabic">
-<div class="title">For Che deployed using a Helm Chart</div>
-<ol class="arabic">
-<li>
-<p>Clone the <a href="https://github.com/eclipse-che/che-server">Che server repository</a>.</p>
-</li>
-<li>
-<p>Go to <code>deploy/kubernetes/helm/che</code> directory.</p>
-</li>
-<li>
-<p>Update the <code>global.useGitSelfSignedCerts</code> property. To do that, add the following option to the <code>helm upgrade</code> command:</p>
+<p>Add the required labels to the ConfigMap:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ helm upgrade che -n eclipse-che \
-  --set global.useGitSelfSignedCerts=true \
-  --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> \
-  -f values/multi-user.yaml -f values/tls.yaml .</pre>
+<pre>$ kubectl label configmap che-git-self-signed-cert \
+app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
 </div>
 </div>
 </li>
-</ol>
-</div>
+<li>
+<p>Configure Che to use self-signed certificates for git repositories:</p>
 <div class="paragraph">
-<p>On Minikube, substitute <code><em>&lt;kubernetes-cluster-domain&gt;</em></code> with <code>$(minikube ip).nip.io</code>.</p>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<div class="title">For Che deployed using Operators</div>
 <p>Update the <code>gitSelfSignedCert</code> property. To do that, execute:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json \
-  -p '[{"op": "replace", "path": "/spec/server/gitSelfSignedCert", "value": true}]'</pre>
-</div>
-</div>
+  -p '[{"op": "replace", "path": "/spec/server/gitSelfSignedCert", \
+  "value": true}]'</pre>
 </div>
 </div>
 </li>
 <li>
 <p>Create and start a new workspace. Every container used by the workspace mounts a special volume that contains a file with the self-signed certificate. The repository&#8217;s <code>.git/config</code> file contains information about the Git server host (its URL) and the path to the certificate in the <code>http</code> section (see Git documentation about <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpsslCAInfo">git-config</a>). For example:</p>
+</li>
+</ol>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>[http "https://10.33.177.118:3000"]
 sslCAInfo = /etc/che/git/cert/ca.crt</pre>
 </div>
-</div>
-</li>
-</ol>
 </div>
 </article>
   </div>

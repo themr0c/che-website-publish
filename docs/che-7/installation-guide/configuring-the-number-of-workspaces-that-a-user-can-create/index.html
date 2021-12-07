@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Configuring the number of workspaces that a user can create</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-the-number-of-workspaces-that-a-user-can-create.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-the-number-of-workspaces-that-a-user-can-create.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -752,16 +779,6 @@
 </aside>
 <article class="doc">
 <h1 class="page">Configuring the number of workspaces that a user can create</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>This article describes how to configure the number of workspaces that a user can create.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-create_che"><a class="anchor" href="#using-the-operator-to-configure-the-number-of-workspaces-that-a-user-can-create_che"></a>Using the Operator to configure the number of workspaces that a user can create</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p>This procedure describes how to configure the number of workspaces that a user can create. By creating multiple workspaces, users can have access to workspaces with different configurations simultaneously.</p>
 </div>
@@ -813,55 +830,6 @@ spec:
 </div>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-create_che"><a class="anchor" href="#using-configmap-to-configure-the-number-of-workspaces-that-a-user-can-create_che"></a>Using ConfigMap to configure the number of workspaces that a user can create</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This procedure describes how to configure the number of workspaces that a user can create. By creating multiple workspaces, users can have access to workspaces with different configurations simultaneously.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You have installed an instance of <code>Che</code> by using Helm and the default namespace <code>eclipse-che</code>.</p>
-</li>
-<li>
-<p>You have determined the value of the <code><em>&lt;number-of-workspaces&gt;</em></code> placeholder.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If the value is <code>-1</code>, users can create an unlimited number of workspaces. If the value is a positive integer, users can create as many workspaces as the value of the integer. The default value is <code>-1</code>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>To configure the number of workspaces that a user can create, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ helm upgrade che -n eclipse-che --set \
-che.limits.userWorkspacesCount=<em>&lt;number-of-workspaces&gt;</em></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </article>
   </div>

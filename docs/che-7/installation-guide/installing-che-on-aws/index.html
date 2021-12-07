@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -745,7 +772,7 @@
     <li><a href="./">Installing Che on AWS</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/installing-che-on-aws.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/installing-che-on-aws.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -1427,10 +1454,10 @@ Events:
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-che-on-kubernetes-using-chectl_and_helm_che"><a class="anchor" href="#installing-che-on-kubernetes-using-chectl_and_helm_che"></a>Installing Che on AWS using chectl</h2>
+<h2 id="installing-che-on-kubernetes-using-chectl_che"><a class="anchor" href="#installing-che-on-kubernetes-using-chectl_che"></a>Installing Che on Kubernetes using chectl</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Kubernetes is an open-source system for automating deployment, scaling, and managing containerized applications. The following section describes the process of deploying Che on AWS by using the <code>chectl</code> tool.</p>
+<p>Kubernetes is an open-source system for automating deployment, scaling, and managing containerized applications. The following section describes the process of deploying Che on Kubernetes by using the <code>chectl</code> tool.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1438,67 +1465,81 @@ Events:
 <li>
 <p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="page">Using the chectl management tool</a>.</p>
 </li>
-<li>
-<p>The <code>helm</code> tool is available, with version 2.15 or higher. See <a href="https://helm.sh/">Helm</a>.</p>
-</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Install Che on AWS:</p>
+<p>Install Che on Kubernetes:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:deploy --installer=helm --platform=k8s --domain=aws.my-ide.cloud
+<pre>$ chectl server:deploy --platform=k8s --domain=aws.my-ide.cloud
 › Current Kubernetes context: 'current-context'
   ✔ Verify Kubernetes API...OK
-  ✔ 👀  Looking for an already existing Eclipse&#160;Che instance
-    ✔ Verify if Eclipse&#160;Che is deployed into namespace "eclipse-che"...it is not
+  ✔ 👀  Looking for an already existing Eclipse Che instance
+    ✔ Verify if Eclipse Che is deployed into namespace "eclipse-che"...it is not
   ✔ ✈️  Kubernetes preflight checklist
     ✔ Verify if kubectl is installed
     ✔ Verify remote kubernetes status...done.
-    ✔ Check Kubernetes version: Found v1.15.12-gke.2.
+    ✔ Check Kubernetes version: Found v1.22.2.
     ✔ Verify domain is set...set to aws.my-ide.cloud.
     ↓ Check if cluster accessible [skipped]
-  ✔ Following Eclipse&#160;Che logs
-    ↓ Start following Operator logs [skipped]
-    ✔ Start following Eclipse&#160;Che server logs...done
-    ✔ Start following Postgres logs...done
+  ✔ Following Eclipse Che logs
+    ✔ Start following Operator logs...done
+    ✔ Start following Eclipse Che Server logs...done
+    ✔ Start following PostgreSQL logs...done
     ✔ Start following Keycloak logs...done
-    ✔ Start following Plugin registry logs...done
-    ✔ Start following Devfile registry logs...done
+    ✔ Start following Plug-in Registry logs...done
+    ✔ Start following Devfile Registry logs...done
+    ✔ Start following Eclipse Che Dashboard logs...done
     ✔ Start following namespace events...done
-  ✔ 🏃‍  Running Helm to install Eclipse&#160;Che
-    ✔ Verify if helm is installed
-    ✔ Check Helm Version: Found v3.4.1+gc4e7485
-    ✔ Create Namespace (eclipse-che)...does already exist.
-    ✔ Check Eclipse&#160;Che TLS certificate...self-signed TLS certificate secret found
-    ✔ Check Cluster Role Binding...does not exists.
-    ✔ Preparing Eclipse&#160;Che Helm Chart...done.
-    ✔ Updating Helm Chart dependencies...done.
-    ✔ Deploying Eclipse&#160;Che Helm Chart...done.
+ ›   Warning: Consider using the more reliable 'OLM' installer when deploying a stable release of Eclipse Che (--installer=olm).
+  ✔ Create Namespace eclipse-che...[Exists]
+  ✔ 🏃‍  Running the Eclipse Che operator
+    ✔ Create ServiceAccount che-operator in namespace eclipse-che...done.
+    ✔ Read Roles and Bindings...done.
+    ✔ Creating Roles and Bindings...done.
+    ✔ Create CRD checlusters.org.eclipse.che...done.
+    ✔ Create backup and restore CRDs...done.
+    ✔ Waiting 5 seconds for the new Kubernetes resources to get flushed...done.
+    ✔ Create deployment che-operator in namespace eclipse-che...done.
+    ✔ Operator pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Prepare Eclipse Che cluster CR...Done.
+    ✔ Create the Custom Resource of type checlusters.org.eclipse.che in the namespace eclipse-che...done.
   ✔ ✅  Post installation checklist
     ✔ PostgreSQL pod bootstrap
       ✔ Scheduling...done
       ✔ Downloading images...done
       ✔ Starting...done
-    ✔ Devfile registry pod bootstrap
+    ✔ Keycloak pod bootstrap
       ✔ Scheduling...done
       ✔ Downloading images...done
       ✔ Starting...done
-    ✔ Plugin registry pod bootstrap
+    ✔ Devfile Registry pod bootstrap
       ✔ Scheduling...done
       ✔ Downloading images...done
       ✔ Starting...done
-    ✔ Eclipse&#160;Che pod bootstrap
+    ✔ Plug-in Registry pod bootstrap
       ✔ Scheduling...done
       ✔ Downloading images...done
       ✔ Starting...done
-    ✔ Eclipse&#160;Che status check...done
+    ✔ Eclipse Che Dashboard pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse Che Server pod bootstrap
+      ✔ Scheduling...done
+      ✔ Downloading images...done
+      ✔ Starting...done
+    ✔ Eclipse Che status check...done
+  ✔ Retrieving Che self-signed CA certificate...OK
   ✔ Prepare post installation output...done
   ✔ Show important messages
-    ✔ Eclipse&#160;Che 7.39 has been successfully deployed.
+    ✔ Eclipse&#160;Che 7.40 has been successfully deployed.
     ✔ Documentation             : https://www.eclipse.org/che/docs
     ✔ -------------------------------------------------------------------------------
     ✔ Users Dashboard           : https://eclipse-che-eclipse-che.aws.my-ide.cloud
@@ -1509,7 +1550,10 @@ Events:
     ✔ -------------------------------------------------------------------------------
     ✔ Identity Provider URL     : https://keycloak-eclipse-che.aws.my-ide.cloud/auth
     ✔ Identity Provider login   : "XXX:XXX".
-    ✔ -------------------------------------------------------------------------------</pre>
+    ✔ -------------------------------------------------------------------------------
+    ✔ [ACTION REQUIRED] Please add Che self-signed CA certificate into your browser: /tmp/cheCA.crt.
+   Documentation how to add a CA certificate into a browser: https://www.eclipse.org/che/docs/che-7/end-user-guide/importing-certificates-to-browsers/
+Command server:deploy has completed successfully in 04:25.</pre>
 </div>
 </div>
 </li>

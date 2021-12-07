@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -742,7 +769,7 @@
     <li><a href="./">Importing untrusted TLS certificates to Che</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/importing-untrusted-tls-certificates-old.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/importing-untrusted-tls-certificates-old.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -897,18 +924,6 @@ ensure you add the <code>spec.server.ServerTrustStoreConfigMapName</code> field 
 </div>
 </div>
 </div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>For a Che <a href="https://helm.sh/">Helm Chart</a> deployment, ensure you override the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property with the name of the ConfigMap when installing the Che Helm Chart. For this you should add the following arguments to the Helm command line:</p>
-</div>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">--set global.tls.serverTrustStoreConfigMapName=ca-certs</pre>
-</div>
-</div>
-</div>
-</div>
 </li>
 </ol>
 </div>
@@ -934,18 +949,6 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get checluster eclipse-che -n eclipse-che -o jsonpath={.spec.server.serverTrustStoreConfigMapName}</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>On instances of Che deployed with the Che <a href="https://helm.sh/">Helm Chart</a> deployment, retrieve the name of the ConfigMap by reading the <code>global.tls.serverTrustStoreConfigMapName</code> property from the Helm Chart:</p>
-</div>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ helm get values che --all --output json | jq -r '.global.tls.serverTrustStoreConfigMapName'</pre>
 </div>
 </div>
 </div>
@@ -1030,35 +1033,6 @@ retrieve the name of the ConfigMap by reading the <code>spec.server.ServerTrustS
 <div class="content">
 <pre class="nowrap">$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p '[{"op": "replace", "path": "/spec/server/serverTrustStoreConfigMapName", "value": "&lt;config-map-name&gt;"}]'</pre>
 </div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>For a Che <a href="https://helm.sh/">Helm Chart</a> deployment:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Clone the <a href="https://github.com/eclipse-che/che-server">Che server</a> project.</p>
-</li>
-<li>
-<p>Go to the <code>deploy/kubernetes/helm/che</code> directory.</p>
-</li>
-<li>
-<p>Update the name of the configMap Che will use, by editing the <code>global.tls.serverTrustStoreConfigMapName</code> Helm Chart property to match the created or updated ConfigMap:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ helm upgrade che -n eclipse-che --set global.tls.serverTrustStoreConfigMapName=&lt;config-map-name&gt; \
-   --set global.ingressDomain=<em>&lt;kubernetes-cluster-domain&gt;</em> .</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>When using Minikube to run Che, substitute <em>&lt;kubernetes-cluster-domain&gt;</em> with <code>$(minikube ip).nip.io</code>.</p>
 </div>
 </li>
 </ol>

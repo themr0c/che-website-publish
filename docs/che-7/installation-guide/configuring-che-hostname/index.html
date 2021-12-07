@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -744,7 +771,7 @@
     <li><a href="./">Configuring Che hostname</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-che-hostname.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-che-hostname.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -805,9 +832,9 @@ Ask a DNS provider to point the custom host name to the cluster ingress.
 <p>Create a TLS secret:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create secret TLS ${secret} \  <i class="conum" data-value="1"></i><b>(1)</b>
---key ${key_file} \                       <i class="conum" data-value="2"></i><b>(2)</b>
---cert ${cert_file} \                     <i class="conum" data-value="3"></i><b>(3)</b>
+<pre>$ kubectl create secret TLS <em>&lt;tls-secret-name&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+--key <em>&lt;key-file&gt;</em> \ <i class="conum" data-value="2"></i><b>(2)</b>
+--cert <em>&lt;cert-file&gt;</em> \ <i class="conum" data-value="3"></i><b>(3)</b>
 -n eclipse-che</pre>
 </div>
 </div>
@@ -824,6 +851,23 @@ Ask a DNS provider to point the custom host name to the cluster ingress.
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>A file with the certificate</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Add the required labels to the secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret <em>&lt;tls-secret-name&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The TLS secret name</td>
 </tr>
 </table>
 </div>

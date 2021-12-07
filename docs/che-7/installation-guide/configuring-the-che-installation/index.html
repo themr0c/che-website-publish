@@ -568,6 +568,36 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/readiness-init-containers/">Readiness init containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-operator-installer/">Enabling and disabling the readiness init containers for the Operator installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-operator-installer/">Enabling the readiness init containers for the Operator installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-operator-installer/">Disabling the readiness init containers for the Operator installer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/enabling-and-disabling-readiness-init-containers-for-the-olm-installer/">Enabling and disabling the readiness init containers for the OLM installer</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/enabling-readiness-init-containers-for-the-olm-installer/">Enabling the readiness init containers for the OLM installer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/disabling-readiness-init-containers-for-the-olm-installer/">Disabling the readiness init containers for the OLM installer</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../administration-guide/caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -587,9 +617,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">Installing on OpenShift 3</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../administration-guide/installing-image-puller-on-kubernetes-using-helm/">Installing using Helm</a>
   </li>
 </ul>
   </li>
@@ -743,7 +770,7 @@
     <li><a href="./">Configuring the Che installation</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.39.x/modules/installation-guide/pages/configuring-the-che-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.40.x/modules/installation-guide/pages/configuring-the-che-installation.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -938,7 +965,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheClusterRoles</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of ClusterRoles that will be assigned to Che ServiceAccount. Be aware that the Che Operator has to already have all permissions in these ClusterRoles to grant them.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of ClusterRoles that will be assigned to Che ServiceAccount. Each role must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label. Be aware that the Che Operator has to already have all permissions in these ClusterRoles to grant them.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheDebug</p></td>
@@ -954,7 +981,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheHostTLSSecret</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing certificates to secure ingress or route for the custom host name of the installed Che server. See the <code>cheHost</code> field.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing certificates to secure ingress or route for the custom host name of the installed Che server. The secret must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label. See the <code>cheHost</code> field.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheImage</p></td>
@@ -982,7 +1009,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheWorkspaceClusterRole</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom cluster role bound to the user for the Che workspaces. The default roles are used when omitted or left blank.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom cluster role bound to the user for the Che workspaces. The role must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label. The default roles are used when omitted or left blank.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">customCheProperties</p></td>
@@ -1074,7 +1101,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">gitSelfSignedCert</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the certificate from <code>che-git-self-signed-cert</code> ConfigMap will be propagated to the Che components and provide particular configuration for Git.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the certificate from <code>che-git-self-signed-cert</code> ConfigMap will be propagated to the Che components and provide particular configuration for Git. Note, the <code>che-git-self-signed-cert</code> ConfigMap must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nonProxyHosts</p></td>
@@ -1126,7 +1153,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">proxySecret</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for a proxy server. When the secret is defined, the <code>proxyUser</code> and <code>proxyPassword</code> are ignored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for a proxy server. When the secret is defined, the <code>proxyUser</code> and <code>proxyPassword</code> are ignored. The secret must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">proxyURL</p></td>
@@ -1162,7 +1189,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">serverTrustStoreConfigMapName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the ConfigMap with public certificates to add to Java trust store of the Che server. This is often required when adding the OpenShift OAuth provider, which has HTTPS endpoint signed with self-signed cert. The Che server must be aware of its CA cert to be able to request it. This is disabled by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the ConfigMap with public certificates to add to Java trust store of the Che server. This is often required when adding the OpenShift OAuth provider, which has HTTPS endpoint signed with self-signed cert. The Che server must be aware of its CA cert to be able to request it. This is disabled by default. The Config Map must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">singleHostGatewayConfigMapLabels</p></td>
@@ -1225,7 +1252,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresSecret</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains PostgreSQL`user` and <code>password</code> that the Che server uses to connect to the DB. When the secret is defined, the <code>chePostgresUser</code> and <code>chePostgresPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>chePostgresUser</code> and <code>chePostgresPassword</code> are defined, then they will be used to connect to the DB. 2. <code>chePostgresUser</code> or <code>chePostgresPassword</code> are not defined, then a new secret with the name <code>che-postgres-secret</code> will be created with default value of <code>pgche</code> for <code>user</code> and with an auto-generated value for <code>password</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains PostgreSQL`user` and <code>password</code> that the Che server uses to connect to the DB. When the secret is defined, the <code>chePostgresUser</code> and <code>chePostgresPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>chePostgresUser</code> and <code>chePostgresPassword</code> are defined, then they will be used to connect to the DB. 2. <code>chePostgresUser</code> or <code>chePostgresPassword</code> are not defined, then a new secret with the name <code>che-postgres-secret</code> will be created with default value of <code>pgche</code> for <code>user</code> and with an auto-generated value for <code>password</code>. The secret must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chePostgresUser</p></td>
@@ -1246,6 +1273,10 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">postgresVersion</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a PostgreSQL version image to use. Allowed values are: <code>9.6</code> and <code>13.3</code>. Migrate your PostgreSQL database to switch from one version to another.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pvcClaimSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the persistent volume claim for database. Defaults to <code>1Gi</code>. To update pvc storageclass that provisions it must support resize when Che has been already deployed.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1316,7 +1347,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderPostgresSecret</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>password</code> for the Identity Provider, Keycloak or RH-SSO, to connect to the database. When the secret is defined, the <code>identityProviderPostgresPassword</code> is ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderPostgresPassword</code> is defined, then it will be used to connect to the database. 2. <code>identityProviderPostgresPassword</code> is not defined, then a new secret with the name <code>che-identity-postgres-secret</code> will be created with an auto-generated value for <code>password</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>password</code> for the Identity Provider, Keycloak or RH-SSO, to connect to the database. When the secret is defined, the <code>identityProviderPostgresPassword</code> is ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderPostgresPassword</code> is defined, then it will be used to connect to the database. 2. <code>identityProviderPostgresPassword</code> is not defined, then a new secret with the name <code>che-identity-postgres-secret</code> will be created with an auto-generated value for <code>password</code>. The secret must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderRealm</p></td>
@@ -1328,7 +1359,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderSecret</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for Identity Provider. When the secret is defined, the <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are defined, then they will be used. 2. <code>identityProviderAdminUserName</code> or <code>identityProviderPassword</code> are not defined, then a new secret with the name <code>che-identity-secret</code> will be created with default value <code>admin</code> for <code>user</code> and with an auto-generated value for <code>password</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The secret that contains <code>user</code> and <code>password</code> for Identity Provider. When the secret is defined, the <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are ignored. When the value is omitted or left blank, the one of following scenarios applies: 1. <code>identityProviderAdminUserName</code> and <code>identityProviderPassword</code> are defined, then they will be used. 2. <code>identityProviderAdminUserName</code> or <code>identityProviderPassword</code> are not defined, then a new secret with the name <code>che-identity-secret</code> will be created with default value <code>admin</code> for <code>user</code> and with an auto-generated value for <code>password</code>. The secret must have <code>app.kubernetes.io/part-of=che.eclipse.org</code> label.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">identityProviderURL</p></td>
