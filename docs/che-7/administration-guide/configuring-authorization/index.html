@@ -419,6 +419,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/upgrading-che-namespace-strategies-other-than-per-user/">Updating Che namespace strategies other than 'per user'</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../installation-guide/rolling-back-a-che-upgrade/">Rolling back a Che upgrade</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -552,34 +555,31 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../backup-and-disaster-recovery/">Backup and disaster recovery</a>
+    <a class="nav-link" href="../backup-and-recovery/">Backup and recovery</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../setup-backup-server/">Setting up a backup server</a>
+    <a class="nav-link" href="../supported-restic-compatible-backup-servers/">Supported restic-compatible backup servers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../managing-backups-using-cli/">Managing backups using CLI</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-cli-to-use-backup-server/">Configuring CLI to use a backup server</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-an-sftp-backup-server/">Backing up of Che instances to an SFTP backup server</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../managing-backups-using-custom-resources/">Managing backups through custom resources</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../define-backup-server-for-operator/">Configuring Che Operator to use a backup server</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-amazon-s3/">Backing up of Che instances to Amazon S3</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../persistent-volumes-backups/">Persistent Volumes backups</a>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-a-rest-backup-server/">Backing up of Che instances to a REST backup server</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../external-database-setup/">External database setup</a>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-the-internal-backup-server/">Backing up of Che instances to the internal backup server</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../restoring-a-che-instance-from-a-backup/">Restoring a Che instance from a backup</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../backups-of-persistent-volumes/">Backups of persistent volumes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../backups-of-postgresql/">Backups of PostgreSQL</a>
   </li>
 </ul>
   </li>
@@ -1443,7 +1443,7 @@ EOF</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuring-gitlab-oauth2_che"><a class="anchor" href="#configuring-gitlab-oauth2_che"></a>Configuring GitLab OAuth2</h3>
+<h3 id="configuring-gitlab-oauth2-with-che-server-engine_che"><a class="anchor" href="#configuring-gitlab-oauth2-with-che-server-engine_che"></a>Configuring GitLab OAuth2 with the che-server engine</h3>
 <div class="paragraph">
 <p>OAuth2 for GitLab allows accepting factories from private GitLab repositories.</p>
 </div>
@@ -1451,7 +1451,7 @@ EOF</code></pre>
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>GitLab server is running and available from Che</p>
+<p>The GitLab server is running and available from Che.</p>
 </li>
 </ul>
 </div>
@@ -1557,6 +1557,84 @@ All three types of GitLab OAuth 2 applications are supported: User owned, Group 
 </li>
 <li>
 <p><a href="../../installation-guide/deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="xref page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-gitlab-oauth2-with-devworkspace-engine_che"><a class="anchor" href="#configuring-gitlab-oauth2-with-devworkspace-engine_che"></a>Configuring GitLab OAuth2 with the DevWorkspace engine</h3>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The GitLab server is running and available from Che.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create an OAuth2 <a href="https://docs.gitlab.com/ee/integration/oauth_provider.html#authorized-applications">Authorized application</a> in Gitlab:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enter Che as the application <code>Name</code>.</p>
+</li>
+<li>
+<p>Enter the Che OAuth callback URL as the <code>Redirect URI</code>. The default value is <code>https://che-eclipse-che.<em>&lt;domain&gt;</em>/api/oauth/callback</code>.</p>
+</li>
+<li>
+<p>Check the <code>Confidential</code> and <code>Expire access tokens</code> checkboxes.</p>
+</li>
+<li>
+<p>Under <strong>Scopes</strong>, check the <code>api</code>, <code>write_repository</code>, and <code>openid</code> checkboxes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <code>Save application</code> and store the <code>Application ID</code> and <code>Secret</code> values.</p>
+</li>
+<li>
+<p>Create a new secret in the namespace where Che is deployed.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+kind: Secret
+apiVersion: v1
+metadata:
+  name: gitlab-oauth-config
+  namespace: <em>&lt;namespace&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: oauth-scm-configuration
+  annotations:
+    che.eclipse.org/oauth-scm-server: gitlab
+    che.eclipse.org/scm-server-endpoint: <em>&lt;your_GitLab_service_URL&gt;</em>
+type: Opaque
+data:
+  id: <em>&lt;base64_encoded_GitLab_Application_ID&gt;</em>
+  secret: <em>&lt;base64_encoded_GitLab_Secret&gt;</em>
+EOF</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace. The default is eclipse-che.</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://docs.gitlab.com/ee/integration/oauth_provider.html">Configure GitLab as an OAuth 2.0 authentication identity provider</a></p>
 </li>
 </ul>
 </div>

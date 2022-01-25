@@ -419,6 +419,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../installation-guide/upgrading-che-namespace-strategies-other-than-per-user/">Updating Che namespace strategies other than 'per user'</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../installation-guide/rolling-back-a-che-upgrade/">Rolling back a Che upgrade</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -552,34 +555,31 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../backup-and-disaster-recovery/">Backup and disaster recovery</a>
+    <a class="nav-link" href="../backup-and-recovery/">Backup and recovery</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../setup-backup-server/">Setting up a backup server</a>
+    <a class="nav-link" href="../supported-restic-compatible-backup-servers/">Supported restic-compatible backup servers</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../managing-backups-using-cli/">Managing backups using CLI</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-cli-to-use-backup-server/">Configuring CLI to use a backup server</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-an-sftp-backup-server/">Backing up of Che instances to an SFTP backup server</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../managing-backups-using-custom-resources/">Managing backups through custom resources</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../define-backup-server-for-operator/">Configuring Che Operator to use a backup server</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-amazon-s3/">Backing up of Che instances to Amazon S3</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../persistent-volumes-backups/">Persistent Volumes backups</a>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-a-rest-backup-server/">Backing up of Che instances to a REST backup server</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../external-database-setup/">External database setup</a>
+    <a class="nav-link" href="../backing-up-of-che-instances-to-the-internal-backup-server/">Backing up of Che instances to the internal backup server</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../restoring-a-che-instance-from-a-backup/">Restoring a Che instance from a backup</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../backups-of-persistent-volumes/">Backups of persistent volumes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../backups-of-postgresql/">Backups of PostgreSQL</a>
   </li>
 </ul>
   </li>
@@ -858,7 +858,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -sSLo- <a href="https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-kubernetes/manifests/che-operator.clusterserviceversion.yaml" class="bare">https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-kubernetes/manifests/che-operator.clusterserviceversion.yaml</a> | \
+<pre>$ curl -sSLo- https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-kubernetes/manifests/che-operator.clusterserviceversion.yaml | \
 yq -r '.spec.install.spec.deployments[].spec.template.spec.containers[].env[] | select(.name | test("RELATED_IMAGE_.*"; "g")) | .value' | \
 sort -u</pre>
 </div>
@@ -870,7 +870,7 @@ sort -u</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -sSLo- <a href="https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml" class="bare">https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml</a> | \
+<pre>$ curl -sSLo- https://raw.githubusercontent.com/eclipse-che/che-operator/7.42.x/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml | \
 yq -r '.spec.install.spec.deployments[].spec.template.spec.containers[].env[] | select(.name | test("RELATED_IMAGE_.*"; "g")) | .value' | \
 sort -u</pre>
 </div>
