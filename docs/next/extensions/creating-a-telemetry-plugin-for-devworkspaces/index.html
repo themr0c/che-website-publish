@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Creating a telemetry plug-in :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/che-7/extensions/creating-a-telemetry-plugin/">
+    <title>Creating a telemetry plug-in for DevWorkspaces :: Eclipse Che Documentation</title>
     <meta name="keywords" content="extensions, telemetry">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -437,11 +436,11 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../telemetry/">Telemetry</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Creating A Telemetry Plugin</a>
-  </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../creating-a-telemetry-plugin-for-devworkspaces/">Creating a telemetry plug-in for DevWorkspaces</a>
+    <a class="nav-link" href="../creating-a-telemetry-plugin/">Creating A Telemetry Plugin</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">Creating a telemetry plug-in for DevWorkspaces</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../the-woopra-telemetry-plugin/">The Woopra Telemetry Plugin</a>
@@ -493,50 +492,33 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li><a href="../extensions/">Extensions</a></li>
     <li><a href="../telemetry/">Telemetry</a></li>
-    <li><a href="./">Creating A Telemetry Plugin</a></li>
+    <li><a href="./">Creating a telemetry plug-in for DevWorkspaces</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
-    <a class="version" href="../../../che-7/extensions/creating-a-telemetry-plugin/">7.43.x</a>
+    <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">7.43.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/extensions/pages/creating-a-telemetry-plugin.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/extensions/pages/creating-a-telemetry-plugin-for-devworkspaces.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Creating a telemetry plug-in</h1>
+<h1 class="page">Creating a telemetry plug-in for DevWorkspaces</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This page explains how to create a back-end telemetry plug-in for Che workspaces.</p>
-</div>
-<div class="paragraph">
-<p>To create a telemetry back-end plug-in for DevWorkspaces, see <a href="../creating-a-telemetry-plugin-for-devworkspaces/" class="xref page">Creating a telemetry plug-in for DevWorkspaces</a></p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>This section shows how to create an <code>AnalyticsManager</code> class that extends <a href="https://github.com/che-incubator/che-workspace-telemetry-client/blob/master/backend-base/src/main/java/org/eclipse/che/incubator/workspace/telemetry/base/AbstractAnalyticsManager.java"><code>AbstractAnalyticsManager</code></a> and implements the following methods:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>isEnabled()</code> - determines whether the telemetry backend is functioning correctly. This could mean always returning <code>true</code>, or have more complex checks, for example, returning <code>false</code> when a connection property is missing.</p>
+<p><code>isEnabled()</code> - determines whether the telemetry backend is functioning correctly. This can mean always returning <code>true</code>, or have more complex checks, for example, returning <code>false</code> when a connection property is missing.</p>
 </li>
 <li>
 <p><code>destroy()</code> - cleanup method that is run before shutting down the telemetry backend. This method sends the <code>WORKSPACE_STOPPED</code> event.</p>
@@ -558,26 +540,26 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Creation of a telemetry server to echo events to standard output.</p>
+<p>Creating a telemetry server to echo events to standard output.</p>
 </li>
 <li>
 <p>Extending the Che telemetry client and implementing a user&#8217;s custom backend.</p>
 </li>
 <li>
-<p>Creating a <code>meta.yaml</code> file representing a Che workspace plug-in for a user&#8217;s custom backend.</p>
+<p>Creating a <code>plugin.yaml</code> file representing a DevWorkspace plug-in for the custom backend.</p>
 </li>
 <li>
-<p>Specifying the location of a custom plug-in to Che by setting the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable.</p>
+<p>Specifying of a location of a custom plug-in to Che by setting the <code>workspacesDefaultPlugins</code> attribute from the <code>CheCluster</code> custom resource.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
+<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting started</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document describes the steps required to extend the Che telemetry system to connect to a custom backend:</p>
+<p>This document describes the steps required to extend the Che telemetry system to communicate with to a custom backend:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -591,19 +573,22 @@
 <p>Packaging the telemetry backend in a container and deploying it to an image registry</p>
 </li>
 <li>
-<p>Adding a plug-in for your backend and instructing Che to load the plug-in in your workspaces</p>
+<p>Adding a plug-in for your backend and instructing Che to load the plug-in in your DevWorkspaces</p>
 </li>
 </ol>
 </div>
-<h2 id="_optional_creating_a_server_that_receives_events" class="discrete">Optional: creating a server that receives events</h2>
 <div class="paragraph">
-<p>This example shows how to create a server that receives events from Che and writes them to standard output.</p>
+<p>A finished example of the telemetry backend is available <a href="https://github.com/che-incubator/devworkspace-telemetry-example-plugin">here</a>.</p>
+</div>
+<h2 id="_creating_a_server_that_receives_events" class="discrete">Creating a server that receives events</h2>
+<div class="paragraph">
+<p>For demonstration purposes, this example shows how to create a server that receives events from our telemetry plug-in and writes them to standard output.</p>
 </div>
 <div class="paragraph">
 <p>For production use cases, consider integrating with a third-party telemetry system (for example, Segment, Woopra) rather than creating your own telemetry server. In this case, use your provider&#8217;s APIs to send events from your custom backend to their system.</p>
 </div>
 <div class="paragraph">
-<p>The following Go code starts a server on port 8080 and writes events to standard output:</p>
+<p>The following Go code starts a server on port <code>8080</code> and writes events to standard output:</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 1. <code>main.go</code></div>
@@ -689,7 +674,7 @@ $ docker push registry/organization/telemetry-server-example:latest</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Both <code>manifest_with_ingress.yaml</code> and <code>manifest_with_route</code> contain definitions for a Deployment and Service. The former also defines a Kubernetes Ingress, while the latter also defines an OpenShift Route.</p>
+<p>Both <code>manifest_with_ingress.yaml</code> and <code>manifest_with_route</code> contain definitions for a Deployment and Service. The former also defines a Kubernetes Ingress, while the latter defines an OpenShift Route.</p>
 </div>
 <div class="paragraph">
 <p>In the manifest file, replace the <code>image</code> and <code>host</code> fields to match the image you pushed, and the public hostname of your Kubernetes or OpenShift cluster. Then run:</p>
@@ -702,7 +687,7 @@ $ docker push registry/organization/telemetry-server-example:latest</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_creating_a_new_maven_project"><a class="anchor" href="#_creating_a_new_maven_project"></a>Creating a new Maven project</h2>
+<h2 id="_creating_the_back_end_project"><a class="anchor" href="#_creating_the_back_end_project"></a>Creating the back-end project</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -711,49 +696,52 @@ $ docker push registry/organization/telemetry-server-example:latest</pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For fast feedback when developing, it is recommended to do development inside a Che workspace. This way, you can run the application in a cluster and connect to the workspaces front-end telemetry plug-in to send events to your custom backend.
+For fast feedback when developing, it is recommended to do development inside a DevWorkspace. This way, you can run the application in a cluster and receive events from the front-end telemetry plug-in.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = NO --></p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create a new Maven Quarkus project scaffolding:</p>
+<p>Maven Quarkus project scaffolding:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ mvn io.quarkus:quarkus-maven-plugin:1.2.1.Final:create \
-  -DprojectGroupId=mygroup -DprojectArtifactId=telemetrybackend \
-  -DprojectVersion=my-version -DclassName="org.my.group.MyResource"</pre>
+<pre>mvn io.quarkus:quarkus-maven-plugin:2.7.1.Final:create \
+    -DprojectGroupId=mygroup -DprojectArtifactId=devworkspace-telemetry-example-plugin \
+-DprojectVersion=1.0.0-SNAPSHOT</pre>
 </div>
 </div>
 </li>
-</ol>
-</div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = YES --></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
 <li>
-<p>Add a dependency to <code>org.eclipse.che.incubator.workspace-telemetry:backend-base</code> in your <code>pom.xml</code>:</p>
+<p>Remove the files under <code>src/main/java/mygroup</code> and <code>src/test/java/mygroup</code>.</p>
+</li>
+<li>
+<p>Consult the <a href="https://github.com/che-incubator/che-workspace-telemetry-client/packages">GitHub packages</a> for the latest version and Maven coordinates of <code>backend-base</code>.</p>
+</li>
+<li>
+<p>Add the following dependencies to your <code>pom.xml</code>:</p>
 <div class="exampleblock">
 <div class="title">Example 2. <code>pom.xml</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- Required --&gt;
+&lt;dependency&gt;
     &lt;groupId&gt;org.eclipse.che.incubator.workspace-telemetry&lt;/groupId&gt;
     &lt;artifactId&gt;backend-base&lt;/artifactId&gt;
-    &lt;version&gt;0.0.32&lt;/version&gt;
+    &lt;version&gt;LATEST VERSION FROM PREVIOUS STEP&lt;/version&gt;
+&lt;/dependency&gt;
+
+
+&lt;!-- Used to make http requests to the telemetry server --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-rest-client&lt;/artifactId&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
-    &lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
-    &lt;artifactId&gt;httpclient&lt;/artifactId&gt;
-    &lt;version&gt;4.5.12&lt;/version&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-rest-client-jackson&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -761,13 +749,10 @@ For fast feedback when developing, it is recommended to do development inside a 
 </div>
 </li>
 <li>
-<p>Add the Apache HTTP components library to send HTTP requests.</p>
+<p>Create a personal access token with <code>read:packages</code> permissions to download the <code>org.eclipse.che.incubator.workspace-telemetry:backend-base</code> dependency from <a href="https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages">GitHub packages</a>.</p>
 </li>
 <li>
-<p>Create a GitHub personal access token with <code>read:packages</code> permissions and copy the token value. This token is used to access <a href="https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages">GitHub packages</a> to download the Che telemetry library.</p>
-</li>
-<li>
-<p>Create a <code>settings.xml</code> file in the repository root and add the coordinates and token to the <code>che-incubator</code> packages:</p>
+<p>Add your GitHub username, personal access token and <code>che-incubator</code> repository details in your <code>~/.m2/settings.xml</code> file:</p>
 <div class="exampleblock">
 <div class="title">Example 3. <code>settings.xml</code></div>
 <div class="content">
@@ -780,8 +765,8 @@ http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
    &lt;servers&gt;
       &lt;server&gt;
          &lt;id&gt;che-incubator&lt;/id&gt;
-         &lt;username&gt;${env.GITHUB_USERNAME}&lt;/username&gt;
-         &lt;password&gt;${env.GITHUB_TOKEN}&lt;/password&gt;
+         &lt;username&gt;YOUR GITHUB USERNAME&lt;/username&gt;
+         &lt;password&gt;YOUR GITHUB TOKEN&lt;/password&gt;
       &lt;/server&gt;
    &lt;/servers&gt;
 
@@ -795,24 +780,20 @@ http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
             &lt;repository&gt;
                &lt;id&gt;central&lt;/id&gt;
                &lt;url&gt;https://repo1.maven.org/maven2&lt;/url&gt;
-                &lt;releases&gt;&lt;enabled&gt;true&lt;/enabled&gt;&lt;/releases&gt;
-                &lt;snapshots&gt;&lt;enabled&gt;false&lt;/enabled&gt;&lt;/snapshots&gt;
-                &lt;/repository&gt;
-                &lt;repository&gt;
-                &lt;id&gt;che-incubator&lt;/id&gt;
-                &lt;name&gt;GitHub navikt Apache Maven Packages&lt;/name&gt;
-                &lt;url&gt;https://maven.pkg.github.com/che-incubator/che-workspace-telemetry-client&lt;/url&gt;
-                &lt;/repository&gt;
-            &lt;/repositories&gt;
-        &lt;/profile&gt;
-    &lt;/profiles&gt;
-    &lt;/settings&gt;</code></pre>
+               &lt;releases&gt;&lt;enabled&gt;true&lt;/enabled&gt;&lt;/releases&gt;
+               &lt;snapshots&gt;&lt;enabled&gt;false&lt;/enabled&gt;&lt;/snapshots&gt;
+               &lt;/repository&gt;
+               &lt;repository&gt;
+               &lt;id&gt;che-incubator&lt;/id&gt;
+               &lt;url&gt;https://maven.pkg.github.com/che-incubator/che-workspace-telemetry-client&lt;/url&gt;
+            &lt;/repository&gt;
+         &lt;/repositories&gt;
+      &lt;/profile&gt;
+   &lt;/profiles&gt;
+&lt;/settings&gt;</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p>This file is used when packaging the application in a container. When running locally, add the information to your personal <code>settings.xml</code> file.</p>
 </div>
 </li>
 </ol>
@@ -820,127 +801,203 @@ http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
 </div>
 </div>
 <div class="sect1">
-<h2 id="running-the-application_che"><a class="anchor" href="#running-the-application_che"></a>Running the application</h2>
+<h2 id="_creating_a_concrete_implementation_of_analyticsmanager_and_adding_specialized_logic"><a class="anchor" href="#_creating_a_concrete_implementation_of_analyticsmanager_and_adding_specialized_logic"></a>Creating a concrete implementation of AnalyticsManager and adding specialized logic</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Run and test the application is in a Che workspace:</p>
+<p>Create two files in your project under <code>src/main/java/mygroup</code>:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>MainConfiguration.java</code> - contains configuration provided to <code>AnalyticsManager</code>.</p>
+</li>
+<li>
+<p><code>AnalyticsManager.java</code> - contains logic specific to the telemetry system.</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. <code>MainConfiguration.java</code></div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ mvn quarkus:dev -Dquarkus.http.port=${CHE_WORKSPACE_TELEMETRY_BACKEND_PORT}</pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.my.group;
+
+import java.util.Optional;
+
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+
+import org.eclipse.che.incubator.workspace.telemetry.base.BaseConfiguration;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+@Dependent
+@Alternative
+public class MainConfiguration extends BaseConfiguration {
+    @ConfigProperty(name = "welcome.message")      <i class="conum" data-value="1"></i><b>(1)</b>
+    Optional&lt;String&gt; welcomeMessage;               <i class="conum" data-value="2"></i><b>(2)</b>
+}</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A MicroProfile configuration annotation is used to inject the <code>welcome.message</code> configuration.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>If Che is secured using a self-signed certificate, add the certificate to a trust store and mount it into the workspace. Also add the Java system property, <code>-Djavax.net.ssl.trustStore=/path/to/trustStore</code>, to the <code>mvn</code> command. For example, assuming the trust store is located in <code>$JAVA_HOME/jre/lib/security/cacerts</code>:</p>
+<p>For more details on how to set configuration properties specific to your backend, see the Quarkus <a href="https://quarkus.io/guides/config-reference">Configuration Reference Guide</a>.</p>
 </div>
+<div class="exampleblock">
+<div class="title">Example 5. <code>AnalyticsManager.java</code></div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ keytool -import -alias self-signed-certificate \
-  -file <em>&lt;path/to/self-signed-certificate&gt;</em> -keystore $JAVA_HOME/jre/lib/security/cacerts</pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.my.group;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+
+import org.eclipse.che.incubator.workspace.telemetry.base.AbstractAnalyticsManager;
+import org.eclipse.che.incubator.workspace.telemetry.base.AnalyticsEvent;
+import org.eclipse.che.incubator.workspace.telemetry.finder.DevWorkspaceFinder;
+import org.eclipse.che.incubator.workspace.telemetry.finder.UsernameFinder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
+@Dependent
+@Alternative
+public class AnalyticsManager extends AbstractAnalyticsManager {
+
+    private static final Logger LOG = getLogger(AbstractAnalyticsManager.class);
+
+    public AnalyticsManager(MainConfiguration mainConfiguration, DevWorkspaceFinder devworkspaceFinder, UsernameFinder usernameFinder) {
+        super(mainConfiguration, devworkspaceFinder, usernameFinder);
+
+        mainConfiguration.welcomeMessage.ifPresentOrElse(     <i class="conum" data-value="1"></i><b>(1)</b>
+            (str) -&gt; LOG.info("The welcome message is: {}", str),
+            () -&gt; LOG.info("No welcome message provided")
+        );
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public void destroy() {}
+
+    @Override
+    public void onEvent(AnalyticsEvent event, String ownerId, String ip, String userAgent, String resolution, Map&lt;String, Object&gt; properties) {
+        LOG.info("The received event is: {}", event);         <i class="conum" data-value="2"></i><b>(2)</b>
+    }
+
+    @Override
+    public void increaseDuration(AnalyticsEvent event, Map&lt;String, Object&gt; properties) { }
+
+    @Override
+    public void onActivity() {}
+}</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Log the welcome message if it was provided.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Log the event received from the front-end plug-in.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Followed by:</p>
+<p>Since <code>org.my.group.AnalyticsManager</code> and <code>org.my.group.MainConfiguration</code> are alternative beans, specify them using the <code>quarkus.arc.selected-alternatives</code> property in <code>src/main/resources/application.properties</code>.</p>
 </div>
+<div class="exampleblock">
+<div class="title">Example 6. <code>application.properties</code></div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ mvn quarkus:dev -Dquarkus.http.port=${CHE_WORKSPACE_TELEMETRY_BACKEND_PORT} \
-  -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts</pre>
+<pre>quarkus.arc.selected-alternatives=MainConfiguration,AnalyticsManager</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_creating_a_concrete_implementation_of_analyticsmanager_and_adding_specialized_logic"><a class="anchor" href="#_creating_a_concrete_implementation_of_analyticsmanager_and_adding_specialized_logic"></a>Creating a concrete implementation of AnalyticsManager and adding specialized logic</h2>
+<h2 id="running-the-application_che"><a class="anchor" href="#running-the-application_che"></a>Running the application within a DevWorkspace</h2>
 <div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the <code>DEVWORKSPACE_TELEMETRY_BACKEND_PORT</code> environment variable in the DevWorkspace. Here, the value is set to <code>4167</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>spec:
+  template:
+    attributes:
+      workspaceEnv:
+        - name: DEVWORKSPACE_TELEMETRY_BACKEND_PORT
+          value: '4167'</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the DevWorkspace from the Eclipse&#160;Che dashboard.</p>
+</li>
+<li>
+<p>Run the following command within a DevWorkspace&#8217;s terminal window to start the application. Use the <code>--settings</code> flag to specify path to the location of the <code>settings.xml</code> file that contains the GitHub access token.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ mvn --settings=settings.xml quarkus:dev -Dquarkus.http.port=${DEVWORKSPACE_TELEMETRY_BACKEND_PORT}</pre>
+</div>
+</div>
 <div class="paragraph">
-<p>Create two new files in your project:</p>
+<p>The application now receives telemetry events through port <code>4167</code> from the front-end plug-in.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>AnalyticsManager.java</code> - contains the logic specific to the telemetry system.</p>
 </li>
-<li>
-<p><code>MainConfiguration.java</code> - is the main entrypoint that creates an instance of <code>AnalyticsManager</code> and starts listening for events.</p>
-</li>
-</ul>
+</ol>
 </div>
-<div class="exampleblock">
-<div class="title">Example 4. <code>AnalyticsManager.java</code></div>
-<div class="content">
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Verify that the following output is logged:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.my.group;
-
-import java.util.Map;
-
-import org.eclipse.che.api.core.rest.HttpJsonRequestFactory;
-import org.eclipse.che.incubator.workspace.telemetry.base.AbstractAnalyticsManager;
-import org.eclipse.che.incubator.workspace.telemetry.base.AnalyticsEvent;
-
-public class AnalyticsManager extends AbstractAnalyticsManager {
-
-    public AnalyticsManager(String apiEndpoint, String workspaceId, String machineToken,
-            HttpJsonRequestFactory requestFactory) {
-        super(apiEndpoint, workspaceId, machineToken, requestFactory);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
-    @Override
-    public void destroy() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onEvent(AnalyticsEvent event, String ownerId, String ip, String userAgent, String resolution,
-            Map&lt;String, Object&gt; properties) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void increaseDuration(AnalyticsEvent event, Map&lt;String, Object&gt; properties) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void onActivity() {
-        // TODO Auto-generated method stub
-    }
-}</code></pre>
+<pre>INFO  [org.ecl.che.inc.AnalyticsManager] (Quarkus Main Thread) No welcome message provided
+INFO  [io.quarkus] (Quarkus Main Thread) devworkspace-telemetry-example-plugin 1.0.0-SNAPSHOT on JVM (powered by Quarkus 2.7.2.Final) started in 0.323s. Listening on: http://localhost:4167
+INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, kubernetes-client, rest-client, rest-client-jackson, resteasy, resteasy-jsonb, smallrye-context-propagation, smallrye-openapi, swagger-ui, vertx]</pre>
 </div>
 </div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 5. <code>MainConfiguration.java</code></div>
-<div class="content">
+</li>
+<li>
+<p>To verify that the <code>onEvent()</code> method of <code>AnalyticsManager</code> receives events from the front-end plug-in, press the <kbd>l</kbd> key to disable Quarkus live coding and edit any file within the IDE. The following output should be logged:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.my.group;
-
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
-
-import org.eclipse.che.incubator.workspace.telemetry.base.AbstractAnalyticsManager;
-import org.eclipse.che.incubator.workspace.telemetry.base.BaseConfiguration;
-
-@Dependent
-public class MainConfiguration extends BaseConfiguration {
-    @Produces
-    public AbstractAnalyticsManager analyticsManager() {
-      return new AnalyticsManager(apiEndpoint, workspaceId, machineToken, requestFactory());
-      
-    }
-}</code></pre>
+<pre>INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (Aesh InputStream Reader) Live reload disabled
+INFO  [org.ecl.che.inc.AnalyticsManager] (executor-thread-2) The received event is: Edit Workspace File in Che</pre>
 </div>
 </div>
-</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -948,10 +1005,10 @@ public class MainConfiguration extends BaseConfiguration {
 <h2 id="_implementing_isenabled"><a class="anchor" href="#_implementing_isenabled"></a>Implementing <code>isEnabled()</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For the purposes of the example, this method just returns <code>true</code> whenever it is called. Whenever the server is running, it is enabled and operational.</p>
+<p>For the purposes of the example, this method always returns <code>true</code> whenever it is called.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 6. <code>AnalyticsManager.java</code></div>
+<div class="title">Example 7. <code>AnalyticsManager.java</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -964,7 +1021,7 @@ public boolean isEnabled() {
 </div>
 </div>
 <div class="paragraph">
-<p>It is possible to put more a complex login in <code>isEnabled()</code>. For example, the service should not be considered operational in certain cases. The <a href="https://github.com/redhat-developer/che-workspace-telemetry-woopra-backend/blob/master/src/main/java/com/redhat/che/workspace/services/telemetry/woopra/AnalyticsManager.java">hosted Che Woopra backend</a> checks that a configuration property exists before determining if the backend is enabled.</p>
+<p>It is possible to put more complex logic in <code>isEnabled()</code>. For example, the <a href="https://github.com/che-incubator/devworkspace-telemetry-woopra-plugin/blob/main/src/main/java/com/redhat/devworkspace/services/telemetry/woopra/AnalyticsManager.java">hosted Che Woopra backend</a> checks that a configuration property exists before determining if the backend is enabled.</p>
 </div>
 </div>
 </div>
@@ -972,34 +1029,99 @@ public boolean isEnabled() {
 <h2 id="_implementing_onevent"><a class="anchor" href="#_implementing_onevent"></a>Implementing <code>onEvent()</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>onEvent()</code> sends the event passed to the backend to the telemetry system. For the example application, it sends an HTTP POST payload to the telemetry server. The example telemetry server application is deployed to OpenShift at the following URL: <code>http://little-telemetry-backend-che.apps-crc.testing</code>.</p>
+<p><code>onEvent()</code> sends the event received by the backend to the telemetry system. For the example application, it sends an HTTP POST payload to the <code>/event</code> endpoint from the telemetry server.</p>
 </div>
+<div class="sect2">
+<h3 id="_sending_a_post_request_to_the_example_telemetry_server"><a class="anchor" href="#_sending_a_post_request_to_the_example_telemetry_server"></a>Sending a POST request to the example telemetry server</h3>
+<div class="paragraph">
+<p>For the following example, the telemetry server application is deployed to OpenShift at the following URL: <code>http://little-telemetry-server-che.apps-crc.testing</code>, where <code>apps-crc.testing</code> is the ingress domain name of the OpenShift cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up the RESTEasy REST Client by creating <code>TelemetryService.java</code></p>
 <div class="exampleblock">
-<div class="title">Example 7. <code>AnalyticsManager.java</code></div>
+<div class="title">Example 8. <code>TelemetryService.java</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.my.group;
+
+import java.util.Map;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+@RegisterRestClient
+public interface TelemetryService {
+    @POST
+    @Path("/event") <i class="conum" data-value="1"></i><b>(1)</b>
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response sendEvent(Map&lt;String, Object&gt; payload);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The endpoint to make the <code>POST</code> request to.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Specify the base URL for <code>TelemetryService</code> in the <code>src/main/resources/application.properties</code> file:</p>
+<div class="exampleblock">
+<div class="title">Example 9. <code>application.properties</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>org.my.group.TelemetryService/mp-rest/url=http://little-telemetry-server-che.apps-crc.testing</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Inject <code>TelemetryService</code> into <code>AnalyticsManager</code> and send a <code>POST</code> request in <code>onEvent()</code></p>
+<div class="exampleblock">
+<div class="title">Example 10. <code>AnalyticsManager.java</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Dependent
+@Alternative
+public class AnalyticsManager extends AbstractAnalyticsManager {
+    @Inject
+    @RestClient
+    TelemetryService telemetryService;
+
+...
+
+@Override
 public void onEvent(AnalyticsEvent event, String ownerId, String ip, String userAgent, String resolution, Map&lt;String, Object&gt; properties) {
-    HttpClient httpClient = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost("http://little-telemetry-backend-che.apps-crc.testing/event");
-    HashMap&lt;String, Object&gt; eventPayload = new HashMap&lt;String, Object&gt;(properties);
-    eventPayload.put("event", event);
-    StringEntity requestEntity = new StringEntity(new JsonObject(eventPayload).toString(),
-            ContentType.APPLICATION_JSON);
-    httpPost.setEntity(requestEntity);
-    try {
-        HttpResponse response = httpClient.execute(httpPost);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+    Map&lt;String, Object&gt; payload = new HashMap&lt;String, Object&gt;(properties);
+    payload.put("event", event);
+    telemetryService.sendEvent(payload);
 }</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>This sends an HTTP request to the telemetry server and automatically delays identical events for a small period of time. The default duration is 1500 milliseconds. You can modify the duration by setting subclasses.</p>
+<p>This sends an HTTP request to the telemetry server and automatically delays identical events for a small period of time. The default duration is 1500 milliseconds.</p>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
@@ -1010,7 +1132,7 @@ public void onEvent(AnalyticsEvent event, String ownerId, String ip, String user
 <p>Many telemetry systems recognize event duration. The <code>AbstractAnalyticsManager</code> merges similar events that happen in the same frame of time into one event. This implementation of <code>increaseDuration()</code> is a no-op. This method uses the APIs of the user&#8217;s telemetry provider to alter the event or event properties to reflect the increased duration of an event.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 8. <code>AnalyticsManager.java</code></div>
+<div class="title">Example 11. <code>AnalyticsManager.java</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1026,10 +1148,10 @@ public void increaseDuration(AnalyticsEvent event, Map&lt;String, Object&gt; pro
 <h2 id="_implementing_onactivity"><a class="anchor" href="#_implementing_onactivity"></a>Implementing <code>onActivity()</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Set an inactive timeout limit, and use <code>onActivity()</code> to send a <code>WORKSPACE_INACTIVE</code> event if the last event time is longer than the inactivity timeout.</p>
+<p>Set an inactive timeout limit, and use <code>onActivity()</code> to send a <code>WORKSPACE_INACTIVE</code> event if the last event time is longer than the timeout.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 9. <code>AnalyticsManager.java</code></div>
+<div class="title">Example 12. <code>AnalyticsManager.java</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1037,17 +1159,16 @@ public void increaseDuration(AnalyticsEvent event, Map&lt;String, Object&gt; pro
 
     ...
 
-    private long inactiveTimeLimt = 60000 * 3;
+    private long inactiveTimeLimit = 60000 * 3;
 
     ...
 
-    
     @Override
     public void onActivity() {
-        if (System.currentTimeMillis() - lastEventTime &gt;= inactiveTimeLimt) {
-            onEvent(WORKSPACE_INACTIVE, lastOwnerId, lastIp, lastUserAgent, lastResolution, commonProperties);       
-        }   
-    } </code></pre>
+        if (System.currentTimeMillis() - lastEventTime &gt;= inactiveTimeLimit) {
+            onEvent(WORKSPACE_INACTIVE, lastOwnerId, lastIp, lastUserAgent, lastResolution, commonProperties);
+        }
+    }</code></pre>
 </div>
 </div>
 </div>
@@ -1058,10 +1179,10 @@ public void increaseDuration(AnalyticsEvent event, Map&lt;String, Object&gt; pro
 <h2 id="_implementing_destroy"><a class="anchor" href="#_implementing_destroy"></a>Implementing <code>destroy()</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When <code>destroy()</code> is called, send a <code>WORKSPACE_STOPPED</code> event and shutdown any resources, such as connection pools.</p>
+<p>When <code>destroy()</code> is called, send a <code>WORKSPACE_STOPPED</code> event and shutdown any resources such as connection pools.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 10. <code>AnalyticsManager.java</code></div>
+<div class="title">Example 13. <code>AnalyticsManager.java</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1074,68 +1195,144 @@ public void destroy() {
 </div>
 </div>
 <div class="paragraph">
-<p>Running <code>mvn quarkus:dev</code> as described in <a href="#running-the-application_che">Running the application</a> displays the <code>WORKSPACE_STOPPED</code> event, sent to the server when the Quarkus application is terminated.</p>
+<p>Running <code>mvn quarkus:dev</code> as described in <a href="#running-the-application_che">Running the application within a DevWorkspace</a> and terminating the application with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span> sends a <code>WORKSPACE_STOPPED</code> event to the server.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_packaging_the_quarkus_application"><a class="anchor" href="#_packaging_the_quarkus_application"></a>Packaging the Quarkus application</h2>
+<h2 id="packaging-the-quarkus-application"><a class="anchor" href="#packaging-the-quarkus-application"></a>Packaging the Quarkus application</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>See <a href="https://quarkus.io/guides/building-native-image#using-a-multi-stage-docker-build">the quarkus documentation</a> for the best instructions to package the application in a container. Build and push the container to a container registry of your choice.</p>
+<p>See <a href="https://quarkus.io/guides/building-native-image#using-a-multi-stage-docker-build">the Quarkus documentation</a> for the best instructions to package the application in a container. Build and push the container to a container registry of your choice.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_a_meta_yaml_for_your_plug_in"><a class="anchor" href="#_creating_a_meta_yaml_for_your_plug_in"></a>Creating a <code>meta.yaml</code> for your plug-in</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Create a <code>meta.yaml</code> definition representing a Che plug-in that runs your custom backend in a workspace Pod.</p>
-</div>
+<div class="sect2">
+<h3 id="_sample_dockerfile_for_building_a_quarkus_image_running_with_jvm"><a class="anchor" href="#_sample_dockerfile_for_building_a_quarkus_image_running_with_jvm"></a>Sample Dockerfile for building a Quarkus image running with JVM</h3>
 <div class="exampleblock">
-<div class="title">Example 11. <code>meta.yaml</code></div>
+<div class="title">Example 14. <code>Dockerfile.jvm</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v2
-publisher: demo-publisher
-name: little-telemetry-backend
-version: 0.0.1
-type: Che Plugin
-displayName: Little Telemetry Backend
-description: A Demo telemetry backend
-title: Little Telemetry Backend
-category: Other
-spec:
-  workspaceEnv:
-    - name: CHE_WORKSPACE_TELEMETRY_BACKEND_PORT
-      value: '4167'
-  containers:
-  - name: YOUR BACKEND NAME
-    image: YOUR IMAGE NAME
-    env:
-      - name: CHE_API
-        value: $(CHE_API_INTERNAL)</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">FROM registry.access.redhat.com/ubi8/openjdk-11:1.11
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+
+COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
+COPY --chown=185 target/quarkus-app/*.jar /deployments/
+COPY --chown=185 target/quarkus-app/app/ /deployments/app/
+COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+
+EXPOSE 8080
+USER 185
+
+ENTRYPOINT ["java", "-Dquarkus.http.host=0.0.0.0", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager", "-Dquarkus.http.port=${DEVWORKSPACE_TELEMETRY_BACKEND_PORT}", "-jar", "/deployments/quarkus-run.jar"]</code></pre>
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>To build the image, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn package &amp;&amp; \
+docker build -f src/main/docker/Dockerfile.jvm -t image:tag .</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sample_dockerfile_for_building_a_quarkus_native_image"><a class="anchor" href="#_sample_dockerfile_for_building_a_quarkus_native_image"></a>Sample Dockerfile for building a Quarkus native image</h3>
+<div class="exampleblock">
+<div class="title">Example 15. <code>Dockerfile.native</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">FROM registry.access.redhat.com/ubi8/ubi-minimal:8.5
+WORKDIR /work/
+RUN chown 1001 /work \
+    &amp;&amp; chmod "g+rwX" /work \
+    &amp;&amp; chown 1001:root /work
+COPY --chown=1001:root target/*-runner /work/application
+
+EXPOSE 8080
+USER 1001
+
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=$DEVWORKSPACE_TELEMETRY_BACKEND_PORT}"]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>To build the image, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn package -Pnative -Dquarkus.native.container-build=true &amp;&amp; \
+docker build -f src/main/docker/Dockerfile.native -t image:tag .</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_plugin_yaml_for_your_plug_in"><a class="anchor" href="#_creating_a_plugin_yaml_for_your_plug_in"></a>Creating a <code>plugin.yaml</code> for your plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a <code>plugin.yaml</code> devfile v2 file representing a DevWorkspace plug-in that runs your custom backend in a DevWorkspace Pod. For more information about devfile v2, see <a href="https://devfile.io/docs/">Devfile v2 documentation</a></p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 16. <code>plugin.yaml</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 2.1.0
+metadata:
+  name: devworkspace-telemetry-backend-plugin
+  version: 0.0.1
+  description: A Demo telemetry backend
+  displayName: Devworkspace Telemetry Backend
+components:
+  - name: devworkspace-telemetry-backend-plugin
+    attributes:
+      workspaceEnv:
+        - name: DEVWORKSPACE_TELEMETRY_BACKEND_PORT
+          value: '4167'
+    container:
+      image: YOUR IMAGE            <i class="conum" data-value="1"></i><b>(1)</b>
+      env:
+        - name: WELCOME_MESSAGE    <i class="conum" data-value="2"></i><b>(2)</b>
+          value: 'hello world!'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the container image built from <a href="#packaging-the-quarkus-application">Packaging the Quarkus application</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Set the value for the <code>welcome.message</code> optional configuration property from Example 4.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Typically, the user deploys this file to a corporate web server. This guide demonstrates how to create an Apache web server on OpenShift and host the plug-in there.</p>
 </div>
 <div class="paragraph">
-<p>Create a ConfigMap referencing the new <code>meta.yaml</code> file.</p>
+<p>Create a ConfigMap referencing the new <code>plugin.yaml</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc create configmap --from-file=meta.yaml -n eclipse-che telemetry-plugin-meta</pre>
+<pre>$ oc create configmap --from-file=plugin.yaml -n eclipse-che telemetry-plugin-yaml</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Create a deployment, a service, and a route to expose the web server. The deployment references this ConfigMap and places it in the <code>/var/www/html</code> directory.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 12. <code>manifests.yaml</code></div>
+<div class="title">Example 17. <code>manifest.yaml</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1143,7 +1340,6 @@ spec:
 apiVersion: apps/v1
 metadata:
   name: apache
-  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   replicas: 1
   selector:
@@ -1155,9 +1351,9 @@ spec:
         app: apache
     spec:
       volumes:
-        - name: plugin-meta-yaml
+        - name: plugin-yaml
           configMap:
-            name: telemetry-plugin-meta
+            name: telemetry-plugin-yaml
             defaultMode: 420
       containers:
         - name: apache
@@ -1167,7 +1363,7 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
-            - name: plugin-meta-yaml
+            - name: plugin-yaml
               mountPath: /var/www/html
   strategy:
     type: RollingUpdate
@@ -1181,7 +1377,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: apache
-  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   ports:
     - protocol: TCP
@@ -1195,7 +1390,6 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: apache
-  namespace: <em>&lt;eclipse-che&gt;</em>
 spec:
   host: apache-che.apps-crc.testing
   to:
@@ -1211,107 +1405,113 @@ spec:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc apply -f manifests.yaml</pre>
+<pre>$ oc apply -f manifest.yaml</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Wait a few minutes for the image to pull and the deployment to start, and then confirm that <code>meta.yaml</code> is available in the web server:</p>
+<div class="title">Verification steps</div>
+<p><!-- vale RedHat.TermsErrors = NO --></p>
+</div>
+<div class="paragraph">
+<p>After the deployment has started, confirm that <code>plugin.yaml</code> is available in the web server:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl apache-che.apps-crc.testing/meta.yaml</pre>
+<pre>$ curl apache-che.apps-crc.testing/plugin.yaml</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>This command should return the <code>meta.yaml</code> file.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_updating_che_to_reference_your_telemetry_plug_in"><a class="anchor" href="#_updating_che_to_reference_your_telemetry_plug_in"></a>Updating Che to reference your telemetry plug-in</h2>
+<h2 id="specifying-the-telemetry-plug-in-in-a-DevWorkspace"><a class="anchor" href="#specifying-the-telemetry-plug-in-in-a-DevWorkspace"></a>Specifying the telemetry plug-in in a DevWorkspace</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Update the <code>CheCluster</code> Custom Resource, and add the <code>CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> environment variable to <code>spec.server.customCheProperties</code>. The value of the environment variable must be the URL of the location of the <code>meta.yaml</code> file on your web server. This can be accomplished by running <code>oc edit checluster -n eclipse-che</code> and typing in the change at the terminal, or by editing the CR in the OpenShift console (<strong>Installed Operators &#8594; Eclipse&#160;Che &#8594; Eclipse&#160;Che Cluster &#8594; eclipse-che &#8594; YAML</strong>).</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 13. Example of a YAML file</div>
-<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the following to the <code>components</code> field of an existing DevWorkspace:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
-kind: CheCluster
-metadata:
-  creationTimestamp: '2020-05-14T13:21:51Z'
-  finalizers:
-    - oauthclients.finalizers.che.eclipse.org
-  generation: 18
-  name: eclipse-che
-  namespace: <em>&lt;eclipse-che&gt;</em>
-  resourceVersion: '5108404'
-  selfLink: /apis/org.eclipse.che/v1/namespaces/che/checlusters/eclipse-che
-  uid: bae08db2-104d-4e44-a001-c9affc07528d
-spec:
-  auth:
-    identityProviderURL: 'https://keycloak-che.apps-crc.testing'
-    identityProviderRealm: che
-    updateAdminPassword: false
-    oAuthSecret: ZMmNPRbgOJJQ
-    oAuthClientName: eclipse-che-openshift-identity-provider-yrlcxs
-    identityProviderClientId: che-public
-    identityProviderPostgresSecret: che-identity-postgres-secret
-    externalIdentityProvider: false
-    identityProviderSecret: che-identity-secret
-    openShiftoAuth: true
-  database:
-    chePostgresDb: dbche
-    chePostgresHostName: postgres
-    chePostgresPort: '5432'
-    chePostgresSecret: che-postgres-secret
-    externalDb: false
-  k8s: {}
-  metrics:
-    enable: false
-  server:
-    cheLogLevel: INFO
-    customCheProperties:
-      CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS: 'http://apache-che.apps-crc.testing/meta.yaml'
-    externalDevfileRegistry: false
-    cheHost: che-che.apps-crc.testing
-    selfSignedCert: true
-    cheDebug: 'false'
-    tlsSupport: true
-    allowUserDefinedWorkspaceNamespaces: false
-    externalPluginRegistry: false
-    gitSelfSignedCert: false
-    cheFlavor: che
-  storage:
-    preCreateSubPaths: true
-    pvcClaimSize: 1Gi
-    pvcStrategy: per-workspace
-status:
-  devfileRegistryURL: 'https://devfile-registry-che.apps-crc.testing'
-  keycloakProvisioned: true
-  cheClusterRunning: Available
-  cheURL: 'https://che-che.apps-crc.testing'
-  openShiftoAuthProvisioned: true
-  dbProvisioned: true
-  cheVersion: 7.13.1
-  keycloakURL: 'https://keycloak-che.apps-crc.testing'
-  pluginRegistryURL: 'https://plugin-registry-che.apps-crc.testing/v3'</code></pre>
+<pre>components:
+  ...
+  - name: telemetry-plug-in
+    plugin:
+      uri: http://apache-che.apps-crc.testing/plugin.yaml</pre>
 </div>
 </div>
+</li>
+<li>
+<p>Start the DevWorkspace from the Che dashboard.</p>
+</li>
+</ol>
 </div>
-</div>
-<div class="paragraph">
-<p>Wait for the Che server to restart, and create a new workspace. See a new message stating that the plug-in is being installed into the workspace.</p>
-</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Verify that the <code>telemetry-plug-in</code> container is running in the DevWorkspace pod. Here, this is verified by checking the Workspace view within the editor.</p>
 <div class="imageblock">
 <div class="content">
-<img src="../_images/telemetry/custom_telemetry_plugin.png" alt="Custom telemetry plug-in">
+<img src="../_images/creating-a-telemetry-plug-in-for-devworkspaces/devworkspace_telemetry_plugin.png" alt="devworkspace telemetry plugin">
 </div>
+</div>
+</li>
+<li>
+<p>Edit files within the editor and observe their events in the example telemetry server&#8217;s logs.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_applying_the_telemetry_plug_in_for_all_devworkspaces"><a class="anchor" href="#_applying_the_telemetry_plug_in_for_all_devworkspaces"></a>Applying the telemetry plug-in for all DevWorkspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Set the telemetry plug-in as a default plug-in in the <code>spec.server.workspaceDefaultPlugins</code> field for the <code>CheCluster</code> custom resource. Default plug-ins are applied on DevWorkspace startup for new and existing DevWorkspaces.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>spec:
+  ...
+  server:
+    ...
+    workspacesDefaultPlugins:
+    - editor: eclipse/che-theia/next     <i class="conum" data-value="1"></i><b>(1)</b>
+      plugins:                           <i class="conum" data-value="2"></i><b>(2)</b>
+      - 'http://apache-che.apps-crc.testing/plugin.yaml'</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The editorId to set default plug-ins for.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>List of URLs to devfile v2 plug-ins.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Perform any operations in the started workspace and observe their events in the example telemetry server logs.</p>
+<p>This can be accomplished by running <code>oc edit checluster -n eclipse-che</code> and typing in the change at the terminal, or by editing the CR in the OpenShift console (<strong>Installed Operators &#8594; Eclipse&#160;Che &#8594; Eclipse&#160;Che Cluster &#8594; eclipse-che &#8594; YAML</strong>).</p>
+</div>
+<div class="paragraph">
+<p>For more information about the Che Cluster custom resource, see
+<a href="../../administration-guide/understanding-the-checluster-custom-resource/" class="xref page">Understanding the <code>CheCluster</code> Custom Resource</a>.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Start a new or existing DevWorkspace from the Eclipse&#160;Che dashboard.</p>
+</li>
+<li>
+<p>Verify that the telemetry plug-in is working by following the verification steps for <a href="#specifying-the-telemetry-plug-in-in-a-DevWorkspace">Specifying the telemetry plug-in in a DevWorkspace</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><!-- vale RedHat.TermsErrors = YES --></p>
 </div>
 </div>
 </div>
