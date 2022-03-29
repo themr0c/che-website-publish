@@ -549,8 +549,10 @@
 </li>
 <li>
 <p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
+<div class="exampleblock">
+<div class="title">Example 1. Git credentials store</div>
+<div class="content">
 <div class="listingblock">
-<div class="title">Example:</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: Secret
@@ -561,17 +563,26 @@ metadata:
     app.kubernetes.io/component: workspace-secret
   annotations:
     che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/theia/.git-credentials
-    che.eclipse.org/mount-as: file
+    che.eclipse.org/mount-path: /home/theia/.git-credentials <i class="conum" data-value="1"></i><b>(1)</b>
+    che.eclipse.org/mount-as: file <i class="conum" data-value="1"></i><b>(1)</b>
     che.eclipse.org/git-credential: 'true'
 data:
-  credentials: aHR0cHM6Ly91c2VyOnBhc3NAZXhhbXBsZS5jb20K</code></pre>
+  credentials: aHR0cHM6Ly91c2VyOnBhc3NAZXhhbXBsZS5jb20K <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Content of the credential field has to be bas64 encoded to avoid collision with special characters in password.
-This results in a file named <code>credentials</code> being mounted at the <code>/home/theia/.git-credentials</code> path of all workspace containers.
-Also, the system configuration of Git would be linked to the mounted file.</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>All workspace containers have the <code>/home/theia/.git-credentials/credentials</code> file. Also, the Git system configuration is linked to the mounted file.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Encode the content with the <code>base64</code> tool to avoid collision with special characters in password.</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </li>
 </ul>
