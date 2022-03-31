@@ -118,7 +118,13 @@
     <a class="nav-link" href="../../end-user-guide/integrating-with-kubernetes/">Integrating with Kubernetes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/automatic-token-injection/">Automatic Kubernetes token injection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/navigating-che-from-openshift-developer-perspective/">Navigating Che from OpenShift Developer Perspective</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/navigating-openshift-web-console-from-che/">Navigating OpenShift web console from Che</a>
   </li>
 </ul>
   </li>
@@ -300,12 +306,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../defining-the-memory-parameters-for-the-image-puller/">Defining the memory settings</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-image-puller-using-che-operator/">Installing using the Che Operator</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-image-puller-on-kubernetes-using-the-image-puller-operator/">Installing using the Kubernetes Image Puller Operator</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../installing-image-puller-on-openshift-using-operatorhub/">Installing using OperatorHub</a>
@@ -522,90 +522,14 @@
 <div class="paragraph">
 <p>The Image Puller can pre-pull most images, including scratch images such as <code>che-machine-exec</code>. However, images that mount volumes in the Dockerfile, such as <code>traefik</code>, are not supported for pre-pulling on OpenShift 3.11.</p>
 </div>
-<div class="paragraph">
-<p>Pre-pulling images involved in workspace startup will reduce workspace start times. For example:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Che-Theia</p>
-</li>
-<li>
-<p>broker images</p>
-</li>
-<li>
-<p>plug-in sidecar images</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The <code>curl</code> tool is available. See <a href="https://curl.se/">curl homepage</a>.</p>
-</li>
-<li>
-<p>The <code>jq</code> tool is available. See <a href="https://stedolan.github.io/jq/">jq homepage</a>.</p>
-</li>
-<li>
-<p>The <code>yq</code> tool is available. See <a href="https://pypi.org/project/yq/">yq homepage</a>.</p>
-</li>
-</ul>
-</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Gather a list of relevant container images for the Kubernetes or OpenShift platform:</p>
-<div class="exampleblock">
-<div class="title">Example 1. Getting the list of all relevant images for Kubernetes</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -sSLo- https://raw.githubusercontent.com/eclipse-che/che-operator/main/deploy/olm-catalog/stable/eclipse-che-preview-kubernetes/manifests/che-operator.clusterserviceversion.yaml | \
-yq -r '.spec.install.spec.deployments[].spec.template.spec.containers[].env[] | select(.name | test("RELATED_IMAGE_.*"; "g")) | .value' | \
-sort -u</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. Getting the list of all relevant images for OpenShift</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -sSLo- https://raw.githubusercontent.com/eclipse-che/che-operator/main/deploy/olm-catalog/stable/eclipse-che-preview-openshift/manifests/che-operator.clusterserviceversion.yaml | \
-yq -r '.spec.install.spec.deployments[].spec.template.spec.containers[].env[] | select(.name | test("RELATED_IMAGE_.*"; "g")) | .value' | \
-sort -u</pre>
-</div>
-</div>
-</div>
-</div>
+<p>Gather a list of relevant container images for prepulling by navigating to the <code>https://<em>&lt;che_fqdn&gt;</em>/plugin-registry/v3/external_images.txt</code> URL.</p>
 </li>
 <li>
-<p>Determine images from the list for pre-pulling.</p>
-<div class="paragraph">
-<p>For faster workspace startup times, consider pre-pulling the workspace-related images:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>che-theia</code></p>
-</li>
-<li>
-<p><code>che-theia-endpoint-runtime-binary</code></p>
-</li>
-<li>
-<p><code>che-machine-exec</code></p>
-</li>
-<li>
-<p><code>che-plugin-artifacts-broker</code></p>
-</li>
-<li>
-<p><code>che-plugin-metadata-broker</code></p>
-</li>
-</ul>
-</div>
+<p>Determine images from the list for pre-pulling. For faster workspace startup times, consider pre-pulling workspace related images such as <code>che-theia</code>, <code>che-machine-exec</code>, <code>che-theia-endpoint-runtime-binary</code>, and plug-in sidecar images.</p>
 </li>
 </ol>
 </div>
@@ -615,12 +539,6 @@ sort -u</pre>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="../defining-the-memory-parameters-for-the-image-puller/" class="xref page">Defining the memory parameters for the Image Puller</a>.</p>
-</li>
-<li>
-<p><a href="../installing-image-puller-on-kubernetes-using-the-image-puller-operator/" class="xref page">Installing Image Puller on Kubernetes using the Kubernetes Image Puller Operator</a></p>
-</li>
 <li>
 <p><a href="../installing-image-puller-on-openshift-using-operatorhub/" class="xref page">Installing Image Puller on OpenShift 4 using OperatorHub</a></p>
 </li>
