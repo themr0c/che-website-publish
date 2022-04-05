@@ -545,9 +545,6 @@
 <p>User-driven actions such as file editing, committing, and pushing to remote repositories.</p>
 </li>
 <li>
-<p>The list of plug-ins enabled in a workspace</p>
-</li>
-<li>
 <p>Programming languages and devfiles used in workspaces.</p>
 </li>
 </ul>
@@ -558,30 +555,11 @@
 <h2 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h2>
 <div class="sectionbody">
 <div id="how-it-works_che" class="paragraph">
-<p>When a Che workspace starts, the <code>che-theia</code> container starts the telemetry plug-in, which is responsible for sending telemetry events to a backend. If the <code>$CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</code> environment variable was set in the workspace Pod, the telemetry plug-in will send events to a backend listening at that port.</p>
-</div>
-<div class="paragraph">
-<p>If the Che workspace has a telemetry back-end container running, and it is listening on <code>$CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</code>, it takes the events sent from the telemetry plug-in, turns them into the backend-specific representation of events, and sends them to the configured analytics backend (for example, Segment or Woopra).</p>
+<p>When a DevWorkspace starts, the <code>che-theia</code> container starts the telemetry plug-in which is responsible for sending telemetry events to a backend. If the <code>$DEVWORKSPACE_TELEMETRY_BACKEND_PORT</code> environment variable is set in the DevWorkspace Pod, the telemetry plug-in sends events to a backend listening at that port. The backend turns received events into a backend-specific representation of the events and sends them to the configured analytics backend (for example, Segment or Woopra).</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/telemetry/telemetry_diagram.png" alt="telemetry diagram">
-</div>
-</div>
-<div class="sect2">
-<h3 id="_devworkspace_telemetry"><a class="anchor" href="#_devworkspace_telemetry"></a>DevWorkspace telemetry</h3>
-<div class="paragraph">
-<p>Telemetry for DevWorkspaces works similarly to telemetry for Che workspaces, with the main differences being:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>A DevWorkspace telemetry plug-in listens for events on <code>$DEVWORKSPACE_TELEMETRY_BACKEND_PORT</code> instead of <code>$CHE_WORKSPACE_TELEMETRY_BACKEND_PORT</code>.</p>
-</li>
-<li>
-<p>The DevWorkspace telemetry plug-in requires version 0.0.34 or later of the <a href="https://github.com/che-incubator/che-workspace-telemetry-client/tree/master/backend-base">telemetry plug-in dependency</a>.</p>
-</li>
-</ol>
 </div>
 </div>
 </div>
