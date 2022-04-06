@@ -536,10 +536,17 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <a href="https://github.com/devfile/devworkspace-operator/blob/v0.10.0/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics.Service.yaml"><code>devworkspace-controller-metrics</code> service</a> is exposing metrics on port <code>8443</code>.</p>
+<p>The default configuration is set:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>devworkspace-controller-metrics</code> service is exposing metrics on port <code>8443</code>.</p>
 </li>
 <li>
-<p>The <code>devworkspace-webhookserver</code> service is exposing metrics on port <code>9443</code>. By default, the service exposes metrics on port <code>9443</code>.</p>
+<p>The <code>devworkspace-webhookserver</code> service is exposing metrics on <code>9443</code>.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
@@ -581,13 +588,25 @@ metadata:
   name: devworkspace-controller-metrics-binding
 subjects:
   - kind: ServiceAccount
-    name: &lt;ServiceAccount name associated with the Prometheus Pod&gt;
-    namespace: &lt;Prometheus namespace&gt;
+    name: <em>&lt;ServiceAccount_name&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+    namespace: <em>&lt;Prometheus_namespace&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: devworkspace-controller-metrics-reader</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name of the <code>ServiceAccount</code> associated with the Prometheus Pod.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The namespace in which Prometheus is running.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -610,27 +629,24 @@ data:
         evaluation_interval: 5s             <i class="conum" data-value="2"></i><b>(2)</b>
       scrape_configs:                       <i class="conum" data-value="3"></i><b>(3)</b>
         - job_name: 'DevWorkspace'
+          scheme: https
           authorization:
             type: Bearer
             credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['devworkspace-controller-metrics:8443']  <i class="conum" data-value="4"></i><b>(4)</b>
+            - targets: ['<em>&lt;devworkspace-controller-metrics_service_host&gt;</em>:8443']  <i class="conum" data-value="4"></i><b>(4)</b>
         - job_name: 'DevWorkspace webhooks'
+          scheme: https
           authorization:
             type: Bearer
             credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['devworkspace-webhookserver:9443']  <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+            - targets: ['<em>&lt;devworkspace-webhookserver_service_host&gt;</em>:9443']  <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
-</div>
-</div>
-</div>
-</li>
-</ol>
 </div>
 <div class="colist arabic">
 <table>
@@ -655,6 +671,11 @@ data:
 <td>Scrape metrics from the <code>9443</code> port.</td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Verification steps</div>
@@ -801,7 +822,7 @@ data:
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes how to view DevWorkspace operator metrics on Grafana with the example dashboard.
-Grafana version 7.5.3 or later is required to support all panels in the example dashboard.</p>
+Grafana version 7 or later is required to support all panels in the example dashboard.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
