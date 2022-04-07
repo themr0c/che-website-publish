@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting a secret as an environment variable into a workspace container :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/secret-as-a-variable/">
-    <meta name="keywords" content="user-guide, configuring, user, secrets">
+    <title>Adding a Visual Studio Code extension to a workspace :: Eclipse Che Documentation</title>
+    <meta name="keywords" content="Visual Studio Code extension, user-guide">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -105,8 +104,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../secret-as-a-file/">Secret as a file</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Secret as environment variable</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../secret-as-a-variable/">Secret as environment variable</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../git-credential-store/">Git credential store</a>
@@ -146,8 +145,8 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../adding-a-vscode-extension/">Adding a Visual Studio Code extension to a workspace</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="./">Adding a Visual Studio Code extension to a workspace</a>
   </li>
 </ul>
   </li>
@@ -501,8 +500,7 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a></li>
-    <li><a href="./">Secret as environment variable</a></li>
+    <li><a href="./">Adding a Visual Studio Code extension to a workspace</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -510,131 +508,292 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/secret-as-a-variable/">stable</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/secret-as-a-variable.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/adding-a-vscode-extension.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting a secret as an environment variable into a workspace container</h1>
+<h1 class="page">Adding a Visual Studio Code extension to a workspace</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>The following section describes how to mount a Kubernetes or OpenShift secret from the user’s namespace as an environment variable, or variables, into single-workspace or multiple-workspace containers of Che.</p>
+<p>Previously, with the devfiles v1 format, you used the devfile to specify IDE-specific plug-ins and Visual Studio Code extensions. Now, with devfiles v2, you use a specific meta-folder rather than the devfile to specify the plug-ins and extensions.</p>
 </div>
-<div class="ulist">
+</div>
+</div>
+<div class="sect1">
+<h2 id="plug-in-registries"><a class="anchor" href="#plug-in-registries"></a>Che plug-in registries overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every Che instance has a registry of default plug-ins and extensions. The Che-Theia IDE gets information about these plug-ins and extensions from the registry and installs them.</p>
+</div>
+<div class="paragraph">
+<p>Check this Che <a href="https://github.com/eclipse-che/che-plugin-registry">registry project</a> for an overview of the default plug-ins, extensions, and source code. An online instance that refreshes after every commit to the main branch, is located <a href="https://eclipse-che.github.io/che-plugin-registry/main/v3/plugins/">here</a>. You can use a different plug-in or extension registry for Che-Theia if you don&#8217;t work in air-gapped environment: only the default registry is available there.</p>
+</div>
+<div class="paragraph">
+<p>The plug-in and extension overview for Che-Code Visual Studio Code editor is located in the <a href="https://www.open-vsx.org/">OpenVSX instance</a>. Air gap is not yet supported for this editor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="visual-studio-code-extensions-json"><a class="anchor" href="#visual-studio-code-extensions-json"></a>Adding an extension to <code>.vscode/extensions.json</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The easiest way to add a Visual Studio Code extension to a workspace is to add it to the <code>.vscode/extensions.json</code> file. The main advantage of this method is that it works with all supported Che IDEs.</p>
+</div>
+<div class="paragraph">
+<p>If you use the Che-Theia IDE, the extension is installed and configured automatically. If you use a different supported IDE with the Che-Code Visual Studio Code fork, the IDE displays a pop-up with a recommendation to install the extension.</p>
+</div>
+<div class="olist arabic">
 <div class="title">Prerequisites</div>
-<ul>
+<ol class="arabic">
 <li>
-<p>A running instance of Che.</p>
+<p>You have the <code>.vscode/extensions.json</code> file in the root of the GitHub repository.</p>
 </li>
-</ul>
+</ol>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the Kubernetes namespace or OpenShift project where a Che workspace will be created, generate a new Kubernetes or OpenShift secret.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The labels of the secret that is about to be generated must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. By default, it is a set of two labels:</p>
-</li>
-<li>
-<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
-</li>
-<li>
-<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
+<p>Add the extension ID to the <code>.vscode/extensions.json</code> file. Use a <code>.</code> sign to separate the publisher and extension. The following example uses the IDs of Red Hat Visual Studio Code Java extension:</p>
 <div class="listingblock">
-<div class="title">Example:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-...</code></pre>
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">  {
+    "recommendations": [
+      "redhat.java"
+    ]
+  }</code></pre>
 </div>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ol>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>The following example shows how to mount the secret as an environment variable by including the <code>&lt;url&gt;/mount-as: env</code> annotation:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/env-name: FOO_ENV
-    che.eclipse.org/mount-as: env
-  labels:
-   ...
-data:
-  mykey: myvalue</code></pre>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the specified set of extension IDs isn&#8217;t available in the Che registry, the workspace starts without the extension.
+</td>
+</tr>
+</table>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="che-theia-plug-ins-YAML"><a class="anchor" href="#che-theia-plug-ins-YAML"></a>Adding plug-in parameters to <code>.che/che-theia-plugins.yaml</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In this example, the <code>FOO_ENV</code> environment variable and <code>myvalue</code> key value are provisioned into all workspace containers as follows:</p>
+<p>You can add extra parameters to a plug-in by modifying the <code>.che/che-theia-plugins.yaml</code> file. These modifications include:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The secret&#8217;s environment variable, <code>env-name</code>, is declared as <code>FOO_ENV</code> in the <code>annotations</code>.</p>
+<p>Defining the plug-ins for workspace installation.</p>
 </li>
 <li>
-<p>The <code>automount-workspace-secret</code> annotation with a boolean value defines the default secret mounting behavior (that can be overridden in a devfile):</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
+<p>Changing the default memory limit.</p>
 </li>
 <li>
-<p><code>'false'</code> disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
+<p>Overriding default preferences.</p>
 </li>
 </ul>
 </div>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_defining_the_plug_ins_for_workspace_installation"><a class="anchor" href="#_defining_the_plug_ins_for_workspace_installation"></a>Defining the plug-ins for workspace installation</h3>
+<div class="paragraph">
+<p>Define the plug-ins to be installed in the workspace.</p>
 </div>
-</li>
+<div class="olist arabic">
+<div class="title">Prerequisites</div>
+<ol class="arabic">
 <li>
-<p>If the secret has more than one data key, declare an environment variable name using a <code>&lt;<em>key</em>&gt;_env-name</code> annotation for each data key, as shown in the following example. In this example, you provision the <code>myvalue</code> and <code>othervalue</code> data key values, and the environment variable names, <code>FOO_ENV</code> and <code>OTHER_ENV</code>, into all workspace containers.</p>
+<p>You have the <code>.che/che-theia-plugins.yaml</code> file in the root of the GitHub repository.</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the ID of the plug-in to the  <code>.che/che-theia-plugins.yaml</code> file. Use the <code>/</code> sign to separate the publisher and plug-in name. The following example uses the IDs of Red Hat Visual Studio Code Java extension:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-as: env
-    che.eclipse.org/mykey_env-name: FOO_ENV
-    che.eclipse.org/otherkey_env-name: OTHER_ENV
-  labels:
-   ...
-data:
-  mykey: myvalue
-  otherkey: othervalue</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- id: redhat/java</code></pre>
 </div>
 </div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_the_default_memory_limit"><a class="anchor" href="#_changing_the_default_memory_limit"></a>Changing the default memory limit</h3>
+<div class="paragraph">
+<p>Override container settings such as the memory limit.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Prerequisites</div>
+<ol class="arabic">
+<li>
+<p>You have the <code>.che/che-theia-plugins.yaml</code> file in the root of the GitHub repository.</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an <code>override</code> section to the <code>.che/che-theia-plugins.yaml</code> file under the <code>id</code> of the plug-in.</p>
 </li>
 <li>
-<p>The maximum length of an annotation name in a Kubernetes secret is 63 characters, of which 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.</p>
+<p>Specify the memory limit for the extension. In the following example, Che automatically installs the Red Hat Visual Studio Code Java extension in the Che workspace and increases the memory of the workspace by two gigabytes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  - id: redhat/java
+    override:
+      sidecar:
+        memoryLimit: 2Gi</code></pre>
+</div>
+</div>
 </li>
-</ul>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overriding_default_preferences"><a class="anchor" href="#_overriding_default_preferences"></a>Overriding default preferences</h3>
+<div class="paragraph">
+<p>Override the default preferences of the Visual Studio Code extension for the workspace.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Prerequisites</div>
+<ol class="arabic">
+<li>
+<p>You have the <code>.che/che-theia-plugins.yaml</code> file in the root of the GitHub repository.</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an <code>override</code> section to the <code>.che/che-theia-plugins.yaml</code> file under the <code>id</code> of the extension.</p>
+</li>
+<li>
+<p>Specify the preferences in the <code>Preferences</code> section. In the following example, Che automatically installs Red Hat Visual Studio Code Java extension in the Che workspace and sets the <code>java.server.launchMode</code> preference to <code>LightWeight</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">  - id: redhat/java
+    override:
+      preferences:
+        java.server.launchMode: LightWeight</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can also define the preferences in the <code>.vscode/settings.json</code> file, either by changing the preferences in the UI of your IDE or by adding them to the <code>.vscode/settings.json</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+"my.preferences": "my-value"
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="visual-studio-code-extensions-in-devfile"><a class="anchor" href="#visual-studio-code-extensions-in-devfile"></a>Defining Visual Studio Code extension attributes in the devfile</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If it&#8217;s not possible to add extra files in the GitHub repository, you can define some of the plug-in or extension attributes by inlining them in the devfile. You can use this procedure with both <code>.vscode/extensions.json</code> and <code>.che/che-theia-plugins.yaml</code> file contents.</p>
+</div>
+<div class="sect2">
+<h3 id="_inlining_vscodeextensions_json_file"><a class="anchor" href="#_inlining_vscodeextensions_json_file"></a>Inlining <code>.vscode/extensions.json</code> file</h3>
+<div class="paragraph">
+<p>Use <code>.vscode/extensions.json</code> file contents to inline the extension attributes in the devfile.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an <code>attributes</code> section to your <code>devfile.yaml</code> file.</p>
+</li>
+<li>
+<p>Add <code>.vscode/extensions.json</code> to the <code>atributes</code> section. Add a <code>|</code> sign after the colon separator.</p>
+</li>
+<li>
+<p>Paste the contents of the <code>.vscode/extensions.json</code> file after the <code>|</code> sign. The following example uses Red Hat Visual Studio Code Java extension attributes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 2.2.0
+metadata:
+  name: my-example
+attributes:
+  .vscode/extensions.json: |
+    {
+      "recommendations": [
+        "redhat.java"
+      ]
+    }</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inlining_cheche_theia_plugins_yaml_file"><a class="anchor" href="#_inlining_cheche_theia_plugins_yaml_file"></a>Inlining <code>.che/che-theia-plugins.yaml</code> file</h3>
+<div class="paragraph">
+<p>Use <code>.che/che-theia-plugins.yaml</code> file contents to inline the plug-in attributes in the devfile.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an <code>attributes</code> section to your <code>devfile.yaml</code> file.</p>
+</li>
+<li>
+<p>Add <code>.vscode/extensions.json</code> to the <code>atributes</code> section. Add a <code>|</code> sign after the colon separator.</p>
+</li>
+<li>
+<p>Paste the content of the <code>.che/che-theia-plugins.yaml</code> file after the <code>|</code> sign. The following example uses Red Hat Visual Studio Code Java extension attributes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 2.2.0
+metadata:
+  name: my-example
+attributes:
+  .che/che-theia-plugins.yaml: |
+    - id: redhat/java</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>
