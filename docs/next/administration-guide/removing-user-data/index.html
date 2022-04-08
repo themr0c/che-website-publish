@@ -529,7 +529,7 @@
 <p>The General Data Protection Regulation (<a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">GDPR</a>) law enforces the right for individuals to have personal data erased.</p>
 </div>
 <div class="paragraph">
-<p>The following procedure describes how to remove a user’s data from a cluster and the Keycloak database.</p>
+<p>The following procedure describes how to remove the Che user’s data.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -549,7 +549,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A user or an administrator authorization token. To delete any other data except the data bound to a user account, <code>admin</code> privileges are required. The <code>admin</code> is a special Che administrator account pre-created and enabled using the <code>CHE_SYSTEM_ADMIN__NAME</code> and <code>CHE_SYSTEM_SUPER__PRIVILEGED__MODE = true</code> Custom Resource definitions.</p>
+<p>A user or an administrator authorization token. To delete the Che data bound to a user account, <code>admin</code> privileges are required. The <code>admin</code> is a special Che administrator account that should be pre-created and enabled using the <code>CHE_SYSTEM_ADMIN__NAME</code> and <code>CHE_SYSTEM_SUPER__PRIVILEGED__MODE = true</code> properties of the Che Custom Resource.</p>
 <div class="listingblock">
 <div class="content">
 <pre>spec:
@@ -560,7 +560,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>If needed, use commands below for creating the <code>admin</code> user:</p>
+<p>If needed, use kubectl commands below for patching the Che Custom Resource:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -586,7 +586,7 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>All system permissions are granted to the administrative user. To configure the administrative user, use the <code>CHE_SYSTEM_ADMIN__NAME</code> property. The default value is <code>admin</code>. The system permissions are granted when the Che server starts. If the user record is not in the Che user database, the permissions are granted after the first login of the user.</p>
+<p>All Che system permissions are granted to the administrative user. To configure the administrative user, use the <code>CHE_SYSTEM_ADMIN__NAME</code> property. The default value is <code>admin</code>. The system permissions are granted when the Che server starts. If the user record is not in the Che user database, the permissions are granted after the first login of the user.</p>
 </div>
 <div class="ulist">
 <div class="title">Authorization token privileges:</div>
@@ -631,14 +631,10 @@
 </div>
 </div>
 </li>
-<li>
-<p>To find a user by email:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -X GET \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  'https://<em>&lt;che-host&gt;</em>/api/user/find?email=<em>&lt;email&gt;</em>'</pre>
+</ul>
 </div>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <div class="title">Example of obtaining a user ID</div>
@@ -674,25 +670,9 @@
 </div>
 </div>
 </div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Update the <code>eclipse-che</code> <code>CheCluster Custom</code> Resource (CR) definition to permit the removal of a user’s data from the Keycloak database:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster/eclipse-che \
-  --patch "{\"spec\":{\"server\":{\"customCheProperties\": {\"CHE_KEYCLOAK_CASCADE__USER__REMOVAL__ENABLED\": \"true\"}}}}" \
-  --type=merge -n <em>eclipse-che</em></pre>
-</div>
-</div>
-</li>
+<ul>
 <li>
 <p>Remove the data using the API:</p>
 <div class="listingblock">
@@ -703,7 +683,21 @@
 </div>
 </div>
 </li>
-</ol>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The procedure can be also executed using the Swagger UI available on https://<em>&lt;che-host&gt;</em>/swagger</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <div class="title">Verification</div>
@@ -715,6 +709,20 @@
   --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
   https://<em>&lt;che-host&gt;</em>/api/user/<em>&lt;user-id&gt;</em></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The following procedure only removes the user on the Che level. For removing all Kubernetes user data including namespaces from the cluster, the Kubernetes cluster-admin needs to explicitly remove the Kubernetes resources bound to the user.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <div class="title">Additional resources</div>
