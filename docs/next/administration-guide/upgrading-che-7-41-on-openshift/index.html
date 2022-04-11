@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Monitoring the DevWorkspace operator :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/monitoring-the-dev-workspace-operator/">
-    <meta name="keywords" content="administration-guide, monitoring-the-dev-workspace-operator">
+    <title>Upgrading Che v7.41 on OpenShift :: Eclipse Che Documentation</title>
+    <meta name="keywords" content="administration-guide, migration, devworkspace">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -343,8 +342,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../monitoring-che/">Monitoring Che</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Monitoring the DevWorkspace operator</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace operator</a>
   </li>
 </ul>
   </li>
@@ -399,8 +398,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../upgrading-che/">Upgrading Che</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Upgrading Che v7.41 on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-operatorhub/">Upgrading Che using OperatorHub</a>
@@ -504,58 +503,40 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../configuring-che/">Configuring Che</a></li>
-    <li><a href="../configuring-observability/">Configuring observability</a></li>
-    <li><a href="./">Monitoring the DevWorkspace operator</a></li>
+    <li><a href="../upgrading-che/">Upgrading Che</a></li>
+    <li><a href="./">Upgrading Che v7.41 on OpenShift</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
-    <a class="version" href="../../../che-7/administration-guide/monitoring-the-dev-workspace-operator/">old (7.41)</a>
-    <a class="version" href="../../../stable/administration-guide/monitoring-the-dev-workspace-operator/">stable</a>
+    <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/monitoring-the-dev-workspace-operator.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/upgrading-che-7-41-on-openshift.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Monitoring the DevWorkspace operator</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Upgrading Che v7.41 on OpenShift</h1>
 <div class="paragraph">
-<p>This chapter describes how to configure an example monitoring stack to process metrics exposed by the DevWorkspace operator.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"><a class="anchor" href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"></a>Collecting DevWorkspace operator metrics with Prometheus</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>This section describes how to use the Prometheus to collect, store, and query metrics about the DevWorkspace operator.</p>
+<p>The workspace engine and authentication system used until version v7.41 are deprecated. Upgrading from version v7.41 requires manual steps.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The default configuration is set:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>devworkspace-controller-metrics</code> service is exposing metrics on port <code>8443</code>.</p>
+<p>An instance of Che deployed on <a href="../supported-platforms/" class="xref page">Supported platforms</a>, using the default internal PostgreSQL database, and with OpenShift OAuth enabled. See <a href="https://www.eclipse.org/che/docs/che-7/administration-guide/configuring-openshift-oauth/">Configuring OpenShift OAuth</a>.</p>
 </li>
 <li>
-<p>The <code>devworkspace-webhookserver</code> service is exposing metrics on <code>9443</code>.</p>
-</li>
-</ul>
-</div>
+<p>Command line tools <code>oc</code>, <code>curl</code>, and <code>jq</code> are available.</p>
 </li>
 <li>
-<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>The host running the upgrade commands is running on Linux.</p>
 </li>
 </ul>
 </div>
@@ -563,429 +544,73 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a <code>ClusterRoleBinding</code> to bind the <code>ServiceAccount</code> associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> <code>ClusterRole</code>.
-Without the <code>ClusterRoleBinding</code>, you cannot access DevWorkspace metrics because they are protected with role-based access control (RBAC).</p>
-<div class="exampleblock">
-<div class="title">Example 1. ClusterRole example</div>
-<div class="content">
+<p>Optionally push back changes to Git repositories in all workspaces, stop all workspaces to avoid user experience degradation, and backup Che data. See <a href="https://www.eclipse.org/che/docs/che-7/administration-guide/backup-and-recovery/">Backup and recovery</a>.</p>
+</li>
+<li>
+<p>Set the environment variables to use in the migration scripts:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: devworkspace-controller-metrics-reader
-rules:
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. ClusterRoleBinding example</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: devworkspace-controller-metrics-binding
-subjects:
-  - kind: ServiceAccount
-    name: <em>&lt;ServiceAccount_name&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
-    namespace: <em>&lt;Prometheus_namespace&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: devworkspace-controller-metrics-reader</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">INSTALLATION_NAMESPACE=eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+PRODUCT_DEPLOYMENT_NAME=che
+PRODUCT_OPERATOR_NAME=che-operator
+PRODUCT_ID=eclipse-che
+CHE_CLUSTER_CR_NAME=eclipse-che
+IDENTITY_PROVIDER_DEPLOYMENT_NAME=keycloak
+OLM_STABLE_CHANNEL=stable
+OLM_CATALOG_SOURCE=community-operators
+OLM_PACKAGE=eclipse-che</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Name of the <code>ServiceAccount</code> associated with the Prometheus Pod.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The namespace in which Prometheus is running.</td>
+<td>Adapt to the namespace where Che is installed.</td>
 </tr>
 </table>
 </div>
-</div>
-</div>
 </li>
 <li>
-<p>Configure Prometheus to scrape metrics from the <code>8443</code> port exposed by the <code>devworkspace-controller-metrics</code> service, and <code>9443</code> port exposed by the <code>devworkspace-webhookserver</code> service.</p>
-<div class="exampleblock">
-<div class="title">Example 3. Prometheus configuration example</div>
-<div class="content">
+<p>Download and execute the migration scripts: <a href="../_attachments/migration/1-prepare.sh" class="xref attachment">1-prepare.sh</a>, <a href="../_attachments/migration/2-migrate.sh" class="xref attachment">2-migrate.sh</a>, <a href="../_attachments/migration/3-subscribe.sh" class="xref attachment">3-subscribe.sh</a>, and <a href="../_attachments/migration/4-wait.sh" class="xref attachment">4-wait.sh</a>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-data:
-  prometheus.yml: |-
-      global:
-        scrape_interval:     5s             <i class="conum" data-value="1"></i><b>(1)</b>
-        evaluation_interval: 5s             <i class="conum" data-value="2"></i><b>(2)</b>
-      scrape_configs:                       <i class="conum" data-value="3"></i><b>(3)</b>
-        - job_name: 'DevWorkspace'
-          scheme: https
-          authorization:
-            type: Bearer
-            credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
-          tls_config:
-            insecure_skip_verify: true
-          static_configs:
-            - targets: ['<em>&lt;devworkspace-controller-metrics_service_host&gt;</em>:8443']  <i class="conum" data-value="4"></i><b>(4)</b>
-        - job_name: 'DevWorkspace webhooks'
-          scheme: https
-          authorization:
-            type: Bearer
-            credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
-          tls_config:
-            insecure_skip_verify: true
-          static_configs:
-            - targets: ['<em>&lt;devworkspace-webhookserver_service_host&gt;</em>:9443']  <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">chmod +x ./1-prepare.sh ./2-migrate.sh ./3-subscribe.sh ./4-wait.sh
+./1-prepare.sh <i class="conum" data-value="1"></i><b>(1)</b>
+./2-migrate.sh <i class="conum" data-value="2"></i><b>(2)</b>
+./3-subscribe.sh <i class="conum" data-value="3"></i><b>(3)</b>
+./4-wait.sh <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Rate at which a target is scraped.</td>
+<td>Shuts down Che and Keycloak, fetch users data and dumps Che database.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Rate at which recording and alerting rules are re-checked.</td>
+<td>Fetches Che Keycloak and database data, and repopulates the database with updated data.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Resources that Prometheus monitors. In the default configuration, two jobs (<code>DevWorkspace</code> and <code>DevWorkspace webhooks</code>), scrape the time series data exposed by the <code>devworkspace-controller-metrics</code> and <code>devworkspace-webhookserver</code> services.</td>
+<td>Deletes Che Operator and Keycloak resources, updates CheCluster CR and creates a new Operator subscription.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Scrape metrics from the <code>8443</code> port.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Scrape metrics from the <code>9443</code> port.</td>
+<td>Waits until Che is ready (it can take more than 5 minutes).</td>
 </tr>
 </table>
-</div>
-</div>
 </div>
 </li>
 </ol>
 </div>
 <div class="ulist">
-<div class="title">Verification steps</div>
+<div class="title">Verification</div>
 <ul>
 <li>
-<p>Use the Prometheus console to view targets and metrics.</p>
-<div class="paragraph">
-<p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
-</div>
+<p>Open Che dashboard and log in.</p>
 </li>
 </ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
-</li>
-<li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a>.</p>
-</li>
-<li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a>.</p>
-</li>
-<li>
-<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="ref_devworkspace-specific-metrics_che"><a class="anchor" href="#ref_devworkspace-specific-metrics_che"></a>DevWorkspace-specific metrics</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>This section describes the DevWorkspace-specific metrics exposed by the <code>devworkspace-controller-metrics</code> service.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Metrics</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Labels</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devworkspace_started_total</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of DevWorkspace starting events.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code>, <code>routingclass</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devworkspace_started_success_total</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of DevWorkspaces successfully entering the <code>Running</code> phase.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code>, <code>routingclass</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devworkspace_fail_total</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of failed DevWorkspaces.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code>, <code>reason</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>devworkspace_startup_time</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Histogram</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Total time taken to start a DevWorkspace, in seconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code>, <code>routingclass</code></p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Labels</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Values</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>controller.devfile.io/devworkspace-source</code> label of the DevWorkspace.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>routingclass</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>spec.routingclass</code> of the DevWorkspace.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"basic|cluster|cluster-tls|web-terminal"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reason</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The workspace startup failure reason.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"BadRequest|InfrastructureFailure|Unknown"</code></p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Startup failure reasons</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BadRequest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Startup failure due to an invalid devfile used to create a DevWorkspace.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InfrastructureFailure</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Startup failure due to the following errors: <code>CreateContainerError</code>, <code>RunContainerError</code>, <code>FailedScheduling</code>, <code>FailedMount</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Unknown</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unknown failure reason.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"><a class="anchor" href="#proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"></a>Viewing DevWorkspace operator metrics on Grafana dashboards</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to view DevWorkspace operator metrics on Grafana with the example dashboard.
-Grafana version 7 or later is required to support all panels in the example dashboard.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Prometheus is collecting metrics. See <a href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che">Collecting DevWorkspace operator metrics with Prometheus</a>.</p>
-</li>
-<li>
-<p>Grafana is running on port <code>3000</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Add the data source for the Prometheus instance.
-See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-prometheus-data-source">Creating a Prometheus data source</a>.</p>
-</li>
-<li>
-<p>Import the example <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">grafana-dashboard.json</a> dashboard.</p>
-</li>
-</ol>
-</div>
-<div class="ulist">
-<div class="title">Verification steps</div>
-<ul>
-<li>
-<p>Use the Grafana console to view the DevWorkspace operator metrics dashboard. See <a href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che">Grafana dashboards for the DevWorkspace operator</a>.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
-</li>
-<li>
-<p><a href="https://grafana.com/docs/grafana/latest/datasources/prometheus/#prometheus-data-source">Prometheus data source</a>.</p>
-</li>
-<li>
-<p><a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="ref_grafana-dashboards-for-the-dev-workspace-operator_che"><a class="anchor" href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che"></a>Grafana dashboards for the DevWorkspace operator</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes the example Grafana dashboard, see <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">grafana-dashboard.json</a>, which displays metrics collected from the DevWorkspace operator.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/monitoring/monitoring-dev-workspace-metrics-panel.png" alt="Grafana dashboard panels that contain metrics related to `DevWorkspace startup">
-</div>
-<div class="title">Figure 1. The <strong>DevWorkspace-specific metrics</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>DevWorkspace-specific metrics</strong> panel contains information related to <code>DevWorkspace</code> startup.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Average workspace start time</dt>
-<dd>
-<p>The average start time of a workspace.</p>
-</dd>
-<dt class="hdlist1">Workspace starts</dt>
-<dd>
-<p>The number successful and failed workspace starts.</p>
-</dd>
-<dt class="hdlist1">Workspace startup duration</dt>
-<dd>
-<p>A heatmap that displays workspace startup duration.</p>
-</dd>
-<dt class="hdlist1">DevWorkspace successes / failures</dt>
-<dd>
-<p>A comparison between successful and failed DevWorkspace startups</p>
-</dd>
-<dt class="hdlist1">DevWorkspace failure rate</dt>
-<dd>
-<p>The ratio between the number of failed workspace startups and the number of total workspace startups.</p>
-</dd>
-<dt class="hdlist1">DevWorkspace startup failure reasons</dt>
-<dd>
-<p>A pie chart that displays the distribution of workspace startup failures. The possible failure reasons are:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>BadRequest</code></p>
-</li>
-<li>
-<p><code>InfrastructureFailure</code></p>
-</li>
-<li>
-<p><code>Unknown</code></p>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-1.png" alt="Grafana dashboard panels that contain Operator metrics part 1">
-</div>
-<div class="title">Figure 2. The <strong>Operator metrics</strong> panel, part 1</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Webhooks in flight</dt>
-<dd>
-<p>A comparison between the number of different webhook requests.</p>
-</dd>
-<dt class="hdlist1">Work queue duration</dt>
-<dd>
-<p>A heatmap that displays how long the reconcile requests stay in the work queue before they are handled.</p>
-</dd>
-<dt class="hdlist1">Webhooks latency (/mutate)</dt>
-<dd>
-<p>A heatmap that displays <code>/mutate</code> webhook latency.</p>
-</dd>
-<dt class="hdlist1">Reconcile time</dt>
-<dd>
-<p>A heatmap that displays the reconcile duration.</p>
-</dd>
-</dl>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-2.png" alt="Grafana dashboard panels that contain Operator metrics part 2">
-</div>
-<div class="title">Figure 3. The <strong>Operator metrics</strong> panel, part 2</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Webhooks latency (/convert)</dt>
-<dd>
-<p>A heatmap that displays <code>/convert</code> webhook latency.</p>
-</dd>
-<dt class="hdlist1">Work queue depth</dt>
-<dd>
-<p>The number of reconcile requests that are in the work queue.</p>
-</dd>
-<dt class="hdlist1">Memory</dt>
-<dd>
-<p>Memory usage for the DevWorkspace controller and the DevWorkspace webhook server.</p>
-</dd>
-<dt class="hdlist1">Reconcile counts (DWO)</dt>
-<dd>
-<p>The average per-second number of reconcile counts for the DevWorkspace controller.</p>
-</dd>
-</dl>
-</div>
-</div>
 </div>
 </article>
   </div>
