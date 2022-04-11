@@ -145,6 +145,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../end-user-guide/adding-a-vscode-extension/">Adding a Visual Studio Code extension to a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
@@ -396,6 +399,9 @@
     <a class="nav-link" href="../upgrading-che/">Upgrading Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-operatorhub/">Upgrading Che using OperatorHub</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -520,10 +526,10 @@
 <article class="doc">
 <h1 class="page">The Woopra telemetry plug-in</h1>
 <div class="paragraph">
-<p>The <a href="https://github.com/che-incubator/che-workspace-telemetry-woopra-plugin">Woopra Telemetry Plugin</a> is a plug-in built to send telemetry from a Eclipse&#160;Che installation to Segment and Woopra.
+<p>The <a href="https://github.com/che-incubator/devworkspace-telemetry-woopra-plugin">Woopra Telemetry Plugin</a> is a plug-in built to send telemetry from a Eclipse&#160;Che installation to Segment and Woopra.
 This plug-in is used by <a href="https://workspaces.openshift.com">Eclipse Che hosted by Red Hat</a>, but any Eclipse&#160;Che deployment can take advantage of this plug-in.
 There are no dependencies other than a valid Woopra domain and Segment Write key.
-The <a href="https://raw.githubusercontent.com/che-incubator/che-workspace-telemetry-woopra-plugin/master/meta.yaml">plug-in&#8217;s meta.yaml</a> file has 5 environment variables that can be passed to the plug-in:</p>
+The devfile v2 for the plug-in, <a href="https://raw.githubusercontent.com/che-incubator/devworkspace-telemetry-woopra-plugin/main/plugin.yaml">plugin.yaml</a>, has four environment variables that can be passed to the plug-in:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -542,15 +548,31 @@ The <a href="https://raw.githubusercontent.com/che-incubator/che-workspace-telem
 </ul>
 </div>
 <div class="paragraph">
-<p>To enable the Woopra plug-in on the Eclipse&#160;Che installation, deploy the <code>meta.yaml</code> file to an HTTP server with the environment variables set correctly. Then, edit the <code>CheCluster</code> Custom Resource, and set the <code>spec.server.customCheProperties.CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS</code> field:</p>
+<p>To enable the Woopra plug-in on the Eclipse&#160;Che installation, deploy the <code>plugin.yaml</code> devfile v2 file to an HTTP server with the environment variables set correctly. Then, set the <code>spec.server.workspaceDefaultPlugins</code> field of your <code>CheCluster</code> custom resource:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  ...
   server:
-    customCheProperties:
-      CHE_WORKSPACE_DEVFILE_DEFAULT__EDITOR_PLUGINS: 'eclipse/che-machine-exec-plugin/7.20.0,https://your-web-server/meta.yaml'</code></pre>
+    ...
+    workspacesDefaultPlugins:
+    - editor: eclipse/che-theia/next     <i class="conum" data-value="1"></i><b>(1)</b>
+      plugins:                           <i class="conum" data-value="2"></i><b>(2)</b>
+      - 'https://your-web-server/plugin.yaml'</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>editorId</code> to set the telemetry plug-in for.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The URL to the telemetry plug-in&#8217;s devfile v2 definition.</td>
+</tr>
+</table>
 </div>
 </article>
   </div>

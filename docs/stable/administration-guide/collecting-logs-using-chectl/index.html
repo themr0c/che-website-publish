@@ -145,6 +145,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../end-user-guide/adding-a-vscode-extension/">Adding a Visual Studio Code extension to a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
@@ -396,6 +399,9 @@
     <a class="nav-link" href="../upgrading-che/">Upgrading Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-operatorhub/">Upgrading Che using OperatorHub</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -519,19 +525,51 @@
 <article class="doc">
 <h1 class="page">Collecting logs using chectl</h1>
 <div class="paragraph">
+<p>An installation of Eclipse&#160;Che consists of several containers running in the Kubernetes cluster. While it is possible to manually collect logs from each running container, <code>chectl</code> provides commands which automate the process.</p>
+</div>
+<div class="paragraph">
 <p>Following commands are available to collect Eclipse&#160;Che logs from the Kubernetes cluster using the <code>chectl</code> tool:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>chectl server:deploy</code></dt>
-<dd>
-<p>Automatically starts collecting logs during Che installation.</p>
-</dd>
 <dt class="hdlist1"><code>chectl server:logs</code></dt>
 <dd>
-<p>Collects existing Eclipse&#160;Che server logs.</p>
+<p>Collects existing Eclipse&#160;Che server logs and stores them in a directory on the local machine. By default, logs are downloaded to a temporary directory on the machine. However, this can be overwritten by specifying the <code>-d</code> parameter. For example, to download Che logs to the <code>/home/user/che-logs/</code> directory, use the command</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">chectl server:logs -d /home/user/che-logs/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, <code>chectl server:logs</code> prints a message in the console specifying the directory that will store the log files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Eclipse&#160;Che logs will be available in '/tmp/chectl-logs/1648575098344'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If Eclipse&#160;Che is installed in a non-default namespace, <code>chectl server:logs</code> requires the <code>-n &lt;NAMESPACE&gt;</code> paremeter, where <code>&lt;NAMESPACE&gt;</code> is the Kubernetes namespace or OpenShift project in which Eclipse&#160;Che was installed. For example, to get logs from Che in the <code>my-namespace</code> namespace, use the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">chectl server:logs -n my-namespace</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><code>chectl server:deploy</code></dt>
+<dd>
+<p>Logs are automatically collected during the Che installation when installed using <code>chectl</code>. As with <code>chectl server:logs</code>, the directory logs are stored in can be specified using the <code>-d</code> parameter.</p>
 </dd>
 </dl>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>See: <a href="https://github.com/che-incubator/chectl/#chectl-serverlogs"><code>chectl</code> reference documentation</a>.</p>
+</li>
+</ul>
 </div>
 </article>
   </div>
