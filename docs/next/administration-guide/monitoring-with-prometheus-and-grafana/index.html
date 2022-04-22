@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Uninstalling Che after chectl installation :: Eclipse Che Documentation</title>
-    <meta name="keywords" content="administration guide, uninstalling-che, uninstalling-che-after-chectl-installation">
+    <title>Monitoring Che with Prometheus and Grafana :: Eclipse Che Documentation</title>
+    <meta name="keywords" content="administration-guide, monitoring-with-prometheus-and-grafana">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -354,9 +354,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
+    <a class="nav-link" href="./">Monitoring with Prometheus and Grafana</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
@@ -461,8 +461,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../uninstalling-che-after-operatorhub-installation-using-openshift-cli/">Using OpenShift CLI</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Using chectl</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../uninstalling-che-after-chectl-installation/">Using chectl</a>
   </li>
 </ul>
   </li>
@@ -542,93 +542,42 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../uninstalling-che/">Uninstalling Che</a></li>
-    <li><a href="./">Using chectl</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../configuring-observability/">Configuring observability</a></li>
+    <li><a href="./">Monitoring with Prometheus and Grafana</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
-    <a class="version" href="../../../che-7/installation-guide/uninstalling-che-after-chectl-installation/">old (7.41)</a>
+    <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
     <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/uninstalling-che-after-chectl-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/monitoring-with-prometheus-and-grafana.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Uninstalling Che after chectl installation</h1>
+<h1 class="page">Monitoring Che with Prometheus and Grafana</h1>
 <div class="paragraph">
-<p>This section describes how to uninstall an instance of Eclipse&#160;Che that was installed using the <code>chectl</code> tool.</p>
+<p>You can collect and view the Che metrics with a running instance of Prometheus and Grafana on the cluster.</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>chectl</code> tool is available.</p>
+<p><a href="../installing-prometheus-and-grafana/" class="xref page">Installing Prometheus and Grafana</a></p>
 </li>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
+<p><a href="../monitoring-the-dev-workspace-operator/" class="xref page">Monitoring the DevWorkspace Operator</a></p>
 </li>
 <li>
-<p>The <code>chectl</code> tool installed the Che instance on Kubernetes.</p>
+<p><a href="../monitoring-che/" class="xref page">Monitoring Che Server</a></p>
 </li>
 </ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Sign in to the Kubernetes cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl login -u <em>&lt;username&gt;</em> -p <em>&lt;password&gt;</em> <em>&lt;cluster_URL&gt;</em></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Obtain the name of the Che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl get checluster --all-namespaces -o=jsonpath="{.items[*].metadata.namespace}"</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Remove the Che instance from the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:delete -n eclipse-che</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>When the name of the namespace containing the Che instance is <code>eclipse-che</code>, the <code>-n</code> argument is not necessary.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Remove the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl delete namespaces eclipse-che</pre>
-</div>
-</div>
-</li>
-</ol>
 </div>
 </article>
   </div>

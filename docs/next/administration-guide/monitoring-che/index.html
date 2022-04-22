@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Monitoring Che :: Eclipse Che Documentation</title>
+    <title>Monitoring Che Server :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/monitoring-che/">
     <meta name="keywords" content="administration-guide, monitoring-che">
     <meta name="generator" content="Antora 3.0.0">
@@ -355,11 +355,20 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Monitoring Che</a>
-  </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace operator</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace Operator</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Monitoring Che Server</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -536,7 +545,8 @@
     <li>Administration Guide</li>
     <li><a href="../configuring-che/">Configuring Che</a></li>
     <li><a href="../configuring-observability/">Configuring observability</a></li>
-    <li><a href="./">Monitoring Che</a></li>
+    <li><a href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a></li>
+    <li><a href="./">Monitoring Che Server</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -554,36 +564,25 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Monitoring Che</h1>
+<h1 class="page">Monitoring Che Server</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes how to configure Che to expose metrics and how to build an example monitoring stack with external tools to process data exposed as metrics by Che.</p>
+<p>You can configure Che to expose JVM metrics such as JVM memory and class loading for Che Server.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enabling-and-exposing-che-metrics_che"><a class="anchor" href="#enabling-and-exposing-che-metrics_che"></a>Enabling and exposing Che metrics</h2>
+<h2 id="enabling-and-exposing-che-metrics_che"><a class="anchor" href="#enabling-and-exposing-che-metrics_che"></a>Enabling and exposing Che Server metrics</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to enable and expose Che metrics.</p>
+<p>To expose the JVM metrics:</p>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>Set the <code>CHE_METRICS_ENABLED=true</code> environment variable, which will expose the <code>8087</code> port as a service on the <code>che-master</code> host.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>When Eclipse&#160;Che is installed from the OperatorHub, the environment variable is set automatically if the default <code>CheCluster</code> CR is used:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-cluster-cr.png"><img src="../_images/monitoring/monitoring-che-che-cluster-cr.png" alt="monitoring che che cluster cr"></a>
-</div>
-</div>
+<p>Set <code>spec.metrics.enable</code> to <code>true</code> in the <code>CheCluster</code> CR.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
@@ -591,22 +590,47 @@
     enable: true</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When Eclipse&#160;Che is installed from the OperatorHub using the default <code>CheCluster</code> CR, <code>spec.metrics.enable</code> is set to <code>true</code> by default. For example:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/monitoring/monitoring-che-che-cluster-cr.png"><img src="../_images/monitoring/monitoring-che-che-cluster-cr.png" alt="monitoring che che cluster cr" width="["></a>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the JVM metrics for Che Server are enabled, they are exposed on port <code>8087</code> of the <code>che-host</code> Service.</p>
+</div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="collecting-che-metrics-with-prometheus_che"><a class="anchor" href="#collecting-che-metrics-with-prometheus_che"></a>Collecting Che metrics with Prometheus</h2>
+<h2 id="collecting-che-metrics-with-prometheus_che"><a class="anchor" href="#collecting-che-metrics-with-prometheus_che"></a>Collecting Che Server metrics with Prometheus</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to use the Prometheus monitoring system to collect, store, and query metrics about Che.</p>
+<p>To use Prometheus to collect, store, and query JVM metrics for Che Server:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics_che">Enabling and exposing Che metrics</a>.</p>
+<p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics_che">Enabling and exposing Che server JVM metrics</a>.</p>
 </li>
 <li>
-<p>Prometheus 2.9.1 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>Prometheus  2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
 </li>
 </ul>
 </div>
@@ -614,9 +638,9 @@
 <div class="title">Procedure</div>
 <ul>
 <li>
-<p>Configure Prometheus to scrape metrics from the <code>8087</code> port:</p>
+<p>Configure Prometheus to scrape metrics from port <code>8087</code>.</p>
 <div class="exampleblock">
-<div class="title">Example 1. Prometheus configuration example</div>
+<div class="title">Example 1. Prometheus configuration</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -635,78 +659,75 @@ data:
             - targets: ['[che-host]:8087']  <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
-</div>
-</div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Rate, at which a target is scraped.</td>
+<td>The rate at which a target is scraped.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Rate, at which recording and alerting rules are re-checked (not used in the system at the moment).</td>
+<td>The rate at which the recording and alerting rules are re-checked.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Resources Prometheus monitors. In the default configuration, a single job called <code>che</code>, scrapes the time series data exposed by the Che server.</td>
+<td>The Resources that Prometheus monitors. In the default configuration, a single job, <code>che</code>, scrapes the time series data exposed by Che Server.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Scrape metrics from the <code>8087</code> port.</td>
+<td>The scrape metrics from port <code>8087</code>.</td>
 </tr>
 </table>
 </div>
+</div>
+</div>
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Verification steps</div>
-<ul>
+<ol class="arabic">
 <li>
-<p>Use the Prometheus console to query and view metrics.</p>
-<div class="paragraph">
-<p>Metrics are available at: <code>http://<em>&lt;che-server-url&gt;</em>:9090/metrics</code>.</p>
-</div>
-<div class="paragraph">
-<p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
-</div>
+<p>View the metrics in the Prometheus console at <code>http://<em>&lt;prometheus-url&gt;</em>/metrics</code>.</p>
 </li>
-</ul>
+<li>
+<p>Query the metrics in the Prometheus console from <code>http://<em>&lt;prometheus-url&gt;</em>/graph</code>. For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
+</li>
+<li>
+<p>Verify that all targets are up by viewing the targets endpoint at <code>http://<em>&lt;prometheus-url&gt;</em>/targets</code>.</p>
+</li>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a></p>
 </li>
 <li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a>.</p>
+<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a></p>
 </li>
 <li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a>.</p>
-</li>
-<li>
-<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a>.</p>
+<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="viewing-che-metrics-on-grafana-dashboards_che"><a class="anchor" href="#viewing-che-metrics-on-grafana-dashboards_che"></a>Viewing Che metrics on Grafana dashboards</h2>
+<h2 id="viewing-che-metrics-on-grafana-dashboards_che"><a class="anchor" href="#viewing-che-metrics-on-grafana-dashboards_che"></a>Viewing Che Server metrics on Grafana dashboards</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to view Che metrics on Grafana dashboards.</p>
+<p>To view the Che Server metrics on Grafana:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Prometheus is collecting metrics on the Che cluster. See <a href="#collecting-che-metrics-with-prometheus_che">Collecting Che metrics with Prometheus</a>.</p>
+<p>Prometheus is collecting metrics on the Che cluster. See <a href="#collecting-che-metrics-with-prometheus_che">Collecting Che Server metrics with Prometheus</a>.</p>
 </li>
 <li>
-<p>Grafana 6.0 or above is running on port <code>3000</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
+<p>Grafana 6.0 or later is running on port <code>3000</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
 </li>
 </ul>
 </div>
@@ -714,485 +735,66 @@ data:
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Deploy Che-specific dashboards on Grafana using the <code>che-monitoring.yaml</code> configuration file.</p>
-<div class="paragraph">
-<p>Three ConfigMaps are used to configure Grafana:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>grafana-datasources</code>&#8201;&#8212;&#8201;configuration for Grafana data source, a Prometheus endpoint</p>
+<p>Add the data source for the Prometheus instance. See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-prometheus-data-source">Creating a Prometheus data source</a>.</p>
 </li>
 <li>
-<p><code>grafana-dashboards</code>&#8201;&#8212;&#8201;configuration of Grafana dashboards and panels</p>
+<p>Import the example <a href="https://github.com/eclipse-che/che-server/blob/7.44.x/docs/grafana/dashboard.json">dashboard</a>. See <a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a>.</p>
 </li>
 <li>
-<p><code>grafana-dashboard-provider</code> &#8201;&#8212;&#8201;configuration of the Grafana dashboard provider API object, which tells Grafana where to look in the file system for pre-provisioned dashboards</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
-<div class="ulist">
-<div class="title">Verification steps</div>
-<ul>
-<li>
-<p>Use the Grafana console to view Che metrics.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="grafana-dashboards-for-che_che"><a class="anchor" href="#grafana-dashboards-for-che_che"></a>Grafana dashboards for Che</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes the Grafana dashboards that are displaying metrics collected from Che.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/monitoring/monitoring-che-che-server-dashboard-general-panel.png" alt="monitoring che che server dashboard general panel">
-</div>
-<div class="title">Figure 1. The <strong>General</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>General</strong> panel contains basic information, such as the total number of users and workspaces in the Che database.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-panel.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-panel.png" alt="The *Workspaces* panel"></a>
-</div>
-<div class="title">Figure 2. The <strong>Workspaces</strong> panel</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Workspace start rate</strong>&#8201;&#8212;&#8201;the ratio between successful and failed started workspaces</p>
-</li>
-<li>
-<p><strong>Workspace stop rate</strong>&#8201;&#8212;&#8201;the ratio between successful and failed stopped workspaces</p>
-</li>
-<li>
-<p><strong>Workspace Failures</strong>&#8201;&#8212;&#8201;the number of workspace failures shown on the graph</p>
-</li>
-<li>
-<p><strong>Starting Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently starting workspaces</p>
-</li>
-<li>
-<p><strong>Average Workspace Start Time</strong>&#8201;&#8212;&#8201;1-hour average of workspace starts or fails</p>
-</li>
-<li>
-<p><strong>Average Workspace Stop Time</strong>&#8201;&#8212;&#8201;1-hour average of workspace stops</p>
-</li>
-<li>
-<p><strong>Running Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently running workspaces</p>
-</li>
-<li>
-<p><strong>Stopping Workspaces</strong>&#8201;&#8212;&#8201;the gauge that shows the number of currently stopping workspaces</p>
-</li>
-<li>
-<p><strong>Workspaces started under 60 seconds</strong>&#8201;&#8212;&#8201;the percentage of workspaces started under 60 seconds</p>
-</li>
-<li>
-<p><strong>Number of Workspaces</strong>&#8201;&#8212;&#8201;the number of workspaces created over time</p>
-</li>
-<li>
-<p><strong>Workspace start attempts</strong>&#8201;&#8212;&#8201;the number of attempts to start a workspace comparing regular attempts with start-debug mode</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-users-panel.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-users-panel.png" alt="The *Users* panel"></a>
-</div>
-<div class="title">Figure 3. The <strong>Users</strong> panel</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Number of Users</strong>&#8201;&#8212;&#8201;the number of users known to Che over time</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-tomcat-panel.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-tomcat-panel.png" alt="The *Tomcat* panel"></a>
-</div>
-<div class="title">Figure 4. The <strong>Tomcat</strong> panel</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Max number of active sessions</strong>&#8201;&#8212;&#8201;the max number of active sessions that have been active at the same time</p>
-</li>
-<li>
-<p><strong>Number of current active sessions</strong>&#8201;&#8212;&#8201;the number of currently active sessions</p>
-</li>
-<li>
-<p><strong>Total sessions</strong>&#8201;&#8212;&#8201;the total number of sessions</p>
-</li>
-<li>
-<p><strong>Expired sessions</strong>&#8201;&#8212;&#8201;the number of sessions that have expired</p>
-</li>
-<li>
-<p><strong>Rejected sessions</strong>&#8201;&#8212;&#8201;the number of sessions that were not created because the maximum number of active sessions was reached</p>
-</li>
-<li>
-<p><strong>Longest time of an expired session</strong>&#8201;&#8212;&#8201;the longest time (in seconds) that an expired session had been alive</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-requests-panel.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-requests-panel.png" alt="The *Request* panel"></a>
-</div>
-<div class="title">Figure 5. The <strong>Request</strong> panel</div>
-</div>
-<div class="paragraph">
-<p>The <strong>Requests</strong> panel displays HTTP requests in a graph that shows the average number of requests per minute.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-1.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-1.png" alt="The *Executors* panel part 1"></a>
-</div>
-<div class="title">Figure 6. The <strong>Executors</strong> panel, part 1</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Threads running</strong> - the number of threads that are not terminated aka alive. May include threads that are in a waiting or blocked state.</p>
-</li>
-<li>
-<p><strong>Threads terminated</strong> - the number of threads that was finished its execution.</p>
-</li>
-<li>
-<p><strong>Threads created</strong> - number of threads created by thread factory for given executor service.</p>
-</li>
-<li>
-<p><strong>Created thread per minute</strong> - Speed of thread creating for the given executor service.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-2.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-2.png" alt="The *Executors* panel part 2"></a>
-</div>
-<div class="title">Figure 7. The <strong>Executors</strong> panel, part 2</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Executor threads active</strong> - number of threads that actively execute tasks.</p>
-</li>
-<li>
-<p><strong>Executor pool size</strong> - number of threads that actively execute tasks.</p>
-</li>
-<li>
-<p><strong>Queued task</strong> - the approximate number of tasks that are queued for execution</p>
-</li>
-<li>
-<p><strong>Queued occupancy</strong> - the percent of the queue used by the tasks that are waiting for execution.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-3.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-3.png" alt="The *Executors* panel part 3"></a>
-</div>
-<div class="title">Figure 8. The <strong>Executors</strong> panel, part 3</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Rejected task</strong> - the number of tasks that were rejected from execution.</p>
-</li>
-<li>
-<p><strong>Rejected task per minute</strong> - the speed of task rejections</p>
-</li>
-<li>
-<p><strong>Completed tasks</strong> - the number of completed tasks</p>
-</li>
-<li>
-<p><strong>Completed tasks per minute</strong> - the speed of task execution</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-4.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-executors-panel-4.png" alt="The *Executors* panel part 4"></a>
-</div>
-<div class="title">Figure 9. The <strong>Executors</strong> panel, part 4</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Task execution seconds max</strong> - 5min moving maximum of task execution</p>
-</li>
-<li>
-<p><strong>Tasks execution seconds avg</strong> - 1h moving average of task execution</p>
-</li>
-<li>
-<p><strong>Executor idle seconds max</strong> - 5min moving maximum of executor idle state.</p>
-</li>
-<li>
-<p><strong>Executor idle seconds avg</strong> - 1h moving average of executor idle state.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-1.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-1.png" alt="The *Trace* panel part 1"></a>
-</div>
-<div class="title">Figure 10. The <strong>Traces</strong> panel, part 1</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Workspace start Max</strong> - maximum workspace start time</p>
-</li>
-<li>
-<p><strong>Workspace start Avg</strong> - 1h moving average of the workspace start time components</p>
-</li>
-<li>
-<p><strong>Workspace stop Max</strong> - maximum of workspace stop time</p>
-</li>
-<li>
-<p><strong>Workspace stop Avg</strong> - 1h moving average of the workspace stop time components</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-2.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-2.png" alt="The *Trace* panel part 2"></a>
-</div>
-<div class="title">Figure 11. The <strong>Traces</strong> panel, part 2</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>OpenShiftInternalRuntime#start Max</strong> - maximum time of OpenShiftInternalRuntime#start operation</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#start Avg</strong> - 1h moving average time of OpenShiftInternalRuntime#start operation</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = NO --></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Plugin Brokering Execution Max</strong> - maximum time of PluginBrokerManager#getTooling operation</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Avg</strong> - 1h moving average of PluginBrokerManager#getTooling operation</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = YES --></p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-3.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-3.png" alt="The *Trace* panel part 3"></a>
-</div>
-<div class="title">Figure 12. The <strong>Traces</strong> panel, part 3</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>OpenShiftEnvironmentProvisioner#provision Max</strong> - maximum time of OpenShiftEnvironmentProvisioner#provision operation</p>
-</li>
-<li>
-<p><strong>OpenShiftEnvironmentProvisioner#provision Avg</strong> -1h moving average of OpenShiftEnvironmentProvisioner#provision operation</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = NO --></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Plugin Brokering Execution Max</strong> - maximum time of PluginBrokerManager#getTooling components execution time</p>
-</li>
-<li>
-<p><strong>Plugin Brokering Execution Avg</strong> - 1h moving average of time of PluginBrokerManager#getTooling components execution time</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><!-- vale RedHat.TermsErrors = YES --></p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-4.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-trace-panel-4.png" alt="The *Trace* panel part 4"></a>
-</div>
-<div class="title">Figure 13. The <strong>Traces</strong> panel, part 4</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>WaitMachinesStart Max</strong> - maximum time of WaitMachinesStart operations</p>
-</li>
-<li>
-<p><strong>WaitMachinesStart Avg</strong> - 1h moving average time of WaitMachinesStart operations</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#startMachines Max</strong> - maximum time of OpenShiftInternalRuntime#startMachines operations</p>
-</li>
-<li>
-<p><strong>OpenShiftInternalRuntime#startMachines Avg</strong> - 1h moving average of the time of OpenShiftInternalRuntime#startMachines operations</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel.png" alt="The *Workspace detailed* panel part 1"></a>
-</div>
-<div class="title">Figure 14. The <strong>Workspace detailed</strong> panel, part 1</div>
-</div>
-<div class="paragraph">
-<p>The <strong>Workspace Detailed</strong> panel contains heat maps, which illustrate the average time of workspace starts or fails. The row shows some period of time.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel-2.png"><img src="../_images/monitoring/monitoring-che-che-server-dashboard-workspace-detailed-panel-2.png" alt="The *Workspace detailed* panel part 2"></a>
-</div>
-<div class="title">Figure 15. The <strong>Workspace detailed</strong> panel, part 2</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Messages sent to runtime log</strong> - Number of messages sent to the workspace startup log.</p>
-</li>
-<li>
-<p><strong>Bytes sent to runtime log</strong> - Number of bytes of the messages sent to the workspace startup log.</p>
-</li>
-<li>
-<p><strong>Current Log Watchers</strong> - Number of currently watched containers logs</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_che_server_jvm_dashboard"><a class="anchor" href="#_che_server_jvm_dashboard"></a>Che server JVM dashboard</h3>
-<div class="paragraph">
-<p>Use case: JVM metrics of the Che server, such as JVM memory or class loading.</p>
-</div>
+<p>View the Che JVM metrics in the Grafana console:</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard.png" alt="The *Che server JVM* dashboard"></a>
 </div>
-<div class="title">Figure 16. Che server JVM dashboard</div>
+<div class="title">Figure 1. Che server JVM dashboard</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png" alt="The *JVM quick facts* panel"></a>
 </div>
-<div class="title">Figure 17. Quick Facts</div>
+<div class="title">Figure 2. Quick Facts</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png" alt="The *JVM Memory* panel"></a>
 </div>
-<div class="title">Figure 18. JVM Memory</div>
+<div class="title">Figure 3. JVM Memory</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png" alt="The *JVM Misc* panel"></a>
 </div>
-<div class="title">Figure 19. JVM Misc</div>
+<div class="title">Figure 4. JVM Misc</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png" alt="The *JVM Memory Pools (heap)* panel"></a>
 </div>
-<div class="title">Figure 20. JVM Memory Pools (heap)</div>
+<div class="title">Figure 5. JVM Memory Pools (heap)</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png" alt="The *JVM Memory Pools (non-heap)* panel"></a>
 </div>
-<div class="title">Figure 21. JVM Memory Pools (Non-Heap)</div>
+<div class="title">Figure 6. JVM Memory Pools (Non-Heap)</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png" alt="The *JVM garbage collection* panel"></a>
 </div>
-<div class="title">Figure 22. Garbage Collection</div>
+<div class="title">Figure 7. Garbage Collection</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png" alt="The *JVM class loading* panel"></a>
 </div>
-<div class="title">Figure 23. Class loading</div>
+<div class="title">Figure 8. Class loading</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png" alt="The *JVM buffer pools* panel"></a>
 </div>
-<div class="title">Figure 24. Buffer Pools</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="developing-grafana-dashboards_che"><a class="anchor" href="#developing-grafana-dashboards_che"></a>Developing Grafana dashboards</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Grafana offers the possibility to add custom panels.</p>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>To add a custom panel, use the <strong>New dashboard</strong> view.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In the first section, define <strong>Queries to</strong>. Use the <em>Prometheus Query Language</em> to construct a specific metric, as well as to modify it with various aggregation operators.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-new-grafana-dashboard-queries.png"><img src="../_images/monitoring/monitoring-che-new-grafana-dashboard-queries.png" alt="Grafana Dashboard queries"></a>
-</div>
-<div class="title">Figure 25. New Grafana dashboard: Queries to</div>
-</div>
-</li>
-<li>
-<p>In the <strong>Visualisation</strong> section, choose a metric to be shown in the following visual in the form of a graph, gauge, heatmap, or others.</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-new-grafana-dashboard-visualization.png"><img src="../_images/monitoring/monitoring-che-new-grafana-dashboard-visualization.png" alt="Grafana dashboard visualization"></a>
-</div>
-<div class="title">Figure 26. New Grafana dashboard: Visualization</div>
-</div>
-</li>
-<li>
-<p>Save changes to the dashboard using the <b class="button">Save</b> button, and copy and paste the JSON code to the deployment.</p>
-</li>
-<li>
-<p>Load changes in the configuration of a running Grafana deployment. First remove the deployment:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc process -f che-monitoring.yaml | oc delete -f -</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then redeploy your Grafana with the new configuration:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc process -f che-monitoring.yaml | oc apply -f - | oc rollout latest grafana</pre>
-</div>
+<div class="title">Figure 9. Buffer Pools</div>
 </div>
 </li>
 </ol>

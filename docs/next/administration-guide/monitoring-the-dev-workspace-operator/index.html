@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Monitoring the DevWorkspace operator :: Eclipse Che Documentation</title>
+    <title>Monitoring the DevWorkspace Operator :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/monitoring-the-dev-workspace-operator/">
+    <meta name="description" content="Monitoring the DevWorkspace Operator">
     <meta name="keywords" content="administration-guide, monitoring-the-dev-workspace-operator">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -356,10 +357,19 @@
     <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../monitoring-che/">Monitoring Che</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Monitoring the DevWorkspace operator</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Monitoring the DevWorkspace Operator</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../monitoring-che/">Monitoring Che Server</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -536,7 +546,8 @@
     <li>Administration Guide</li>
     <li><a href="../configuring-che/">Configuring Che</a></li>
     <li><a href="../configuring-observability/">Configuring observability</a></li>
-    <li><a href="./">Monitoring the DevWorkspace operator</a></li>
+    <li><a href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a></li>
+    <li><a href="./">Monitoring the DevWorkspace Operator</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -554,38 +565,31 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Monitoring the DevWorkspace operator</h1>
+<h1 class="page">Monitoring the DevWorkspace Operator</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes how to configure an example monitoring stack to process metrics exposed by the DevWorkspace operator.</p>
+<p>You can configure an example monitoring stack to process metrics exposed by the DevWorkspace Operator.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"><a class="anchor" href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"></a>Collecting DevWorkspace operator metrics with Prometheus</h2>
+<h2 id="proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"><a class="anchor" href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che"></a>Collecting DevWorkspace Operator metrics with Prometheus</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section describes how to use the Prometheus to collect, store, and query metrics about the DevWorkspace operator.</p>
+<p>To use Prometheus to collect, store, and query metrics about the DevWorkspace Operator:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The default configuration is set:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>devworkspace-controller-metrics</code> service is exposing metrics on port <code>8443</code>.</p>
+<p>The <a href="https://github.com/devfile/devworkspace-operator/blob/v0.10.0/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics.Service.yaml"><code>devworkspace-controller-metrics</code> Service</a> is exposing metrics on port <code>8443</code>.</p>
 </li>
 <li>
-<p>The <code>devworkspace-webhookserver</code> service is exposing metrics on <code>9443</code>.</p>
-</li>
-</ul>
-</div>
+<p>The <code>devworkspace-webhookserver</code> Service is exposing metrics on port <code>9443</code>. By default, the Service exposes metrics on port <code>9443</code>.</p>
 </li>
 <li>
-<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
 </li>
 </ul>
 </div>
@@ -593,10 +597,21 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a <code>ClusterRoleBinding</code> to bind the <code>ServiceAccount</code> associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> <code>ClusterRole</code>.
-Without the <code>ClusterRoleBinding</code>, you cannot access DevWorkspace metrics because they are protected with role-based access control (RBAC).</p>
+<p>Create a <code>ClusterRoleBinding</code> to bind the <code>ServiceAccount</code> associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> <code>ClusterRole</code>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Without the <code>ClusterRoleBinding</code>, you cannot access DevWorkspace metrics because access is protected with role-based access control (RBAC).
+</td>
+</tr>
+</table>
+</div>
 <div class="exampleblock">
-<div class="title">Example 1. ClusterRole example</div>
+<div class="title">Example 1. ClusterRole</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -614,7 +629,7 @@ rules:
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 2. ClusterRoleBinding example</div>
+<div class="title">Example 2. ClusterRoleBinding</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -624,33 +639,21 @@ metadata:
   name: devworkspace-controller-metrics-binding
 subjects:
   - kind: ServiceAccount
-    name: <em>&lt;ServiceAccount_name&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
-    namespace: <em>&lt;Prometheus_namespace&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
+    name: <em>&lt;ServiceAccount_name_associated_with_the_Prometheus_Pod&gt;</em>
+    namespace: <em>&lt;Prometheus_namespace&gt;</em>
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: devworkspace-controller-metrics-reader</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Name of the <code>ServiceAccount</code> associated with the Prometheus Pod.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The namespace in which Prometheus is running.</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </li>
 <li>
-<p>Configure Prometheus to scrape metrics from the <code>8443</code> port exposed by the <code>devworkspace-controller-metrics</code> service, and <code>9443</code> port exposed by the <code>devworkspace-webhookserver</code> service.</p>
+<p>Configure Prometheus to scrape metrics from port <code>8443</code> exposed by the <code>devworkspace-controller-metrics</code> Service and from port <code>9443</code> exposed by the <code>devworkspace-webhookserver</code> Service.</p>
 <div class="exampleblock">
-<div class="title">Example 3. Prometheus configuration example</div>
+<div class="title">Example 3. Prometheus configuration</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -661,9 +664,9 @@ metadata:
 data:
   prometheus.yml: |-
       global:
-        scrape_interval:     5s             <i class="conum" data-value="1"></i><b>(1)</b>
-        evaluation_interval: 5s             <i class="conum" data-value="2"></i><b>(2)</b>
-      scrape_configs:                       <i class="conum" data-value="3"></i><b>(3)</b>
+        scrape_interval: 5s <i class="conum" data-value="1"></i><b>(1)</b>
+        evaluation_interval: 5s <i class="conum" data-value="2"></i><b>(2)</b>
+      scrape_configs: <i class="conum" data-value="3"></i><b>(3)</b>
         - job_name: 'DevWorkspace'
           scheme: https
           authorization:
@@ -672,7 +675,7 @@ data:
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['<em>&lt;devworkspace-controller-metrics_service_host&gt;</em>:8443']  <i class="conum" data-value="4"></i><b>(4)</b>
+            - targets: ['devworkspace-controller-metrics:8443'] <i class="conum" data-value="4"></i><b>(4)</b>
         - job_name: 'DevWorkspace webhooks'
           scheme: https
           authorization:
@@ -681,30 +684,30 @@ data:
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['<em>&lt;devworkspace-webhookserver_service_host&gt;</em>:9443']  <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+            - targets: ['devworkspace-webhookserver:9443'] <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Rate at which a target is scraped.</td>
+<td>The rate at which a target is scraped.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Rate at which recording and alerting rules are re-checked.</td>
+<td>The rate at which the recording and alerting rules are re-checked.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Resources that Prometheus monitors. In the default configuration, two jobs (<code>DevWorkspace</code> and <code>DevWorkspace webhooks</code>), scrape the time series data exposed by the <code>devworkspace-controller-metrics</code> and <code>devworkspace-webhookserver</code> services.</td>
+<td>The resources that Prometheus monitors. In the default configuration, two jobs, <code>DevWorkspace</code> and <code>DevWorkspace webhooks</code>, scrape the time series data exposed by the <code>devworkspace-controller-metrics</code> and <code>devworkspace-webhookserver</code> Services.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Scrape metrics from the <code>8443</code> port.</td>
+<td>The scrape metrics from port <code>8443</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Scrape metrics from the <code>9443</code> port.</td>
+<td>The scrape metrics from port <code>9443</code>.</td>
 </tr>
 </table>
 </div>
@@ -713,31 +716,41 @@ data:
 </li>
 </ol>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Use the Prometheus console to view and query metrics:</p>
+<div class="ulist">
 <ul>
 <li>
-<p>Use the Prometheus console to view targets and metrics.</p>
+<p>View the metrics at <code>http://<em>&lt;prometheus_url&gt;</em>/metrics</code>.</p>
+</li>
+<li>
+<p>Query metrics from <code>http://<em>&lt;prometheus_url&gt;</em>/graph</code>.</p>
 <div class="paragraph">
 <p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
 </div>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>Verify that all targets are up by viewing the targets endpoint at <code>http://<em>&lt;prometheus-url&gt;</em>/targets</code>.</p>
+</li>
+</ol>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a></p>
 </li>
 <li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a>.</p>
+<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a></p>
 </li>
 <li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a>.</p>
-</li>
-<li>
-<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a>.</p>
+<p><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus metric types</a></p>
 </li>
 </ul>
 </div>
@@ -747,7 +760,7 @@ data:
 <h2 id="ref_devworkspace-specific-metrics_che"><a class="anchor" href="#ref_devworkspace-specific-metrics_che"></a>DevWorkspace-specific metrics</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section describes the DevWorkspace-specific metrics exposed by the <code>devworkspace-controller-metrics</code> service.</p>
+<p>The following tables describe the DevWorkspace-specific metrics exposed by the <code>devworkspace-controller-metrics</code> Service.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Metrics</caption>
@@ -854,20 +867,22 @@ data:
 </div>
 </div>
 <div class="sect1">
-<h2 id="proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"><a class="anchor" href="#proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"></a>Viewing DevWorkspace operator metrics on Grafana dashboards</h2>
+<h2 id="proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"><a class="anchor" href="#proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards_che"></a>Viewing DevWorkspace Operator metrics on Grafana dashboards</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to view DevWorkspace operator metrics on Grafana with the example dashboard.
-Grafana version 7 or later is required to support all panels in the example dashboard.</p>
+<p>To view the DevWorkspace Operator metrics on Grafana with the example dashboard:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Prometheus is collecting metrics. See <a href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che">Collecting DevWorkspace operator metrics with Prometheus</a>.</p>
+<p>Prometheus is collecting metrics. See <a href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus_che">Collecting DevWorkspace Operator metrics with Prometheus</a>.</p>
 </li>
 <li>
-<p>Grafana is running on port <code>3000</code> with a corresponding <strong>service</strong> and <strong>route</strong>. See <a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
+<p>Grafana version 7.5.3 or later.</p>
+</li>
+<li>
+<p>Grafana is running on port <code>3000</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
 </li>
 </ul>
 </div>
@@ -879,7 +894,7 @@ Grafana version 7 or later is required to support all panels in the example dash
 See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-prometheus-data-source">Creating a Prometheus data source</a>.</p>
 </li>
 <li>
-<p>Import the example <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">grafana-dashboard.json</a> dashboard.</p>
+<p>Import the <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">example <code>grafana-dashboard.json</code></a> dashboard.</p>
 </li>
 </ol>
 </div>
@@ -887,7 +902,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 <div class="title">Verification steps</div>
 <ul>
 <li>
-<p>Use the Grafana console to view the DevWorkspace operator metrics dashboard. See <a href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che">Grafana dashboards for the DevWorkspace operator</a>.</p>
+<p>Use the Grafana console to view the DevWorkspace Operator metrics dashboard. See <a href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che">Grafana dashboard for the DevWorkspace Operator</a>.</p>
 </li>
 </ul>
 </div>
@@ -895,42 +910,38 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://grafana.com/docs/installation/">Installing Grafana</a>.</p>
+<p><a href="https://grafana.com/docs/grafana/latest/datasources/prometheus/#prometheus-data-source">Prometheus data source</a></p>
 </li>
 <li>
-<p><a href="https://grafana.com/docs/grafana/latest/datasources/prometheus/#prometheus-data-source">Prometheus data source</a>.</p>
-</li>
-<li>
-<p><a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a>.</p>
+<p><a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="ref_grafana-dashboards-for-the-dev-workspace-operator_che"><a class="anchor" href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che"></a>Grafana dashboards for the DevWorkspace operator</h2>
+<h2 id="ref_grafana-dashboards-for-the-dev-workspace-operator_che"><a class="anchor" href="#ref_grafana-dashboards-for-the-dev-workspace-operator_che"></a>Grafana dashboard for the DevWorkspace Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the example Grafana dashboard, see <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">grafana-dashboard.json</a>, which displays metrics collected from the DevWorkspace operator.</p>
+<p>The example Grafana dashboard <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">based on <code>grafana-dashboard.json</code></a> displays the following metrics from the DevWorkspace Operator.</p>
 </div>
+<div class="sect2">
+<h3 id="_the_devworkspace_specific_metrics_panel"><a class="anchor" href="#_the_devworkspace_specific_metrics_panel"></a>The <strong>DevWorkspace-specific metrics</strong> panel</h3>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/monitoring/monitoring-dev-workspace-metrics-panel.png" alt="Grafana dashboard panels that contain metrics related to `DevWorkspace startup">
 </div>
 <div class="title">Figure 1. The <strong>DevWorkspace-specific metrics</strong> panel</div>
 </div>
-<div class="paragraph">
-<p>The <strong>DevWorkspace-specific metrics</strong> panel contains information related to <code>DevWorkspace</code> startup.</p>
-</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Average workspace start time</dt>
 <dd>
-<p>The average start time of a workspace.</p>
+<p>The average workspace startup duration.</p>
 </dd>
 <dt class="hdlist1">Workspace starts</dt>
 <dd>
-<p>The number successful and failed workspace starts.</p>
+<p>The number of successful and failed workspace startups.</p>
 </dd>
 <dt class="hdlist1">Workspace startup duration</dt>
 <dd>
@@ -938,7 +949,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </dd>
 <dt class="hdlist1">DevWorkspace successes / failures</dt>
 <dd>
-<p>A comparison between successful and failed DevWorkspace startups</p>
+<p>A comparison between successful and failed DevWorkspace startups.</p>
 </dd>
 <dt class="hdlist1">DevWorkspace failure rate</dt>
 <dd>
@@ -946,7 +957,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </dd>
 <dt class="hdlist1">DevWorkspace startup failure reasons</dt>
 <dd>
-<p>A pie chart that displays the distribution of workspace startup failures. The possible failure reasons are:</p>
+<p>A pie chart that displays the distribution of workspace startup failures:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -963,11 +974,14 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </dd>
 </dl>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_the_operator_metrics_panel_part_1"><a class="anchor" href="#_the_operator_metrics_panel_part_1"></a>The <strong>Operator metrics</strong> panel (part 1)</h3>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-1.png" alt="Grafana dashboard panels that contain Operator metrics part 1">
 </div>
-<div class="title">Figure 2. The <strong>Operator metrics</strong> panel, part 1</div>
+<div class="title">Figure 2. The <strong>Operator metrics</strong> panel (part 1)</div>
 </div>
 <div class="dlist">
 <dl>
@@ -981,7 +995,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </dd>
 <dt class="hdlist1">Webhooks latency (/mutate)</dt>
 <dd>
-<p>A heatmap that displays <code>/mutate</code> webhook latency.</p>
+<p>A heatmap that displays the <code>/mutate</code> webhook latency.</p>
 </dd>
 <dt class="hdlist1">Reconcile time</dt>
 <dd>
@@ -989,17 +1003,20 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </dd>
 </dl>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_the_operator_metrics_panel_part_2"><a class="anchor" href="#_the_operator_metrics_panel_part_2"></a>The <strong>Operator metrics</strong> panel (part 2)</h3>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-2.png" alt="Grafana dashboard panels that contain Operator metrics part 2">
 </div>
-<div class="title">Figure 3. The <strong>Operator metrics</strong> panel, part 2</div>
+<div class="title">Figure 3. The <strong>Operator metrics</strong> panel (part 2)</div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Webhooks latency (/convert)</dt>
 <dd>
-<p>A heatmap that displays <code>/convert</code> webhook latency.</p>
+<p>A heatmap that displays the <code>/convert</code> webhook latency.</p>
 </dd>
 <dt class="hdlist1">Work queue depth</dt>
 <dd>
@@ -1014,6 +1031,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 <p>The average per-second number of reconcile counts for the DevWorkspace controller.</p>
 </dd>
 </dl>
+</div>
 </div>
 </div>
 </div>
