@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting a Git credentials store into a workspace container :: Eclipse Che Documentation</title>
+    <title>Creating a Kubernetes Secret for a Git credentials store :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/git-credential-store/">
     <meta name="keywords" content="user-guide, configuring, user, secrets">
     <meta name="generator" content="Antora 3.0.0">
@@ -123,7 +123,7 @@
     <a class="nav-link" href="../secret-as-a-variable/">Secret as environment variable</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Git credential store</a>
+    <a class="nav-link" href="./">Creating a Kubernetes Secret for a Git credentials store</a>
   </li>
 </ul>
   </li>
@@ -355,10 +355,19 @@
     <a class="nav-link" href="../../administration-guide/collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/monitoring-che/">Monitoring Che</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../administration-guide/monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../administration-guide/installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace operator</a>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../administration-guide/monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace Operator</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../administration-guide/monitoring-che/">Monitoring Che Server</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -534,7 +543,7 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
     <li><a href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a></li>
-    <li><a href="./">Git credential store</a></li>
+    <li><a href="./">Creating a Kubernetes Secret for a Git credentials store</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -552,9 +561,12 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting a Git credentials store into a workspace container</h1>
+<h1 class="page">Creating a Kubernetes Secret for a Git credentials store</h1>
 <div class="paragraph">
-<p>This section describes how to mount Git credentials store as secret from the user&#8217;s namespace into the file in single-workspace or multiple-workspace containers of Che.</p>
+<p>As an alternative to the OAuth for GitHub, GitLab, or Bitbucket that is configured by the administrator of your organization&#8217;s Che instance, you can apply your Git credentials store as a Secret in your user namespace.</p>
+</div>
+<div class="paragraph">
+<p>When mounting the Secret, a Git configuration file with the path to the mounted Git credentials store is automatically configured and mounted to the DevWorkspace containers at <code>/etc/gitconfig</code>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -562,32 +574,68 @@
 <li>
 <p>A running instance of Che.</p>
 </li>
+<li>
+<p>You have CLI or GUI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</li>
+<li>
+<p>For CLI users: The <code>kubectl</code> and <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Prepare Git credential file in the <a href="https://git-scm.com/docs/git-credential-store#_storage_format">Storage format</a>.</p>
+<p>In your home directory, locate and open your <code>.git-credentials</code> file if you already have it. Alternatively, if you do not have this file, save a new <code>.git-credentials</code> file, using the <a href="https://git-scm.com/docs/git-credential-store#_storage_format">Git credentials storage format</a>. Each credential is stored on its own line in the file:</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://<em>&lt;username&gt;</em>:<em>&lt;token&gt;</em>@<em>&lt;git_server_hostname&gt;</em></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. A line in a <code>.git-credentials</code> file</div>
+<div class="content">
+<div class="paragraph">
+<p><code><a href="https://trailblazer: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@github.com" class="bare">https://trailblazer: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@github.com</a></code></p>
+</div>
+</div>
+</div>
 </li>
 <li>
-<p>Encode content of the file to the base64 format.</p>
-</li>
-<li>
-<p>Create a new Kubernetes or OpenShift secret in the Kubernetes or OpenShift namespace where a Che workspace will be created.</p>
+<p>Select credentials from your <code>.git-credentials</code> file for the Secret. Encode the selected credentials to Base64 for the next step.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can use the <code>base64</code> command as needed:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. The default labels are:</p>
+<p>To encode all lines in the file:</p>
+<div class="paragraph">
+<p><code>$ cat .git-credentials | base64 | tr -d '\n'</code></p>
+</div>
 </li>
 <li>
-<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+<p>To encode a selected line:</p>
+<div class="paragraph">
+<p><code>$ echo -n '<em>&lt;copied_and_pasted_line_from_.git-credentials&gt;</em>' | base64</code></p>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
-<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
-<div class="exampleblock">
-<div class="title">Example 1. Git credentials store</div>
-<div class="content">
+<p>Create a new Kubernetes Secret in your user namespace.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -595,33 +643,67 @@ kind: Secret
 metadata:
   name: git-credentials-secret
   labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
+    controller.devfile.io/git-credential: 'true' <i class="conum" data-value="1"></i><b>(1)</b>
+    controller.devfile.io/watch-secret: 'true'
   annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/theia/.git-credentials <i class="conum" data-value="1"></i><b>(1)</b>
-    che.eclipse.org/mount-as: file <i class="conum" data-value="1"></i><b>(1)</b>
-    che.eclipse.org/git-credential: 'true'
+    controller.devfile.io/mount-path: /etc/secret <i class="conum" data-value="2"></i><b>(2)</b>
 data:
-  credentials: aHR0cHM6Ly91c2VyOnBhc3NAZXhhbXBsZS5jb20K <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+  credentials: <em>&lt;Base64_content_of_.git-credentials&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>All workspace containers have the <code>/home/theia/.git-credentials/credentials</code> file. Also, the Git system configuration is linked to the mounted file.</td>
+<td>The <code>controller.devfile.io/git-credential</code> label marks the Secret as containing Git credentials.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Encode the content with the <code>base64</code> tool to avoid collision with special characters in password.</td>
+<td>A custom absolute path in the DevWorkspace containers. The Secret is mounted as the <code>credentials</code> file at this path. The default path is <code>/</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The selected content from <code>.git-credentials</code> that you encoded to Base64 in the previous step.</td>
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can create and apply multiple Git credentials Secrets in your user namespace. All of them will be copied into one Secret that will be mounted to the DevWorkspace containers. For example, if you set the mount path to <code>/etc/secret</code>, then the one Secret with all of your Git credentials will be mounted at <code>/etc/secret/credentials</code>. You must set all Git credentials Secrets in your user namespace to the same mount path. You can set the mount path to an arbitrary path because the mount path will be automatically set in the Git configuration file configured at <code>/etc/gitconfig</code>.</p>
 </div>
+</td>
+</tr>
+</table>
 </div>
 </li>
-</ul>
+<li>
+<p>Use the CLI or GUI to apply the Secret to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can apply the Secret with <code>kubectl</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>

@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installing Che on CodeReady Containers :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/installing-che-on-codeready-containers/">
-    <meta name="keywords" content="overview, installing-che-on-codeready-containers">
+    <title>Installing Prometheus and Grafana :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/installing-prometheus-and-grafana/">
+    <meta name="keywords" content="prometheus, grafana">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -237,8 +237,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../installing-che-locally/">Installing Che locally</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Installing Che on CodeReady Containers</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../installing-che-on-codeready-containers/">Installing Che on CodeReady Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../installing-che-on-minikube/">Installing Che on Minikube</a>
@@ -358,8 +358,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Installing Prometheus and Grafana</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace Operator</a>
@@ -542,220 +542,167 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../installing-che/">Installing Che</a></li>
-    <li><a href="../installing-che-locally/">Installing Che locally</a></li>
-    <li><a href="./">Installing Che on CodeReady Containers</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../configuring-observability/">Configuring observability</a></li>
+    <li><a href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a></li>
+    <li><a href="./">Installing Prometheus and Grafana</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version" href="../../../next/administration-guide/installing-che-on-codeready-containers/">next</a>
+    <a class="version" href="../../../next/administration-guide/installing-prometheus-and-grafana/">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/administration-guide/pages/installing-che-on-codeready-containers.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/administration-guide/pages/installing-prometheus-and-grafana.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Installing Che on CodeReady Containers</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Installing Prometheus and Grafana</h1>
 <div class="paragraph">
-<p>This chapter describes the creation of a single-node OpenShift cluster for deploying a Che instance using CodeReady Containers. To install Che, use the`chectl` command-line tool or the OpenShift web console GUI.</p>
+<p>You can install Prometheus and Grafana by applying <code>template.yaml</code> that consists of a Deployment and Service for both Prometheus and Grafana.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-chectl-to-install-che-on-codeready-containers_che"><a class="anchor" href="#using-chectl-to-install-che-on-codeready-containers_che"></a>Using chectl to install Che on CodeReady Containers</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to install Che on CodeReady Containers (CRC) using <code>chectl</code>.</p>
+<p>Alternatively, you can use the <a href="https://github.com/prometheus-operator/prometheus-operator">Prometheus Operator</a> and <a href="https://github.com/grafana-operator/grafana-operator">Grafana Operator</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="xref page">Using the chectl management tool</a>.</p>
-</li>
-<li>
-<p>An installation of CodeReady Containers. See <a href="https://console.redhat.com/openshift/create/local">Installing CodeReady Containers</a>.</p>
-</li>
-<li>
-<p>The path to the user&#8217;s CRC pull secret is known.</p>
+<p>kubectl</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="paragraph">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<p>To install Prometheus and Grafana by using <code>template.yaml</code>:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>Initiate the CRC platform:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Configure your host machine for CodeReady Containers:</p>
+<p>Apply <code>template.yaml</code> to the cluster by running <code>kubectl apply -f template.yaml</code>.</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. <code>template.yaml</code></div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ crc setup</pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  ports:
+  - name: 3000-tcp
+    port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: grafana
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  ports:
+  - name: 9090-tcp
+    port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - image: grafana/grafana:8.4.5
+        name: grafana
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - image: prom/prometheus:v2.34.0
+        name: prometheus
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /prometheus
+          name: volume-data
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: volume-config
+          subPath: prometheus.yml
+      volumes:
+      - emptyDir: {}
+        name: volume-data
+      - configMap:
+          defaultMode: 420
+          name: prometheus-config
+        name: volume-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+---</code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>Remove any previous cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc delete</pre>
 </div>
-</div>
-</li>
-<li>
-<p>Initiate the <code>oc</code> command line interface within CRC:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ eval $(crc oc-env)</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Start the CodeReady Containers virtual machine with at least 12 GB of RAM and specify the path to your pull secret:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc start --memory 12288 --pull-secret-file <em>&lt;download-path&gt;</em>pull-secret.txt</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Take note of the password for the user <code>kubeadmin</code>, displayed at the end of the CRC initiation.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Log into the OpenShift cluster using the <code>kubeadmin</code> username, the corresponding <code><em>&lt;kubeadmin-password&gt;</em></code> password, and the CRC URL pointer displayed at the end of the CRC initiation phase:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc login --username="kubeadmin" --password="<em>&lt;kubeadmin-password&gt;</em>" https://api.crc.testing:6443</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install the Che instance using chectl:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:deploy --platform crc</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Use the Users Dashboard CRC testing URL and sign in as:</p>
-<div class="listingblock">
-<div class="content">
-<pre>Login: developer
-Password: developer</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Enter the user&#8217;s credentials and start using Che.</p>
-</li>
-</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/">Product documentation for Red Hat CodeReady Containers</a>.</p>
+<p><a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a></p>
 </li>
 <li>
-<p><a href="https://github.com/code-ready/crc">CodeReady Containers on GitHub</a>.</p>
+<p><a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a></p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-openshift-web-console-to-install-che-on-codeready-containers_che"><a class="anchor" href="#using-openshift-web-console-to-install-che-on-codeready-containers_che"></a>Using the OpenShift web console to install Che on CodeReady Containers</h2>
-<div class="sectionbody">
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>An installation of CodeReady Containers. See <a href="https://cloud.redhat.com/openshift/install/crc/installer-provisioned">Installing CodeReady Containers</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>To configure your host machine for CodeReady Containers, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc setup</pre>
-</div>
-</div>
-</li>
-<li>
-<p>To remove any previous cluster, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc delete</pre>
-</div>
-</div>
-</li>
-<li>
-<p>To start the CodeReady Containers virtual machine with at least 12 GB of RAM, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc start --memory 12288</pre>
-</div>
-</div>
-</li>
-<li>
-<p>When prompted, supply your user pull secret.</p>
-</li>
-<li>
-<p>Take note of the password for the user <code>kubeadmin</code>, which the <code>crc start --memory 12288</code> command outputs.</p>
-</li>
-<li>
-<p>To access the OpenShift web console, run:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc console</pre>
-</div>
-</div>
-</li>
-<li>
-<p>In the web console, log in with the username <code>developer</code> and the password <code>developer</code>.</p>
-</li>
-<li>
-<p>In the top right corner of the OpenShift web console, click <strong>developer</strong> &#8594; <strong>Log out</strong>.</p>
-</li>
-<li>
-<p>Log in with the <code>kubeadmin</code> username and the corresponding password.</p>
-</li>
-<li>
-<p>Follow the procedure for <a href="../installing-che-on-openshift-4-using-operatorhub/" class="xref page">Installing Che on OpenShift 4 using OperatorHub</a>.</p>
-</li>
-</ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/">Product documentation for Red Hat CodeReady Containers</a>.</p>
-</li>
-<li>
-<p><a href="https://github.com/code-ready/crc">CodeReady Containers on GitHub</a>.</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </article>
   </div>
