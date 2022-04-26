@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Uninstalling Che after chectl installation :: Eclipse Che Documentation</title>
+    <title>Uninstalling Che by using chectl :: Eclipse Che Documentation</title>
     <meta name="keywords" content="administration guide, uninstalling-che, uninstalling-che-after-chectl-installation">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -456,13 +456,10 @@
     <a class="nav-link" href="../uninstalling-che/">Uninstalling Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-after-operatorhub-installation-using-openshift-web-console/">Using the OpenShift web console</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-after-operatorhub-installation-using-openshift-cli/">Using OpenShift CLI</a>
+    <a class="nav-link" href="../uninstalling-che-on-openshift/">Uninstalling Che on OpenShift</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Using chectl</a>
+    <a class="nav-link" href="./">Uninstalling Che by using chectl</a>
   </li>
 </ul>
   </li>
@@ -543,7 +540,7 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
     <li><a href="../uninstalling-che/">Uninstalling Che</a></li>
-    <li><a href="./">Using chectl</a></li>
+    <li><a href="./">Uninstalling Che by using chectl</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -554,28 +551,25 @@
     <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/uninstalling-che-after-chectl-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/uninstalling-che-by-using-chectl.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Uninstalling Che after chectl installation</h1>
+<h1 class="page">Uninstalling Che by using <code>chectl</code></h1>
 <div class="paragraph">
-<p>This section describes how to uninstall an instance of Eclipse&#160;Che that was installed using the <code>chectl</code> tool.</p>
+<p>To uninstall an instance of Eclipse&#160;Che that was installed using the <code>chectl</code> tool on Kubernetes or OpenShift:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>chectl</code> tool is available.</p>
+<p>The <code>chectl</code> tool was used to install the Che instance on Kubernetes or OpenShift.</p>
 </li>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
-</li>
-<li>
-<p>The <code>chectl</code> tool installed the Che instance on Kubernetes.</p>
+<p>The <code>chectl</code> and <code>kubectl</code> tools are available.</p>
 </li>
 </ul>
 </div>
@@ -583,27 +577,15 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Sign in to the Kubernetes cluster:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl login -u <em>&lt;username&gt;</em> -p <em>&lt;password&gt;</em> <em>&lt;cluster_URL&gt;</em></pre>
-</div>
-</div>
-</li>
-<li>
 <p>Obtain the name of the Che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl get checluster --all-namespaces -o=jsonpath="{.items[*].metadata.namespace}"</pre>
-</div>
+<div class="paragraph">
+<p><code>$ kubectl get checluster --all-namespaces -o=jsonpath="{.items[*].metadata.namespace}"</code></p>
 </div>
 </li>
 <li>
-<p>Remove the Che instance from the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:delete -n eclipse-che</pre>
-</div>
+<p>Remove the Che instance from the namespace:</p>
+<div class="paragraph">
+<p><code>$ chectl server:delete -n <em>&lt;namespace&gt;</em></code></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -613,19 +595,14 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>When the name of the namespace containing the Che instance is <code>eclipse-che</code>, the <code>-n</code> argument is not necessary.</p>
+<p>If uninstalling Che from a Minikube cluster, remove the <code>dex</code> and Che namespaces.</p>
+</div>
+<div class="paragraph">
+<p><code>$ kubectl delete namespaces dex <em>&lt;namespace&gt;</em></code></p>
 </div>
 </td>
 </tr>
 </table>
-</div>
-</li>
-<li>
-<p>Remove the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl delete namespaces eclipse-che</pre>
-</div>
 </div>
 </li>
 </ol>
