@@ -574,7 +574,7 @@
 <h2 id="using-chectl-to-install-che-on-codeready-containers_che"><a class="anchor" href="#using-chectl-to-install-che-on-codeready-containers_che"></a>Using chectl to install Che on CodeReady Containers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to install Che on CodeReady Containers (CRC) using <code>chectl</code>.</p>
+<p>This section describes how to install Che on CodeReady Containers using <code>chectl</code>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -586,25 +586,13 @@
 <p>An installation of CodeReady Containers. See <a href="https://console.redhat.com/openshift/create/local">Installing CodeReady Containers</a>.</p>
 </li>
 <li>
-<p>The path to the user&#8217;s CRC pull secret is known.</p>
+<p>The path to the user&#8217;s CodeReady Containers pull secret is known as <em>&lt;pull-secret-file&gt;</em>.</p>
 </li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
-<li>
-<p>Initiate the CRC platform:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Configure your host machine for CodeReady Containers:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc setup</pre>
-</div>
-</div>
-</li>
 <li>
 <p>Remove any previous cluster:</p>
 <div class="listingblock">
@@ -614,32 +602,26 @@
 </div>
 </li>
 <li>
-<p>Initiate the <code>oc</code> command line interface within CRC:</p>
+<p>Configure your host machine for CodeReady Containers:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ crc setup</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start the CodeReady Containers virtual machine with at least 12 GB of RAM and specify the path to your pull secret, and take note of the password for the user <code>kubeadmin</code>, displayed at the end of the CodeReady Containers initiation:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ crc start --memory 12288 --pull-secret-file <em>&lt;pull-secret-file&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable access to the <code>oc</code> command line interface embedded in CodeReady Containers:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ eval $(crc oc-env)</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Start the CodeReady Containers virtual machine with at least 12 GB of RAM and specify the path to your pull secret:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ crc start --memory 12288 --pull-secret-file <em>&lt;download-path&gt;</em>pull-secret.txt</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Take note of the password for the user <code>kubeadmin</code>, displayed at the end of the CRC initiation.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Log into the OpenShift cluster using the <code>kubeadmin</code> username, the corresponding <code><em>&lt;kubeadmin-password&gt;</em></code> password, and the CRC URL pointer displayed at the end of the CRC initiation phase:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ oc login --username="kubeadmin" --password="<em>&lt;kubeadmin-password&gt;</em>" https://api.crc.testing:6443</pre>
 </div>
 </div>
 </li>
@@ -650,18 +632,6 @@
 <pre>$ chectl server:deploy --platform crc</pre>
 </div>
 </div>
-</li>
-<li>
-<p>Use the Users Dashboard CRC testing URL and sign in as:</p>
-<div class="listingblock">
-<div class="content">
-<pre>Login: developer
-Password: developer</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Enter the user&#8217;s credentials and start using Che.</p>
 </li>
 </ol>
 </div>
