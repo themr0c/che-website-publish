@@ -561,25 +561,182 @@
 </aside>
 <article class="doc">
 <h1 class="page">Selecting an IDE</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>You can select your IDE at when starting a workspace:</p>
+<p><a href="https://theia-ide.org/docs/">Eclipse Theia</a> is the current default editor for Che but other IDEs are available when starting a workspace.</p>
+</div>
+<div class="paragraph">
+<p>The following alternatives are available:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://theia-ide.org/docs/">Eclipse Theia</a> (default IDE)</p>
+<p>JetBrains <a href="https://www.jetbrains.com/help/idea/getting-started.html">IntelliJ IDEA</a></p>
 </li>
 <li>
-<p>JetBrains IDE such as IntelliJ or PyCharm</p>
+<p>JetBrains <a href="https://www.jetbrains.com/help/pycharm/quick-start-guide.html">PyCharm</a></p>
 </li>
 <li>
-<p>Visual Studio Code</p>
+<p>Visual Studio Code - <a href="https://github.com/Microsoft/vscode/">Open Source ("Code - OSS")</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
+<p>To specify an alternative IDE, use either a URL parameter <code>che-editor</code> or a <code>.che/che-editor.yaml</code> file the Git project.</p>
+</div>
+<div class="paragraph">
+<p>If the editor is unspecified, the latest stable version of Eclipse Theia will open.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_a_url_parameter"><a class="anchor" href="#_using_a_url_parameter"></a>Using a URL parameter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When launching a workspace using the factory API, pass in an additional parameter to load the chosen IDE:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">https://&lt;che_fqdn&gt;#&lt;git_repository_url&gt;?che-editor=&lt;editor_key&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the <code>&lt;editor_key&gt;</code> values for the supported IDEs in <a href="../optional-parameters-for-the-urls-for-starting-a-new-workspace/" class="xref page">Table 1. The &lt;editor_key&gt; values for the supported IDEs</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_a_che_editor_file"><a class="anchor" href="#_using_a_che_editor_file"></a>Using a Che Editor file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To define an editor different from the default, place a <code>che-editor.yaml</code> file in a <code>.che</code> folder in the root of the Git project, and point it at the ID of the editor of choice:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">id: che-incubator/che-idea/latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Link to a sample file: <a href="https://github.com/che-samples/gradle-demo-project/blob/devfilev2/.che/che-editor.yaml" class="bare">https://github.com/che-samples/gradle-demo-project/blob/devfilev2/.che/che-editor.yaml</a></p>
+</div>
+<div class="paragraph">
+<p>For a list of supported IDs, see <a href="../optional-parameters-for-the-urls-for-starting-a-new-workspace/" class="xref page">Optional parameters for the URLs for starting a new workspace</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Experimental IDEs can be loaded from the default plug-in registry, using the IDs shown in <a href="https://github.com/eclipse-che/che-plugin-registry/blob/main/che-editors.yaml">che-editors.yaml</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_using_a_custom_plug_in_registry_for_additional_editors"><a class="anchor" href="#_using_a_custom_plug_in_registry_for_additional_editors"></a>Using a custom plug-in registry for additional editors</h3>
+<div class="paragraph">
+<p>To include different editors than those from the default list in the Che plug-in registry, setting an optional <code>registryUrl</code> directive in <code>.che/che-editor.yaml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">id: eclipse/che-theia/next            # mandatory
+registryUrl: https://my-registry.com  # optional
+override:                             # optional
+  containers:
+    - name: theia-ide
+      memoryLimit: 1280Mi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_a_web_reference"><a class="anchor" href="#_using_a_web_reference"></a>Using a web reference</h3>
+<div class="paragraph">
+<p>To refer to an editor outside the plug-in registry, use the <code>reference</code> directive in <code>.che/che-editor.yaml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">reference: https://gist.github.com/.../che-editor.yaml # mandatory
+override:                                              # optional
+  containers:
+      - name: theia-ide
+        memoryLimit: 1280Mi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_an_embedded_editor_definition"><a class="anchor" href="#_using_an_embedded_editor_definition"></a>Using an embedded editor definition</h3>
+<div class="paragraph">
+<p>To put a complete editor definition in the <code>che-editor.yaml</code> file, use the <code>inline</code> directive:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">inline:
+  endpoints:
+    - name: "theia"
+      public: true
+      targetPort: 3100
+      attributes:
+        protocol: http
+        type: ide
+        secure: true
+        cookiesAuthEnabled: true
+        discoverable: false
+    (...)
+  containers:
+    - name: theia-ide
+      image: "quay.io/eclipse/che-theia:next"
+      env:
+        - name: THEIA_PLUGINS
+          value: local-dir:///plugins
+      volumeMounts:
+        - name: plugins
+          path: "/plugins"
+        - name: theia-local
+          path: "/home/theia/.theia"
+      mountSources: true
+      ports:
+        - exposedPort: 3100
+      memoryLimit: "512M"
+      cpuLimit: 1000m
+      cpuRequest: 100m
+  initContainers:
+    - name: remote-runtime-injector
+      image: "quay.io/eclipse/che-theia-endpoint-runtime-binary:next"
+      volumeMounts:
+        - name: remote-endpoint
+          path: "/remote-endpoint"
+          ephemeral: true
+      env:
+        - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
+          value: /remote-endpoint/plugin-remote-endpoint
+        - name: REMOTE_ENDPOINT_VOLUME_NAME
+          value: remote-endpoint</code></pre>
+</div>
+</div>
+<div class="ulist">
 <div class="title">Additional resources</div>
-<p>See: <a href="https://theia-ide.org/docs/" class="bare">https://theia-ide.org/docs/</a></p>
+<ul>
+<li>
+<p><a href="https://theia-ide.org/docs/">Eclipse Theia Docs</a></p>
+</li>
+<li>
+<p><a href="https://www.jetbrains.com/help/idea/getting-started.html">JetBrains IntelliJ IDEA</a></p>
+</li>
+<li>
+<p><a href="https://www.jetbrains.com/help/pycharm/quick-start-guide.html">JetBrains PyCharm</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Microsoft/vscode/">Visual Studio Code - Open Source ("Code - OSS")</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>
