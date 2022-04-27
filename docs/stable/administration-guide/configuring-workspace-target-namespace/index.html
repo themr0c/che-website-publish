@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Uninstalling Che after chectl installation :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/uninstalling-che-after-chectl-installation/">
-    <meta name="keywords" content="administration guide, uninstalling-che, uninstalling-che-after-chectl-installation">
+    <title>Configuring a user namespace name for automatic provisioning :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/configuring-workspace-target-namespace/">
+    <meta name="keywords" content="administration guide, configuring, namespace">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -286,6 +286,18 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuring-namespace-provisioning/">Configuring namespaces</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">Configuring namespace name</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../provisioning-namespaces-in-advance/">Provisioning namespaces in advance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../configuring-server-components/">Configuring server components</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
@@ -305,9 +317,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../deploying-che-with-support-for-git-repositories-with-self-signed-certificates/">Deploying Che with support for Git repositories with self-signed certificates</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-namespace-strategies/">Configuring workspace target namespace</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-workspaces-nodeselector/">Configuring workspaces nodeSelector</a>
@@ -456,13 +465,10 @@
     <a class="nav-link" href="../uninstalling-che/">Uninstalling Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-after-operatorhub-installation-using-openshift-web-console/">Using the OpenShift web console</a>
+    <a class="nav-link" href="../uninstalling-che-on-openshift/">Uninstalling Che on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-after-operatorhub-installation-using-openshift-cli/">Using OpenShift CLI</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Using chectl</a>
+    <a class="nav-link" href="../uninstalling-che-by-using-chectl/">Uninstalling Che by using chectl</a>
   </li>
 </ul>
   </li>
@@ -542,93 +548,109 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../uninstalling-che/">Uninstalling Che</a></li>
-    <li><a href="./">Using chectl</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../configuring-namespace-provisioning/">Configuring namespaces</a></li>
+    <li><a href="./">Configuring namespace name</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version is-missing" href="../../../next/overview/introduction-to-eclipse-che/">next</a>
+    <a class="version" href="../../../next/administration-guide/configuring-workspace-target-namespace/">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/administration-guide/pages/uninstalling-che-after-chectl-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/administration-guide/pages/configuring-workspace-target-namespace.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Uninstalling Che after chectl installation</h1>
+<h1 class="page">Configuring a user namespace name for automatic provisioning</h1>
 <div class="paragraph">
-<p>This section describes how to uninstall an instance of Eclipse&#160;Che that was installed using the <code>chectl</code> tool.</p>
+<p>You can configure the namespace name template that Che uses to create the required namespace when starting a workspace.</p>
+</div>
+<div class="paragraph">
+<p>A valid namespace name template follows these conventions:</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <code>chectl</code> tool is available.</p>
+<p>The <code>&lt;username&gt;</code> or <code>&lt;userid&gt;</code> placeholder is mandatory.</p>
 </li>
 <li>
-<p>The <code>kubectl</code> tool is available.</p>
+<p>Usernames and IDs cannot contain invalid characters. If the formatting of a username or ID is incompatible with the naming conventions for Kubernetes objects, Che changes the username or ID to a valid name by replacing incompatible characters with the <code>-</code> symbol.</p>
 </li>
 <li>
-<p>The <code>chectl</code> tool installed the Che instance on Kubernetes.</p>
+<p>Che evaluates the <code>&lt;userid&gt;</code> placeholder into a 14 character long string, and adds a random six character long suffix to prevent IDs from colliding. The result is stored in the user preferences for reuse.</p>
+</li>
+<li>
+<p>Kubernetes limits the length of a namespace name to 63 characters.</p>
+</li>
+<li>
+<p>OpenShift limits the length further to 49 characters.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>Sign in to the Kubernetes cluster:</p>
+<p>Set the <code>server.workspaceNamespaceDefault</code> property in CheCluster Custom Resource:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl login -u <em>&lt;username&gt;</em> -p <em>&lt;password&gt;</em> <em>&lt;cluster_URL&gt;</em></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: CheCluster
+apiVersion: org.eclipse.che/v1
+# ...
+spec:
+  server:
+    workspaceNamespaceDefault: <em>&lt;workspace_namespace_template_&gt;</em>
+# ...</code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>Obtain the name of the Che namespace:</p>
-<div class="listingblock">
+<div class="exampleblock">
+<div class="title">Example 1. User workspaces namespace name template examples</div>
 <div class="content">
-<pre>$ kubectl get checluster --all-namespaces -o=jsonpath="{.items[*].metadata.namespace}"</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Remove the Che instance from the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:delete -n eclipse-che</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>When the name of the namespace containing the Che instance is <code>eclipse-che</code>, the <code>-n</code> argument is not necessary.</p>
-</div>
-</td>
+<th class="tableblock halign-left valign-top">User workspaces namespace name template</th>
+<th class="tableblock halign-left valign-top">Resulting namespace example</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;username&gt;-che</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user1-che</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;userid&gt;-namespace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cge1egvsb2nhba-namespace-ul1411</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;userid&gt;-aka-&lt;username&gt;-namespace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cgezegvsb2nhba-aka-user1-namespace-6m2w2b</code></p></td>
+</tr>
+</tbody>
 </table>
 </div>
+</div>
 </li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
 <li>
-<p>Remove the eclipse-che namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl delete namespaces eclipse-che</pre>
-</div>
-</div>
+<p><a href="../understanding-the-checluster-custom-resource/" class="xref page">Understanding the <code>CheCluster</code> Custom Resource</a></p>
 </li>
-</ol>
+</ul>
 </div>
 </article>
   </div>
