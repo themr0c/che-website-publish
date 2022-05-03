@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting a secret as a file into a workspace container :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/secret-as-a-file/">
+    <title>Creating image pull Secrets :: Eclipse Che Documentation</title>
     <meta name="keywords" content="user-guide, configuring, user, secrets">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -115,21 +114,24 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a>
+    <a class="nav-link" href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-user-secrets/">Configuring user secrets</a>
+    <a class="nav-link" href="../using-a-git-credentials-store/">Using a Git credentials store</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Secret as a file</a>
+    <a class="nav-link" href="./">Creating image pull Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../secret-as-a-variable/">Secret as environment variable</a>
+    <a class="nav-link" href="../mounting-secrets/">Mounting Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../git-credential-store/">Creating a Kubernetes Secret for a Git credentials store</a>
+    <a class="nav-link" href="../mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../requesting-persistent-storage-for-workspaces/">Requesting persistent storage for workspaces</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -552,8 +554,8 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a></li>
-    <li><a href="./">Secret as a file</a></li>
+    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
+    <li><a href="./">Creating image pull Secrets</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -561,25 +563,38 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/secret-as-a-file/">stable</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/secret-as-a-file.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/end-user-guide/pages/creating-image-pull-secrets.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting a secret as a file into a workspace container</h1>
+<h1 class="page">Creating image pull Secrets</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>This section describes how to mount a secret from the user&#8217;s namespace as a file in single-workspace or multiple-workspace containers of Che.</p>
+<p>To allow the <code>DevWorkspace</code> Pods in the Kubernetes cluster of your organization&#8217;s Che instance to access container registries that require authentication, create an image pull Secret.</p>
 </div>
+<div class="paragraph">
+<p>You can create image pull Secrets by using <code>kubectl</code> or a <code>.dockercfg</code> file or a <code>config.json</code> file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-an-image-pull-secret-with-cli_che"><a class="anchor" href="#creating-an-image-pull-secret-with-cli_che"></a>Creating an image pull Secret with <code>kubectl</code></h2>
+<div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Che.</p>
+<p>You have CLI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</li>
+<li>
+<p>The <code>kubectl</code> command line tool is installed in the operating system you are using.</p>
 </li>
 </ul>
 </div>
@@ -587,144 +602,198 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a new Kubernetes or OpenShift secret in the Kubernetes or OpenShift namespace where a Che workspace will be created.</p>
+<p>In your user namespace, create an image pull Secret with your private container registry details and credentials:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret docker-registry <em>&lt;Secret_name&gt;</em> \
+    --docker-server=<em>&lt;registry_server&gt;</em> \
+    --docker-username=<em>&lt;username&gt;</em> \
+    --docker-password=<em>&lt;password&gt;</em> \
+    --docker-email=<em>&lt;email_address&gt;</em></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the following label to the image pull Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret <em>&lt;Secret_name&gt;</em> controller.devfile.io/devworkspace_pullsecret=true controller.devfile.io/watch-secret=true</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-an-image-pull-secret-from-a-.dockercfg-file_che"><a class="anchor" href="#creating-an-image-pull-secret-from-a-.dockercfg-file_che"></a>Creating an image pull Secret from a <code>.dockercfg</code> file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you already store the credentials for the private container registry in a <code>.dockercfg</code> file, you can use that file to create an image pull Secret.</p>
+</div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. The default labels are:</p>
+<p>You have GUI or CLI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
 </li>
 <li>
-<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
-</li>
-<li>
-<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
-<div class="listingblock">
-<div class="title">Example:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-...</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>The following example shows how to mount the secret as a file by including the <code>&lt;url&gt;/mount-as: file</code> annotation:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/target-container: maven
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-  labels:
-...</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>To define the default behavior for mounting secrets, use the <code>/automount-workspace-secret</code> annotation. Developers can override this default in a devfile. This annotation takes a boolean value:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
-</li>
-<li>
-<p><code>'false'</code> disables automatic mounting into all workspace containers. To mount a secret, a user must request it in the devfile component by using the <code>automountWorkspaceSecrets:true</code> property.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-  labels:
-...</code></pre>
-</div>
-</div>
+<p>For CLI users: The <code>kubectl</code> and <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
 </li>
 </ul>
 </div>
-</li>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
 <li>
-<p>The following example shows how to mount the <code>settings.xml</code> file at the <code>/home/user/.m2/</code> path of all workspace containers:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-data:
-  settings.xml: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
+<p>Encode the <code>.dockercfg</code> file to Base64.</p>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The <code>data</code> of the Kubernetes secret can contain several items. The names of these items must match the desired file name mounted into the container.
+<div class="paragraph">
+<p>CLI users can use the <code>base64</code> command as needed:</p>
+</div>
+<div class="paragraph">
+<p><code>$ cat .dockercfg | base64 | tr -d '\n'</code></p>
+</div>
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>To override the mount path of the secret for a workspace component, edit the devfile as follows:</p>
-</li>
-</ul>
+<p>Create a new Kubernetes Secret in your user namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: <em>&lt;Secret_name&gt;</em>
+  labels:
+    controller.devfile.io/devworkspace_pullsecret: 'true'
+    controller.devfile.io/watch-secret: 'true'
+data:
+  .dockercfg: <em>&lt;Base64_content_of_.dockercfg&gt;</em>
+type: kubernetes.io/dockercfg</code></pre>
+</div>
 </div>
 </li>
 <li>
-<p>Declare a component alias for the containers in the override path.</p>
-</li>
-<li>
-<p>Declare an additional volume for the component.</p>
-</li>
-<li>
-<p>Use the name of the secret as the name of the volume.</p>
-</li>
-<li>
-<p>Provide the new mount path for the secret as <code>containerPath</code>.</p>
+<p>Use the CLI or GUI to apply the Secret to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>See the following example:</p>
+<p>CLI users can apply the Secret with <code>kubectl</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-metadata:
-  ...
-components:
- - type: dockerimage
-   alias: maven
-   image: maven:3.11
-   volumes:
-     - name: &lt;secret-name&gt;
-       containerPath: /my/new/path
-   ...</code></pre>
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
 </div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-an-image-pull-secret-from-a-config.json-file_che"><a class="anchor" href="#creating-an-image-pull-secret-from-a-config.json-file_che"></a>Creating an image pull Secret from a <code>config.json</code> file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you already store the credentials for the private container registry in a <code>$HOME/.docker/config.json</code> file, you can use that file to create an image pull Secret.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have GUI or CLI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</li>
+<li>
+<p>For CLI users: The <code>kubectl</code> and <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Encode the <code>$HOME/.docker/config.json</code> file to Base64.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can use the <code>base64</code> command as needed:</p>
+</div>
+<div class="paragraph">
+<p><code>$ cat config.json | base64 | tr -d '\n'</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a new Kubernetes Secret in your user namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: <em>&lt;Secret_name&gt;</em>
+  labels:
+    controller.devfile.io/devworkspace_pullsecret: 'true'
+    controller.devfile.io/watch-secret: 'true'
+data:
+  .dockerconfigjson: <em>&lt;Base64_content_of_config.json&gt;</em>
+type: kubernetes.io/dockerconfigjson</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use the CLI or GUI to apply the Secret to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can apply the Secret with <code>kubectl</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </article>
   </div>
