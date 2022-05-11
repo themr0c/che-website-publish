@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting a secret as an environment variable into a workspace container :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/secret-as-a-variable/">
-    <meta name="keywords" content="user-guide, configuring, user, secrets">
+    <title>Mounting Secrets :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/mounting-secrets/">
+    <meta name="keywords" content="user-guide, configuring, user, configmap, secret, secrets, mounting, mount">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -104,6 +104,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../basic-actions-you-can-perform-on-a-workspace/">Basic actions you can perform on a workspace</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../authenticating-yourself-to-a-git-server-from-a-workspace/">Authenticating yourself to a Git server from a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -114,21 +117,24 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a>
+    <a class="nav-link" href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-user-secrets/">Configuring user secrets</a>
+    <a class="nav-link" href="../using-a-git-credentials-store/">Using a Git credentials store</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../secret-as-a-file/">Secret as a file</a>
+    <a class="nav-link" href="../creating-image-pull-secrets/">Creating image pull Secrets</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Secret as environment variable</a>
+    <a class="nav-link" href="./">Mounting Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../git-credential-store/">Creating a Kubernetes Secret for a Git credentials store</a>
+    <a class="nav-link" href="../mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../requesting-persistent-storage-for-workspaces/">Requesting persistent storage for workspaces</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -249,16 +255,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../administration-guide/installing-che-in-a-restricted-environment/">Installing Che in restricted environment</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/preparing-a-restricted-environment/">Preparing a restricted environment</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/configuring-che-to-run-in-a-restricted-environment/">Configuring Che to run in a restricted environment</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../../administration-guide/installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
   </li>
 </ul>
   </li>
@@ -551,34 +548,46 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a></li>
-    <li><a href="./">Secret as environment variable</a></li>
+    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
+    <li><a href="./">Mounting Secrets</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version is-missing" href="../../../next/overview/introduction-to-eclipse-che/">next</a>
+    <a class="version" href="../../../next/end-user-guide/mounting-secrets/">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/end-user-guide/pages/secret-as-a-variable.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/end-user-guide/pages/mounting-secrets.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting a secret as an environment variable into a workspace container</h1>
+<h1 class="page">Mounting Secrets</h1>
 <div class="paragraph">
-<p>The following section describes how to mount a Kubernetes or OpenShift secret from the user’s namespace as an environment variable, or variables, into single-workspace or multiple-workspace containers of Che.</p>
+<p>To mount confidential data into your workspaces, use Kubernetes Secrets.</p>
+</div>
+<div class="paragraph">
+<p>Using Kubernetes Secrets, you can mount usernames, passwords, SSH key pairs, authentication tokens (for example, for AWS), and sensitive configurations.</p>
+</div>
+<div class="paragraph">
+<p>Mount Kubernetes Secrets to the <code>DevWorkspace</code> containers in the Kubernetes cluster of your organization&#8217;s Che instance.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Che.</p>
+<p>You have GUI or CLI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</li>
+<li>
+<p>You have created a new Secret or determined an existing one in your user namespace to mount to all <code>DevWorkspace</code> containers.</p>
+</li>
+<li>
+<p>For CLI users: The <code>kubectl</code> command line tool is installed in the operating system you are using.</p>
 </li>
 </ul>
 </div>
@@ -586,105 +595,87 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the Kubernetes namespace or OpenShift project where a Che workspace will be created, generate a new Kubernetes or OpenShift secret.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The labels of the secret that is about to be generated must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. By default, it is a set of two labels:</p>
+<p>Determine an existing ConfigMap or Secret in your user namespace to mount to all workspace containers.</p>
 </li>
 <li>
-<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
-</li>
-<li>
-<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
+<p>Set the required labels for mounting.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can run <code>kubectl</code>:</p>
+</div>
 <div class="listingblock">
-<div class="title">Example:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-...</code></pre>
+<pre>$ kubectl label secret <em>&lt;Secret_name&gt;</em> \
+        controller.devfile.io/mount-to-devworkspace=true \
+        controller.devfile.io/watch-secret=true</pre>
 </div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
-</ul>
-</div>
+<li>
+<p>Optional: Use the annotations to configure how the Secret is mounted.</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Optional annotations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>controller.devfile.io/mount-path:</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the mount path.</p>
+<p class="tableblock">Defaults to <code>/etc/secret/<em>&lt;Secret_name&gt;</em></code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>controller.devfile.io/mount-as:</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies how the resource should be mounted: <code>file</code>, <code>subpath</code>, or <code>env</code>.</p>
+<p class="tableblock">Defaults to <code>file</code>.</p>
+<p class="tableblock"><code>mount-as:file</code> mounts the keys and values as files within the mount path.</p>
+<p class="tableblock"><code>mount-as:subpath</code> mounts the keys and values within the mount path using subpath volume mounts.</p>
+<p class="tableblock"><code>mount-as:env</code> mounts the keys and values as environment variables in all <code>DevWorkspace</code> containers.</p></td>
+</tr>
+</tbody>
+</table>
 </li>
 </ol>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>The following example shows how to mount the secret as an environment variable by including the <code>&lt;url&gt;/mount-as: env</code> annotation:</p>
+<div class="exampleblock">
+<div class="title">Example 1. Mounting a Secret as a file</div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: Secret
 metadata:
   name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/env-name: FOO_ENV
-    che.eclipse.org/mount-as: env
   labels:
-   ...
+    controller.devfile.io/mount-to-devworkspace: 'true'
+    controller.devfile.io/watch-secret: 'true'
+  annotations:
+    controller.devfile.io/mount-path: '/home/user/.m2'
 data:
-  mykey: myvalue</code></pre>
+  settings.xml: <em>&lt;Base64_encoded_content&gt;</em></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In this example, the <code>FOO_ENV</code> environment variable and <code>myvalue</code> key value are provisioned into all workspace containers as follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The secret&#8217;s environment variable, <code>env-name</code>, is declared as <code>FOO_ENV</code> in the <code>annotations</code>.</p>
-</li>
-<li>
-<p>The <code>automount-workspace-secret</code> annotation with a boolean value defines the default secret mounting behavior (that can be overridden in a devfile):</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
-</li>
-<li>
-<p><code>'false'</code> disables the mounting process until it is explicitly requested in a devfile component using the <code>automountWorkspaceSecrets:true</code> property.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>If the secret has more than one data key, declare an environment variable name using a <code>&lt;<em>key</em>&gt;_env-name</code> annotation for each data key, as shown in the following example. In this example, you provision the <code>myvalue</code> and <code>othervalue</code> data key values, and the environment variable names, <code>FOO_ENV</code> and <code>OTHER_ENV</code>, into all workspace containers.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-as: env
-    che.eclipse.org/mykey_env-name: FOO_ENV
-    che.eclipse.org/otherkey_env-name: OTHER_ENV
-  labels:
-   ...
-data:
-  mykey: myvalue
-  otherkey: othervalue</code></pre>
+<p>When you start a workspace, the <code>/home/user/.m2/settings.xml</code> file will be available in the <code>DevWorkspace</code> containers.</p>
 </div>
 </div>
-</li>
-<li>
-<p>The maximum length of an annotation name in a Kubernetes secret is 63 characters, of which 9 characters are reserved for a prefix that ends with <code>/</code>. This acts as a restriction for the maximum length of the key that can be used for the secret.</p>
-</li>
-</ul>
 </div>
 </article>
   </div>

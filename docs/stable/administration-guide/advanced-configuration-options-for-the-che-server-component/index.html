@@ -105,6 +105,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/basic-actions-you-can-perform-on-a-workspace/">Basic actions you can perform on a workspace</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/authenticating-yourself-to-a-git-server-from-a-workspace/">Authenticating yourself to a Git server from a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -115,21 +118,24 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../end-user-guide/configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a>
+    <a class="nav-link" href="../../end-user-guide/using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/configuring-user-secrets/">Configuring user secrets</a>
+    <a class="nav-link" href="../../end-user-guide/using-a-git-credentials-store/">Using a Git credentials store</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/secret-as-a-file/">Secret as a file</a>
+    <a class="nav-link" href="../../end-user-guide/creating-image-pull-secrets/">Creating image pull Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/secret-as-a-variable/">Secret as environment variable</a>
+    <a class="nav-link" href="../../end-user-guide/mounting-secrets/">Mounting Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/git-credential-store/">Creating a Kubernetes Secret for a Git credentials store</a>
+    <a class="nav-link" href="../../end-user-guide/mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../end-user-guide/requesting-persistent-storage-for-workspaces/">Requesting persistent storage for workspaces</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -250,16 +256,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in restricted environment</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../preparing-a-restricted-environment/">Preparing a restricted environment</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-che-to-run-in-a-restricted-environment/">Configuring Che to run in a restricted environment</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
   </li>
 </ul>
   </li>
@@ -1739,7 +1736,7 @@ spec:
 <div class="sect3">
 <h4 id="_che_infra_kubernetes_namespace_label"><a class="anchor" href="#_che_infra_kubernetes_namespace_label"></a><code>CHE_INFRA_KUBERNETES_NAMESPACE_LABEL</code></h4>
 <div class="paragraph">
-<p>Defines whether che-server should try to label the workspace namespaces.</p>
+<p>Defines whether che-server should try to label the workspace namespaces. NOTE: It is strongly recommended to keep the value of this property set to true. If false, the new workspace namespaces will not be labeled automatically and therefore not recognized by the Che operator making some features of DevWorkspaces not working. If false, an administrator is required to label the namespaces manually using the labels specified in che.infra.kubernetes.namespace.labels. If you want to manage the namespaces yourself, make sure to follow https://www.eclipse.org/che/docs/stable/administration-guide/provisioning-namespaces-in-advance/. Any additional labels present on the namespace are kept in place and do not affect the functionality. Also note that the the administrator is free to pre-create and label the namespaces manually even if this property is true. No updates to the namespaces are done if they already conform to the labeling requirements.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1769,7 +1766,7 @@ spec:
 <div class="sect3">
 <h4 id="_che_infra_kubernetes_namespace_labels"><a class="anchor" href="#_che_infra_kubernetes_namespace_labels"></a><code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code></h4>
 <div class="paragraph">
-<p>List of labels to find namespace that are used for Che Workspaces. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.annotations</code>.  - actively label namespace with any workspace.</p>
+<p>List of labels to find namespace that are used for Che Workspaces. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.annotations</code>.  - actively label namespace with any workspace. NOTE: It is strongly recommended not to change the value of this property because the Che operator relies on these labels and their precise values when reconciling DevWorkspaces. If this configuration is changed, the namespaces will not be automatically recognized by the Che operator as workspace namespaces unless manually labeled as such using the default labels and values. Additional labels on the namespace do not affect the functionality.</p>
 </div>
 <div class="dlist">
 <dl>

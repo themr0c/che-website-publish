@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting a secret as a file into a workspace container :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/secret-as-a-file/">
+    <title>Using a Git credentials store :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/using-a-git-credentials-store/">
     <meta name="keywords" content="user-guide, configuring, user, secrets">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -104,6 +104,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../basic-actions-you-can-perform-on-a-workspace/">Basic actions you can perform on a workspace</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../authenticating-yourself-to-a-git-server-from-a-workspace/">Authenticating yourself to a Git server from a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -114,21 +117,24 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a>
+    <a class="nav-link" href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuring-user-secrets/">Configuring user secrets</a>
-  </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Secret as a file</a>
+    <a class="nav-link" href="./">Using a Git credentials store</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../secret-as-a-variable/">Secret as environment variable</a>
+    <a class="nav-link" href="../creating-image-pull-secrets/">Creating image pull Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../git-credential-store/">Creating a Kubernetes Secret for a Git credentials store</a>
+    <a class="nav-link" href="../mounting-secrets/">Mounting Secrets</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../requesting-persistent-storage-for-workspaces/">Requesting persistent storage for workspaces</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -249,16 +255,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../administration-guide/installing-che-in-a-restricted-environment/">Installing Che in restricted environment</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/preparing-a-restricted-environment/">Preparing a restricted environment</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/configuring-che-to-run-in-a-restricted-environment/">Configuring Che to run in a restricted environment</a>
-  </li>
-</ul>
+    <a class="nav-link" href="../../administration-guide/installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
   </li>
 </ul>
   </li>
@@ -551,34 +548,43 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a></li>
-    <li><a href="./">Secret as a file</a></li>
+    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
+    <li><a href="./">Using a Git credentials store</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version is-missing" href="../../../next/overview/introduction-to-eclipse-che/">next</a>
+    <a class="version" href="../../../next/end-user-guide/using-a-git-credentials-store/">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/end-user-guide/pages/secret-as-a-file.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.46.x/modules/end-user-guide/pages/using-a-git-credentials-store.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting a secret as a file into a workspace container</h1>
+<h1 class="page">Using a Git credentials store</h1>
 <div class="paragraph">
-<p>This section describes how to mount a secret from the user&#8217;s namespace as a file in single-workspace or multiple-workspace containers of Che.</p>
+<p>As an alternative to the <a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">OAuth for GitHub, GitLab, or Bitbucket</a> that is configured by the administrator of your organization&#8217;s Che instance, you can apply your Git credentials store as a Kubernetes Secret.</p>
+</div>
+<div class="paragraph">
+<p>Apply the Kubernetes Secret in your user namespace of the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</div>
+<div class="paragraph">
+<p>When you apply the Secret, a Git configuration file with the path to the mounted Git credentials store is automatically configured and mounted to the <code>DevWorkspace</code> containers in the cluster at <code>/etc/gitconfig</code>. This makes your Git credentials store available in your workspaces.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A running instance of Che.</p>
+<p>You have CLI or GUI access to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</li>
+<li>
+<p>For CLI users: The <code>kubectl</code> and <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
 </li>
 </ul>
 </div>
@@ -586,141 +592,126 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a new Kubernetes or OpenShift secret in the Kubernetes or OpenShift namespace where a Che workspace will be created.</p>
+<p>In your home directory, locate and open your <code>.git-credentials</code> file if you already have it. Alternatively, if you do not have this file, save a new <code>.git-credentials</code> file, using the <a href="https://git-scm.com/docs/git-credential-store#_storage_format">Git credentials storage format</a>. Each credential is stored on its own line in the file:</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://<em>&lt;username&gt;</em>:<em>&lt;token&gt;</em>@<em>&lt;git_server_hostname&gt;</em></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. A line in a <code>.git-credentials</code> file</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>https://trailblazer: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@github.com</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Select credentials from your <code>.git-credentials</code> file for the Secret. Encode the selected credentials to Base64 for the next step.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CLI users can use the <code>base64</code> command as needed:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>The labels of the secret that is about to be created must match the set of labels configured in <code>che.workspace.provision.secret.labels</code> property of Che. The default labels are:</p>
-</li>
-<li>
-<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
-</li>
-<li>
-<p><code>app.kubernetes.io/component: workspace-secret</code>:</p>
-<div class="listingblock">
-<div class="title">Example:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-...</code></pre>
-</div>
+<p>To encode all lines in the file:</p>
+<div class="paragraph">
+<p><code>$ cat .git-credentials | base64 | tr -d '\n'</code></p>
 </div>
 </li>
 <li>
-<p>The following example shows how to mount the secret as a file by including the <code>&lt;url&gt;/mount-as: file</code> annotation:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/target-container: maven
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-  labels:
-...</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>To define the default behavior for mounting secrets, use the <code>/automount-workspace-secret</code> annotation. Developers can override this default in a devfile. This annotation takes a boolean value:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>'true'</code> enables automatic mounting into all workspace containers.</p>
-</li>
-<li>
-<p><code>'false'</code> disables automatic mounting into all workspace containers. To mount a secret, a user must request it in the devfile component by using the <code>automountWorkspaceSecrets:true</code> property.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-  labels:
-...</code></pre>
-</div>
+<p>To encode a selected line:</p>
+<div class="paragraph">
+<p><code>$ echo -n '<em>&lt;copied_and_pasted_line_from_.git-credentials&gt;</em>' | base64</code></p>
 </div>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>The following example shows how to mount the <code>settings.xml</code> file at the <code>/home/user/.m2/</code> path of all workspace containers:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: mvn-settings-secret
-  labels:
-    app.kubernetes.io/part-of: che.eclipse.org
-    app.kubernetes.io/component: workspace-secret
-  annotations:
-    che.eclipse.org/automount-workspace-secret: 'true'
-    che.eclipse.org/mount-path: /home/user/.m2/
-    che.eclipse.org/mount-as: file
-data:
-  settings.xml: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code>data</code> of the Kubernetes secret can contain several items. The names of these items must match the desired file name mounted into the container.
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>To override the mount path of the secret for a workspace component, edit the devfile as follows:</p>
-</li>
-</ul>
+<p>Create a new Kubernetes Secret in your user namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: git-credentials-secret
+  labels:
+    controller.devfile.io/git-credential: 'true' <i class="conum" data-value="1"></i><b>(1)</b>
+    controller.devfile.io/watch-secret: 'true'
+  annotations:
+    controller.devfile.io/mount-path: /etc/secret <i class="conum" data-value="2"></i><b>(2)</b>
+data:
+  credentials: <em>&lt;Base64_content_of_.git-credentials&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>controller.devfile.io/git-credential</code> label marks the Secret as containing Git credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A custom absolute path in the <code>DevWorkspace</code> containers. The Secret is mounted as the <code>credentials</code> file at this path. The default path is <code>/</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The selected content from <code>.git-credentials</code> that you encoded to Base64 in the previous step.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can create and apply multiple Git credentials Secrets in your user namespace. All of them will be copied into one Secret that will be mounted to the <code>DevWorkspace</code> containers. For example, if you set the mount path to <code>/etc/secret</code>, then the one Secret with all of your Git credentials will be mounted at <code>/etc/secret/credentials</code>. You must set all Git credentials Secrets in your user namespace to the same mount path. You can set the mount path to an arbitrary path because the mount path will be automatically set in the Git configuration file configured at <code>/etc/gitconfig</code>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
-<p>Declare a component alias for the containers in the override path.</p>
-</li>
-<li>
-<p>Declare an additional volume for the component.</p>
-</li>
-<li>
-<p>Use the name of the secret as the name of the volume.</p>
-</li>
-<li>
-<p>Provide the new mount path for the secret as <code>containerPath</code>.</p>
+<p>Use the CLI or GUI to apply the Secret to the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>See the following example:</p>
+<p>CLI users can apply the Secret with <code>kubectl</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-metadata:
-  ...
-components:
- - type: dockerimage
-   alias: maven
-   image: maven:3.11
-   volumes:
-     - name: &lt;secret-name&gt;
-       containerPath: /my/new/path
-   ...</code></pre>
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
 </div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>

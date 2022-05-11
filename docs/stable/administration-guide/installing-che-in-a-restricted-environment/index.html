@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installing Che in a restricted environment :: Eclipse Che Documentation</title>
+    <title>Installing Che in a restricted environment on OpenShift :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/installing-che-in-a-restricted-environment/">
     <meta name="keywords" content="administration guide, installing-che-in-a-restricted-environment, installing-che-in-restricted-environment">
     <meta name="generator" content="Antora 3.0.0">
@@ -104,6 +104,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/basic-actions-you-can-perform-on-a-workspace/">Basic actions you can perform on a workspace</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/authenticating-yourself-to-a-git-server-from-a-workspace/">Authenticating yourself to a Git server from a workspace</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -114,21 +117,24 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../end-user-guide/configuring-user-preferences-and-secrets/">Configuring user preferences and secrets</a>
+    <a class="nav-link" href="../../end-user-guide/using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/configuring-user-secrets/">Configuring user secrets</a>
+    <a class="nav-link" href="../../end-user-guide/using-a-git-credentials-store/">Using a Git credentials store</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/secret-as-a-file/">Secret as a file</a>
+    <a class="nav-link" href="../../end-user-guide/creating-image-pull-secrets/">Creating image pull Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/secret-as-a-variable/">Secret as environment variable</a>
+    <a class="nav-link" href="../../end-user-guide/mounting-secrets/">Mounting Secrets</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/git-credential-store/">Creating a Kubernetes Secret for a Git credentials store</a>
+    <a class="nav-link" href="../../end-user-guide/mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../end-user-guide/requesting-persistent-storage-for-workspaces/">Requesting persistent storage for workspaces</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -249,16 +255,7 @@
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">Installing Che in restricted environment</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../preparing-a-restricted-environment/">Preparing a restricted environment</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-che-to-run-in-a-restricted-environment/">Configuring Che to run in a restricted environment</a>
-  </li>
-</ul>
+    <a class="nav-link" href="./">Installing Che in a restricted environment</a>
   </li>
 </ul>
   </li>
@@ -552,7 +549,7 @@
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
     <li><a href="../installing-che/">Installing Che</a></li>
-    <li><a href="./">Installing Che in restricted environment</a></li>
+    <li><a href="./">Installing Che in a restricted environment</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -570,27 +567,106 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Installing Che in a restricted environment</h1>
+<h1 class="page">Installing Che in a restricted environment on OpenShift</h1>
 <div class="paragraph">
-<p>By default, Che workspaces reference various external resources, including container images available in public registries or sample projects hosted on public resources. This section describes how to deploy Che in a restricted environment where these external resources are not available. This method is also called <em>offline mode</em> or <em>air-gap scenario</em>.</p>
+<p>On an OpenShift cluster operating in a restricted network, public resources are not available.</p>
+</div>
+<div class="paragraph">
+<p>However, deploying Che and running workspaces requires the following public resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Operator catalog</p>
+</li>
+<li>
+<p>Container images</p>
+</li>
+<li>
+<p>Sample projects</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To make these resources available, you can replace them with their copy in a registry accessible by the OpenShift cluster.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You are logged in to the cluster using the developer account.</p>
+<p>The OpenShift cluster has at least 64 GB of disk space.</p>
 </li>
 <li>
-<p>Dynamic provisioning or pre-defined PVs configured before the deployment.</p>
+<p>The OpenShift cluster is ready to operate on a restricted network, and the OpenShift control plane has access to the public Internet. See <a href="https://docs.openshift.com/container-platform/latest/operators/admin/olm-restricted-networks.html">Using Operator Lifecycle Manager on restricted networks</a>.</p>
 </li>
 <li>
-<p>Block-based storage volume or NFS share available outside of the cluster to serve dynamic storage provisioning or PVs. Block-based storage is recommended for optimal performance.</p>
+<p>An active <code>oc</code> session with administrative access to the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
 </li>
 <li>
-<p><a href="../preparing-a-restricted-environment/" class="xref page">Preparing a restricted environment</a></p>
+<p>An active <code>oc</code> session to the <code>registry.redhat.io</code> Red Hat Ecosystem Catalog. See: <a href="https://access.redhat.com/RegistryAuthentication">Red Hat Container Registry authentication</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>opm</code>. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/opm/cli-opm-install.html">Installing the <code>opm</code> CLI</a>.</p>
 </li>
 <li>
-<p><a href="../configuring-che-to-run-in-a-restricted-environment/" class="xref page">Configuring Che to run in a restricted environment</a></p>
+<p><code>jq</code>. See <a href="https://stedolan.github.io/jq/download/">Downloading <code>jq</code></a>.</p>
+</li>
+<li>
+<p><code>podman</code>. See <a href="https://podman.io/getting-started/installation">Installing Podman</a>.</p>
+</li>
+<li>
+<p>An active <code>skopeo</code> session with administrative access to the <em>&lt;my_registry&gt;</em> registry. See <a href="https://github.com/containers/skopeo/blob/main/install.md">Installing Skopeo</a>, <a href="https://github.com/containers/skopeo#authenticating-to-a-registry">Authenticating to a registry</a>, and <a href="https://docs.openshift.com/container-platform/4.10/installing/disconnected_install/installing-mirroring-installation-images.html">Mirroring images for a disconnected installation</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>chectl</code> for Che version 7.46. See <a href="../using-the-chectl-management-tool/" class="xref page">Using the chectl management tool</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Download and execute the mirroring script to install a custom Operator catalog and mirror the related images: <a href="../_attachments/restricted-environment/prepare-restricted-environment.sh" class="xref attachment">prepare-restricted-environment.sh</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ bash prepare-restricted-environment.sh \
+  --ocp_ver "4.10" \
+  --devworkspace_operator_index "registry.redhat.io/redhat/redhat-operator-index:v4.10" \
+  --devworkspace_operator_version "v0.14.1" \
+  --prod_operator_index "registry.access.redhat.com/redhat/community-operator-index:v4.10" \
+  --prod_operator_package_name "eclipse-che" \
+  --prod_operator_version "v7.46.0" \
+  --my_registry "<em>&lt;my_registry&gt;</em>"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install Che with the configuration set in the <code>che-operator-cr-patch.yaml</code> during the previous step:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:deploy --platform=openshift \
+  --che-operator-cr-patch-yaml=che-operator-cr-patch.yaml</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/4.10/operators/understanding/olm-rh-catalogs.html">Red Hat-provided Operator catalogs</a></p>
+</li>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/4.10/operators/admin/olm-managing-custom-catalogs.html">Managing custom catalogs</a></p>
 </li>
 </ul>
 </div>
