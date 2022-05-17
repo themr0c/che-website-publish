@@ -234,13 +234,16 @@
     <a class="nav-link" href="../installing-che/">Installing Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-on-openshift-4-using-operatorhub/">Installing Che on OpenShift 4 using OperatorHub</a>
+    <a class="nav-link" href="../installing-the-chectl-management-tool/">Installing the chectl management tool</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../using-the-chectl-management-tool/">Using the chectl management tool</a>
+    <a class="nav-link" href="../installing-che-on-openshift-using-cli/">Installing Che on OpenShift using CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-on-openshift-4-using-cli/">Installing Che on OpenShift 4 using CLI</a>
+    <a class="nav-link" href="../installing-che-on-openshift-using-the-web-console/">Installing Che on OpenShift using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -254,9 +257,6 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
-  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -267,12 +267,6 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../understanding-the-checluster-custom-resource/">Understanding the <code>CheCluster</code> Custom Resource</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../using-the-openshift-web-console-to-configure-the-checluster-custom-resource-during-installation/">Using the OpenShift web console to configure the <code>CheCluster</code> Custom Resource during installation</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../using-the-openshift-web-console-to-configure-the-checluster-custom-resource/">Using the OpenShift web console to configure the <code>CheCluster</code> Custom Resource</a>
-  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a>
   </li>
@@ -447,6 +441,9 @@
     <a class="nav-link" href="../upgrading-che/">Upgrading Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-the-chectl-management-tool/">Upgrading the chectl management tool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -461,16 +458,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../uninstalling-che/">Uninstalling Che</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-on-openshift/">Uninstalling Che on OpenShift</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-by-using-chectl/">Uninstalling Che by using chectl</a>
-  </li>
-</ul>
   </li>
 </ul>
   </li>
@@ -569,8 +557,6 @@
 </aside>
 <article class="doc">
 <h1 class="page">Installing Che on Minikube</h1>
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph">
 <p>This article explains how to create a single-node Kubernetes cluster with Minikube to deploy Che.</p>
 </div>
@@ -586,22 +572,17 @@ Remember that single-node Kubernetes clusters are suited only for testing or dev
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="using-minikube-to-set-up-kubernetes_che"><a class="anchor" href="#using-minikube-to-set-up-kubernetes_che"></a>Using Minikube to configure Kubernetes</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to use Minikube to prepare a local single-node Kubernetes cluster.</p>
-</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An installation of <code>kubectl</code>. See <a href="https://kubernetes.io/docs/tasks/tools/#kubectl/">Installing and Setting Up kubectl </a>.</p>
+<p>Minikube with Kubernetes version <code>1.21</code> or higher. See <a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">Installing Minikube</a>.</p>
 </li>
 <li>
-<p>An installation of Minikube with Kubernetes version <code>1.21</code> or higher. See <a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">Installing Minikube</a>.</p>
+<p><code>kubectl</code>. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p><code>chectl</code>. See <a href="../installing-the-chectl-management-tool/" class="xref page">Install the chectl management tool</a>.</p>
 </li>
 </ul>
 </div>
@@ -616,41 +597,36 @@ Remember that single-node Kubernetes clusters are suited only for testing or dev
 </div>
 </div>
 </li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installing-che-on-minikube-using-chectl_che"><a class="anchor" href="#installing-che-on-minikube-using-chectl_che"></a>Installing Che on Minikube using chectl</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section describes how to install Che on Minikube using chectl.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
 <li>
-<p>The <code>chectl</code> management tool is available. See <a href="../using-the-chectl-management-tool/" class="xref page">Using the chectl management tool</a>.</p>
-</li>
-<li>
-<p>A running instance of Minikube. See <a href="#using-minikube-to-set-up-kubernetes_che">Using Minikube to configure Kubernetes</a>.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>Run the following command:</p>
+<p>Create the Che instance:</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ chectl server:deploy --platform minikube</pre>
 </div>
 </div>
 </li>
-</ul>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
+<li>
+<p>Verify the Che instance status:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl server:status</pre>
 </div>
 </div>
+</li>
+<li>
+<p>Navigate to the Che cluster instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ chectl dashboard:open</pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 </article>
   </div>
