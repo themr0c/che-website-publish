@@ -110,10 +110,10 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../end-user-guide/selecting-an-ide/">Selecting an IDE</a>
+    <a class="nav-link" href="../../end-user-guide/customizing-workspace-components/">Customizing workspace components</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../end-user-guide/customizing-workspaces-components/">Customizing workspaces components</a>
+    <a class="nav-link" href="../../end-user-guide/selecting-an-ide/">Selecting an IDE</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -234,13 +234,16 @@
     <a class="nav-link" href="../installing-che/">Installing Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-on-openshift-4-using-operatorhub/">Installing Che on OpenShift 4 using OperatorHub</a>
+    <a class="nav-link" href="../installing-the-chectl-management-tool/">Installing the chectl management tool</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../using-the-chectl-management-tool/">Using the chectl management tool</a>
+    <a class="nav-link" href="../installing-che-on-openshift-using-cli/">Installing Che on OpenShift using CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-on-openshift-4-using-cli/">Installing Che on OpenShift 4 using CLI</a>
+    <a class="nav-link" href="../installing-che-on-openshift-using-the-web-console/">Installing Che on OpenShift using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -254,9 +257,6 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-che-in-a-restricted-environment/">Installing Che in a restricted environment</a>
-  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -267,12 +267,6 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../understanding-the-checluster-custom-resource/">Understanding the <code>CheCluster</code> Custom Resource</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../using-the-openshift-web-console-to-configure-the-checluster-custom-resource-during-installation/">Using the OpenShift web console to configure the <code>CheCluster</code> Custom Resource during installation</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../using-the-openshift-web-console-to-configure-the-checluster-custom-resource/">Using the OpenShift web console to configure the <code>CheCluster</code> Custom Resource</a>
-  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a>
   </li>
@@ -447,6 +441,9 @@
     <a class="nav-link" href="../upgrading-che/">Upgrading Che</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-the-chectl-management-tool/">Upgrading the chectl management tool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -461,16 +458,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../uninstalling-che/">Uninstalling Che</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-on-openshift/">Uninstalling Che on OpenShift</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../uninstalling-che-by-using-chectl/">Uninstalling Che by using chectl</a>
-  </li>
-</ul>
   </li>
 </ul>
   </li>
@@ -579,10 +567,7 @@
 <p>An instance of Che on Kubernetes or OpenShift.</p>
 </li>
 <li>
-<p>Access to an administrator account on the instance of Kubernetes or OpenShift.</p>
-</li>
-<li>
-<p>The <code>oc</code> tool is available.</p>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
 </li>
 </ul>
 </div>
@@ -593,7 +578,7 @@
 <p>Edit the CheCluster Custom Resource on the cluster:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc edit checluster/eclipse-che -n eclipse-che</pre>
+<pre>$ kubectl edit checluster/eclipse-che -n eclipse-che</pre>
 </div>
 </div>
 </li>
@@ -609,7 +594,7 @@
 <p>Verify the value of the configured property:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ oc get configmap che -o jsonpath='{.data.<em>&lt;configured-property&gt;</em>}' \
+<pre>$ kubectl get configmap che -o jsonpath='{.data.<em>&lt;configured-property&gt;</em>}' \
 -n eclipse-che</pre>
 </div>
 </div>
@@ -620,7 +605,7 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="../understanding-the-checluster-custom-resource/" class="xref page">Understanding the <code>CheCluster</code> Custom Resource</a>.</p>
+<p><a href="../checluster-custom-resource-fields-reference/" class="xref page"><code>CheCluster</code> Custom Resource fields reference</a>.</p>
 </li>
 <li>
 <p><a href="../advanced-configuration-options-for-the-che-server-component/" class="xref page">Advanced configuration options for the Che server component</a>.</p>
