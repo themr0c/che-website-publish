@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Upgrading Che using OperatorHub :: Eclipse Che Documentation</title>
-    <meta name="keywords" content="administration guide, upgrading-che-using-operatorhub">
+    <title>Installing Image Puller on OpenShift by using the CLI :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/installing-image-puller-on-openshift-using-cli/">
+    <meta name="keywords" content="administration-guide, image-puller, openshift, openshift-templates, CLI">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -328,10 +329,10 @@
     <a class="nav-link" href="../defining-the-memory-parameters-for-the-image-puller/">Defining the memory settings</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-image-puller-on-openshift-using-operatorhub/">Installing using OperatorHub</a>
+    <a class="nav-link" href="../installing-image-puller-on-openshift-using-the-web-console/">Installing Image Puller on OpenShift using the web console</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-image-puller-on-openshift-using-openshift-templates/">Installing using OpenShift templates</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">Installing Image Puller on OpenShift using CLI</a>
   </li>
 </ul>
   </li>
@@ -446,8 +447,11 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Upgrading Che using OperatorHub</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specifying-the-update-approval-strategy/">Specifying the update approval strategy</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-che-using-the-web-console/">Upgrading Che using the web console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
@@ -536,59 +540,41 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../upgrading-che/">Upgrading Che</a></li>
-    <li><a href="./">Upgrading Che using OperatorHub</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../caching-images-for-faster-workspace-start/">Caching images for faster workspace start</a></li>
+    <li><a href="./">Installing Image Puller on OpenShift using CLI</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
-    <a class="version" href="../../../che-7/installation-guide/upgrading-che-using-operatorhub/">old (7.41)</a>
-    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
+    <a class="version" href="../../../che-7/administration-guide/installing-image-puller-on-openshift-using-openshift-templates/">old (7.41)</a>
+    <a class="version" href="../../../stable/administration-guide/installing-image-puller-on-openshift-using-cli/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/upgrading-che-using-operatorhub.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/installing-image-puller-on-openshift-using-cli.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Upgrading Che using OperatorHub</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Installing Image Puller on OpenShift by using the CLI</h1>
 <div class="paragraph">
-<p>This section describes how to upgrade from an earlier minor version using the Operator from OperatorHub in the OpenShift web console.</p>
+<p>You can install the Kubernetes Image Puller on OpenShift by using OpenShift <code>oc</code> management tool.</p>
 </div>
-<div class="paragraph">
-<p>OperatorHub supports <code>Automatic</code> and <code>Manual</code> upgrade strategies:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>Automatic</code></dt>
-<dd>
-<p>The upgrade process starts when a new version of the Operator is published.</p>
-</dd>
-<dt class="hdlist1"><code>Manual</code></dt>
-<dd>
-<p>The update must be manually approved every time the new version of the Operator is published.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="specifying-the-approval-strategy-of-che-in-operatorhub_che"><a class="anchor" href="#specifying-the-approval-strategy-of-che-in-operatorhub_che"></a>Specifying the approval strategy of Che in OperatorHub</h2>
-<div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An administrator account on an instance of OpenShift.</p>
+<p><a href="../defining-the-list-of-images-to-pull/" class="xref page">Defining the list of images to pull</a>.</p>
 </li>
 <li>
-<p>An instance of Che previous minor version or earlier that was installed by using OperatorHub.</p>
+<p><a href="../defining-the-memory-parameters-for-the-image-puller/" class="xref page">Defining the memory parameters for the Image Puller</a>.</p>
+</li>
+<li>
+<p>An active <code>oc</code> session with administrative permissions to the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
 </li>
 </ul>
 </div>
@@ -596,75 +582,160 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Open the OpenShift web console.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> page.</p>
-</li>
-<li>
-<p>Click <strong>Eclipse&#160;Che</strong> in the list of installed Operators.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Subscription</strong> tab.</p>
-</li>
-<li>
-<p>Configure the approval strategy to <code>Automatic</code> or <code>Manual</code>.</p>
-<div class="imageblock">
+<p>Clone the Image Puller repository and get in the directory containing the OpenShift templates:</p>
+<div class="listingblock">
 <div class="content">
-<img src="../_images/installation/specifying-upgrade-strategy.png" alt="Specifying upgrade strategy screenshot">
+<pre>$ git clone https://github.com/che-incubator/kubernetes-image-puller
+$ cd kubernetes-image-puller/deploy/openshift</pre>
 </div>
 </div>
 </li>
-</ol>
+<li>
+<p>Configure the <code>app.yaml</code>, <code>configmap.yaml</code> and <code>serviceaccount.yaml</code> OpenShift templates using following parameters:</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Image Puller OpenShift templates parameters in <code>app.yaml</code></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPLOYMENT_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DEPLOYMENT_NAME</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Image used for the <code>kubernetes-image-puller</code> deployment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quay.io/eclipse/kubernetes-image-puller</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGE_TAG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The image tag to pull</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SERVICEACCOUNT_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the ServiceAccount created and used by the deployment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Image Puller OpenShift templates parameters in <code>configmap.yaml</code></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_LIMIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_LIMIT</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_CPU_REQUEST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_CPU_REQUEST</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.05</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_INTERVAL_HOURS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_INTERVAL_HOURS</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_MEMORY_LIMIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_LIMIT</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"20Mi"</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CACHING_MEMORY_REQUEST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>CACHING_MEMORY_REQUEST</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"10Mi"</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAEMONSET_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DAEMONSET_NAME</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPLOYMENT_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>DEPLOYMENT_NAME</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMAGES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>IMAGES</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java11-maven=quay.io/eclipse/che-java11-maven:nightly;che-theia=quay.io/eclipse/che-theia:next;java-plugin-runner=eclipse/che-remote-plugin-runner-java8:latest;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NAMESPACE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>NAMESPACE</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>k8s-image-puller</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NODE_SELECTOR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>NODE_SELECTOR</code> in the ConfigMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"{}"</code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Image Puller OpenShift templates parameters in <code>serviceaccount.yaml</code></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SERVICEACCOUNT_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the ServiceAccount created and used by the deployment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes-image-puller</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Create an OpenShift project to host the Image Puller:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc new-project <em>&lt;k8s-image-puller&gt;</em></pre>
 </div>
 </div>
+</li>
+<li>
+<p>Process and apply the templates to install the puller:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ oc process -f serviceaccount.yaml | oc apply -f -
+$ oc process -f configmap.yaml | oc apply -f -
+$ oc process -f app.yaml | oc apply -f -</pre>
 </div>
-<div class="sect1">
-<h2 id="manually-upgrading-che-in-operatorhub_che"><a class="anchor" href="#manually-upgrading-che-in-operatorhub_che"></a>Manually upgrading Che in OperatorHub</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>OperatorHub is an assembly point for sharing Operators. The OperatorHub helps you deploy and update applications. The following section describes the process of upgrading Che by using OperatorHub and the <code>Manual</code> approval strategy approach. Use the <code>Manual</code> approval strategy to prevent automatic updates of the Operator with every release.</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>An administrator account on an instance of OpenShift.</p>
-</li>
-<li>
-<p>An instance of Che previous minor version or earlier that was installed by using OperatorHub.</p>
-</li>
-<li>
-<p>The approval strategy in the subscription is <code>Manual</code>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Open the OpenShift web console.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> page.</p>
-</li>
-<li>
-<p>In the list of the installed Operators, click <strong>Eclipse&#160;Che</strong>.</p>
-</li>
-<li>
-<p>Navigate to the <strong>Subscription</strong> tab.</p>
-</li>
-<li>
-<p>Next to the <strong>Upgrade Status</strong>, inspect the upgrades that require approval. The expected message is <strong>1 requires approval</strong>.</p>
-</li>
-<li>
-<p>Click <strong>1 requires approval</strong>.</p>
-</li>
-<li>
-<p>Click <strong>Preview Install Plan</strong>.</p>
-</li>
-<li>
-<p>Review the resources that are available for upgrade and click <strong>Approve</strong>.</p>
 </li>
 </ol>
 </div>
@@ -672,22 +743,22 @@
 <div class="title">Verification steps</div>
 <ol class="arabic">
 <li>
-<p>Navigate to the <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> page.</p>
+<p>Verify the existence of a <em>&lt;kubernetes-image-puller&gt;</em> deployment and a <em>&lt;kubernetes-image-puller&gt;</em> DaemonSet. The DaemonSet needs to have a Pod for each node in the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get deployment,daemonset,pod --namespace <em>&lt;k8s-image-puller&gt;</em></code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Monitor the upgrade progress. When complete, the status changes to <strong>Succeeded</strong> and <strong>Up to date</strong>. The 7.47 version number is visible at the end of the page.</p>
+<p>Verify the values of the <em>&lt;kubernetes-image-puller&gt;</em> <code>ConfigMap</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-dummy hljs" data-lang="dummy">$ oc get configmap <em>&lt;kubernetes-image-puller&gt;</em> --output yaml</code></pre>
+</div>
+</div>
 </li>
 </ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://docs.openshift.com/container-platform/latest/operators/admin/olm-upgrading-operators.html">Upgrading installed Operators</a> section in the OpenShift documentation.</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </article>
   </div>
