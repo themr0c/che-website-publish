@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Advanced configuration options for the Che server component :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/advanced-configuration-options-for-the-che-server-component/">
     <meta name="description" content="Advanced deployment and configuration methods for the Che server component.">
     <meta name="keywords" content="administration guide, configuring, configuration, Che server">
     <meta name="generator" content="Antora 3.0.0">
@@ -11,7 +12,6 @@
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
 <link rel="stylesheet" href="../../../../docs/_/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel="icon" href="../../../../docs/_/img/favicon.ico" type="image/x-icon">
-<meta name="robots" content="noindex">
 <script>var uiRootPath = '../../../../docs/_'</script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','UA-37306001-2')</script>
@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="next">
+<div class="nav-container" data-component="docs" data-version="stable">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -510,20 +510,20 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">next</span>
+    <span class="version">stable</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <a class="title" href="../../overview/introduction-to-eclipse-che/">Documentation</a>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">next</a>
+        <li class="version">
+          <a href="../../../next/overview/introduction-to-eclipse-che/">next</a>
         </li>
         <li class="version">
           <a href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
         </li>
-        <li class="version">
-          <a href="../../../7.48.x/overview/introduction-to-eclipse-che/">7.48.x</a>
+        <li class="version is-current is-latest">
+          <a href="../../overview/introduction-to-eclipse-che/">stable</a>
         </li>
       </ul>
     </li>
@@ -546,14 +546,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">next</button>
+  <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version is-current" href="./">next</a>
-    <a class="version" href="../../../che-7/installation-guide/advanced-configuration-options-for-the-che-server-component/">old (7.41)</a>
-    <a class="version is-missing" href="../../../7.48.x/overview/introduction-to-eclipse-che/">7.48.x</a>
+    <a class="version" href="../../../next/administration-guide/advanced-configuration-options-for-the-che-server-component/">next</a>
+    <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
+    <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/master/modules/administration-guide/pages/advanced-configuration-options-for-the-che-server-component.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.48.x/modules/administration-guide/pages/advanced-configuration-options-for-the-che-server-component.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -1727,7 +1727,7 @@ spec:
 <div class="sect3">
 <h4 id="_che_infra_kubernetes_namespace_label"><a class="anchor" href="#_che_infra_kubernetes_namespace_label"></a><code>CHE_INFRA_KUBERNETES_NAMESPACE_LABEL</code></h4>
 <div class="paragraph">
-<p>Defines whether che-server should try to label the workspace namespaces.</p>
+<p>Defines whether che-server should try to label the workspace namespaces. NOTE: It is strongly recommended to keep the value of this property set to true. If false, the new workspace namespaces will not be labeled automatically and therefore not recognized by the Che operator making some features of DevWorkspaces not working. If false, an administrator is required to label the namespaces manually using the labels specified in che.infra.kubernetes.namespace.labels. If you want to manage the namespaces yourself, make sure to follow https://www.eclipse.org/che/docs/stable/administration-guide/provisioning-namespaces-in-advance/. Any additional labels present on the namespace are kept in place and do not affect the functionality. Also note that the the administrator is free to pre-create and label the namespaces manually even if this property is true. No updates to the namespaces are done if they already conform to the labeling requirements.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1757,7 +1757,7 @@ spec:
 <div class="sect3">
 <h4 id="_che_infra_kubernetes_namespace_labels"><a class="anchor" href="#_che_infra_kubernetes_namespace_labels"></a><code>CHE_INFRA_KUBERNETES_NAMESPACE_LABELS</code></h4>
 <div class="paragraph">
-<p>List of labels to find namespace that are used for Che Workspaces. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.annotations</code>.  - actively label namespace with any workspace.</p>
+<p>List of labels to find namespace that are used for Che Workspaces. They are used to:  - find prepared namespace for users in combination with <code>che.infra.kubernetes.namespace.annotations</code>.  - actively label namespace with any workspace. NOTE: It is strongly recommended not to change the value of this property because the Che operator relies on these labels and their precise values when reconciling DevWorkspaces. If this configuration is changed, the namespaces will not be automatically recognized by the Che operator as workspace namespaces unless manually labeled as such using the default labels and values. Additional labels on the namespace do not affect the functionality.</p>
 </div>
 <div class="dlist">
 <dl>
