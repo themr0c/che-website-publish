@@ -642,154 +642,24 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Define storage class names</p>
-<div class="paragraph">
-<p>To do so, use one of the following methods:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Use arguments for the <code>server:deploy</code> command</strong></p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>Provide the storage class name for the PostgreSQL PVC</p>
-<div class="paragraph">
-<p>Use the <code>chectl</code> <code>server:deploy</code> command with the <code>--postgres-pvc-storage-class-name</code> flag:</p>
-</div>
+<p>Define storage class names: configure the <code>CheCluster</code> Custom Resource, and install Che. See <a href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/" class="xref page">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a>.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ chectl server:deploy -p minikube -a operator --postgres-pvc-storage-class-name=postgress-storage</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Provide the storage class name for the Che workspaces</p>
-<div class="paragraph">
-<p>Use the <code>server:deploy</code> command with the <code>--workspace-pvc-storage-class-name</code> flag:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:deploy -p minikube -a operator --workspace-pvc-storage-class-name=workspace-storage</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For  Che workspaces, the storage class name has different behavior depending on the workspace PVC strategy.</p>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p><strong>Define storage class names using a Custom Resources YAML file:</strong></p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>Create a YAML file with Custom Resources defined for the Che installation.</p>
-</li>
-<li>
-<p>Define fields: <code>spec#storage#postgresPVCStorageClassName</code> and <code>spec#storage#workspacePVCStorageClassName</code>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
-kind: CheCluster
-metadata:
-  name: eclipse-che
-spec:
-  # ...
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
   storage:
-    # ...
     # keep blank unless you need to use a non default storage class for PostgreSQL PVC
     postgresPVCStorageClassName: 'postgres-storage'
-    # ...
     # keep blank unless you need to use a non default storage class for workspace PVC(s)
-    workspacePVCStorageClassName: 'workspace-storage'
-    # ...</code></pre>
+    workspacePVCStorageClassName: 'workspace-storage'</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Start the che server with your Custom Resources:</p>
+<p>Define the persistent volume for a PostgreSQL database in a <code>che-postgres-pv.yaml</code> file:</p>
 <div class="listingblock">
+<div class="title"><code>che-postgres-pv.yaml</code> file</div>
 <div class="content">
-<pre>$ chectl server:deploy -p minikube -a operator --che-operator-cr-yaml=/path/to/custom/che/resource/org_v1_che_cr.yaml</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Configure Che to store workspaces in one persistent volume and a PostreSQL database in the second one:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Modify your Custom Resources YAML file:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Set <code>pvcStrategy</code> as <code>common</code>.</p>
-</li>
-<li>
-<p>Configure Che to start workspaces in a single namespace.</p>
-</li>
-<li>
-<p>Define storage class names for <code>postgresPVCStorageClassName</code> and <code>workspacePVCStorageClassName</code>.</p>
-</li>
-<li>
-<p>Example of the YAML file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: org.eclipse.che/v1
-kind: CheCluster
-metadata:
-  name: eclipse-che
-spec:
-  server:
-    # ...
-    workspaceNamespaceDefault: <em>che-ws</em>-<em>&lt;username&gt;</em>
-    # ...
-  storage:
-    # ...
-    # Defaults to common
-    pvcStrategy: 'common'
-    # ...
-    # keep blank unless you need to use a non default storage class for PostgreSQL PVC
-    postgresPVCStorageClassName: 'postgres-storage'
-    # ...
-    # keep blank unless you need to use a non default storage class for workspace PVC(s)
-    workspacePVCStorageClassName: 'workspace-storage'
-    # ...</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Start the che server with your Custom Resources:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:deploy -p minikube -a operator --che-operator-cr-yaml=/path/to/custom/che/resource/org_v1_che_cr.yaml</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Bind static provisioned volumes using class names:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Define the persistent volume for a PostgreSQL database:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># che-postgres-pv.yaml
-apiVersion: v1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv-volume
@@ -807,11 +677,11 @@ spec:
 </div>
 </li>
 <li>
-<p>Define the persistent volume for a Che workspace:</p>
+<p>Define the persistent volume for a Che workspace in a <code>che-postgres-pv.yaml</code> file:</p>
 <div class="listingblock">
+<div class="title"><code>che-workspace-pv.yaml</code> file</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># che-workspace-pv.yaml
-apiVersion: v1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: workspace-pv-volume
@@ -830,16 +700,13 @@ spec:
 </li>
 <li>
 <p>Bind the two persistent volumes:</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl apply -f che-workspace-pv.yaml -f che-postgres-pv.yaml</pre>
 </div>
+</div>
+</li>
+</ol>
 </div>
 <div class="admonitionblock note">
 <table>
