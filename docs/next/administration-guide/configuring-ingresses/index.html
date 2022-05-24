@@ -251,7 +251,7 @@
     <a class="nav-link" href="../installing-che-locally/">Installing Che locally</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-che-on-codeready-containers/">Installing Che on CodeReady Containers</a>
+    <a class="nav-link" href="../installing-che-on-red-hat-openshift-local/">Installing Che on Red Hat OpenShift Local</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../installing-che-on-minikube/">Installing Che on Minikube</a>
@@ -562,7 +562,7 @@
 <article class="doc">
 <h1 class="page">Adding labels and annotations to Kubernetes Ingress</h1>
 <div class="paragraph">
-<p>Some organizations require labels and annotations on eachKubernetes Ingress. This procedure describes how to configure labels and annotations.</p>
+<p>You can configure Kubernetes Ingress labels and annotations, if your organization requires them.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -575,62 +575,37 @@
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>To configure labels for Kubernetes Ingress, update the Custom Resource:</p>
-<div class="admonitionblock important">
+<p>Configure the <code>CheCluster</code> Custom Resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  server:
+    cheServerIngress:
+      labels: <em>&lt;labels&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+      annotations: <em>&lt;annotations&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
+    customCheProperties:
+      CHE_INFRA_KUBERNETES_INGRESS_LABELS: <em>&lt;labels&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+      CHE_INFRA_KUBERNETES_INGRESS_ANNOTATIONS<em>_</em>_JSON: "<em>&lt;annotations&gt;</em>" <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Use commas to separate labels: <code>key1=value1,key2=value2</code>.
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A comma-separated list of labels for Kubernetes Ingress: <code>key1=value1,key2=value2</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Annotations for Kubernetes Ingress in JSON format: <code>{"key1": "value1", "key2" : "value2"}</code>.</td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/cheServerIngress/labels", '\
-'"value": "<em>&lt;labels for a che server ingress&gt;</em>"}]'
-
-$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/customCheProperties/CHE_INFRA_KUBERNETES_INGRESS_LABELS", '\
-'"value": "<em>&lt;labels for a workspace ingress&gt;</em>"}]'</pre>
-</div>
-</div>
 </li>
-<li>
-<p>To configure annotations for Kubernetes Ingress, update the Custom Resource with the following commands:</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Use objects to specify annotations: <code>{"key1": "value1", "key2" : "value2"}</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/cheServerIngress/annotations", '\
-'"value": <em>&lt;annotations for a che server ingress&gt;</em>}]'
-
-$ kubectl patch checluster/eclipse-che -n eclipse-che --type=json -p \
-'[{"op": "replace", "path": "/spec/server/customCheProperties/CHE_INFRA_KUBERNETES_INGRESS_ANNOTATIONS<em>_</em>_JSON", '\
-'"value": "<em>&lt;annotations for a workspace ingress in json format&gt;</em>"}]'</pre>
-</div>
-</div>
-</li>
-</ol>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
