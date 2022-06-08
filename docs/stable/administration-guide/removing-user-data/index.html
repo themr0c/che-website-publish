@@ -430,12 +430,18 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-the-administrative-user/">Configuring the administrative user</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="./">Removing user data</a>
   </li>
 </ul>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../managing-workloads-using-the-che-server-api/">Using the Che server API</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -565,207 +571,52 @@
 <h2 id="_removing_user_data_according_to_gdpr"><a class="anchor" href="#_removing_user_data_according_to_gdpr"></a>Removing user data according to GDPR</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The General Data Protection Regulation (<a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">GDPR</a>) law enforces the right for individuals to have personal data erased.</p>
-</div>
-<div class="paragraph">
-<p>The following procedure describes how to remove the Che user’s data.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The following commands use the default Kubernetes namespace or OpenShift project, <code>eclipse-che</code>, as a user&#8217;s example for the <code>-n</code> option.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>You can remove the Che user’s data using the Che API.
+Following this procedure makes the service compliant to EU General Data Protection Regulation (<a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">GDPR</a>) that enforces the right for individuals to have personal data erased.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A user or an administrator authorization token. To delete the Che data bound to a user account, <code>admin</code> privileges are required. The <code>admin</code> is a special Che administrator account that should be pre-created and enabled using the <code>CHE_SYSTEM_ADMIN__NAME</code> and <code>CHE_SYSTEM_SUPER__PRIVILEGED__MODE = true</code> properties of the Che Custom Resource.</p>
-<div class="listingblock">
-<div class="content">
-<pre>spec:
- server:
-   customCheProperties:
-     CHE_SYSTEM_SUPER__PRIVILEGED__MODE: 'true'
-     CHE_SYSTEM_ADMIN__NAME: '<em>&lt;admin-name&gt;</em>'</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If needed, use kubectl commands below for patching the Che Custom Resource:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster/eclipse-che \
-  --type merge \
-  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_SUPER__PRIVILEGED__MODE": "true"} } }}' \
-  -n <em>eclipse-che</em></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl patch checluster/eclipse-che \
-  --type merge \
-  -p '{ "spec": { "server": {"customCheProperties": {"CHE_SYSTEM_ADMIN__NAME": "<em>&lt;admin-name&gt;</em>"} } }}' \
-  -n <em>eclipse-che</em></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>All Che system permissions are granted to the administrative user. To configure the administrative user, use the <code>CHE_SYSTEM_ADMIN__NAME</code> property. The default value is <code>admin</code>. The system permissions are granted when the Che server starts. If the user record is not in the Che user database, the permissions are granted after the first login of the user.</p>
-</div>
-<div class="ulist">
-<div class="title">Authorization token privileges:</div>
-<ul>
-<li>
-<p><code>admin</code> - Can delete all personal data of all users</p>
+<p>An active session with administrative permissions to Che. See <a href="../configuring-the-administrative-user/" class="xref page">Configuring the administrative user</a>.</p>
 </li>
 <li>
-<p><code>user</code> - Can delete only the data related to the user</p>
+<p>An active <code>oc</code> session with administrative permissions to the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>A user or an administrator is logged in the OpenShift cluster with deployed Che.</p>
-</li>
-<li>
-<p>A user ID is obtained. Get the user ID using the commands below:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>For the current user:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -X GET \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  'https://<em>&lt;che-host&gt;</em>/api/user'</pre>
-</div>
-</div>
-</li>
-<li>
-<p>To find a user by name:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -X GET \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  'https://<em>&lt;che-host&gt;</em>/api/user/find?name=<em>&lt;username&gt;</em>'</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Example of obtaining a user ID</div>
-<p>This example uses <code>vparfono</code> as a local user name.</p>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -X GET \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  'https://che-vp-che.apps.che-dev.x6e0.p1.openshiftapps.com/api/user/find?name=vparfono'</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The user ID is at the bottom of the curl command output.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
- "name": "vparfono",
- "links": [
-   {
-.
-.
-.
-   }
- ],
- "email": "vparfono@redhat.com",
- "id": "921b6f33-2657-407e-93a6-fb14cf2329ce"
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Procedure</div>
-<ul>
+<ol class="arabic">
 <li>
-<p>Remove the data using the API:</p>
+<p>Get the <em>&lt;username&gt;</em> user <em>&lt;id&gt;</em> <code>id</code>: navigate to https://<em>&lt;che-host&gt;</em>/swagger/#/user/find_1, click <b class="button">Try it out</b>, set <strong>name</strong>: <em>&lt;username&gt;</em>, and click <b class="button">Execute</b>. Scroll down the <strong>Response body</strong> to find the <code>id</code> value.</p>
+</li>
+<li>
+<p>Remove the <em>&lt;id&gt;</em> user data that Che server manages, such as user preferences: navigate to https://<em>&lt;che-host&gt;</em>/swagger/#/user/remove, click <b class="button">Try it out</b>, set <strong>id</strong>: <em>&lt;id&gt;</em>, and click <b class="button">Execute</b>. Expect a <code>204</code> response code:</p>
+</li>
+<li>
+<p>Delete the user namespace to remove all Kubernetes resources bound to the user, such as workspaces, secrets, and configmaps.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ curl -i -X DELETE \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  https://<em>&lt;che-host&gt;</em>/api/user/<em>&lt;user-id&gt;</em></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ kubectl delete namespace <em>&lt;username&gt;</em>-che</code></pre>
 </div>
 </div>
 </li>
-</ul>
+</ol>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The procedure can be also executed using the Swagger UI available on https://<em>&lt;che-host&gt;</em>/swagger</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<div class="title">Verification</div>
-<p>Running the following command returns code <code>204</code> as the API response:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ curl -i -X DELETE \
-  --header 'Authorization: Bearer <em>&lt;user-token&gt;</em>' \
-  https://<em>&lt;che-host&gt;</em>/api/user/<em>&lt;user-id&gt;</em></pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The following procedure only removes the user on the Che level. For removing all Kubernetes user data including namespaces from the cluster, the Kubernetes cluster-admin needs to explicitly remove the Kubernetes resources bound to the user.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
+<div class="ulist">
 <div class="title">Additional resources</div>
-<p>To remove the data of all users, follow the instructions for <a href="../uninstalling-che/" class="xref page">Uninstalling Che</a>.</p>
+<ul>
+<li>
+<p><a href="../managing-workloads-using-the-che-server-api/" class="xref page">Managing Che server workloads using the Che server API</a>.</p>
+</li>
+<li>
+<p><a href="../configuring-workspace-target-namespace/" class="xref page">Configuring a user namespace name for automatic provisioning</a>.</p>
+</li>
+<li>
+<p>To remove the data of all users, see <a href="../uninstalling-che/" class="xref page">Uninstalling Che</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
