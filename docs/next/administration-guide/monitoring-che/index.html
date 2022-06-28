@@ -645,15 +645,27 @@ You can configure this behaviour.</p>
 <p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics_che">Enabling and exposing Che server JVM metrics</a>.</p>
 </li>
 <li>
-<p>Prometheus  2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding Service. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Procedure</div>
-<ul>
+<ol class="arabic">
 <li>
 <p>Configure Prometheus to scrape metrics from port <code>8087</code>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a> already creates the <code>prometheus-config</code> ConfigMap with an empty configuration. To provide the Prometheus configuration details, edit the <code>data</code> field of the ConfigMap.
+</td>
+</tr>
+</table>
+</div>
 <div class="exampleblock">
 <div class="title">Example 1. Prometheus configuration</div>
 <div class="content">
@@ -669,9 +681,9 @@ data:
         scrape_interval:     5s             <i class="conum" data-value="1"></i><b>(1)</b>
         evaluation_interval: 5s             <i class="conum" data-value="2"></i><b>(2)</b>
       scrape_configs:                       <i class="conum" data-value="3"></i><b>(3)</b>
-        - job_name: 'che'
+        - job_name: 'Che Server'
           static_configs:
-            - targets: ['[che-host]:8087']  <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+            - targets: ['che-host.<em>&lt;Che_namespace&gt;</em>:8087']  <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -686,30 +698,56 @@ data:
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The Resources that Prometheus monitors. In the default configuration, a single job, <code>che</code>, scrapes the time series data exposed by Che Server.</td>
+<td>The resources that Prometheus monitors. In the default configuration, a single job, <code>Che Server</code>, scrapes the time series data exposed by Che Server.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The scrape metrics from port <code>8087</code>.</td>
+<td>The scrape target for the metrics from port <code>8087</code>. Replace <code><em>&lt;Che_namespace&gt;</em></code> with the Che namespace. The default Che namespace is <code>eclipse-che</code>.</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 </li>
-</ul>
+<li>
+<p>Scale the <code>Prometheus</code> Deployment down and up to read the updated ConfigMap from the previous step.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl scale --replicas=0 deployment/prometheus -n monitoring &amp;&amp; kubectl scale --replicas=1 deployment/prometheus -n monitoring</code></pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="olist arabic">
-<div class="title">Verification steps</div>
+<div class="title">Verification</div>
 <ol class="arabic">
 <li>
-<p>View the metrics in the Prometheus console at <code>http://<em>&lt;prometheus-url&gt;</em>/metrics</code>.</p>
+<p>Use port forwarding to access the <code>Prometheus</code> Service locally:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl port-forward svc/prometheus 9090:9090 -n monitoring</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Query the metrics in the Prometheus console from <code>http://<em>&lt;prometheus-url&gt;</em>/graph</code>. For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
+<p>Verify that all targets are up by viewing the <code>targets</code> endpoint at <code>localhost:9090/targets</code>.</p>
 </li>
 <li>
-<p>Verify that all targets are up by viewing the targets endpoint at <code>http://<em>&lt;prometheus-url&gt;</em>/targets</code>.</p>
+<p>Use the Prometheus console to view and query metrics:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>View metrics at <code>localhost:9090/metrics</code>.</p>
+</li>
+<li>
+<p>Query metrics from <code>localhost:9090/graph</code>.</p>
+<div class="paragraph">
+<p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
+</div>
+</li>
+</ul>
+</div>
 </li>
 </ol>
 </div>
@@ -742,7 +780,7 @@ data:
 <p>Prometheus is collecting metrics on the Che cluster. See <a href="../monitoring-with-prometheus-and-grafana/" class="xref page">Monitoring Che with Prometheus and Grafana</a>.</p>
 </li>
 <li>
-<p>Grafana 6.0 or later is running on port <code>3000</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
+<p>Grafana 6.0 or later is running on port <code>3000</code> with a corresponding Service. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
 </li>
 </ul>
 </div>

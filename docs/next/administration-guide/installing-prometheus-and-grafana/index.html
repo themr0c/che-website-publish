@@ -594,7 +594,7 @@
 <article class="doc">
 <h1 class="page">Installing Prometheus and Grafana</h1>
 <div class="paragraph">
-<p>You can install Prometheus and Grafana by applying <code>template.yaml</code> that consists of a Deployment and Service for both Prometheus and Grafana.</p>
+<p>You can install Prometheus and Grafana by applying <code>template.yaml</code>. The <code>template.yaml</code> file in this example provides a monitoring stack of basic configuration, Deployments and Services to get started with Prometheus and Grafana.</p>
 </div>
 <div class="paragraph">
 <p>Alternatively, you can use the <a href="https://github.com/prometheus-operator/prometheus-operator">Prometheus Operator</a> and <a href="https://github.com/grafana-operator/grafana-operator">Grafana Operator</a>.</p>
@@ -611,12 +611,25 @@
 <div class="title">Procedure</div>
 <p>To install Prometheus and Grafana by using <code>template.yaml</code>:</p>
 </div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Apply <code>template.yaml</code> to the cluster by running <code>kubectl apply -f template.yaml</code>.</p>
+<p>Create a new namespace, <code>monitoring</code>, for Prometheus and Grafana:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl create namespace monitoring</code></pre>
+</div>
+</div>
 </li>
-</ul>
+<li>
+<p>Apply <code>template.yaml</code> in the <code>monitoring</code> namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f template.yaml -n monitoring</pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="exampleblock">
 <div class="title">Example 1. <code>template.yaml</code></div>
@@ -691,6 +704,7 @@ spec:
       labels:
         app: prometheus
     spec:
+      serviceAccountName: prometheus
       containers:
       - image: quay.io/prometheus/prometheus:v2.36.0
         name: prometheus
@@ -716,7 +730,12 @@ kind: ConfigMap
 metadata:
   name: prometheus-config
 data:
-  prometheus.yml: |
+  prometheus.yml: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
 ---</code></pre>
 </div>
 </div>
