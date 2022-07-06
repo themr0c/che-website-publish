@@ -584,7 +584,7 @@
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.48.x/modules/administration-guide/pages/monitoring-the-dev-workspace-operator.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.50.x/modules/administration-guide/pages/monitoring-the-dev-workspace-operator.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -609,13 +609,13 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The <a href="https://github.com/devfile/devworkspace-operator/blob/v0.10.0/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics.Service.yaml"><code>devworkspace-controller-metrics</code> Service</a> is exposing metrics on port <code>8443</code>.</p>
+<p>The <code>devworkspace-controller-metrics</code> Service is exposing metrics on port <code>8443</code>. This is preconfigured by default.</p>
 </li>
 <li>
-<p>The <code>devworkspace-webhookserver</code> Service is exposing metrics on port <code>9443</code>. By default, the Service exposes metrics on port <code>9443</code>.</p>
+<p>The <code>devworkspace-webhookserver</code> Service is exposing metrics on port <code>9443</code>. This is preconfigured by default.</p>
 </li>
 <li>
-<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding Service. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
 </li>
 </ul>
 </div>
@@ -623,7 +623,7 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a <code>ClusterRoleBinding</code> to bind the <code>ServiceAccount</code> associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> <code>ClusterRole</code>.</p>
+<p>Create a ClusterRoleBinding to bind the ServiceAccount associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> ClusterRole. For the <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a>, the name of the ServiceAccount to be be used is <code>prometheus</code>.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -631,31 +631,13 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Without the <code>ClusterRoleBinding</code>, you cannot access Dev Workspace metrics because access is protected with role-based access control (RBAC).
+Without the ClusterRoleBinding, you cannot access Dev Workspace metrics because access is protected with role-based access control (RBAC).
 </td>
 </tr>
 </table>
 </div>
 <div class="exampleblock">
-<div class="title">Example 1. ClusterRole</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: devworkspace-controller-metrics-reader
-rules:
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. ClusterRoleBinding</div>
+<div class="title">Example 1. ClusterRoleBinding</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -665,8 +647,8 @@ metadata:
   name: devworkspace-controller-metrics-binding
 subjects:
   - kind: ServiceAccount
-    name: <em>&lt;ServiceAccount_name_associated_with_the_Prometheus_Pod&gt;</em>
-    namespace: <em>&lt;Prometheus_namespace&gt;</em>
+    name: prometheus
+    namespace: monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -678,8 +660,20 @@ roleRef:
 </li>
 <li>
 <p>Configure Prometheus to scrape metrics from port <code>8443</code> exposed by the <code>devworkspace-controller-metrics</code> Service and from port <code>9443</code> exposed by the <code>devworkspace-webhookserver</code> Service.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a> already creates the <code>prometheus-config</code> ConfigMap with an empty configuration. To provide the Prometheus configuration details, edit the <code>data</code> field of the ConfigMap.
+</td>
+</tr>
+</table>
+</div>
 <div class="exampleblock">
-<div class="title">Example 3. Prometheus configuration</div>
+<div class="title">Example 2. Prometheus configuration</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -687,6 +681,7 @@ roleRef:
 kind: ConfigMap
 metadata:
   name: prometheus-config
+  namespace: monitoring
 data:
   prometheus.yml: |-
       global:
@@ -701,7 +696,7 @@ data:
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['devworkspace-controller-metrics:8443'] <i class="conum" data-value="4"></i><b>(4)</b>
+            - targets: ['devworkspace-controller-metrics.<em>&lt;DWO_namespace&gt;</em>:8443'] <i class="conum" data-value="4"></i><b>(4)</b>
         - job_name: 'DevWorkspace webhooks'
           scheme: https
           authorization:
@@ -710,7 +705,7 @@ data:
           tls_config:
             insecure_skip_verify: true
           static_configs:
-            - targets: ['devworkspace-webhookserver:9443'] <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+            - targets: ['devworkspace-webhookserver.<em>&lt;DWO_namespace&gt;</em>:9443'] <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -729,40 +724,56 @@ data:
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The scrape metrics from port <code>8443</code>.</td>
+<td>The scrape target for the metrics from port <code>8443</code>. Replace <code><em>&lt;DWO_namespace&gt;</em></code> with the namespace where the <code>devworkspace-controller-metrics</code> <code>Service</code> is located.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The scrape metrics from port <code>9443</code>.</td>
+<td>The scrape target for the metrics from port <code>9443</code>. Replace <code><em>&lt;DWO_namespace&gt;</em></code> with the namespace where the <code>devworkspace-webhookserver</code> <code>Service</code> is located.</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 </li>
+<li>
+<p>Scale the <code>Prometheus</code> Deployment down and up to read the updated ConfigMap from the previous step.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl scale --replicas=0 deployment/prometheus -n monitoring &amp;&amp; kubectl scale --replicas=1 deployment/prometheus -n monitoring</code></pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 <div class="olist arabic">
-<div class="title">Verification steps</div>
+<div class="title">Verification</div>
 <ol class="arabic">
+<li>
+<p>Use port forwarding to access the <code>Prometheus</code> Service locally:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl port-forward svc/prometheus 9090:9090 -n monitoring</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that all targets are up by viewing the targets endpoint at <code>localhost:9090/targets</code>.</p>
+</li>
 <li>
 <p>Use the Prometheus console to view and query metrics:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>View the metrics at <code>http://<em>&lt;prometheus_url&gt;</em>/metrics</code>.</p>
+<p>View metrics at <code>localhost:9090/metrics</code>.</p>
 </li>
 <li>
-<p>Query metrics from <code>http://<em>&lt;prometheus_url&gt;</em>/graph</code>.</p>
+<p>Query metrics from <code>localhost:9090/graph</code>.</p>
 <div class="paragraph">
 <p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
 </div>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>Verify that all targets are up by viewing the targets endpoint at <code>http://<em>&lt;prometheus-url&gt;</em>/targets</code>.</p>
 </li>
 </ol>
 </div>
@@ -908,7 +919,7 @@ data:
 <p>Grafana version 7.5.3 or later.</p>
 </li>
 <li>
-<p>Grafana is running on port <code>3000</code> with a corresponding <code>service</code> and <code>route</code>. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
+<p>Grafana is running on port <code>3000</code> with a corresponding Service. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
 </li>
 </ul>
 </div>
