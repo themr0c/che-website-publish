@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/checluster-custom-resource-fields-reference/">
     <meta name="description" content="`CheCluster` Custom Resource fields reference">
     <meta name="keywords" content="administration guide, checluster, custom resource">
-    <meta name="generator" content="Antora 3.0.1">
+    <meta name="generator" content="Antora 3.0.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
 <link rel="stylesheet" href="../../../../docs/_/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -475,7 +475,7 @@
     <a class="nav-link" href="../upgrading-the-chectl-management-tool/">Upgrading the chectl management tool</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che 7.41 on Red Hat OpenShift</a>
+    <a class="nav-link" href="../upgrading-che-7-41-on-openshift/">Upgrading Che v7.41 on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../specifying-the-update-approval-strategy/">Specifying the update approval strategy</a>
@@ -685,7 +685,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheFlavor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. The value of this flag is ignored. Specifies a variation of the installation. The options are <code>che</code> for upstream Che installations, or <code>devspaces</code> for <a href="https://developers.redhat.com/products/openshift-dev-spaces/overview">Red Hat OpenShift Dev Spaces</a> installation. Override the default value only on necessary occasions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. The value of this flag is ignored. Specifies a variation of the installation. The options are  <code>che</code> for upstream Che installations or <code>devspaces</code> for Red Hat OpenShift Dev Spaces (formerly Red Hat CodeReady Workspaces) installation</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cheHost</p></td>
@@ -924,6 +924,14 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated in favor of <code>disableInternalClusterSVCNames</code>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workspaceDefaultComponents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default components applied to DevWorkspaces. These default components are meant to be used when a Devfile does not contain any components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workspaceDefaultEditor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default editor to workspace create with. It could be a plugin ID or a URI. The plugin ID must have <code>publisher/plugin/version</code>. The URI must start from <code>http</code>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workspaceNamespaceDefault</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines Kubernetes default namespace in which user&#8217;s workspaces are created for a case when a user does not override it. It&#8217;s possible to use <code>&lt;username&gt;</code>, <code>&lt;userid&gt;</code> and <code>&lt;workspaceid&gt;</code> placeholders, such as che-workspace-&lt;username&gt;. In that case, a new namespace will be created for each user or workspace.</p></td>
 </tr>
@@ -1090,6 +1098,10 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public URL of the Identity Provider server (Keycloak / RH-SSO server). Set this ONLY when a use of an external Identity Provider is needed. See the <code>externalIdentityProvider</code> field. By default, this will be automatically calculated and set by the Operator.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityToken</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity token to be passed to upstream. There are two types of tokens supported: <code>id_token</code> and <code>access_token</code>. Default value is <code>id_token</code>. This field is specific to Che installations made for Kubernetes only and ignored for OpenShift.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">initialOpenShiftOAuthUser</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. The value of this flag is ignored. For operating with the OpenShift OAuth authentication, create a new user account since the kubeadmin can not be used. If the value is true, then a new OpenShift OAuth user will be created for the HTPasswd identity provider. If the value is false and the user has already been created, then it will be removed. If value is an empty, then do nothing. The user&#8217;s credentials are stored in the <code>openshift-oauth-user-credentials</code> secret in 'openshift-config' namespace by Operator. Note that this solution is Openshift 4 platform-specific.</p></td>
 </tr>
@@ -1100,6 +1112,10 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">oAuthClientName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the OpenShift <code>OAuthClient</code> resource used to setup identity federation on the OpenShift side. Auto-generated when left blank. See also the <code>OpenShiftoAuth</code> field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oAuthScope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access Token Scope. This field is specific to Che installations made for Kubernetes only and ignored for OpenShift.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">oAuthSecret</p></td>
@@ -1256,6 +1272,10 @@ spec:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">gitHubOAuthProvisioned</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether an Identity Provider instance, Keycloak or RH-SSO, has been configured to integrate with the GitHub OAuth.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gitServerTLSCertificateConfigMapName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ConfigMap containing certificates to propagate to the Che components and to provide particular configuration for Git.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">helpLink</p></td>
