@@ -696,7 +696,7 @@ If the cluster is configured with an intermediate certificate, then the whole ch
 <h2 id="_adding_new_ca_certificates_into_che"><a class="anchor" href="#_adding_new_ca_certificates_into_che"></a>Adding new CA certificates into Che</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following procedure is applicable for already installed and running instances and for instances that are to be installed.</p>
+<p>Certificate files are typically stored as Base64 files, with extensions such as <code>.pem</code>, <code>.crt</code>, <code>.ca-bundle</code>, and others. All Secrets that hold certificate files should use the Base64-encoded certificate rather than binary-encoded certificate. The following procedure is applicable for already installed and running instances and for instances that are to be installed.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -706,6 +706,19 @@ If the cluster is configured with an intermediate certificate, then the whole ch
 </li>
 <li>
 <p>Namespace for Che exists.</p>
+</li>
+<li>
+<p>Che already uses some reserved file names to automatically inject certificates into the ConfigMap, so avoid using the following reserved file names to save your certificates:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ca-bundle.crt</code></p>
+</li>
+<li>
+<p><code>ca.crt</code></p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -724,17 +737,11 @@ If the cluster is configured with an intermediate certificate, then the whole ch
 <div class="ulist">
 <ul>
 <li>
-<p>Certificate files are typically stored as Base64 ASCII files, such as <code>.pem</code>, <code>.crt</code>, <code>.ca-bundle</code>. But, they can also be binary-encoded, for example, as <code>.cer</code> files. All Secrets that hold certificate files should use the Base64 ASCII certificate rather than the binary-encoded certificate.</p>
-</li>
-<li>
-<p>Che already uses some reserved file names to automatically inject certificates into the ConfigMap, so you should avoid using the following reserved file names to save your certificates:</p>
+<p>A certificate with the <code>BEGIN TRUSTED CERTIFICATE</code> introductory phrase is likely in the PEM <code>TRUSTED CERTIFICATE</code> format, which is not supported. Convert it to the supported <code>CERTIFICATE</code> format with the following command:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ca-bundle.crt</code></p>
-</li>
-<li>
-<p><code>ca.crt</code></p>
+<p><code>openssl x509 -in cert.pem -out cert.cer</code></p>
 </li>
 </ul>
 </div>
