@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Authenticating yourself to a Git server from a workspace :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/authenticating-yourself-to-a-git-server-from-a-workspace/">
-    <meta name="description" content="Authenticating yourself to a Git server from a workspace">
-    <meta name="keywords" content="authentication, authenticate, github, gitlab, bitbucket">
+    <title>Using Git credentials :: Eclipse Che Documentation</title>
+    <meta name="description" content="Using Git credentials">
+    <meta name="keywords" content="Git, credentials, Git-credentials">
     <meta name="generator" content="Antora 3.0.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -124,8 +123,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../basic-actions-you-can-perform-on-a-workspace/">Basic actions you can perform on a workspace</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Authenticating yourself to a Git server from a workspace</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../authenticating-to-a-git-server-from-a-workspace/">Authenticating to a Git server from a workspace</a>
   </li>
 </ul>
   </li>
@@ -148,8 +147,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../using-a-git-credentials-store/">Using a Git credentials store</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Using Git credentials</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -598,8 +597,8 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../user-onboarding/">User onboarding</a></li>
-    <li><a href="./">Authenticating yourself to a Git server from a workspace</a></li>
+    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
+    <li><a href="./">Using Git credentials</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -607,43 +606,281 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/authenticating-yourself-to-a-git-server-from-a-workspace/">stable</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/main/modules/end-user-guide/pages/authenticating-yourself-to-a-git-server-from-a-workspace.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/main/modules/end-user-guide/pages/using-git-credentials.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Authenticating yourself to a Git server from a workspace</h1>
+<h1 class="page">Using Git credentials</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>In a workspace, you can run Git commands that require user authentication like cloning a remote private Git repository or pushing to a remote public or private Git repository.</p>
+<p>As an alternative to the <a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">OAuth for GitHub, GitLab, or Bitbucket</a> that is configured by the administrator of your organization&#8217;s Che instance, you can apply your Git credentials, a credentials store and access token, as Kubernetes Secrets.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-a-git-credentials-store_che"><a class="anchor" href="#using-a-git-credentials-store_che"></a>Using a Git credentials store</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the administrator of your organization&#8217;s Che instance has not configured <a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">OAuth for GitHub, GitLab, or Bitbucket</a>, you can apply your Git credentials store as a Kubernetes Secret.</p>
 </div>
 <div class="paragraph">
-<p>To configure user authentication to a Git server from a workspace, Che provides two options:</p>
+<p>Mounting your Git credentials store as a Secret results in the Dev Workspace Operator applying your Git credentials to the <code>.gitconfig</code> file in the workspace container.</p>
+</div>
+<div class="paragraph">
+<p>Apply the Kubernetes Secret in your user namespace of the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</div>
+<div class="paragraph">
+<p>When you apply the Secret, a Git configuration file with the path to the mounted Git credentials store is automatically configured and mounted to the <code>Dev Workspace</code> containers in the cluster at <code>/etc/gitconfig</code>. This makes your Git credentials store available in your workspaces.</p>
 </div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Your administrator sets up an <a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">OAuth application on GitHub, GitLab, or Bitbucket</a> for your organization&#8217;s Eclipse&#160;Che instance.</p>
+<p>An active <code>kubectl</code> session, with administrative permissions, to the Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
 </li>
 <li>
-<p>You create your own, user <a href="../using-a-git-credentials-store/" class="xref page">Kubernetes Secret for a Git credentials store</a>.</p>
+<p>The <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
 </li>
 </ul>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In your home directory, locate and open your <code>.git-credentials</code> file if you already have it. Alternatively, if you do not have this file, save a new <code>.git-credentials</code> file, using the <a href="https://git-scm.com/docs/git-credential-store#_storage_format">Git credentials storage format</a>. Each credential is stored on its own line in the file:</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://<em>&lt;username&gt;</em>:<em>&lt;token&gt;</em>@<em>&lt;git_server_hostname&gt;</em></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. A line in a <code>.git-credentials</code> file</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>https://trailblazer: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@github.com</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Select credentials from your <code>.git-credentials</code> file for the Secret. Encode the selected credentials to Base64 for the next step.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="ulist">
-<div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">Administration Guide: OAuth for GitHub, GitLab, or Bitbucket</a></p>
+<p>To encode all lines in the file:</p>
+<div class="paragraph">
+<p><code>$ cat .git-credentials | base64 | tr -d '\n'</code></p>
+</div>
 </li>
 <li>
-<p><a href="../using-a-git-credentials-store/" class="xref page">User Guide: Using a Git credentials store</a></p>
+<p>To encode a selected line:</p>
+<div class="paragraph">
+<p><code>$ echo -n '<em>&lt;copied_and_pasted_line_from_.git-credentials&gt;</em>' | base64</code></p>
+</div>
 </li>
 </ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a new Kubernetes Secret in your user namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: git-credentials-secret
+  labels:
+    controller.devfile.io/git-credential: 'true' <i class="conum" data-value="1"></i><b>(1)</b>
+    controller.devfile.io/watch-secret: 'true'
+  annotations:
+    controller.devfile.io/mount-path: /etc/secret <i class="conum" data-value="2"></i><b>(2)</b>
+data:
+  credentials: <em>&lt;Base64_content_of_.git-credentials&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>controller.devfile.io/git-credential</code> label marks the Secret as containing Git credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A custom absolute path in the <code>Dev Workspace</code> containers. The Secret is mounted as the <code>credentials</code> file at this path. The default path is <code>/</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The selected content from <code>.git-credentials</code> that you encoded to Base64 in the previous step.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can create and apply multiple Git credentials Secrets in your user namespace. All of them will be copied into one Secret that will be mounted to the <code>Dev Workspace</code> containers. For example, if you set the mount path to <code>/etc/secret</code>, then the one Secret with all of your Git credentials will be mounted at <code>/etc/secret/credentials</code>. You must set all Git credentials Secrets in your user namespace to the same mount path. You can set the mount path to an arbitrary path because the mount path will be automatically set in the Git configuration file configured at <code>/etc/gitconfig</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Apply the Secret.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-a-git-provider-access-token_che"><a class="anchor" href="#using-a-git-provider-access-token_che"></a>Using a Git provider access token</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the administrator of your organization&#8217;s Che instance has not configured <a href="../../administration-guide/oauth-for-github-gitlab-or-bitbucket/" class="xref page">OAuth for GitHub, GitLab, or Bitbucket</a>, you can apply your personal access token as a Kubernetes Secret.</p>
+</div>
+<div class="paragraph">
+<p>Mounting your access token as a Secret enables the Che Server to access the remote repository that is cloned during workspace creation, including access to the repository&#8217;s <code>/.che</code> and <code>/.vscode</code> folders.</p>
+</div>
+<div class="paragraph">
+<p>Apply the Kubernetes Secret in your user namespace of the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+</div>
+<div class="paragraph">
+<p>After you have applied the Secret, you can create new workspaces from a private GitHub, GitLab, or Bitbucket-server repository.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In your user namespace, you can create and apply multiple access-token Secrets per a Git provider.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session, with administrative permissions, to the Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p>The <a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> command line tools are installed in the operating system you are using.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Copy your access token and encode it to Base64.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ echo -n '<em>&lt;your_access_token&gt;</em>' | base64</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Prepare a new Kubernetes Secret in your user namespace.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Secret
+apiVersion: v1
+metadata:
+  name: personal-access-token-<em>&lt;your_chosen_name_for_this_token&gt;</em>
+  labels:
+    app.kubernetes.io/component: scm-personal-access-token
+    app.kubernetes.io/part-of: che.eclipse.org
+  annotations:
+    che.eclipse.org/che-userid: <em>&lt;che_user_ID&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+    che.eclipse.org/scm-personal-access-token-name: <em>&lt;git_provider_name&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
+    che.eclipse.org/scm-url: <em>&lt;Git_provider_endpoint&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+    che.eclipse.org/scm-userid: <em>&lt;Git_provider_user_ID&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b>
+    che.eclipse.org/scm-username: <em>&lt;Git_provider_username&gt;</em>
+data:
+  token: <em>&lt;Base64_encoded_access_token&gt;</em>
+type: Opaque</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Your Che user ID. You can retrieve <code><em>&lt;che-endpoint&gt;</em>/api/user</code> to get the Che user data.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The Git provider name: <code>github</code> or <code>gitlab</code> or <code>bitbucket-server</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The Git provider URL.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Your Git provider user ID, follow the API documentation to retrieve the user object:
+<div class="ulist">
+<ul>
+<li>
+<p>GitHub: <a href="https://docs.github.com/en/rest/users/users#get-a-user">Get a user</a>. See the <code>id</code> value in the response.</p>
+</li>
+<li>
+<p>GitLab: <a href="https://docs.gitlab.com/ee/api/users.html#for-normal-users">List users: For normal users</a>, use the <code>username</code> filter: <code>/users?username=:username</code>. See the <code>id</code> value in the response.</p>
+</li>
+<li>
+<p>Bitbucket Server: <a href="https://developer.atlassian.com/server/bitbucket/rest/v802/api-group-users/#api-users-userslug-get">Get users</a>. See the <code>account_id</code> value in the response.</p>
+</li>
+</ul>
+</div></td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Apply the Secret.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </article>
   </div>
