@@ -618,7 +618,7 @@
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.50.x/modules/end-user-guide/pages/enabling-maven-artifact-repositories.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.52.x/modules/end-user-guide/pages/enabling-maven-artifact-repositories.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -723,6 +723,9 @@ data:
 </li>
 <li>
 <p>Apply the ConfigMap for the TrustStore initialization script:</p>
+<div class="paragraph">
+<p>Java 8</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
@@ -736,7 +739,29 @@ metadata:
     controller.devfile.io/mount-to-devworkspace: 'true'
     controller.devfile.io/watch-configmap: 'true'
 data:
-  init-truststore.sh: |
+  init-java8-truststore.sh: |
+    #!/usr/bin/env bash
+
+    keytool -importcert -noprompt -file /home/user/certs/tls.cer -trustcacerts -keystore ~/.java/current/jre/lib/security/cacerts -storepass changeit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Java 11</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: init-truststore
+  annotations:
+    controller.devfile.io/mount-as: subpath
+    controller.devfile.io/mount-path: /home/user/
+  labels:
+    controller.devfile.io/mount-to-devworkspace: 'true'
+    controller.devfile.io/watch-configmap: 'true'
+data:
+  init-java11-truststore.sh: |
     #!/usr/bin/env bash
 
     keytool -importcert -noprompt -file /home/user/certs/tls.cer -cacerts -storepass changeit</code></pre>
