@@ -644,9 +644,20 @@ In the context of Che, this makes it possible for a workspace Pod in one user na
 <p>For security, multitenant isolation could be configured by using NetworkPolicy objects to restrict all incoming communication to Pods in a user namespace.
 However, Pods in the Che namespace must be able to communicate with Pods in user namespaces.</p>
 </div>
-<div class="paragraph">
-<p>For a cluster with network restrictions such as multitenant isolation already configured, you must apply the <code>allow-from-eclipse-che</code> NetworkPolicy to each user namespace. The <code>allow-from-eclipse-che</code> NetworkPolicy allows incoming traffic from the Che namespace to all Pods in the user namespace.</p>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Kubernetes cluster has network restrictions such as multitenant isolation.</p>
+</li>
+</ul>
 </div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Apply the <code>allow-from-eclipse-che</code> NetworkPolicy to each user namespace.
+The <code>allow-from-eclipse-che</code> NetworkPolicy allows incoming traffic from the Che namespace to all Pods in the user namespace.</p>
 <div class="exampleblock">
 <div class="title">Example 1. <code>allow-from-eclipse-che.yaml</code></div>
 <div class="content">
@@ -673,13 +684,17 @@ spec:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
+<td>The Che namespace.
+The default is <code>eclipse-che</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>The empty <code>podSelector</code> selects all Pods in the namespace.</td>
 </tr>
 </table>
+</div>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
