@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="stable">
+<div class="nav-container" data-component="docs" data-version="7.53.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -312,6 +312,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../installing-che-on-minikube/">Installing Che on Minikube</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../installing-che-on-minikube-keycloak-oidc/">Installing Che on Minikube with Keycloak as the OIDC provider</a>
   </li>
 </ul>
   </li>
@@ -585,7 +588,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">stable</span>
+    <span class="version">7.53.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -598,7 +601,7 @@
           <a href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
         </li>
         <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">stable</a>
+          <a href="../../overview/introduction-to-eclipse-che/">7.53.x</a>
         </li>
       </ul>
     </li>
@@ -621,14 +624,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">stable</button>
+  <button class="version-menu-toggle" title="Show other versions of page">7.53.x</button>
   <div class="version-menu">
     <a class="version" href="../../../next/administration-guide/advanced-configuration-options-for-the-che-server-component/">next</a>
     <a class="version is-missing" href="../../../che-7/overview/introduction-to-eclipse-che/">old (7.41)</a>
-    <a class="version is-current" href="./">stable</a>
+    <a class="version is-current" href="./">7.53.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.52.x/modules/administration-guide/pages/advanced-configuration-options-for-the-che-server-component.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.53.x/modules/administration-guide/pages/advanced-configuration-options-for-the-che-server-component.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -795,21 +798,6 @@ map of additional environment variables to apply to the Che server component.</p
 <dt class="hdlist1">Default</dt>
 <dd>
 <p><code>/projects</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_workspace_projects_storage_default_size"><a class="anchor" href="#_che_workspace_projects_storage_default_size"></a><code>CHE_WORKSPACE_PROJECTS_STORAGE_DEFAULT_SIZE</code></h4>
-<div class="paragraph">
-<p>Used when Kubernetes-type components in a devfile request project PVC creation (Applied in case of <code>unique</code> and <code>per workspace</code> PVC strategy. In case of the <code>common</code> PVC strategy, it is rewritten with the value of the <code>che.infra.kubernetes.pvc.quantity</code> property.)</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>1Gi</code></p>
 </dd>
 </dl>
 </div>
@@ -2025,171 +2013,6 @@ map of additional environment variables to apply to the Che server component.</p
 <hr>
 </div>
 <div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_enabled"><a class="anchor" href="#_che_infra_kubernetes_pvc_enabled"></a><code>CHE_INFRA_KUBERNETES_PVC_ENABLED</code></h4>
-<div class="paragraph">
-<p>Defines whether use the Persistent Volume Claim for Che workspace needs, for example: backup projects, logs, or disable it.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>true</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_strategy"><a class="anchor" href="#_che_infra_kubernetes_pvc_strategy"></a><code>CHE_INFRA_KUBERNETES_PVC_STRATEGY</code></h4>
-<div class="paragraph">
-<p>Defined which strategy will be used while choosing PVC for workspaces. Supported strategies: <code>common</code>:        All workspaces in the same namespace will reuse the same PVC.        Name of PVC may be configured with <code>che.infra.kubernetes.pvc.name</code>.        Existing PVC will be used or a new one will be created if it does not exist. <code>unique</code>:        Separate PVC for each workspace&#8217;s volume will be used.        Name of PVC is evaluated as <code>'{che.infra.kubernetes.pvc.name} + '-' + {generated_8_chars}'</code>.        Existing PVC will be used or a new one will be created if it does not exist. <code>per-workspace</code>:        Separate PVC for each workspace will be used.        Name of PVC is evaluated as <code>'{che.infra.kubernetes.pvc.name} + '-' + {WORKSPACE_ID}'</code>.        Existing PVC will be used or a new one will be created if it doesn&#8217;t exist.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>common</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_precreate_subpaths"><a class="anchor" href="#_che_infra_kubernetes_pvc_precreate_subpaths"></a><code>CHE_INFRA_KUBERNETES_PVC_PRECREATE__SUBPATHS</code></h4>
-<div class="paragraph">
-<p>Defines whether to run a job that creates workspace&#8217;s subpath directories in persistent volume for the <code>common</code> strategy before launching a workspace. Necessary in some versions of Kubernetes as workspace subpath volume mounts are created with root permissions, and therefore cannot be modified by workspaces running as a user (presents an error importing projects into a workspace in Che). The default is <code>true</code>, but should be set to <code>false</code> if the version of Kubernetes creates subdirectories with user permissions. See: <a href="https://github.com/kubernetes/kubernetes/issues/41638">subPath in volumeMount is not writable for non-root users #41638</a> the Che Operator that this property has effect only if the <code>common</code> PVC strategy used.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>true</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_name"><a class="anchor" href="#_che_infra_kubernetes_pvc_name"></a><code>CHE_INFRA_KUBERNETES_PVC_NAME</code></h4>
-<div class="paragraph">
-<p>Defines the settings of PVC name for Che workspaces. Each PVC strategy supplies this value differently. See documentation for <code>che.infra.kubernetes.pvc.strategy</code> property</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>claim-che-workspace</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_storage_class_name"><a class="anchor" href="#_che_infra_kubernetes_pvc_storage_class_name"></a><code>CHE_INFRA_KUBERNETES_PVC_STORAGE__CLASS__NAME</code></h4>
-<div class="paragraph">
-<p>Defines the storage class of Persistent Volume Claim for the workspaces. Empty strings means "use default".</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p>empty</p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_quantity"><a class="anchor" href="#_che_infra_kubernetes_pvc_quantity"></a><code>CHE_INFRA_KUBERNETES_PVC_QUANTITY</code></h4>
-<div class="paragraph">
-<p>Defines the size of Persistent Volume Claim of Che workspace. See: <a href="https://docs.openshift.com/container-platform/4.4/storage/understanding-persistent-storage.html">Understanding persistent storage</a></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>10Gi</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_jobs_image"><a class="anchor" href="#_che_infra_kubernetes_pvc_jobs_image"></a><code>CHE_INFRA_KUBERNETES_PVC_JOBS_IMAGE</code></h4>
-<div class="paragraph">
-<p>Pod that is launched when performing persistent volume claim maintenance jobs on OpenShift</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>registry.access.redhat.com/ubi8-minimal:8.3-230</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_jobs_image_pull_policy"><a class="anchor" href="#_che_infra_kubernetes_pvc_jobs_image_pull_policy"></a><code>CHE_INFRA_KUBERNETES_PVC_JOBS_IMAGE_PULL__POLICY</code></h4>
-<div class="paragraph">
-<p>Image pull policy of container that used for the maintenance jobs on Kubernetes cluster</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>IfNotPresent</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_jobs_memorylimit"><a class="anchor" href="#_che_infra_kubernetes_pvc_jobs_memorylimit"></a><code>CHE_INFRA_KUBERNETES_PVC_JOBS_MEMORYLIMIT</code></h4>
-<div class="paragraph">
-<p>Defines Pod memory limit for persistent volume claim maintenance jobs</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>250Mi</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_access_mode"><a class="anchor" href="#_che_infra_kubernetes_pvc_access_mode"></a><code>CHE_INFRA_KUBERNETES_PVC_ACCESS__MODE</code></h4>
-<div class="paragraph">
-<p>Defines Persistent Volume Claim access mode. the Che Operator that for common PVC strategy changing of access mode affects the number of simultaneously running workspaces. If the OpenShift instance running Che is using Persistent Volumes with RWX access mode, then a limit of running workspaces at the same time is bounded only by Che limits configuration: RAM, CPU, and so on. See: <a href="https://docs.openshift.com/container-platform/4.4/storage/understanding-persistent-storage.html">Understanding persistent storage</a></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>ReadWriteOnce</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_pvc_wait_bound"><a class="anchor" href="#_che_infra_kubernetes_pvc_wait_bound"></a><code>CHE_INFRA_KUBERNETES_PVC_WAIT__BOUND</code></h4>
-<div class="paragraph">
-<p>Defines if Che Server should wait workspaces Persistent Volume Claims to become bound after creating. Default value is <code>true</code>. The parameter is used by all Persistent Volume Claim strategies. It should be set to <code>false</code> when <code>volumeBindingMode</code> is configured to <code>WaitForFirstConsumer</code> otherwise workspace starts will hangs up on phase of waiting PVCs.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>true</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
 <h4 id="_che_infra_kubernetes_ingress_annotations_json"><a class="anchor" href="#_che_infra_kubernetes_ingress_annotations_json"></a><code>CHE_INFRA_KUBERNETES_INGRESS_ANNOTATIONS__JSON</code></h4>
 <div class="paragraph">
 <p>Defines annotations for ingresses which are used for servers exposing. Value depends on the kind of ingress controller. OpenShift infrastructure ignores this property because it uses Routes rather than Ingresses. the Che Operator that for a single-host deployment strategy to work, a controller supporting URL rewriting has to be used (so that URLs can point to different servers while the servers do not need to support changing the app root). The <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> property defines how the path of the ingress should be transformed to support the URL rewriting and this property defines the set of annotations on the ingress itself that instruct the chosen ingress controller to actually do the URL rewriting, potentially building on the path transformation (if required by the chosen ingress controller). For example for Nginx ingress controller 0.22.0 and later the following value is recommended: <code>{"ingress.kubernetes.io/rewrite-target": "/$1","ingress.kubernetes.io/ssl-redirect": "false",\     "ingress.kubernetes.io/proxy-connect-timeout": "3600","ingress.kubernetes.io/proxy-read-timeout": "3600",     "nginx.org/websocket-services": "&lt;service-name&gt;"}</code> and the <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> should be set to <code>"%s(.*)"</code>. For nginx ingress controller older than 0.22.0, the rewrite-target should be set to merely <code>/</code> and the path transform to <code>%s</code> (see the <code>che.infra.kubernetes.ingress.path.rewrite_transform</code> property). See the Nginx ingress controller documentation for the explanation of how the ingress controller uses the regular expression available in the ingress path and how it achieves the URL rewriting.</p>
@@ -3018,21 +2841,6 @@ map of additional environment variables to apply to the Che server component.</p
 <hr>
 </div>
 <div class="sect3">
-<h4 id="_che_infra_kubernetes_async_storage_image"><a class="anchor" href="#_che_infra_kubernetes_async_storage_image"></a><code>CHE_INFRA_KUBERNETES_ASYNC_STORAGE_IMAGE</code></h4>
-<div class="paragraph">
-<p>Docker image for the Che asynchronous storage</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>quay.io/eclipse/che-workspace-data-sync-storage:0.0.1</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
 <h4 id="_che_workspace_pod_node_selector"><a class="anchor" href="#_che_workspace_pod_node_selector"></a><code>CHE_WORKSPACE_POD_NODE__SELECTOR</code></h4>
 <div class="paragraph">
 <p>Optionally configures node selector for workspace Pod. Format is comma-separated key=value pairs, for example: <code>disktype=ssd,cpu=xlarge,foo=bar</code></p>
@@ -3057,36 +2865,6 @@ map of additional environment variables to apply to the Che server component.</p
 <dt class="hdlist1">Default</dt>
 <dd>
 <p><code>NULL</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_async_storage_shutdown_timeout_min"><a class="anchor" href="#_che_infra_kubernetes_async_storage_shutdown_timeout_min"></a><code>CHE_INFRA_KUBERNETES_ASYNC_STORAGE_SHUTDOWN__TIMEOUT__MIN</code></h4>
-<div class="paragraph">
-<p>The timeout for the Asynchronous Storage Pod shutdown after stopping the last used workspace. Value less or equal to 0 interpreted as disabling shutdown ability.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>120</code></p>
-</dd>
-</dl>
-</div>
-<hr>
-</div>
-<div class="sect3">
-<h4 id="_che_infra_kubernetes_async_storage_shutdown_check_period_min"><a class="anchor" href="#_che_infra_kubernetes_async_storage_shutdown_check_period_min"></a><code>CHE_INFRA_KUBERNETES_ASYNC_STORAGE_SHUTDOWN__CHECK__PERIOD__MIN</code></h4>
-<div class="paragraph">
-<p>Defines the period with which the Asynchronous Storage Pod stopping ability will be performed (once in 30 minutes by default)</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Default</dt>
-<dd>
-<p><code>30</code></p>
 </dd>
 </dl>
 </div>
