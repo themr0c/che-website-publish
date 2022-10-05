@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Selecting a workspace IDE :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/selecting-a-workspace-ide/">
-    <meta name="description" content="Selecting a workspace IDE">
-    <meta name="keywords" content="user-guide, selecting, IDE, select, selecting, editor, ide, vs-code, visual-studio, visual-studio-code, jetbrains, intellij, pycharm, theia, che-theia">
+    <title>URL parameter for the workspace storage :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/url-parameter-for-the-workspace-storage/">
+    <meta name="description" content="URL parameter for the workspace storage">
+    <meta name="keywords" content="ephemeral-workspace, persistent-workspace">
     <meta name="generator" content="Antora 3.1.1">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -121,8 +121,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../url-parameter-for-the-devfile-file-path/">URL parameter for the devfile file path</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../url-parameter-for-the-workspace-storage/">URL parameter for the workspace storage</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">URL parameter for the workspace storage</a>
   </li>
 </ul>
   </li>
@@ -140,9 +140,9 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../devfile-introduction/">Introduction to devfile in Eclipse&#160;Che</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">Selecting a workspace IDE</a>
+    <a class="nav-link" href="../selecting-a-workspace-ide/">Selecting a workspace IDE</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../selecting-an-ide-by-using-a-url-parameter/">Selecting an in-browser IDE for a new workspace by using a URL parameter</a>
@@ -621,93 +621,67 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="./">Selecting a workspace IDE</a></li>
+    <li><a href="../user-onboarding/">User onboarding</a></li>
+    <li><a href="../optional-parameters-for-the-urls-for-starting-a-new-workspace/">Optional parameters for the URLs for starting a new workspace</a></li>
+    <li><a href="./">URL parameter for the workspace storage</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">7.53.x</button>
   <div class="version-menu">
-    <a class="version" href="../../../next/end-user-guide/selecting-a-workspace-ide/">next</a>
+    <a class="version" href="../../../next/end-user-guide/url-parameter-for-the-workspace-storage/">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
     <a class="version is-current" href="./">7.53.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.53.x/modules/end-user-guide/pages/selecting-a-workspace-ide.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse/che-docs/edit/7.53.x/modules/end-user-guide/pages/url-parameter-for-the-workspace-storage.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Selecting a workspace IDE</h1>
+<h1 class="page">URL parameter for the workspace storage</h1>
 <div class="paragraph">
-<p>The default in-browser IDE in a new workspace is <a href="https://theia-ide.org/docs/">Che Theia</a>.</p>
+<p>If the URL for starting a new workspace does not contain a URL parameter specifying the storage type, the new workspace is created in ephemeral or persistent storage, whichever is defined as the default storage type in the <code>CheCluster</code> Custom Resource.</p>
 </div>
 <div class="paragraph">
-<p>You can select another supported in-browser IDE by either method:</p>
+<p>The URL parameter for specifying a storage type for a workspace is <code>storageType=<em>&lt;storage_type&gt;</em></code>:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre>https://<em>&lt;che_fqdn&gt;</em>#<em>&lt;git_repository_url&gt;</em>?storageType=<em>&lt;storage_type&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Possible <code><em>&lt;storage_type&gt;</em></code> values:
 <div class="ulist">
 <ul>
 <li>
-<p>When you start a new workspace by visiting a URL, you can choose an IDE for that workspace by adding the <code>che-editor</code> parameter to the URL. See <a href="../selecting-an-ide-by-using-a-url-parameter/" class="xref page">Selecting an in-browser IDE for a new workspace by using a URL parameter</a>.</p>
+<p><code>ephemeral</code></p>
 </li>
 <li>
-<p>You can specify an IDE in the <code>.che/che-editor.yaml</code> file of the Git repository for all new workspaces that will feature a clone of that repository. See <a href="../specifying-an-in-browser-ide-for-a-git-repository-by-using-che-editor/" class="xref page">Specifying an in-browser IDE for a Git repository by using <code>che-editor.yaml</code></a>.</p>
+<p><code>per-user</code> (persistent)</p>
+</li>
+<li>
+<p><code>per-workspace</code> (persistent)</p>
+</li>
+</ul>
+</div></td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../requesting-persistent-storage-for-workspaces/" class="xref page">Requesting persistent storage for workspaces</a></p>
 </li>
 </ul>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Supported in-browser IDEs</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">IDE</th>
-<th class="tableblock halign-left valign-top"><code>id</code></th>
-<th class="tableblock halign-left valign-top">Note</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse-che/che-theia">Che-Theia</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This is the default IDE that loads in a new workspace when the URL parameter or <code>che-editor.yaml</code> is not used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse-che/che-theia">Che-Theia</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eclipse/che-theia/next</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When using the <code>next</code> <a href="https://github.com/che-incubator/chectl/">chectl</a> channel, this IDE loads as a default without the URL parameter.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/che-incubator/che-code">Visual Studio Code - Open Source</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-incubator/che-code/insiders</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Visual Studio Code Insiders version packaged to run on Kubernetes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.jetbrains.com/help/idea/discover-intellij-idea.html">IntelliJ IDEA</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-incubator/che-idea/latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Community Edition - stable version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.jetbrains.com/help/idea/discover-intellij-idea.html">IntelliJ IDEA</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-incubator/che-idea/next</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Community Edition - development version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.jetbrains.com/help/pycharm/quick-start-guide.html">PyCharm</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-incubator/che-pycharm/latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Community Edition - stable version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.jetbrains.com/help/pycharm/quick-start-guide.html">PyCharm</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>che-incubator/che-pycharm/next</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Community Edition - development version</p></td>
-</tr>
-</tbody>
-</table>
 </article>
   </div>
 </main>
