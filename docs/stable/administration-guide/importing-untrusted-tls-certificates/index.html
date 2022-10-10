@@ -809,7 +809,7 @@ If the cluster is configured with an intermediate certificate, add the whole cha
 To get the list of Volumes of the Che Pod, run:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get pod -o json <em>&lt;che-pod-name&gt;</em> -n eclipse-che | jq .spec.volumes</pre>
+<pre class="nowrap">$ kubectl get pod -l app.kubernetes.io/component=che -o "jsonpath={.items[0].spec.volumes}" -n eclipse-che</pre>
 </div>
 </div>
 </li>
@@ -817,7 +817,7 @@ To get the list of Volumes of the Che Pod, run:</p>
 <p>Che mounts certificates in the <code>/public-certs/</code> folder of the Che server container. To view the list of files in this folder, enter:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- ls /public-certs/</pre>
+<pre class="nowrap">$ kubectl exec -t deploy/che -n eclipse-che -- ls /public-certs/</pre>
 </div>
 </div>
 </li>
@@ -825,7 +825,7 @@ To get the list of Volumes of the Che Pod, run:</p>
 <p>In the Che server logs, there is a line for every certificate added to the Java truststore, including configured Che certificates. View them:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl logs <em>&lt;che-pod-name&gt;</em> -n eclipse-che</pre>
+<pre class="nowrap">$ kubectl logs deploy/che -n eclipse-che</pre>
 </div>
 </div>
 </li>
@@ -833,7 +833,7 @@ To get the list of Volumes of the Che Pod, run:</p>
 <p>Che server Java truststore contains the certificates. The certificates SHA1 fingerprints are among the list of the SHA1 of the certificates included in the truststore. View the list:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t <em>&lt;che-pod-name&gt;</em> -n eclipse-che -- keytool -list -keystore /home/user/cacerts
+<pre class="nowrap">$ kubectl exec -t deploy/che -n eclipse-che -- keytool -list -keystore /home/user/cacerts
 Your keystore contains 141 entries:
 +
 (...)</pre>
@@ -875,29 +875,29 @@ SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pr
 </div>
 </li>
 <li>
-<p>Look for a <code>ca-certs</code> <code>ConfigMap</code> object inside the workspace namespace:</p>
+<p>Look for a <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object inside the workspace namespace:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm ca-certs <em>&lt;workspace namespace&gt;</em></pre>
+<pre class="nowrap">$ kubectl get cm che-trusted-ca-certs -n <em>&lt;workspace namespace&gt;</em></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check that the entries in the <code>ca-certs</code> <code>ConfigMap</code> object contain all the additional entries you added before. In addition, it can contain <code>ca-bundle.crt</code> reserved entry. View the entries:</p>
+<p>Check that the entries in the <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object contain all the additional entries you added before. In addition, it can contain <code>ca-bundle.crt</code> reserved entry. View the entries:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm ca-certs -n <em>&lt;workspace namespace&gt;</em> -o json | jq -r '.data | keys[]'
+<pre class="nowrap">$ kubectl get cm che-trusted-ca-certs -n <em>&lt;workspace namespace&gt;</em> -o json | jq -r '.data | keys[]'
 ca-bundle.crt
 source-config-map-name.data-key.crt</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Confirm that the <code>ca-certs</code> <code>ConfigMap</code> object is added as a volume in the workspace Pod:</p>
+<p>Confirm that the <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object is added as a volume in the workspace Pod:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
-    jq '.spec.volumes[] | select(.configMap.name == "ca-certs")'
+    jq '.spec.volumes[] | select(.configMap.name == "che-trusted-ca-certs")'
 {
   "configMap": {
     "defaultMode": 420,
@@ -913,17 +913,17 @@ source-config-map-name.data-key.crt</pre>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
-   jq '.spec.containers[] | select(.name == "<em>&lt;theia ide container name&gt;</em>").volumeMounts[] | select(.name == "che-self-signed-certs")'
+   jq '.spec.containers[] | select(.name == "<em>&lt;theia ide container name&gt;</em>").volumeMounts[] | select(.name == "che-trusted-ca-certs")'
 {
   "mountPath": "/public-certs",
-  "name": "che-self-signed-certs",
+  "name": "che-trusted-ca-certs",
   "readOnly": true
 }</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Inspect the <code>/public-certs</code> folder in the Che-Theia IDE container and check if its contents match the list of entries in the <code>ca-certs</code> <code>ConfigMap</code> object:</p>
+<p>Inspect the <code>/public-certs</code> folder in the Che-Theia IDE container and check if its contents match the list of entries from the <code>custom-certs</code> <code>ConfigMap</code> object:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
 <pre class="nowrap">$ kubectl exec <em>&lt;workspace pod name&gt;</em> -c <em>&lt;theia ide container name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> -- ls /public-certs
@@ -931,6 +931,14 @@ ca-bundle.crt
 source-config-map-name.data-key.crt</pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="xref page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
 </li>
 </ul>
 </div>
