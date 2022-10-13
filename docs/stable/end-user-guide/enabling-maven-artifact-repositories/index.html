@@ -648,13 +648,16 @@
 <li>
 <p>You are not running any Maven workspace.</p>
 </li>
+<li>
+<p>You know your user namespace, which is <code><em>&lt;username&gt;</em>-che</code> where <code><em>&lt;username&gt;</em></code> is your Che username.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Apply the Secret for the TLS certificate:</p>
+<p>In the <code><em>&lt;username&gt;</em>-che</code> namespace, apply the Secret for the TLS certificate:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Secret
@@ -682,7 +685,7 @@ data:
 </div>
 </li>
 <li>
-<p>Apply the ConfigMap to create the <code>settings.xml</code> file:</p>
+<p>In the <code><em>&lt;username&gt;</em>-che</code> namespace, apply the ConfigMap to create the <code>settings.xml</code> file:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
@@ -732,14 +735,12 @@ data:
 </div>
 </li>
 <li>
-<p>Optional: When using EAP-based devfiles, apply a second <code>settings-xml</code> ConfigMap with the same content, a different name, and the <code>/home/jboss/.m2</code> mount path.</p>
+<p>Optional: When using EAP-based devfiles, apply a second <code>settings-xml</code> ConfigMap in the <code><em>&lt;username&gt;</em>-che</code> namespace, and with the same content, a different name, and the <code>/home/jboss/.m2</code> mount path.</p>
 </li>
 <li>
-<p>Apply the ConfigMap for the TrustStore initialization script:</p>
-<div class="paragraph">
-<p>Java 8</p>
-</div>
+<p>In the <code><em>&lt;username&gt;</em>-che</code> namespace, apply the ConfigMap for the TrustStore initialization script:</p>
 <div class="listingblock">
+<div class="title">Java 8</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
 apiVersion: v1
@@ -758,10 +759,8 @@ data:
     keytool -importcert -noprompt -file /home/user/certs/tls.cer -trustcacerts -keystore ~/.java/current/jre/lib/security/cacerts -storepass changeit</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Java 11</p>
-</div>
 <div class="listingblock">
+<div class="title">Java 11</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
 apiVersion: v1
