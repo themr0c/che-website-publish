@@ -650,67 +650,41 @@ Uninstalling Che removes all Che-related user data!
 </table>
 </div>
 <div class="paragraph">
-<p>To uninstall an instance of Eclipse&#160;Che 7.56:</p>
+<p>Use <code>kubectl</code> to uninstall the Che instance.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
-</li>
-<li>
 <p><code>chectl</code>. See: <a href="../installing-the-chectl-management-tool/" class="xref page">Install the chectl management tool</a>.</p>
 </li>
 </ul>
 </div>
-<div class="olist arabic">
+<div class="ulist">
 <div class="title">Procedure</div>
-<ol class="arabic">
+<ul>
 <li>
-<p>Obtain the name of the Che namespace. The default is <code>eclipse-che</code>.</p>
+<p>Remove the Che instance:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl get checluster --all-namespaces \
-  -o=jsonpath="{.items[*].metadata.namespace}"</pre>
+<pre>$ chectl server:delete</pre>
 </div>
 </div>
 </li>
-<li>
-<p>Remove the Che instance from the <code>eclipse-che</code> namespace:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:delete -n eclipse-che <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</ul>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The namespace that you got in step 1.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>When uninstalling Che from a Minikube cluster, remove the <code>dex</code> and <code>eclipse-che</code> namespace.</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl delete namespaces dex eclipse-che</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If Che was installed from the OpenShift web console, <code>chectl</code> will not uninstall the Dev Workspace operator.
-To uninstall the Dev Workspace Operator, see <a href="https://docs.openshift.com/container-platform/4.10/web_console/odc-about-web-terminal.html#deleting-the-devworkspace-operator-dependency">Deleting the Dev Workspace Operator dependency</a>.</p>
+<p>The <code>--delete-namespace</code> option removes the Che namespace.</p>
+</div>
+<div class="paragraph">
+<p>The <code>--delete-all</code> option removes the Dev Workspace Operator and the related resources.</p>
 </div>
 </td>
 </tr>
