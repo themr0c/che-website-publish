@@ -695,7 +695,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">id: che-incubator/che-code/insiders</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">id: che-incubator/che-idea/latest</code></pre>
 </div>
 </div>
 </div>
@@ -721,23 +721,34 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">inline:
   schemaVersion: 2.1.0
   metadata:
-    name: theia-ide
-  commands:
-    ...
-  events:
-    ...
+    name: JetBrains IntelliJ IDEA Community IDE
   components:
-    - name: che-machine-exec
+    - name: intellij
       container:
-        image: 'quay.io/eclipse/che-machine-exec:next'
-        command:
-          ...
-        memoryLimit: 128Mi
+        image: 'quay.io/che-incubator/che-idea:next'
+        volumeMounts:
+          - name: projector-user
+            path: /home/projector-user
+        mountSources: true
+        memoryLimit: 2048M
         memoryRequest: 32Mi
-        cpuLimit: 500m
-        cpuRequest: 30m
-      attributes:
-...</code></pre>
+        cpuLimit: 1500m
+        cpuRequest: 100m
+        endpoints:
+          - name: intellij
+            attributes:
+              type: main
+              cookiesAuthEnabled: true
+              urlRewriteSupported: true
+              discoverable: false
+              path: /?backgroundColor=434343&amp;wss
+            targetPort: 8887
+            exposure: public
+            secure: false
+            protocol: https
+      attributes: {}
+    - name: projector-user
+      volume: {}</code></pre>
 </div>
 </div>
 </div>
@@ -772,7 +783,7 @@ registryUrl: <em>&lt;url_of_custom_plug-in_registry&gt;</em></code></pre>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">... <i class="conum" data-value="1"></i><b>(1)</b>
 override:
   containers:
-    - name: theia-ide
+    - name: che-idea
       memoryLimit: 1280Mi
       cpuLimit: 1510m
       cpuRequest: 102m
