@@ -654,24 +654,27 @@
 </aside>
 <article class="doc">
 <h1 class="page">Importing untrusted TLS certificates to Che</h1>
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph">
-<p>By default, external communications between Che components are encrypted with TLS. Communications of Che components with external services such as proxies, source code repositories, and identity provider might also require TLS. All communications encrypted with TLS require the use of TLS certificates signed by trusted Certificate Authorities (CA).</p>
-</div>
-<div class="paragraph">
-<p>When the certificates used by Che components or by an external service are signed by an untrusted CA, you must import the CA certificate into the Che instance so that every Che component treats the certificates as signed by a trusted CA. You have to do this in the following cases:</p>
+<p>Che components communications with external services are encrypted with TLS.
+They require TLS certificates signed by trusted Certificate Authorities (CA).
+Therefore, you must import into Che all untrusted CA chains in use by an external service such as:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The underlying Kubernetes cluster uses TLS certificates signed by an untrusted CA.
-Che server or workspace components connect to external OIDC providers or a Git server that use TLS certificates signed by an untrusted CA.</p>
+<p>A proxy</p>
+</li>
+<li>
+<p>An identity provider (OIDC)</p>
+</li>
+<li>
+<p>A source code repositories provider (Git)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Che uses labeled <code>ConfigMap</code> objects in namespace as sources for TLS certificates. The <code>ConfigMap</code> objects can have an arbitrary number of keys with a random number of certificates each.</p>
+<p>Che uses labeled config maps in Che namespace as sources for TLS certificates.
+The config maps can have an arbitrary amount of keys with a random amount of certificates each.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -681,56 +684,26 @@ Che server or workspace components connect to external OIDC providers or a Git s
 </td>
 <td class="content">
 <div class="paragraph">
-<p>When an OpenShift cluster contains cluster-wide trusted CA certificates added through the <a href="https://docs.openshift.com/container-platform/4.10/networking/configuring-a-custom-pki.html#nw-proxy-configure-object_configuring-a-custom-pki">cluster-wide-proxy configuration</a>, Che Operator detects them and automatically injects them into a <code>ConfigMap</code> object. Che automatically labels the <code>ConfigMap</code> object with the <code>config.openshift.io/inject-trusted-cabundle="true"</code> label. Based on this annotation, OpenShift automatically injects the cluster-wide trusted CA certificates inside the <code>ca-bundle.crt</code> key of the <code>ConfigMap</code> object.</p>
+<p>When an OpenShift cluster contains cluster-wide trusted CA certificates added through the <a href="https://docs.openshift.com/container-platform/latest/networking/configuring-a-custom-pki.html#nw-proxy-configure-object_configuring-a-custom-pki">cluster-wide-proxy configuration</a>,
+Che Operator detects them and automatically injects them into a config map with the <code>config.openshift.io/inject-trusted-cabundle="true"</code> label.
+Based on this annotation, OpenShift automatically injects the cluster-wide trusted CA certificates inside the <code>ca-bundle.crt</code> key of the config map.</p>
 </div>
 </td>
 </tr>
 </table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Some Che components require a full certificate chain to trust the endpoint.
-If the cluster is configured with an intermediate certificate, add the whole chain, including self-signed root, to Che.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_adding_new_ca_certificates_into_che"><a class="anchor" href="#_adding_new_ca_certificates_into_che"></a>Adding new CA certificates into Che</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Certificate files are typically stored as Base64 files, with extensions such as <code>.pem</code>, <code>.crt</code>, <code>.ca-bundle</code>, and others. All Secrets that hold certificate files should use the Base64-encoded certificate rather than binary-encoded certificate. The following procedure is applicable for already installed and running instances and for instances that are to be installed.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster.
+See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
 </li>
 <li>
-<p>Namespace for Che exists.</p>
+<p>The <code>eclipse-che</code> namespace exists.</p>
 </li>
 <li>
-<p>Che already uses some reserved file names to automatically inject certificates into the <code>ConfigMap</code> object. Avoid using the following reserved file names to save your certificates:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ca-bundle.crt</code></p>
-</li>
-<li>
-<p><code>ca.crt</code></p>
-</li>
-</ul>
-</div>
+<p>For each CA chain to import: the root CA and intermediate certificates, in <a href="https://wiki.openssl.org/index.php/PEM">PEM</a> format, in a <code>ca-cert-for-che-<em>&lt;count&gt;</em>.pem</code> file.</p>
 </li>
 </ul>
 </div>
@@ -738,216 +711,171 @@ If the cluster is configured with an intermediate certificate, add the whole cha
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Save the certificates you need to import to a local file system.</p>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>A certificate with the introductory phrase <code>BEGIN TRUSTED CERTIFICATE</code> is likely in the PEM <code>TRUSTED CERTIFICATE</code> format, which is not supported by Java. Convert it to the supported <code>CERTIFICATE</code> format with the following command:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>openssl x509 -in cert.pem -out cert.cer</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Create a new <code>ConfigMap</code> object with the required TLS certificates:</p>
+<p>Concatenate all CA chains PEM files to import, into the <code>custom-ca-certificates.pem</code> file, and remove the return character that is incompatible with the Java trust store.</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl create configmap custom-certs --from-file=<em>&lt;bundle_file_path&gt;</em> -n=eclipse-che</pre>
+<pre>$ cat ca-cert-for-{prod-id-short}-*.pem | tr -d '\r' &gt; custom-ca-certificates.pem</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>To apply more than one bundle, add another <code>-from-file=<em>&lt;bundle_file_path&gt;</em></code>. Alternatively, create another <code>ConfigMap</code> object.</p>
 </div>
 </li>
 <li>
-<p>Label the created <code>ConfigMap</code> objects with the <code>app.kubernetes.io/part-of=che.eclipse.org</code> and <code>app.kubernetes.io/component=ca-bundle</code> labels:</p>
+<p>Create the <code>custom-ca-certificates</code> config map with the required TLS certificates:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl label configmap custom-certs app.kubernetes.io/part-of=che.eclipse.org app.kubernetes.io/component=ca-bundle -n eclipse-che</pre>
+<pre>$ kubectl create configmap custom-ca-certificates \
+    --from-file=custom-ca-certificates.pem \
+    --namespace=eclipse-che</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Deploy Che if it hasn&#8217;t been deployed before. Otherwise wait until the rollout of Che components finishes.</p>
+<p>Label the <code>custom-ca-certificates</code> config map:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label configmap custom-ca-certificates \
+    app.kubernetes.io/component=ca-bundle \
+    app.kubernetes.io/part-of=che.eclipse.org \
+    --namespace=eclipse-che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Deploy Che if it hasn&#8217;t been deployed before.
+Otherwise, wait until the rollout of Che components finishes.</p>
 </li>
 <li>
 <p>Restart running workspaces for the changes to take effect.</p>
 </li>
 </ol>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_troubleshooting_imported_certificate_issues"><a class="anchor" href="#_troubleshooting_imported_certificate_issues"></a>Troubleshooting imported certificate issues</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If issues occur after adding the certificates, verify the specified values at the Che instance level and workspace level.</p>
-</div>
-<div class="ulist">
-<div class="title">Verifying imported certificates at the Che instance level</div>
-<ul>
+<div class="olist arabic">
+<div class="title">Verification steps</div>
+<ol class="arabic">
 <li>
-<p>In case of a Che <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/olm-what-operators-are.html">Operator</a> deployment, the namespace where the <code>CheCluster</code> is located contains the labeled <code>ConfigMap</code> objects with the correct content:</p>
+<p>Verify that the config map contains your custom CA certificates.
+This command returns your custom CA certificates in PEM format:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm --selector=app.kubernetes.io/component=ca-bundle,app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Check the content of the <code>ConfigMap</code> object by entering:</p>
-</div>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl get cm <em>&lt;name&gt;</em> -n eclipse-che -o yaml</pre>
+<pre class="nowrap">$ kubectl get configmap \
+    --namespace=eclipse-che \
+    --output='jsonpath={.items[0:].data.custom-ca-certificates\.pem}' \
+    --selector=app.kubernetes.io/component=ca-bundle,app.kubernetes.io/part-of=che.eclipse.org</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Che Pod Volumes list contains a volume that uses the <code>ca-certs-merged</code> <code>ConfigMap</code> object as the data source.
-To get the list of Volumes of the Che Pod, run:</p>
+<p>Verify Che pod contains a volume mounting the <code>ca-certs-merged</code> config map:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get pod -l app.kubernetes.io/component=che -o "jsonpath={.items[0].spec.volumes}" -n eclipse-che</pre>
+<pre class="nowrap">$ kubectl get pod \
+    --selector=app.kubernetes.io/component=che \
+    --output='jsonpath={.items[0].spec.volumes[0:].configMap.name}' \
+    --namespace=eclipse-che \
+    | grep ca-certs-merged</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Che mounts certificates in the <code>/public-certs/</code> folder of the Che server container. To view the list of files in this folder, enter:</p>
+<p>Verify the Che server container has your custom CA certificates.
+This command returns your custom CA certificates in PEM format:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t deploy/che -n eclipse-che -- ls /public-certs/</pre>
+<pre class="nowrap">$ kubectl exec -t deploy/che \
+    --namespace=eclipse-che \
+    -- cat /public-certs/custom-ca-certificates.pem</pre>
 </div>
 </div>
 </li>
 <li>
-<p>In the Che server logs, there is a line for every certificate added to the Java truststore, including configured Che certificates. View them:</p>
+<p>Verify in the Che server logs that the imported certificates count is not null:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl logs deploy/che -n eclipse-che</pre>
+<pre class="nowrap">$ kubectl logs deploy/che --namespace=eclipse-che \
+    | grep custom-ca-certificates.pem</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Che server Java truststore contains the certificates. The certificates SHA1 fingerprints are among the list of the SHA1 of the certificates included in the truststore. View the list:</p>
+<p>List the SHA256 fingerprints of your certificates:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec -t deploy/che -n eclipse-che -- keytool -list -keystore /home/user/cacerts
-Your keystore contains 141 entries:
-+
-(...)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To get the SHA1 hash of a certificate on the local filesystem, run:</p>
-</div>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ openssl x509 -in <em>&lt;certificate_file_path&gt;</em> -fingerprint -noout
-SHA1 Fingerprint=3F:DA:BF:E7:A7:A7:90:62:CA:CF:C7:55:0E:1D:7D:05:16:7D:45:60</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Verifying imported certificates at the workspace level</div>
-<ul>
-<li>
-<p>Start a workspace, obtain the namespace name in which it has been created and wait for the workspace to be started.</p>
-</li>
-<li>
-<p>Get the name of the workspace Pod:</p>
-<div class="listingblock white-space-pre">
-<div class="content">
-<pre class="nowrap">$ kubectl get pods -o=jsonpath='{.items[0].metadata.name}' -n <em>&lt;workspace namespace&gt;</em> | grep '^workspace.*'</pre>
+<pre class="nowrap">$ for certificate in ca-cert*.pem ;
+  do openssl x509 -in $certificate -digest -sha256 -fingerprint -noout | cut -d= -f2;
+  done</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Get the name of the Che-Theia IDE container in the workspace Pod:</p>
+<p>Verify  that Che server Java truststore contains certificates with the same fingerprint:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em>  -n <em>&lt;workspace namespace&gt;</em> | \
-    jq -r '.spec.containers[] | select(.name | startswith("theia-ide")).name'</pre>
+<pre class="nowrap">$ kubectl exec -t deploy/che --namespace=eclipse-che -- \
+    keytool -list -keystore /home/user/cacerts \
+    | grep --after-context=1 custom-ca-certificates.pem</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Look for a <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object inside the workspace namespace:</p>
+<p>Start a workspace, get the namespace name in which it has been created: <em>&lt;workspace_namespace&gt;</em>, and wait for the workspace to be started.</p>
+</li>
+<li>
+<p>Verify that the <code>che-trusted-ca-certs</code> config map contains your custom CA certificates.
+This command returns your custom CA certificates in PEM format:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm che-trusted-ca-certs -n <em>&lt;workspace namespace&gt;</em></pre>
+<pre class="nowrap">$ kubectl get configmap che-trusted-ca-certs \
+    --namespace=<em>&lt;workspace_namespace&gt;</em> \
+    --output='jsonpath={.data.custom-ca-certificates\.custom-ca-certificates\.pem}'</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Check that the entries in the <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object contain all the additional entries you added before. In addition, it can contain <code>ca-bundle.crt</code> reserved entry. View the entries:</p>
+<p>Verify that the workspace pod mounts the <code>che-trusted-ca-certs</code> config map:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get cm che-trusted-ca-certs -n <em>&lt;workspace namespace&gt;</em> -o json | jq -r '.data | keys[]'
-ca-bundle.crt
-source-config-map-name.data-key.crt</pre>
+<pre class="nowrap">$ kubectl get pod \
+    --namespace=<em>&lt;workspace_namespace&gt;</em> \
+    --selector='controller.devfile.io/devworkspace_name=<em>&lt;workspace_name&gt;</em>' \
+    --output='jsonpath={.items[0:].spec.volumes[0:].configMap.name}' \
+    | grep che-trusted-ca-certs</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Confirm that the <code>che-trusted-ca-certs</code> <code>ConfigMap</code> object is added as a volume in the workspace Pod:</p>
+<p>Verify that the <code>universal-developer-image</code> container (or the container defined in the workspace devfile) mounts the <code>che-trusted-ca-certs</code> volume:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
-    jq '.spec.volumes[] | select(.configMap.name == "che-trusted-ca-certs")'
-{
-  "configMap": {
-    "defaultMode": 420,
-    "name": "ca-certs"
-  },
-  "name": "che-self-signed-certs"
-}</pre>
+<pre class="nowrap">$ kubectl get pod \
+    --namespace=<em>&lt;workspace_namespace&gt;</em> \
+    --selector='controller.devfile.io/devworkspace_name=<em>&lt;workspace_name&gt;</em>' \
+    --output='jsonpath={.items[0:].spec.containers[0:]}' \
+    | jq 'select (.volumeMounts[].name == "che-trusted-ca-certs") | .name'</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Confirm that the volume is mounted into containers, especially in the Che-Theia IDE container:</p>
+<p>Get the workspace pod name <em>&lt;workspace_pod_name&gt;</em>:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl get -o json pod <em>&lt;workspace pod name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> | \
-   jq '.spec.containers[] | select(.name == "<em>&lt;theia ide container name&gt;</em>").volumeMounts[] | select(.name == "che-trusted-ca-certs")'
-{
-  "mountPath": "/public-certs",
-  "name": "che-trusted-ca-certs",
-  "readOnly": true
-}</pre>
+<pre class="nowrap">$ kubectl get pod \
+    --namespace=<em>&lt;workspace_namespace&gt;</em> \
+    --selector='controller.devfile.io/devworkspace_name=<em>&lt;workspace_name&gt;</em>' \
+    --output='jsonpath={.items[0:].metadata.name}' \</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Inspect the <code>/public-certs</code> folder in the Che-Theia IDE container and check if its contents match the list of entries from the <code>custom-certs</code> <code>ConfigMap</code> object:</p>
+<p>Verify that the workspace container has your custom CA certificates.
+This command returns your custom CA certificates in PEM format:</p>
 <div class="listingblock white-space-pre">
 <div class="content">
-<pre class="nowrap">$ kubectl exec <em>&lt;workspace pod name&gt;</em> -c <em>&lt;theia ide container name&gt;</em> -n <em>&lt;workspace namespace&gt;</em> -- ls /public-certs
-ca-bundle.crt
-source-config-map-name.data-key.crt</pre>
+<pre class="nowrap">$ kubectl exec <em>&lt;workspace_pod_name&gt;</em> \
+    --namespace=<em>&lt;workspace_namespace&gt;</em> \
+    -- cat /public-certs/custom-ca-certificates.custom-ca-certificates.pem</pre>
 </div>
 </div>
 </li>
-</ul>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
@@ -956,8 +884,6 @@ source-config-map-name.data-key.crt</pre>
 <p><a href="../deploying-che-with-support-for-git-repositories-with-self-signed-certificates/" class="xref page">Deploying Che with support for Git repositories with self-signed certificates</a>.</p>
 </li>
 </ul>
-</div>
-</div>
 </div>
 </article>
   </div>
