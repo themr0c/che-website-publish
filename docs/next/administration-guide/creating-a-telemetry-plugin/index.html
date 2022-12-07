@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Creating a telemetry plug-in :: Eclipse Che Documentation</title>
+    <title>Creating a telemetry plugin :: Eclipse Che Documentation</title>
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/creating-a-telemetry-plugin/">
-    <meta name="description" content="Creating a telemetry plug-in">
+    <meta name="description" content="Creating a telemetry plugin">
     <meta name="keywords" content="extensions, telemetry">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
@@ -289,7 +289,7 @@
     <a class="nav-link" href="../postgresql/">PostgreSQL</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../plug-in-registry/">Plug-in registry</a>
+    <a class="nav-link" href="../plugin-registry/">Plug-in registry</a>
   </li>
 </ul>
   </li>
@@ -427,10 +427,10 @@
     <a class="nav-link" href="../che-theia-workspaces/">Che-Theia workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../the-woopra-telemetry-plugin/">The Woopra telemetry plug-in</a>
+    <a class="nav-link" href="../the-woopra-telemetry-plugin/">The Woopra telemetry plugin</a>
   </li>
   <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="./">Creating a telemetry plug-in</a>
+    <a class="nav-link" href="./">Creating a telemetry plugin</a>
   </li>
 </ul>
   </li>
@@ -637,7 +637,7 @@
     <li><a href="../configuring-che/">Configuring Che</a></li>
     <li><a href="../configuring-observability/">Configuring observability</a></li>
     <li><a href="../che-theia-workspaces/">Che-Theia workspaces</a></li>
-    <li><a href="./">Creating a telemetry plug-in</a></li>
+    <li><a href="./">Creating a telemetry plugin</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -655,7 +655,7 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Creating a telemetry plug-in</h1>
+<h1 class="page">Creating a telemetry plugin</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -692,10 +692,10 @@
 <p>Extending the Che telemetry client and implementing a user&#8217;s custom backend.</p>
 </li>
 <li>
-<p>Creating a <code>plugin.yaml</code> file representing a Dev Workspace plug-in for the custom backend.</p>
+<p>Creating a <code>plugin.yaml</code> file representing a Dev Workspace plugin for the custom backend.</p>
 </li>
 <li>
-<p>Specifying of a location of a custom plug-in to Che by setting the <code>workspacesDefaultPlugins</code> attribute from the <code>CheCluster</code> custom resource.</p>
+<p>Specifying of a location of a custom plugin to Che by setting the <code>workspacesDefaultPlugins</code> attribute from the <code>CheCluster</code> custom resource.</p>
 </li>
 </ul>
 </div>
@@ -719,7 +719,7 @@
 <p>Packaging the telemetry backend in a container and deploying it to an image registry</p>
 </li>
 <li>
-<p>Adding a plug-in for your backend and instructing Che to load the plug-in in your Dev Workspaces</p>
+<p>Adding a plugin for your backend and instructing Che to load the plugin in your Dev Workspaces</p>
 </li>
 </ol>
 </div>
@@ -728,7 +728,7 @@
 </div>
 <h2 id="_creating_a_server_that_receives_events" class="discrete">Creating a server that receives events</h2>
 <div class="paragraph">
-<p>For demonstration purposes, this example shows how to create a server that receives events from our telemetry plug-in and writes them to standard output.</p>
+<p>For demonstration purposes, this example shows how to create a server that receives events from our telemetry plugin and writes them to standard output.</p>
 </div>
 <div class="paragraph">
 <p>For production use cases, consider integrating with a third-party telemetry system (for example, Segment, Woopra) rather than creating your own telemetry server. In this case, use your provider&#8217;s APIs to send events from your custom backend to their system.</p>
@@ -842,7 +842,7 @@ $ docker push registry/organization/telemetry-server-example:latest</pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For fast feedback when developing, it is recommended to do development inside a Dev Workspace. This way, you can run the application in a cluster and receive events from the front-end telemetry plug-in.
+For fast feedback when developing, it is recommended to do development inside a Dev Workspace. This way, you can run the application in a cluster and receive events from the front-end telemetry plugin.
 </td>
 </tr>
 </table>
@@ -1067,7 +1067,7 @@ public class AnalyticsManager extends AbstractAnalyticsManager {
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Log the event received from the front-end plug-in.</td>
+<td>Log the event received from the front-end plugin.</td>
 </tr>
 </table>
 </div>
@@ -1115,7 +1115,7 @@ public class AnalyticsManager extends AbstractAnalyticsManager {
 </div>
 </div>
 <div class="paragraph">
-<p>The application now receives telemetry events through port <code>4167</code> from the front-end plug-in.</p>
+<p>The application now receives telemetry events through port <code>4167</code> from the front-end plugin.</p>
 </div>
 </li>
 </ol>
@@ -1135,7 +1135,7 @@ INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, kubernetes-cl
 </div>
 </li>
 <li>
-<p>To verify that the <code>onEvent()</code> method of <code>AnalyticsManager</code> receives events from the front-end plug-in, press the <kbd>l</kbd> key to disable Quarkus live coding and edit any file within the IDE. The following output should be logged:</p>
+<p>To verify that the <code>onEvent()</code> method of <code>AnalyticsManager</code> receives events from the front-end plugin, press the <kbd>l</kbd> key to disable Quarkus live coding and edit any file within the IDE. The following output should be logged:</p>
 <div class="listingblock">
 <div class="content">
 <pre>INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] (Aesh InputStream Reader) Live reload disabled
@@ -1420,10 +1420,10 @@ docker build -f src/main/docker/Dockerfile.native -t image:tag .</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_creating_a_plugin_yaml_for_your_plug_in"><a class="anchor" href="#_creating_a_plugin_yaml_for_your_plug_in"></a>Creating a <code>plugin.yaml</code> for your plug-in</h2>
+<h2 id="_creating_a_plugin_yaml_for_your_plugin"><a class="anchor" href="#_creating_a_plugin_yaml_for_your_plugin"></a>Creating a <code>plugin.yaml</code> for your plugin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Create a <code>plugin.yaml</code> devfile v2 file representing a Dev Workspace plug-in that runs your custom backend in a Dev Workspace Pod. For more information about devfile v2, see <a href="https://devfile.io/docs/2.1.0/overview">Devfile v2 documentation</a></p>
+<p>Create a <code>plugin.yaml</code> devfile v2 file representing a Dev Workspace plugin that runs your custom backend in a Dev Workspace Pod. For more information about devfile v2, see <a href="https://devfile.io/docs/2.1.0/overview">Devfile v2 documentation</a></p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 16. <code>plugin.yaml</code></div>
@@ -1464,7 +1464,7 @@ components:
 </table>
 </div>
 <div class="paragraph">
-<p>Typically, the user deploys this file to a corporate web server. This guide demonstrates how to create an Apache web server on OpenShift and host the plug-in there.</p>
+<p>Typically, the user deploys this file to a corporate web server. This guide demonstrates how to create an Apache web server on OpenShift and host the plugin there.</p>
 </div>
 <div class="paragraph">
 <p>Create a <code>ConfigMap</code> object that references the new <code>plugin.yaml</code> file.</p>
@@ -1570,7 +1570,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="specifying-the-telemetry-plug-in-in-a-devworkspace"><a class="anchor" href="#specifying-the-telemetry-plug-in-in-a-devworkspace"></a>Specifying the telemetry plug-in in a Dev Workspace</h2>
+<h2 id="specifying-the-telemetry-plugin-in-a-devworkspace"><a class="anchor" href="#specifying-the-telemetry-plugin-in-a-devworkspace"></a>Specifying the telemetry plugin in a Dev Workspace</h2>
 <div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
@@ -1580,7 +1580,7 @@ spec:
 <div class="content">
 <pre>components:
   ...
-  - name: telemetry-plug-in
+  - name: telemetry-plugin
     plugin:
       uri: http://apache-che.apps-crc.testing/plugin.yaml</pre>
 </div>
@@ -1595,10 +1595,10 @@ spec:
 <div class="title">Verification steps</div>
 <ol class="arabic">
 <li>
-<p>Verify that the <code>telemetry-plug-in</code> container is running in the Dev Workspace pod. Here, this is verified by checking the Workspace view within the editor.</p>
+<p>Verify that the telemetry plugin container is running in the Dev Workspace pod. Here, this is verified by checking the Workspace view within the editor.</p>
 <div class="imageblock">
 <div class="content">
-<img src="../_images/creating-a-telemetry-plug-in/devworkspace_telemetry_plugin.png" alt="Dev Workspace telemetry plug-in">
+<img src="../_images/creating-a-telemetry-plugin/devworkspace_telemetry_plugin.png" alt="Dev Workspace telemetry plugin">
 </div>
 </div>
 </li>
@@ -1610,10 +1610,10 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_applying_the_telemetry_plug_in_for_all_dev_workspaces"><a class="anchor" href="#_applying_the_telemetry_plug_in_for_all_dev_workspaces"></a>Applying the telemetry plug-in for all Dev Workspaces</h2>
+<h2 id="_applying_the_telemetry_plugin_for_all_dev_workspaces"><a class="anchor" href="#_applying_the_telemetry_plugin_for_all_dev_workspaces"></a>Applying the telemetry plugin for all Dev Workspaces</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Set the telemetry plug-in as a default plug-in. Default plug-ins are applied on Dev Workspace startup for new and existing Dev Workspaces.</p>
+<p>Set the telemetry plugin as a default plugin. Default plugins are applied on Dev Workspace startup for new and existing Dev Workspaces.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1633,11 +1633,11 @@ spec:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The editor identification to set the default plug-ins for.</td>
+<td>The editor identification to set the default plugins for.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>List of URLs to devfile v2 plug-ins.</td>
+<td>List of URLs to devfile v2 plugins.</td>
 </tr>
 </table>
 </div>
@@ -1659,7 +1659,7 @@ spec:
 <p>Start a new or existing Dev Workspace from the Eclipse&#160;Che dashboard.</p>
 </li>
 <li>
-<p>Verify that the telemetry plug-in is working by following the verification steps for <a href="#specifying-the-telemetry-plug-in-in-a-devworkspace">Specifying the telemetry plug-in in a Dev Workspace</a>.</p>
+<p>Verify that the telemetry plugin is working by following the verification steps for <a href="#specifying-the-telemetry-plugin-in-a-devworkspace">Specifying the telemetry plugin in a Dev Workspace</a>.</p>
 </li>
 </ol>
 </div>

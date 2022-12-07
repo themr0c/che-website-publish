@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Collecting logs using chectl :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/collecting-logs-using-chectl/">
-    <meta name="description" content="Collecting logs using chectl">
-    <meta name="keywords" content="administration-guide, collecting-logs-using-chectl">
+    <title>Plug-in registry :: Eclipse Che Documentation</title>
+    <meta name="description" content="Plug-in registry">
+    <meta name="keywords" content="administration-guide, architecture, server, devworkspace, plugin, registry">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -288,8 +287,8 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../postgresql/">PostgreSQL</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../plugin-registry/">Plug-in registry</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Plug-in registry</a>
   </li>
 </ul>
   </li>
@@ -437,8 +436,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-server-logging/">Configuring server logging</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Collecting logs using chectl</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
@@ -634,71 +633,53 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../configuring-che/">Configuring Che</a></li>
-    <li><a href="../configuring-observability/">Configuring observability</a></li>
-    <li><a href="./">Collecting logs using chectl</a></li>
+    <li><a href="../preparing-the-installation/">Preparing the installation</a></li>
+    <li><a href="../architecture-overview/">Architecture</a></li>
+    <li><a href="../server-components/">Server components</a></li>
+    <li><a href="./">Plug-in registry</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
-    <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/administration-guide/collecting-logs-using-chectl/">7.57.x</a>
+    <a class="version" href="../../../che-7/">old (7.41)</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.57.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/collecting-logs-using-chectl.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/plugin-registry.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Collecting logs using chectl</h1>
+<h1 class="page">Plug-in registry</h1>
 <div class="paragraph">
-<p>An installation of Eclipse&#160;Che consists of several containers running in the Kubernetes cluster. While it is possible to manually collect logs from each running container, <code>chectl</code> provides commands which automate the process.</p>
+<p>Each Che workspace starts with a specific editor and set of associated extensions.
+The Che plugin registry provides the list of available editors and editor extensions.
+A Devfile v2 describes each editor or extension.</p>
 </div>
 <div class="paragraph">
-<p>Following commands are available to collect Eclipse&#160;Che logs from the Kubernetes cluster using the <code>chectl</code> tool:</p>
+<p>The <a href="../dashboard/" class="xref page">User dashboard</a> is reading the content of the registry.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>chectl server:logs</code></dt>
-<dd>
-<p>Collects existing Eclipse&#160;Che server logs and stores them in a directory on the local machine. By default, logs are downloaded to a temporary directory on the machine. However, this can be overwritten by specifying the <code>-d</code> parameter. For example, to download Che logs to the <code>/home/user/che-logs/</code> directory, use the command</p>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">chectl server:logs -d /home/user/che-logs/</code></pre>
+<img src="../_images/architecture/che-plugin-registry-interactions.png" alt="Plug-in registries interactions with other components">
 </div>
-</div>
-<div class="paragraph">
-<p>When run, <code>chectl server:logs</code> prints a message in the console specifying the directory that will store the log files:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Eclipse&#160;Che logs will be available in '/tmp/chectl-logs/1648575098344'</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If Eclipse&#160;Che is installed in a non-default namespace, <code>chectl server:logs</code> requires the <code>-n &lt;NAMESPACE&gt;</code> paremeter, where <code>&lt;NAMESPACE&gt;</code> is the Kubernetes namespace or OpenShift project in which Eclipse&#160;Che was installed. For example, to get logs from Che in the <code>my-namespace</code> namespace, use the command</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">chectl server:logs -n my-namespace</code></pre>
-</div>
-</div>
-</dd>
-<dt class="hdlist1"><code>chectl server:deploy</code></dt>
-<dd>
-<p>Logs are automatically collected during the Che installation when installed using <code>chectl</code>. As with <code>chectl server:logs</code>, the directory logs are stored in can be specified using the <code>-d</code> parameter.</p>
-</dd>
-</dl>
+<div class="title">Figure 1. Plug-in registries interactions with other components</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://github.com/che-incubator/chectl/">`chectl` reference documentation</a></p>
+<p><a href="https://github.com/eclipse-che/che-plugin-registry/blob/main/che-editors.yaml">Editors definitions in the Che plugin registry repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse-che/che-plugin-registry/blob/main/che-theia-plugins.yaml">Plug-ins definitions in the Che plugin registry repository</a></p>
+</li>
+<li>
+<p><a href="https://eclipse-che.github.io/che-plugin-registry/main/index.json">Plug-in registry latest community version online instance</a></p>
 </li>
 </ul>
 </div>

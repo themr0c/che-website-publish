@@ -289,7 +289,7 @@
     <a class="nav-link" href="../../administration-guide/postgresql/">PostgreSQL</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../administration-guide/plug-in-registry/">Plug-in registry</a>
+    <a class="nav-link" href="../../administration-guide/plugin-registry/">Plug-in registry</a>
   </li>
 </ul>
   </li>
@@ -427,10 +427,10 @@
     <a class="nav-link" href="../../administration-guide/che-theia-workspaces/">Che-Theia workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../administration-guide/the-woopra-telemetry-plugin/">The Woopra telemetry plug-in</a>
+    <a class="nav-link" href="../../administration-guide/the-woopra-telemetry-plugin/">The Woopra telemetry plugin</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../administration-guide/creating-a-telemetry-plugin/">Creating a telemetry plug-in</a>
+    <a class="nav-link" href="../../administration-guide/creating-a-telemetry-plugin/">Creating a telemetry plugin</a>
   </li>
 </ul>
   </li>
@@ -699,16 +699,16 @@
 <p>Components of Che are OCI images. Set up Eclipse&#160;Che in offline mode to reduce any extra download at runtime because everything needs to be available from the beginning. See <a href="../../administration-guide/installing-che-in-a-restricted-environment/" class="xref page">Installing Che in a restricted environment on OpenShift</a>.</p>
 </div>
 </dd>
-<dt class="hdlist1">Optimizing workspace plug-ins</dt>
+<dt class="hdlist1">Optimizing workspace plugins</dt>
 <dd>
 <div class="paragraph">
 <p><em>Role: User</em></p>
 </div>
 <div class="paragraph">
-<p>When selecting various plug-ins, each plug-in can bring its own sidecar container, which is an OCI image. Kubernetes pulls the images of these sidecar containers.</p>
+<p>When selecting various plugins, each plugin can bring its own sidecar container, which is an OCI image. Kubernetes pulls the images of these sidecar containers.</p>
 </div>
 <div class="paragraph">
-<p>Reduce the number of plug-ins, or disable them to see if start time is faster. See also <a href="../../administration-guide/caching-images-for-faster-workspace-start/" class="xref page">Caching images for faster workspace start</a>.</p>
+<p>Reduce the number of plugins, or disable them to see if start time is faster. See also <a href="../../administration-guide/caching-images-for-faster-workspace-start/" class="xref page">Caching images for faster workspace start</a>.</p>
 </div>
 </dd>
 <dt class="hdlist1">Reducing the number of public endpoints</dt>
@@ -720,10 +720,10 @@
 <p>For each endpoint, Kubernetes is creating Kubernetes Ingress or OpenShift Route objects. Depending on the underlying configuration, this creation can be slow.</p>
 </div>
 <div class="paragraph">
-<p>To avoid this problem, reduce the exposure. For example, to automatically detect a new port listening inside containers and redirect traffic for the processes using a local IP address (<code>127.0.0.1</code>), the Che-Theia IDE plug-in has three optional routes.</p>
+<p>To avoid this problem, reduce the exposure. For example, to automatically detect a new port listening inside containers and redirect traffic for the processes using a local IP address (<code>127.0.0.1</code>), the Che-Theia IDE plugin has three optional routes.</p>
 </div>
 <div class="paragraph">
-<p>By reducing the number of endpoints and checking endpoints of all plug-ins, workspace start can be faster.</p>
+<p>By reducing the number of endpoints and checking endpoints of all plugins, workspace start can be faster.</p>
 </div>
 </dd>
 <dt class="hdlist1">CDN configuration</dt>
@@ -747,7 +747,7 @@
 <dt class="hdlist1">Providing enough CPU resources</dt>
 <dd>
 <div class="paragraph">
-<p>Plug-ins consume CPU resources. For example, when a plug-in provides IntelliSense features, adding more CPU resources may lead to better performance.</p>
+<p>Plug-ins consume CPU resources. For example, when a plugin provides IntelliSense features, adding more CPU resources may lead to better performance.</p>
 </div>
 <div class="paragraph">
 <p>Ensure the CPU settings in the devfile definition, <code>devfile.yaml</code>, are correct:</p>
@@ -759,7 +759,7 @@
 components:
   -
     type: chePlugin
-    id: id/of/plug-in
+    id: __&lt;plugin_id&gt;__
     cpuLimit: 1360Mi <i class="conum" data-value="1"></i><b>(1)</b>
     cpuRequest: 100m <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
@@ -768,11 +768,11 @@ components:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the CPU limit for the plug-in.</td>
+<td>Specifies the CPU limit for the plugin.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specifies the CPU request for the plug-in.</td>
+<td>Specifies the CPU request for the plugin.</td>
 </tr>
 </table>
 </div>
@@ -780,15 +780,15 @@ components:
 <dt class="hdlist1">Providing enough memory</dt>
 <dd>
 <div class="paragraph">
-<p>Plug-ins consume CPU and memory resources. For example, when a plug-in provides IntelliSense features, collecting data can consume all the memory allocated to the container.</p>
+<p>Plug-ins consume CPU and memory resources. For example, when a plugin provides IntelliSense features, collecting data can consume all the memory allocated to the container.</p>
 </div>
 <div class="paragraph">
-<p>Providing more memory to the plug-in can increase performance. Ensure about the correctness of memory settings:</p>
+<p>Providing more memory to the plugin can increase performance. Ensure about the correctness of memory settings:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>in the plug-in definition - <code>meta.yaml</code> file</p>
+<p>in the plugin definition - <code>meta.yaml</code> file</p>
 </li>
 <li>
 <p>in the devfile definition - <code>devfile.yaml</code> file</p>
@@ -809,7 +809,7 @@ spec:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the memory limit for the plug-in.</td>
+<td>Specifies the memory limit for the plugin.</td>
 </tr>
 </table>
 </div>
@@ -823,7 +823,7 @@ spec:
 components:
   -
     type: chePlugin
-    id: id/of/plug-in
+    id: __&lt;plugin_id&gt;__
     memoryLimit: 1048M  <i class="conum" data-value="1"></i><b>(1)</b>
     memoryRequest: 256M</code></pre>
 </div>
@@ -832,7 +832,7 @@ components:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the memory limit for this plug-in.</td>
+<td>Specifies the memory limit for this plugin.</td>
 </tr>
 </table>
 </div>
