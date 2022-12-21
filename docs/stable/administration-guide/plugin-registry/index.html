@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Upgrading Che using the CLI management tool in a restricted environment :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/upgrading-che-using-the-cli-management-tool-in-restricted-environment/">
-    <meta name="description" content="Upgrading Che in a restricted environment">
-    <meta name="keywords" content="Upgrading Che in a restricted environment">
+    <title>Plug-in registry :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/plugin-registry/">
+    <meta name="description" content="Plug-in registry">
+    <meta name="keywords" content="administration-guide, architecture, server, devworkspace, plugin, registry">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -284,8 +284,8 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../postgresql/">PostgreSQL</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../plugin-registry/">Plug-in registry</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Plug-in registry</a>
   </li>
 </ul>
   </li>
@@ -534,8 +534,8 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool/">Upgrading Che using the CLI management tool</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Upgrading Che in a restricted environment</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in a restricted environment</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../repairing-the-devworkspace-operator-on-openshift/">Repairing the Dev Workspace Operator on OpenShift</a>
@@ -621,130 +621,53 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../upgrading-che/">Upgrading Che</a></li>
-    <li><a href="./">Upgrading Che in a restricted environment</a></li>
+    <li><a href="../preparing-the-installation/">Preparing the installation</a></li>
+    <li><a href="../architecture-overview/">Architecture</a></li>
+    <li><a href="../server-components/">Server components</a></li>
+    <li><a href="./">Plug-in registry</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">stable</button>
   <div class="version-menu">
-    <a class="version" href="../../../next/administration-guide/upgrading-che-using-the-cli-management-tool-in-restricted-environment/">next</a>
+    <a class="version" href="../../../next/administration-guide/plugin-registry/">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
     <a class="version is-current" href="./">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.58.x/modules/administration-guide/pages/upgrading-che-using-the-cli-management-tool-in-restricted-environment.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.58.x/modules/administration-guide/pages/plugin-registry.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Upgrading Che using the CLI management tool in a restricted environment</h1>
+<h1 class="page">Plug-in registry</h1>
 <div class="paragraph">
-<p>This section describes how to upgrade Eclipse&#160;Che and perform minor version updates by using the CLI management tool in a restricted environment.</p>
+<p>Each Che workspace starts with a specific editor and set of associated extensions.
+The Che plugin registry provides the list of available editors and editor extensions.
+A Devfile v2 describes each editor or extension.</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The Che instance was installed on OpenShift using the <code>chectl --installer operator</code> method in the <code>eclipse-che</code> project. See <a href="../installing-che-in-a-restricted-environment/" class="xref page">Installing Che in a restricted environment on OpenShift</a>.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>The <a href="../dashboard/" class="xref page">User dashboard</a> is reading the content of the registry.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>The OpenShift cluster has at least 64 GB of disk space.</p>
-</li>
-<li>
-<p>The OpenShift cluster is ready to operate on a restricted network, and the OpenShift control plane has access to the public internet. See <a href="https://docs.openshift.com/container-platform/4.10/installing/disconnected_install/index.html">About disconnected installation mirroring</a> and <a href="https://docs.openshift.com/container-platform/4.10/operators/admin/olm-restricted-networks.html">Using Operator Lifecycle Manager on restricted networks</a>.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>An active <code>oc</code> session with administrative permissions to the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
-</li>
-<li>
-<p>An active <code>oc registry</code> session to the <code>registry.redhat.io</code> Red Hat Ecosystem Catalog. See: <a href="https://access.redhat.com/RegistryAuthentication">Red Hat Container Registry authentication</a>.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>opm</code>. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/opm/cli-opm-install.html">Installing the <code>opm</code> CLI</a>.</p>
-</li>
-<li>
-<p><code>jq</code>. See <a href="https://stedolan.github.io/jq/download/">Downloading <code>jq</code></a>.</p>
-</li>
-<li>
-<p><code>podman</code>. See <a href="https://podman.io/getting-started/installation">Installing Podman</a>.</p>
-</li>
-<li>
-<p>An active <code>skopeo</code> session with administrative access to the <em>&lt;my_registry&gt;</em> registry. See <a href="https://github.com/containers/skopeo/blob/main/install.md">Installing Skopeo</a>, <a href="https://github.com/containers/skopeo#authenticating-to-a-registry">Authenticating to a registry</a>, and <a href="https://docs.openshift.com/container-platform/4.10/installing/disconnected_install/installing-mirroring-installation-images.html">Mirroring images for a disconnected installation</a>.</p>
-</li>
-<li>
-<p><code>chectl</code> for Che version 7.58. See <a href="../installing-the-chectl-management-tool/" class="xref page">Install the chectl management tool</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Download and execute the mirroring script to install a custom Operator catalog and mirror the related images: <a href="../_attachments/restricted-environment/prepare-restricted-environment.sh" class="xref attachment">prepare-restricted-environment.sh</a>.</p>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>$ bash prepare-restricted-environment.sh \
-  --ocp_ver "4.10" \
-  --devworkspace_operator_index "registry.redhat.io/redhat/redhat-operator-index:v4.10" \
-  --devworkspace_operator_version "v0.15.2" \
-  --prod_operator_index "registry.access.redhat.com/redhat/community-operator-index:v4.10" \
-  --prod_operator_package_name "eclipse-che" \
-  --prod_operator_version "v7.58.0" \
-  --my_registry "<em>&lt;my_registry&gt;</em>" \
-  --my_catalog "<em>&lt;my_catalog&gt;</em>"</pre>
+<img src="../_images/architecture/che-plugin-registry-interactions.png" alt="Plug-in registries interactions with other components">
 </div>
-</div>
-</li>
-<li>
-<p>In all running workspaces in the Che previous minor version instance, save and push changes back to the Git repositories.</p>
-</li>
-<li>
-<p>Stop all workspaces in the Che previous minor version instance.</p>
-</li>
-<li>
-<p>Run the following command:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:update --che-operator-image="$TAG" -n eclipse-che --k8spodwaittimeout=1800000</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">Verification steps</div>
-<ol class="arabic">
-<li>
-<p>Navigate to the Che instance.</p>
-</li>
-<li>
-<p>The 7.58 version number is visible at the bottom of the page.</p>
-</li>
-</ol>
+<div class="title">Figure 1. Plug-in registries interactions with other components</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.10/operators/understanding/olm-rh-catalogs.html">Red Hat-provided Operator catalogs</a></p>
+<p><a href="https://github.com/eclipse-che/che-plugin-registry/blob/main/che-editors.yaml">Editors definitions in the Che plugin registry repository</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.10/operators/admin/olm-managing-custom-catalogs.html">Managing custom catalogs</a></p>
+<p><a href="https://github.com/eclipse-che/che-plugin-registry/blob/main/che-theia-plugins.yaml">Plug-ins definitions in the Che plugin registry repository</a></p>
+</li>
+<li>
+<p><a href="https://eclipse-che.github.io/che-plugin-registry/main/index.json">Plug-in registry latest community version online instance</a></p>
 </li>
 </ul>
 </div>
