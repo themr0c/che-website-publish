@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Using credentials and configurations in workspaces :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/using-credentials-and-configurations-in-workspaces/">
-    <meta name="description" content="Using credentials and configurations in workspaces">
-    <meta name="keywords" content="user-guide, configuring, user, configmaps, secrets, volumes, mounting, mount">
+    <title>URL parameter for additional remotes :: Eclipse Che Documentation</title>
+    <meta name="description" content="URL parameter for additional remotes">
+    <meta name="keywords" content="additional-remote, more-remotes, configure-remote, remotes-parameter">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -125,8 +124,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../url-parameter-for-the-workspace-storage/">URL parameter for the workspace storage</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../url-parameter-for-additional-remotes/">URL parameter for additional remotes</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">URL parameter for additional remotes</a>
   </li>
 </ul>
   </li>
@@ -156,9 +155,9 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">Using credentials and configurations in workspaces</a>
+    <a class="nav-link" href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -637,7 +636,9 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="./">Using credentials and configurations in workspaces</a></li>
+    <li><a href="../user-onboarding/">User onboarding</a></li>
+    <li><a href="../optional-parameters-for-the-urls-for-starting-a-new-workspace/">Optional parameters for the URLs for starting a new workspace</a></li>
+    <li><a href="./">URL parameter for additional remotes</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -645,74 +646,48 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/using-credentials-and-configurations-in-workspaces/">stable</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/using-credentials-and-configurations-in-workspaces.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/url-parameter-for-additional-remotes.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Using credentials and configurations in workspaces</h1>
+<h1 class="page">URL parameter for additional remotes</h1>
 <div class="paragraph">
-<p>You can use your credentials and configurations in your workspaces.</p>
+<p>When you visit a URL for starting a new workspace, Che configures the <code>origin</code> remote to be the Git repository that you specified with <code>#</code> after the FQDN URL of your organization’s Che instance.</p>
 </div>
 <div class="paragraph">
-<p>To do so, mount your credentials and configurations to the <code>Dev Workspace</code> containers in the Kubernetes cluster of your organization&#8217;s Che instance:</p>
+<p>The URL parameter for cloning and configuring additional remotes for the workspace is <code>remotes=</code>:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">https://<em>&lt;che_fqdn&gt;</em>#<em>&lt;git_repository_url&gt;</em>?remotes={{<em>&lt;name_1&gt;</em>,<em>&lt;url_1&gt;</em>},{<em>&lt;name_2&gt;</em>,<em>&lt;url_2&gt;</em>},{<em>&lt;name_3&gt;</em>,<em>&lt;url_3&gt;</em>},...}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Mount your credentials and sensitive configurations as Kubernetes <a href="../mounting-secrets/" class="xref page">Secrets</a>.</p>
+<p>If you do not enter the name <code>origin</code> for any of the additional remotes, the remote from <em>&lt;git_repository_url&gt;</em> will be cloned and named <code>origin</code> by default, and its expected branch will be checked out automatically.</p>
 </li>
 <li>
-<p>Mount your non-sensitve configurations as Kubernetes <a href="../mounting-configmaps/" class="xref page">ConfigMaps</a>.</p>
+<p>If you enter the name <code>origin</code> for one of the additional remotes, its default branch will be checked out automatically, but the remote from <em>&lt;git_repository_url&gt;</em> will NOT be cloned for the workspace.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>If you need to allow the <code>Dev Workspace</code> Pods in the cluster to access container registries that require authentication, create an <a href="../creating-image-pull-secrets/" class="xref page">image pull Secret</a> for the <code>Dev Workspace</code> Pods.</p>
-</div>
-<div class="paragraph">
-<p>The mounting process uses the standard Kubernetes mounting mechanism and requires applying additional labels and annotations to your existing resources. Resources are mounted when starting a new workspace or restarting an existing one.</p>
-</div>
-<div class="paragraph">
-<p>You can create permanent mount points for various components:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Maven configuration, such as the <a href="https://maven.apache.org/settings.html">user-specific</a> <code>settings.xml</code> file</p>
-</li>
-<li>
-<p>SSH key pairs</p>
-</li>
-<li>
-<p><a href="../using-a-git-provider-access-token/" class="xref page">Git-provider access tokens</a></p>
-</li>
-<li>
-<p>AWS authorization tokens</p>
-</li>
-<li>
-<p>Configuration files</p>
-</li>
-<li>
-<p>Persistent storage</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes Documentation: Secrets</a></p>
-</li>
-<li>
-<p><a href="https://kubernetes.io/docs/concepts/configuration/configmap/">Kubernetes Documentation: ConfigMaps</a></p>
-</li>
-</ul>
+</td>
+</tr>
+</table>
 </div>
 </article>
   </div>
