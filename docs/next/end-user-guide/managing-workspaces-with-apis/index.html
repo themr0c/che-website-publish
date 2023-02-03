@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mounting ConfigMaps :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/mounting-configmaps/">
-    <meta name="description" content="To mount non-confidential configuration data into your workspaces, use Kubernetes ConfigMaps.">
-    <meta name="keywords" content="user-guide, configuring, user, configmaps, configmap, mounting, mount">
+    <title>Managing workspaces with Kubernetes APIs :: Eclipse Che Documentation</title>
+    <meta name="description" content="Managing workspaces with Kubernetes APIs">
+    <meta name="keywords" content="api, list workspaces, create workspace, restart workspace, stop workspace, start workspace, remove workspace">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -172,8 +171,8 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Mounting ConfigMaps</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../mounting-configmaps/">Mounting ConfigMaps</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -208,8 +207,8 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../integrating-with-kubernetes/">Integrating with Kubernetes</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../managing-workspaces-with-apis/">Managing workspaces with Kubernetes APIs</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="./">Managing workspaces with Kubernetes APIs</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../automatic-token-injection/">Automatic Kubernetes token injection</a>
@@ -640,8 +639,8 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
-    <li><a href="./">Mounting ConfigMaps</a></li>
+    <li><a href="../integrating-with-kubernetes/">Integrating with Kubernetes</a></li>
+    <li><a href="./">Managing workspaces with Kubernetes APIs</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -649,34 +648,240 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/mounting-configmaps/">stable</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">stable</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/mounting-configmaps.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/managing-workspaces-with-apis.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mounting ConfigMaps</h1>
+<h1 class="page">Managing workspaces with Kubernetes APIs</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>To mount non-confidential configuration data into your workspaces, use Kubernetes ConfigMaps.</p>
+<p>On your organization&#8217;s Kubernetes cluster, Che workspaces are represented as <code>DevWorkspace</code> custom resources of the same name.
+As a result, if there is a workspace named <code>my-workspace</code> in the Che dashboard, there is a corresponding <code>DevWorkspace</code> custom resource named <code>my-workspace</code> in the user&#8217;s namespace on the cluster.</p>
 </div>
 <div class="paragraph">
-<p>Using Kubernetes ConfigMaps, you can mount non-sensitive data such as configuration values for an application.</p>
+<p>Because each <code>DevWorkspace</code> custom resource on the cluster represents a Che workspace, you can manage Che workspaces by using Kubernetes APIs with clients such as the command-line <code>kubectl</code>.</p>
 </div>
 <div class="paragraph">
-<p>Mount Kubernetes ConfigMaps to the <code>Dev Workspace</code> containers in the Kubernetes cluster of your organization&#8217;s Che instance.</p>
+<p>Each <code>DevWorkspace</code> custom resource contains details derived from the devfile of the Git repository cloned for the workspace. For example, a devfile might provide devfile commands and workspace container configurations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="listing-workspaces"><a class="anchor" href="#listing-workspaces"></a>Listing all workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a user, you can list your workspaces by using the command line.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+<p>An active <code>kubectl</code> session with permissions to <code>get</code> the <code>DevWorkspace</code> resources in your namespace on the cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
 </li>
 <li>
-<p>In your user namespace, you created a new ConfigMap or determined an existing ConfigMap to mount to all <code>Dev Workspace</code> containers.</p>
+<p>You know the relevant Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can visit <code>https://<em>&lt;che_fqdn&gt;</em>/api/kubernetes/namespace</code> to get your Che user namespace as <code>name</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You are in the Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift, you can use the command-line <code>oc</code> tool to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-project">display your current namespace or switch to a namespace</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>To list your workspaces, enter the following on a command line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ kubectl get devworkspaces</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Output</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>NAMESPACE   NAME                 DEVWORKSPACE ID             PHASE     INFO
+user1-dev   spring-petclinic     workspace6d99e9ffb9784491   Running   https://url-to-workspace.com
+user1-dev   golang-example       workspacedf64e4a492cd4701   Stopped   Stopped
+user1-dev   python-hello-world   workspace69c26884bbc141f2   Failed    Container tooling has state CrashLoopBackOff</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can view <strong>PHASE</strong> changes live by adding the <code>--watch</code> flag to this command.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Users with administrative permissions on the cluster can list all workspaces from all Che users by including the <code>--all-namespaces</code> flag.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-workspaces"><a class="anchor" href="#creating-workspaces"></a>Creating workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If your use case does not permit use of the Che dashboard, you can create workspaces with Kubernetes APIs by applying custom resources to the cluster.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Creating workspaces through the Che dashboard provides better user experience and configuration benefits compared to using the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>As a user, you are automatically logged in to the cluster.</p>
+</li>
+<li>
+<p>Kubernetes or OpenShift clients work automatically.</p>
+</li>
+<li>
+<p>Che and its components automatically convert the target Git repository&#8217;s devfile into the <code>DevWorkspace</code> and <code>DevWorkspaceTemplate</code> custom resources on the cluster.</p>
+</li>
+<li>
+<p>Access to the workspace is secured by default with the <code>routingClass: che</code> in the <code>DevWorkspace</code> of the workspace.</p>
+</li>
+<li>
+<p>Recognition of the <code>DevWorkspaceOperatorConfig</code> configuration is managed by Che.</p>
+</li>
+<li>
+<p>Recognition of configurations in <code>spec.devEnvironments</code> specified in the <code>CheCluster</code> custom resource including:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistent storage strategy is specified with <code>devEnvironments.storage</code>.</p>
+</li>
+<li>
+<p>Default IDE is specified with <code>devEnvironments.defaultEditor</code>.</p>
+</li>
+<li>
+<p>Default plugins are specified with <code>devEnvironments.defaultPlugins</code>.</p>
+</li>
+<li>
+<p>Container build configuration is specified with <code>devEnvironments.containerBuildConfiguration</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session with permissions to create <code>DevWorkspace</code> resources in your namespace on the cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p>You know the relevant Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can visit <code>https://<em>&lt;che_fqdn&gt;</em>/api/kubernetes/namespace</code> to get your Che user namespace as <code>name</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You are in the Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift, you can use the command-line <code>oc</code> tool to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-project">display your current namespace or switch to a namespace</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Che administrators who intend to create workspaces for other users must create the <code>DevWorkspace</code> custom resource in a user namespace that is provisioned by Che or by the administrator. See <a href="../../administration-guide/configuring-namespace-provisioning/" class="xref page">Configuring user namespace provisioning</a>.
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ul>
 </div>
@@ -684,69 +889,415 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Add the labels, which are required for mounting the ConfigMap, to the ConfigMap.</p>
+<p>To prepare the <code>DevWorkspace</code> custom resource, copy the contents of the target Git repository&#8217;s devfile.</p>
+<div class="exampleblock">
+<div class="title">Example 2. Copied devfile contents with <code>schemaVersion: 2.2.0</code></div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl label configmap <em>&lt;ConfigMap_name&gt;</em> \
-        controller.devfile.io/mount-to-devworkspace=true \
-        controller.devfile.io/watch-configmap=true</pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">components:
+  - name: tooling-container
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For more details, see the <a href="https://devfile.io/docs/2.2.0/what-is-a-devfile">devfile v2 documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a <code>DevWorkspace</code> custom resource, pasting the devfile contents from the previous step under the <code>spec.template</code> field.</p>
+<div class="exampleblock">
+<div class="title">Example 3. A <code>DevWorkspace</code> custom resource</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: my-devworkspace<i class="conum" data-value="1"></i><b>(1)</b>
+  namespace: user1-dev<i class="conum" data-value="2"></i><b>(2)</b>
+spec:
+  routingClass: che
+  started: true<i class="conum" data-value="3"></i><b>(3)</b>
+  contributions:<i class="conum" data-value="4"></i><b>(4)</b>
+    - name: ide
+      uri: https://<em>&lt;che_fqdn&gt;</em>/plugin-registry/v3/plugins/che-incubator/che-code/insiders/devfile.yaml
+  template:
+    projects:<i class="conum" data-value="5"></i><b>(5)</b>
+      - name: my-project-name
+        git:
+          remotes:
+            origin: <a href="https://github.com/eclipse-che/che-docs" class="bare">https://github.com/eclipse-che/che-docs</a>
+    components:<i class="conum" data-value="6"></i><b>(6)</b>
+      - name: tooling-container
+        container:
+          image: quay.io/devfile/universal-developer-image:ubi8-latest</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name of the <code>DevWorkspace</code> custom resource. This will be the name of the new workspace.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>User namespace, which is the target namespace for the new workspace.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Determines whether the workspace must be started when the <code>DevWorkspace</code> custom resource is created.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>URL reference to the <a href="https://github.com/microsoft/vscode">Microsoft Visual Studio Code - Open Source</a> IDE devfile from the plugin registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Details about the Git repository to clone into the workspace when it starts.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>List of components such as workspace containers and volume components.</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </li>
 <li>
-<p>Optional: Use the annotations to configure how the ConfigMap is mounted.</p>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Optional annotations</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Annotation</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>controller.devfile.io/mount-path:</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the mount path.</p>
-<p class="tableblock">Defaults to <code>/etc/config/<em>&lt;ConfigMap_name&gt;</em></code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>controller.devfile.io/mount-as:</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies how the resource should be mounted: <code>file</code>, <code>subpath</code>, or <code>env</code>.</p>
-<p class="tableblock">Defaults to <code>file</code>.</p>
-<p class="tableblock"><code>mount-as:file</code> mounts the keys and values as files within the mount path.</p>
-<p class="tableblock"><code>mount-as:subpath</code> mounts the keys and values within the mount path using subpath volume mounts.</p>
-<p class="tableblock"><code>mount-as:env</code> mounts the keys and values as environment variables in all <code>Dev Workspace</code> containers.</p></td>
-</tr>
-</tbody>
-</table>
+<p>Apply the <code>DevWorkspace</code> custom resource to the cluster.</p>
 </li>
 </ol>
 </div>
+<div class="olist arabic">
+<div class="title">Verification</div>
+<ol class="arabic">
+<li>
+<p>Verify that the workspace is starting by checking the <strong>PHASE</strong> status of the <code>DevWorkspace</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl get devworkspaces -n <em>&lt;user_namespace&gt;</em> --watch</pre>
+</div>
+</div>
 <div class="exampleblock">
-<div class="title">Example 1. Mounting a ConfigMap as environment variables</div>
+<div class="title">Example 4. Output</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: my-settings
-  labels:
-    controller.devfile.io/mount-to-devworkspace: 'true'
-    controller.devfile.io/watch-configmap: 'true'
-  annotations:
-    controller.devfile.io/mount-as: env
-data:
-  <em>&lt;env_var_1&gt;</em>: <em>&lt;value_1&gt;</em>
-  <em>&lt;env_var_2&gt;</em>: <em>&lt;value_2&gt;</em></code></pre>
+<pre>NAMESPACE        NAME                  DEVWORKSPACE ID             PHASE      INFO
+user1-dev        my-devworkspace       workspacedf64e4a492cd4701   Starting   Waiting for workspace deployment</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>When the workspace has successfully started, its <strong>PHASE</strong> status changes to <strong>Running</strong> in the output of the <code>kubectl get devworkspaces</code> command.</p>
+<div class="exampleblock">
+<div class="title">Example 5. Output</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>NAMESPACE            NAME                  DEVWORKSPACE ID             PHASE      INFO
+user1-dev            my-devworkspace       workspacedf64e4a492cd4701   Running    https://url-to-workspace.com</pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
-<p>When you start a workspace, the <code><em>&lt;env_var_1&gt;</em></code> and <code><em>&lt;env_var_2&gt;</em></code> environment variables will be available in the <code>Dev Workspace</code> containers.</p>
+<p>You can then open the workspace by using one of these options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Visit the URL provided in the <strong>INFO</strong> section of the output of the <code>kubectl get devworkspaces</code> command.</p>
+</li>
+<li>
+<p>Open the workspace from the Che dashboard.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stopping-workspaces"><a class="anchor" href="#stopping-workspaces"></a>Stopping workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can stop a workspace by setting the <code>spec.started</code> field in the <code>Devworkspace</code> custom resource to <code>false</code>.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session on the cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p>You know the workspace name.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can find the relevant workspace name in the output of <code>$ kubectl get devworkspaces</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You know the relevant Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can visit <code>https://<em>&lt;che_fqdn&gt;</em>/api/kubernetes/namespace</code> to get your Che user namespace as <code>name</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You are in the Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift, you can use the command-line <code>oc</code> tool to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-project">display your current namespace or switch to a namespace</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command to stop a workspace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch devworkspace <em>&lt;workspace_name&gt;</em> \
+-p '{"spec":{"started":false}}' \
+--type=merge -n <em>&lt;user_namespace&gt;</em> &amp;&amp; \
+kubectl wait --for=jsonpath='{.status.phase}'=Stopped \
+dw/<em>&lt;workspace_name&gt;</em> -n <em>&lt;user_namespace&gt;</em></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="starting-stopped-workspaces"><a class="anchor" href="#starting-stopped-workspaces"></a>Starting stopped workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can start a stopped workspace by setting the <code>spec.started</code> field in the <code>Devworkspace</code> custom resource to <code>true</code>.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session on the cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p>You know the workspace name.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can find the relevant workspace name in the output of <code>$ kubectl get devworkspaces</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You know the relevant Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can visit <code>https://<em>&lt;che_fqdn&gt;</em>/api/kubernetes/namespace</code> to get your Che user namespace as <code>name</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You are in the Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift, you can use the command-line <code>oc</code> tool to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-project">display your current namespace or switch to a namespace</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command to start a stopped workspace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch devworkspace <em>&lt;workspace_name&gt;</em> \
+-p '{"spec":{"started":true}}' \
+--type=merge -n <em>&lt;user_namespace&gt;</em> &amp;&amp; \
+kubectl wait --for=jsonpath='{.status.phase}'=Running \
+dw/<em>&lt;workspace_name&gt;</em> -n <em>&lt;user_namespace&gt;</em></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="removing-workspaces"><a class="anchor" href="#removing-workspaces"></a>Removing workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can remove a workspace by simply deleting the <code>DevWorkspace</code> custom resource.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Deleting the <code>DevWorkspace</code> custom resource will also delete other workspace resources if they were created by Che: for example, the referenced <code>DevWorkspaceTemplate</code> and per-workspace <code>PersistentVolumeClaims</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Remove workspaces by using the Che dashboard whenever possible.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session on the cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+<li>
+<p>You know the workspace name.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can find the relevant workspace name in the output of <code>$ kubectl get devworkspaces</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You know the relevant Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can visit <code>https://<em>&lt;che_fqdn&gt;</em>/api/kubernetes/namespace</code> to get your Che user namespace as <code>name</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You are in the Che user namespace on the cluster.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On OpenShift, you can use the command-line <code>oc</code> tool to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-project">display your current namespace or switch to a namespace</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command to remove a workspace:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl delete devworkspace <em>&lt;workspace_name&gt;</em> -n <em>&lt;user_namespace&gt;</em></pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
