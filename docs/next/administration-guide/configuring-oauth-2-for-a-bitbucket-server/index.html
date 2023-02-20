@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Preparing the installation :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/preparing-the-installation/">
-    <meta name="description" content="Preparing the installation">
-    <meta name="keywords" content="preparing, installation">
+    <title>Configuring OAuth 2.0 for a Bitbucket Server :: Eclipse Che Documentation</title>
+    <meta name="description" content="Configuring OAuth 2.0 for a Bitbucket Server">
+    <meta name="keywords" content="configuring-oauth, authorization, bitbucket, bitbucket-server, oauth-2, oauth-2.0">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -258,9 +257,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Administration Guide</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">Preparing the installation</a>
+    <a class="nav-link" href="../preparing-the-installation/">Preparing the installation</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../supported-platforms/">Supported platforms</a>
@@ -507,8 +506,8 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../configuring-oauth-2-for-gitlab/">Configuring OAuth 2.0 for GitLab</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../configuring-oauth-2-for-a-bitbucket-server/">Configuring OAuth 2.0 for a Bitbucket Server</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Configuring OAuth 2.0 for a Bitbucket Server</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../configuring-oauth-2-for-the-bitbucket-cloud/">Configuring OAuth 2.0 for the Bitbucket Cloud</a>
@@ -643,7 +642,10 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="./">Preparing the installation</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../managing-identities-and-authorizations/">Managing identities and authorizations</a></li>
+    <li><a href="../oauth-for-github-gitlab-or-bitbucket/">OAuth for GitHub, GitLab, or Bitbucket</a></li>
+    <li><a href="./">Configuring OAuth 2.0 for a Bitbucket Server</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -651,35 +653,191 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/administration-guide/preparing-the-installation/">7.60.x</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.60.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/preparing-the-installation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/configuring-oauth-2-for-a-bitbucket-server.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Preparing the installation</h1>
+<h1 class="page">Configuring OAuth 2.0 for a Bitbucket Server</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>To prepare a Che installation, learn about Che ecosystem and deployment constraints:</p>
+<p>You can use OAuth 2.0 to enable users to work with a remote Git repository that is hosted on a Bitbucket Server:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up an OAuth 2.0 application link on the Bitbucket Server.</p>
+</li>
+<li>
+<p>Apply an application link Secret for the Bitbucket Server.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="setting-up-an-oauth-2-application-link-on-the-bitbucket-server"><a class="anchor" href="#setting-up-an-oauth-2-application-link-on-the-bitbucket-server"></a>Setting up an OAuth 2.0 application link on the Bitbucket Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Set up an OAuth 2.0 application link on the Bitbucket Server.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You are logged in to the Bitbucket Server.</p>
+</li>
+<li>
+<p><a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> is installed in the operating system you are using.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Go to <strong>Administration &gt; Applications &gt; Application links</strong>.</p>
+</li>
+<li>
+<p>Select <strong>Create link</strong>.</p>
+</li>
+<li>
+<p>Select <strong>External application</strong> and <strong>Incoming</strong>.</p>
+</li>
+<li>
+<p>Enter <code>https://<em>&lt;che_fqdn&gt;</em>/api/oauth/callback</code> to the <strong>Redirect URL</strong> field.</p>
+</li>
+<li>
+<p>Select the <strong>Admin - Write</strong>  checkbox in <strong>Application permissions</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+<li>
+<p>Copy the <strong>Client ID</strong> and encode it to Base64 for use when applying the Bitbucket application link Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo -n '<em>&lt;Bitbucket_Client_ID&gt;</em>' | base64</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Copy the <strong>Client secret</strong> and encode it to Base64 for use when applying the Bitbucket application link Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo -n '<em>&lt;Bitbucket_Client_secret&gt;</em>' | base64</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://confluence.atlassian.com/bitbucketserver0720/configure-an-incoming-link-1116282013.html">Atlassian Documentation: Configure an incoming link</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="applying-an-oauth-2-application-link-secret-for-the-bitbucket-server"><a class="anchor" href="#applying-an-oauth-2-application-link-secret-for-the-bitbucket-server"></a>Applying an OAuth 2.0 application link Secret for the Bitbucket Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Prepare and apply the OAuth 2.0 application link Secret for the Bitbucket Server.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The application link is set up on the Bitbucket Server.</p>
+</li>
+<li>
+<p>The Base64-encoded values, which were generated when setting up the Bitbucket application link, are prepared:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../supported-platforms/" class="xref page">Supported platforms</a></p>
+<p>Bitbucket <strong>Client ID</strong></p>
 </li>
 <li>
-<p><a href="../architecture-overview/" class="xref page">Che architecture</a></p>
-</li>
-<li>
-<p><a href="../calculating-che-resource-requirements/" class="xref page">Calculating Che resource requirements</a></p>
-</li>
-<li>
-<p><a href="../understanding-the-checluster-custom-resource/" class="xref page">Understanding the <code>CheCluster</code> Custom Resource</a></p>
+<p>Bitbucket <strong>Client secret</strong></p>
 </li>
 </ul>
+</div>
+</li>
+<li>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Prepare the Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Secret
+apiVersion: v1
+metadata:
+  name: bitbucket-oauth-config
+  namespace: eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: oauth-scm-configuration
+  annotations:
+    che.eclipse.org/oauth-scm-server: bitbucket
+    che.eclipse.org/scm-server-endpoint: <em>&lt;bitbucket_server_url&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
+type: Opaque
+data:
+  id: <em>&lt;Base64_Bitbucket_Client_ID&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+  secret: <em>&lt;Base64_Bitbucket_Client_Secret&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The URL of the Bitbucket Server.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The Base64-encoded Bitbucket <strong>Client ID</strong>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The Base64-encoded Bitbucket <strong>Client secret</strong>.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Apply the Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify in the output that the Secret is created.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </article>
   </div>
