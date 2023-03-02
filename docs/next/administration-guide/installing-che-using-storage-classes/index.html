@@ -291,9 +291,6 @@
     <a class="nav-link" href="../che-server/">Che server</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../postgresql/">PostgreSQL</a>
-  </li>
-  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../plugin-registry/">Plug-in registry</a>
   </li>
 </ul>
@@ -689,15 +686,12 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Che has two components that require persistent volumes to store data:</p>
+<p>Che has one component that requires persistent volumes to store data:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A PostgreSQL database.</p>
-</li>
-<li>
-<p>A Che workspaces. Che workspaces store source code using volumes, for example <code>/projects</code> volume.</p>
+<p>A Che workspace. Che workspaces store source code using volumes, for example <code>/projects</code> volume.</p>
 </li>
 </ul>
 </div>
@@ -743,11 +737,6 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
-  components:
-    database:
-      pvc:
-        # keep blank unless you need to use a non default storage class for PostgreSQL PVC
-        storageClass: 'postgres-storage'
   devEnvironments:
     storage:
       pvc:
@@ -757,29 +746,7 @@
 </div>
 </li>
 <li>
-<p>Define the persistent volume for a PostgreSQL database in a <code>che-postgres-pv.yaml</code> file:</p>
-<div class="listingblock">
-<div class="title"><code>che-postgres-pv.yaml</code> file</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: postgres-storage
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/data/che/postgres"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Define the persistent volume for a Che workspace in a <code>che-postgres-pv.yaml</code> file:</p>
+<p>Define the persistent volume for a Che workspace in a <code>che-workspace-pv.yaml</code> file:</p>
 <div class="listingblock">
 <div class="title"><code>che-workspace-pv.yaml</code> file</div>
 <div class="content">
@@ -801,10 +768,10 @@ spec:
 </div>
 </li>
 <li>
-<p>Bind the two persistent volumes:</p>
+<p>Bind the persistent volume:</p>
 <div class="listingblock">
 <div class="content">
-<pre>$ kubectl apply -f che-workspace-pv.yaml -f che-postgres-pv.yaml</pre>
+<pre>$ kubectl apply -f che-workspace-pv.yaml</pre>
 </div>
 </div>
 </li>
@@ -818,7 +785,7 @@ spec:
 </td>
 <td class="content">
 <div class="paragraph">
-<p>You must provide valid file permissions for volumes. You can do it using storage class configuration or manually. To manually define permissions, define <code>storageClass#mountOptions</code> <code>uid</code> and <code>gid</code>. PostgreSQL volume requires <code>uid=26</code> and <code>gid=26</code>.</p>
+<p>You must provide valid file permissions for volumes. You can do it using storage class configuration or manually. To manually define permissions, define <code>storageClass#mountOptions</code> <code>uid</code> and <code>gid</code>.</p>
 </div>
 </td>
 </tr>
