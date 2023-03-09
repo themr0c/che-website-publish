@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>OAuth for GitHub, GitLab, or Bitbucket :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/oauth-for-github-gitlab-or-bitbucket/">
-    <meta name="description" content="OAuth for GitHub, GitLab, or Bitbucket">
-    <meta name="keywords" content="bitbucket">
+    <title>Configuring OAuth 2.0 for Microsoft Azure DevOps Services :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/configuring-oauth-2-for-microsoft-azure-devops-services/">
+    <meta name="description" content="Configuring OAuth 2.0 for Microsoft Azure DevOps Services">
+    <meta name="keywords" content="configuring-oauth, authorization, microsoft azure devops services, microsoft azure repos, oauth-2, oauth-2.0">
     <meta name="generator" content="Antora 3.1.2">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -491,9 +491,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../managing-identities-and-authorizations/">Managing identities and authorizations</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="./">OAuth for GitHub, GitLab, or Bitbucket</a>
+    <a class="nav-link" href="../configuring-oauth-for-git-providers/">Configuring OAuth for Git providers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../configuring-oauth-2-for-github/">Configuring OAuth 2.0 for GitHub</a>
@@ -509,6 +509,9 @@
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../configuring-oauth-1-for-a-bitbucket-server/">Configuring OAuth 1.0 for a Bitbucket Server</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="./">Configuring OAuth 2.0 for Microsoft Azure DevOps Services</a>
   </li>
 </ul>
   </li>
@@ -639,7 +642,8 @@
     <li>Administration Guide</li>
     <li><a href="../configuring-che/">Configuring Che</a></li>
     <li><a href="../managing-identities-and-authorizations/">Managing identities and authorizations</a></li>
-    <li><a href="./">OAuth for GitHub, GitLab, or Bitbucket</a></li>
+    <li><a href="../configuring-oauth-for-git-providers/">Configuring OAuth for Git providers</a></li>
+    <li><a href="./">Configuring OAuth 2.0 for Microsoft Azure DevOps Services</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -647,35 +651,208 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/administration-guide/oauth-for-github-gitlab-or-bitbucket/">7.61.x</a>
+    <a class="version" href="../../../stable/administration-guide/configuring-oauth-2-for-microsoft-azure-devops-services/">7.61.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/oauth-for-github-gitlab-or-bitbucket.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/configuring-oauth-2-for-microsoft-azure-devops-services.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">OAuth for GitHub, GitLab, or Bitbucket</h1>
+<h1 class="page">Configuring OAuth 2.0 for Microsoft Azure DevOps Services</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>To enable users to work with remote Git repositories:</p>
+<p><!-- vale RedHat.Spelling = NO --></p>
 </div>
+<div class="paragraph">
+<p>To enable users to work with a remote Git repository that is hosted on Microsoft Azure Repos:</p>
+</div>
+<div class="paragraph">
+<p><!-- vale RedHat.Spelling = YES --></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up the Microsoft Azure DevOps Services OAuth App (OAuth 2.0).</p>
+</li>
+<li>
+<p>Apply the Microsoft Azure DevOps Services OAuth App Secret.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="setting-up-the-microsoft-azure-devops-services-oauth-app"><a class="anchor" href="#setting-up-the-microsoft-azure-devops-services-oauth-app"></a>Setting up the Microsoft Azure DevOps Services OAuth App</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Set up a Microsoft Azure DevOps Services OAuth App using OAuth 2.0.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You are logged in to <a href="https://azure.microsoft.com/en-us/products/devops/">Microsoft Azure DevOps Services</a>.</p>
+</li>
+<li>
+<p>Third-party applications can access resources in your organization through OAuth. See <a href="https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops">Manage security &amp; app access policies</a>.</p>
+</li>
+<li>
+<p><a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> is installed in the operating system you are using.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Visit https://app.vsaex.visualstudio.com/app/register.</p>
+</li>
+<li>
+<p>Enter the following values:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>Company name</strong>: <code>Che</code></p>
+</li>
+<li>
+<p><strong>Application name</strong>: <code>Che</code></p>
+</li>
+<li>
+<p><strong>Application website</strong>: <code>https://<em>&lt;che_fqdn&gt;</em>/</code></p>
+</li>
+<li>
+<p><strong>Authorization callback URL</strong>: <code>https://<em>&lt;che_fqdn&gt;</em>/api/oauth/callback</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>In <strong>Select Authorized scopes</strong>, select <strong>Code (read and write)</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Create application</strong>.</p>
+</li>
+<li>
+<p>Copy the <strong>App ID</strong> and encode it to Base64 for use when applying the Microsoft Azure DevOps Services OAuth App Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo -n '<em>&lt;microsoft_azure_devops_services_oauth_app_id&gt;</em>' | base64</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Show</strong> to display the <strong>Client Secret</strong>.</p>
+</li>
+<li>
+<p>Copy the <strong>Client Secret</strong> and encode it to Base64 for use when applying the Microsoft Azure DevOps Services OAuth App Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo -n '<em>&lt;microsoft_azure_devops_services_oauth_client_secret&gt;</em>' | base64</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops">Authorize access to REST APIs with OAuth 2.0</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="applying-the-microsoft-azure-devops-services-oauth-app-secret"><a class="anchor" href="#applying-the-microsoft-azure-devops-services-oauth-app-secret"></a>Applying the Microsoft Azure DevOps Services OAuth App Secret</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Prepare and apply the Microsoft Azure DevOps Services Secret.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Setting up the Microsoft Azure DevOps Services OAuth App is completed.</p>
+</li>
+<li>
+<p>The Base64-encoded values, which were generated when setting up the Microsoft Azure DevOps Services OAuth App, are prepared:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../configuring-oauth-2-for-github/" class="xref page">Configuring OAuth 2.0 for GitHub</a></p>
+<p><strong>App ID</strong></p>
 </li>
 <li>
-<p><a href="../configuring-oauth-2-for-gitlab/" class="xref page">Configuring OAuth 2.0 for GitLab</a></p>
-</li>
-<li>
-<p>Configuring <a href="../configuring-oauth-2-for-a-bitbucket-server/" class="xref page">OAuth 2.0 for a Bitbucket Server</a> or <a href="../configuring-oauth-2-for-the-bitbucket-cloud/" class="xref page">OAuth 2.0 for the Bitbucket Cloud</a></p>
-</li>
-<li>
-<p>Configuring <a href="../configuring-oauth-1-for-a-bitbucket-server/" class="xref page">OAuth 1.0 for a Bitbucket Server</a></p>
+<p><strong>Client Secret</strong></p>
 </li>
 </ul>
+</div>
+</li>
+<li>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Prepare the Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Secret
+apiVersion: v1
+metadata:
+  name: azure-devops-oauth-config
+  namespace: eclipse-che<i class="conum" data-value="1"></i><b>(1)</b>
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: oauth-scm-configuration
+  annotations:
+    che.eclipse.org/oauth-scm-server: azure-devops
+type: Opaque
+data:
+  id: <em>&lt;Base64_Microsoft_Azure_DevOps_Services_OAuth_App_ID&gt;</em><i class="conum" data-value="2"></i><b>(2)</b>
+  secret: <em>&lt;Base64_Microsoft_Azure_DevOps_Services_OAuth_Client_Secret&gt;</em><i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The Base64-encoded Microsoft Azure DevOps Services OAuth <strong>App ID</strong>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The Base64-encoded Microsoft Azure DevOps Services OAuth <strong>Client Secret</strong>.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Apply the Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl apply -f - &lt;&lt;EOF
+<em>&lt;Secret_prepared_in_the_previous_step&gt;</em>
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify in the output that the Secret is created.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </article>
   </div>
