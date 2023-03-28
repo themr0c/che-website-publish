@@ -271,6 +271,9 @@
     <a class="nav-link" href="../supported-platforms/">Supported platforms</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installing-the-chectl-management-tool/">Installing the chectl management tool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../architecture-overview/">Architecture</a>
 <ul class="nav-list">
@@ -315,9 +318,6 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../installing-che/">Installing Che</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../installing-the-chectl-management-tool/">Installing the chectl management tool</a>
-  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../installing-che-on-openshift-using-cli/">Installing Che on OpenShift using CLI</a>
   </li>
@@ -663,7 +663,7 @@
 <article class="doc">
 <h1 class="page">Installing Che on OpenShift using the web console</h1>
 <div class="paragraph">
-<p>This section describes how to install Che using the OpenShift web console. Consider <a href="../installing-che-on-openshift-using-cli/" class="xref page">Installing Che on OpenShift using the <code>chectl</code> management tool</a> instead.</p>
+<p>If you have trouble <a href="../installing-che-on-openshift-using-cli/" class="xref page">installing Che on the command line</a>, you can install it through the OpenShift web console.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -671,21 +671,34 @@
 <li>
 <p>An OpenShift web console session by a cluster administrator. See <a href="https://docs.openshift.com/container-platform/4.10/web_console/web-console.html">Accessing the web console</a>.</p>
 </li>
+<li>
+<p>An active <code>oc</code> session with administrative permissions to the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
+</li>
+<li>
+<p>For a repeat installation on the same OpenShift cluster: you uninstalled the previous Che instance according to <a href="../uninstalling-che/" class="xref page">Uninstalling Che</a>.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Optional: If you previously deployed Che on this OpenShift cluster, ensure that the previous Che instance is removed:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ chectl server:delete</pre>
-</div>
-</div>
+<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <strong>Operators</strong> &#8594; <strong>OperatorHub</strong> and search for <code>Eclipse&#160;Che</code>.</p>
 </li>
 <li>
-<p>Install the Eclipse&#160;Che Operator. See <a href="https://docs.openshift.com/container-platform/4.10/operators/admin/olm-adding-operators-to-cluster.html#olm-installing-from-operatorhub-using-web-console_olm-adding-operators-to-a-cluster">Installing from OperatorHub using the web console</a>.</p>
+<p>Install the Eclipse&#160;Che Operator.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See <a href="https://docs.openshift.com/container-platform/4.10/operators/admin/olm-adding-operators-to-cluster.html#olm-installing-from-operatorhub-using-web-console_olm-adding-operators-to-a-cluster">Installing from OperatorHub using the web console</a>.
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
 <p>Create the <code>eclipse-che</code> project in OpenShift as follows:</p>
@@ -696,40 +709,52 @@
 </div>
 </li>
 <li>
-<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <span class="menuseq"><b class="menu">Operators</b>&#160;<i class="fa fa-angle-right caret"></i> <b class="submenu">Installed Operators</b>&#160;<i class="fa fa-angle-right caret"></i> <b class="submenu">Eclipse&#160;Che instance Specification</b>&#160;<i class="fa fa-angle-right caret"></i> <b class="submenu">Create CheCluster</b>&#160;<i class="fa fa-angle-right caret"></i> <b class="menuitem">YAML view</b></span>.</p>
+<p>Go to <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> &#8594; <strong>Eclipse&#160;Che instance Specification</strong> &#8594; <strong>Create CheCluster</strong> &#8594; <strong>YAML view</strong>.</p>
 </li>
 <li>
 <p>In the <strong>YAML view</strong>, replace <code>namespace: openshift-operators</code> with <code>namespace: eclipse-che</code>.</p>
 </li>
 <li>
-<p>Select <strong>Create</strong>. See <a href="https://docs.openshift.com/container-platform/4.10/operators/user/olm-creating-apps-from-installed-operators.html">Creating applications from installed Operators</a>.</p>
+<p>Select <strong>Create</strong>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See <a href="https://docs.openshift.com/container-platform/4.10/operators/user/olm-creating-apps-from-installed-operators.html">Creating applications from installed Operators</a>.
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ol>
 </div>
-<div class="olist arabic">
+<div class="paragraph">
 <div class="title">Verification</div>
+<p><!-- vale RedHat.Spelling = NO --></p>
+</div>
+<div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>To verify that the Che instance has installed correctly, navigate to the <strong>Eclipse&#160;Che Cluster</strong> tab of the <strong>Operator details</strong> page. The <strong>Eclipse&#160;Che instance Specification</strong> page displays the list of Eclipse&#160;Che instances and their status.</p>
+<p>In <strong>Eclipse&#160;Che instance Specification</strong>, go to <strong>eclipse-che</strong>, landing on the <strong>Details</strong> tab.</p>
 </li>
-<li>
-<p>Click <strong>eclipse-che</strong> <code>CheCluster</code> and navigate to the <strong>Details</strong> tab.</p>
-</li>
-<li>
-<p>See the content of the following fields:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The <strong>Message</strong> field contains error messages. The expected content is <code>None</code>.</p>
-</li>
-<li>
-<p>The <strong>Eclipse&#160;Che URL</strong> field contains the URL of the Eclipse&#160;Che instance. The URL appears when the deployment finishes successfully.</p>
-</li>
-</ul>
+</ol>
 </div>
+<div class="paragraph">
+<p><!-- vale RedHat.Spelling = YES --></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Under <strong>Message</strong>, check that there is <strong>None</strong>, which means no errors.</p>
 </li>
 <li>
-<p>Navigate to the <strong>Resources</strong> tab. View the list of resources assigned to the Che deployment and their status.</p>
+<p>Under <strong>Eclipse&#160;Che URL</strong>, wait until the URL of the Che instance appears, and then open the URL to check the Che dashboard.</p>
+</li>
+<li>
+<p>In the <strong>Resources</strong> tab, view the resources for the Che deployment and their status.</p>
 </li>
 </ol>
 </div>
