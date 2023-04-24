@@ -444,13 +444,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
-  </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
   </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="./">Monitoring the Dev Workspace Operator</a>
@@ -664,27 +658,27 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can configure an example monitoring stack to process metrics exposed by the Dev Workspace Operator.</p>
+<p>You can configure the OpenShift in-cluster monitoring stack to scrape metrics exposed by the Dev Workspace Operator.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="proc_collecting-dev-workspace-operator-metrics-with-prometheus"><a class="anchor" href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus"></a>Collecting Dev Workspace Operator metrics with Prometheus</h2>
+<h2 id="proc_collecting-dev-workspace-operator-metrics-with-prometheus"><a class="anchor" href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus"></a>Collecting Dev Workspace Operator metrics</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>To use Prometheus to collect, store, and query metrics about the Dev Workspace Operator:</p>
+<p>To use the in-cluster Prometheus instance to collect, store, and query metrics about the Dev Workspace Operator:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
+<p>Your organization&#8217;s instance of Che is installed and running in Red Hat OpenShift.</p>
+</li>
+<li>
+<p>An active <code>oc</code> session with administrative permissions to the destination OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the CLI</a>.</p>
+</li>
+<li>
 <p>The <code>devworkspace-controller-metrics</code> Service is exposing metrics on port <code>8443</code>. This is preconfigured by default.</p>
-</li>
-<li>
-<p>The <code>devworkspace-webhookserver</code> Service is exposing metrics on port <code>9443</code>. This is preconfigured by default.</p>
-</li>
-<li>
-<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding Service. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
 </li>
 </ul>
 </div>
@@ -692,112 +686,42 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a ClusterRoleBinding to bind the ServiceAccount associated with Prometheus to the <a href="https://github.com/devfile/devworkspace-operator/blob/main/deploy/deployment/kubernetes/objects/devworkspace-controller-metrics-reader.ClusterRole.yaml">devworkspace-controller-metrics-reader</a> ClusterRole. For the <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a>, the name of the ServiceAccount to be used is <code>prometheus</code>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Without the ClusterRoleBinding, you cannot access Dev Workspace metrics because access is protected with role-based access control (RBAC).
-</td>
-</tr>
-</table>
-</div>
+<p>Create the ServiceMonitor for detecting the Dev Workspace Operator metrics Service</p>
 <div class="exampleblock">
-<div class="title">Example 1. ClusterRoleBinding</div>
+<div class="title">Example 1. ServiceMonitor</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
 metadata:
-  name: devworkspace-controller-metrics-binding
-subjects:
-  - kind: ServiceAccount
-    name: prometheus
-    namespace: monitoring
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: devworkspace-controller-metrics-reader</code></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Configure Prometheus to scrape metrics from port <code>8443</code> exposed by the <code>devworkspace-controller-metrics</code> Service and from port <code>9443</code> exposed by the <code>devworkspace-webhookserver</code> Service.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a> already creates the <code>prometheus-config</code> ConfigMap with an empty configuration. To provide the Prometheus configuration details, edit the <code>data</code> field of the ConfigMap.
-</td>
-</tr>
-</table>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. Prometheus configuration</div>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-  namespace: monitoring
-data:
-  prometheus.yml: |-
-      global:
-        scrape_interval: 5s <i class="conum" data-value="1"></i><b>(1)</b>
-        evaluation_interval: 5s <i class="conum" data-value="2"></i><b>(2)</b>
-      scrape_configs: <i class="conum" data-value="3"></i><b>(3)</b>
-        - job_name: 'DevWorkspace'
-          scheme: https
-          authorization:
-            type: Bearer
-            credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
-          tls_config:
-            insecure_skip_verify: true
-          static_configs:
-            - targets: ['devworkspace-controller-metrics.<em>&lt;DWO_namespace&gt;</em>:8443'] <i class="conum" data-value="4"></i><b>(4)</b>
-        - job_name: 'DevWorkspace webhooks'
-          scheme: https
-          authorization:
-            type: Bearer
-            credentials_file: '/var/run/secrets/kubernetes.io/serviceaccount/token'
-          tls_config:
-            insecure_skip_verify: true
-          static_configs:
-            - targets: ['devworkspace-webhookserver.<em>&lt;DWO_namespace&gt;</em>:9443'] <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+  name: devworkspace-controller
+  namespace: eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+spec:
+  endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 10s <i class="conum" data-value="2"></i><b>(2)</b>
+      port: metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+  namespaceSelector:
+    matchNames:
+      - openshift-operators
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devworkspace-controller</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The rate at which a target is scraped.</td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The rate at which the recording and alerting rules are re-checked.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The resources that Prometheus monitors. In the default configuration, two jobs, <code>DevWorkspace</code> and <code>DevWorkspace webhooks</code>, scrape the time series data exposed by the <code>devworkspace-controller-metrics</code> and <code>devworkspace-webhookserver</code> Services.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The scrape target for the metrics from port <code>8443</code>. Replace <code><em>&lt;DWO_namespace&gt;</em></code> with the namespace where the <code>devworkspace-controller-metrics</code> <code>Service</code> is located.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The scrape target for the metrics from port <code>9443</code>. Replace <code><em>&lt;DWO_namespace&gt;</em></code> with the namespace where the <code>devworkspace-webhookserver</code> <code>Service</code> is located.</td>
+<td>The rate at which a target is scraped.</td>
 </tr>
 </table>
 </div>
@@ -805,10 +729,10 @@ data:
 </div>
 </li>
 <li>
-<p>Scale the <code>Prometheus</code> Deployment down and up to read the updated ConfigMap from the previous step.</p>
+<p>Allow the in-cluster Prometheus instance to detect the ServiceMonitor in the Che namespace. The default Che namespace is <code>eclipse-che</code>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl scale --replicas=0 deployment/prometheus -n monitoring &amp;&amp; kubectl scale --replicas=1 deployment/prometheus -n monitoring</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ oc label namespace eclipse-che openshift.io/cluster-monitoring=true</code></pre>
 </div>
 </div>
 </li>
@@ -818,40 +742,56 @@ data:
 <div class="title">Verification</div>
 <ol class="arabic">
 <li>
-<p>Use port forwarding to access the <code>Prometheus</code> Service locally:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl port-forward svc/prometheus 9090:9090 -n monitoring</code></pre>
-</div>
-</div>
+<p>For a fresh installation of Che, generate metrics by creating a Che workspace from the Dashboard.</p>
 </li>
 <li>
-<p>Verify that all targets are up by viewing the targets endpoint at <code>localhost:9090/targets</code>.</p>
+<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <strong>Observe</strong> &#8594; <strong>Metrics</strong>.</p>
 </li>
 <li>
-<p>Use the Prometheus console to view and query metrics:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>View metrics at <code>localhost:9090/metrics</code>.</p>
-</li>
-<li>
-<p>Query metrics from <code>localhost:9090/graph</code>.</p>
+<p>Run a PromQL query to confirm that the metrics are available. For example, enter <code>devworkspace_started_total</code> and click <strong>Run queries</strong>.</p>
 <div class="paragraph">
-<p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
-</div>
-</li>
-</ul>
+<p>For more metrics, see <a href="#ref_devworkspace-specific-metrics">Dev Workspace-specific metrics</a>.</p>
 </div>
 </li>
 </ol>
 </div>
-<div class="ulist _additional-resources">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To troubleshoot missing metrics, view the Prometheus container logs for possible RBAC-related errors:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the name of the Prometheus pod:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$ oc get pods -l app.kubernetes.io/name=prometheus -n openshift-monitoring -o=jsonpath='{.items[*].metadata.name}'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Print the last 20 lines of the Prometheus container logs from the Prometheus pod from the previous step:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$ oc logs --tail=20 <em>&lt;prometheus_pod_name&gt;</em> -c prometheus -n openshift-monitoring</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
-<li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a></p>
-</li>
 <li>
 <p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a></p>
 </li>
@@ -973,71 +913,108 @@ data:
 </div>
 </div>
 <div class="sect1">
-<h2 id="proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards"><a class="anchor" href="#proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards"></a>Viewing Dev Workspace Operator metrics on Grafana dashboards</h2>
+<h2 id="proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards"><a class="anchor" href="#proc_viewing-dev-workspace-operator-metrics-on-grafana-dashboards"></a>Viewing Dev Workspace Operator metrics from an OpenShift web console dashboard</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To view the Dev Workspace Operator metrics on Grafana with the example dashboard:</p>
+<p>After configuring the in-cluster Prometheus instance to collect Dev Workspace Operator metrics, you can view the metrics on a custom dashboard in the <strong>Administrator</strong> perspective of the OpenShift web console.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Prometheus is collecting metrics. See <a href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus">Collecting Dev Workspace Operator metrics with Prometheus</a>.</p>
+<p>Your organization&#8217;s instance of Che is installed and running in Red Hat OpenShift.</p>
 </li>
 <li>
-<p>Grafana version 7.5.3 or later.</p>
+<p>An active <code>oc</code> session with administrative permissions to the destination OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the CLI</a>.</p>
 </li>
 <li>
-<p>Grafana is running on port <code>3000</code> with a corresponding Service. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
+<p>The in-cluster Prometheus instance is collecting metrics. See <a href="#proc_collecting-dev-workspace-operator-metrics-with-prometheus">Collecting Dev Workspace Operator metrics</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Create a ConfigMap for the dashboard definition in the <code>openshift-config-managed</code> namespace and apply the necessary label.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ oc create configmap grafana-dashboard-dwo \
+  --from-literal=dwo-dashboard.json="$(curl https://raw.githubusercontent.com/devfile/devworkspace-operator/main/docs/grafana/openshift-console-dashboard.json)" \
+  -n openshift-config-managed</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ oc label configmap grafana-dashboard-dwo console.openshift.io/dashboard=true -n openshift-config-managed</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The dashboard definition is based on Grafana 6.x dashboards. Not all Grafana 6.x dashboard features are supported in the OpenShift web console.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
 </li>
 </ul>
 </div>
 <div class="olist arabic">
-<div class="title">Procedure</div>
+<div class="title">Verification steps</div>
 <ol class="arabic">
 <li>
-<p>Add the data source for the Prometheus instance.
-See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-prometheus-data-source">Creating a Prometheus data source</a>.</p>
+<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <strong>Observe</strong> &#8594; <strong>Dashboards</strong>.</p>
 </li>
 <li>
-<p>Import the <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">example <code>grafana-dashboard.json</code></a> dashboard.</p>
+<p>Go to <strong>Dashboard</strong> &#8594; <strong>Che Server JVM</strong> and verify that the dashboard panels contain data.</p>
 </li>
 </ol>
-</div>
-<div class="ulist">
-<div class="title">Verification steps</div>
-<ul>
-<li>
-<p>Use the Grafana console to view the Dev Workspace Operator metrics dashboard. See <a href="#ref_grafana-dashboards-for-the-dev-workspace-operator">Grafana dashboard for the Dev Workspace Operator</a>.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://grafana.com/docs/grafana/latest/datasources/prometheus/#prometheus-data-source">Prometheus data source</a></p>
-</li>
-<li>
-<p><a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="ref_grafana-dashboards-for-the-dev-workspace-operator"><a class="anchor" href="#ref_grafana-dashboards-for-the-dev-workspace-operator"></a>Grafana dashboard for the Dev Workspace Operator</h2>
+<h2 id="ref_grafana-dashboards-for-the-dev-workspace-operator"><a class="anchor" href="#ref_grafana-dashboards-for-the-dev-workspace-operator"></a>Dashboard for the Dev Workspace Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The example Grafana dashboard <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/grafana/grafana-dashboard.json">based on <code>grafana-dashboard.json</code></a> displays the following metrics from the Dev Workspace Operator.</p>
+<p>The OpenShift web console custom dashboard is based on Grafana 6.x and displays the following metrics from the Dev Workspace Operator.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Not all features for Grafana 6.x dashboards are supported as an OpenShift web console dashboard.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
-<h3 id="_the_dev_workspace_specific_metrics_panel"><a class="anchor" href="#_the_dev_workspace_specific_metrics_panel"></a>The <strong>Dev Workspace-specific metrics</strong> panel</h3>
+<h3 id="_dev_workspace_metrics"><a class="anchor" href="#_dev_workspace_metrics"></a>Dev Workspace metrics</h3>
+<div class="paragraph">
+<p>The Dev Workspace-specific metrics are displayed in the <strong>Dev Workspace Metrics</strong> panel.</p>
+</div>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/monitoring/monitoring-dev-workspace-metrics-panel.png" alt="Grafana dashboard panels that contain metrics related to `DevWorkspace startup">
 </div>
-<div class="title">Figure 1. The <strong>Dev Workspace-specific metrics</strong> panel</div>
+<div class="title">Figure 1. The Dev Workspace Metrics panel</div>
 </div>
 <div class="dlist">
 <dl>
@@ -1049,11 +1026,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 <dd>
 <p>The number of successful and failed workspace startups.</p>
 </dd>
-<dt class="hdlist1">Workspace startup duration</dt>
-<dd>
-<p>A heatmap that displays workspace startup duration.</p>
-</dd>
-<dt class="hdlist1">Dev Workspace successes / failures</dt>
+<dt class="hdlist1">Dev Workspace successes and failures</dt>
 <dd>
 <p>A comparison between successful and failed Dev Workspace startups.</p>
 </dd>
@@ -1082,47 +1055,21 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_operator_metrics_panel_part_1"><a class="anchor" href="#_the_operator_metrics_panel_part_1"></a>The <strong>Operator metrics</strong> panel (part 1)</h3>
+<h3 id="_operator_metrics"><a class="anchor" href="#_operator_metrics"></a>Operator metrics</h3>
+<div class="paragraph">
+<p>The Operator-specific metrics are displayed in the <strong>Operator Metrics</strong> panel.</p>
+</div>
 <div class="imageblock">
 <div class="content">
-<img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-1.png" alt="Grafana dashboard panels that contain Operator metrics part 1">
+<img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel.png" alt="Grafana dashboard panels that contain Operator metrics">
 </div>
-<div class="title">Figure 2. The <strong>Operator metrics</strong> panel (part 1)</div>
+<div class="title">Figure 2. The Operator Metrics panel</div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Webhooks in flight</dt>
 <dd>
 <p>A comparison between the number of different webhook requests.</p>
-</dd>
-<dt class="hdlist1">Work queue duration</dt>
-<dd>
-<p>A heatmap that displays how long the reconcile requests stay in the work queue before they are handled.</p>
-</dd>
-<dt class="hdlist1">Webhooks latency (/mutate)</dt>
-<dd>
-<p>A heatmap that displays the <code>/mutate</code> webhook latency.</p>
-</dd>
-<dt class="hdlist1">Reconcile time</dt>
-<dd>
-<p>A heatmap that displays the reconcile duration.</p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_operator_metrics_panel_part_2"><a class="anchor" href="#_the_operator_metrics_panel_part_2"></a>The <strong>Operator metrics</strong> panel (part 2)</h3>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/monitoring/monitoring-dev-workspace-operator-metrics-panel-2.png" alt="Grafana dashboard panels that contain Operator metrics part 2">
-</div>
-<div class="title">Figure 3. The <strong>Operator metrics</strong> panel (part 2)</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Webhooks latency (/convert)</dt>
-<dd>
-<p>A heatmap that displays the <code>/convert</code> webhook latency.</p>
 </dd>
 <dt class="hdlist1">Work queue depth</dt>
 <dd>
@@ -1132,7 +1079,7 @@ See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-promet
 <dd>
 <p>Memory usage for the Dev Workspace controller and the Dev Workspace webhook server.</p>
 </dd>
-<dt class="hdlist1">Reconcile counts (DWO)</dt>
+<dt class="hdlist1">Average reconcile counts per second (DWO)</dt>
 <dd>
 <p>The average per-second number of reconcile counts for the Dev Workspace controller.</p>
 </dd>
