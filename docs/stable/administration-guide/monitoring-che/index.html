@@ -440,13 +440,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../collecting-logs-using-chectl/">Collecting logs using chectl</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../monitoring-with-prometheus-and-grafana/">Monitoring with Prometheus and Grafana</a>
-  </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-prometheus-and-grafana/">Installing Prometheus and Grafana</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the Dev Workspace Operator</a>
@@ -704,16 +698,19 @@ You can configure this behaviour.</p>
 <h2 id="collecting-che-metrics-with-prometheus"><a class="anchor" href="#collecting-che-metrics-with-prometheus"></a>Collecting Che Server metrics with Prometheus</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To use Prometheus to collect, store, and query JVM metrics for Che Server:</p>
+<p>To use the in-cluster Prometheus instance to collect, store, and query JVM metrics for Che Server:</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics">Enabling and exposing Che server JVM metrics</a>.</p>
+<p>Your organization&#8217;s instance of Che is installed and running in Red Hat OpenShift.</p>
 </li>
 <li>
-<p>Prometheus 2.26.0 or later is running. The Prometheus console is running on port <code>9090</code> with a corresponding Service. See <a href="https://prometheus.io/docs/introduction/first_steps/">First steps with Prometheus</a>.</p>
+<p>An active <code>oc</code> session with administrative permissions to the destination OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the CLI</a>.</p>
+</li>
+<li>
+<p>Che is exposing metrics on port <code>8087</code>. See <a href="#enabling-and-exposing-che-metrics">Enabling and exposing Che server JVM metrics</a>.</p>
 </li>
 </ul>
 </div>
@@ -721,56 +718,39 @@ You can configure this behaviour.</p>
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Configure Prometheus to scrape metrics from port <code>8087</code>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <a href="../installing-prometheus-and-grafana/" class="xref page">example monitoring stack</a> already creates the <code>prometheus-config</code> ConfigMap with an empty configuration. To provide the Prometheus configuration details, edit the <code>data</code> field of the ConfigMap.
-</td>
-</tr>
-</table>
-</div>
+<p>Create the ServiceMonitor for detecting the Che JVM metrics Service.</p>
 <div class="exampleblock">
-<div class="title">Example 1. Prometheus configuration</div>
+<div class="title">Example 1. ServiceMonitor</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: ConfigMap
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
 metadata:
-  name: prometheus-config
-data:
-  prometheus.yml: |-
-      global:
-        scrape_interval:     5s             <i class="conum" data-value="1"></i><b>(1)</b>
-        evaluation_interval: 5s             <i class="conum" data-value="2"></i><b>(2)</b>
-      scrape_configs:                       <i class="conum" data-value="3"></i><b>(3)</b>
-        - job_name: 'Che Server'
-          static_configs:
-            - targets: ['che-host.<em>&lt;Che_namespace&gt;</em>:8087']  <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+  name: che-host
+  namespace: eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+spec:
+  endpoints:
+    - interval: 10s <i class="conum" data-value="2"></i><b>(2)</b>
+      port: metrics
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - openshift-devspaces
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devspaces</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The rate at which a target is scraped.</td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The rate at which the recording and alerting rules are re-checked.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The resources that Prometheus monitors. In the default configuration, a single job, <code>Che Server</code>, scrapes the time series data exposed by Che Server.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The scrape target for the metrics from port <code>8087</code>. Replace <code><em>&lt;Che_namespace&gt;</em></code> with the Che namespace. The default Che namespace is <code>eclipse-che</code>.</td>
+<td>The rate at which a target is scraped.</td>
 </tr>
 </table>
 </div>
@@ -778,10 +758,76 @@ data:
 </div>
 </li>
 <li>
-<p>Scale the <code>Prometheus</code> Deployment down and up to read the updated ConfigMap from the previous step.</p>
+<p>Create a Role and RoleBinding to allow Prometheus view the metrics.</p>
+<div class="exampleblock">
+<div class="title">Example 2. Role</div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl scale --replicas=0 deployment/prometheus -n monitoring &amp;&amp; kubectl scale --replicas=1 deployment/prometheus -n monitoring</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-k8s
+  namespace: eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - services
+      - endpoints
+      - pods</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. RoleBinding</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: view-openshift-monitoring-prometheus-k8s
+  namespace: eclipse-che <i class="conum" data-value="1"></i><b>(1)</b>
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s
+    namespace: openshift-monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace. The default is <code>eclipse-che</code>.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Allow the in-cluster Prometheus instance to detect the ServiceMonitor in the Che namespace. The default Che namespace is <code>eclipse-che</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ oc label namespace eclipse-che openshift.io/cluster-monitoring=true</code></pre>
 </div>
 </div>
 </li>
@@ -791,40 +837,50 @@ data:
 <div class="title">Verification</div>
 <ol class="arabic">
 <li>
-<p>Use port forwarding to access the <code>Prometheus</code> Service locally:</p>
+<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <strong>Observe</strong> &#8594; <strong>Metrics</strong>.</p>
+</li>
+<li>
+<p>Run a PromQL query to confirm that the metrics are available. For example, enter <code>process_uptime_seconds{job="che-host"}</code> and click <strong>Run queries</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To troubleshoot missing metrics, view the Prometheus container logs for possible RBAC-related errors:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the name of the Prometheus pod:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-terminal hljs" data-lang="terminal">$ kubectl port-forward svc/prometheus 9090:9090 -n monitoring</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$ oc get pods -l app.kubernetes.io/name=prometheus -n openshift-monitoring -o=jsonpath='{.items[*].metadata.name}'</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Verify that all targets are up by viewing the <code>targets</code> endpoint at <code>localhost:9090/targets</code>.</p>
-</li>
-<li>
-<p>Use the Prometheus console to view and query metrics:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>View metrics at <code>localhost:9090/metrics</code>.</p>
-</li>
-<li>
-<p>Query metrics from <code>localhost:9090/graph</code>.</p>
-<div class="paragraph">
-<p>For more information, see <a href="https://prometheus.io/docs/introduction/first_steps/#using-the-expression-browser">Using the expression browser</a>.</p>
+<p>Print the last 20 lines of the Prometheus container logs from the Prometheus pod from the previous step:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$ oc logs --tail=20 <em>&lt;prometheus_pod_name&gt;</em> -c prometheus -n openshift-monitoring</code></pre>
 </div>
-</li>
-</ul>
 </div>
 </li>
 </ol>
 </div>
-<div class="ulist">
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
-<li>
-<p><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Configuring Prometheus</a></p>
-</li>
 <li>
 <p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/">Querying Prometheus</a></p>
 </li>
@@ -836,86 +892,122 @@ data:
 </div>
 </div>
 <div class="sect1">
-<h2 id="viewing-che-metrics-on-grafana-dashboards"><a class="anchor" href="#viewing-che-metrics-on-grafana-dashboards"></a>Viewing Che Server metrics on Grafana dashboards</h2>
+<h2 id="viewing-che-metrics-on-grafana-dashboards"><a class="anchor" href="#viewing-che-metrics-on-grafana-dashboards"></a>Viewing Che Server from an OpenShift web console dashboard</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To view the Che Server metrics on Grafana:</p>
+<p>After configuring the in-cluster Prometheus instance to collect Che Server JVM metrics, you can view the metrics on a custom dashboard in the <strong>Administrator</strong> perspective of the OpenShift web console.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Prometheus is collecting metrics on the Che cluster. See <a href="../monitoring-with-prometheus-and-grafana/" class="xref page">Monitoring Che with Prometheus and Grafana</a>.</p>
+<p>Your organization&#8217;s instance of Che is installed and running in Red Hat OpenShift.</p>
 </li>
 <li>
-<p>Grafana 6.0 or later is running on port <code>3000</code> with a corresponding Service. See <a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/">Installing Grafana</a>.</p>
+<p>An active <code>oc</code> session with administrative permissions to the destination OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the CLI</a>.</p>
+</li>
+<li>
+<p>The in-cluster Prometheus instance is collecting metrics. See <a href="#collecting-che-metrics-with-prometheus">Collecting Che Server metrics with Prometheus</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Create a ConfigMap for the dashboard definition in the <code>openshift-config-managed</code> namespace and apply the necessary label.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ oc create configmap grafana-dashboard-devspaces-server \
+  --from-literal=devspaces-server-dashboard.json="$(curl https://raw.githubusercontent.com/eclipse-che/che-server/main/docs/grafana/openshift-console-dashboard.json)" \
+  -n openshift-config-managed</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ oc label configmap grafana-dashboard-devspaces-server console.openshift.io/dashboard=true -n openshift-config-managed</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The dashboard definition is based on Grafana 6.x dashboards. Not all Grafana 6.x dashboard features are supported in the OpenShift web console.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
 </li>
 </ul>
 </div>
 <div class="olist arabic">
-<div class="title">Procedure</div>
+<div class="title">Verification steps</div>
 <ol class="arabic">
 <li>
-<p>Add the data source for the Prometheus instance. See <a href="https://prometheus.io/docs/visualization/grafana/#creating-a-prometheus-data-source">Creating a Prometheus data source</a>.</p>
+<p>In the <strong>Administrator</strong> view of the OpenShift web console, go to <strong>Observe</strong> &#8594; <strong>Dashboards</strong>.</p>
 </li>
 <li>
-<p>Import the example <a href="https://github.com/eclipse-che/che-server/blob/7.44.x/docs/grafana/dashboard.json">dashboard</a>. See <a href="https://grafana.com/docs/grafana/latest/dashboards/export-import/#import-dashboard">Import dashboard</a>.</p>
-</li>
-<li>
-<p>View the Che JVM metrics in the Grafana console:</p>
-<div class="imageblock">
-<div class="content">
-<a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard.png" alt="The *Che server JVM* dashboard"></a>
-</div>
-<div class="title">Figure 1. Che server JVM dashboard</div>
-</div>
+<p>Go to <strong>Dashboard</strong> &#8594; <strong>Dev Workspace Operator</strong> and verify that the dashboard panels contain data.</p>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-quick-facts.png" alt="The *JVM quick facts* panel"></a>
 </div>
-<div class="title">Figure 2. Quick Facts</div>
+<div class="title">Figure 1. Quick Facts</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory.png" alt="The *JVM Memory* panel"></a>
 </div>
-<div class="title">Figure 3. JVM Memory</div>
+<div class="title">Figure 2. JVM Memory</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-misc.png" alt="The *JVM Misc* panel"></a>
 </div>
-<div class="title">Figure 4. JVM Misc</div>
+<div class="title">Figure 3. JVM Misc</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-heap.png" alt="The *JVM Memory Pools (heap)* panel"></a>
 </div>
-<div class="title">Figure 5. JVM Memory Pools (heap)</div>
+<div class="title">Figure 4. JVM Memory Pools (heap)</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-jvm-memory-pools-non-heap.png" alt="The *JVM Memory Pools (non-heap)* panel"></a>
 </div>
-<div class="title">Figure 6. JVM Memory Pools (Non-Heap)</div>
+<div class="title">Figure 5. JVM Memory Pools (Non-Heap)</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-garbage-collection.png" alt="The *JVM garbage collection* panel"></a>
 </div>
-<div class="title">Figure 7. Garbage Collection</div>
+<div class="title">Figure 6. Garbage Collection</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-classloading.png" alt="The *JVM class loading* panel"></a>
 </div>
-<div class="title">Figure 8. Class loading</div>
+<div class="title">Figure 7. Class loading</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png"><img src="../_images/monitoring/monitoring-che-che-server-jvm-dashboard-buffer-pools.png" alt="The *JVM buffer pools* panel"></a>
 </div>
-<div class="title">Figure 9. Buffer Pools</div>
+<div class="title">Figure 8. Buffer Pools</div>
 </div>
 </li>
 </ol>
