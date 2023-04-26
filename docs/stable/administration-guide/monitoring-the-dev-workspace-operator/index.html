@@ -728,6 +728,56 @@ spec:
 </div>
 </li>
 <li>
+<p>Create a Role and RoleBinding to allow Prometheus to view the metrics.</p>
+<div class="exampleblock">
+<div class="title">Example 2. Role</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-k8s
+  namespace: openshift-operators
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - ''
+    resources:
+      - services
+      - endpoints
+      - pods</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. RoleBinding</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: view-openshift-monitoring-prometheus-k8s
+  namespace: openshift-operators
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s
+    namespace: openshift-monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
 <p>Allow the in-cluster Prometheus instance to detect the ServiceMonitor in the Che namespace. The default Che namespace is <code>eclipse-che</code>.</p>
 <div class="listingblock">
 <div class="content">
