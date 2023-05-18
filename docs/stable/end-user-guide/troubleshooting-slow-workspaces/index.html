@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="7.62.x">
+<div class="nav-container" data-component="docs" data-version="7.63.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -251,6 +251,9 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../troubleshooting-network-problems/">Troubleshooting network problems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting-webview-loading-error/">Troubleshooting webview loading error</a>
   </li>
 </ul>
   </li>
@@ -509,9 +512,6 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/configuring-the-administrative-user/">Configuring the administrative user</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../administration-guide/removing-user-data-in-compliance-with-the-gdpr/">Removing user data in compliance with the GDPR</a>
   </li>
 </ul>
@@ -603,7 +603,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">7.62.x</span>
+    <span class="version">7.63.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -616,7 +616,7 @@
           <a href="../../../che-7/">old (7.41)</a>
         </li>
         <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">7.62.x</a>
+          <a href="../../overview/introduction-to-eclipse-che/">7.63.x</a>
         </li>
       </ul>
     </li>
@@ -638,14 +638,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">7.62.x</button>
+  <button class="version-menu-toggle" title="Show other versions of page">7.63.x</button>
   <div class="version-menu">
     <a class="version" href="../../../next/end-user-guide/troubleshooting-slow-workspaces/">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version is-current" href="./">7.62.x</a>
+    <a class="version is-current" href="./">7.63.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.62.x/modules/end-user-guide/pages/troubleshooting-slow-workspaces.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.63.x/modules/end-user-guide/pages/troubleshooting-slow-workspaces.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -698,18 +698,6 @@
 <p>Components of Che are OCI images. Set up Eclipse&#160;Che in offline mode to reduce any extra download at runtime because everything needs to be available from the beginning. See <a href="../../administration-guide/installing-che-in-a-restricted-environment/" class="xref page">Installing Che in a restricted environment on OpenShift</a>.</p>
 </div>
 </dd>
-<dt class="hdlist1">Optimizing workspace plugins</dt>
-<dd>
-<div class="paragraph">
-<p><em>Role: User</em></p>
-</div>
-<div class="paragraph">
-<p>When selecting various plugins, each plugin can bring its own sidecar container, which is an OCI image. Kubernetes pulls the images of these sidecar containers.</p>
-</div>
-<div class="paragraph">
-<p>Reduce the number of plugins, or disable them to see if start time is faster. See also <a href="../../administration-guide/caching-images-for-faster-workspace-start/" class="xref page">Caching images for faster workspace start</a>.</p>
-</div>
-</dd>
 <dt class="hdlist1">Reducing the number of public endpoints</dt>
 <dd>
 <div class="paragraph">
@@ -719,19 +707,10 @@
 <p>For each endpoint, Kubernetes is creating Kubernetes Ingress or OpenShift Route objects. Depending on the underlying configuration, this creation can be slow.</p>
 </div>
 <div class="paragraph">
-<p>To avoid this problem, reduce the exposure. For example, to automatically detect a new port listening inside containers and redirect traffic for the processes using a local IP address (<code>127.0.0.1</code>), the Che-Theia IDE plugin has three optional routes.</p>
+<p>To avoid this problem, reduce the exposure. For example, to automatically detect a new port listening inside containers and redirect traffic for the processes using a local IP address (<code>127.0.0.1</code>), Microsoft Visual Code - Open Source has three optional routes.</p>
 </div>
 <div class="paragraph">
 <p>By reducing the number of endpoints and checking endpoints of all plugins, workspace start can be faster.</p>
-</div>
-</dd>
-<dt class="hdlist1">CDN configuration</dt>
-<dd>
-<div class="paragraph">
-<p>The IDE editor uses a CDN (Content Delivery Network) to serve content. Check that the content uses a CDN to the client (or a local route for offline setup).</p>
-</div>
-<div class="paragraph">
-<p>To check that, open Developer Tools in the browser and check for <code>vendors</code> in the <strong>Network</strong> tab. <code>vendors.&lt;random_id&gt;.js</code> or <code>editor.main.*</code> should come from CDN URLs.</p>
 </div>
 </dd>
 </dl>
@@ -753,25 +732,23 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-
-components:
-  -
-    type: chePlugin
-    id: __&lt;plugin_id&gt;__
-    cpuLimit: 1360Mi <i class="conum" data-value="1"></i><b>(1)</b>
-    cpuRequest: 100m <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      cpuLimit: 4000m <i class="conum" data-value="1"></i><b>(1)</b>
+      cpuRequest: 1000m <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the CPU limit for the plugin.</td>
+<td>Specifies the CPU limit</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specifies the CPU request for the plugin.</td>
+<td>Specifies the CPU request</td>
 </tr>
 </table>
 </div>
@@ -782,61 +759,29 @@ components:
 <p>Plug-ins consume CPU and memory resources. For example, when a plugin provides IntelliSense features, collecting data can consume all the memory allocated to the container.</p>
 </div>
 <div class="paragraph">
-<p>Providing more memory to the plugin can increase performance. Ensure about the correctness of memory settings:</p>
+<p>Providing more memory to the container can increase performance. Ensure that memory settings in the devfile definition <code>devfile.yaml</code> file are correct.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>in the plugin definition - <code>meta.yaml</code> file</p>
-</li>
-<li>
-<p>in the devfile definition - <code>devfile.yaml</code> file</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v2
-
-spec:
-  containers:
-    - image: "quay.io/my-image"
-      name: "vscode-plugin"
-      memoryLimit: "512Mi" <i class="conum" data-value="1"></i><b>(1)</b>
-  extensions:
-    - https://link.to/vsix</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      memoryLimit: 6G <i class="conum" data-value="1"></i><b>(1)</b>
+      memoryRequest: 512Mi <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the memory limit for the plugin.</td>
+<td>Specifies the memory limit</td>
 </tr>
-</table>
-</div>
-<div class="paragraph">
-<p>In the devfile definition (<code>devfile.yaml</code>):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: 1.0.0
-
-components:
-  -
-    type: chePlugin
-    id: __&lt;plugin_id&gt;__
-    memoryLimit: 1048M  <i class="conum" data-value="1"></i><b>(1)</b>
-    memoryRequest: 256M</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specifies the memory limit for this plugin.</td>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specifies the memory request</td>
 </tr>
 </table>
-</div>
-</li>
-</ul>
 </div>
 </dd>
 </dl>

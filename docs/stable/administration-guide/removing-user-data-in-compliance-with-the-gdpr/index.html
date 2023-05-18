@@ -46,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="7.62.x">
+<div class="nav-container" data-component="docs" data-version="7.63.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -251,6 +251,9 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/troubleshooting-network-problems/">Troubleshooting network problems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../end-user-guide/troubleshooting-webview-loading-error/">Troubleshooting webview loading error</a>
   </li>
 </ul>
   </li>
@@ -508,9 +511,6 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-the-administrative-user/">Configuring the administrative user</a>
-  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="./">Removing user data in compliance with the GDPR</a>
   </li>
@@ -603,7 +603,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">7.62.x</span>
+    <span class="version">7.63.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -616,7 +616,7 @@
           <a href="../../../che-7/">old (7.41)</a>
         </li>
         <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">7.62.x</a>
+          <a href="../../overview/introduction-to-eclipse-che/">7.63.x</a>
         </li>
       </ul>
     </li>
@@ -639,14 +639,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">7.62.x</button>
+  <button class="version-menu-toggle" title="Show other versions of page">7.63.x</button>
   <div class="version-menu">
     <a class="version" href="../../../next/administration-guide/removing-user-data-in-compliance-with-the-gdpr/">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version is-current" href="./">7.62.x</a>
+    <a class="version is-current" href="./">7.63.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.62.x/modules/administration-guide/pages/removing-user-data-in-compliance-with-the-gdpr.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.63.x/modules/administration-guide/pages/removing-user-data-in-compliance-with-the-gdpr.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -655,7 +655,7 @@
 <article class="doc">
 <h1 class="page">Removing user data in compliance with the GDPR</h1>
 <div class="paragraph">
-<p>You can remove a user’s data in compliance with the <a href="https://gdpr.eu/">General Data Protection Regulation (GDPR)</a> that enforces the right of individuals to have their personal data erased.</p>
+<p>You can remove a user’s data on OpenShift&#160;Container&#160;Platform in compliance with the <a href="https://gdpr.eu/">General Data Protection Regulation (GDPR)</a> that enforces the right of individuals to have their personal data erased. The process for other Kubernetes infrastructures might vary. Follow the user management best practices of the provider you are using for the Eclipse&#160;Che installation.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -673,10 +673,7 @@ Removing user data as follows is irreversible! All removed data is deleted and u
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>An active session with administrative permissions for Che. See <a href="../configuring-the-administrative-user/" class="xref page">Configuring the administrative user</a>.</p>
-</li>
-<li>
-<p>An active <code>oc</code> session with administrative permissions for the OpenShift cluster. See <a href="https://docs.openshift.com/container-platform/4.10/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
+<p>An active <code>oc</code> session with administrative permissions for the OpenShift&#160;Container&#160;Platform cluster. See <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html">Getting started with the OpenShift CLI</a>.</p>
 </li>
 </ul>
 </div>
@@ -684,42 +681,34 @@ Removing user data as follows is irreversible! All removed data is deleted and u
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>If the Che instance has been upgraded since a previous release in which user data were stored in a PostgreSQL database, then first use the deprecated endpoints:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Go to <code>https://<em>&lt;che_fqdn&gt;</em>/swagger/#/user/find_1</code>.</p>
-</li>
-<li>
-<p>Select <strong>Try it out</strong> &#8594; <strong>name</strong>: <em>&lt;username&gt;</em> &#8594; <strong>Execute</strong> to get the user <strong>id</strong>.</p>
-</li>
-<li>
-<p>Find the <strong>id</strong> value in the <strong>Response body</strong>.</p>
-<div class="paragraph">
-<p>If the response is <strong>404</strong>, which means the user is not in the database, skip to step two.</p>
-</div>
-</li>
-<li>
-<p>Go to <code>https://<em>&lt;che_fqdn&gt;</em>/swagger/#/user/remove</code>.</p>
-</li>
-<li>
-<p>Select <strong>Try it out</strong> &#8594; <strong>id</strong>: <em>&lt;id&gt;</em> &#8594; <strong>Execute</strong> to remove the user&#8217;s data that is managed by the Che server.</p>
-</li>
-<li>
-<p>Verify that you got a <strong>204</strong> response.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Delete the user namespace to remove all Kubernetes resources bound to the user, such as workspaces, Secrets, and ConfigMaps.</p>
+<p>List all the users in the OpenShift cluster using the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ kubectl delete namespace <em>&lt;username&gt;</em>-che</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ oc get users</code></pre>
 </div>
 </div>
 </li>
+<li>
+<p>Delete the user entry:</p>
+</li>
 </ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the user has any associated resources (such as projects, roles, or service accounts), you need to delete those first before deleting the user.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ oc delete user &lt;username&gt;</code></pre>
+</div>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
