@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Calculating Che resource requirements :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/calculating-che-resource-requirements/">
-    <meta name="description" content="Calculating Che resource requirements">
-    <meta name="keywords" content="administration-guide, calculating-che-resource-requirements">
+    <title>Configuring cluster roles for Che users :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/configuring-cluster-roles-for-users/">
+    <meta name="description" content="Configuring cluster roles for Che users">
+    <meta name="keywords" content="administration-guide, user, roles, permissions">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -309,8 +309,8 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="./">Calculating Che resource requirements</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../calculating-che-resource-requirements/">Calculating Che resource requirements</a>
   </li>
 </ul>
   </li>
@@ -511,8 +511,8 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-cluster-roles-for-users/">Configuring cluster roles for Che users</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">Configuring cluster roles for Che users</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../removing-user-data-in-compliance-with-the-gdpr/">Removing user data in compliance with the GDPR</a>
@@ -636,592 +636,153 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../preparing-the-installation/">Preparing the installation</a></li>
-    <li><a href="./">Calculating Che resource requirements</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../managing-identities-and-authorizations/">Managing identities and authorizations</a></li>
+    <li><a href="./">Configuring cluster roles for Che users</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">7.66.x</button>
   <div class="version-menu">
-    <a class="version" href="../../../next/overview/introduction-to-eclipse-che/">next</a>
-    <a class="version" href="../../../che-7/">old (7.41)</a>
+    <a class="version" href="../../../next/administration-guide/configuring-cluster-roles-for-users/">next</a>
+    <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
     <a class="version is-current" href="./">7.66.x</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.66.x/modules/administration-guide/pages/calculating-che-resource-requirements.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.66.x/modules/administration-guide/pages/configuring-cluster-roles-for-users.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Calculating Che resource requirements</h1>
+<h1 class="page">Configuring cluster roles for Che users</h1>
 <div class="paragraph">
-<p>The Che Operator, Dev Workspace Controller, and user workspaces consist of a set of pods.
-The pods contribute to the resource consumption in CPU and memory limits and requests.</p>
+<p>You can grant Che users more cluster permissions by adding cluster roles to those users.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Identify the workspace resource requirements which depend on the devfile that is used for defining the development environment. This includes identifying the workspace components explicitly specified in the <code>components</code> section of the devfile.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Here is an <a href="https://github.com/che-incubator/quarkus-api-example/blob/main/devfile.yaml">example devfile</a> with the following components:</p>
-<div class="exampleblock">
-<div class="title">Example 1. <code>tools</code></div>
-<div class="content">
-<div class="paragraph">
-<p>The <code>tools</code> component of the devfile defines the following requests and limits:</p>
-</div>
+<p>Define the user roles name:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">    memoryLimit: 6G
-    memoryRequest: 512M
-    cpuRequest: 1000m
-    cpuLimit: 4000m</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ USER_ROLES=<em>&lt;name&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. <code>postgresql</code></div>
-<div class="content">
-<div class="paragraph">
-<p>The <code>postgresql</code> component does not define any requests and limits and therefore falls back on the defaults for the dedicated container:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">    memoryLimit: 128M
-    memoryRequest: 64M
-    cpuRequest: 10m
-    cpuLimit: 1000m</code></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>During the workspace startup, an internal <code>che-gateway</code> container is implicitly provisioned with the following requests and limits:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">    memoryLimit: 256M
-    memoryRequest: 64M
-    cpuRequest: 50m
-    cpuLimit: 500m</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Calculate the sums of the resources required for each workspace. If you intend to use multiple devfiles, repeat this calculation for every expected devfile.</p>
-<div class="exampleblock">
-<div class="title">Example 3. Workspace requirements for the <a href="https://github.com/che-incubator/quarkus-api-example/blob/main/devfile.yaml">example devfile</a> in the previous step</div>
-<div class="content">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2858%;">
-</colgroup>
-<thead>
+<div class="colist arabic">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">Purpose</th>
-<th class="tableblock halign-left valign-top">Pod</th>
-<th class="tableblock halign-left valign-top">Container name</th>
-<th class="tableblock halign-left valign-top">Memory limit</th>
-<th class="tableblock halign-left valign-top">Memory request</th>
-<th class="tableblock halign-left valign-top">CPU limit</th>
-<th class="tableblock halign-left valign-top">CPU request</th>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Unique resource name.</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Developer tools</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>workspace</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tools</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>6 GiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>512 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>4000 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1000 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Database</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>workspace</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>postgresql</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>128 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1000 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>10 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che gateway</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>workspace</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-gateway</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>50 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-right valign-top" colspan="3"><p class="tableblock"><strong>Total</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>6.4 GiB</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>640 MiB</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>5500 m</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1060 m</strong></p></td>
-</tr>
-</tbody>
 </table>
 </div>
+</li>
+<li>
+<p>Find out the namespace where the Che Operator is deployed:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ OPERATOR_NAMESPACE=$(kubectl get pods -l app.kubernetes.io/component=che-operator -o jsonpath={".items[0].metadata.namespace"} --all-namespaces)</code></pre>
+</div>
 </div>
 </li>
 <li>
-<p>Multiply the resources calculated per workspace by the number of workspaces that you expect all of your users to run simultaneously.</p>
+<p>Create needed roles:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ kubectl apply -f - &lt;&lt;EOF
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ${USER_ROLES}
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+rules:
+  - verbs:
+      - <em>&lt;verbs&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b>
+    apiGroups:
+      - <em>&lt;apiGroups&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
+    resources:
+      - <em>&lt;resources&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+EOF</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>As <code><em>&lt;verbs&gt;</em></code>,  list all Verbs that apply to all ResourceKinds and AttributeRestrictions contained in this rule. You can use <code>*</code> to represent all verbs.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>As <code><em>&lt;apiGroups&gt;</em></code>, name the APIGroups that contain the resources.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>As <code><em>&lt;resources&gt;</em></code>, list all resources that this rule applies to. You can use <code>*</code> to represent all verbs.</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
-<p>Calculate the sums of the requirements for the Che Operator, Operands, and Dev Workspace Controller.</p>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Default requirements for the Che Operator, Operands, and Dev Workspace Controller</caption>
-<colgroup>
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2858%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Purpose</th>
-<th class="tableblock halign-left valign-top">Pod name</th>
-<th class="tableblock halign-left valign-top">Container names</th>
-<th class="tableblock halign-left valign-top">Memory limit</th>
-<th class="tableblock halign-left valign-top">Memory request</th>
-<th class="tableblock halign-left valign-top">CPU limit</th>
-<th class="tableblock halign-left valign-top">CPU request</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che operator</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-operator</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-operator</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Server</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1 GiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>512 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1000 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Dashboard</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-dashboard</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-dashboard</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>32 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Gateway</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-gateway</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>traefik</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>4 GiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>128 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1000 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Gateway</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-gateway</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>configbump</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>50 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Gateway</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-gateway</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>oauth-proxy</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>512 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Che Gateway</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>che-gateway</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kube-rbac-proxy</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>512 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>64 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Devfile registry</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devfile-registry</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devfile-registry</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>32 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Plugin registry</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>plugin-registry</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>plugin-registry</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>256 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>32 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>500 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace Controller Manager</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-controller-manager</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-controller</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1 GiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1000 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>250 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace Controller Manager</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-controller-manager</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kube-rbac-proxy</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace webhook server</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-webhook-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>webhook-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>300 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>20 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>200 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace Operator Catalog</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-operator-catalog</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>registry-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>50 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>10 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace Webhook Server</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-webhook-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>webhook-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>300 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>20 MiB</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>200 m</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>100 m</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Dev Workspace Webhook Server</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>devworkspace-webhook-server</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kube-rbac-proxy</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>N/A</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-right valign-top" colspan="3"><p class="tableblock"><strong>Total</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>9 GiB</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.2 GiB</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>6.9</strong></p></td>
-<td class="tableblock halign-right valign-top"><p class="tableblock"><strong>1.3</strong></p></td>
-</tr>
-</tbody>
-</table>
+<p>Delegate the roles to the Che Operator:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ kubectl apply -f - &lt;&lt;EOF
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ${USER_ROLES}
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+subjects:
+  - kind: ServiceAccount
+    name: che-operator
+    namespace: ${OPERATOR_NAMESPACE}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ${USER_ROLES}
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the Che Operator to delegate the roles to the <code>che</code> service account:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ kubectl patch checluster eclipse-che \
+  --patch '{"spec": {"components": {"cheServer": {"clusterRoles": ["'${USER_ROLES}'"]}}}}' \
+  --type=merge -n eclipse-che</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the Che server to delegate the roles to a user:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ kubectl patch checluster eclipse-che \
+  --patch '{"spec": {"devEnvironments": {"user": {"clusterRoles": ["'${USER_ROLES}'"]}}}}' \
+  --type=merge -n eclipse-che</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Wait for the rollout of the Che server components to be completed.</p>
+</li>
+<li>
+<p>Ask the user to log out and log in to have the new roles applied.</p>
 </li>
 </ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://devfile.io/docs/2.2.0/what-is-a-devfile">What is a devfile</a></p>
-</li>
-<li>
-<p><a href="https://devfile.io/docs/2.2.0/benefits-of-devfile">Benefits of devfile</a></p>
-</li>
-<li>
-<p><a href="https://devfile.io/docs/2.2.0/overview">Devfile customization overview</a></p>
-</li>
-</ul>
 </div>
 </article>
   </div>
