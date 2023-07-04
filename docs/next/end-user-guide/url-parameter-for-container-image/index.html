@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling Python artifact repositories :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/end-user-guide/enabling-python-artifact-repositories/">
-    <meta name="description" content="You can enable a Python artifact repository in Python workspaces that run in a restricted environment.">
-    <meta name="keywords" content="python, artifact-repository, artifact-repositories">
+    <title>URL parameter for a container image :: Eclipse Che Documentation</title>
+    <meta name="description" content="URL parameter for a container image">
+    <meta name="keywords" content="parameter, URL, container, image">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -131,8 +130,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../url-parameter-for-additional-remotes/">URL parameter for additional remotes</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../url-parameter-for-container-image/">URL parameter for a container image</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">URL parameter for a container image</a>
   </li>
 </ul>
   </li>
@@ -194,8 +193,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enabling-npm-artifact-repositories/">npm</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Python</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enabling-python-artifact-repositories/">Python</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enabling-go-artifact-repositories/">Go</a>
@@ -643,9 +642,9 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>User Guide</li>
-    <li><a href="../using-credentials-and-configurations-in-workspaces/">Using credentials and configurations in workspaces</a></li>
-    <li><a href="../enabling-artifact-repositories-in-a-restricted-environment/">Enabling artifact repositories in a restricted environment</a></li>
-    <li><a href="./">Python</a></li>
+    <li><a href="../user-onboarding/">User onboarding</a></li>
+    <li><a href="../optional-parameters-for-the-urls-for-starting-a-new-workspace/">Optional parameters for the URLs for starting a new workspace</a></li>
+    <li><a href="./">URL parameter for a container image</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -653,97 +652,41 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/enabling-python-artifact-repositories/">7.67.x</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.67.x</a>
   </div>
 </div>
-<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/enabling-python-artifact-repositories.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/url-parameter-for-container-image.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling Python artifact repositories</h1>
+<h1 class="page">URL parameter for a container image</h1>
 <div class="paragraph">
-<p>You can enable a Python artifact repository in Python workspaces that run in a restricted environment.</p>
+<p>You can use the <code>image</code> parameter to use a custom reference to a container image in the following scenarios:</p>
 </div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You are not running any Python workspace.</p>
+<p>The Git repository contains no devfile, and you want to start a new workspace with the custom image.</p>
+</li>
+<li>
+<p>The Git repository contains a devfile, and you want to override the first container image listed in the <code>components</code> section of the devfile.</p>
 </li>
 </ul>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>Applying a ConfigMap that sets environment variables might cause a workspace boot loop.</p>
+<p>The URL parameter for the path to the container image is <code>image=</code>:</p>
 </div>
-<div class="paragraph">
-<p>If you encounter this behavior, remove the <code>ConfigMap</code> and edit the devfile directly.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Apply the Secret for the TLS certificate:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Secret
-apiVersion: v1
-metadata:
-  name: tls-cer
-  annotations:
-    controller.devfile.io/mount-path: /home/user/certs
-    controller.devfile.io/mount-as: file
-  labels:
-    controller.devfile.io/mount-to-devworkspace: 'true'
-    controller.devfile.io/watch-secret: 'true'
-data:
-  tls.cer: &gt;-
-    <em>&lt;Base64_encoded_content_of_public_cert&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">https://<em>&lt;che_fqdn&gt;</em>#<em>&lt;git_repository_url&gt;</em>?image=<em>&lt;container_image_url&gt;</em></code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Base64 encoding with disabled line wrapping.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Apply the ConfigMap to set the following environment variables in the <code>tools</code> container:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: disconnected-env
-  annotations:
-    controller.devfile.io/mount-as: env
-  labels:
-    controller.devfile.io/mount-to-devworkspace: 'true'
-    controller.devfile.io/watch-configmap: 'true'
-data:
-  PIP_INDEX_URL: &gt;-
-    https://<em>&lt;python_artifact_repository_route&gt;</em>/repository/pypi-all/
-  PIP_CERT: /home/user/certs/tls.cer</code></pre>
-</div>
-</div>
-</li>
-</ol>
+<div class="paragraph">
+<div class="title">Example</div>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/eclipse-che/che-docs?image=quay.io/devfile/universal-developer-image:ubi8-latest</code></p>
 </div>
 </article>
   </div>
