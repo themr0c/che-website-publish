@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Che server :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/che-server/">
-    <meta name="description" content="Functions of Che server">
-    <meta name="keywords" content="administration-guide, architecture, server, devworkspace">
+    <title>Configuring Eclipse&#160;Che with self-signed certificate :: Eclipse Che Documentation</title>
+    <meta name="description" content="Configuring Che with self-signed certificates">
+    <meta name="keywords" content="administration guide, configuring, Eclipse&#160;Che, Che, self-signed, certificate">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
@@ -300,8 +299,8 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../devfile-registries/">Devfile registries</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="./">Che server</a>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../che-server/">Che server</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../plugin-registry/">Plug-in registry</a>
@@ -470,8 +469,8 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-che-hostname/">Configuring Che hostname</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../configuring-che-with-self-signed-certificate/">Configuring Che with self-signed certificates</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="./">Configuring Che with self-signed certificates</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
@@ -643,10 +642,9 @@
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
-    <li><a href="../preparing-the-installation/">Preparing the installation</a></li>
-    <li><a href="../architecture-overview/">Architecture</a></li>
-    <li><a href="../server-components/">Server components</a></li>
-    <li><a href="./">Che server</a></li>
+    <li><a href="../configuring-che/">Configuring Che</a></li>
+    <li><a href="../configuring-networking/">Configuring networking</a></li>
+    <li><a href="./">Configuring Che with self-signed certificates</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -654,67 +652,107 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/administration-guide/che-server/">7.67.x</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.67.x</a>
   </div>
 </div>
-<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/che-server.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/configuring-che-with-self-signed-certificate.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Che server</h1>
+<h1 class="page">Configuring Eclipse&#160;Che with self-signed certificate</h1>
 <div class="paragraph">
-<p>The Che server main functions are:</p>
+<p>By default <code>chectl</code> creates a Kubernetes Job to generate self-signed certificate to deploy Che with.
+This procedure describes how to configure a custom self-signed certificate on prior of deploying Che.</p>
 </div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Creating user namespaces.</p>
+<p>An active <code>kubectl</code> session with administrative permissions to the destination Kubernetes cluster. See <a href="https://kubernetes.io/docs/reference/kubectl/overview/">Overview of kubectl</a>.</p>
 </li>
 <li>
-<p>Provisioning user namespaces with required secrets and config maps.</p>
-</li>
-<li>
-<p>Integrating with Git services providers, to fetch and validate devfiles and authentication.</p>
+<p>Generated certificate and private key files.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>The Che server is a Java web service exposing an HTTP REST API and needs access to:</p>
-</div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
 <li>
-<p>Git service providers</p>
-</li>
-<li>
-<p>Kubernetes API</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
+<p>Pre-create a namespace for Che:</p>
+<div class="listingblock">
 <div class="content">
-<img src="../_images/architecture/che-server-interactions.png" alt="Che server interactions with other components">
+<pre>$ kubectl create namespace eclipse-che</pre>
 </div>
-<div class="title">Figure 1. Che server interactions with other components</div>
+</div>
+</li>
+<li>
+<p>Create a <code>che-tls</code> secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret tls che-tls \
+--key <em>&lt;key_file&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+--cert <em>&lt;cert_file&gt;</em> \ <i class="conum" data-value="2"></i><b>(2)</b>
+-n eclipse-che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A file with the private key in PEM format</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A file with the public key certificates in PEM format</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Add the required labels to the secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret che-tls app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>self-signed-certificate</code> secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create secret generic self-signed-certificate \
+--from-file=ca.crt=<em>&lt;certitifcate_chain_of_trust_file&gt;</em> \ <i class="conum" data-value="1"></i><b>(1)</b>
+-n eclipse-che</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A file with certificate chain of trust in PEM format</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Add the required labels to the secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl label secret self-signed-certificate app.kubernetes.io/part-of=che.eclipse.org -n eclipse-che</pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="../advanced-configuration-options-for-the-che-server-component/" class="xref page">Advanced configuration options for the Che server component</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://quay.io/repository/eclipse/che-server?tab=history"><code>quay.io/eclipse/che-server</code> container image</a></p>
-</li>
-<li>
-<p><a href="https://github.com/eclipse-che/che-server">Eclipse&#160;Che server repository</a></p>
+<p><a href="../installing-che/" class="xref page">Installing Che</a></p>
 </li>
 </ul>
 </div>
