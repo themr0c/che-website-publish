@@ -177,7 +177,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../end-user-guide/mounting-configmaps/">Mounting ConfigMaps</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../end-user-guide/mounting-git-configuration/">Mounting Git configuration</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -481,7 +487,13 @@
     <a class="nav-link" href="../configuring-storage/">Configuring storage</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../installing-che-using-storage-classes/">Installing Che using storage classes</a>
+    <a class="nav-link" href="../configuring-storage-classes/">Configuring storage classes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-the-storage-strategy/">Configuring the storage strategy</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-storage-sizes/">Configuring storage sizes</a>
   </li>
 </ul>
   </li>
@@ -621,7 +633,7 @@
           <a href="../../../che-7/">old (7.41)</a>
         </li>
         <li class="version is-latest">
-          <a href="../../../stable/overview/introduction-to-eclipse-che/">7.67.x</a>
+          <a href="../../../stable/overview/introduction-to-eclipse-che/">7.73.x</a>
         </li>
       </ul>
     </li>
@@ -648,7 +660,7 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version" href="../../../che-7/">old (7.41)</a>
-    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.67.x</a>
+    <a class="version is-missing" href="../../../stable/overview/introduction-to-eclipse-che/">7.73.x</a>
   </div>
 </div>
 <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/checluster-custom-resource-fields-reference.adoc">Edit this Page</a></div>
@@ -1018,7 +1030,7 @@ spec:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">disableContainerBuildCapabilities</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disables the container build capabilities.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disables the container build capabilities. When set to <code>false</code> (the default value), the devEnvironments.security.containerSecurityContext field is ignored, and the following container SecurityContext is applied: \n  containerSecurityContext:    allowPrivilegeEscalation: true    capabilities:      add:      - SETGID      - SETUID</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -1042,6 +1054,11 @@ spec:
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">persistUserHome</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PersistUserHome defines configuration options for persisting the user home directory in workspaces.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">podSchedulerName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pod scheduler for the workspace pods. If not specified, the pod scheduler is set to the default scheduler on the cluster.</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -1060,6 +1077,11 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock">secondsOfRunBeforeIdling</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Run timeout for workspaces in seconds. This timeout is the maximum duration a workspace runs. To disable workspace run timeout, set this value to -1.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">security</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspace security configuration.</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">serviceAccount</p></td>
@@ -1588,6 +1610,11 @@ spec:
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dashboard branding resources.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">deployment</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deployment override options.</p></td>

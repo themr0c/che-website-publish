@@ -178,7 +178,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../mounting-configmaps/">Mounting ConfigMaps</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../mounting-git-configuration/">Mounting Git configuration</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -482,7 +488,13 @@
     <a class="nav-link" href="../../administration-guide/configuring-storage/">Configuring storage</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../administration-guide/installing-che-using-storage-classes/">Installing Che using storage classes</a>
+    <a class="nav-link" href="../../administration-guide/configuring-storage-classes/">Configuring storage classes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/configuring-the-storage-strategy/">Configuring the storage strategy</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../administration-guide/configuring-storage-sizes/">Configuring storage sizes</a>
   </li>
 </ul>
   </li>
@@ -622,7 +634,7 @@
           <a href="../../../che-7/">old (7.41)</a>
         </li>
         <li class="version is-latest">
-          <a href="../../../stable/overview/introduction-to-eclipse-che/">7.67.x</a>
+          <a href="../../../stable/overview/introduction-to-eclipse-che/">7.73.x</a>
         </li>
       </ul>
     </li>
@@ -648,7 +660,7 @@
   <div class="version-menu">
     <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version" href="../../../stable/end-user-guide/starting-a-new-workspace-with-a-clone-of-a-git-repository/">7.67.x</a>
+    <a class="version" href="../../../stable/end-user-guide/starting-a-new-workspace-with-a-clone-of-a-git-repository/">7.73.x</a>
   </div>
 </div>
 <div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/end-user-guide/pages/starting-a-new-workspace-with-a-clone-of-a-git-repository.adoc">Edit this Page</a></div>
@@ -660,26 +672,9 @@
 <article class="doc">
 <h1 class="page">Starting a new workspace with a clone of a Git repository</h1>
 <div class="paragraph">
-<p>Working with Che in your browser involves multiple URLs:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The URL of your organization&#8217;s Che instance, used as part of all the following URLs</p>
-</li>
-<li>
-<p>The URL of the <strong>Workspaces</strong> page of your Che dashboard with the workspace control panel</p>
-</li>
-<li>
-<p><span class="underline">The URLs for starting a new workspace</span></p>
-</li>
-<li>
-<p>The URLs of your workspaces in use</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>With Che, you can visit a URL in your browser to start a new workspace that contains a clone of a Git repository. This way, you can clone a Git repository that is hosted on GitHub, a GitLab instance, or a Bitbucket server.</p>
+<p>With Che, you can use a URL in your browser to start
+a new workspace that contains a clone of a Git repository.
+This way, you can clone a Git repository that is hosted on GitHub, GitLab, Bitbucket or Microsoft Azure DevOps server instances.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -688,7 +683,45 @@
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-You can also use the <strong>Git Repo URL *</strong> field on the <strong>Create Workspace</strong> page of your Che dashboard to enter the URL of a Git repository to start a new workspace.
+You can also use the <strong>Git Repository URL</strong> field on the <strong>Create Workspace</strong> page of your Che dashboard to enter the URL of a Git repository to start a new workspace.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Starting a workspace using a URL from a Git service other than GitHub, GiLab, Bitbucket, or Microsoft Azure DevOps will fail.</p>
+</li>
+<li>
+<p>If you use an SSH URL to start a new workspace, you must propagate the SSH key. See <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/additional-configuration.adoc#configuring-devworkspaces-to-use-ssh-keys-for-git-operations">Configuring DevWorkspaces to use SSH keys for Git operations</a> for more information.</p>
+</li>
+<li>
+<p>If the SSH URL points to a private repository, you must apply an access token to be able to fetch the <code>devfile.yaml</code> content. You can do this either by accepting an SCM authentication page or following a <a href="../using-a-git-provider-access-token/" class="xref page">Personal Access Token</a> procedure.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Configure personal access token to access private repositories. See <a href="../using-a-git-provider-access-token/" class="xref page">Using a Git-provider access token</a>.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -765,68 +798,6 @@ You can also start a new workspace by supplying the URL of a Git repository that
 </tr>
 </table>
 </div>
-<div class="exampleblock">
-<div class="title">Example 1. A URL for starting a new workspace</div>
-<div class="content">
-<div class="paragraph">
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/che-samples/cpp-hello-world</code></p>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. The URL syntax for starting a new workspace with a clone of a GitHub-hosted repository</div>
-<div class="content">
-<div class="paragraph">
-<p>With GitHub and GitLab, you can even use the URL of a specific branch of the repository to be cloned:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em></code> starts a new workspace with a clone of the default branch.</p>
-</li>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>/tree/<em>&lt;branch_name&gt;</em></code> starts a new workspace with a clone of the specified branch.</p>
-</li>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>/pull/<em>&lt;pull_request_id&gt;</em></code> starts a new workspace with a clone of the branch of the pull request.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 3. The URL syntax for starting a new workspace with a clone of a BitBucket Server repository</div>
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://&lt;bb-host&gt;/scm/&lt;project-key&gt;/&lt;repository_name&gt;.git</code> starts a new workspace with a clone of the default branch.</p>
-</li>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://&lt;bb-host&gt;/users/&lt;user-slug&gt;/repos/&lt;repo-name&gt;/</code> starts a new workspace with a clone of the default branch, if a repository was created under the user profile.</p>
-</li>
-<li>
-<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://&lt;bb-host&gt;/users/&lt;user-slug&gt;/repos/&lt;repo-name&gt;/browse?at=refs%2Fheads%2F&lt;branch-name&gt;</code> starts a new workspace with a clone of the specified branch.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>After you enter the URL to start a new workspace in a browser tab, it renders the workspace-starting page.</p>
-</div>
-<div class="paragraph">
-<p>When the new workspace is ready, the workspace IDE loads in the browser tab.</p>
-</div>
-<div class="paragraph">
-<p>A clone of the Git repository is present in the filesystem of the new workspace.</p>
-</div>
-<div class="paragraph">
-<p>The workspace has a unique URL: <code>https://<em>&lt;che_fqdn&gt;</em>#workspace<em>&lt;unique_url&gt;</em></code>.</p>
-</div>
-</li>
-</ol>
-</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -835,21 +806,120 @@ You can also start a new workspace by supplying the URL of a Git repository that
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Although this is not possible in the address bar, you can add a URL for starting a new workspace as a bookmark by using the browser bookmark manager:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>In Mozilla Firefox, go to <strong>☰</strong> <strong>&gt;</strong> <strong>Bookmarks</strong> <strong>&gt;</strong> <strong>Manage bookmarks Ctrl+Shift+O</strong> <strong>&gt;</strong> <strong>Bookmarks Toolbar</strong> <strong>&gt;</strong> <strong>Organize</strong> <strong>&gt;</strong> <strong>Add bookmark</strong>.</p>
-</li>
-<li>
-<p>In Google Chrome, go to <strong>⋮</strong> <strong>&gt;</strong> <strong>Bookmarks</strong> <strong>&gt;</strong> <strong>Bookmark manager</strong> <strong>&gt;</strong> <strong>Bookmarks bar</strong> <strong>&gt;</strong> <strong>⋮</strong> <strong>&gt;</strong> <strong>Add new bookmark</strong>.</p>
-</li>
-</ul>
+<p>You can use Git+SSH URLs to start a new workspace.
+See <a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/additional-configuration.adoc#configuring-devworkspaces-to-use-ssh-keys-for-git-operations">Configuring DevWorkspaces to use SSH keys for Git operations</a></p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. A URL for starting a new workspace</div>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://github.com/che-samples/cpp-hello-world</code></p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#git@github.com:che-samples/cpp-hello-world.git</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. The URL syntax for starting a new workspace with a clone of a GitHub instance repository</div>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;github_host&gt;</em>/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em></code> starts a new workspace with a clone of the default branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;github_host&gt;</em>/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>/tree/<em>&lt;branch_name&gt;</em></code> starts a new workspace with a clone of the specified branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;github_host&gt;</em>/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>/pull/<em>&lt;pull_request_id&gt;</em></code> starts a new workspace with a clone of the branch of the pull request.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#git@<em>&lt;github_host&gt;</em>:<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>.git</code> starts a new workspace from Git+SSH URL.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. The URL syntax for starting a new workspace with a clone of a GitLab instance repository</div>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;gitlab_host&gt;</em>/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em></code> starts a new workspace with a clone of the default branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;gitlab_host&gt;</em>/<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>/-/tree/<em>&lt;branch_name&gt;</em></code> starts a new workspace with a clone of the specified branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#git@<em>&lt;gitlab_host&gt;</em>:<em>&lt;user_or_org&gt;</em>/<em>&lt;repository&gt;</em>.git</code> starts a new workspace from Git+SSH URL.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. The URL syntax for starting a new workspace with a clone of a BitBucket Server repository</div>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;bb_host&gt;</em>/scm/<em>&lt;project-key&gt;</em>/<em>&lt;repository&gt;</em>.git</code> starts a new workspace with a clone of the default branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;bb_host&gt;</em>/users/<em>&lt;user_slug&gt;</em>/repos/<em>&lt;repository&gt;</em>/</code> starts a new workspace with a clone of the default branch, if a repository was created under the user profile.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;bb_host&gt;</em>/users/<em>&lt;user-slug&gt;</em>/repos/<em>&lt;repository&gt;</em>/browse?at=refs%2Fheads%2F<em>&lt;branch-name&gt;</em></code> starts a new workspace with a clone of the specified branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#git@<em>&lt;bb_host&gt;</em>:<em>&lt;user_slug&gt;</em>/<em>&lt;repository&gt;</em>.git</code> starts a new workspace from Git+SSH URL.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 5. The URL syntax for starting a new workspace with a clone of a Microsoft Azure DevOps Git repository</div>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;organization&gt;</em>@dev.azure.com/<em>&lt;organization&gt;</em>/<em>&lt;project&gt;</em>/_git/<em>&lt;repository&gt;</em></code> starts a new workspace with a clone of the default branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#https://<em>&lt;organization&gt;</em>@dev.azure.com/<em>&lt;organization&gt;</em>/<em>&lt;project&gt;</em>/_git/<em>&lt;repository&gt;</em>?version=GB<em>&lt;branch&gt;</em></code> starts a new workspace with a clone of the specific branch.</p>
+</li>
+<li>
+<p><code>https://<em>&lt;che_fqdn&gt;</em>#git@ssh.dev.azure.com:v3/<em>&lt;organization&gt;</em>/<em>&lt;project&gt;</em>/<em>&lt;repository&gt;</em></code> starts a new workspace from Git+SSH URL.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>After you enter the URL to start a new workspace in a browser tab, the workspace starting page appears.</p>
+</div>
+<div class="paragraph">
+<p>When the new workspace is ready, the workspace IDE loads in the browser tab.</p>
+</div>
+<div class="paragraph">
+<p>A clone of the Git repository is present in the filesystem of the new workspace.</p>
+</div>
+<div class="paragraph">
+<p>The workspace has a unique URL: <code>https://<em>&lt;che_fqdn&gt;</em>/<em>&lt;user_name&gt;</em>/<em>&lt;unique_url&gt;</em></code>.</p>
+</div>
+</li>
+</ol>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
@@ -859,6 +929,15 @@ You can also start a new workspace by supplying the URL of a Git repository that
 </li>
 <li>
 <p><a href="../basic-actions-you-can-perform-on-a-workspace/" class="xref page">Basic actions you can perform on a workspace</a></p>
+</li>
+<li>
+<p><a href="../using-a-git-provider-access-token/" class="xref page">Using a Git-provider access token</a></p>
+</li>
+<li>
+<p><a href="../mounting-git-configuration/" class="xref page">Mounting Git configuration</a></p>
+</li>
+<li>
+<p><a href="https://github.com/devfile/devworkspace-operator/blob/main/docs/additional-configuration.adoc#configuring-devworkspaces-to-use-ssh-keys-for-git-operations">Configuring DevWorkspaces to use SSH keys for Git operations</a></p>
 </li>
 </ul>
 </div>

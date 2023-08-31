@@ -3,15 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring storage classes :: Eclipse Che Documentation</title>
-    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/installing-che-using-storage-classes/">
-    <meta name="description" content="Installing Che using storage classes">
-    <meta name="keywords" content="administration guide, installing-che-using-storage-classes">
+    <title>Configuring storage sizes :: Eclipse Che Documentation</title>
+    <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/configuring-storage-sizes/">
+    <meta name="description" content="Configuring storage sizes">
+    <meta name="keywords" content="administration guide, configuring, che, storage sizes, PVC size, pvc">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
 <link rel="stylesheet" href="../../../../docs/_/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel="icon" href="../../../../docs/_/img/favicon.ico" type="image/x-icon">
+<meta name="robots" content="noindex">
 <script>var uiRootPath = '../../../../docs/_'</script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-37306001-2"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','UA-37306001-2')</script>
@@ -45,7 +46,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="7.67.x">
+<div class="nav-container" data-component="docs" data-version="next">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -129,6 +130,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../end-user-guide/url-parameter-for-additional-remotes/">URL parameter for additional remotes</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../end-user-guide/url-parameter-for-container-image/">URL parameter for a container image</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -174,7 +178,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../end-user-guide/mounting-configmaps/">Mounting ConfigMaps</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../end-user-guide/mounting-git-configuration/">Mounting Git configuration</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -243,9 +253,6 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../end-user-guide/investigating-failures-at-a-workspace-start-using-the-verbose-mode/">Troubleshooting workspace start failures</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../end-user-guide/troubleshooting-slow-workspaces/">Troubleshooting slow workspaces</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -284,7 +291,7 @@
     <a class="nav-link" href="../che-operator/">Che operator</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../devworkspace-operator/">Dev Workspace operator</a>
+    <a class="nav-link" href="../devworkspace-operator/">DevWorkspace operator</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../gateway/">Gateway</a>
@@ -448,7 +455,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the Dev Workspace Operator</a>
+    <a class="nav-link" href="../monitoring-the-dev-workspace-operator/">Monitoring the DevWorkspace Operator</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../monitoring-che/">Monitoring Che Server</a>
@@ -466,6 +473,9 @@
     <a class="nav-link" href="../configuring-che-hostname/">Configuring Che hostname</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-che-with-self-signed-certificate/">Configuring Che with self-signed certificates</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../importing-untrusted-tls-certificates/">Importing untrusted TLS certificates to Che</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,8 +487,14 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../configuring-storage/">Configuring storage</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-storage-classes/">Configuring storage classes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-the-storage-strategy/">Configuring the storage strategy</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="./">Installing Che using storage classes</a>
+    <a class="nav-link" href="./">Configuring storage sizes</a>
   </li>
 </ul>
   </li>
@@ -552,7 +568,7 @@
     <a class="nav-link" href="../upgrading-che-using-the-cli-management-tool-in-restricted-environment/">Upgrading Che in a restricted environment</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../repairing-the-devworkspace-operator-on-openshift/">Repairing the Dev Workspace Operator on OpenShift</a>
+    <a class="nav-link" href="../repairing-the-devworkspace-operator-on-openshift/">Repairing the DevWorkspace Operator on OpenShift</a>
   </li>
 </ul>
   </li>
@@ -605,20 +621,20 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">7.67.x</span>
+    <span class="version">next</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <a class="title" href="../../overview/introduction-to-eclipse-che/">Documentation</a>
+      <a class="title" href="../../../stable/overview/introduction-to-eclipse-che/">Documentation</a>
       <ul class="versions">
-        <li class="version">
-          <a href="../../../next/overview/introduction-to-eclipse-che/">next</a>
+        <li class="version is-current">
+          <a href="../../overview/introduction-to-eclipse-che/">next</a>
         </li>
         <li class="version">
           <a href="../../../che-7/">old (7.41)</a>
         </li>
-        <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">7.67.x</a>
+        <li class="version is-latest">
+          <a href="../../../stable/overview/introduction-to-eclipse-che/">7.73.x</a>
         </li>
       </ul>
     </li>
@@ -630,152 +646,63 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../overview/introduction-to-eclipse-che/" class="home-link"></a>
+  <a href="../../../stable/overview/introduction-to-eclipse-che/" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../overview/introduction-to-eclipse-che/">Documentation</a></li>
     <li>Administration Guide</li>
     <li><a href="../configuring-che/">Configuring Che</a></li>
     <li><a href="../configuring-storage/">Configuring storage</a></li>
-    <li><a href="./">Installing Che using storage classes</a></li>
+    <li><a href="./">Configuring storage sizes</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">7.67.x</button>
+  <button class="version-menu-toggle" title="Show other versions of page">next</button>
   <div class="version-menu">
-    <a class="version" href="../../../next/administration-guide/installing-che-using-storage-classes/">next</a>
+    <a class="version is-current" href="./">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version is-current" href="./">7.67.x</a>
+    <a class="version" href="../../../stable/administration-guide/configuring-storage-sizes/">7.73.x</a>
   </div>
 </div>
-<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.67.x/modules/administration-guide/pages/installing-che-using-storage-classes.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/main/modules/administration-guide/pages/configuring-storage-sizes.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring storage classes</h1>
+<h1 class="page">Configuring storage sizes</h1>
 <div class="paragraph">
-<p>To configure Che to use a configured infrastructure storage, install Che using storage classes. This is especially useful when a user wants to bind a persistent volume provided by a non-default provisioner. To do so, a user binds this storage for the Che data saving and sets the parameters for that storage. These parameters can determine the following:</p>
+<p>You can configure the persistent volume claim (PVC) size using the <code>per-user</code> or <code>per-workspace</code> storage strategies. You must specify the PVC sizes in the <code>CheCluster</code> Custom Resource in the format of a <a href="https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/">Kubernetes resource quantity</a>. For more details on the available storage strategies, see <a href="../configuring-the-storage-strategy/" class="xref page">this page</a>.</p>
+</div>
+<div class="paragraph">
+<p>Default persistent volume claim sizes:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A special host path</p>
-</li>
-<li>
-<p>A storage capacity</p>
-</li>
-<li>
-<p>A volume mod</p>
-</li>
-<li>
-<p>Mount options</p>
-</li>
-<li>
-<p>A file system</p>
-</li>
-<li>
-<p>An access mode</p>
-</li>
-<li>
-<p>A storage type</p>
-</li>
-<li>
-<p>And many others</p>
-</li>
-</ul>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">per-user: 10Gi</code></pre>
 </div>
-<div class="paragraph">
-<p>Che has one component that requires persistent volumes to store data:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>A Che workspace. Che workspaces store source code using volumes, for example <code>/projects</code> volume.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Che workspaces source code is stored in the persistent volume only if a workspace is not ephemeral.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">Persistent volume claims facts:</div>
-<ul>
-<li>
-<p>Che does not create persistent volumes in the infrastructure.</p>
 </li>
 <li>
-<p>Che uses persistent volume claims (PVC) to mount persistent volumes.</p>
-</li>
-<li>
-<p>The Che server creates  persistent volume claims.</p>
-<div class="paragraph">
-<p>A user defines a storage class name in the Che configuration to use the storage classes feature in the Che PVC. With storage classes, a user configures infrastructure storage in a flexible way with additional storage parameters. It is also possible to bind a static provisioned persistent volumes to the Che PVC using the class name.</p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">per-workspace: 5Gi</code></pre>
+</div>
 </div>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>Use CheCluster Custom Resource definition to define storage classes:</p>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Define storage class names: configure the <code>CheCluster</code> Custom Resource, and install Che. See <a href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/" class="xref page">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
-  devEnvironments:
-    storage:
-      pvc:
-        # keep blank unless you need to use a non default storage class for workspace PVC(s)
-        storageClass: 'workspace-storage'</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Define the persistent volume for a Che workspace in a <code>che-workspace-pv.yaml</code> file:</p>
-<div class="listingblock">
-<div class="title"><code>che-workspace-pv.yaml</code> file</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: workspace-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: workspace-storage
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/data/che/workspace"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Bind the persistent volume:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ kubectl apply -f che-workspace-pv.yaml</pre>
-</div>
-</div>
+<p>Set the appropriate <code>claimSize</code> field for the desired storage strategy in the Che Cluster Custom Resource.</p>
 </li>
 </ol>
 </div>
@@ -786,23 +713,48 @@ spec:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>You must provide valid file permissions for volumes. You can do it using storage class configuration or manually. To manually define permissions, define <code>storageClass#mountOptions</code> <code>uid</code> and <code>gid</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You can set this field at installation. See <a href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/" class="xref page">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a>.</p>
+</li>
+<li>
+<p>You can update this field on the command line. See <a href="../using-the-cli-to-configure-the-checluster-custom-resource/" class="xref page">Using the CLI to configure the CheCluster Custom Resource</a>.</p>
+</li>
+</ul>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/" class="xref page">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a></p>
-</li>
-<li>
-<p><a href="../using-the-cli-to-configure-the-checluster-custom-resource/" class="xref page">Using the CLI to configure the CheCluster Custom Resource</a></p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  devEnvironments:
+    storage:
+      pvc:
+        pvcStrategy: '<em>&lt;strategy_name&gt;</em>'  <i class="conum" data-value="1"></i><b>(1)</b>
+        perUserStrategyPvcConfig: <i class="conum" data-value="2"></i><b>(2)</b>
+          claimSize: <em>&lt;resource_quantity&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+        perWorkspaceStrategyPvcConfig:  <i class="conum" data-value="2"></i><b>(2)</b>
+          claimSize: <em>&lt;resource_quantity&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Select the storage strategy: <code>per-user</code> or <code>per-workspace</code> or <code>ephemeral</code>. Note: the <code>ephemeral</code> storage strategy does not use persistent storage, therefore you cannot configure its storage size or other PVC-related attributes.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify a claim size on the next line or omit the next line to set the default claim size value. The specified claim size is only used when you select this storage strategy.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The claim size must be specified as a <a href="https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/">Kubernetes resource quantity</a>. The available quantity units include: <code>Ei</code>, <code>Pi</code>, <code>Ti</code>, <code>Gi</code>,  <code>Mi</code> and <code>Ki</code>.</td>
+</tr>
+</table>
 </div>
 </article>
   </div>
