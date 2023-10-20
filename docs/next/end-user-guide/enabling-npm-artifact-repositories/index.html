@@ -675,6 +675,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Enabling npm artifact repositories</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>You can enable an npm artifact repository in npm workspaces that run in a restricted environment.</p>
 </div>
@@ -715,14 +717,14 @@ apiVersion: v1
 metadata:
   name: tls-cer
   annotations:
-    controller.devfile.io/mount-path: /home/user/certs
+    controller.devfile.io/mount-path: /public-certs
     controller.devfile.io/mount-as: file
   labels:
     controller.devfile.io/mount-to-devworkspace: 'true'
     controller.devfile.io/watch-secret: 'true'
 data:
-  tls.cer: &gt;-
-    <em>&lt;Base64_encoded_content_of_public_cert&gt;</em> <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+  nexus.cer: &gt;-
+    &lt;Base64_encoded_content_of_public_cert&gt;__ <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -748,13 +750,65 @@ metadata:
     controller.devfile.io/mount-to-devworkspace: 'true'
     controller.devfile.io/watch-configmap: 'true'
 data:
-  NODE_EXTRA_CA_CERTS: /home/user/certs/tls.cer
   NPM_CONFIG_REGISTRY: &gt;-
     https://<em>&lt;npm_artifact_repository_route&gt;</em>/repository/npm-all/</code></pre>
 </div>
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="disabling-self-signed-certificate-validation"><a class="anchor" href="#disabling-self-signed-certificate-validation"></a>Disabling self-signed certificate validation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the command below to disable SSL/TLS, bypassing the validation of your self-signed certificates. Note that this is a potential security risk. For a better solution, configure a self-signed certificate you trust with <code>NODE_EXTRA_CA_CERTS</code>.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command in the terminal:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">npm config set strict-ssl false</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="restoring-node-extra-ca-certs-variable-value"><a class="anchor" href="#restoring-node-extra-ca-certs-variable-value"></a>Configuring NODE_EXTRA_CA_CERTS to use a certificate</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use the command below to set NODE_EXTRA_CA_CERTS to point to where you have your SSL/TLS certificate.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command in the terminal:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">`export NODE_EXTRA_CA_CERTS=/public-certs/nexus.cer` <i class="conum" data-value="1"></i><b>(1)</b>
+`npm install`</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>/public-certs/nexus.cer</code> is the path to self-signed SSL/TLS certificate of Nexus artifactory.</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </article>
   </div>
