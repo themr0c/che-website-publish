@@ -709,9 +709,6 @@
 <li>
 <p><a href="https://www.openssl.org/"><code>openssl</code></a> is installed in the operating system you are using.</p>
 </li>
-<li>
-<p><a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> is installed in the operating system you are using.</p>
-</li>
 </ul>
 </div>
 <div class="olist arabic">
@@ -723,7 +720,7 @@
 <div class="content">
 <pre>$ openssl genrsa -out private.pem 2048 &amp;&amp; \
 openssl pkcs8 -topk8 -inform pem -outform pem -nocrypt -in private.pem -out privatepkcs8.pem &amp;&amp; \
-cat privatepkcs8.pem | sed 's/-----BEGIN PRIVATE KEY-----//g' | sed 's/-----END PRIVATE KEY-----//g' | tr -d '\n' | base64 | tr -d '\n' &gt; privatepkcs8-stripped.pem &amp;&amp; \
+cat privatepkcs8.pem | sed 's/-----BEGIN PRIVATE KEY-----//g' | sed 's/-----END PRIVATE KEY-----//g' | tr -d '\n' &gt; privatepkcs8-stripped.pem &amp;&amp; \
 openssl rsa -in private.pem -pubout &gt; public.pub &amp;&amp; \
 cat public.pub | sed 's/-----BEGIN PUBLIC KEY-----//g' | sed 's/-----END PUBLIC KEY-----//g' | tr -d '\n' &gt; public-stripped.pub &amp;&amp; \
 openssl rand -base64 24 &gt; bitbucket-consumer-key &amp;&amp; \
@@ -825,22 +822,6 @@ openssl rand -base64 24 &gt; bitbucket-shared-secret</pre>
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Encode the content of the <code>bitbucket-consumer-key</code> file to Base64:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ echo -n '<em>&lt;bitbucket-consumer-key file content&gt;</em>' | base64</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Encode the content of the <code>bitbucket-shared-secret</code> file to Base64:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ echo -n '<em>&lt;bitbucket-shared-secret file content&gt;</em>' | base64</pre>
-</div>
-</div>
-</li>
-<li>
 <p>Prepare the Secret:</p>
 <div class="listingblock">
 <div class="content">
@@ -856,10 +837,10 @@ metadata:
     che.eclipse.org/oauth-scm-server: bitbucket
     che.eclipse.org/scm-server-endpoint: <em>&lt;bitbucket_server_url&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
 type: Opaque
-data:
-  private.key: <em>&lt;Base64_content_of_privatepkcs8-stripped.pem&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
-  consumer.key: <em>&lt;Base64_content_of_bitbucket-consumer-key&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b>
-  shared_secret: <em>&lt;Base64_content_of_bitbucket-shared-secret&gt;</em> <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
+stringData:
+  private.key: <em>&lt;Content_of_privatepkcs8-stripped.pem&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+  consumer.key: <em>&lt;Content_of_bitbucket-consumer-key&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b>
+  shared_secret: <em>&lt;Content_of_bitbucket-shared-secret&gt;</em> <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -874,15 +855,15 @@ data:
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The content of the <code>privatepkcs8-stripped.pem</code> file, which was Base64-encoded when the file was generated.</td>
+<td>The content of the <code>privatepkcs8-stripped.pem</code> file.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The content of the <code>bitbucket-consumer-key</code> file that you manually encoded to Base64 in step 1.</td>
+<td>The content of the <code>bitbucket-consumer-key</code> file.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The content of the <code>bitbucket-shared-secret</code> file that you manually encoded to Base64 in step 2.</td>
+<td>The content of the <code>bitbucket-shared-secret</code> file.</td>
 </tr>
 </table>
 </div>
