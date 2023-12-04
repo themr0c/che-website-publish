@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/mounting-a-secret-as-a-file-or-an-environment-variable-into-a-container/">
     <meta name="description" content="Mounting a Secret or a ConfigMap as a file or an environment variable into a Eclipse&#160;Che container">
     <meta name="keywords" content="administration guide, mounting-a-secret-or-a-configmap-as-a-file-or-an-environment-variable-into-a-container">
-    <meta name="generator" content="Antora 3.1.4">
+    <meta name="generator" content="Antora 3.1.5">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
 <link rel="stylesheet" href="../../../../docs/_/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -500,6 +500,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-getting-started-samples/">Configuring getting started samples</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../customizing-openshift-che-consolelink-icon/">Customizing OpenShift Eclipse Che ConsoleLink icon</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -744,7 +747,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><code>keycloak</code></p>
+<p><code>che-dashboard</code></p>
 </li>
 <li>
 <p><code>devfile-registry</code></p>
@@ -814,13 +817,10 @@ metadata:
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>Annotations must indicate that the given object is mounted as a file.</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure the annotation values:</p>
+<p>Configure the annotation values. Annotations must indicate that the given object is mounted as a file:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -847,6 +847,8 @@ metadata:
     che.eclipse.org/mount-as: file
     che.eclipse.org/mount-path: /data
   labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
 ...</code></pre>
 </div>
 </div>
@@ -863,6 +865,8 @@ metadata:
     che.eclipse.org/mount-as: file
     che.eclipse.org/mount-path: /data
   labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
 ...</code></pre>
 </div>
 </div>
@@ -921,7 +925,7 @@ data:
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-To make the changes in a Che container visible, recreate the object entirely.
+To make the changes in a Che container visible, re-create the Secret or the ConfigMap object entirely.
 </td>
 </tr>
 </table>
@@ -940,7 +944,7 @@ To make the changes in a Che container visible, recreate the object entirely.
 </div>
 </div>
 <div class="sect1">
-<h2 id="mounting-a-secret-or-a-configmap-as-an-environment-variable-into-a-container"><a class="anchor" href="#mounting-a-secret-or-a-configmap-as-an-environment-variable-into-a-container"></a>Mounting a Secret or a ConfigMap as an environment variable into a Che container</h2>
+<h2 id="mounting-a-secret-or-a-configmap-as-a-subpath-into-a-container"><a class="anchor" href="#mounting-a-secret-or-a-configmap-as-a-subpath-into-a-container"></a>Mounting a Secret or a ConfigMap as a subPath into a Che container</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -968,7 +972,7 @@ To make the changes in a Che container visible, recreate the object entirely.
 <div class="ulist">
 <ul>
 <li>
-<p><code>keycloak</code></p>
+<p><code>che-dashboard</code></p>
 </li>
 <li>
 <p><code>devfile-registry</code></p>
@@ -1038,20 +1042,17 @@ metadata:
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>Annotations must indicate that the given object is mounted as a environment variable.</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure the annotation values:</p>
+<p>Configure the annotation values. Annotations must indicate that the given object is mounted as a subPath.:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>che.eclipse.org/mount-as: env</code> - to indicate that a object is mounted as an environment variable</p>
+<p><code>che.eclipse.org/mount-as: subpath</code> - To indicate that an object is mounted as a subPath.</p>
 </li>
 <li>
-<p><code>che.eclipse.org/env-name: <em>&lt;FOO_ENV&gt;</em></code> - to provide an environment variable name, which is required to mount a object key value</p>
+<p><code>che.eclipse.org/mount-path: <em>&lt;TARGET_PATH&gt;</em></code> - To provide a required mount path.</p>
 </li>
 </ul>
 </div>
@@ -1066,12 +1067,238 @@ metadata:
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: Secret
 metadata:
+  name: custom-data
+  annotations:
+    che.eclipse.org/mount-as: subpath
+    che.eclipse.org/mount-path: /data
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-data
+  annotations:
+    che.eclipse.org/mount-as: subpath
+    che.eclipse.org/mount-path: /data
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The Kubernetes object can contain several items whose names must match the file name mounted into the container.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 6. Example:</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-data
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+  annotations:
+    che.eclipse.org/mount-as: subpath
+    che.eclipse.org/mount-path: /data
+data:
+  ca.crt: <em>&lt;base64 encoded data content here&gt;</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-data
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
+  annotations:
+    che.eclipse.org/mount-as: subpath
+    che.eclipse.org/mount-path: /data
+data:
+  ca.crt: <em>&lt;data content here&gt;</em></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a file named <code>ca.crt</code> being mounted at the <code>/data</code> path of Che container.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+To make the changes in a Che container visible, re-create the Secret or the ConfigMap object entirely.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../using-chectl-to-configure-the-checluster-custom-resource-during-installation/" class="xref page">Using chectl to configure the <code>CheCluster</code> Custom Resource during installation</a></p>
+</li>
+<li>
+<p><a href="../using-the-cli-to-configure-the-checluster-custom-resource/" class="xref page">Using the CLI to configure the CheCluster Custom Resource</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mounting-a-secret-or-a-configmap-as-an-environment-variable-into-a-container"><a class="anchor" href="#mounting-a-secret-or-a-configmap-as-an-environment-variable-into-a-container"></a>Mounting a Secret or a ConfigMap as an environment variable into a Che container</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A running instance of Eclipse&#160;Che.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a new Kubernetes or OpenShift Secret or a ConfigMap in the Kubernetes or OpenShift namespace where a Che is deployed. The labels of the object that is about to be created must match the set of labels:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>app.kubernetes.io/part-of: che.eclipse.org</code></p>
+</li>
+<li>
+<p><code>app.kubernetes.io/component: &lt;DEPLOYMENT_NAME&gt;-&lt;OBJECT_KIND&gt;</code></p>
+</li>
+<li>
+<p>The <code>&lt;DEPLOYMENT_NAME&gt;</code> corresponds to the one following deployments:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>che-dashboard</code></p>
+</li>
+<li>
+<p><code>devfile-registry</code></p>
+</li>
+<li>
+<p><code>plugin-registry</code></p>
+</li>
+<li>
+<p><code>che</code></p>
+<div class="paragraph">
+<p>and</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>&lt;OBJECT_KIND&gt;</code> is either:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>secret</code></p>
+<div class="paragraph">
+<p>or</p>
+</div>
+</li>
+<li>
+<p><code>configmap</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="title">Example 7. Example:</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-settings
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-settings
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the annotation values. Annotations must indicate that the given object is mounted as an environment variable:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>che.eclipse.org/mount-as: env</code> - to indicate that a object is mounted as an environment variable</p>
+</li>
+<li>
+<p><code>che.eclipse.org/env-name: <em>&lt;FOO_ENV&gt;</em></code> - to provide an environment variable name, which is required to mount a object key value</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="title">Example 8. Example:</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
   name: custom-settings
   annotations:
     che.eclipse.org/env-name: FOO_ENV
     che.eclipse.org/mount-as: env
   labels:
-   ...
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
 data:
   mykey: myvalue</code></pre>
 </div>
@@ -1089,7 +1316,8 @@ metadata:
     che.eclipse.org/env-name: FOO_ENV
     che.eclipse.org/mount-as: env
   labels:
-   ...
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
 data:
   mykey: myvalue</code></pre>
 </div>
@@ -1116,7 +1344,7 @@ data:
 <p>If the object provides more than one data item, the environment variable name must be provided for each of the data keys as follows:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 6. Example:</div>
+<div class="title">Example 9. Example:</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1129,10 +1357,11 @@ metadata:
     che.eclipse.org/mykey_env-name: FOO_ENV
     che.eclipse.org/otherkey_env-name: OTHER_ENV
   labels:
-   ...
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-secret
 stringData:
-  mykey: __&lt;data_content_here&gt;__
-  otherkey: __&lt;data_content_here&gt;__</code></pre>
+  mykey: <em>&lt;data_content_here&gt;</em>
+  otherkey: <em>&lt;data_content_here&gt;</em></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1149,10 +1378,11 @@ metadata:
     che.eclipse.org/mykey_env-name: FOO_ENV
     che.eclipse.org/otherkey_env-name: OTHER_ENV
   labels:
-   ...
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: che-configmap
 data:
-  mykey: __&lt;data content here&gt;__
-  otherkey: __&lt;data content here&gt;__</code></pre>
+  mykey: <em>&lt;data content here&gt;</em>
+  otherkey: <em>&lt;data content here&gt;</em></code></pre>
 </div>
 </div>
 </div>
@@ -1192,7 +1422,7 @@ The maximum length of annotation names in a Kubernetes object is 63 characters, 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-To make the changes in a Che container visible, recreate the object entirely.
+To make the changes in a Che container visible, re-create the Secret or the ConfigMap object entirely.
 </td>
 </tr>
 </table>
