@@ -740,6 +740,89 @@ The default is <code>eclipse-che</code>.</td>
 </table>
 </div>
 </li>
+<li>
+<p>OPTIONAL: In case you applied <a href="https://docs.openshift.com/container-platform/4.12/networking/network_policy/multitenant-network-policy.html">Configuring multitenant isolation with network policy</a>, you also must apply <code>allow-from-openshift-apiserver</code> and <code>allow-from-workspaces-namespaces</code> NetworkPolicies to <code>eclipse-che</code>.
+The <code>allow-from-openshift-apiserver</code> NetworkPolicy allows incoming traffic from <code>openshift-apiserver</code> namespace to the <code>devworkspace-webhook-server</code> enabling webhooks.
+The <code>allow-from-workspaces-namespaces</code> NetworkPolicy allows incoming traffic from each user project to <code>che-gateway</code> pod.</p>
+<div class="exampleblock">
+<div class="title">Example 2. <code>allow-from-openshift-apiserver.yaml</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openshift-apiserver
+  namespace: eclipse-che   <i class="conum" data-value="1"></i><b>(1)</b>
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: devworkspace-webhook-server   <i class="conum" data-value="2"></i><b>(2)</b>
+  ingress:
+    - from:
+        - podSelector: {}
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-apiserver
+  policyTypes:
+    - Ingress</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace.
+The default is <code>eclipse-che</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>podSelector</code> only selects devworkspace-webhook-server pods</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. <code>allow-from-workspaces-namespaces.yaml</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-workspaces-namespaces
+  namespace: eclipse-che   <i class="conum" data-value="1"></i><b>(1)</b>
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: che-gateway   <i class="conum" data-value="2"></i><b>(2)</b>
+  ingress:
+    - from:
+        - podSelector: {}
+          namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/component: workspaces-namespace
+  policyTypes:
+    - Ingress</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Che namespace.
+The default is <code>eclipse-che</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>podSelector</code> only selects che-gateway pods</td>
+</tr>
+</table>
+</div>
+</li>
 </ul>
 </div>
 <div class="ulist">
