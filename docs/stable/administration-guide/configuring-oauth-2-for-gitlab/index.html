@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://www.eclipse.org/che/docs/stable/administration-guide/configuring-oauth-2-for-gitlab/">
     <meta name="description" content="Configuring OAuth 2.0 for GitLab">
     <meta name="keywords" content="configuring-oauth, authorization, gitlab, oauth-2, oauth-2.0">
-    <meta name="generator" content="Antora 3.1.5">
+    <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../../../docs/_/css/site.css">
 <link rel="stylesheet" href="../../../../docs/_/css/extra.css">
 <link rel="stylesheet" href="../../../../docs/_/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -45,7 +45,7 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="docs" data-version="7.77.x">
+<div class="nav-container" data-component="docs" data-version="7.79.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -329,6 +329,15 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../installing-che-in-the-cloud/">Installing Che in the cloud</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../installing-che-on-microsoft-azure/">Installing and setting up Che on Microsoft Azure</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../installing-che-locally/">Installing Che locally</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
@@ -499,6 +508,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-getting-started-samples/">Configuring getting started samples</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../customizing-openshift-che-consolelink-icon/">Customizing OpenShift Eclipse Che ConsoleLink icon</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -531,6 +543,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuring-cluster-roles-for-users/">Configuring cluster roles for Che users</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-advanced-authorization/">Configuring advanced authorization</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../removing-user-data-in-compliance-with-the-gdpr/">Removing user data in compliance with the GDPR</a>
@@ -624,7 +639,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Documentation</span>
-    <span class="version">7.77.x</span>
+    <span class="version">7.79.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -637,7 +652,7 @@
           <a href="../../../che-7/">old (7.41)</a>
         </li>
         <li class="version is-current is-latest">
-          <a href="../../overview/introduction-to-eclipse-che/">7.77.x</a>
+          <a href="../../overview/introduction-to-eclipse-che/">7.79.x</a>
         </li>
       </ul>
     </li>
@@ -661,14 +676,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">7.77.x</button>
+  <button class="version-menu-toggle" title="Show other versions of page">7.79.x</button>
   <div class="version-menu">
     <a class="version" href="../../../next/administration-guide/configuring-oauth-2-for-gitlab/">next</a>
     <a class="version is-missing" href="../../../che-7/">old (7.41)</a>
-    <a class="version is-current" href="./">7.77.x</a>
+    <a class="version is-current" href="./">7.79.x</a>
   </div>
 </div>
-<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.77.x/modules/administration-guide/pages/configuring-oauth-2-for-gitlab.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/eclipse-che/che-docs/edit/7.79.x/modules/administration-guide/pages/configuring-oauth-2-for-gitlab.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -705,9 +720,6 @@
 <li>
 <p>You are logged in to GitLab.</p>
 </li>
-<li>
-<p><a href="https://www.gnu.org/software/coreutils/base64"><code>base64</code></a> is installed in the operating system you are using.</p>
-</li>
 </ul>
 </div>
 <div class="olist arabic">
@@ -732,20 +744,10 @@
 <p>Click <strong>Save application</strong>.</p>
 </li>
 <li>
-<p>Copy the <strong>GitLab Application ID</strong> and encode it to Base64 for use when applying the GitLab-authorized application Secret:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ echo -n '<em>&lt;gitlab_application_id&gt;</em>' | base64</pre>
-</div>
-</div>
+<p>Copy and save the <strong>GitLab Application ID</strong> for use when applying the GitLab-authorized application Secret.</p>
 </li>
 <li>
-<p>Copy the <strong>GitLab Client Secret</strong> and encode it to Base64 for use when applying the GitLab-authorized application Secret:</p>
-<div class="listingblock">
-<div class="content">
-<pre>$ echo -n '<em>&lt;gitlab_client_secret&gt;</em>' | base64</pre>
-</div>
-</div>
+<p>Copy and save the <strong>GitLab Client Secret</strong> for use when applying the GitLab-authorized application Secret.</p>
 </li>
 </ol>
 </div>
@@ -772,7 +774,7 @@
 <p>Setting up the GitLab authorized application is completed.</p>
 </li>
 <li>
-<p>The Base64-encoded values, which were generated when setting up the GitLab authorized application, are prepared:</p>
+<p>The following values, which were generated when setting up the GitLab authorized application, are prepared:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -808,9 +810,9 @@ metadata:
     che.eclipse.org/oauth-scm-server: gitlab
     che.eclipse.org/scm-server-endpoint: <em>&lt;gitlab_server_url&gt;</em> <i class="conum" data-value="2"></i><b>(2)</b>
 type: Opaque
-data:
-  id: <em>&lt;Base64_GitLab_Application_ID&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
-  secret: <em>&lt;Base64_GitLab_Client_Secret&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+stringData:
+  id: <em>&lt;GitLab_Application_ID&gt;</em> <i class="conum" data-value="3"></i><b>(3)</b>
+  secret: <em>&lt;GitLab_Client_Secret&gt;</em> <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -825,11 +827,11 @@ data:
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The Base64-encoded <strong>GitLab Application ID</strong>.</td>
+<td>The <strong>GitLab Application ID</strong>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The Base64-encoded <strong>GitLab Client Secret</strong>.</td>
+<td>The <strong>GitLab Client Secret</strong>.</td>
 </tr>
 </table>
 </div>
