@@ -699,14 +699,47 @@
 <div class="paragraph">
 <p>This section describes how to configure <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/"><code>nodeSelector</code></a> for Pods of Che workspaces.</p>
 </div>
-<div class="paragraph">
+<div class="olist loweralpha">
 <div class="title">Procedure</div>
-<p>Che uses the <code>CHE_WORKSPACE_POD_NODE__SELECTOR</code> environment variable to configure <code>nodeSelector</code>. This variable can contain a set of comma-separated <code>key=value</code> pairs to form the nodeSelector rule, or <code>NULL</code> to disable it.</p>
+<ol class="loweralpha" type="a">
+<li>
+<p>Using NodeSelector</p>
+<div class="paragraph">
+<p>Che uses <code>CheCluster</code> Custom Resource to configure <code>nodeSelector</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>CHE_WORKSPACE_POD_NODE__SELECTOR=disktype=ssd,cpu=xlarge,[key=value]</pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  devEnvironments:
+    nodeSelector:
+      key: value</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>This section must contain a set of <code>key=value</code> pairs for each <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels">node label</a> to form the <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector">nodeSelector</a> rule.</p>
+</div>
+</li>
+<li>
+<p>Using Taints and Tolerations</p>
+<div class="paragraph">
+<p>This works in the opposite way to <code>nodeSelector</code>. Instead of specifying which nodes the Pod will be scheduled on, you specify which nodes the Pod cannot be scheduled on. For more information, see: <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration" class="bare">https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration</a>.</p>
+</div>
+<div class="paragraph">
+<p>Che uses <code>CheCluster</code> Custom Resource to configure <code>tolerations</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  devEnvironments:
+    tolerations:
+      - effect: NoSchedule
+        key: key
+        value: value
+        operator: Equal</code></pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -722,7 +755,7 @@
 <p>To avoid Pods and PVCs to be scheduled in different zones on large, multizone clusters, create an additional <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/"><code>StorageClass</code></a> object (pay attention to the <code>allowedTopologies</code> field), which will coordinate the PVC creation process.</p>
 </div>
 <div class="paragraph">
-<p>Pass the name of this newly created <code>StorageClass</code> to Che through the <code>CHE_INFRA_KUBERNETES_PVC_STORAGE__CLASS__NAME</code> environment variable. A default empty value of this variable instructs Che to use the cluster&#8217;s default <code>StorageClass</code>.</p>
+<p>Pass the name of this newly created <code>StorageClass</code> to Che through the <code>CheCluster</code> Custom Resource. For more information, see: <a href="../configuring-storage-classes/" class="xref page">Configuring storage classes</a>.</p>
 </div>
 </td>
 </tr>
