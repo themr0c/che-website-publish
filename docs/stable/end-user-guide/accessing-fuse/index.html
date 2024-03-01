@@ -721,7 +721,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The administrator has enabled access to <code>/dev/fuse</code> by following <a href="../../administration-guide/configuring-fuse/" class="xref page">Configuring fuse-overlayfs</a>.</p>
+<p>For OpenShift versions older than 4.15, the administrator has enabled access to <code>/dev/fuse</code> by following <a href="../../administration-guide/configuring-fuse/" class="xref page">Configuring fuse-overlayfs</a>.</p>
 </li>
 <li>
 <p>Determine a workspace to use fuse-overlayfs with.</p>
@@ -733,10 +733,23 @@
 <ol class="arabic">
 <li>
 <p>Use the <code>pod-overrides</code> attribute to add the required annotations defined in <a href="../../administration-guide/configuring-fuse/" class="xref page">Configuring fuse-overlayfs</a> to the workspace. The <code>pod-overrides</code> attribute allows merging certain fields in the workspace pod&#8217;s <code>spec</code>.</p>
+<div class="paragraph">
+<p>For OpenShift versions older than 4.15:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ kubectl patch devworkspace <em>&lt;DevWorkspace_name&gt;</em> \
   --patch '{"spec":{"template":{"attributes":{"pod-overrides":{"metadata":{"annotations":{"io.kubernetes.cri-o.Devices":"/dev/fuse","io.openshift.podman-fuse":""}}}}}}}' \
+  --type=merge</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For OpenShift version 4.15 and later:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl patch devworkspace <em>&lt;DevWorkspace_name&gt;</em> \
+  --patch '{"spec":{"template":{"attributes":{"pod-overrides":{"metadata":{"annotations":{"io.kubernetes.cri-o.Devices":"/dev/fuse"}}}}}}}' \
   --type=merge</pre>
 </div>
 </div>
