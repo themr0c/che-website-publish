@@ -1,0 +1,48 @@
+name: publish
+on:
+  - push
+  - schedule:
+    - cron '30 5,17 * * *'
+  - workflow_dispatch
+  
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout local code
+        uses: actions/checkout@v4
+        
+      - name: Checkout che-website main branch
+        uses: actions/checkout@v4
+        with:
+          repository: eclipse-che/che-website
+          ref: main
+          path: che-website
+      - name: Install packages to build che-website
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: che-website
+      - name: Build che-website to website/build/che
+        run: yarn build
+        working-directory: che-website
+
+      - name: Checkout che-docs publication branch
+        uses: actions/checkout@v4
+        with:
+          repository: eclipse-che/che-docs
+          ref: publication
+          path: che-docs  
+      - name: Copy che-docs to website/buil/che
+        run: |
+          rm -rf che-docs/Jenkinsfile che-docs/push-to-eclipse-repository.sh che-docs/.git
+          cp -R che-docs/* che-website/build/che
+          
+          
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./che-website/build/che
+          publish_branch: publish
+          force_orphan: true
