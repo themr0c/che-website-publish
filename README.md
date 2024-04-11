@@ -1,4 +1,4 @@
-= Eclipse Che static website
+# Eclipse Che static website
 
 A worklow runs on schedule, daily at 5:30 and 17:30, and might be run manually, and do following steps:
 
